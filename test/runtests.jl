@@ -1,5 +1,4 @@
 using DiffEqDocs
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+# Tests are just for docs generation
