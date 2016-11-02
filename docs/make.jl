@@ -55,7 +55,6 @@ makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
          ]
          ])
 
-
 deploydocs(
    repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git",
    target = "build",
