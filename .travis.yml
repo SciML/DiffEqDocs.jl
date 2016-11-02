@@ -11,6 +11,7 @@ script:
   - julia -e 'Pkg.clone(pwd())'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DifferentialEquations.jl")'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/ParameterizedFunctions.jl")'
+  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl")'
   - julia -e 'Pkg.checkout("DifferentialEquations","dev")'
   - julia -e 'Pkg.checkout("AlgebraicDiffEq")'
   - julia -e 'Pkg.checkout("StochasticDiffEq")'
