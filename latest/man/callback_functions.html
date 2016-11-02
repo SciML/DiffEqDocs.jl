@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Event Handling and Callback Functions · DifferentialEquations.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Ubuntu+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script></head><body><nav class="toc"><h1>DifferentialEquations.jl</h1><form class="search" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Home</a></li><li><span class="toctext">Tutorials</span><ul><li><a class="toctext" href="../tutorials/ode_example.html">Ordinary Differential Equations (ODE)</a></li><li><a class="toctext" href="../tutorials/sde_example.html">Stochastic Differential Equations (SDE)</a></li><li><a class="toctext" href="../tutorials/dae_example.html">Differential Algebraic Equations (DAE)</a></li><li><a class="toctext" href="../tutorials/fempoisson_example.html">Poisson Equation Finite Element Method</a></li><li><a class="toctext" href="../tutorials/femheat_example.html">Heat Equation Finite Element Method</a></li><li><a class="toctext" href="../tutorials/femstochastic_example.html">Stochastic Finite Element Method</a></li></ul></li><li><span class="toctext">Solver Options</span><ul><li><a class="toctext" href="../solvers/ode_solve.html">Ordinary Differential Equation Solvers</a></li><li><a class="toctext" href="../solvers/sde_solve.html">Stochastic Differential Equation Solvers</a></li><li><a class="toctext" href="../solvers/dae_solve.html">Differential Algebraic Equation Solvers</a></li><li><a class="toctext" href="../solvers/fempoisson_solve.html">Finite Element Method Poisson Equation Solvers</a></li><li><a class="toctext" href="../solvers/femheat_solve.html">Finite Element Method Heat Equation Solvers</a></li><li><a class="toctext" href="../solvers/fdmstokes_solve.html">Finite Difference Method Stokes Equation Solvers</a></li></ul></li><li><span class="toctext">Manual</span><ul><li><a class="toctext" href="overview.html">Overview of DifferentialEquations.jl</a></li><li><a class="toctext" href="ODEProblem.html">Defining an ODE Problem</a></li><li><a class="toctext" href="SDEProblem.html">Defining a SDE Problem</a></li><li><a class="toctext" href="FEMProblem.html">Defining a FEM Problem</a></li><li><a class="toctext" href="StokesProblem.html">Defining a Stokes Problem</a></li><li><a class="toctext" href="mesh.html">Meshes</a></li><li><a class="toctext" href="solution.html">The Solution Type</a></li><li><a class="toctext" href="output_specification.html">Output Specification</a></li><li class="current"><a class="toctext" href="callback_functions.html">Event Handling and Callback Functions</a><ul class="internal"><li><a class="toctext" href="#Introduction-to-Callback-Function-1">Introduction to Callback Function</a></li><li><a class="toctext" href="#Event-Handling-1">Event Handling</a></li><li><a class="toctext" href="#Advanced:-Callback-Function-API-1">Advanced: Callback Function API</a></li></ul></li><li><a class="toctext" href="plot.html">Plot Functions</a></li><li><a class="toctext" href="parameter_estimation.html">Parameter Estimation</a></li><li><a class="toctext" href="function_definition_macros.html">Function Definition Macros</a></li><li><a class="toctext" href="benchmarks.html">Benchmark Suite</a></li><li><a class="toctext" href="convergence.html">Convergence Simulations</a></li><li><a class="toctext" href="conditional_dependencies.html">Conditional Dependencies</a></li><li><a class="toctext" href="progress_bar.html">Juno Progress Bar Integration</a></li></ul></li><li><span class="toctext">Internal Documentation</span><ul><li><a class="toctext" href="../internals/contributors_guide.html">Contributor&#39;s Guide</a></li><li><a class="toctext" href="../internals/fem_tools.html">Internal Finite Element Tools</a></li><li><a class="toctext" href="../internals/extras.html">Extra Functions</a></li><li><a class="toctext" href="../internals/solver_helpers.html">Solver Helpers</a></li><li><a class="toctext" href="../internals/notes_on_algorithms.html">Notes on Algorithms</a></li><li><a class="toctext" href="../internals/function_index.html">Function Index</a></li></ul></li></ul></nav><article id="docs"><header><nav><ul><li>Manual</li><li><a href="callback_functions.html">Event Handling and Callback Functions</a></li></ul><a class="edit-page" href="https://github.com/JuliaDiffEq/DiffEqDocs.jl/tree/92f7949d775fd6edb41500a82b4c488c241377cc/docs/src/man/callback_functions.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/></header><h1><a class="nav-anchor" id="Event-Handling-and-Callback-Functions-1" href="#Event-Handling-and-Callback-Functions-1">Event Handling and Callback Functions</a></h1><h2><a class="nav-anchor" id="Introduction-to-Callback-Function-1" href="#Introduction-to-Callback-Function-1">Introduction to Callback Function</a></h2><p>DifferentialEquations.jl allows for using callback functions to inject user code into the solver algorithms. This is done by defining a callback function and passing that function to the solver. After each accepted iteration this function is called. The standard callback is defined as:</p><pre><code class="language-julia">default_callback = @ode_callback begin
+  @ode_savevalues
+end</code></pre><p>This runs the saving routine at every timestep (inside of this saving routine it   checks the iterations vs <code>timeseries_steps</code> etc., so it&#39;s quite complicated).   However, you can add any code you want to this callback. For example, we can   make it print the value at each timestep by doing:</p><pre><code class="language-julia">my_callback = @ode_callback begin
+  println(u)
+  @ode_savevalues
+end</code></pre><p>and pass this to the solver:</p><pre><code class="language-julia">sol = solve(prob,tspan,callback=my_callback)</code></pre><p>Later in the manual the full API for callbacks is given (the callbacks are very   general and thus the full API is complex enough to handle just about anything),   but for most users it&#39;s recommended that you use the simplified event handling   DSL described below.</p><h2><a class="nav-anchor" id="Event-Handling-1" href="#Event-Handling-1">Event Handling</a></h2><p>Since event handling is a very common issue, a special domain-specific language (DSL) was created to make event handling callbacks simple to define.</p><h3><a class="nav-anchor" id="Example-1:-Bouncing-Ball-1" href="#Example-1:-Bouncing-Ball-1">Example 1: Bouncing Ball</a></h3><p>First let&#39;s look at the bouncing ball. <code>@ode_def</code> from <a href="https://github.com/JuliaDiffEq/ParameterizedFunctions.jl">ParameterizedFunctions.jl</a> was to define the problem, where the first variable <code>y</code> is the height which changes by <code>v</code> the velocity, where the velocity is always changing at <code>-g</code> where is the gravitational constant. This is the equation:</p><pre><code class="language-julia">f = @ode_def BallBounce begin
+  dy =  v
+  dv = -g
+end g=9.81</code></pre><p>All we have to do in order specify the event is to have a function which should always be positive with an event occurring at 0. For now at least that&#39;s how it&#39;s specified, if a generalization is needed we can talk about this (but it needs to be &quot;root-findable&quot;). For here it&#39;s clear that we just want to check if the ball&#39;s height ever hits zero:</p><pre><code class="language-julia">function event_f(t,u) # Event when event_f(t,u) == 0
+  u[1]
+end</code></pre><p>Now we have to say what to do when the event occurs. In this case we just flip the velocity (the second variable)</p><pre><code class="language-julia">function apply_event!(u,cache)
+  u[2] = -u[2]
+end</code></pre><p>That&#39;s all you need to specify the callback function with the macro:</p><pre><code class="language-julia">callback = @ode_callback begin
+  @ode_event event_f apply_event!
+end</code></pre><p>One thing to note is that by default this will check at 5 evently-spaced interpolated values for if the event condition is satisfied (i.e. if <code>event_f(t,u)&lt;0</code>). This is because if your problem is oscillatory, sometimes too large of a timestep will miss the event. One may want to specify a number of points in the interval to interpolate to match the computational effort to the problem. This is done with one more parameter to <code>@ode_event</code>. Note that the interpolations are comparatively cheap to calculate so it&#39;s recommended that one use a few (if the memory for <code>calck</code> is available).</p><p>Another parameter you can set for <code>@ode_event</code> is whether to use a rootfinder. By default, when an event is detected, a rootfinding algorithm (provided by NLsolve) is used to find the exact timepoint of the event. This can be computationally costly for large systems and thus there&#39;s an option to turn it off.</p><p>The next option is to allow for termination on event. This will make the ODE solver stop when the event happens. For example, if we set it to true in our example, then the ODE solver will return the solution the first time the ball hits the ground. Whether it will save the &quot;overshot&quot; point or the &quot;true end&quot; depends on whether rootfinding is used.</p><p>Lastly, you can also tell the solver to decrease Δt after the event occurs. This can be helpful if the discontinuity changes the problem immensely. Using the full power of the macro, we can define an event as</p><pre><code class="language-julia">const Δt_safety = 1 # Multiplier to Δt after an event
+const interp_points = 10
+const terminate_on_event = false
+callback = @ode_callback begin
+  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event Δt_safety
+end</code></pre><p>Then you can solve and plot:</p><pre><code class="language-julia">u0 = [50.0,0.0]
+prob = ODEProblem(f,u0)
+tspan = [0;15]
+sol = solve(prob,tspan,callback=callback)
+plot(sol)</code></pre><p><img src="../assets/ballbounce.png" alt="BallBounce"/></p><p>As you can see from the resulting image, DifferentialEquations.jl is smart enough to use the interpolation to hone in on the time of the event and apply the event back at the correct time. Thus one does not have to worry about the adaptive timestepping &quot;overshooting&quot; the event as this is handled for you. Notice that the event macro will save the value(s) at the discontinuity.</p><h3><a class="nav-anchor" id="Example-2:-Growing-Cell-Population-1" href="#Example-2:-Growing-Cell-Population-1">Example 2: Growing Cell Population</a></h3><p>Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein <code>X</code> which increases linearly with time with rate parameter <code>α</code>. Since we are going to be changing the size of the population, we write the model in the general form:</p><pre><code class="language-julia">const α = 0.3
+f = function (t,u,du)
+  for i in 1:length(u)
+    du[i] = α*u[i]
+  end
+end</code></pre><p>Our model is that, whenever the protein <code>X</code> gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:</p><pre><code class="language-julia">function event_f(t,u) # Event when event_f(t,u) == 0
+  1-maximum(u)
+end</code></pre><p>Again, recall that this function finds events as switching from positive to negative, so <code>1-maximum(u)</code> is positive until a cell has a concentration of <code>X</code> which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:</p><pre><code class="language-julia">function apply_event!(u,cache)
+  @ode_change_cachesize cache length+1
+  maxidx = findmax(u)[2]
+  Θ = rand()
+  u[maxidx] = Θ
+  u[end] = 1-Θ
+end</code></pre><p><code>@ode_change_cachesize cache length+1</code> is used to change the length of all of the internal caches (which includes <code>u</code>) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:</p><pre><code class="language-julia">const Δt_safety = 1
+const interp_points = 10
+callback = @ode_callback begin
+  @ode_event event_f apply_event! interp_points Δt_safety
+end
+u0 = [0.2]
+prob = ODEProblem(f,u0)
+tspan = [0;10]
+sol = solve(prob,tspan,callback=callback)</code></pre><p>The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let&#39;s make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:</p><pre><code class="language-julia">plot(sol.t,map((x)-&gt;length(x),sol[:]),lw=3,
+     ylabel=&quot;Number of Cells&quot;,xlabel=&quot;Time&quot;)</code></pre><p><img src="../assets/numcells.png" alt="NumberOfCells"/></p><p>Now let&#39;s check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:</p><pre><code class="language-julia">ts = linspace(0,10,100)
+plot(ts,map((x)-&gt;x[1],sol.(ts)),lw=3,
+     ylabel=&quot;Amount of X in Cell 1&quot;,xlabel=&quot;Time&quot;)</code></pre><p><img src="../assets/cell1.png" alt="Cell1"/></p><p>Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of <code>X</code> which then grows until the next division.</p><p>Note that one macro which was not shown in this example is <code>@ode_change_deleteat</code> which performs <code>deleteat!</code> on the caches. For example, to delete the second cell, we could use:</p><pre><code class="language-julia">@ode_change_deleteat cache 2</code></pre><p>This allows you to build sophisticated models of populations with births and deaths.</p><h2><a class="nav-anchor" id="Advanced:-Callback-Function-API-1" href="#Advanced:-Callback-Function-API-1">Advanced: Callback Function API</a></h2><p>The callback functions have access to a lot of the functionality of the solver. The macro defines a function which is written as follows:</p><pre><code class="language-julia">macro ode_callback(ex)
+  esc(quote
+    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtprev,Δt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
+      reeval_fsal = false
+      event_occured = false
+      $(ex)
+      cursaveat,Δt,t,T,reeval_fsal
+    end
+  end)
+end</code></pre><p>All of the parts of the algorithm are defined in the internal solver documentation.</p><h3><a class="nav-anchor" id="Example:-Bouncing-Ball-Without-Macros-1" href="#Example:-Bouncing-Ball-Without-Macros-1">Example: Bouncing Ball Without Macros</a></h3><p>Here is an example of the defining the ball bouncing callback without the usage of macros. The entire code in its fully glory is generic enough to handle any of the implemented DifferentialEquations.jl algorithms, which special differences depending on the type of interpolant, implementation of FSAL, etc. For these reasons it&#39;s usually recommended to use the event handling macro, though this kind of code will allow you handle pretty much anything!</p><pre><code class="language-julia">manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtprev,Δt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
+  reeval_fsal = false
+  event_occured = false
+  Δt_safety = 1
+  interp_points = 10
+
+  # Event Handling
+  ode_addsteps!(k,tprev,uprev,Δtprev,alg,f)
+  Θs = linspace(0,1,interp_points)
+  interp_index = 0
+  # Check if the event occured
+  if event_f(t,u)&lt;0
+    event_occured = true
+    interp_index = interp_points
+  elseif interp_points!=0 # Use the interpolants for safety checking
+    for i in 2:length(Θs)-1
+      if event_f(t+Δt*Θs[i],ode_interpolant(Θs[i],Δtprev,uprev,u,kprev,k,alg))&lt;0
+        event_occured = true
+        interp_index = i
+        break
+      end
+    end
+  end
+
+  if event_occured
+    if interp_index == interp_points # If no safety interpolations, start in the middle as well
+      initial_Θ = [.5]
+    else
+      initial_Θ = [Θs[interp_index]] # Start at the closest
+    end
+    find_zero = (Θ,val) -&gt; begin
+      val[1] = event_f(t+Θ[1]*Δt,ode_interpolant(Θ[1],Δtprev,uprev,u,kprev,k,alg))
+    end
+    res = nlsolve(find_zero,initial_Θ)
+    val = ode_interpolant(res.zero[1],Δtprev,uprev,u,kprev,k,alg)
+    for i in eachindex(u)
+      u[i] = val[i]
+    end
+    Δtprev *= res.zero[1]
+    t = tprev + Δtprev
+
+    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
+      resize!(k,kshortsize) # Reset k for next step
+      k = typeof(k)() # Make a local blank k for saving
+      ode_addsteps!(k,tprev,uprev,Δtprev,alg,f)
+    elseif typeof(u) &lt;: Number
+      k = f(t,u)
+    else
+      f(t,u,k)
+    end
+  end
+
+  @ode_savevalues
+
+  if event_occured
+    apply_event!(u)
+    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
+      if typeof(u) &lt;: Number
+        k = f(t,u)
+      else
+        f(t,u,k)
+      end
+    end
+    @ode_savevalues
+    if fsal
+      reeval_fsal = true
+    end
+    Δt *= Δt_safety # Safety Δt change
+  end
+
+  cursaveat,Δt,t,T,reeval_fsal
+end</code></pre><footer><hr/><a class="previous" href="output_specification.html"><span class="direction">Previous</span><span class="title">Output Specification</span></a><a class="next" href="plot.html"><span class="direction">Next</span><span class="title">Plot Functions</span></a></footer></article></body></html>
