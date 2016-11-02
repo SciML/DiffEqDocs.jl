@@ -54,16 +54,16 @@ all of the features of a Plots.jl plot.
 ## Solution Types
 
 ```@docs
-DifferentialEquations.FEMSolution
-DifferentialEquations.DESolution
-DifferentialEquations.SDESolution
-DifferentialEquations.ODESolution
-DifferentialEquations.StokesSolution
+FiniteElementDiffEq.FEMSolution
+DiffEqBase.DESolution
+StochasticDiffEq.SDESolution
+OrdinaryDiffEq.ODESolution
+StokesDiffEq.StokesSolution
 ```
 
 ## Related Functions
 
 ```@docs
-DifferentialEquations.appxtrue!
-DifferentialEquations.FEMSolutionTS
+DiffEqDevTools.appxtrue!
+FiniteElementDiffEq.FEMSolutionTS
 ```

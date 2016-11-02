@@ -17,7 +17,7 @@ appropriate solution array or by using one of the provided `test_convergence` fu
 ## The ConvergenceSimulation Type
 
 ```@docs
-DifferentialEquations.ConvergenceSimulation
+DiffEqDevTools.ConvergenceSimulation
 ```
 
 ## Plot Functions
@@ -37,6 +37,6 @@ be used in this command. Please see the Plots.jl documentation for more informat
 
 ```@docs
 Base.length(::ConvergenceSimulation)
-DifferentialEquations.calc𝒪estimates
-DifferentialEquations.test_convergence
+DiffEqDevTools.calc𝒪estimates
+DiffEqDevTools.test_convergence
 ```

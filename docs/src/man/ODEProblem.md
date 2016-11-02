@@ -15,7 +15,7 @@ arbitrary matrices / higher dimension tensors as well.
 ## Problem Type
 
 ```@docs
-DifferentialEquations.ODEProblem
+OrdinaryDiffEq.ODEProblem
 ```
 
 ## Example Problems
@@ -30,17 +30,16 @@ sol = solve(prob,[0;1])
 ```
 
 ```@docs
-DifferentialEquations.prob_ode_linear
-DifferentialEquations.prob_ode_2Dlinear
-DifferentialEquations.prob_ode_bigfloatlinear
-DifferentialEquations.prob_ode_bigfloat2Dlinear
-DifferentialEquations.prob_ode_large2Dlinear
-DifferentialEquations.prob_ode_2Dlinear_notinplace
-DifferentialEquations.prob_ode_threebody
-DifferentialEquations.prob_ode_pleides
-DifferentialEquations.prob_ode_vanderpol
-DifferentialEquations.prob_ode_vanderpol_stiff
-DifferentialEquations.prob_ode_rober
-DifferentialEquations.prob_ode_lorenz
-DifferentialEquations.prob_ode_rigidbody
+DiffEqProblemLibrary.prob_ode_linear
+DiffEqProblemLibrary.prob_ode_2Dlinear
+DiffEqProblemLibrary.prob_ode_bigfloatlinear
+DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear
+DiffEqProblemLibrary.prob_ode_large2Dlinear
+DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace
+DiffEqProblemLibrary.prob_ode_threebody
+DiffEqProblemLibrary.prob_ode_pleides
+DiffEqProblemLibrary.prob_ode_vanderpol
+DiffEqProblemLibrary.prob_ode_vanderpol_stiff
+DiffEqProblemLibrary.prob_ode_rober
+DiffEqProblemLibrary.prob_ode_rigidbody
 ```

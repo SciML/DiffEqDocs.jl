@@ -1,8 +1,8 @@
 # Extra Functions
 
 ```@docs
-DifferentialEquations.getNoise
-DifferentialEquations.numparameters
-DifferentialEquations.Tableau
-DifferentialEquations.DEProblem
+FiniteElementDiffEq.getNoise
+DiffEqBase.numparameters
+DiffEqBase.Tableau
+DiffEqBase.DEProblem
 ```

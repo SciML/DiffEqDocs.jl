@@ -1,8 +1,12 @@
-using Documenter, DifferentialEquations
+using Documenter, AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
+      OrdinaryDiffEq,DiffEqProblemLibrary,StokesDiffEq,DiffEqParamEstim,
+      FiniteElementDiffEq
 
-makedocs(modules=[DifferentialEquations],
+makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
+                  OrdinaryDiffEq,DiffEqProblemLibrary,StokesDiffEq,
+                  DiffEqParamEstim,FiniteElementDiffEq],
          doctest=false, clean=true,
-         format =Documenter.Formats.HTML,
+         format =:html,
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[

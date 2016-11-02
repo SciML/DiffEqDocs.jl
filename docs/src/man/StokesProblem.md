@@ -3,7 +3,7 @@
 ## Problem Type
 
 ```@docs
-DifferentialEquations.StokesProblem
+StokesDiffEq.StokesProblem
 ```
 
 ## Example Problems
@@ -11,6 +11,6 @@ DifferentialEquations.StokesProblem
 Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)
 
 ```@docs
-DifferentialEquations.prob_stokes_dirichletzero
-DifferentialEquations.prob_stokes_homogenous
+StokesDiffEq.prob_stokes_dirichletzero
+StokesDiffEq.prob_stokes_homogenous
 ```

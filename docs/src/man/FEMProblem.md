@@ -19,13 +19,13 @@ Below are the definitions of the types which specify problems. Some general note
 ## Poisson Equation Problem
 
 ```@docs
-PoissonProblem
+FiniteElementDiffEq.PoissonProblem
 ```
 
 ## Heat Equation Problem
 
 ```@docs
-HeatProblem
+FiniteElementDiffEq.HeatProblem
 ```
 
 ## Example Problems
@@ -36,24 +36,24 @@ Examples problems can be found in [src/premades/premade_problems.jl](https://git
 ### Poisson Equation
 
 ```@docs
-DifferentialEquations.prob_poisson_birthdeathinteractingsystem
-DifferentialEquations.prob_poisson_noisywave
-DifferentialEquations.prob_poisson_birthdeathsystem
-DifferentialEquations.prob_poisson_wave
-DifferentialEquations.prob_poisson_birthdeath
+DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem
+DiffEqProblemLibrary.prob_poisson_noisywave
+DiffEqProblemLibrary.prob_poisson_birthdeathsystem
+DiffEqProblemLibrary.prob_poisson_wave
+DiffEqProblemLibrary.prob_poisson_birthdeath
 ```
 
 ### Heat Equation
 
 ```@docs
-DifferentialEquations.prob_femheat_birthdeathsystem
-DifferentialEquations.prob_femheat_birthdeathinteractingsystem
-DifferentialEquations.prob_femheat_diffuse
-DifferentialEquations.prob_femheat_stochasticbirthdeath
-DifferentialEquations.prob_femheat_moving
-DifferentialEquations.heatProblemExample_gierermeinhardt
-DifferentialEquations.heatProblemExample_grayscott
-DifferentialEquations.prob_femheat_pure
-DifferentialEquations.prob_femheat_diffusionconstants
-DifferentialEquations.prob_femheat_birthdeath
+DiffEqProblemLibrary.prob_femheat_birthdeathsystem
+DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem
+DiffEqProblemLibrary.prob_femheat_diffuse
+DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath
+DiffEqProblemLibrary.prob_femheat_moving
+DiffEqProblemLibrary.heatProblemExample_gierermeinhardt
+DiffEqProblemLibrary.heatProblemExample_grayscott
+DiffEqProblemLibrary.prob_femheat_pure
+DiffEqProblemLibrary.prob_femheat_diffusionconstants
+DiffEqProblemLibrary.prob_femheat_birthdeath
 ```

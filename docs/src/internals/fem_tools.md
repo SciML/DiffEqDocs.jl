@@ -3,24 +3,24 @@
 ## Mesh Tools
 
 ```@docs
-DifferentialEquations.CFLν
-DifferentialEquations.CFLμ
+FiniteElementDiffEq.CFLν
+FiniteElementDiffEq.CFLμ
 ```
 
 ## Solver Tools
 
 ```@docs
-DifferentialEquations.∇basis
-DifferentialEquations.quadfbasis
-DifferentialEquations.quadpts
-DifferentialEquations.quadpts1
-DifferentialEquations.assemblematrix
-DifferentialEquations.∇u
+FiniteElementDiffEq.∇basis
+FiniteElementDiffEq.quadfbasis
+FiniteElementDiffEq.quadpts
+FiniteElementDiffEq.quadpts1
+FiniteElementDiffEq.assemblematrix
+FiniteElementDiffEq.∇u
 ```
 
 ## Error Tools
 
 ```@docs
-DifferentialEquations.getH1error
-DifferentialEquations.getL2error
+FiniteElementDiffEq.getH1error
+FiniteElementDiffEq.getL2error
 ```

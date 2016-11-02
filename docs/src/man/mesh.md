@@ -22,33 +22,33 @@ Element Methods by Long Chen](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.p
 ## Mesh Type
 
 ```@docs
-DifferentialEquations.FEMmesh
-DifferentialEquations.SimpleMesh
-DifferentialEquations.Mesh
+FiniteElementDiffEq.FEMmesh
+FiniteElementDiffEq.SimpleMesh
+DiffEqBase.Mesh
 ```
 
 ## Mesh Generation Functions
 
 ```@docs
-DifferentialEquations.findboundary
-DifferentialEquations.setboundary
-DifferentialEquations.fem_squaremesh
-DifferentialEquations.notime_squaremesh
-DifferentialEquations.parabolic_squaremesh
-Base.size(::DifferentialEquations.FDMMesh)
+FiniteElementDiffEq.findboundary
+FiniteElementDiffEq.setboundary
+FiniteElementDiffEq.fem_squaremesh
+FiniteElementDiffEq.notime_squaremesh
+FiniteElementDiffEq.parabolic_squaremesh
+Base.size(::StokesDiffEq.FDMMesh)
 ```
 
 ## Example Meshes
 
 ```@docs
-DifferentialEquations.meshExample_bunny
-DifferentialEquations.meshExample_flowpastcylindermesh
-DifferentialEquations.meshExample_lakemesh
-DifferentialEquations.meshExample_Lshapemesh
-DifferentialEquations.meshExample_Lshapeunstructure
-DifferentialEquations.meshExample_oilpump
-DifferentialEquations.meshExample_wavymesh
-DifferentialEquations.meshExample_wavyperturbmesh
+DiffEqProblemLibrary.meshExample_bunny
+DiffEqProblemLibrary.meshExample_flowpastcylindermesh
+DiffEqProblemLibrary.meshExample_lakemesh
+DiffEqProblemLibrary.meshExample_Lshapemesh
+DiffEqProblemLibrary.meshExample_Lshapeunstructure
+DiffEqProblemLibrary.meshExample_oilpump
+DiffEqProblemLibrary.meshExample_wavymesh
+DiffEqProblemLibrary.meshExample_wavyperturbmesh
 ```
 
 ## Plot Functions

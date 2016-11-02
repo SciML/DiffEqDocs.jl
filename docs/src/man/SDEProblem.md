@@ -16,7 +16,7 @@ of `g`s can also be defined to determine an SDE of higher Ito dimension.
 ## Problem Type
 
 ```@docs
-DifferentialEquations.SDEProblem
+StochasticDiffEq.SDEProblem
 ```
 
 ## Example Problems
@@ -24,11 +24,11 @@ DifferentialEquations.SDEProblem
 Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)
 
 ```@docs
-DifferentialEquations.prob_sde_linear
-DifferentialEquations.prob_sde_2Dlinear
-DifferentialEquations.prob_sde_wave
-DifferentialEquations.prob_sde_lorenz
-DifferentialEquations.prob_sde_cubic
-DifferentialEquations.prob_sde_additive
-DifferentialEquations.prob_sde_additivesystem
+DiffEqProblemLibrary.prob_sde_linear
+DiffEqProblemLibrary.prob_sde_2Dlinear
+DiffEqProblemLibrary.prob_sde_wave
+DiffEqProblemLibrary.prob_sde_lorenz
+DiffEqProblemLibrary.prob_sde_cubic
+DiffEqProblemLibrary.prob_sde_additive
+DiffEqProblemLibrary.prob_sde_additivesystem
 ```

@@ -19,5 +19,5 @@ A few extra arguments are provided addition to the Plots.jl keyword arguments. T
 ## Extra Plot Functions
 
 ```@docs
-DifferentialEquations.animate
+FiniteElementDiffEq.animate
 ```
