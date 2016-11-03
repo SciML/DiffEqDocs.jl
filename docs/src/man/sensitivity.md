@@ -70,7 +70,7 @@ prob = ODELocalSensitivityProblem(f,[1.0;1.0])
 This generates a problem which the ODE solvers can solve:
 
 ```julia
-sol = solve(prob,[0;30],alg=:DP8)
+sol = solve(prob,[0;10],alg=:DP8)
 ```
 
 Note that the solution is the standard ODE system and the sensitivity system combined.
@@ -95,3 +95,18 @@ This means that `da[i][1]` is the derivative of the `x(t)` by the parameter `a`
 at time `sol.t[i]`. Note that all of the functionality available to ODE solutions
 is available in this case, including interpolations and plot recipes (the recipes
 will plot the expanded system).
+
+Since the closure returns a vector of vectors, it can be helpful to use
+`vecvec_to_mat` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
+in order to plot the solution.
+
+```julia
+plot(sol.t,vecvec_to_mat(da),lw=3)
+```
+
+![Sensitivity Solution](../assets/sensitivityplot.png)
+
+Here we see that there is a periodicity to the sensitivity which matches
+the periodicity of the Lotka-Volterra solutions. However, as time goes on the
+sensitivity increases. This matches the analysis of Wilkins in Sensitivity
+Analysis for Oscillating Dynamical Systems.

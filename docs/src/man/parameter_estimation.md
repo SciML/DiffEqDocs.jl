@@ -64,6 +64,13 @@ data = vecvec_to_mat(randomized)
 Here we used `vecvec_to_mat` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
 to turn the result of an ODE to a matrix.
 
+If we plot the solution with the parameter at `a=1.42`, we get the following:
+
+![Parameter Estimation Not Fit](../assets/paramest_notfit.png)
+
+Notice that after one period this solution begins to drift very far off: this
+problem is sensitive to the choice of `a`.
+
 To build the objective function for Optim.jl, we simply call the `build_optim_objective`
 funtion:
 
@@ -80,6 +87,13 @@ result = optimize(cost_function, 0.0, 10.0)
 ```
 
 This returns `result.minimum[1]==1.5` as the best parameter to match the data.
+When we plot the fitted equation on the data, we receive the following:
+
+![Parameter Estimation Fit](../assets/paramest_fit.png)
+
+Thus we see that after fitting, the lines match up with the generated data and
+receive the right parameter value.
+
 We can also use the multivariate optimization functions. For example, we can use
 the `BFGS` algorithm to optimize the parameter starting at `a=1.42` using
 
