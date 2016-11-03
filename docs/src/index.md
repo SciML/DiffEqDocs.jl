@@ -133,6 +133,7 @@ Pages = [
     "man/callback_functions.md",
     "man/plot.md",
     "man/parameter_estimation.md",
+    "man/sensitivity.md",
     "man/function_definition_macros.md",
     "man/benchmarks.md",
     "man/convergence.md",

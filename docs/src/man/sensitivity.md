@@ -54,7 +54,7 @@ actual ODE system.
 ### Defining a Sensitivity Problem
 
 To define a sensitivity problem, simply use the `ODELocalSensitivityProblem` type
-instead of an ODE type. Note that this requires a ParameterizedFunction with a
+instead of an ODE type. Note that this requires a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl) with a
 Jacobian. For example, we generate an ODE with the sensitivity equations attached
 for the Lotka-Volterra equations by:
 
