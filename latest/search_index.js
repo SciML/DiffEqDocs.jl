@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Manual",
     "category": "section",
-    "text": "Pages = [\n    \"man/overview.md\",\n    \"man/ODEProblem.md\",\n    \"man/SDEProblem.md\",\n    \"man/FEMProblem.md\",\n    \"man/StokesProblem.md\",\n    \"man/mesh.md\",\n    \"man/solution.md\",\n    \"man/output_specification.md\",\n    \"man/callback_functions.md\",\n    \"man/plot.md\",\n    \"man/parameter_estimation.md\",\n    \"man/function_definition_macros.md\",\n    \"man/benchmarks.md\",\n    \"man/convergence.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
+    "text": "Pages = [\n    \"man/overview.md\",\n    \"man/ODEProblem.md\",\n    \"man/SDEProblem.md\",\n    \"man/FEMProblem.md\",\n    \"man/StokesProblem.md\",\n    \"man/mesh.md\",\n    \"man/solution.md\",\n    \"man/output_specification.md\",\n    \"man/callback_functions.md\",\n    \"man/plot.md\",\n    \"man/parameter_estimation.md\",\n    \"man/sensitivity.md\",\n    \"man/function_definition_macros.md\",\n    \"man/benchmarks.md\",\n    \"man/convergence.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -1453,7 +1453,39 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Examples",
     "category": "section",
-    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = [0;10.0]\nprob = ODEProblem(f,u0)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:t = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)Here we used vecvec_to_mat from RecursiveArrayTools.jl to turn the result of an ODE to a matrix.To build the objective function for Optim.jl, we simply call the build_optim_objective funtion:cost_function = build_optim_objective(prob,tspan,t,data,alg=:Vern6)Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:result = optimize(cost_function, 0.0, 10.0)This returns result.minimum[1]==1.5 as the best parameter to match the data. We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 usingresult = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condtion. For more details on using Optim.jl, see the documentation for Optim.jl."
+    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = [0;10.0]\nprob = ODEProblem(f,u0)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:t = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)Here we used vecvec_to_mat from RecursiveArrayTools.jl to turn the result of an ODE to a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_optim_objective funtion:cost_function = build_optim_objective(prob,tspan,t,data,alg=:Vern6)Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:result = optimize(cost_function, 0.0, 10.0)This returns result.minimum[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 usingresult = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condtion. For more details on using Optim.jl, see the documentation for Optim.jl."
+},
+
+{
+    "location": "man/sensitivity.html#",
+    "page": "Sensitivity Analysis",
+    "title": "Sensitivity Analysis",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/sensitivity.html#Sensitivity-Analysis-1",
+    "page": "Sensitivity Analysis",
+    "title": "Sensitivity Analysis",
+    "category": "section",
+    "text": "Sensitivity analysis for ODE models is provided by the DiffEq suite."
+},
+
+{
+    "location": "man/sensitivity.html#Local-Sensitivity-Analysis-1",
+    "page": "Sensitivity Analysis",
+    "title": "Local Sensitivity Analysis",
+    "category": "section",
+    "text": "The local sensitivity of the solution to a parameter is defined by how much the solution would change by changes in the parameter, i.e. the sensitivity of the ith independent variable to the jth parameter is fracpartial ypartial p_j.The local sensitivity is computed using the sensitivity ODE:fracddtfracpartial upartial p_j=fracpartial fpartial yfracpartial ypartial p_j+fracpartial fpartial p_j=Jcdot S_j+F_jwhereJ=left(beginarraycccc\nfracpartial f_1partial y_1  fracpartial f_1partial y_2  cdots  fracpartial f_1partial y_k\nfracpartial f_2partial y_1  fracpartial f_2partial y_2  cdots  fracpartial f_2partial y_k\ncdots  cdots  cdots  cdots\nfracpartial f_kpartial y_1  fracpartial f_kpartial y_2  cdots  fracpartial f_kpartial y_k\nendarrayright)is the Jacobian of the system,F_j=left(beginarrayc\nfracpartial f_1partial p_j\nfracpartial f_2partial p_j\nvdots\nfracpartial f_kpartial p_j\nendarrayright)are the parameter derivatives, andS_j=left(beginarrayc\nfracpartial y_1partial p_j\nfracpartial y_2partial p_j\nvdots\nfracpartial y_kpartial p_j\nendarrayright)is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system."
+},
+
+{
+    "location": "man/sensitivity.html#Defining-a-Sensitivity-Problem-1",
+    "page": "Sensitivity Analysis",
+    "title": "Defining a Sensitivity Problem",
+    "category": "section",
+    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0])This generates a problem which the ODE solvers can solve:sol = solve(prob,[0;10],alg=:DP8)Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecvec_to_mat([sol[i][1:sol.prob.numvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecvec_to_mat from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecvec_to_mat(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
 },
 
 {
