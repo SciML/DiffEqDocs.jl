@@ -127,8 +127,8 @@ f(t,u) = A*u
 prob = ODEProblem(f,u0)
 ```
 
-Here our ODE is on a 4x2 matrix. Since we are using .\*, this is 8 independent
-ODEs, but you can do whatever you want. To solve the ODE, we do the same steps
+Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by
+multiplication by `A`. To solve the ODE, we do the same steps
 as before.
 
 ```julia

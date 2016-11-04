@@ -18,6 +18,16 @@ is the data, which are the values where are known, in order to be optimized agai
 Optionally, one can choose a loss function from LossFunctions.jl or use the default
 of an L2 loss. The keyword arguments are passed to the ODE solver.
 
+### build_lsoptim_objective
+
+`build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
+
+```julia
+build_lsoptim_objective(prob::DEProblem,tspan,t,data;kwargs...)
+```
+
+The arguments are the same as `build_optim_objective`.
+
 ### lm_fit
 
 `lm_fit` is a function for fitting the parameters of an ODE using the Levenberg-Marquardt
