@@ -101,7 +101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations (ODE)",
     "title": "Systems of Equations",
     "category": "section",
-    "text": "We can also solve systems of equations. DifferentialEquations.jl can handle any size problem, so instead of showing it for a vector, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\nf(t,u) = A*u\nprob = ODEProblem(f,u0)Here our ODE is on a 4x2 matrix. Since we are using .*, this is 8 independent ODEs, but you can do whatever you want. To solve the ODE, we do the same steps as before.sol = solve(prob,tspan)\nplot(sol)(Image: ODE System Solution)"
+    "text": "We can also solve systems of equations. DifferentialEquations.jl can handle any size problem, so instead of showing it for a vector, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\nf(t,u) = A*u\nprob = ODEProblem(f,u0)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob,tspan)\nplot(sol)(Image: ODE System Solution)"
 },
 
 {
@@ -1438,6 +1438,14 @@ var documenterSearchIndex = {"docs": [
     "title": "build_optim_objective",
     "category": "section",
     "text": "build_optim_objective builds an objective function to be used with Optim.jl.build_optim_objective(prob::DEProblem,tspan,t,data;loss_func = L2DistLoss,kwargs...)The first argument is the DEProblem to solve. Second is the tspan. Next is t, the set of timepoints which the data is found at. The last argument which is required is the data, which are the values where are known, in order to be optimized against. Optionally, one can choose a loss function from LossFunctions.jl or use the default of an L2 loss. The keyword arguments are passed to the ODE solver."
+},
+
+{
+    "location": "man/parameter_estimation.html#build_lsoptim_objective-1",
+    "page": "Parameter Estimation",
+    "title": "build_lsoptim_objective",
+    "category": "section",
+    "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob::DEProblem,tspan,t,data;kwargs...)The arguments are the same as build_optim_objective."
 },
 
 {
