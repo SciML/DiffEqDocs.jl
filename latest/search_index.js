@@ -217,19 +217,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#DiffEqBase.solve-Tuple{DiffEqBase.AbstractODEProblem,AbstractArray}",
-    "page": "Ordinary Differential Equation Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "solve(prob::ODEProblem,tspan)\n\nSolves the ODE defined by prob on the interval tspan. If not given, tspan defaults to [0,1].\n\nKeyword Arguments\n\nΔt: Sets the initial stepsize. Defaults to an automatic choice.\nsave_timeseries: Saves the result at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1.\ntableau: The tableau for an :ExplicitRK algorithm. Defaults to a Dormand-Prince 4/5 method.\nadaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nγ - The risk-factor γ in the q equation for adaptive timestepping. Default is .9.\ntimechoicealg - Chooses the method which is used for making the adaptive timestep choices. Default is :Lund for Lund stabilization (PI stepsize control). The other option is :Simple for the standard simple error-based rejection\nβ - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Default is 10.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\nmaxiters - Maximum number of iterations before stopping. Defaults to 1e9.\nΔtmax - Maximum Δt for adaptive timestepping. Defaults to half the timespan.\nΔtmin - Minimum Δt for adaptive timestepping. Defaults to 1e-10.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ninternalnorm - The norm for which error estimates are calculated. Default is 2.\nprogressbar - Turns on/off the Juno progressbar. Defualt is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nalg: The solver algorithm. Defult is :DP5. Note that any keyword argument available in the external solvers are accessible via keyword arguemnts. For example, for the ODEInterface.jl algorithms, one can specify SSBETA=0.03 as a keyword argument and it will do as it states in the ODEInterface.jl documentation. Common options such as MAXSS (max stepsize) are aliased to one can use the DifferentialEquations.jl syntax Δtmax or MAXSS. The possibilities for the solvers are:\n\nFor a full list of algorithms, please see the solver documentation.\n\n\n\n"
-},
-
-{
     "location": "solvers/ode_solve.html#Ordinary-Differential-Equation-Solvers-1",
     "page": "Ordinary Differential Equation Solvers",
     "title": "Ordinary Differential Equation Solvers",
     "category": "section",
-    "text": "solve(::AbstractODEProblem,::AbstractArray)"
+    "text": "solve(prob::ODEProblem,tspan)Solves the ODE defined by prob on the interval tspan. If not given, tspan defaults to [0,1]."
+},
+
+{
+    "location": "solvers/ode_solve.html#Keyword-Arguments-1",
+    "page": "Ordinary Differential Equation Solvers",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "Δt: Sets the initial stepsize. Defaults to an automatic choice.\nsave_timeseries: Saves the result at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1.\ntableau: The tableau for an :ExplicitRK algorithm. Defaults to a Dormand-Prince 4/5 method.\nadaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nγ - The risk-factor γ in the q equation for adaptive timestepping. Default is .9.\ntimechoicealg - Chooses the method which is used for making the adaptive timestep choices. Default is :Lund for Lund stabilization (PI stepsize control). The other option is :Simple for the standard simple error-based rejection\nβ - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Default is 10.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\nmaxiters - Maximum number of iterations before stopping. Defaults to 1e9.\nΔtmax - Maximum Δt for adaptive timestepping. Defaults to half the timespan.\nΔtmin - Minimum Δt for adaptive timestepping. Defaults to 1e-10.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ninternalnorm - The norm function internalnorm(u) which error estimates are calculated. Default is Hairer's adjusted 2-norm.\nprogressbar - Turns on/off the Juno progressbar. Defualt is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nalg: The solver algorithm. Defult is :DP5. Note that any keyword argument available in the external solvers are accessible via keyword arguments. For example, for the ODEInterface.jl algorithms, one can specify SSBETA=0.03 as a keyword argument and it will do as it states in the ODEInterface.jl documentation. Common options such as MAXSS (max stepsize) are aliased to one can use the DifferentialEquations.jl syntax Δtmax or MAXSS."
 },
 
 {
@@ -253,7 +253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For mildly stiff problems which are not oscillatory, :Rosenbrock32 is a good choice. If there exist large oscillations, then this form (local extrapolated) is not L-stable, and thus it is recommended that you use :Rosenbrock23 which is L-stable (but Order 2 instead of 3). As a native DifferentialEquations.jl solver, Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), :Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use :radau or :cvode_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation)"
+    "text": "For mildly stiff problems it is recommended that you use :Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), :Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use :radau or :cvode_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation)"
 },
 
 {
