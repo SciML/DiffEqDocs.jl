@@ -41,6 +41,7 @@ and then we pass this information to the solver and plot:
 ```julia
 #We can plot using the classic Euler-Maruyama algorithm as follows:
 sol =solve(prob::SDEProblem,tspan,Δt=Δt,alg=:EM)
+using Plots
 plot(sol,plot_analytic=true)
 ```
 

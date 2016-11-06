@@ -47,8 +47,9 @@ sol = solve(fem_mesh,pdeProb)
 solve takes in a mesh and a PoissonProblem and uses the solver to compute the solution. Here the solver was chosen to be GMRES. Other solvers can be found in the documentation. This returns a FEMSolution object which holds data about the solution, such as the solution values (u). To plot the solution, we use the command
 
 ```julia
+using Plots
 plot(sol::FEMSolution)
-Plots.gui()
+gui()
 ```
 
 Here is the plot shown against the analytical solution to show the accuracy:

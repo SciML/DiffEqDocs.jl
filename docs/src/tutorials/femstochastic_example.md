@@ -54,6 +54,7 @@ T = 5
 fem_mesh = parabolic_squaremesh([0 1 0 1],Δx,Δt,T,:neumann)
 
 sol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler,save_timeseries=true,solver=:LU)
+using Plots
 animate(sol::FEMSolution;zlim=(0,3),cbar=false)
 ```
 

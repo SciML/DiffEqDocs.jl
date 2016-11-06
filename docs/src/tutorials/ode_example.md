@@ -71,6 +71,7 @@ Plotting commands are provided via a recipe to Plots.jl. To plot the solution
 object, simply call plot:
 
 ```julia
+using Plots
 plot(sol)
 ```
 

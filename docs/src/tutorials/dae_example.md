@@ -67,6 +67,7 @@ and plot:
 ```julia
 tspan = [0;100000]
 sol = solve(prob,tspan)
+using Plots
 plot(sol)
 ```
 
