@@ -55,7 +55,7 @@ in `saveat` (matching Sundial's default behavior).
 Another way to specify an output location is to add that value to `tspan`. For example,
 we can force the solver to solve at `0.5` via `tspan=[0,0.5,1]`. However, notice that
 this will require that the solver actually hits `t=0.5`. In some cases this can slow
-down the solver by lowering the `Δt` leading to extra steps. In some cases, this may
+down the solver by lowering the `dt` leading to extra steps. In some cases, this may
 be advantagous. For example, if you know that there is a large discontinuity at
 `t=0.5`, using `tspan=[0,0.5,1]` will force the solver to first solve on `[0,0.5]`,
 and then continue to solve on `[0.5,1]`. This will give a much better approximation

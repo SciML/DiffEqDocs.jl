@@ -25,14 +25,14 @@ prob = ODEProblem(f,u₀)
 Then we setup some parameters:
 
 ```julia
-Δt = 1/2^(4) #The initial step size. It will automatically determined if not given.
+dt = 1/2^(4) #The initial step size. It will automatically determined if not given.
 tspan = [0,1] # The timespan. This is the default if not given.
 ```
 
 We then send these items to the solver.
 
 ```julia
-sol =solve(prob::ODEProblem,tspan,Δt=Δt,alg=:Euler)
+sol =solve(prob::ODEProblem,tspan,dt=dt,alg=:Euler)
 ```
 
 To see what's in the solution object, we can print it:
@@ -101,7 +101,7 @@ like the 7th order Verner Efficient method, turn off adaptive timestepping, and
 set the initial timestep to the previously set value via:
 
 ```julia
-sol =solve(prob::ODEProblem,tspan,Δt=Δt,alg=:Vern7,adaptive=false)
+sol =solve(prob::ODEProblem,tspan,dt=dt,alg=:Vern7,adaptive=false)
 plot(sol)
 ```
 

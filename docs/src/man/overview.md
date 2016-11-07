@@ -16,7 +16,7 @@ Next, for PDE problems, one generates a mesh. For example, if one wants to solve
 in the parabolic cylinder of the unit square, i.e. ``[0,1]^2 \times [0,T]``, then one
 has to discretize this. Tools within the package will generate meshes from
 general characteristics. For example, most tools require only specifying the
-general shape, Δx, Δt, and T and will generate the mesh.
+general shape, dx, dt, and T and will generate the mesh.
 
 One then passes the mesh and the problem to the solver interface. The solver then
 solves the differential equation using the some numerical methods (which can be

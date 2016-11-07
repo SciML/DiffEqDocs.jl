@@ -29,7 +29,7 @@ setups = [Dict(:alg=>:DP5)
           Dict(:alg=>:dopri5)]
 prob = DifferentialEquations.prob_ode_large2Dlinear
 names = ["DifferentialEquations";"ODE";"ODEInterface"]
-shoot = ode_shootout(prob,tspan,setups;Δt=1/2^(10),names=names)
+shoot = ode_shootout(prob,tspan,setups;dt=1/2^(10),names=names)
 ```
 
 Note that keyword arguments applied to ode_shootout are applie dot every run, so
@@ -67,10 +67,10 @@ algorithms, you can make a WorkPrecisionSet. To do so, you pass the setups
 into the function as well:
 
 ```julia
-wp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;Δt=1/2^4,numruns=2)
+wp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;dt=1/2^4,numruns=2)
 setups = [Dict(:alg=>:RK4);Dict(:alg=>:Euler);Dict(:alg=>:BS3);
           Dict(:alg=>:Midpoint);Dict(:alg=>:BS5);Dict(:alg=>:DP5)]
-wp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;Δt=1/2^4,numruns=2)
+wp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;dt=1/2^4,numruns=2)
 ```
 
 Both of these types have a plot recipe to produce a work-precision diagram,

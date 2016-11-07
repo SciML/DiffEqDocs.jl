@@ -31,11 +31,11 @@ end,α=>2π,β=>8π*π)
 
 The linebreaks are not required but I think it makes it more legible!
 
-Here we chose the dirichlet boundary condition `gD` to give the theoretical solution.  Other example problems can be found in [src/examples/exampleProblems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/src/premades/premade_problems.jl). To solve this problem, we first have to generate a mesh. Here we will simply generate a mesh of triangles on the square [0,1]x[0,1] with Δx=2^(-5). To do so, we use the code:
+Here we chose the dirichlet boundary condition `gD` to give the theoretical solution.  Other example problems can be found in [src/examples/exampleProblems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/src/premades/premade_problems.jl). To solve this problem, we first have to generate a mesh. Here we will simply generate a mesh of triangles on the square [0,1]x[0,1] with dx=2^(-5). To do so, we use the code:
 
 ```julia
-Δx = 1//2^(5)
-fem_mesh = notime_squaremesh([0 1 0 1],Δx,:dirichlet)
+dx = 1//2^(5)
+fem_mesh = notime_squaremesh([0 1 0 1],dx,:dirichlet)
 ```
 
 Note that by specifying :dirichlet our boundary conditions is set on all boundaries to dirichlet. This gives an FEMmesh object which stores a finite element mesh in the same layout as [iFEM](http://www.math.uci.edu/~chenlong/programming.html). Notice this code shows that the package supports the use of rationals in meshes. Other numbers such as floating point and integers can be used as well. Finally, to solve the equation we use

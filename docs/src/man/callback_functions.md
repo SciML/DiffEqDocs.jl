@@ -104,16 +104,16 @@ then the ODE solver will return the solution the first time the ball hits the
 ground. Whether it will save the "overshot" point or the "true end" depends on
 whether rootfinding is used.
 
-Lastly, you can also tell the solver to decrease Δt after the event occurs.
+Lastly, you can also tell the solver to decrease dt after the event occurs.
 This can be helpful if the discontinuity changes the problem immensely.
 Using the full power of the macro, we can define an event as
 
 ```julia
-const Δt_safety = 1 # Multiplier to Δt after an event
+const dt_safety = 1 # Multiplier to dt after an event
 const interp_points = 10
 const terminate_on_event = false
 callback = @ode_callback begin
-  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event Δt_safety
+  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event dt_safety
 end
 ```
 
@@ -184,10 +184,10 @@ ODE system. Then the following code sets the new protein concentrations. Now we
 can solve:
 
 ```julia
-const Δt_safety = 1
+const dt_safety = 1
 const interp_points = 10
 callback = @ode_callback begin
-  @ode_event event_f apply_event! interp_points Δt_safety
+  @ode_event event_f apply_event! interp_points dt_safety
 end
 u0 = [0.2]
 prob = ODEProblem(f,u0)
@@ -239,11 +239,11 @@ The macro defines a function which is written as follows:
 ```julia
 macro ode_callback(ex)
   esc(quote
-    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtprev,Δt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
+    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
       reeval_fsal = false
       event_occured = false
       $(ex)
-      cursaveat,Δt,t,T,reeval_fsal
+      cursaveat,dt,t,T,reeval_fsal
     end
   end)
 end
@@ -261,14 +261,14 @@ reasons it's usually recommended to use the event handling macro, though this ki
 of code will allow you handle pretty much anything!
 
 ```julia
-manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtprev,Δt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
+manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
   reeval_fsal = false
   event_occured = false
-  Δt_safety = 1
+  dt_safety = 1
   interp_points = 10
 
   # Event Handling
-  ode_addsteps!(k,tprev,uprev,Δtprev,alg,f)
+  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
   Θs = linspace(0,1,interp_points)
   interp_index = 0
   # Check if the event occured
@@ -277,7 +277,7 @@ manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtpr
     interp_index = interp_points
   elseif interp_points!=0 # Use the interpolants for safety checking
     for i in 2:length(Θs)-1
-      if event_f(t+Δt*Θs[i],ode_interpolant(Θs[i],Δtprev,uprev,u,kprev,k,alg))<0
+      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0
         event_occured = true
         interp_index = i
         break
@@ -292,20 +292,20 @@ manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtpr
       initial_Θ = [Θs[interp_index]] # Start at the closest
     end
     find_zero = (Θ,val) -> begin
-      val[1] = event_f(t+Θ[1]*Δt,ode_interpolant(Θ[1],Δtprev,uprev,u,kprev,k,alg))
+      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))
     end
     res = nlsolve(find_zero,initial_Θ)
-    val = ode_interpolant(res.zero[1],Δtprev,uprev,u,kprev,k,alg)
+    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)
     for i in eachindex(u)
       u[i] = val[i]
     end
-    Δtprev *= res.zero[1]
-    t = tprev + Δtprev
+    dtprev *= res.zero[1]
+    t = tprev + dtprev
 
     if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
       resize!(k,kshortsize) # Reset k for next step
       k = typeof(k)() # Make a local blank k for saving
-      ode_addsteps!(k,tprev,uprev,Δtprev,alg,f)
+      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
     elseif typeof(u) <: Number
       k = f(t,u)
     else
@@ -328,9 +328,9 @@ manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,Δtpr
     if fsal
       reeval_fsal = true
     end
-    Δt *= Δt_safety # Safety Δt change
+    dt *= dt_safety # Safety dt change
   end
 
-  cursaveat,Δt,t,T,reeval_fsal
+  cursaveat,dt,t,T,reeval_fsal
 end
 ```

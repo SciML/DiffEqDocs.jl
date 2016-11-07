@@ -6,7 +6,7 @@ Solves the ODE defined by prob on the interval tspan. If not given, tspan defaul
 
 ### Keyword Arguments
 
-* `Δt`: Sets the initial stepsize. Defaults to an automatic choice.
+* `dt`: Sets the initial stepsize. Defaults to an automatic choice.
 * `save_timeseries`: Saves the result at every timeseries_steps steps. Default is true.
 * `timeseries_steps`: Denotes how many steps between saving a value for the timeseries. Defaults to 1.
 * `tableau`: The tableau for an `:ExplicitRK` algorithm. Defaults to a Dormand-Prince 4/5 method.
@@ -20,8 +20,8 @@ Solves the ODE defined by prob on the interval tspan. If not given, tspan defaul
 * `abstol` - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.
 * `reltol` - Relative tolerance in adaptive timestepping. Defaults to 1e-6.
 * `maxiters` - Maximum number of iterations before stopping. Defaults to 1e9.
-* `Δtmax` - Maximum Δt for adaptive timestepping. Defaults to half the timespan.
-* `Δtmin` - Minimum Δt for adaptive timestepping. Defaults to 1e-10.
+* `dtmax` - Maximum dt for adaptive timestepping. Defaults to half the timespan.
+* `dtmin` - Minimum dt for adaptive timestepping. Defaults to 1e-10.
 * `autodiff` - Turns on/off the use of autodifferentiation (via ForwardDiff) in the
   implicit solvers which use `NLsolve`. Default is true.
 * `internalnorm` - The norm function `internalnorm(u)` which error estimates are calculated.
@@ -33,7 +33,7 @@ Solves the ODE defined by prob on the interval tspan. If not given, tspan defaul
   argument available in the external solvers are accessible via keyword arguments. For example,
   for the ODEInterface.jl algorithms, one can specify `SSBETA=0.03` as a keyword argument and it will
   do as it states in the ODEInterface.jl documentation. Common options such as `MAXSS` (max stepsize)
-  are aliased to one can use the DifferentialEquations.jl syntax `Δtmax` or `MAXSS`.
+  are aliased to one can use the DifferentialEquations.jl syntax `dtmax` or `MAXSS`.
 
 ## Recommended Methods
 

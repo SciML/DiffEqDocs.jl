@@ -22,7 +22,7 @@ using DifferentialEquations
 u₀=1/2
 f(t,u) = α*u
 g(t,u) = β*u
-Δt = 1//2^(4) #The initial timestepping size. It will automatically assigned if not given.
+dt = 1//2^(4) #The initial timestepping size. It will automatically assigned if not given.
 tspan = [0,1] # The timespan. This is the default if not given.
 ```
 
@@ -40,7 +40,7 @@ and then we pass this information to the solver and plot:
 
 ```julia
 #We can plot using the classic Euler-Maruyama algorithm as follows:
-sol =solve(prob::SDEProblem,tspan,Δt=Δt,alg=:EM)
+sol =solve(prob::SDEProblem,tspan,dt=dt,alg=:EM)
 using Plots
 plot(sol,plot_analytic=true)
 ```
@@ -50,7 +50,7 @@ plot(sol,plot_analytic=true)
 We can choose a higher-order solver for a more accurate result:
 
 ```julia
-sol =solve(prob::SDEProblem,tspan,Δt=Δt,alg=:SRIW1Optimized)
+sol =solve(prob::SDEProblem,tspan,dt=dt,alg=:SRIW1Optimized)
 plot(sol,plot_analytic=true)
 ```
 

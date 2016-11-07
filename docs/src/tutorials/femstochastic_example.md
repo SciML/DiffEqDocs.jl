@@ -49,9 +49,9 @@ We use the following code create an animation of the solution:
 
 ```julia
 T = 5
-Δx = 1//2^(3)
-Δt = 1//2^(11)
-fem_mesh = parabolic_squaremesh([0 1 0 1],Δx,Δt,T,:neumann)
+dx = 1//2^(3)
+dt = 1//2^(11)
+fem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)
 
 sol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler,save_timeseries=true,solver=:LU)
 using Plots

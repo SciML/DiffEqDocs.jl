@@ -17,11 +17,11 @@ take a look at the Midpoint method's implementation:
 ```julia
 function ode_solve{uType<:Number,uEltype<:Number,N,tType<:Number,uEltypeNoUnits<:Number,rateType<:Number}(integrator::ODEIntegrator{:Midpoint,uType,uEltype,N,tType,uEltypeNoUnits,rateType})
   @ode_preamble
-  halfΔt::tType = Δt/2
+  halfdt::tType = dt/2
   @inbounds for T in Ts
     while t < T
       @ode_loopheader
-      u = u + Δt.*f(t+halfΔt,u+halfΔt.*f(t,u))
+      u = u + dt.*f(t+halfdt,u+halfdt.*f(t,u))
       @ode_numberloopfooter
     end
   end
@@ -70,7 +70,7 @@ If tests fail due to units (i.e. SIUnits), don't worry. I would be willing to fi
 that up. To do so, you have to make sure you keep separate your `rateType`s and
 your `uType`s since the rates from `f` will have units of `u` but divided by
 a unit of time. If you simply try to write these into `u`, the units part will
-fail (normally you have to multiply by a ``Δt``).
+fail (normally you have to multiply by a ``dt``).
 
 ## Adding Conditional Dependencies
 

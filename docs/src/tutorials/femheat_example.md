@@ -25,9 +25,9 @@ to 1, the domain is the unit square. To generate this mesh, we use the command
 
 ```julia
 T = 1
-Δx = 1//2^(3)
-Δt = 1//2^(7)
-fem_mesh = parabolic_squaremesh([0 1 0 1],Δx,Δt,T,:neumann)
+dx = 1//2^(3)
+dt = 1//2^(7)
+fem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)
 ```  
 
 We then call the solver
