@@ -14,9 +14,26 @@ arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type
 
-```@docs
-OrdinaryDiffEq.ODEProblem
+Wraps the data which defines an ODE problem
+
+```math
+\\frac{du}{dt} = f(t,u)
 ```
+
+with initial condition ``u0``.
+
+### Constructors
+
+`ODEProblem(f,u0,tspan)` : Defines the ODE with the specified functions and
+defines the solution if analytic is given.
+
+### Fields
+
+* `f`: The drift function in the ODE.
+* `u0`: The initial condition.
+* `isinplace`: Determines whether the function `f` uses the in-place syntax `f(t,u,du)`
+  or not, `f(t,u)`
+* `tspan`: The timespan for the problem.
 
 ## Example Problems
 

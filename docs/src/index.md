@@ -110,13 +110,27 @@ Pages = [
 Depth = 2
 ```
 
+## Problem Types
+
+These pages describe building the problem types.
+
+```@contents
+Pages = [
+  "problems/ODEProblem.md",
+  "problems/SDEProblem.md",
+  "problems/FEMProblem.md",
+  "problems/StokesProblem.md"
+]
+Depth = 2
+```
+
 ## Solver Options
 
 These pages describe the options available in the solvers.
 
 ```@contents
 Pages = [
-  "solvers/common_solvers_opts.md"
+  "solvers/common_solver_opts.md",
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
   "solvers/dae_solve.md",
@@ -159,7 +173,6 @@ Pages = [
   "internals/contributors_guide.md",
   "internals/fem_tools.md",
   "internals/extras.md",
-  "internals/solver_helpers.md",
   "internals/notes_on_algorithms.md",
   "internals/function_index.md"
 ]

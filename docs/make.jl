@@ -1,10 +1,8 @@
-using Documenter, AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
-      OrdinaryDiffEq,DiffEqProblemLibrary,StokesDiffEq,DiffEqParamEstim,
-      FiniteElementDiffEq
+using Documenter,DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
+      DiffEqProblemLibrary, StokesDiffEq
 
-makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
-                  OrdinaryDiffEq,DiffEqProblemLibrary,StokesDiffEq,
-                  DiffEqParamEstim,FiniteElementDiffEq],
+makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
+                  StokesDiffEq,OrdinaryDiffEq,DiffEqProblemLibrary],
          doctest=false, clean=true,
          format =:html,
          sitename="DifferentialEquations.jl",
@@ -19,8 +17,14 @@ makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
              "tutorials/femheat_example.md",
              "tutorials/femstochastic_example.md"
          ],
+         "Problem Types" => Any[
+           "problems/ODEProblem.md",
+           "problems/SDEProblem.md",
+           "problems/FEMProblem.md",
+           "problems/StokesProblem.md"
+         ],
          "Solver Options" => Any[
-           "solvers/common_solvers_opts.md",
+           "solvers/common_solver_opts.md",
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
            "solvers/dae_solve.md",
@@ -30,10 +34,6 @@ makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
          ],
          "Manual" => Any[
            "man/overview.md",
-           "man/ODEProblem.md",
-           "man/SDEProblem.md",
-           "man/FEMProblem.md",
-           "man/StokesProblem.md",
            "man/mesh.md",
            "man/solution.md",
            "man/output_specification.md",
@@ -51,7 +51,6 @@ makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
            "internals/contributors_guide.md",
            "internals/fem_tools.md",
            "internals/extras.md",
-           "internals/solver_helpers.md",
            "internals/notes_on_algorithms.md",
            "internals/function_index.md"
          ]

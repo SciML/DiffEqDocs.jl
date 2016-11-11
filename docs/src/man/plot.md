@@ -15,9 +15,3 @@ A few extra arguments are provided addition to the Plots.jl keyword arguments. T
   the numerically approximated solution. Default is false.
 * filename: Specifies the filename to save an animation. Only applies to the `animate` function.
 * fps: Determines the fps in an animation. Only applies to the `animate` function.
-
-## Extra Plot Functions
-
-```@docs
-FiniteElementDiffEq.animate
-```

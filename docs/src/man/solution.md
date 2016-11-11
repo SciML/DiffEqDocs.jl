@@ -18,12 +18,7 @@ to access the value at timestep `i` (if the timeseres was saved), and
 sol.t[i]
 ```
 
-to access the value of `t` at timestep `i`. The final value of the simulation,
-which is always saved, is saved to
-
-```julia
-sol.u
-```
+to access the value of `t` at timestep `i`.
 
 If the solver allows for dense output (any ODE solver) and `dense=true` was set
 for the solving (which is the default), then we can access the approximate value
@@ -36,8 +31,7 @@ sol(t)
 If the analytical solution, we also have
 
 ```julia
-sol.u_analytic # final value
-sol.timeseries_analytic # timeseries of analytical solution, saved if save_timesseries == true
+sol.u_analytic # timeseries of analytical solution
 sol.prob.analytic(t) # The analytic solution at time t
 ```
 
@@ -50,16 +44,6 @@ plot(sol)
 
 The plotting function is implemented as a recipe to Plots.jl and as such receives
 all of the features of a Plots.jl plot.
-
-## Solution Types
-
-```@docs
-FiniteElementDiffEq.FEMSolution
-DiffEqBase.DESolution
-StochasticDiffEq.SDESolution
-OrdinaryDiffEq.ODESolution
-StokesDiffEq.StokesSolution
-```
 
 ## Related Functions
 

@@ -15,9 +15,29 @@ of `g`s can also be defined to determine an SDE of higher Ito dimension.
 
 ## Problem Type
 
-```@docs
-StochasticDiffEq.SDEProblem
+Wraps the data which defines an SDE problem
+
+```math
+u = f(u,t)dt + Σgᵢ(u,t)dWⁱ
 ```
+
+with initial condition ``u0``.
+
+### Constructors
+
+`SDEProblem(f,g,u0;analytic=nothing)` : Defines the SDE with the specified functions and
+defines the solution if analytic is given.
+
+### Fields
+
+* `f`: The drift function in the SDE.
+* `g`: The noise function in the SDE.
+* `u0`: The initial condition.
+* `analytic`: A function which describes the solution.
+* `knownanalytic`: True if the solution is given.
+* `numvars`: The number of variables in the system
+* `sizeu`: The size of the initial condition (and thus `u`)
+* `noise`: The noise process applied to the noise upon generation.
 
 ## Example Problems
 
