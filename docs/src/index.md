@@ -21,23 +21,16 @@ ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives
 a powerful mixture of speed and productivity features to help you solve and
 analyze your differential equations faster.
 
-All of the algorithms are thoroughly tested to ensure accuracy. Convergence tests are included in the [test/](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/test) folder. The algorithms were also tested to show correctness with nontrivial behavior such as Turing morphogenesis. Example IJulia notebooks
-[can be found in the examples folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples). If you find any example where there seems
-to be an error, please open an issue.
+Example IJulia notebooks [can be found in the examples folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
+If you find any example where there seems to be an error, please open an issue.
 
-If you have any questions, or just want to chat about solvers/using the package, please feel free to message me in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby). For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the [Contributor's Guide](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/internals/contributors_guide.html).
+If you have any questions, or just want to chat about solvers/using the package, please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby). For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the [Contributor's Guide](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/internals/contributors_guide.html).
 
 ## Using the Package
 
 To install the package, use the following command inside the Julia REPL:
 ```julia
 Pkg.add("DifferentialEquations")
-```
-
-For all of the latest features, switch to the master branch via:
-
-```julia
-Pkg.checkout("DifferentialEquations")
 ```
 
 To load the package, use the command:
@@ -73,16 +66,15 @@ For help with choosing a solver algorithm, please see the solver options pages.
 
 ## IJulia Notebook Tutorials
 
-If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can access
-extra tutorials in the supplied IJulia notebooks via:
+You can access extra tutorials supplied in the [DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
+view them locally and interactively, by cloning the repository:
 
 ```julia
+Pkg.clone("https://github.com/JuliaDiffEq/DiffEqTutorials.jl")
 using IJulia
-notebook(dir = Pkg.dir("DifferentialEquations")*"/examples")
+notebook(dir = Pkg.dir("DiffEqTutorials"))
 ```
-
-Otherwise, these notebooks can be viewed [via the Github repository](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples)
-(note that Github renders them slightly incorrectly, so it will look better in IJulia!).
 
 ## Tutorials
 
@@ -108,6 +100,7 @@ These pages describe the options available in the solvers.
 
 ```@contents
 Pages = [
+  "solvers/common_solvers_opts.md"
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
   "solvers/dae_solve.md",

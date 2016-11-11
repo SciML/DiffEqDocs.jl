@@ -20,6 +20,7 @@ makedocs(modules=[AlgebraicDiffEq,StochasticDiffEq,DiffEqDevTools,DiffEqBase,
              "tutorials/femstochastic_example.md"
          ],
          "Solver Options" => Any[
+           "solvers/common_solvers_opts.md",
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
            "solvers/dae_solve.md",

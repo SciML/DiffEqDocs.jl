@@ -1,91 +1,72 @@
 # Ordinary Differential Equation Solvers
 
-`solve(prob::ODEProblem,tspan)`
+`solve(prob::ODEProblem,alg;kwargs)`
 
-Solves the ODE defined by prob on the interval tspan. If not given, tspan defaults to [0,1].
-
-### Keyword Arguments
-
-* `dt`: Sets the initial stepsize. Defaults to an automatic choice.
-* `save_timeseries`: Saves the result at every timeseries_steps steps. Default is true.
-* `timeseries_steps`: Denotes how many steps between saving a value for the timeseries. Defaults to 1.
-* `tableau`: The tableau for an `:ExplicitRK` algorithm. Defaults to a Dormand-Prince 4/5 method.
-* `adaptive` - Turns on adaptive timestepping for appropriate methods. Default is true.
-* `γ` - The risk-factor γ in the q equation for adaptive timestepping. Default is .9.
-* `timechoicealg` - Chooses the method which is used for making the adaptive timestep choices.
-  Default is `:Lund` for Lund stabilization (PI stepsize control). The other
-  option is `:Simple` for the standard simple error-based rejection
-* `β` - The Lund stabilization β parameter. Defaults are algorithm-dependent.
-* `qmax` - Defines the maximum value possible for the adaptive q. Default is 10.
-* `abstol` - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.
-* `reltol` - Relative tolerance in adaptive timestepping. Defaults to 1e-6.
-* `maxiters` - Maximum number of iterations before stopping. Defaults to 1e9.
-* `dtmax` - Maximum dt for adaptive timestepping. Defaults to half the timespan.
-* `dtmin` - Minimum dt for adaptive timestepping. Defaults to 1e-10.
-* `autodiff` - Turns on/off the use of autodifferentiation (via ForwardDiff) in the
-  implicit solvers which use `NLsolve`. Default is true.
-* `internalnorm` - The norm function `internalnorm(u)` which error estimates are calculated.
-  Default is Hairer's adjusted 2-norm.
-* `progressbar` - Turns on/off the Juno progressbar. Defualt is false.
-* `progress_steps` - Numbers of steps between updates of the progress bar. Default is 1000.
-
-* `alg`: The solver algorithm. Defult is `:DP5`. Note that any keyword
-  argument available in the external solvers are accessible via keyword arguments. For example,
-  for the ODEInterface.jl algorithms, one can specify `SSBETA=0.03` as a keyword argument and it will
-  do as it states in the ODEInterface.jl documentation. Common options such as `MAXSS` (max stepsize)
-  are aliased to one can use the DifferentialEquations.jl syntax `dtmax` or `MAXSS`.
+Solves the ODE defined by `prob` using the algorithm `alg`. If no algorithm is
+given, a default algorithm will be chosen.
 
 ## Recommended Methods
 
-Currently, over 100 algorithm choices are available. This guide is to help
-you choose the right one.
+Currently, over 100 algorithm choices are available. Thus it is suggested that
+you try choosing an algorithm using the `alg_hints` keyword argument. However,
+in some cases you may want something specific, or you may just be curious.
+This guide is to help you choose the right algorithm.
 
 ### Non-Stiff Problems
 
-For non-stiff problems, the native DifferentialEquations.jl algorithms are vastly
-more efficient than the other choices (ODEInterface and ODE.jl). For most non-stiff
-problems, we recommend `:DP5` (this is the default algorithm). When more robust
-error control is required, `:BS5` is a good choice.
-For fast solving at lower tolerances, we recommend `:BS3`. For tolerances
-which are at about the truncation error of Float64 (1e-16), we recommend
-`:DP8` as a robust choice and `:Vern6`, `:Vern7`, or `:Vern8` as an efficient choice.
+For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly
+more efficient than the other choices. For most non-stiff
+problems, we recommend `Tsit5`. When more robust error control is required,
+`BS5` is a good choice. For fast solving at lower tolerances, we recommend
+`BS3`. For tolerances which are at about the truncation error of Float64 (1e-16),
+we recommend `Vern6`, `Vern7`, or `Vern8` as efficient choices.
 
-For high accuracy non-stiff solving, we recommend the `:Feagin12` or `:Feagin14`
-methods. These are more robust than Adams-Bashforth methods to discontinuities
-and achieve very high precision, and are much more efficient than the extrapolation
-methods. Note that the Feagin methods are the only high-order optimized methods
-which do not include a high-order interpolant (they do include a 3rd order
-Hermite interpolation if needed). If a high-order method is needed with a high
-order interpolant, then you should choose `:Vern9` which is Order 9 with an
-Order 9 interpolant.
+For high accuracy non-stiff solving (BigFloat and tolerances like `<1e-20`),
+we recommend the `Feagin12` or `Feagin14` methods. These are more robust than
+Adams-Bashforth methods to discontinuities and achieve very high precision,
+and are much more efficient than the extrapolation methods. Note that the Feagin
+methods are the only high-order optimized methods which do not include a high-order
+interpolant (they do include a 3rd order Hermite interpolation if needed).
+If a high-order method is needed with a high order interpolant, then you
+should choose `Vern9` which is Order 9 with an Order 9 interpolant.
 
 ### Stiff Problems
 
-For mildly stiff problems it is recommended that you use `:Rosenbrock23`
+For mildly stiff problems at low tolerances it is recommended that you use `Rosenbrock23`
 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work.
 This method uses ForwardDiff to automatically guess the Jacobian. For faster solving
 when the Jacobian is known, use `radau`. For highly stiff problems where Julia-defined
-numbers need to be used (SIUnits, Arbs), `:Trapezoid` is the current best choice.
-However, for the most efficient highly stiff solvers, use `:radau` or `:cvode_BDF` provided by wrappers
-to the ODEInterface and Sundials packages respectively ([see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html))
+numbers need to be used (SIUnits, Arbs), `Trapezoid` is the current best choice.
+However, for the most efficient highly stiff solvers, use `radau` or `CVODE_BDF` provided by wrappers
+to the ODEInterface and Sundials packages respectively ([see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html)).
+These algorithms require that the number types are Float64.
 
 ## Full List of Methods
 
 Choose one of these methods with the `alg` keyword in `solve`.
 
-* DifferentialEquations.jl
+### OrdinaryDiffEq.jl
 
-Unless otherwise specified, the DifferentialEquations algorithms all come with a
+Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a "free"
 interpolation means that no extra steps are required for the interpolation. For
 the non-free higher order interpolating functions, the extra steps are computed
 lazily (i.e. not during the solve).
 
-  - `:Euler`- The canonical forward Euler method.
-  - `:Midpoint` - The second order midpoint method.
-  - `:RK4` - The canonical Runge-Kutta Order 4 method.
-  - `:BS3` - Bogacki-Shampine 3/2 method.
-  - `:DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
+The OrdinaryDiffEq.jl algorithms achieve the highest performance for nonstiff equations
+while being the most generic: accepting the most Julia-based types, allow for
+sophisticated event handling, etc. They are recommended for all nonstiff problems.
+For stiff problems, the algorithms are currently not as high of order or as well-optimized
+as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on
+arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl
+are able to handle a larger generality of number types (arbitrary precision, etc.)
+and thus are recommended for stiff problems on for non-Float64 numbers.
+
+  - `Euler`- The canonical forward Euler method.
+  - `Midpoint` - The second order midpoint method.
+  - `RK4` - The canonical Runge-Kutta Order 4 method.
+  - `BS3` - Bogacki-Shampine 3/2 method.
+  - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
   - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)
   - `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)
   - `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant)
@@ -96,54 +77,66 @@ lazily (i.e. not during the solve).
   - `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
   - `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
   - `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
-  - `:Feagin10` - Feagin's 10th-order Runge-Kutta method.
-  - `:Feagin12` - Feagin's 12th-order Runge-Kutta method.
-  - `:Feagin14` - Feagin's 14th-order Runge-Kutta method.
-  - `:ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
+  - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
+  - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
+  - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
+  - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
     are specified via the keyword argument `tab=tableau`. The default tableau is
     for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.
-  - `:ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
-  - `:Trapezoid` - A second order unconditionally stable implicit solver. Good for highly stiff.
-  - `:Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations.
-  - `:Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations.
+  - `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
+  - `Trapezoid` - A second order unconditionally stable implicit solver. Good for highly stiff.
+  - `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.
+  - `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances.
+    Note that this method is prone to instability in the presence of oscillations, so use with caution.
 
-* ODEInterface.jl
+### ODEInterface.jl
 
-  - `:dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
-  - `:dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince
-  - `:odex` - GBS extrapolation-algorithm based on the midpoint rule
-  - `:seulex` - extrapolation-algorithm based on the linear implicit Euler method
-  - `:radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
-  - `:radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
+The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
+nonstiff algorithms are superseded by the more featured and higher performance
+Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
+are some of the most efficient methods available (but are restricted for use on
+arrays of Float64).
 
-* ODE.jl
+  - `dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
+  - `dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince
+  - `odex` - GBS extrapolation-algorithm based on the midpoint rule
+  - `seulex` - extrapolation-algorithm based on the linear implicit Euler method
+  - `radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
+  - `radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
+
+### Sundials.jl
+
+The Sundials suite is built around multistep methods. These methods are more efficient
+than other methods when the cost of the function calculations is really high, but
+for less costly functions the cost of nurturing the timestep overweighs the benefits.
+However, the BDF method is a classic method for stiff equations and "generally works".
+
+  - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
+  - `CVODE_Adams` - CVode Adams-Moulton solver
+
+### ODE.jl
 
 The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.
 
-  - `:ode23` - Bogakai-Shampine's 2/3 method
-  - `:ode45` - Dormand-Prince's 4/5 method
-  - `:ode78` - Runge-Kutta-Fehlberg 7/8 method
-  - `:ode23s` - Rosenbrock's 2/3 method
-  - `:ode1` - Forward Euler
-  - `:ode2_midpoint` - Midpoint Method
-  - `:ode2_heun` - Heun's Method
-  - `:ode4` - RK4
-  - `:ode45_fe` - Runge-Kutta-Fehlberg 4/5 method
-
-* Sundials.jl
-
-  - `:cvode_BDF` - CVode Backward Differentiation Formula (BDF) solver.
-  - `:cvode_Adams` - CVode Adams-Moulton solver
+  - `rk23` - Bogakai-Shampine's 2/3 method
+  - `rk45` - Dormand-Prince's 4/5 method
+  - `feh78` - Runge-Kutta-Fehlberg 7/8 method
+  - `ModifiedRosenbrockIntegrator` - Rosenbrock's 2/3 method
+  - `feuler` - Forward Euler
+  - `midpoint` - Midpoint Method
+  - `heun` - Heun's Method
+  - `rk4` - RK4
+  - `feh45` - Runge-Kutta-Fehlberg 4/5 method
 
 ## List of Supplied Tableaus
 
-A large variety of tableaus have been supplied by default. For the most useful
-and common algorithms, a hand-optimized version is supplied and is recommended
-for general uses (i.e. use `:DP5` instead of `:ExplicitRK` with `tableau=constructDormandPrince()`).
-However, these serve as a good method for comparing between tableaus and understanding
-the pros/cons of the methods. Implemented are every published tableau (that I know exist).
-Note that user-defined tableaus also are accepted.
-To see how to define a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/ode/ode_tableaus.jl).
+A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
+For the most useful and common algorithms, a hand-optimized version is supplied
+and is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
+with `tableau=constructDormandPrince()`). However, these serve as a good method
+for comparing between tableaus and understanding the pros/cons of the methods.
+Implemented are every published tableau (that I know exist). Note that user-defined
+tableaus also are accepted. To see how to define a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 A plot recipes is provided which will plot the stability region for a given tableau.
