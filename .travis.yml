@@ -8,6 +8,7 @@ notifications:
   email: false
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'Pkg.clone(pwd())'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DifferentialEquations.jl")'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/ParameterizedFunctions.jl")'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl")'
