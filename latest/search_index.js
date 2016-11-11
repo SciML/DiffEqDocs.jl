@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "DifferentialEquations.jl Documentation",
     "category": "section",
-    "text": "DifferentialEquations.jl is a package for solving numerically solving differential equations. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.All of the algorithms are thoroughly tested to ensure accuracy. Convergence tests are included in the test/ folder. The algorithms were also tested to show correctness with nontrivial behavior such as Turing morphogenesis. Example IJulia notebooks can be found in the examples folder. If you find any example where there seems to be an error, please open an issue.If you have any questions, or just want to chat about solvers/using the package, please feel free to message me in the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Contributor's Guide."
+    "text": "DifferentialEquations.jl is a package for solving numerically solving differential equations. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.Example IJulia notebooks can be found in the examples folder. If you find any example where there seems to be an error, please open an issue.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Contributor's Guide."
 },
 
 {
@@ -21,7 +21,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Using the Package",
     "category": "section",
-    "text": "To install the package, use the following command inside the Julia REPL:Pkg.add(\"DifferentialEquations\")For all of the latest features, switch to the master branch via:Pkg.checkout(\"DifferentialEquations\")To load the package, use the command:using DifferentialEquationsTo understand the package in more detail, check out the following tutorials in the manual. Examples IJulia notebooks using DifferentialEquations can be found in the examples folder. Codes for the latest features can be found in test/.For the most up to date on using the package information, please contact me via the repository Gitter or read the latest documentation"
+    "text": "To install the package, use the following command inside the Julia REPL:Pkg.add(\"DifferentialEquations\")To load the package, use the command:using DifferentialEquationsTo understand the package in more detail, check out the following tutorials in the manual. Examples IJulia notebooks using DifferentialEquations can be found in the examples folder. Codes for the latest features can be found in test/.For the most up to date on using the package information, please contact me via the repository Gitter or read the latest documentation"
+},
+
+{
+    "location": "index.html#Bleeding-Edge-1",
+    "page": "Home",
+    "title": "Bleeding Edge",
+    "category": "section",
+    "text": "This package suite is still under heavy development. If you are a power user and would like to try out the latest features, it is recommended you use the MetaDiffEq metapackage. To do so, use the following commands:Pkg.clone(\"https://github.com/tbreloff/MetaPkg.jl\") # Install MetaPkg\nusing MetaPkg\nmeta_add(\"MetaDiffEq\") # Adds all of the packages, even those unregistered\nmeta_checkout(\"MetaDiffEq\") # Checks out the master branch on all of the packagesNote that this is for power users who are familiar with Julia. If you are having issues, please contact Chris Rackauckas in  the Gitter channel."
 },
 
 {
@@ -37,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "IJulia Notebook Tutorials",
     "category": "section",
-    "text": "If you have IJulia installed, you can access extra tutorials in the supplied IJulia notebooks via:using IJulia\nnotebook(dir = Pkg.dir(\"DifferentialEquations\")*\"/examples\")Otherwise, these notebooks can be viewed via the Github repository (note that Github renders them slightly incorrectly, so it will look better in IJulia!)."
+    "text": "You can access extra tutorials supplied in the DiffEqTutorials.jl repository. If you have IJulia installed, you can view them locally and interactively, by cloning the repository:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqTutorials.jl\")\nusing IJulia\nnotebook(dir = Pkg.dir(\"DiffEqTutorials\"))"
 },
 
 {
@@ -49,11 +57,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Problem-Types-1",
+    "page": "Home",
+    "title": "Problem Types",
+    "category": "section",
+    "text": "These pages describe building the problem types.Pages = [\n  \"problems/ODEProblem.md\",\n  \"problems/SDEProblem.md\",\n  \"problems/FEMProblem.md\",\n  \"problems/StokesProblem.md\"\n]\nDepth = 2"
+},
+
+{
     "location": "index.html#Solver-Options-1",
     "page": "Home",
     "title": "Solver Options",
     "category": "section",
-    "text": "These pages describe the options available in the solvers.Pages = [\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the options available in the solvers.Pages = [\n  \"solvers/common_solver_opts.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
 },
 
 {
@@ -69,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Internal Documentation",
     "category": "section",
-    "text": "Pages = [\n  \"internals/contributors_guide.md\",\n  \"internals/fem_tools.md\",\n  \"internals/extras.md\",\n  \"internals/solver_helpers.md\",\n  \"internals/notes_on_algorithms.md\",\n  \"internals/function_index.md\"\n]\nDepth = 2"
+    "text": "Pages = [\n  \"internals/contributors_guide.md\",\n  \"internals/fem_tools.md\",\n  \"internals/extras.md\",\n  \"internals/notes_on_algorithms.md\",\n  \"internals/function_index.md\"\n]\nDepth = 2"
 },
 
 {
@@ -85,7 +101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations (ODE)",
     "title": "Ordinary Differential Equations (ODE)",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out the IJulia notebooks in the examples folder.In this example we will solve the equationfracdudt = f(tu)where f(tu)=u. We know via Calculus that the solution to this equation is u(t)=uexp(t). To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nu₀=1/2\nf(t,u) = u\nprob = ODEProblem(f,u₀)Then we setup some parameters:dt = 1/2^(4) #The initial step size. It will automatically determined if not given.\ntspan = [0,1] # The timespan. This is the default if not given.We then send these items to the solver.sol =solve(prob::ODEProblem,tspan,dt=dt,alg=:Euler)To see what's in the solution object, we can print it:print(sol)\n#DifferentialEquations.ODESolution with 17 timesteps. No analytical solution is known.\n#u: 1.3189642486832998\n#t: [0.0,0.0625,0.125,0.1875,0.25,0.3125,0.375,0.4375,0.5,0.5625,0.625,0.6875,0.75,0.8125,0.875,0.9375,1.0]\n#timeseries: [0.5,0.53125,0.564453,0.599731,0.637215,0.677041,0.719356,0.764315,0.812085,0.86284,0.916768,0.974066,1.03494,1.09963,1.16836,1.24138,1.31896]We can access the 5th value of the solution withsol[5]\n#.637or get the time of the 8th timestep bysol.t[8]\n#.438The object that is returns by default acts as a continuous solution via an interpolation. We can access the interpolated values by treating sol as a function, for example:sol(0.45) # The value of the solution at t=0.45For details on more finely controlling the output, see the output specification manual pagePlotting commands are provided via a recipe to Plots.jl. To plot the solution object, simply call plot:using Plots\nplot(sol)If you are in Juno, this will plot to the plot pane. To open an interactive GUI (dependent on the backend), use the gui command:Plots.gui() # Opens a GUIThe plot function can be formatted using the attributes available in Plots.jl. For more of an introduction to plotting solutions, see the IJulia notebook."
+    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out the IJulia notebooks in the examples folder.In this example we will solve the equationfracdudt = f(tu)on the time interval t\\in[0,1] where f(tu)=u. We know via Calculus that the solution to this equation is u(t)=uexp(t). To solve this numerically, we define a problem type by giving it the equation, the initial condition, and the timespan to solve over:using DifferentialEquations\nα=1\nu0=1/2\nf(t,u) = α*u\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)Note that DifferentialEquations.jl will choose the types for the problem based on the types used to define the problem type. For our example, notice that u0 is a Float64, and therefore this will solve with the independent variables being Float64. Since tspan = (0.0,1.0) is a tuple of Float64's, the dependent variabes will be solved using Float64's (note that the start time and end time must match types). You can use this to choose to solve with arbitrary precision numbers, unitful numbers, etc. Please see the tutorials for more details.After defining a problem, you solve it using solve.sol = solve(prob)DifferentialEquations.jl has a method for choosing the default solver algorithm and the (adaptive) stepsizes dt, and so this will find an efficient method to solve your problem. You can also explicitly choose an algorithm and pass in some parameters.sol = solve(prob,Euler,dt=1/2^4)In this case I chose to use the classic Euler method, and gave it a stepsize dt=1/2^4. Normally dt is the starting stepsize but since the Euler method is not adaptive this is the stepsize for the calculation. The available options is described on the Common Solver Options manual page.The result of solve is a solution object. We can access the 5th value of the solution withsol[5]\n#.637or get the time of the 8th timestep bysol.t[8]\n#.438The object that is returns by default acts as a continuous solution via an interpolation. We can access the interpolated values by treating sol as a function, for example:sol(0.45) # The value of the solution at t=0.45For details on more finely controlling the output, see the Output Specification manual pagePlotting commands are provided via a recipe to Plots.jl. To plot the solution object, simply call plot:using Plots\n#gr() # You can optionally choose a plotting backend\nplot(sol)If you are in Juno, this will plot to the plot pane. To open an interactive GUI (dependent on the backend), use the gui command:gui()The plot function can be formatted using the attributes available in Plots.jl. For more of an introduction to plotting solutions, see the IJulia notebook."
 },
 
 {
@@ -93,7 +109,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations (ODE)",
     "title": "Other Algorithms",
     "category": "section",
-    "text": "In that first example, we used alg=:Euler to set the solver to a 1st order Euler method. We can instead solve using the default method, the Dormand-Prince 4/5 method, (the same as MATLAB's ode45) by not specifying the algorithm:sol =solve(prob::ODEProblem,tspan)By default adaptive timestepping will be on, and the initial timestep will be heuristically chosen if not given. We can choose a higher order algorithm like the 7th order Verner Efficient method, turn off adaptive timestepping, and set the initial timestep to the previously set value via:sol =solve(prob::ODEProblem,tspan,dt=dt,alg=:Vern7,adaptive=false)\nplot(sol)(Image: Better ODE Solution)Please see the solver documentation for more algorithms and keyword arguments."
+    "text": "DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms (which are also available). For example, we can choose a 7th order Verner Efficient method:sol = solve(prob,Vern7)\nplot(sol,title=\"Solving using the Vern7 Method\")(Image: Better ODE Solution)Because these advanced algorithms may not be known to most users, DifferentialEquations.jl offers an advanced method for choosing algorithm defaults. This algorithm utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem but don't know the best stiff algorithm for this problem, we can usesol = solve(prob,alg_hints=[:stiff])Please see the solver documentation for details on the algorithms and recommendations."
 },
 
 {
@@ -101,15 +117,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations (ODE)",
     "title": "Systems of Equations",
     "category": "section",
-    "text": "We can also solve systems of equations. DifferentialEquations.jl can handle any size problem, so instead of showing it for a vector, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\nf(t,u) = A*u\nprob = ODEProblem(f,u0)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob,tspan)\nplot(sol)(Image: ODE System Solution)"
+    "text": "We can also solve systems of equations. DifferentialEquations.jl can handle many different independent variable types (generally, anything with a linear index should work!). So instead of showing solving a vector equation, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\ntspan = (0.0,1.0)\nf(t,u) = A*u\nprob = ODEProblem(f,u0,tspan)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob)\nplot(sol)(Image: ODE System Solution)"
 },
 
 {
-    "location": "tutorials/ode_example.html#Defining-Systems-of-Equations-Eloquently-Using-@ode_define-1",
+    "location": "tutorials/ode_example.html#In-Place-Updates-1",
     "page": "Ordinary Differential Equations (ODE)",
-    "title": "Defining Systems of Equations Eloquently Using @ode_define",
+    "title": "In-Place Updates",
     "category": "section",
-    "text": "To simplify your life, DifferentialEquations.jl provides the @ode_define macro for \"defining your ODE in pseudocode\" and getting a function which is efficient and runnable. For our example we will use the Lorenz system. The standard way to write this out in most mathematical programs is the following:f = (t,u,du) -> begin\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendHere for more efficiency we plugged in the parameters. However, this does not look like the pretty LaTeX system we see on Wikipedia, and this might make it harder to double-check that you defined the system correctly. Using the @ode_define macro is much nicer:g = @ode_define begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10. ρ=>28. β=>(8/3)DifferentialEquations.jl will automatically translate this to be exactly the same as f. The result is more legible code with no performance loss."
+    "text": "Defining your ODE function to be in-place updating can have performance benefits. That this means is that, instead of writing a function which outputs its solution, write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl's solver packages are able to reduce the amount of array allocations and achieve better performance.For our example we will use the Lorenz system. What we do is simply write the output to the 3rd input of the function. For example:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)(Image: Lorenz System)"
+},
+
+{
+    "location": "tutorials/ode_example.html#Defining-Systems-of-Equations-Using-ParameterizedFunctions.jl-1",
+    "page": "Ordinary Differential Equations (ODE)",
+    "title": "Defining Systems of Equations Using ParameterizedFunctions.jl",
+    "category": "section",
+    "text": "To simplify your life, ParameterizedFunctions.jl provides the @ode_def macro for \"defining your ODE in pseudocode\" and getting a function which is efficient and runnable.To use the macro, you write out your system of equations with the left-hand side being d_ and those variables will be parsed as the independent variables. The dependent variable is t, and the other variables are parameters which you pass at the end. For example, we can write the Lorenz system as:using ParameterizedFunctions\ng = @ode_def Lorenz begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)DifferentialEquations.jl will automatically translate this to be exactly the same as f. The result is more legible code with no performance loss. The result is that g is a function which you can now use to define the Lorenz problem.u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(g,u0,tspan)Since we used =>, σ and ρ are kept as mutable parameters. For example we can do:g.σ = 11.0to change the value of σ to 11.0. β is not able to be changed since we defined it using =. We can create a new instance with new parameters via the name used in the @ode_def command:h = Lorenz(σ=11.0,ρ=25.0)Note that the values will default to the values giving in the @ode_def command.One last item to note is that you probably received a warning when defining this:WARNING: Hessian could not invertThis is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl does \"behind-the-scenes\" symbolic calculations to pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speedup calculations. Thus not only will this lead to legible ODE definitions, but \"unfairly fast\" code! We can turn off some of the calculations by using a more specific macro. Here, we can turn off the Hessian calculations via @ode_def_nohes. See ParameterizedFunctions.jl for more details.Since the parameters exist within the function, functions defined in this manner can also be used for sensitivity analysis, parameter estimation routines, and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution for differential equation analysis which also achieves high performance."
 },
 
 {
@@ -209,6 +233,574 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "problems/ODEProblem.html#",
+    "page": "Defining an ODE Problem",
+    "title": "Defining an ODE Problem",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "problems/ODEProblem.html#Defining-an-ODE-Problem-1",
+    "page": "Defining an ODE Problem",
+    "title": "Defining an ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODEfracdudt = f(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)),and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "problems/ODEProblem.html#Problem-Type-1",
+    "page": "Defining an ODE Problem",
+    "title": "Problem Type",
+    "category": "section",
+    "text": "Wraps the data which defines an ODE problemfracdudt = f(tu)with initial condition u0."
+},
+
+{
+    "location": "problems/ODEProblem.html#Constructors-1",
+    "page": "Defining an ODE Problem",
+    "title": "Constructors",
+    "category": "section",
+    "text": "ODEProblem(f,u0,tspan) : Defines the ODE with the specified functions and defines the solution if analytic is given."
+},
+
+{
+    "location": "problems/ODEProblem.html#Fields-1",
+    "page": "Defining an ODE Problem",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The drift function in the ODE.\nu0: The initial condition.\nisinplace: Determines whether the function f uses the in-place syntax f(t,u,du) or not, f(t,u)\ntspan: The timespan for the problem."
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_linear",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_linear",
+    "category": "Constant",
+    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_2Dlinear",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear",
+    "category": "Constant",
+    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_bigfloatlinear",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_bigfloatlinear",
+    "category": "Constant",
+    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
+    "category": "Constant",
+    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_large2Dlinear",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_large2Dlinear",
+    "category": "Constant",
+    "text": "100x100 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
+    "category": "Constant",
+    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\non Float64. Purposefully not in-place as a test.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_threebody",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_threebody",
+    "category": "Constant",
+    "text": "The ThreeBody problem as written by Hairer:\n\nbeginalign\ny = y + 2y - fracy+D - fracy-D \ny = y - 2y - fracyD - fracyD \nD = ((y+)^2 + y^2)^32 \nD = ((y-)^2+y^2)^32 \n = 0012277471 \n =1-\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on t₀ = 0.0; T = parse(BigFloat,\"17.0652165601579625588917206249\") Periodic with that setup.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_pleides",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_pleides",
+    "category": "Constant",
+    "text": "Pleides Problem\n\nbeginalign\nx = sum_ji m(x-x)r \ny = sum_ji m(y-y)r\nendalign\n\nwhere\n\nr = ((x-x)^2 + (y-y)^2)^32\n\nand inital condtions are\n\nbeginalign\nx(0)=3  \nx(0)=3  \nx(0)=-1  \nx(0)=-3  \nx(0)=2  \nx(0)=-2  \nx(0)=2  \ny(0)=3  \ny(0)=-3  \ny(0)=2  \ny(0)=0  \ny(0)=0  \ny(0)=-4  \ny(0)=4\nendalign\n\nand with x(0)=y(0)=0 except for\n\nbeginalign\nx(0)=175 \nx(0)=-15 \ny(0)=-125 \ny(0)=1\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 3.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_vanderpol",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_vanderpol",
+    "category": "Constant",
+    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10 and u0=0sqrt3\n\nNon-stiff parameters.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
+    "category": "Constant",
+    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10^6 and u0=0sqrt3\n\nStiff parameters.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_rober",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_rober",
+    "category": "Constant",
+    "text": "The Robertson biochemical reactions:\n\nbeginalign\nfracdydt = -ky+kyy  \nfracdydt =  ky-ky^2-kyy \nfracdydt =  ky^2\nendalign\n\nwhere k=004, k=3times10^7, k=10^4. For details, see:\n\nHairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on [0,1e11]\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_rigidbody",
+    "page": "Defining an ODE Problem",
+    "title": "DiffEqProblemLibrary.prob_ode_rigidbody",
+    "category": "Constant",
+    "text": "Rigid Body Equations\n\nbeginalign\nfracdydt  = Iyy \nfracdydt  = Iyy \nfracdydt  = Iyy\nendalign\n\nwith I=-2, I=125, and I=-12.\n\nThe initial condition is y=100009.\n\nFrom Solving Differential Equations in R by Karline Soetaert\n\nor Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 20.\n\n\n\n"
+},
+
+{
+    "location": "problems/ODEProblem.html#Example-Problems-1",
+    "page": "Defining an ODE Problem",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Examples problems can be found in src/premades/premade_problems.jl.To use a sample problem, such as prob_ode_linear, you can do something like:prob = prob_ode_linear\nsol = solve(prob,[0;1])DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
+},
+
+{
+    "location": "problems/SDEProblem.html#",
+    "page": "Defining a SDE Problem",
+    "title": "Defining a SDE Problem",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "problems/SDEProblem.html#Defining-a-SDE-Problem-1",
+    "page": "Defining a SDE Problem",
+    "title": "Defining a SDE Problem",
+    "category": "section",
+    "text": "To define an SDE Problem, you simply need to give the forcing function f, the noise function g, and the initial condition u which define an SDEdu = f(tu)dt + g(tu)dWf and g should be specified as f(t,u) and  g(t,u) respectively, and u₀ should be an AbstractArray whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. A vector of gs can also be defined to determine an SDE of higher Ito dimension."
+},
+
+{
+    "location": "problems/SDEProblem.html#Problem-Type-1",
+    "page": "Defining a SDE Problem",
+    "title": "Problem Type",
+    "category": "section",
+    "text": "Wraps the data which defines an SDE problemu = f(ut)dt + g(ut)dWwith initial condition u0."
+},
+
+{
+    "location": "problems/SDEProblem.html#Constructors-1",
+    "page": "Defining a SDE Problem",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SDEProblem(f,g,u0;analytic=nothing) : Defines the SDE with the specified functions and defines the solution if analytic is given."
+},
+
+{
+    "location": "problems/SDEProblem.html#Fields-1",
+    "page": "Defining a SDE Problem",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nanalytic: A function which describes the solution.\nknownanalytic: True if the solution is given.\nnumvars: The number of variables in the system\nsizeu: The size of the initial condition (and thus u)\nnoise: The noise process applied to the noise upon generation."
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_linear",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_linear",
+    "category": "Constant",
+    "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_2Dlinear",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
+    "category": "Constant",
+    "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_wave",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_wave",
+    "category": "Constant",
+    "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(tu0W_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_lorenz",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_lorenz",
+    "category": "Constant",
+    "text": "Lorenz Attractor with additive noise\n\nbeginalign\ndx = *(y-x)dt + dW_t \ndy = (x*(-z) - y)dt + dW_t \ndz = (x*y - *z)dt + dW_t \nendalign\n\nwith =10, =28, =83, =30 and inital condition u0=111.\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_cubic",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_cubic",
+    "category": "Constant",
+    "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(tu0W_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_additive",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_additive",
+    "category": "Constant",
+    "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(tu0W_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#DiffEqProblemLibrary.prob_sde_additivesystem",
+    "page": "Defining a SDE Problem",
+    "title": "DiffEqProblemLibrary.prob_sde_additivesystem",
+    "category": "Constant",
+    "text": "A multiple dimension extension of additiveSDEExample\n\n\n\n"
+},
+
+{
+    "location": "problems/SDEProblem.html#Example-Problems-1",
+    "page": "Defining a SDE Problem",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Examples problems can be found in src/premades/premade_problems.jlDiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
+},
+
+{
+    "location": "problems/FEMProblem.html#",
+    "page": "Defining a FEM Problem",
+    "title": "Defining a FEM Problem",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "problems/FEMProblem.html#Defining-a-FEM-Problem-1",
+    "page": "Defining a FEM Problem",
+    "title": "Defining a FEM Problem",
+    "category": "section",
+    "text": "Below are the definitions of the types which specify problems. Some general notes are:(t,x) vs (t,x,y): Mathematically one normally specifies equations in 2D as f(txy). However, in this code we use x as a vector. Thus you can think of x=x[:,1] and y=x[:,2]. Thus input equations are of the form f(x,t) no matter the dimension. If time is not included in the problem (for example, a Poisson equation problem), then we use f(x). An example is the equation u(xy)= sin(2x)cos(2y)(8^2) would be specified as sol(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π).\nLinearity: If the equation has linear term, they are specified with functions f(t,x). If it is nonlinear, it is specified with functions f(t,x,u). The boundary conditions are always (t,x)\nStochastic: By default the equation is deterministic. For each equation, one can specify a σ term which adds a stochastic (txu)dW_t term to the equation (or with (tx)dW_t if linear, must match f). dW_t corresponds to the type of noise which is chosen. By default this is space-time Gaussian white noise."
+},
+
+{
+    "location": "problems/FEMProblem.html#Poisson-Equation-Problem-1",
+    "page": "Defining a FEM Problem",
+    "title": "Poisson Equation Problem",
+    "category": "section",
+    "text": "Wraps the data that defines a 2D linear Poisson equation problem:-u = fwith bounday conditions gD on the dirichlet boundary and gN on the neumann boundary. Linearity is determined by whether the forcing function f is a function of one variable (x) or two (u,x) (with x=[:,1] and y=[:,2]).If they keyword σ is given, then this wraps the data that define a 2D stochastic heat equation-u = f + dW"
+},
+
+{
+    "location": "problems/FEMProblem.html#Constructors-1",
+    "page": "Defining a FEM Problem",
+    "title": "Constructors",
+    "category": "section",
+    "text": "PoissonProblem(f,analytic,Du): Defines the dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function fPoissonProblem(u0,f): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
+},
+
+{
+    "location": "problems/FEMProblem.html#Keyword-Arguments-1",
+    "page": "Defining a FEM Problem",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "gD = dirichlet boundary function\ngN = neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = The number of variables in the Poisson system. Automatically calculated in many cases.\nD = Vector of diffusion coefficients. Defaults is D=ones(1,numvars)."
+},
+
+{
+    "location": "problems/FEMProblem.html#Heat-Equation-Problem-1",
+    "page": "Defining a FEM Problem",
+    "title": "Heat Equation Problem",
+    "category": "section",
+    "text": "Wraps the data that defines a 2D heat equation problem:u_t = u + fwith bounday conditions gD on the dirichlet boundary and gN on the neumann boundary. Linearity is determined by whether the forcing function f is a function of two variables (t,x) or three (t,x,u) (with x=[:,1] and y=[:,2]).If they keyword σ is given, then this wraps the data that define a 2D stochastic heat equationu_t = u + f + dW_t"
+},
+
+{
+    "location": "problems/FEMProblem.html#Constructors-2",
+    "page": "Defining a FEM Problem",
+    "title": "Constructors",
+    "category": "section",
+    "text": "HeatProblem(analytic,Du,f): Defines the dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u0,f): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
+},
+
+{
+    "location": "problems/FEMProblem.html#Keyword-Arguments-2",
+    "page": "Defining a FEM Problem",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "gD = dirichlet boundary function\ngN = neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = Number of variables in the system. Automatically calculated from u0 in most cases.\nD = Array which defines the diffusion coefficients. Default is D=ones(1,numvars)."
+},
+
+{
+    "location": "problems/FEMProblem.html#Example-Problems-1",
+    "page": "Defining a FEM Problem",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Examples problems can be found in src/premades/premade_problems.jl"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
+    "category": "Constant",
+    "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=5u-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_noisywave",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_poisson_noisywave",
+    "category": "Constant",
+    "text": "Problem with deterministic solution: u(xy)= sin(2x)cos(2y)(8^2) and additive noise (xy)=5\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
+    "category": "Constant",
+    "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=1-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_wave",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_poisson_wave",
+    "category": "Constant",
+    "text": "Problem defined by the solution: u(xy)= sin(2x)cos(2y)(8^2)\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeath",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_poisson_birthdeath",
+    "category": "Constant",
+    "text": "Nonlinear Poisson equation with f(u)=1-u2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#Poisson-Equation-1",
+    "page": "Defining a FEM Problem",
+    "title": "Poisson Equation",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_poisson_noisywave\nDiffEqProblemLibrary.prob_poisson_birthdeathsystem\nDiffEqProblemLibrary.prob_poisson_wave\nDiffEqProblemLibrary.prob_poisson_birthdeath"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_diffuse",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
+    "category": "Constant",
+    "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
+    "category": "Constant",
+    "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_moving",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_moving",
+    "category": "Constant",
+    "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
+    "category": "Function",
+    "text": "heatProblemExample_gierermeinhardt(;a=1,α=1,D=[0.01 1.0],ubar=1,vbar=0,β=10,startNoise=0.01)\n\nThe Gierer-Meinhardt equations wtih quasi-random initial perturbations.\n\nbeginalign\nu_t = fracauv^2 + baru -u \nv_t = au^2 + barv - v\nendalign\n\nThe equation starts at the steady state\n\nbeginalign\nu_ss = fracbaru+ \nv_ss = frac u_ss^2\nendalign\n\nwith a bit of noise.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.heatProblemExample_grayscott",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.heatProblemExample_grayscott",
+    "category": "Function",
+    "text": "heatProblemExample_grayscott(;ρ=.03,k=.062,D=[1e-3 .5e-3])\n\nThe Gray-Scott equations with quasi-random initial conditions. The reaction equations are given by:\n\nbeginalign\nu_t = uv^2 + (1-v) \nv_t = uv^2 - (+k)v\nendalign\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_pure",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_pure",
+    "category": "Constant",
+    "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_diffusionconstants",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_diffusionconstants",
+    "category": "Constant",
+    "text": "Example problem which solves the homogeneous Heat equation with all mass starting at (1/2,1/2) with two different diffusion constants, D=001 and D=0001. Good animation test.\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
+    "page": "Defining a FEM Problem",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
+},
+
+{
+    "location": "problems/FEMProblem.html#Heat-Equation-1",
+    "page": "Defining a FEM Problem",
+    "title": "Heat Equation",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.heatProblemExample_gierermeinhardt\nDiffEqProblemLibrary.heatProblemExample_grayscott\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_diffusionconstants\nDiffEqProblemLibrary.prob_femheat_birthdeath"
+},
+
+{
+    "location": "problems/StokesProblem.html#",
+    "page": "Defining a Stokes Problem",
+    "title": "Defining a Stokes Problem",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "problems/StokesProblem.html#Defining-a-Stokes-Problem-1",
+    "page": "Defining a Stokes Problem",
+    "title": "Defining a Stokes Problem",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "problems/StokesProblem.html#Problem-Type-1",
+    "page": "Defining a Stokes Problem",
+    "title": "Problem Type",
+    "category": "section",
+    "text": "StokesProblem Defines the solution to a stationary Stokes problem:"
+},
+
+{
+    "location": "problems/StokesProblem.html#Constructors-1",
+    "page": "Defining a Stokes Problem",
+    "title": "Constructors",
+    "category": "section",
+    "text": "StokesProblem(f₁,f₂,g,uanalytic,vanalytic,panalytic) StokesProblem(f₁,f₂,g,ugD,vgD)"
+},
+
+{
+    "location": "problems/StokesProblem.html#Fields-1",
+    "page": "Defining a Stokes Problem",
+    "title": "Fields",
+    "category": "section",
+    "text": "f₁::Function\nf₂::Function\ng::Function\nugD::Function\nvgD::Function\nuanalytic::Function\nvanalytic::Function\npanalytic::Function\ntrueknown::Bool"
+},
+
+{
+    "location": "problems/StokesProblem.html#Example-Problems-1",
+    "page": "Defining a Stokes Problem",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Examples problems can be found in src/premades/premade_problems.jl"
+},
+
+{
+    "location": "solvers/common_solver_opts.html#",
+    "page": "Common Solver Options",
+    "title": "Common Solver Options",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Common-Solver-Options-1",
+    "page": "Common Solver Options",
+    "title": "Common Solver Options",
+    "category": "section",
+    "text": "The DifferentialEquations.jl universe has a large set of common arguments available for the solve function. These arguments apply to solve on any problem type and are only limited by limitations of the specific implementations.Many of the defaults depend on the algorithm or the package the algorithm derives from. For more detailed information on the defaults and the available options for specific algorithms / packages, see the Option Availability manual page."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Default-Algorithm-Hinting-1",
+    "page": "Common Solver Options",
+    "title": "Default Algorithm Hinting",
+    "category": "section",
+    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff - Denotes the equation as nonstiff.\n:stiff - Denotes the equation as stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Output-Control-1",
+    "page": "Common Solver Options",
+    "title": "Output Control",
+    "category": "section",
+    "text": "These arguments control the output behavior the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. For more information on controlling the output behavior, see the Output Specification manual page.dense: Denotes whether to save the extra pieces for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes extra times to save the solution at during the solving phase. Note that this can be used even if dense=false. Default is [].\ntstops: Denotes extra times that the timestepping algorithm must step to. This should only be used if dense output via saveat is not available for the algorithm (for efficiency). Default is [].\ncalck: Turns on and off the internal ability for intermediate interpolations. This defaults to dense || !isempty(saveat) ||\"no custom callback is given\". This can be used to turn off interpolations (to save memory) even when a custom callback is used.\nsave_timeseries: Saves the result at every timeseries_steps iteration. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Stepsize-Control-1",
+    "page": "Common Solver Options",
+    "title": "Stepsize Control",
+    "category": "section",
+    "text": "These arguments control the timestepping routines.adaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ninternalnorm - The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma - The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\ndtmax - Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin - Minimum dt for adaptive timestepping. Defaults are package-dependent.\nbeta1 - The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2 - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqoldinit - The initial qold in stabilization stepping. Defaults are algorithm-dependent."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Miscellaneous-1",
+    "page": "Common Solver Options",
+    "title": "Miscellaneous",
+    "category": "section",
+    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Progress-Bar-Control-1",
+    "page": "Common Solver Options",
+    "title": "Progress Bar Control",
+    "category": "section",
+    "text": "These arguments control the usage of the progressbar in the Juno IDE.progressbar - Turns on/off the Juno progressbar. Default is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nprogressbar_name - Controls the name of the progressbar. Default is the name of the problem type."
+},
+
+{
+    "location": "solvers/common_solver_opts.html#Error-Calculations-1",
+    "page": "Common Solver Options",
+    "title": "Error Calculations",
+    "category": "section",
+    "text": "If you are using the test problems (ex: ODETestProblem), then the following options control the errors which are calculated:timeseries_errors - Turns on and off the calculation of errors at the steps which were taken, such as the l2 error. Default is true.\ndense_errors - Turns on and off the calculation of errors at the steps which require dense output and calculate the error at 100 evenly-spaced points throughout tspan. An example is the L2 error. Default is false."
+},
+
+{
     "location": "solvers/ode_solve.html#",
     "page": "Ordinary Differential Equation Solvers",
     "title": "Ordinary Differential Equation Solvers",
@@ -221,15 +813,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Ordinary Differential Equation Solvers",
     "category": "section",
-    "text": "solve(prob::ODEProblem,tspan)Solves the ODE defined by prob on the interval tspan. If not given, tspan defaults to [0,1]."
-},
-
-{
-    "location": "solvers/ode_solve.html#Keyword-Arguments-1",
-    "page": "Ordinary Differential Equation Solvers",
-    "title": "Keyword Arguments",
-    "category": "section",
-    "text": "dt: Sets the initial stepsize. Defaults to an automatic choice.\nsave_timeseries: Saves the result at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1.\ntableau: The tableau for an :ExplicitRK algorithm. Defaults to a Dormand-Prince 4/5 method.\nadaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nγ - The risk-factor γ in the q equation for adaptive timestepping. Default is .9.\ntimechoicealg - Chooses the method which is used for making the adaptive timestep choices. Default is :Lund for Lund stabilization (PI stepsize control). The other option is :Simple for the standard simple error-based rejection\nβ - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Default is 10.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\nmaxiters - Maximum number of iterations before stopping. Defaults to 1e9.\ndtmax - Maximum dt for adaptive timestepping. Defaults to half the timespan.\ndtmin - Minimum dt for adaptive timestepping. Defaults to 1e-10.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ninternalnorm - The norm function internalnorm(u) which error estimates are calculated. Default is Hairer's adjusted 2-norm.\nprogressbar - Turns on/off the Juno progressbar. Defualt is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nalg: The solver algorithm. Defult is :DP5. Note that any keyword argument available in the external solvers are accessible via keyword arguments. For example, for the ODEInterface.jl algorithms, one can specify SSBETA=0.03 as a keyword argument and it will do as it states in the ODEInterface.jl documentation. Common options such as MAXSS (max stepsize) are aliased to one can use the DifferentialEquations.jl syntax dtmax or MAXSS."
+    "text": "solve(prob::ODEProblem,alg;kwargs)Solves the ODE defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
 },
 
 {
@@ -237,7 +821,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Recommended Methods",
     "category": "section",
-    "text": "Currently, over 100 algorithm choices are available. This guide is to help you choose the right one."
+    "text": "Currently, over 100 algorithm choices are available. Thus it is suggested that you try choosing an algorithm using the alg_hints keyword argument. However, in some cases you may want something specific, or you may just be curious. This guide is to help you choose the right algorithm."
 },
 
 {
@@ -245,7 +829,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Non-Stiff Problems",
     "category": "section",
-    "text": "For non-stiff problems, the native DifferentialEquations.jl algorithms are vastly more efficient than the other choices (ODEInterface and ODE.jl). For most non-stiff problems, we recommend :DP5 (this is the default algorithm). When more robust error control is required, :BS5 is a good choice. For fast solving at lower tolerances, we recommend :BS3. For tolerances which are at about the truncation error of Float64 (1e-16), we recommend :DP8 as a robust choice and :Vern6, :Vern7, or :Vern8 as an efficient choice.For high accuracy non-stiff solving, we recommend the :Feagin12 or :Feagin14 methods. These are more robust than Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed). If a high-order method is needed with a high order interpolant, then you should choose :Vern9 which is Order 9 with an Order 9 interpolant."
+    "text": "For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly more efficient than the other choices. For most non-stiff problems, we recommend Tsit5. When more robust error control is required, BS5 is a good choice. For fast solving at lower tolerances, we recommend BS3. For tolerances which are at about the truncation error of Float64 (1e-16), we recommend Vern6, Vern7, or Vern8 as efficient choices.For high accuracy non-stiff solving (BigFloat and tolerances like <1e-20), we recommend the Feagin12 or Feagin14 methods. These are more robust than Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed). If a high-order method is needed with a high order interpolant, then you should choose Vern9 which is Order 9 with an Order 9 interpolant."
 },
 
 {
@@ -253,7 +837,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For mildly stiff problems it is recommended that you use :Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), :Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use :radau or :cvode_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation)"
+    "text": "For mildly stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
 },
 
 {
@@ -261,7 +845,39 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "Full List of Methods",
     "category": "section",
-    "text": "Choose one of these methods with the alg keyword in solve.DifferentialEquations.jlUnless otherwise specified, the DifferentialEquations algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).:Euler- The canonical forward Euler method.\n:Midpoint - The second order midpoint method.\n:RK4 - The canonical Runge-Kutta Order 4 method.\n:BS3 - Bogacki-Shampine 3/2 method.\n:DP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\n:Feagin10 - Feagin's 10th-order Runge-Kutta method.\n:Feagin12 - Feagin's 12th-order Runge-Kutta method.\n:Feagin14 - Feagin's 14th-order Runge-Kutta method.\n:ExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus are specified via the keyword argument tab=tableau. The default tableau is for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.\n:ImplicitEuler - A 1st order implicit solver. Unconditionally stable.\n:Trapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\n:Rosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations.\n:Rosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations.\nODEInterface.jl\n:dopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\n:dop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince\n:odex - GBS extrapolation-algorithm based on the midpoint rule\n:seulex - extrapolation-algorithm based on the linear implicit Euler method\n:radau - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13\n:radau5 - implicit Runge-Kutta method (Radau IIA) of order 5\nODE.jlThe ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.:ode23 - Bogakai-Shampine's 2/3 method\n:ode45 - Dormand-Prince's 4/5 method\n:ode78 - Runge-Kutta-Fehlberg 7/8 method\n:ode23s - Rosenbrock's 2/3 method\n:ode1 - Forward Euler\n:ode2_midpoint - Midpoint Method\n:ode2_heun - Heun's Method\n:ode4 - RK4\n:ode45_fe - Runge-Kutta-Fehlberg 4/5 method\nSundials.jl\n:cvode_BDF - CVode Backward Differentiation Formula (BDF) solver.\n:cvode_Adams - CVode Adams-Moulton solver"
+    "text": "Choose one of these methods with the alg keyword in solve."
+},
+
+{
+    "location": "solvers/ode_solve.html#OrdinaryDiffEq.jl-1",
+    "page": "Ordinary Differential Equation Solvers",
+    "title": "OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for nonstiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all nonstiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on for non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus are specified via the keyword argument tab=tableau. The default tableau is for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution."
+},
+
+{
+    "location": "solvers/ode_solve.html#ODEInterface.jl-1",
+    "page": "Ordinary Differential Equation Solvers",
+    "title": "ODEInterface.jl",
+    "category": "section",
+    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the nonstiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).dopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince\nodex - GBS extrapolation-algorithm based on the midpoint rule\nseulex - extrapolation-algorithm based on the linear implicit Euler method\nradau - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13\nradau5 - implicit Runge-Kutta method (Radau IIA) of order 5"
+},
+
+{
+    "location": "solvers/ode_solve.html#Sundials.jl-1",
+    "page": "Ordinary Differential Equation Solvers",
+    "title": "Sundials.jl",
+    "category": "section",
+    "text": "The Sundials suite is built around multistep methods. These methods are more efficient than other methods when the cost of the function calculations is really high, but for less costly functions the cost of nurturing the timestep overweighs the benefits. However, the BDF method is a classic method for stiff equations and \"generally works\".CVODE_BDF - CVode Backward Differentiation Formula (BDF) solver.\nCVODE_Adams - CVode Adams-Moulton solver"
+},
+
+{
+    "location": "solvers/ode_solve.html#ODE.jl-1",
+    "page": "Ordinary Differential Equation Solvers",
+    "title": "ODE.jl",
+    "category": "section",
+    "text": "The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.rk23 - Bogakai-Shampine's 2/3 method\nrk45 - Dormand-Prince's 4/5 method\nfeh78 - Runge-Kutta-Fehlberg 7/8 method\nModifiedRosenbrockIntegrator - Rosenbrock's 2/3 method\nfeuler - Forward Euler\nmidpoint - Midpoint Method\nheun - Heun's Method\nrk4 - RK4\nfeh45 - Runge-Kutta-Fehlberg 4/5 method"
 },
 
 {
@@ -269,7 +885,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equation Solvers",
     "title": "List of Supplied Tableaus",
     "category": "section",
-    "text": "A large variety of tableaus have been supplied by default. For the most useful and common algorithms, a hand-optimized version is supplied and is recommended for general uses (i.e. use :DP5 instead of :ExplicitRK with tableau=constructDormandPrince()). However, these serve as a good method for comparing between tableaus and understanding the pros/cons of the methods. Implemented are every published tableau (that I know exist). Note that user-defined tableaus also are accepted. To see how to define a tableau, checkout the premade tableau source code. Tableau docstrings should have appropriate citations (if not, file an issue).A plot recipes is provided which will plot the stability region for a given tableau."
+    "text": "A large variety of tableaus have been supplied by default via DiffEqDevTools.jl. For the most useful and common algorithms, a hand-optimized version is supplied and is recommended for general uses (i.e. use DP5 instead of ExplicitRK with tableau=constructDormandPrince()). However, these serve as a good method for comparing between tableaus and understanding the pros/cons of the methods. Implemented are every published tableau (that I know exist). Note that user-defined tableaus also are accepted. To see how to define a tableau, checkout the premade tableau source code. Tableau docstrings should have appropriate citations (if not, file an issue).A plot recipes is provided which will plot the stability region for a given tableau."
 },
 
 {
@@ -321,19 +937,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/sde_solve.html#DiffEqBase.solve-Tuple{DiffEqBase.AbstractSDEProblem,AbstractArray}",
-    "page": "Stochastic Differential Equation Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "solve(prob::SDEProblem,tspan)\n\nSolves the SDE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1].\n\nKeyword Arguments\n\ndt: Sets the initial stepsize. Defaults to an automatic choice.\nsave_timeseries: Saves the result at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1.\nadaptive - Turns on adaptive timestepping for appropriate methods. Default is false.\nγ - The risk-factor γ in the q equation for adaptive timestepping. Default is 2.\nqmax - Defines the maximum value possible for the adaptive q. Default is 1.125.\nδ - The weight-factor in the error estimate. Default is 1/6.\nablstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\nmaxiters - Maximum number of iterations before stopping. Defaults to 1e9.\ndtmax - Maximum dt for adaptive timestepping. Defaults to half the timespan.\ndtmin - Minimum dt for adaptive timestepping. Defaults to 1e-10.\ninternalnorm - The norm for which error estimates are calculated. Default is 2.\nprogressbar - Turns on/off the Juno progressbar. Defualt is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\ndiscard_length - Size at which to discard future information in adaptive. Default is 1e-15.\ntableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.\nalg: String which defines the solver algorithm. Defult is \"SRIW1Optimized\". Possibilities are:\n:EM- The Euler-Maruyama method.\n:RKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\n:SRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\n:SRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\n:SRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\n:SRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\n:SRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\n:SRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem.\n\n\n\n"
-},
-
-{
     "location": "solvers/sde_solve.html#Solver-Documentation-1",
     "page": "Stochastic Differential Equation Solvers",
     "title": "Solver Documentation",
     "category": "section",
-    "text": "solve(::AbstractSDEProblem,::AbstractArray)"
+    "text": "solve(prob::SDEProblem,tspan)Solves the SDE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
+},
+
+{
+    "location": "solvers/sde_solve.html#Special-Keyword-Arguments-1",
+    "page": "Stochastic Differential Equation Solvers",
+    "title": "Special Keyword Arguments",
+    "category": "section",
+    "text": "discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\ntableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.\nalg: String which defines the solver algorithm. Defult is \"SRIW1Optimized\". Possibilities are:\n:EM- The Euler-Maruyama method.\n:RKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\n:SRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\n:SRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\n:SRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\n:SRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\n:SRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\n:SRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem."
 },
 
 {
@@ -345,19 +961,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/dae_solve.html#DiffEqBase.solve-Tuple{DiffEqBase.AbstractDAEProblem,AbstractArray}",
-    "page": "Differential Algebraic Equation Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "solve(prob::DAEProblem,tspan)\n\nSolves the DAE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1].\n\nKeyword Arguments\n\ndt: Sets the initial stepsize. Defaults to an automatic choice.\nsave_timeseries: Saves the result at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1.\nadaptive - Turns on adaptive timestepping for appropriate methods. Default is false.\nγ - The risk-factor γ in the q equation for adaptive timestepping. Default is 2.\nqmax - Defines the maximum value possible for the adaptive q. Default is 1.125.\nablstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\nmaxiters - Maximum number of iterations before stopping. Defaults to 1e9.\ndtmax - Maximum dt for adaptive timestepping. Defaults to half the timespan.\ndtmin - Minimum dt for adaptive timestepping. Defaults to 1e-10.\ninternalnorm - The norm for which error estimates are calculated. Default is 2.\nprogressbar - Turns on/off the Juno progressbar. Defualt is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nalg: String which defines the solver algorithm. Defult is \"idasol\". Possibilities are:\nidasol: The DAE solver from Sundials\n\n\n\n"
-},
-
-{
     "location": "solvers/dae_solve.html#Differential-Algebraic-Equation-Solvers-1",
     "page": "Differential Algebraic Equation Solvers",
     "title": "Differential Algebraic Equation Solvers",
     "category": "section",
-    "text": "solve(::AbstractDAEProblem,::AbstractArray)"
+    "text": "solve(prob::DAEProblem,tspan)Solves the DAE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
+},
+
+{
+    "location": "solvers/dae_solve.html#Special-Keyword-Arguments-1",
+    "page": "Differential Algebraic Equation Solvers",
+    "title": "Special Keyword Arguments",
+    "category": "section",
+    "text": "alg: String which defines the solver algorithm. Default is \"idasol\". Possibilities are:\nidasol: The DAE solver from Sundials"
 },
 
 {
@@ -389,7 +1005,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Finite Element Method Poisson Equation Solvers",
     "title": "DiffEqBase.solve",
     "category": "Method",
-    "text": "Finite Element Poisson Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::PoissonProblem)\n\nTakes in a definition for the heat equation -u = f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic Poisson equation -u = f + dW.\n\nKeyword Arguments\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves Ax=b using \\\n:CG = Conjugate-Gradient. Best when the space is very large and I  tMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  tMA is not positive definite.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\n\n\n\n"
+    "text": "Finite Element Poisson Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::PoissonProblem)\n\nTakes in a definition for the heat equation -u = f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic Poisson equation -u = f + dW.\n\nKeyword Arguments\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves Ax=b using \\\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\n\n\n\n"
 },
 
 {
@@ -429,7 +1045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Finite Element Method Heat Equation Solvers",
     "title": "DiffEqBase.solve",
     "category": "Method",
-    "text": "Finite Element Heat Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::HeatProblem)\n\nTakes in a definition for the heat equation u_t = u + f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic heat equation u_t = u + f + dW_t.\n\nKeyword Arguments\n\nalg = Solution algorithm. Default is :Euler. The choices are:\nLinear\n:Euler (Explicit)\n:ImplicitEuler (Implicit)\n:CrankNicholson (Implicit)\nNonlinear\n:Euler (Explicit)\n:ImplicitEuler (Nonlinear Solve)\n:CrankNicholson (Nonlinear Solve)\n:SemiImplicitEuler (Implicit)\n:SemiImplicitCrankNicholson (Implicit)\n\nExplicit algorithms only require solving matrix multiplications Au. Implicit algorithms require solving the linear equation Ax=b where x is the unknown. Nonlinear Solve algorithms require solving the nonlinear equation f(x)=0 using methods like Newton's method and is provided by NLSolve.jl. Explicit algorithms have the least stability and should be used either small Δt and non-stiff equations. The implicit algorithms have better stability, but for nonlinear equations require costly nonlinear solves in order to be solved exactly. The semi-implicit algorithms discretize with part of the equation implicit and another part explicit in order to allow for the algorithm to not require a nonlinear solve, but at the cost of some stability (though still vastly better at stability than explicit algorithms).\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves using \\ (no factorization). Not recommended.\n:Cholesky = Cholsky decomposition. Only stable of I  tMA is positive definite. This means that this works best when Δt is small. When applicable, this is the fastest.\n:LU = LU-Decomposition. A good mix between fast and stable.\n:QR = QR-Decomposition. Less numerical roundoff error than LU, but slightly slower.\n:SVD = SVD-Decomposition. By far the slowest, but the most robust to roundoff error.\n:CG = Conjugate-Gradient. Best when the space is very large and I  tMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  tMA is not positive definite.\nsave_timeseries = Makes the algorithm save the output at every timeseries_steps timesteps. By default save_timeseries is false.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\nprogress_steps = The number of steps between updates of the progress bar. Defaults to 1000.\nprogressbar = Turns on/off use of the Juno progress bar. Defaults to true. Requires Juno.\n\n\n\n"
+    "text": "Finite Element Heat Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::HeatProblem)\n\nTakes in a definition for the heat equation u_t = u + f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic heat equation u_t = u + f + dW_t.\n\nKeyword Arguments\n\nalg = Solution algorithm. Default is :Euler. The choices are:\nLinear\n:Euler (Explicit)\n:ImplicitEuler (Implicit)\n:CrankNicholson (Implicit)\nNonlinear\n:Euler (Explicit)\n:ImplicitEuler (Nonlinear Solve)\n:CrankNicholson (Nonlinear Solve)\n:SemiImplicitEuler (Implicit)\n:SemiImplicitCrankNicholson (Implicit)\n\nExplicit algorithms only require solving matrix multiplications Au. Implicit algorithms require solving the linear equation Ax=b where x is the unknown. Nonlinear Solve algorithms require solving the nonlinear equation f(x)=0 using methods like Newton's method and is provided by NLSolve.jl. Explicit algorithms have the least stability and should be used either small dt and non-stiff equations. The implicit algorithms have better stability, but for nonlinear equations require costly nonlinear solves in order to be solved exactly. The semi-implicit algorithms discretize with part of the equation implicit and another part explicit in order to allow for the algorithm to not require a nonlinear solve, but at the cost of some stability (though still vastly better at stability than explicit algorithms).\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves using \\ (no factorization). Not recommended.\n:Cholesky = Cholsky decomposition. Only stable of I  dtMA is positive definite. This means that this works best when dt is small. When applicable, this is the fastest.\n:LU = LU-Decomposition. A good mix between fast and stable.\n:QR = QR-Decomposition. Less numerical roundoff error than LU, but slightly slower.\n:SVD = SVD-Decomposition. By far the slowest, but the most robust to roundoff error.\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\nsave_timeseries = Makes the algorithm save the output at every timeseries_steps timesteps. By default save_timeseries is false.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\nprogress_steps = The number of steps between updates of the progress bar. Defaults to 1000.\nprogressbar = Turns on/off use of the Juno progress bar. Defaults to true. Requires Juno.\n\n\n\n"
 },
 
 {
@@ -497,486 +1113,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/ODEProblem.html#",
-    "page": "Defining an ODE Problem",
-    "title": "Defining an ODE Problem",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/ODEProblem.html#Defining-an-ODE-Problem-1",
-    "page": "Defining an ODE Problem",
-    "title": "Defining an ODE Problem",
-    "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODEfracdudt = f(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)),and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
-},
-
-{
-    "location": "man/ODEProblem.html#OrdinaryDiffEq.ODEProblem",
-    "page": "Defining an ODE Problem",
-    "title": "OrdinaryDiffEq.ODEProblem",
-    "category": "Type",
-    "text": "ODEProblem\n\nWraps the data which defines an ODE problem\n\nfracdudt = f(tu)\n\nwith initial condition u.\n\nConstructors\n\nODEProblem(f,u₀;analytic=nothing) : Defines the ODE with the specified functions and defines the solution if analytic is given.\n\nFields\n\nf: The drift function in the ODE.\nu₀: The initial condition.\nanalytic: A function which describes the solution.\nknownanalytic: True if the solution is given.\nnumvars: The number of variables in the system\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#Problem-Type-1",
-    "page": "Defining an ODE Problem",
-    "title": "Problem Type",
-    "category": "section",
-    "text": "OrdinaryDiffEq.ODEProblem"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_linear",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_linear",
-    "category": "Constant",
-    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "category": "Constant",
-    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\nwith BigFloats\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\nwith BigFloats\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "category": "Constant",
-    "text": "100x100 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u=12, =101, and solution\n\nu(t) = ue^t\n\non Float64. Purposefully not in-place as a test.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_threebody",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_threebody",
-    "category": "Constant",
-    "text": "The ThreeBody problem as written by Hairer:\n\nbeginalign\ny = y + 2y - fracy+D - fracy-D \ny = y - 2y - fracyD - fracyD \nD = ((y+)^2 + y^2)^32 \nD = ((y-)^2+y^2)^32 \n = 0012277471 \n =1-\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on t₀ = 0.0; T = parse(BigFloat,\"17.0652165601579625588917206249\") Periodic with that setup.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_pleides",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_pleides",
-    "category": "Constant",
-    "text": "Pleides Problem\n\nbeginalign\nx = sum_ji m(x-x)r \ny = sum_ji m(y-y)r\nendalign\n\nwhere\n\nr = ((x-x)^2 + (y-y)^2)^32\n\nand inital condtions are\n\nbeginalign\nx(0)=3  \nx(0)=3  \nx(0)=-1  \nx(0)=-3  \nx(0)=2  \nx(0)=-2  \nx(0)=2  \ny(0)=3  \ny(0)=-3  \ny(0)=2  \ny(0)=0  \ny(0)=0  \ny(0)=-4  \ny(0)=4\nendalign\n\nand with x(0)=y(0)=0 except for\n\nbeginalign\nx(0)=175 \nx(0)=-15 \ny(0)=-125 \ny(0)=1\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 3.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_vanderpol",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_vanderpol",
-    "category": "Constant",
-    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10 and u=0sqrt3\n\nNon-stiff parameters.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "category": "Constant",
-    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10^6 and u=0sqrt3\n\nStiff parameters.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_rober",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_rober",
-    "category": "Constant",
-    "text": "The Robertson biochemical reactions:\n\nbeginalign\nfracdydt = -ky+kyy  \nfracdydt =  ky-ky^2-kyy \nfracdydt =  ky^2\nendalign\n\nwhere k=004, k=3times10^7, k=10^4. For details, see:\n\nHairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on [0,1e11]\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#DiffEqProblemLibrary.prob_ode_rigidbody",
-    "page": "Defining an ODE Problem",
-    "title": "DiffEqProblemLibrary.prob_ode_rigidbody",
-    "category": "Constant",
-    "text": "Rigid Body Equations\n\nbeginalign\nfracdydt  = Iyy \nfracdydt  = Iyy \nfracdydt  = Iyy\nendalign\n\nwith I=-2, I=125, and I=-12.\n\nThe initial condition is y=100009.\n\nFrom Solving Differential Equations in R by Karline Soetaert\n\nor Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 20.\n\n\n\n"
-},
-
-{
-    "location": "man/ODEProblem.html#Example-Problems-1",
-    "page": "Defining an ODE Problem",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in src/premades/premade_problems.jl.To use a sample problem, such as prob_ode_linear, you can do something like:prob = prob_ode_linear\nsol = solve(prob,[0;1])DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
-},
-
-{
-    "location": "man/SDEProblem.html#",
-    "page": "Defining a SDE Problem",
-    "title": "Defining a SDE Problem",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/SDEProblem.html#Defining-a-SDE-Problem-1",
-    "page": "Defining a SDE Problem",
-    "title": "Defining a SDE Problem",
-    "category": "section",
-    "text": "To define an SDE Problem, you simply need to give the forcing function f, the noise function g, and the initial condition u which define an SDEdu = f(tu)dt + g(tu)dWf and g should be specified as f(t,u) and  g(t,u) respectively, and u₀ should be an AbstractArray whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. A vector of gs can also be defined to determine an SDE of higher Ito dimension."
-},
-
-{
-    "location": "man/SDEProblem.html#StochasticDiffEq.SDEProblem",
-    "page": "Defining a SDE Problem",
-    "title": "StochasticDiffEq.SDEProblem",
-    "category": "Type",
-    "text": "SDEProblem\n\nWraps the data which defines an SDE problem\n\nu = f(ut)dt + g(ut)dW\n\nwith initial condition u0.\n\nConstructors\n\nSDEProblem(f,g,u0;analytic=nothing) : Defines the SDE with the specified functions and defines the solution if analytic is given.\n\nFields\n\nf: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nanalytic: A function which describes the solution.\nknownanalytic: True if the solution is given.\nnumvars: The number of variables in the system\nsizeu: The size of the initial condition (and thus u)\nnoise: The noise process applied to the noise upon generation.\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#Problem-Type-1",
-    "page": "Defining a SDE Problem",
-    "title": "Problem Type",
-    "category": "section",
-    "text": "StochasticDiffEq.SDEProblem"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_linear",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_linear",
-    "category": "Constant",
-    "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u₀=1/2, with solution\n\nu(tuW_t)=uexp((-frac^22)t+W_t)\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_2Dlinear",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
-    "category": "Constant",
-    "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u₀=1/2 with solution\n\nu(tuW_t)=uexp((-frac^22)t+W_t)\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_wave",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_wave",
-    "category": "Constant",
-    "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u₀=1.0 with solution\n\nu(tuW_t)=arctan(fracW_t10 + tan(u))\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_lorenz",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_lorenz",
-    "category": "Constant",
-    "text": "Lorenz Attractor with additive noise\n\nbeginalign\ndx = *(y-x)dt + dW_t \ndy = (x*(-z) - y)dt + dW_t \ndz = (x*y - *z)dt + dW_t \nendalign\n\nwith =10, =28, =83, =30 and inital condition u=111.\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_cubic",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_cubic",
-    "category": "Constant",
-    "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u₀=1/2, with solution\n\nu(tuW_t)=frac(1+u)exp(W_t)+u-1(1+u)exp(W_t)+1-u\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_additive",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_additive",
-    "category": "Constant",
-    "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u₀=1.0 with α=0.1 and β=0.05, with solution\n\nu(tuW_t)=fracusqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#DiffEqProblemLibrary.prob_sde_additivesystem",
-    "page": "Defining a SDE Problem",
-    "title": "DiffEqProblemLibrary.prob_sde_additivesystem",
-    "category": "Constant",
-    "text": "A multiple dimension extension of additiveSDEExample\n\n\n\n"
-},
-
-{
-    "location": "man/SDEProblem.html#Example-Problems-1",
-    "page": "Defining a SDE Problem",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in src/premades/premade_problems.jlDiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
-},
-
-{
-    "location": "man/FEMProblem.html#",
-    "page": "Defining a FEM Problem",
-    "title": "Defining a FEM Problem",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/FEMProblem.html#Defining-a-FEM-Problem-1",
-    "page": "Defining a FEM Problem",
-    "title": "Defining a FEM Problem",
-    "category": "section",
-    "text": "Below are the definitions of the types which specify problems. Some general notes are:(t,x) vs (t,x,y): Mathematically one normally specifies equations in 2D as f(txy). However, in this code we use x as a vector. Thus you can think of x=x[:,1] and y=x[:,2]. Thus input equations are of the form f(x,t) no matter the dimension. If time is not included in the problem (for example, a Poisson equation problem), then we use f(x). An example is the equation u(xy)= sin(2x)cos(2y)(8^2) would be specified as sol(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π).\nLinearity: If the equation has linear term, they are specified with functions f(t,x). If it is nonlinear, it is specified with functions f(t,x,u). The boundary conditions are always (t,x)\nStochastic: By default the equation is deterministic. For each equation, one can specify a σ term which adds a stochastic (txu)dW_t term to the equation (or with (tx)dW_t if linear, must match f). dW_t corresponds to the type of noise which is chosen. By default this is space-time Gaussian white noise."
-},
-
-{
-    "location": "man/FEMProblem.html#FiniteElementDiffEq.PoissonProblem",
-    "page": "Defining a FEM Problem",
-    "title": "FiniteElementDiffEq.PoissonProblem",
-    "category": "Type",
-    "text": "PoissonProblem\n\nWraps the data that define a 2D linear Poisson equation problem:\n\n-u = f\n\nwith bounday conditions gD on the dirichlet boundary and gN on the neumann boundary. Linearity is determined by whether the forcing function f is a function of one variable (x) or two (u,x) (with x=[:,1] and y=[:,2]).\n\nIf they keyword σ is given, then this wraps the data that define a 2D stochastic heat equation\n\n-u = f + dW\n\nConstructors\n\nPoissonProblem(f,analytic,Du): Defines the dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function f\n\nPoissonProblem(u₀,f): Defines the problem with initial value u₀ (as a function) and f. If your initial data is a vector, wrap it as u₀(x) = vector.\n\nNote: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help.\n\nKeyword Arguments\n\ngD = dirichlet boundary function\ngN = neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = The number of variables in the Poisson system. Automatically calculated in many cases.\nD = Vector of diffusion coefficients. Defaults is D=ones(1,numvars).\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#Poisson-Equation-Problem-1",
-    "page": "Defining a FEM Problem",
-    "title": "Poisson Equation Problem",
-    "category": "section",
-    "text": "FiniteElementDiffEq.PoissonProblem"
-},
-
-{
-    "location": "man/FEMProblem.html#FiniteElementDiffEq.HeatProblem",
-    "page": "Defining a FEM Problem",
-    "title": "FiniteElementDiffEq.HeatProblem",
-    "category": "Type",
-    "text": "HeatProblem\n\nWraps the data that define a 2D heat equation problem:\n\nu_t = u + f\n\nwith bounday conditions gD on the dirichlet boundary and gN on the neumann boundary. Linearity is determined by whether the forcing function f is a function of two variables (t,x) or three (t,x,u) (with x=[:,1] and y=[:,2]).\n\nIf they keyword σ is given, then this wraps the data that define a 2D stochastic heat equation\n\nu_t = u + f + dW_t\n\nConstructors\n\nHeatProblem(analytic,Du,f): Defines the dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u₀,f): Defines the problem with initial value u₀ (as a function) and f. If your initial data is a vector, wrap it as u₀(x) = vector.\n\nNote: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help.\n\nKeyword Arguments\n\ngD = dirichlet boundary function\ngN = neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = Number of variables in the system. Automatically calculated from u₀ in most cases.\nD = Array which defines the diffusion coefficients. Default is D=ones(1,numvars).\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#Heat-Equation-Problem-1",
-    "page": "Defining a FEM Problem",
-    "title": "Heat Equation Problem",
-    "category": "section",
-    "text": "FiniteElementDiffEq.HeatProblem"
-},
-
-{
-    "location": "man/FEMProblem.html#Example-Problems-1",
-    "page": "Defining a FEM Problem",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in src/premades/premade_problems.jl"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
-    "category": "Constant",
-    "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=5u-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_noisywave",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_poisson_noisywave",
-    "category": "Constant",
-    "text": "Problem with deterministic solution: u(xy)= sin(2x)cos(2y)(8^2) and additive noise (xy)=5\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
-    "category": "Constant",
-    "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=1-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_wave",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_poisson_wave",
-    "category": "Constant",
-    "text": "Problem defined by the solution: u(xy)= sin(2x)cos(2y)(8^2)\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_poisson_birthdeath",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_poisson_birthdeath",
-    "category": "Constant",
-    "text": "Nonlinear Poisson equation with f(u)=1-u2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#Poisson-Equation-1",
-    "page": "Defining a FEM Problem",
-    "title": "Poisson Equation",
-    "category": "section",
-    "text": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_poisson_noisywave\nDiffEqProblemLibrary.prob_poisson_birthdeathsystem\nDiffEqProblemLibrary.prob_poisson_wave\nDiffEqProblemLibrary.prob_poisson_birthdeath"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_diffuse",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
-    "category": "Constant",
-    "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "category": "Constant",
-    "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_moving",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_moving",
-    "category": "Constant",
-    "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
-    "category": "Function",
-    "text": "heatProblemExample_gierermeinhardt(;a=1,α=1,D=[0.01 1.0],ubar=1,vbar=0,β=10,startNoise=0.01)\n\nThe Gierer-Meinhardt equations wtih quasi-random initial perturbations.\n\nbeginalign\nu_t = fracauv^2 + baru -u \nv_t = au^2 + barv - v\nendalign\n\nThe equation starts at the steady state\n\nbeginalign\nu_ss = fracbaru+ \nv_ss = frac u_ss^2\nendalign\n\nwith a bit of noise.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.heatProblemExample_grayscott",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.heatProblemExample_grayscott",
-    "category": "Function",
-    "text": "heatProblemExample_grayscott(;ρ=.03,k=.062,D=[1e-3 .5e-3])\n\nThe Gray-Scott equations with quasi-random initial conditions. The reaction equations are given by:\n\nbeginalign\nu_t = uv^2 + (1-v) \nv_t = uv^2 - (+k)v\nendalign\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_pure",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_pure",
-    "category": "Constant",
-    "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_diffusionconstants",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_diffusionconstants",
-    "category": "Constant",
-    "text": "Example problem which solves the homogeneous Heat equation with all mass starting at (1/2,1/2) with two different diffusion constants, D=001 and D=0001. Good animation test.\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "page": "Defining a FEM Problem",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
-},
-
-{
-    "location": "man/FEMProblem.html#Heat-Equation-1",
-    "page": "Defining a FEM Problem",
-    "title": "Heat Equation",
-    "category": "section",
-    "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.heatProblemExample_gierermeinhardt\nDiffEqProblemLibrary.heatProblemExample_grayscott\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_diffusionconstants\nDiffEqProblemLibrary.prob_femheat_birthdeath"
-},
-
-{
-    "location": "man/StokesProblem.html#",
-    "page": "Defining a Stokes Problem",
-    "title": "Defining a Stokes Problem",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/StokesProblem.html#Defining-a-Stokes-Problem-1",
-    "page": "Defining a Stokes Problem",
-    "title": "Defining a Stokes Problem",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "man/StokesProblem.html#StokesDiffEq.StokesProblem",
-    "page": "Defining a Stokes Problem",
-    "title": "StokesDiffEq.StokesProblem",
-    "category": "Type",
-    "text": "StokesProblem Defines the solution to a stationary Stokes problem:\n\n\n\nConstructors\n\nStokesProblem(f₁,f₂,g,uanalytic,vanalytic,panalytic) StokesProblem(f₁,f₂,g,ugD,vgD)\n\nFields\n\nf₁::Function\nf₂::Function\ng::Function\nugD::Function\nvgD::Function\nuanalytic::Function\nvanalytic::Function\npanalytic::Function\ntrueknown::Bool\n\n\n\n"
-},
-
-{
-    "location": "man/StokesProblem.html#Problem-Type-1",
-    "page": "Defining a Stokes Problem",
-    "title": "Problem Type",
-    "category": "section",
-    "text": "StokesDiffEq.StokesProblem"
-},
-
-{
-    "location": "man/StokesProblem.html#StokesDiffEq.prob_stokes_dirichletzero",
-    "page": "Defining a Stokes Problem",
-    "title": "StokesDiffEq.prob_stokes_dirichletzero",
-    "category": "Constant",
-    "text": "Example problem for solving the trivial stationary Stokes equation.\n\n\n\n"
-},
-
-{
-    "location": "man/StokesProblem.html#StokesDiffEq.prob_stokes_homogenous",
-    "page": "Defining a Stokes Problem",
-    "title": "StokesDiffEq.prob_stokes_homogenous",
-    "category": "Constant",
-    "text": "Example problem for a homogeneous stationary Stokes equation.\n\n\n\n"
-},
-
-{
-    "location": "man/StokesProblem.html#Example-Problems-1",
-    "page": "Defining a Stokes Problem",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in src/premades/premade_problems.jlStokesDiffEq.prob_stokes_dirichletzero\nStokesDiffEq.prob_stokes_homogenous"
-},
-
-{
     "location": "man/mesh.html#",
     "page": "Meshes",
     "title": "Meshes",
@@ -1005,7 +1141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Meshes",
     "title": "FiniteElementDiffEq.FEMmesh",
     "category": "Type",
-    "text": "FEMmesh\n\nHolds the information describing a finite element mesh. For information on how (node,elem) can be interpreted as a mesh describing a geometry, see the mesh specification documentation.\n\nFields\n\nnode: The nodes in the (node,elem) structure.\nelem: The elements in the (node,elem) structure.\nbdnode: Vector of indices for the boundary nodes.\nfreenode: Vector of indices for the free (non-dirichlet bound) nodes.\nbdedge: Indices of the edges in totaledge which are on the boundary.\nis_bdnode: Boolean which is true for nodes on the boundary.\nis_bdelem: Boolean which is true for elements on the boundary.\nbdflag: Flag which describes the type of boundary condition. 1=> dirichlet, 2=>neumann, 3=>robin.\ntotaledge: Vector of the edges.\narea: Vector which is the area for each element.\ndirichlet: Indices for the nodes on the boundary which have a dirichlet boundary condition.\nneumann: Indices for the nodes on the boundary which have a neumann boundary condition.\nrobin: Indices for the nodes on the boundary which have a robin boundary condition.\nN::Int: The number of nodes.\nNT::Int: The number of triangles (elements).\nΔx: The spatial discretization size. If non-uniform, this is the average.\nΔt: The time discretization size. If adaptive, this is the initial.\nT::Number: The end time.\nnumiters::Int: The number of iterations to go from 0 to T using Δt.\nμ: The CFL μ stability parameter.\nν: The CFL ν stability parameter.\nevolutionEq: True for a mesh which has non-trivial time components.\n\n\n\n"
+    "text": "FEMmesh\n\nHolds the information describing a finite element mesh. For information on how (node,elem) can be interpreted as a mesh describing a geometry, see the mesh specification documentation.\n\nFields\n\nnode: The nodes in the (node,elem) structure.\nelem: The elements in the (node,elem) structure.\nbdnode: Vector of indices for the boundary nodes.\nfreenode: Vector of indices for the free (non-dirichlet bound) nodes.\nbdedge: Indices of the edges in totaledge which are on the boundary.\nis_bdnode: Boolean which is true for nodes on the boundary.\nis_bdelem: Boolean which is true for elements on the boundary.\nbdflag: Flag which describes the type of boundary condition. 1=> dirichlet, 2=>neumann, 3=>robin.\ntotaledge: Vector of the edges.\narea: Vector which is the area for each element.\ndirichlet: Indices for the nodes on the boundary which have a dirichlet boundary condition.\nneumann: Indices for the nodes on the boundary which have a neumann boundary condition.\nrobin: Indices for the nodes on the boundary which have a robin boundary condition.\nN::Int: The number of nodes.\nNT::Int: The number of triangles (elements).\ndx: The spatial discretization size. If non-uniform, this is the average.\ndt: The time discretization size. If adaptive, this is the initial.\nT::Number: The end time.\nnumiters::Int: The number of iterations to go from 0 to T using dt.\nμ: The CFL μ stability parameter.\nν: The CFL ν stability parameter.\nevolutionEq: True for a mesh which has non-trivial time components.\n\n\n\n"
 },
 
 {
@@ -1061,7 +1197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Meshes",
     "title": "FiniteElementDiffEq.notime_squaremesh",
     "category": "Function",
-    "text": "notime_squaremesh(square,Δx,bdtype)\n\nComputes the (node,elem) square mesh for the square with the chosen Δx and boundary settings.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\nΔx=.25\nnotime_squaremesh(square,Δx,\"dirichlet\")\n\n\n\n"
+    "text": "notime_squaremesh(square,dx,bdtype)\n\nComputes the (node,elem) square mesh for the square with the chosen dx and boundary settings.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25\nnotime_squaremesh(square,dx,\"dirichlet\")\n\n\n\n"
 },
 
 {
@@ -1069,7 +1205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Meshes",
     "title": "FiniteElementDiffEq.parabolic_squaremesh",
     "category": "Function",
-    "text": "parabolic_squaremesh(square,Δx,Δt,T,bdtype)\n\nComputes the (node,elem) x [0,T] parabolic square mesh for the square with the chosen Δx and boundary settings and with the constant time intervals Δt.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\nΔx=.25; Δt=.25;T=2\nparabolic_squaremesh(square,Δx,Δt,T,:dirichlet)\n\n\n\n"
+    "text": "parabolic_squaremesh(square,dx,dt,T,bdtype)\n\nComputes the (node,elem) x [0,T] parabolic square mesh for the square with the chosen dx and boundary settings and with the constant time intervals dt.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25; dt=.25;T=2\nparabolic_squaremesh(square,dx,dt,T,:dirichlet)\n\n\n\n"
 },
 
 {
@@ -1181,55 +1317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "The Solution Type",
     "title": "The Solution Type",
     "category": "section",
-    "text": "Each solver has an appropriate solution type. The solution type holds all of the information about the problem which was solved an its solution. If you enabled save_timeseries=true, then the solver also includes a time-course of the solution captured at every timeseries_steps steps.The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. We can usesol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i. The final value of the simulation, which is always saved, is saved tosol.uIf the solver allows for dense output (any ODE solver) and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)If the analytical solution, we also havesol.u_analytic # final value\nsol.timeseries_analytic # timeseries of analytical solution, saved if save_timesseries == true\nsol.prob.analytic(t) # The analytic solution at time tPlotting functionality is provided for each solution type. To plot the solution, simply useplot(sol)The plotting function is implemented as a recipe to Plots.jl and as such receives all of the features of a Plots.jl plot."
-},
-
-{
-    "location": "man/solution.html#FiniteElementDiffEq.FEMSolution",
-    "page": "The Solution Type",
-    "title": "FiniteElementDiffEq.FEMSolution",
-    "category": "Type",
-    "text": "FEMSolution\n\nHolds the data for the solution to a finite element problem.\n\nFields\n\nfem_mesh::FEMmesh: The finite element mesh the problem was solved on.\nu::Array{Float64}: The solution (at the final timepoint)\ntrueknown::Bool: Boolean flag for if the true solution is given.\nu_analytic::AbstractArrayOrVoid: The true solution at the final timepoint.\nerrors: A dictionary of the error calculations.\nappxtrue::Bool: Boolean flag for if u_analytic was an approximation.\ntimeseries::AbstractArrayOrVoid: u over time. Only saved ifsave_timeseries=true` is specified in the solver.\nt::AbstractArrayOrVoid: All the t's in the solution. Only saved if save_timeseries=true is specified in the solver.\nprob::DEProblem: Holds the problem object used to define the problem.\nsave_timeseries::Bool: True if solver saved the extra timepoints.\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#DiffEqBase.DESolution",
-    "page": "The Solution Type",
-    "title": "DiffEqBase.DESolution",
-    "category": "Type",
-    "text": "PdeSolution: Wrapper for the objects obtained from a solver\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#StochasticDiffEq.SDESolution",
-    "page": "The Solution Type",
-    "title": "StochasticDiffEq.SDESolution",
-    "category": "Type",
-    "text": "SDESolution\n\nHolds the data for the solution to a SDE problem.\n\nFields\n\nu::Array{Float64}: The solution (at the final timepoint)\ntrueknown::Bool: Boolean flag for if the true solution is given.\nu_analytic::AbstractArrayOrVoid: The true solution at the final timepoint.\nerrors: A dictionary of the error calculations.\ntimeseries::AbstractArrayOrVoid: u over time. Only saved ifsave_timeseries=true` is specified in the solver.\nt::AbstractArrayOrVoid: All the t's in the solution. Only saved if save_timeseries=true is specified in the solver.\nWs: All of the W's in the solution. Only saved if save_timeseries=true is specified in the solver.\ntimeseries_analytic: If save_timeseries=true, saves the solution at each save point.\nprob::DEProblem: Holds the problem object used to define the problem.\nsave_timeseries::Bool: True if solver saved the extra timepoints.\nappxtrue::Bool: Boolean flag for if u_analytic was an approximation.\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#OrdinaryDiffEq.ODESolution",
-    "page": "The Solution Type",
-    "title": "OrdinaryDiffEq.ODESolution",
-    "category": "Type",
-    "text": "ODESolution\n\nHolds the data for the solution to an ODE problem.\n\nFields\n\nu::Array{Float64}: The solution (at the final timepoint)\ntrueknown::Bool: Boolean flag for if the true solution is given.\nu_analytic::AbstractArrayOrVoid: The true solution at the final timepoint.\nerrors: A dictionary of the error calculations.\ntimeseries::AbstractArrayOrVoid: u over time. Only saved ifsave_timeseries=true` is specified in the solver.\nt::AbstractArrayOrVoid: All the t's in the solution. Only saved if save_timeseries=true is specified in the solver.\ntimeseries_analytic: If save_timeseries=true, saves the solution at each timestep.\nprob::DEProblem: Holds the problem object used to define the problem.\nsave_timeseries::Bool: True if solver saved the extra timepoints.\nappxtrue::Bool: Boolean flag for if u_analytic was an approximation.\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#StokesDiffEq.StokesSolution",
-    "page": "The Solution Type",
-    "title": "StokesDiffEq.StokesSolution",
-    "category": "Type",
-    "text": "StokesSolution\n\nHolds the data for the solution to a Stokes problem.\n\nFields\n\nu\nv\np\nu_analytic\nvTrue\npTrue\nmesh\ntrueknown\nerrors\nconverrors\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#Solution-Types-1",
-    "page": "The Solution Type",
-    "title": "Solution Types",
-    "category": "section",
-    "text": "FiniteElementDiffEq.FEMSolution\nDiffEqBase.DESolution\nStochasticDiffEq.SDESolution\nOrdinaryDiffEq.ODESolution\nStokesDiffEq.StokesSolution"
+    "text": "Each solver has an appropriate solution type. The solution type holds all of the information about the problem which was solved an its solution. If you enabled save_timeseries=true, then the solver also includes a time-course of the solution captured at every timeseries_steps steps.The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. We can usesol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i.If the solver allows for dense output (any ODE solver) and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)If the analytical solution, we also havesol.u_analytic # timeseries of analytical solution\nsol.prob.analytic(t) # The analytic solution at time tPlotting functionality is provided for each solution type. To plot the solution, simply useplot(sol)The plotting function is implemented as a recipe to Plots.jl and as such receives all of the features of a Plots.jl plot."
 },
 
 {
@@ -1237,7 +1325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "The Solution Type",
     "title": "DiffEqDevTools.appxtrue!",
     "category": "Function",
-    "text": "appxtrue!(sol::AbstractODESolution,sol2::TestSolution)\n\nUses the interpolant from the higher order solution sol2 to approximate errors for sol. If sol2 has no interpolant, only the final error is calculated.\n\n\n\nappxtrue!(sol::FEMSolution,sol2::FEMSolution)\n\nAdds the solution from sol2 to the FEMSolution object sol. Useful to add a quasi-true solution when none is known by computing once at a very small time/space step and taking that solution as the \"true\" solution\n\n\n\nappxtrue!(sol::AbstractODESolution,sol2::AbstractODESolution)\n\nUses the interpolant from the higher order solution sol2 to approximate errors for sol. If sol2 has no interpolant, only the final error is calculated.\n\n\n\n"
+    "text": "appxtrue!(sol::FEMSolution,sol2::FEMSolution)\n\nAdds the solution from sol2 to the FEMSolution object sol. Useful to add a quasi-true solution when none is known by computing once at a very small time/space step and taking that solution as the \"true\" solution\n\n\n\n"
 },
 
 {
@@ -1401,14 +1489,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/plot.html#Extra-Plot-Functions-1",
-    "page": "Plot Functions",
-    "title": "Extra Plot Functions",
-    "category": "section",
-    "text": "FiniteElementDiffEq.animate"
-},
-
-{
     "location": "man/parameter_estimation.html#",
     "page": "Parameter Estimation",
     "title": "Parameter Estimation",
@@ -1561,19 +1641,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/convergence.html#DiffEqDevTools.ConvergenceSimulation",
-    "page": "Convergence Simulations",
-    "title": "DiffEqDevTools.ConvergenceSimulation",
-    "category": "Type",
-    "text": "ConvergenceSimulation\n\nA type which holds the data from a convergence simulation.\n\nFields\n\nsolutions::Array{<:DESolution}: Holds all the PdeSolutions.\nerrors: Dictionary of the error calculations. Can contain:\nh1Errors: Vector of the H1 errors.\nl2Errors: Vector of the L2 errors.\nmaxErrors: Vector of the nodal maximum errors.\nnode2Errors: Vector of the nodal l2 errors.\nN: The number of simulations.\nauxdata: Auxillary data of the convergence simluation. Entries can include:\nΔts: The Δt's in the simulations.\nΔxs: The Δx's in the simulations.\nμs: The CFL μ's in the simulations.\nνs: The CFL ν's in the simulations.\n𝒪est: Dictionary of order estimates. Can contain:\nConvEst_h1: The H1 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the Δt/Δx. If alternate scaling, modify by dividing of log(base,ConvEst_h1)\nConvEst_l2: The L2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the Δt/Δx. If alternate scaling, modify by dividing of log(base,ConvEst_l2)\nConvEst_max: The nodal maximum error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the Δt/Δx. If alternate scaling, modify by dividing of log(base,ConvEst_max)\nConvEst_node2: The nodal l2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the Δt/Δx. If alternate scaling, modify by dividing of log(base,ConvEst_node2)\nconvergence_axis: The axis along which convergence is calculated. For example, if  we calculate the Δt convergence, convergence_axis is the Δts used in the calculation.\n\n\n\n"
-},
-
-{
     "location": "man/convergence.html#The-ConvergenceSimulation-Type-1",
     "page": "Convergence Simulations",
     "title": "The ConvergenceSimulation Type",
     "category": "section",
-    "text": "DiffEqDevTools.ConvergenceSimulation"
+    "text": "A type which holds the data from a convergence simulation."
+},
+
+{
+    "location": "man/convergence.html#Fields-1",
+    "page": "Convergence Simulations",
+    "title": "Fields",
+    "category": "section",
+    "text": "solutions::Array{<:DESolution}: Holds all the PdeSolutions.\nerrors: Dictionary of the error calculations. Can contain:\nh1Errors: Vector of the H1 errors.\nl2Errors: Vector of the L2 errors.\nmaxErrors: Vector of the nodal maximum errors.\nnode2Errors: Vector of the nodal l2 errors.\nN: The number of simulations.\nauxdata: Auxillary data of the convergence simluation. Entries can include:\ndts: The dt's in the simulations.\ndxs: The dx's in the simulations.\nμs: The CFL μ's in the simulations.\nνs: The CFL ν's in the simulations.\n𝒪est: Dictionary of order estimates. Can contain:\nConvEst_h1: The H1 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_h1)\nConvEst_l2: The L2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_l2)\nConvEst_max: The nodal maximum error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_max)\nConvEst_node2: The nodal l2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_node2)\nconvergence_axis: The axis along which convergence is calculated. For example, if  we calculate the dt convergence, convergence_axis is the dts used in the calculation."
 },
 
 {
@@ -1585,35 +1665,83 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/convergence.html#Base.length-Tuple{DiffEqDevTools.ConvergenceSimulation}",
+    "location": "man/convergence.html#ODE-1",
     "page": "Convergence Simulations",
-    "title": "Base.length",
-    "category": "Method",
-    "text": "length(simres::ConvergenceSimulation)\n\nReturns the number of simultations in the Convergence Simulation\n\n\n\n"
-},
-
-{
-    "location": "man/convergence.html#DiffEqDevTools.calc𝒪estimates",
-    "page": "Convergence Simulations",
-    "title": "DiffEqDevTools.calc𝒪estimates",
-    "category": "Function",
-    "text": "calc𝒪estimates(error::Vector{Number})\n\nComputes the pairwise convergence estimate for a convergence test done by halving/doubling stepsizes via\n\nlog2(error[i+1]/error[i])\n\nReturns the mean of the convergence estimates\n\n\n\n"
-},
-
-{
-    "location": "man/convergence.html#DiffEqDevTools.test_convergence",
-    "page": "Convergence Simulations",
-    "title": "DiffEqDevTools.test_convergence",
-    "category": "Function",
-    "text": "test_convergence(Δts::AbstractArray,prob::AbstractSDEProblem)\n\nTests the strong order time convergence of the given algorithm on the given problem solved over the given Δts.\n\nKeyword Arguments\n\nT: The final time. Default is 1\nnumMonte: The number of simulations for each Δt. Default is 10000.\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test. Defaults to \"EM\".\n\n\n\ntest_convergence(Δts::AbstractArray,prob::AbstractODEProblem)\n\nTests the order of the time convergence of the given algorithm on the given problem solved over the given Δts.\n\nKeyword Arguments\n\nT: The final time. Default is 1\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test. Defaults to \"Euler\".\ntableau: The tableau used for generic methods. Defaults to ODE_DEFAULT_TABLEAU.\n\n\n\ntest_convergence(Δts::AbstractArray,Δxs::AbstractArray,prob::AbstractHeatProblem,convergence_axis)\n\nTests the convergence of the solver algorithm on the given Heat problem with the Δts and Δxs as given. Uses the square mesh [0,1]x[0,1]. The convergence axis is the axis along which convergence is calculated. For example, when testing Δt convergence, convergence_axis = Δts.\n\nKeyword Arguments\n\nT: The final time. Defaults to 1\nalg: The algorithm to test. Default is \"Euler\".\n\n\n\ntest_convergence(Δxs::AbstractArray,prob::PoissonProblem)\n\nTests the convergence of the solver algorithm on the given Poisson problem with Δxs as given. Uses the square mesh [0,1]x[0,1].\n\nKeyword Arguments\n\nsolver: Which solver to use. Default is \"Direct\".\n\n\n\n"
-},
-
-{
-    "location": "man/convergence.html#Related-Functions-1",
-    "page": "Convergence Simulations",
-    "title": "Related Functions",
+    "title": "ODE",
     "category": "section",
-    "text": "Base.length(::ConvergenceSimulation)\nDiffEqDevTools.calc𝒪estimates\nDiffEqDevTools.test_convergence"
+    "text": "test_convergence(dts::AbstractArray,prob::AbstractODEProblem)Tests the order of the time convergence of the given algorithm on the given problem solved over the given dts."
+},
+
+{
+    "location": "man/convergence.html#Keyword-Arguments-1",
+    "page": "Convergence Simulations",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "T: The final time. Default is 1\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test.\ntableau: The tableau used for generic methods. Defaults to ODE_DEFAULT_TABLEAU."
+},
+
+{
+    "location": "man/convergence.html#SDE-1",
+    "page": "Convergence Simulations",
+    "title": "SDE",
+    "category": "section",
+    "text": "test_convergence(dts::AbstractArray,prob::AbstractSDEProblem)Tests the strong order time convergence of the given algorithm on the given problem solved over the given dts."
+},
+
+{
+    "location": "man/convergence.html#Keyword-Arguments-2",
+    "page": "Convergence Simulations",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "T: The final time. Default is 1\nnumMonte: The number of simulations for each dt. Default is 10000.\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test. Defaults to \"EM\"."
+},
+
+{
+    "location": "man/convergence.html#Poisson-1",
+    "page": "Convergence Simulations",
+    "title": "Poisson",
+    "category": "section",
+    "text": "test_convergence(dxs::AbstractArray,prob::PoissonProblem)Tests the convergence of the solver algorithm on the given Poisson problem with dxs as given. Uses the square mesh [0,1]x[0,1]."
+},
+
+{
+    "location": "man/convergence.html#Keyword-Arguments-3",
+    "page": "Convergence Simulations",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "solver: Which solver to use. Default is \"Direct\"."
+},
+
+{
+    "location": "man/convergence.html#Heat-1",
+    "page": "Convergence Simulations",
+    "title": "Heat",
+    "category": "section",
+    "text": "test_convergence(dts::AbstractArray,dxs::AbstractArray,prob::AbstractHeatProblem,convergence_axis)Tests the convergence of the solver algorithm on the given Heat problem with the dts and dxs as given. Uses the square mesh [0,1]x[0,1]. The convergence axis is the axis along which convergence is calculated. For example, when testing dt convergence, convergence_axis = dts."
+},
+
+{
+    "location": "man/convergence.html#Keyword-Arguments-4",
+    "page": "Convergence Simulations",
+    "title": "Keyword Arguments",
+    "category": "section",
+    "text": "T: The final time. Defaults to 1\nalg: The algorithm to test. Default is \"Euler\"."
+},
+
+{
+    "location": "man/convergence.html#Utilities-1",
+    "page": "Convergence Simulations",
+    "title": "Utilities",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "man/convergence.html#Order-Estimation-1",
+    "page": "Convergence Simulations",
+    "title": "Order Estimation",
+    "category": "section",
+    "text": "calc𝒪estimates(error::Vector{Number})`Computes the pairwise convergence estimate for a convergence test done by halving/doubling stepsizes vialog2(error[i+1]/error[i])Returns the mean of the convergence estimates."
 },
 
 {
@@ -1757,7 +1885,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internal Finite Element Tools",
     "title": "FiniteElementDiffEq.CFLν",
     "category": "Function",
-    "text": "CFLν(Δt,Δx)`\n\nComputes the CFL-condition = tx\n\n\n\n"
+    "text": "CFLν(dt,dx)`\n\nComputes the CFL-condition = dtdx\n\n\n\n"
 },
 
 {
@@ -1765,7 +1893,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Internal Finite Element Tools",
     "title": "FiniteElementDiffEq.CFLμ",
     "category": "Function",
-    "text": "CFLμ(Δt,Δx)`\n\nComputes the CFL-condition = t(x*x)\n\n\n\n"
+    "text": "CFLμ(dt,dx)`\n\nComputes the CFL-condition = dt(dx*dx)\n\n\n\n"
 },
 
 {
@@ -1902,1110 +2030,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Extra Functions",
     "category": "section",
     "text": "FiniteElementDiffEq.getNoise\nDiffEqBase.numparameters\nDiffEqBase.Tableau\nDiffEqBase.DEProblem"
-},
-
-{
-    "location": "internals/solver_helpers.html#",
-    "page": "Solver Helpers",
-    "title": "Solver Helpers",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "internals/solver_helpers.html#Solver-Helpers-1",
-    "page": "Solver Helpers",
-    "title": "Solver Helpers",
-    "category": "section",
-    "text": "This package includes the documentation for the helper functions for the various solvers."
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqBase.DEIntegrator",
-    "page": "Solver Helpers",
-    "title": "DiffEqBase.DEIntegrator",
-    "category": "Type",
-    "text": "DEIntegrator: A DifferentialEquations Integrator type, used to initiate a solver.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#Abstract-Types-1",
-    "page": "Solver Helpers",
-    "title": "Abstract Types",
-    "category": "section",
-    "text": "DiffEqBase.DEIntegrator"
-},
-
-{
-    "location": "internals/solver_helpers.html#ODE-Tableaus-1",
-    "page": "Solver Helpers",
-    "title": "ODE Tableaus",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "internals/solver_helpers.html#Base.length-Tuple{DiffEqBase.ODERKTableau}",
-    "page": "Solver Helpers",
-    "title": "Base.length",
-    "category": "Method",
-    "text": "Base.length(tab::ODERKTableau)\n\nDefines the length of a Runge-Kutta method to be the number of stages.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.stability_region",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.stability_region",
-    "category": "Function",
-    "text": "stability_region(z,tab::ODERKTableau)\n\nCalculates the stability function from the tableau at z. Stable if <1.\n\nr(z) = fracdet(I-zA+zeb^T)det(I-zA)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqBase.ExplicitRKTableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqBase.ExplicitRKTableau",
-    "category": "Type",
-    "text": "ExplicitRKTableau\n\nHolds a tableau which defines an explicit Runge-Kutta method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqBase.ImplicitRKTableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqBase.ImplicitRKTableau",
-    "category": "Type",
-    "text": "ImplicitRKTableau\n\nHolds a tableau which defines an implicit Runge-Kutta method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqBase.ODERKTableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqBase.ODERKTableau",
-    "category": "Type",
-    "text": "ODERKTableau: A Runge-Kutta Tableau for an ODE integrator\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.ODE_DEFAULT_TABLEAU",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.ODE_DEFAULT_TABLEAU",
-    "category": "Constant",
-    "text": "ODE_DEFAULT_TABLEAU\n\nSets the default tableau for the ODE solver. Currently Dormand-Prince 4/5.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#Tableau-Methods-1",
-    "page": "Solver Helpers",
-    "title": "Tableau Methods",
-    "category": "section",
-    "text": "Base.length(::DiffEqBase.ODERKTableau)\nDiffEqDevTools.stability_region\nDiffEqBase.ExplicitRKTableau\nDiffEqBase.ImplicitRKTableau\nDiffEqBase.ODERKTableau\nOrdinaryDiffEq.ODE_DEFAULT_TABLEAU"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructEuler",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructEuler",
-    "category": "Function",
-    "text": "Euler's method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRalston",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRalston",
-    "category": "Function",
-    "text": "Ralston's Order 2 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructHeun",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructHeun",
-    "category": "Function",
-    "text": "Heun's Order 2 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructKutta3",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructKutta3",
-    "category": "Function",
-    "text": "Kutta's Order 3 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructBS3",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructBS3",
-    "category": "Function",
-    "text": "constructBogakiShampine3()\n\nConstructs the tableau object for the Bogakai-Shampine Order 2/3 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructBogakiShampine3",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructBogakiShampine3",
-    "category": "Function",
-    "text": "constructBogakiShampine3()\n\nConstructs the tableau object for the Bogakai-Shampine Order 2/3 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRK4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRK4",
-    "category": "Function",
-    "text": "Classic RK4 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRK438Rule",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRK438Rule",
-    "category": "Function",
-    "text": "Classic RK4 3/8's rule method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRKF4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRKF4",
-    "category": "Function",
-    "text": "Runge-Kutta-Fehberg Order 4/3\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRKF5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRKF5",
-    "category": "Function",
-    "text": "Runge-Kutta-Fehlberg Order 4/5 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCashKarp",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCashKarp",
-    "category": "Function",
-    "text": "constructCashKarp()\n\nConstructs the tableau object for the Cash-Karp Order 4/5 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructDormandPrince",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructDormandPrince",
-    "category": "Function",
-    "text": "constructDormandPrince()\n\nConstructs the tableau object for the Dormand-Prince Order 4/5 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructBS5",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructBS5",
-    "category": "Function",
-    "text": "An Efficient Runge-Kutta (4,5) Pair by P.Bogacki and L.F.Shampine  Computers and Mathematics with Applications, Vol. 32, No. 6, 1996, pages 15 to 28\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructPapakostasPapaGeorgiou5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructPapakostasPapaGeorgiou5",
-    "category": "Function",
-    "text": "S.N. Papakostas and G. PapaGeorgiou higher error more stable\n\nA Family of Fifth-order Runge-Kutta Pairs, by S.N. Papakostas and G. PapaGeorgiou,  Mathematics of Computation,Volume 65, Number 215, July 1996, Pages 1165-1181.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructPapakostasPapaGeorgiou52",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructPapakostasPapaGeorgiou52",
-    "category": "Function",
-    "text": "S.N. Papakostas and G. PapaGeorgiou less stable lower error  Strictly better than DP5\n\nA Family of Fifth-order Runge-Kutta Pairs, by S.N. Papakostas and G. PapaGeorgiou,  Mathematics of Computation,Volume 65, Number 215, July 1996, Pages 1165-1181.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTsitouras5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTsitouras5",
-    "category": "Function",
-    "text": "Runge–Kutta pairs of orders 5(4) using the minimal set of simplifying assumptions,  by Ch. Tsitouras, TEI of Chalkis, Dept. of Applied Sciences, GR34400, Psahna, Greece.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLutherKonen5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLutherKonen5",
-    "category": "Function",
-    "text": "Luther and Konen's First Order 5 Some Fifth-Order Classical Runge Kutta Formulas, H.A.Luther and H.P.Konen,  Siam Review, Vol. 3, No. 7, (Oct., 1965) pages 551-558.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLutherKonen52",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLutherKonen52",
-    "category": "Function",
-    "text": "Luther and Konen's Second Order 5 Some Fifth-Order Classical Runge Kutta Formulas, H.A.Luther and H.P.Konen,  Siam Review, Vol. 3, No. 7, (Oct., 1965) pages 551-558.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLutherKonen53",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLutherKonen53",
-    "category": "Function",
-    "text": "Luther and Konen's Third Order 5 Some Fifth-Order Classical Runge Kutta Formulas, H.A.Luther and H.P.Konen,  Siam Review, Vol. 3, No. 7, (Oct., 1965) pages 551-558.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRungeFirst5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRungeFirst5",
-    "category": "Function",
-    "text": "Runge's First Order 5 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLawson5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLawson5",
-    "category": "Function",
-    "text": "Lawson's 5th order scheme\n\nAn Order Five Runge Kutta Process with Extended Region of Stability, J. Douglas Lawson,  Siam Journal on Numerical Analysis, Vol. 3, No. 4, (Dec., 1966) pages 593-597\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructSharpSmart5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructSharpSmart5",
-    "category": "Function",
-    "text": "Explicit Runge-Kutta Pairs with One More Derivative Evaluation than the Minimum, by P.W.Sharp and E.Smart,  Siam Journal of Scientific Computing, Vol. 14, No. 2, pages. 338-348, March 1993.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructBogakiShampine5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructBogakiShampine5",
-    "category": "Function",
-    "text": "An Efficient Runge-Kutta (4,5) Pair by P.Bogacki and L.F.Shampine  Computers and Mathematics with Applications, Vol. 32, No. 6, 1996, pages 15 to 28\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCassity5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCassity5",
-    "category": "Function",
-    "text": "Cassity's Order 5 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructButcher6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructButcher6",
-    "category": "Function",
-    "text": "Butcher's First Order 6 method\n\nOn Runge-Kutta Processes of High Order, by J. C. Butcher,  Journal of the Australian Mathematical Society, Vol. 4, (1964), pages 179 to 194\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructButcher62",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructButcher62",
-    "category": "Function",
-    "text": "Butcher's Second Order 6 method\n\nOn Runge-Kutta Processes of High Order, by J. C. Butcher,  Journal of the Australian Mathematical Society, Vol. 4, (1964), pages 179 to 194\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructButcher63",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructButcher63",
-    "category": "Function",
-    "text": "Butcher's Third Order 6\n\nOn Runge-Kutta Processes of High Order, by J. C. Butcher,  Journal of the Australian Mathematical Society, Vol. 4, (1964), pages 179 to 194\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerRobust6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerRobust6",
-    "category": "Function",
-    "text": "From Verner's Website\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6A",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6A",
-    "category": "Function",
-    "text": "TanakaKasugaYamashitaYazaki Order 6 A\n\nOn the Optimization of Some Eight-stage Sixth-order Explicit Runge-Kutta Method,  by M. Tanaka, K. Kasuga, S. Yamashita and H. Yazaki,  Journal of the Information Processing Society of Japan, Vol. 34, No. 1 (1993), pages 62 to 74.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6B",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6B",
-    "category": "Function",
-    "text": "constructTanakaKasugaYamashitaYazaki Order 6 B\n\nOn the Optimization of Some Eight-stage Sixth-order Explicit Runge-Kutta Method,  by M. Tanaka, K. Kasuga, S. Yamashita and H. Yazaki,  Journal of the Information Processing Society of Japan, Vol. 34, No. 1 (1993), pages 62 to 74.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6C",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6C",
-    "category": "Function",
-    "text": "constructTanakaKasugaYamashitaYazaki Order 6 C\n\nOn the Optimization of Some Eight-stage Sixth-order Explicit Runge-Kutta Method,  by M. Tanaka, K. Kasuga, S. Yamashita and H. Yazaki,  Journal of the Information Processing Society of Japan, Vol. 34, No. 1 (1993), pages 62 to 74.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6D",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaKasugaYamashitaYazaki6D",
-    "category": "Function",
-    "text": "constructTanakaKasugaYamashitaYazaki Order 6 D\n\nOn the Optimization of Some Eight-stage Sixth-order Explicit Runge-Kutta Method,  by M. Tanaka, K. Kasuga, S. Yamashita and H. Yazaki,  Journal of the Information Processing Society of Japan, Vol. 34, No. 1 (1993), pages 62 to 74.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructHuta6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructHuta6",
-    "category": "Function",
-    "text": "Anton Hutas First Order 6 method\n\nUne amélioration de la méthode de Runge-Kutta-Nyström pour la résolution numérique des équations différentielles du premièr ordre, by Anton Huta, Acta Fac. Nat. Univ. Comenian Math., Vol. 1, pages 201-224 (1956).\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructHuta62",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructHuta62",
-    "category": "Function",
-    "text": "Anton Hutas Second Order 6 method\n\nUne amélioration de la méthode de Runge-Kutta-Nyström pour la résolution numérique des équations différentielles du premièr ordre, by Anton Huta, Acta Fac. Nat. Univ. Comenian Math., Vol. 1, pages 201-224 (1956).\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVerner6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVerner6",
-    "category": "Function",
-    "text": "Verner Order 5/6 method\n\nA Contrast of a New RK56 pair with DP56, by Jim Verner,  Department of Mathematics. Simon Fraser University, Burnaby, Canada, 2006.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructDormandPrince6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructDormandPrince6",
-    "category": "Function",
-    "text": "Dormand-Prince Order 5//6 method\n\nP.J. Prince and J. R. Dormand, High order embedded Runge-Kutta formulae, Journal of Computational and Applied Mathematics . 7 (1981), pp. 67-75.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructSharpVerner6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructSharpVerner6",
-    "category": "Function",
-    "text": "Sharp-Verner Order 5/6 method\n\nCompletely Imbedded Runge-Kutta Pairs, by P. W. Sharp and J. H. Verner,  SIAM Journal on Numerical Analysis, Vol. 31, No. 4. (Aug., 1994), pages. 1169 to 1190.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructVern6",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructVern6",
-    "category": "Function",
-    "text": "From Verner's Website\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructClassicVerner6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructClassicVerner6",
-    "category": "Function",
-    "text": "EXPLICIT RUNGE-KUTFA METHODS WITH ESTIMATES OF THE LOCAL TRUNCATION ERROR\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructChummund6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructChummund6",
-    "category": "Function",
-    "text": "Chummund's First Order 6 method\n\nA three-dimensional family of seven-step Runge-Kutta methods of order 6, by G. M. Chammud (Hammud), Numerical Methods and programming, 2001, Vol.2, 2001, pages 159-166 (Advanced Computing Scientific journal published by the Research Computing Center of the Lomonosov Moscow State Univeristy)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructChummund62",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructChummund62",
-    "category": "Function",
-    "text": "Chummund's Second Order 6 method\n\nA three-dimensional family of seven-step Runge-Kutta methods of order 6, by G. M. Chammud (Hammud), Numerical Methods and programming, 2001, Vol.2, 2001, pages 159-166 (Advanced Computing Scientific journal published by the Research Computing Center of the Lomonosov Moscow State Univeristy)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructPapakostas6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructPapakostas6",
-    "category": "Function",
-    "text": "Papakostas's Order 6\n\nOn Phase-Fitted modified Runge-Kutta Pairs of order 6(5), by Ch. Tsitouras and I. Th. Famelis,  International Conference of Numerical Analysis and Applied Mathematics, Crete, (2006)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLawson6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLawson6",
-    "category": "Function",
-    "text": "Lawson's Order 6\n\nAn Order 6 Runge-Kutta Process with an Extended Region of Stability, by J. D. Lawson,  Siam Journal on Numerical Analysis, Vol. 4, No. 4 (Dec. 1967) pages 620-625.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTsitourasPapakostas6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTsitourasPapakostas6",
-    "category": "Function",
-    "text": "Tsitouras-Papakostas's Order 6\n\nCheap Error Estimation for Runge-Kutta methods, by Ch. Tsitouras and S.N. Papakostas, Siam Journal on Scientific Computing, Vol. 20, Issue 6, Nov 1999.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructDormandLockyerMcCorriganPrince6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructDormandLockyerMcCorriganPrince6",
-    "category": "Function",
-    "text": "DormandLockyerMcCorriganPrince Order 6 Global Error Estimation\n\nGlobal Error estimation with Runge-Kutta triples, by J.R.Dormand, M.A.Lockyer, N.E.McCorrigan and P.J.Prince,  Computers and Mathematics with Applications, 18 (1989) pages 835-846.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerEfficient6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerEfficient6",
-    "category": "Function",
-    "text": "From Verner's Website\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructMikkawyEisa",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructMikkawyEisa",
-    "category": "Function",
-    "text": "Mikkawy-Eisa Order 6\n\nA general four-parameter non-FSAL embedded Runge–Kutta algorithm of orders 6 and 4 in seven stages,  by M.E.A. El-Mikkawy and M.M.M. Eisa,  Applied Mathematics and Computation, Vol. 143, No. 2, (2003) pages 259 to 267.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerEfficient7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerEfficient7",
-    "category": "Function",
-    "text": "From Verner's website\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructClassicVerner7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructClassicVerner7",
-    "category": "Function",
-    "text": "EXPLICIT RUNGE-KUTFA METHODS WITH ESTIMATES OF THE LOCAL TRUNCATION ERROR\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructSharpVerner7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructSharpVerner7",
-    "category": "Function",
-    "text": "Completely Imbedded Runge-Kutta Pairs, by P.W.Sharp and J.H.Verner, Siam Journal on Numerical Analysis, Vol.31, No.4. (August 1994) pages 1169-1190.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaYamashitaStable7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaYamashitaStable7",
-    "category": "Function",
-    "text": "On the Optimization of Some Nine-Stage Seventh-order Runge-Kutta Method, by M. Tanaka, S. Muramatsu and S. Yamashita, Information Processing Society of Japan, Vol. 33, No. 12 (1992) pages 1512-1526.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructSharpSmart7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructSharpSmart7",
-    "category": "Function",
-    "text": "Explicit Runge-Kutta Pairs with One More Derivative Evaluation than the Minimum, by P.W.Sharp and E.Smart,  Siam Journal of Scientific Computing, Vol. 14, No. 2, pages. 338-348, March 1993.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTanakaYamashitaEfficient7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTanakaYamashitaEfficient7",
-    "category": "Function",
-    "text": "On the Optimization of Some Nine-Stage Seventh-order Runge-Kutta Method, by M. Tanaka, S. Muramatsu and S. Yamashita, Information Processing Society of Japan, Vol. 33, No. 12 (1992) pages 1512-1526.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerRobust7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerRobust7",
-    "category": "Function",
-    "text": "From Verner's website\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructTanYam7",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructTanYam7",
-    "category": "Function",
-    "text": "On the Optimization of Some Nine-Stage Seventh-order Runge-Kutta Method, by M. Tanaka, S. Muramatsu and S. Yamashita, Information Processing Society of Japan, Vol. 33, No. 12 (1992) pages 1512-1526.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructEnrightVerner7",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructEnrightVerner7",
-    "category": "Function",
-    "text": "The Relative Efficiency of Alternative Defect Control Schemes for High-Order Continuous Runge-Kutta Formulas  W. H. Enright SIAM Journal on Numerical Analysis, Vol. 30, No. 5. (Oct., 1993), pp. 1419-1445.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructDormandPrince8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructDormandPrince8",
-    "category": "Function",
-    "text": "constructDormandPrice8()\n\nConstructs the tableau object for the Dormand-Prince Order 6/8 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRKF8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRKF8",
-    "category": "Function",
-    "text": "constructRKF8()\n\nConstructs the tableau object for the Runge-Kutta-Fehlberg Order 7/8 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCooperVerner8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCooperVerner8",
-    "category": "Function",
-    "text": "Some Explicit Runge-Kutta Methods of High Order, by G. J. Cooper and J. H. Verner,  SIAM Journal on Numerical Analysis, Vol. 9, No. 3, (September 1972), pages 389 to 405\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCooperVerner82",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCooperVerner82",
-    "category": "Function",
-    "text": "Some Explicit Runge-Kutta Methods of High Order, by G. J. Cooper and J. H. Verner,  SIAM Journal on Numerical Analysis, Vol. 9, No. 3, (September 1972), pages 389 to 405\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTsitourasPapakostas8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTsitourasPapakostas8",
-    "category": "Function",
-    "text": "Cheap Error Estimation for Runge-Kutta methods, by Ch. Tsitouras and S.N. Papakostas,  Siam Journal on Scientific Computing, Vol. 20, Issue 6, Nov 1999.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructEnrightVerner8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructEnrightVerner8",
-    "category": "Function",
-    "text": "The Relative Efficiency of Alternative Defect Control Schemes for High-Order Continuous Runge-Kutta Formulas  W. H. Enright SIAM Journal on Numerical Analysis, Vol. 30, No. 5. (Oct., 1993), pp. 1419-1445.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructdverk78",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructdverk78",
-    "category": "Function",
-    "text": "Jim Verner's \"Maple\" (dverk78)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructClassicVerner8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructClassicVerner8",
-    "category": "Function",
-    "text": "EXPLICIT RUNGE-KUTFA METHODS WITH ESTIMATES OF THE LOCAL TRUNCATION ERROR\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructDormandPrince8_64bit",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructDormandPrince8_64bit",
-    "category": "Function",
-    "text": "constructDormandPrice8_64bit()\n\nConstructs the tableau object for the Dormand-Prince Order 6/8 method with the approximated coefficients from the paper. This works until below 64-bit precision.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCurtis8",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCurtis8",
-    "category": "Function",
-    "text": "An Eighth Order Runge-Kutta process with Eleven Function Evaluations per Step, by A. R. Curtis,  Numerische Mathematik, Vol. 16, No. 3 (1970), pages 268 to 277\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructTsitPap8",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructTsitPap8",
-    "category": "Function",
-    "text": "Cheap Error Estimation for Runge-Kutta methods, by Ch. Tsitouras and S.N. Papakostas,  Siam Journal on Scientific Computing, Vol. 20, Issue 6, Nov 1999.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructSharp9",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructSharp9",
-    "category": "Function",
-    "text": "Journal of Applied Mathematics & Decision Sciences, 4(2), 183-192 (2000),  \"High order explicit Runge-Kutta pairs for ephemerides of the Solar System and the Moon\".\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTsitouras9",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTsitouras9",
-    "category": "Function",
-    "text": "Optimized explicit Runge-Kutta pairs of order 9(8), by Ch. Tsitouras,  Applied Numerical Mathematics, 38 (2001) 123-134.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTsitouras92",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTsitouras92",
-    "category": "Function",
-    "text": "Optimized explicit Runge-Kutta pairs of order 9(8), by Ch. Tsitouras,  Applied Numerical Mathematics, 38 (2001) 123-134.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerEfficient9",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerEfficient9",
-    "category": "Function",
-    "text": "From Verner's Webiste\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructVern9",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructVern9",
-    "category": "Function",
-    "text": "From Verner's Webiste\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVerner916",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVerner916",
-    "category": "Function",
-    "text": "Verner 1991 First Order 5/6 method\n\nSome Ruge-Kutta Formula Pairs, by J.H.Verner,  SIAM Journal on Numerical Analysis, Vol. 28, No. 2 (April 1991), pages 496 to 511.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVerner9162",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVerner9162",
-    "category": "Function",
-    "text": "Verner 1991 Second Order 5/6 method\n\nSome Ruge-Kutta Formula Pairs, by J.H.Verner,  SIAM Journal on Numerical Analysis, Vol. 28, No. 2 (April 1991), pages 496 to 511.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructVernerRobust9",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructVernerRobust9",
-    "category": "Function",
-    "text": "From Verner's Webiste\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructFeagin10",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructFeagin10",
-    "category": "Function",
-    "text": "constructFeagin10\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructFeagin10Tableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructFeagin10Tableau",
-    "category": "Function",
-    "text": "Feagin10 in Tableau form\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructOno10",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructOno10",
-    "category": "Function",
-    "text": "Ono10\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructCurtis10",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructCurtis10",
-    "category": "Function",
-    "text": "High-order Explicit Runge-Kutta Formulae, Their uses, and Limitations, A.R.Curtis, J. Inst. Maths Applics (1975) 16, 35-55.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructHairer10",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructHairer10",
-    "category": "Function",
-    "text": "A Runge-Kutta Method of Order 10, E. Hairer, J. Inst. Maths Applics (1978) 21, 47-59.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructBaker10",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructBaker10",
-    "category": "Function",
-    "text": "Tom Baker, University of Teeside. Part of RK-Aid http://www.scm.tees.ac.uk/users/u0000251/research/researcht.htm http://www.scm.tees.ac.uk/users/u0000251/j.r.dormand/t.baker/rk10921m/rk10921m\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructFeagin12",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructFeagin12",
-    "category": "Function",
-    "text": "constructFeagin12\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructOno12",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructOno12",
-    "category": "Function",
-    "text": "On the 25 stage 12th order explicit Runge-Kutta method, by Hiroshi Ono. Transactions of the Japan Society for Industrial and applied Mathematics, Vol. 6, No. 3, (2006) pages 177 to 186\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructFeagin12Tableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructFeagin12Tableau",
-    "category": "Function",
-    "text": "Tableau form of Feagin12\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#OrdinaryDiffEq.constructFeagin14",
-    "page": "Solver Helpers",
-    "title": "OrdinaryDiffEq.constructFeagin14",
-    "category": "Function",
-    "text": "constructFeagin14\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructFeagin14Tableau",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructFeagin14Tableau",
-    "category": "Function",
-    "text": "Tableau form of Feagin14\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#Explicit-Tableaus-1",
-    "page": "Solver Helpers",
-    "title": "Explicit Tableaus",
-    "category": "section",
-    "text": "DiffEqDevTools.constructEuler\nDiffEqDevTools.constructRalston\nDiffEqDevTools.constructHeun\nDiffEqDevTools.constructKutta3\nOrdinaryDiffEq.constructBS3\nDiffEqDevTools.constructBogakiShampine3\nDiffEqDevTools.constructRK4\nDiffEqDevTools.constructRK438Rule\nDiffEqDevTools.constructRKF4\nDiffEqDevTools.constructRKF5\nDiffEqDevTools.constructCashKarp\nDiffEqDevTools.constructDormandPrince\nOrdinaryDiffEq.constructBS5\nDiffEqDevTools.constructPapakostasPapaGeorgiou5\nDiffEqDevTools.constructPapakostasPapaGeorgiou52\nDiffEqDevTools.constructTsitouras5\nDiffEqDevTools.constructLutherKonen5\nDiffEqDevTools.constructLutherKonen52\nDiffEqDevTools.constructLutherKonen53\nDiffEqDevTools.constructRungeFirst5\nDiffEqDevTools.constructLawson5\nDiffEqDevTools.constructSharpSmart5\nDiffEqDevTools.constructBogakiShampine5\nDiffEqDevTools.constructCassity5\nDiffEqDevTools.constructButcher6\nDiffEqDevTools.constructButcher62\nDiffEqDevTools.constructButcher63\nDiffEqDevTools.constructVernerRobust6\nDiffEqDevTools.constructTanakaKasugaYamashitaYazaki6A\nDiffEqDevTools.constructTanakaKasugaYamashitaYazaki6B\nDiffEqDevTools.constructTanakaKasugaYamashitaYazaki6C\nDiffEqDevTools.constructTanakaKasugaYamashitaYazaki6D\nDiffEqDevTools.constructHuta6\nDiffEqDevTools.constructHuta62\nDiffEqDevTools.constructVerner6\nDiffEqDevTools.constructDormandPrince6\nDiffEqDevTools.constructSharpVerner6\nDiffEqDevTools.constructVern6\nDiffEqDevTools.constructClassicVerner6\nDiffEqDevTools.constructChummund6\nDiffEqDevTools.constructChummund62\nDiffEqDevTools.constructPapakostas6\nDiffEqDevTools.constructLawson6\nDiffEqDevTools.constructTsitourasPapakostas6\nDiffEqDevTools.constructDormandLockyerMcCorriganPrince6\nDiffEqDevTools.constructVernerEfficient6\nDiffEqDevTools.constructMikkawyEisa\nDiffEqDevTools.constructVernerEfficient7\nDiffEqDevTools.constructClassicVerner7\nDiffEqDevTools.constructSharpVerner7\nDiffEqDevTools.constructTanakaYamashitaStable7\nDiffEqDevTools.constructSharpSmart7\nDiffEqDevTools.constructTanakaYamashitaEfficient7\nDiffEqDevTools.constructVernerRobust7\nOrdinaryDiffEq.constructTanYam7\nDiffEqDevTools.constructEnrightVerner7\nDiffEqDevTools.constructDormandPrince8\nDiffEqDevTools.constructRKF8\nDiffEqDevTools.constructCooperVerner8\nDiffEqDevTools.constructCooperVerner82\nDiffEqDevTools.constructTsitourasPapakostas8\nDiffEqDevTools.constructEnrightVerner8\nDiffEqDevTools.constructdverk78\nDiffEqDevTools.constructClassicVerner8\nDiffEqDevTools.constructDormandPrince8_64bit\nDiffEqDevTools.constructCurtis8\nOrdinaryDiffEq.constructTsitPap8\nDiffEqDevTools.constructSharp9\nDiffEqDevTools.constructTsitouras9\nDiffEqDevTools.constructTsitouras92\nDiffEqDevTools.constructVernerEfficient9\nOrdinaryDiffEq.constructVern9\nDiffEqDevTools.constructVerner916\nDiffEqDevTools.constructVerner9162\nDiffEqDevTools.constructVernerRobust9\nDiffEqDevTools.constructFeagin10\nDiffEqDevTools.constructFeagin10Tableau\nDiffEqDevTools.constructOno10\nDiffEqDevTools.constructCurtis10\nDiffEqDevTools.constructHairer10\nDiffEqDevTools.constructBaker10\nDiffEqDevTools.constructFeagin12\nDiffEqDevTools.constructOno12\nDiffEqDevTools.constructFeagin12Tableau\nDiffEqDevTools.constructFeagin14\nDiffEqDevTools.constructFeagin14Tableau"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructImplicitEuler",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructImplicitEuler",
-    "category": "Function",
-    "text": "Implicit Euler Method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructMidpointRule",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructMidpointRule",
-    "category": "Function",
-    "text": "Order 2 Midpoint Method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructTrapezoidalRule",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructTrapezoidalRule",
-    "category": "Function",
-    "text": "Order 2 Trapezoidal Rule (LobattoIIIA2)\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIIA4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIIA4",
-    "category": "Function",
-    "text": "LobattoIIIA Order 4 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIIB2",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIIB2",
-    "category": "Function",
-    "text": "LobattoIIIB Order 2 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIIB4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIIB4",
-    "category": "Function",
-    "text": "LobattoIIIB Order 4 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIIC2",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIIC2",
-    "category": "Function",
-    "text": "LobattoIIIC Order 2 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIIC4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIIC4",
-    "category": "Function",
-    "text": "LobattoIIIC Order 4 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIICStar2",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIICStar2",
-    "category": "Function",
-    "text": "LobattoIIIC* Order 2 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIICStar4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIICStar4",
-    "category": "Function",
-    "text": "LobattoIIIC* Order 4 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIID2",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIID2",
-    "category": "Function",
-    "text": "LobattoIIID Order 2 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructLobattoIIID4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructLobattoIIID4",
-    "category": "Function",
-    "text": "LobattoIIID Order 4 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructGL2",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructGL2",
-    "category": "Function",
-    "text": "Gauss-Legendre Order 2.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructGL4",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructGL4",
-    "category": "Function",
-    "text": "Gauss-Legendre Order 4.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructGL6",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructGL6",
-    "category": "Function",
-    "text": "Gauss-Legendre Order 6.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRadauIA3",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRadauIA3",
-    "category": "Function",
-    "text": "RadauIA Order 3 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRadauIA5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRadauIA5",
-    "category": "Function",
-    "text": "RadauIA Order 5 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRadauIIA3",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRadauIIA3",
-    "category": "Function",
-    "text": "RadauIIA Order 3 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#DiffEqDevTools.constructRadauIIA5",
-    "page": "Solver Helpers",
-    "title": "DiffEqDevTools.constructRadauIIA5",
-    "category": "Function",
-    "text": "RadauIIA Order 5 method\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#Implicit-Tableaus-1",
-    "page": "Solver Helpers",
-    "title": "Implicit Tableaus",
-    "category": "section",
-    "text": "DiffEqDevTools.constructImplicitEuler\nDiffEqDevTools.constructMidpointRule\nDiffEqDevTools.constructTrapezoidalRule\nDiffEqDevTools.constructLobattoIIIA4\nDiffEqDevTools.constructLobattoIIIB2\nDiffEqDevTools.constructLobattoIIIB4\nDiffEqDevTools.constructLobattoIIIC2\nDiffEqDevTools.constructLobattoIIIC4\nDiffEqDevTools.constructLobattoIIICStar2\nDiffEqDevTools.constructLobattoIIICStar4\nDiffEqDevTools.constructLobattoIIID2\nDiffEqDevTools.constructLobattoIIID4\nDiffEqDevTools.constructGL2\nDiffEqDevTools.constructGL4\nDiffEqDevTools.constructGL6\nDiffEqDevTools.constructRadauIA3\nDiffEqDevTools.constructRadauIA5\nDiffEqDevTools.constructRadauIIA3\nDiffEqDevTools.constructRadauIIA5"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.monteCarloSim",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.monteCarloSim",
-    "category": "Function",
-    "text": "monteCarloSim(dt::Number,prob::SDEProblem)\n\nPerforms a parallel Monte-Carlo simulation to solve the SDE problem with dt numMonte times. Returns a vector of solution objects.\n\nKeyword Arguments\n\nT - Final time. Default is 1.\nnumMonte - Number of Monte-Carlo simulations to run. Default is 10000\nsave_timeseries - Denotes whether save_timeseries should be turned on in each run. Default is false.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.RosslerSRI",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.RosslerSRI",
-    "category": "Type",
-    "text": "RosslerSRI\n\nHolds the Butcher tableaus for a Rosser SRI method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.RosslerSRA",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.RosslerSRA",
-    "category": "Type",
-    "text": "RosslerSRA\n\nHolds the Butcher tableaus for a Rosser SRA method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.constructSRA1",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.constructSRA1",
-    "category": "Function",
-    "text": "constructSRA1()\n\nConstructs the taleau type for the SRA1 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.constructSRIW1",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.constructSRIW1",
-    "category": "Function",
-    "text": "constructSRIW1()\n\nConstructs the tableau type for the SRIW1 method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.checkSRAOrder",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.checkSRAOrder",
-    "category": "Function",
-    "text": "checkSRAOrder(RosslerSRI)\n\nDetermines whether the order conditions are met via the tableaus of the SRA method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StochasticDiffEq.checkSRIOrder",
-    "page": "Solver Helpers",
-    "title": "StochasticDiffEq.checkSRIOrder",
-    "category": "Function",
-    "text": "checkSRIOrder(RosslerSRI)\n\nDetermines whether the order conditions are met via the tableaus of the SRI method.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#SDE-Solver-Extras-1",
-    "page": "Solver Helpers",
-    "title": "SDE Solver Extras",
-    "category": "section",
-    "text": "StochasticDiffEq.monteCarloSim\nStochasticDiffEq.RosslerSRI\nStochasticDiffEq.RosslerSRA\nStochasticDiffEq.constructSRA1\nStochasticDiffEq.constructSRIW1\nStochasticDiffEq.checkSRAOrder\nStochasticDiffEq.checkSRIOrder"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.GSδq!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.GSδq!",
-    "category": "Function",
-    "text": "GSδq!(δq,rp,Δxs)\n\nPerforms a Gauss-Seidel iteration for δq.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.GSu!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.GSu!",
-    "category": "Function",
-    "text": "GSu!(u,f₁,Δxs,p,ugD,grids,ux,uy)\n\nPerforms a Gauss-Seidel iteration on u.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.calc_rp!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.calc_rp!",
-    "category": "Function",
-    "text": "calc_rp!(rp,u,v,Δxs,g,px,py)\n\nCalculates the rp from the u and v's.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.update_p!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.update_p!",
-    "category": "Function",
-    "text": "update_p!(p,δq,Δxs)\n\nUpdates p given δq\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.update_v!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.update_v!",
-    "category": "Function",
-    "text": "update_v!(v,δq,Δxs)\n\nUpdates v given δq\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.uzawa_p!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.uzawa_p!",
-    "category": "Function",
-    "text": "uzawa_p!(p,u,v,Δxs,g,px,py)\n\nSolves for p from u and v using an Uzawa update.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.stokes_restriction",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.stokes_restriction",
-    "category": "Function",
-    "text": "stokes_restriction(u,v,p,Δxs,grids,mins,maxs,ugD,vgD)\n\nRestricts the Stokes problem to the coarsegrid.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.stokes_prolongation",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.stokes_prolongation",
-    "category": "Function",
-    "text": "stokes_prolongation(u,v,p,Δxs,grids,mins,maxs,ugD,vgD)\n\nProlongates the Stokes problem to the fine grid\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.update_u!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.update_u!",
-    "category": "Function",
-    "text": "update_u!(u,δq,Δxs)\n\nUpdates u given δq\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#StokesDiffEq.GSv!",
-    "page": "Solver Helpers",
-    "title": "StokesDiffEq.GSv!",
-    "category": "Function",
-    "text": "GSv!(v,f₂,Δxs,p,vgD,grids,vx,vy)\n\nPerforms a Gauss-Seidel iteration on v.\n\n\n\n"
-},
-
-{
-    "location": "internals/solver_helpers.html#Stationary-Stokes-1",
-    "page": "Solver Helpers",
-    "title": "Stationary Stokes",
-    "category": "section",
-    "text": "StokesDiffEq.GSδq!\nStokesDiffEq.GSu!\nStokesDiffEq.calc_rp!\nStokesDiffEq.update_p!\nStokesDiffEq.update_v!\nStokesDiffEq.uzawa_p!\nStokesDiffEq.stokes_restriction\nStokesDiffEq.stokes_prolongation\nStokesDiffEq.update_u!\nStokesDiffEq.GSv!"
 },
 
 {
