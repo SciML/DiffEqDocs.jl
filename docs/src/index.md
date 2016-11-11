@@ -46,6 +46,22 @@ Codes for the latest features can be found in [test/](https://github.com/JuliaDi
 For the most up to date on using the package information, please contact me [via the repository Gitter](https://gitter.im/JuliaDiffEq/Lobby)
 or [read the latest documentation](http://JuliaDiffEq.github.io/DifferentialEquations.jl/latest/)
 
+## Bleeding Edge
+
+This package suite is still under heavy development. If you are a power user
+and would like to try out the latest features, it is recommended you use the
+MetaDiffEq metapackage. To do so, use the following commands:
+
+```julia
+Pkg.clone("https://github.com/tbreloff/MetaPkg.jl") # Install MetaPkg
+using MetaPkg
+meta_add("MetaDiffEq") # Adds all of the packages, even those unregistered
+meta_checkout("MetaDiffEq") # Checks out the master branch on all of the packages
+```
+
+Note that this is for power users who are familiar with Julia. If you are having
+issues, please contact Chris Rackauckas in  [the Gitter channel.](https://gitter.im/JuliaDiffEq/Lobby)
+
 ## Supported Equations
 
 For PDEs, one can optionally specify a noise equation. The solvers currently have
