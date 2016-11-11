@@ -4,6 +4,5 @@
 [![Build Status](https://travis-ci.org/JuliaDiffEq/DiffEqDocs.jl.svg?branch=master)](https://travis-ci.org/JuliaDiffEq/DiffEqDocs.jl)
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaDiffEq.github.io/DiffEqDocs.jl/latest)
 
-DiffEqDocs.jl is a component package in the DifferentialEquations ecosystem. It holds [the
-documentation for the solvers and add-on packages](http://JuliaDiffEq.github.io/DiffEqDocs.jl/latest/). Users interested in using this
-functionality should check out [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl).
+DiffEqDocs.jl is a component package in the DifferentialEquations ecosystem. It holds [the documentation for the common user interface](http://JuliaDiffEq.github.io/DiffEqDocs.jl/latest/). Users interested in using
+these features should check out [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl).
