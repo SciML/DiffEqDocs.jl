@@ -57,19 +57,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Basics-1",
+    "page": "Home",
+    "title": "Basics",
+    "category": "section",
+    "text": "These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.Pages = [\n    \"basics/overview.md\",\n    \"basics/common_solver_opts.md\",\n    \"basics/plot.md\",\n    \"basics/solution.md\",\n    ]\nDepth = 2"
+},
+
+{
     "location": "index.html#Problem-Types-1",
     "page": "Home",
     "title": "Problem Types",
     "category": "section",
-    "text": "These pages describe building the problem types.Pages = [\n  \"problems/ODEProblem.md\",\n  \"problems/SDEProblem.md\",\n  \"problems/FEMProblem.md\",\n  \"problems/StokesProblem.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers.Pages = [\n  \"problems/ODEProblem.md\",\n  \"problems/SDEProblem.md\",\n  \"problems/FEMProblem.md\",\n  \"problems/StokesProblem.md\"\n]\nDepth = 2"
 },
 
 {
-    "location": "index.html#Solver-Options-1",
+    "location": "index.html#Solvers-1",
     "page": "Home",
-    "title": "Solver Options",
+    "title": "Solvers",
     "category": "section",
-    "text": "These pages describe the options available in the solvers.Pages = [\n  \"solvers/common_solver_opts.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
 },
 
 {
@@ -77,7 +85,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Manual",
     "category": "section",
-    "text": "Pages = [\n    \"man/overview.md\",\n    \"man/ODEProblem.md\",\n    \"man/SDEProblem.md\",\n    \"man/FEMProblem.md\",\n    \"man/StokesProblem.md\",\n    \"man/mesh.md\",\n    \"man/solution.md\",\n    \"man/output_specification.md\",\n    \"man/callback_functions.md\",\n    \"man/plot.md\",\n    \"man/parameter_estimation.md\",\n    \"man/sensitivity.md\",\n    \"man/function_definition_macros.md\",\n    \"man/benchmarks.md\",\n    \"man/convergence.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
+    "text": "Pages = [\n    \"man/mesh.md\",\n    \"man/output_specification.md\",\n    \"man/callback_functions.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
+},
+
+{
+    "location": "index.html#Add-ons-1",
+    "page": "Home",
+    "title": "Add-ons",
+    "category": "section",
+    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"addons/function_definition_macros.md\",\n    \"addons/parameter_estimation.md\",\n    \"addons/sensitivity.md\",\n    \"addons/dev_and_test.md\"\n]\nDepth = 2"
 },
 
 {
@@ -222,6 +238,158 @@ var documenterSearchIndex = {"docs": [
     "title": "Finite Element Stochastic Heat Equation",
     "category": "section",
     "text": "This will solve a nonlinear stochastic heat equation u_t=Δu+f+gdW with forcing function f(u)=.5-u, noise function g(u)=100u^2 and initial condition u0=0. We would expect this system to rise towards the deterministic steady state u=2 (but stay in mean a bit below it due to 1st order \"Milstein\" effects), gaining more noise as it increases. This is specified as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu₀(x) = zeros(size(x,1))\nσ(t,x,u) = 1u.^2\nprob = HeatProblem(u₀,f,σ=σ)We use the following code create an animation of the solution:T = 5\ndx = 1//2^(3)\ndt = 1//2^(11)\nfem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)\n\nsol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler,save_timeseries=true,solver=:LU)\nusing Plots\nanimate(sol::FEMSolution;zlim=(0,3),cbar=false)(Image: Stochastic Heat Solution)"
+},
+
+{
+    "location": "basics/overview.html#",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Overview of DifferentialEquations.jl",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/overview.html#Overview-of-DifferentialEquations.jl-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Overview of DifferentialEquations.jl",
+    "category": "section",
+    "text": "The general workflow for using the package is as follows:Define a problem\nGenerate a mesh\nUse a solver on the problem and mesh\nAnalyze the outputProblems are specified via a type interface. For example, for the Poisson equation u = f, one defines a type which holds f and the boundary condition functions. Many examples problems can be found in src/premades/premade_problems.jlNext, for PDE problems, one generates a mesh. For example, if one wants to solve the Heat equation in the parabolic cylinder of the unit square, i.e. 01^2 times 0T, then one has to discretize this. Tools within the package will generate meshes from general characteristics. For example, most tools require only specifying the general shape, dx, dt, and T and will generate the mesh.One then passes the mesh and the problem to the solver interface. The solver then solves the differential equation using the some numerical methods (which can be specified via keyword arguments). The solver returns a solution object which hold all of the details for the solution.With the solution object, you do the analysis as you please! For some result sol, the field sol.u returns the final solution, and if you give a true solution, sol.u_analytic is the true solution at the final time. If you specified to the solver save_timeseries=true, then sol.timeseries and sol.ts will be outputted which hold the solution/time at every timeseries_steps (default set to 100, meaning it saves an output every 100 steps).Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information."
+},
+
+{
+    "location": "basics/overview.html#Extras-for-Developers-and-Researchers-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Extras for Developers and Researchers",
+    "category": "section",
+    "text": "DifferentialEquations.jl also provides some helper functionality to assist with general forms of analysis. The problem types allow one to optionally specify the true solution. When this is given to the solver, the solution object returns with many error calculations. An array of solutions can be made into a ConvergenceSimulation (or the test_convergence functions can be used) which then generates all of the convergence test results and allows for plotting (great for developing new methods!). The benchmark suite allows one to compare between methods and easily plot the results. Recipes are provided for Runge-Kutta tableaus to plot stability regions."
+},
+
+{
+    "location": "basics/common_solver_opts.html#",
+    "page": "Common Solver Options",
+    "title": "Common Solver Options",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/common_solver_opts.html#Common-Solver-Options-1",
+    "page": "Common Solver Options",
+    "title": "Common Solver Options",
+    "category": "section",
+    "text": "The DifferentialEquations.jl universe has a large set of common arguments available for the solve function. These arguments apply to solve on any problem type and are only limited by limitations of the specific implementations.Many of the defaults depend on the algorithm or the package the algorithm derives from. For more detailed information on the defaults and the available options for specific algorithms / packages, see the Option Availability manual page."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Default-Algorithm-Hinting-1",
+    "page": "Common Solver Options",
+    "title": "Default Algorithm Hinting",
+    "category": "section",
+    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff - Denotes the equation as nonstiff.\n:stiff - Denotes the equation as stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Output-Control-1",
+    "page": "Common Solver Options",
+    "title": "Output Control",
+    "category": "section",
+    "text": "These arguments control the output behavior the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. For more information on controlling the output behavior, see the Output Specification manual page.dense: Denotes whether to save the extra pieces for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes extra times to save the solution at during the solving phase. Note that this can be used even if dense=false. Default is [].\ntstops: Denotes extra times that the timestepping algorithm must step to. This should only be used if dense output via saveat is not available for the algorithm (for efficiency). Default is [].\ncalck: Turns on and off the internal ability for intermediate interpolations. This defaults to dense || !isempty(saveat) ||\"no custom callback is given\". This can be used to turn off interpolations (to save memory) even when a custom callback is used.\nsave_timeseries: Saves the result at every timeseries_steps iteration. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Stepsize-Control-1",
+    "page": "Common Solver Options",
+    "title": "Stepsize Control",
+    "category": "section",
+    "text": "These arguments control the timestepping routines.adaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ninternalnorm - The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma - The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\ndtmax - Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin - Minimum dt for adaptive timestepping. Defaults are package-dependent.\nbeta1 - The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2 - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqoldinit - The initial qold in stabilization stepping. Defaults are algorithm-dependent."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Miscellaneous-1",
+    "page": "Common Solver Options",
+    "title": "Miscellaneous",
+    "category": "section",
+    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Progress-Bar-Control-1",
+    "page": "Common Solver Options",
+    "title": "Progress Bar Control",
+    "category": "section",
+    "text": "These arguments control the usage of the progressbar in the Juno IDE.progressbar - Turns on/off the Juno progressbar. Default is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nprogressbar_name - Controls the name of the progressbar. Default is the name of the problem type."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Error-Calculations-1",
+    "page": "Common Solver Options",
+    "title": "Error Calculations",
+    "category": "section",
+    "text": "If you are using the test problems (ex: ODETestProblem), then the following options control the errors which are calculated:timeseries_errors - Turns on and off the calculation of errors at the steps which were taken, such as the l2 error. Default is true.\ndense_errors - Turns on and off the calculation of errors at the steps which require dense output and calculate the error at 100 evenly-spaced points throughout tspan. An example is the L2 error. Default is false."
+},
+
+{
+    "location": "basics/solution.html#",
+    "page": "The Solution Type",
+    "title": "The Solution Type",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/solution.html#The-Solution-Type-1",
+    "page": "The Solution Type",
+    "title": "The Solution Type",
+    "category": "section",
+    "text": "Each solver has an appropriate solution type. The solution type holds all of the information about the problem which was solved an its solution. If you enabled save_timeseries=true, then the solver also includes a time-course of the solution captured at every timeseries_steps steps.The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. We can usesol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i.If the solver allows for dense output (any ODE solver) and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)If the analytical solution, we also havesol.u_analytic # timeseries of analytical solution\nsol.prob.analytic(t) # The analytic solution at time tPlotting functionality is provided for each solution type. To plot the solution, simply useplot(sol)The plotting function is implemented as a recipe to Plots.jl and as such receives all of the features of a Plots.jl plot."
+},
+
+{
+    "location": "basics/solution.html#DiffEqDevTools.appxtrue!",
+    "page": "The Solution Type",
+    "title": "DiffEqDevTools.appxtrue!",
+    "category": "Function",
+    "text": "appxtrue!(sol::FEMSolution,sol2::FEMSolution)\n\nAdds the solution from sol2 to the FEMSolution object sol. Useful to add a quasi-true solution when none is known by computing once at a very small time/space step and taking that solution as the \"true\" solution\n\n\n\n"
+},
+
+{
+    "location": "basics/solution.html#FiniteElementDiffEq.FEMSolutionTS",
+    "page": "The Solution Type",
+    "title": "FiniteElementDiffEq.FEMSolutionTS",
+    "category": "Function",
+    "text": "S = FEMSolutionTS(timeseries::Vector{uType},numvars::Int)S[i][j]` => Variable i at time j.\n\n\n\n"
+},
+
+{
+    "location": "basics/solution.html#Related-Functions-1",
+    "page": "The Solution Type",
+    "title": "Related Functions",
+    "category": "section",
+    "text": "DiffEqDevTools.appxtrue!\nFiniteElementDiffEq.FEMSolutionTS"
+},
+
+{
+    "location": "basics/plot.html#",
+    "page": "Plot Functions",
+    "title": "Plot Functions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/plot.html#Plot-Functions-1",
+    "page": "Plot Functions",
+    "title": "Plot Functions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "basics/plot.html#Standard-Plots-1",
+    "page": "Plot Functions",
+    "title": "Standard Plots",
+    "category": "section",
+    "text": "Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information.A few extra arguments are provided addition to the Plots.jl keyword arguments. They are as follows:plot_analytic: Specifies whether the true solution (if known) should be plotted alongside the numerically approximated solution. Default is false.\nfilename: Specifies the filename to save an animation. Only applies to the animate function.\nfps: Determines the fps in an animation. Only applies to the animate function."
 },
 
 {
@@ -729,70 +897,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/common_solver_opts.html#",
-    "page": "Common Solver Options",
-    "title": "Common Solver Options",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Common-Solver-Options-1",
-    "page": "Common Solver Options",
-    "title": "Common Solver Options",
-    "category": "section",
-    "text": "The DifferentialEquations.jl universe has a large set of common arguments available for the solve function. These arguments apply to solve on any problem type and are only limited by limitations of the specific implementations.Many of the defaults depend on the algorithm or the package the algorithm derives from. For more detailed information on the defaults and the available options for specific algorithms / packages, see the Option Availability manual page."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Default-Algorithm-Hinting-1",
-    "page": "Common Solver Options",
-    "title": "Default Algorithm Hinting",
-    "category": "section",
-    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff - Denotes the equation as nonstiff.\n:stiff - Denotes the equation as stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Output-Control-1",
-    "page": "Common Solver Options",
-    "title": "Output Control",
-    "category": "section",
-    "text": "These arguments control the output behavior the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. For more information on controlling the output behavior, see the Output Specification manual page.dense: Denotes whether to save the extra pieces for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes extra times to save the solution at during the solving phase. Note that this can be used even if dense=false. Default is [].\ntstops: Denotes extra times that the timestepping algorithm must step to. This should only be used if dense output via saveat is not available for the algorithm (for efficiency). Default is [].\ncalck: Turns on and off the internal ability for intermediate interpolations. This defaults to dense || !isempty(saveat) ||\"no custom callback is given\". This can be used to turn off interpolations (to save memory) even when a custom callback is used.\nsave_timeseries: Saves the result at every timeseries_steps iteration. Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Stepsize-Control-1",
-    "page": "Common Solver Options",
-    "title": "Stepsize Control",
-    "category": "section",
-    "text": "These arguments control the timestepping routines.adaptive - Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol - Absolute tolerance in adaptive timestepping. Defaults to 1e-3.\nreltol - Relative tolerance in adaptive timestepping. Defaults to 1e-6.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ninternalnorm - The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma - The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\ndtmax - Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin - Minimum dt for adaptive timestepping. Defaults are package-dependent.\nbeta1 - The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2 - The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqoldinit - The initial qold in stabilization stepping. Defaults are algorithm-dependent."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Miscellaneous-1",
-    "page": "Common Solver Options",
-    "title": "Miscellaneous",
-    "category": "section",
-    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Progress-Bar-Control-1",
-    "page": "Common Solver Options",
-    "title": "Progress Bar Control",
-    "category": "section",
-    "text": "These arguments control the usage of the progressbar in the Juno IDE.progressbar - Turns on/off the Juno progressbar. Default is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nprogressbar_name - Controls the name of the progressbar. Default is the name of the problem type."
-},
-
-{
-    "location": "solvers/common_solver_opts.html#Error-Calculations-1",
-    "page": "Common Solver Options",
-    "title": "Error Calculations",
-    "category": "section",
-    "text": "If you are using the test problems (ex: ODETestProblem), then the following options control the errors which are calculated:timeseries_errors - Turns on and off the calculation of errors at the steps which were taken, such as the l2 error. Default is true.\ndense_errors - Turns on and off the calculation of errors at the steps which require dense output and calculate the error at 100 evenly-spaced points throughout tspan. An example is the L2 error. Default is false."
-},
-
-{
     "location": "solvers/ode_solve.html#",
     "page": "Ordinary Differential Equation Solvers",
     "title": "Ordinary Differential Equation Solvers",
@@ -1081,30 +1185,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/overview.html#",
-    "page": "Overview of DifferentialEquations.jl",
-    "title": "Overview of DifferentialEquations.jl",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/overview.html#Overview-of-DifferentialEquations.jl-1",
-    "page": "Overview of DifferentialEquations.jl",
-    "title": "Overview of DifferentialEquations.jl",
-    "category": "section",
-    "text": "The general workflow for using the package is as follows:Define a problem\nGenerate a mesh\nUse a solver on the problem and mesh\nAnalyze the outputProblems are specified via a type interface. For example, for the Poisson equation u = f, one defines a type which holds f and the boundary condition functions. Many examples problems can be found in src/premades/premade_problems.jlNext, for PDE problems, one generates a mesh. For example, if one wants to solve the Heat equation in the parabolic cylinder of the unit square, i.e. 01^2 times 0T, then one has to discretize this. Tools within the package will generate meshes from general characteristics. For example, most tools require only specifying the general shape, dx, dt, and T and will generate the mesh.One then passes the mesh and the problem to the solver interface. The solver then solves the differential equation using the some numerical methods (which can be specified via keyword arguments). The solver returns a solution object which hold all of the details for the solution.With the solution object, you do the analysis as you please! For some result sol, the field sol.u returns the final solution, and if you give a true solution, sol.u_analytic is the true solution at the final time. If you specified to the solver save_timeseries=true, then sol.timeseries and sol.ts will be outputted which hold the solution/time at every timeseries_steps (default set to 100, meaning it saves an output every 100 steps).Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information."
-},
-
-{
-    "location": "man/overview.html#Extras-for-Developers-and-Researchers-1",
-    "page": "Overview of DifferentialEquations.jl",
-    "title": "Extras for Developers and Researchers",
-    "category": "section",
-    "text": "DifferentialEquations.jl also provides some helper functionality to assist with general forms of analysis. The problem types allow one to optionally specify the true solution. When this is given to the solver, the solution object returns with many error calculations. An array of solutions can be made into a ConvergenceSimulation (or the test_convergence functions can be used) which then generates all of the convergence test results and allows for plotting (great for developing new methods!). The benchmark suite allows one to compare between methods and easily plot the results. Recipes are provided for Runge-Kutta tableaus to plot stability regions."
-},
-
-{
     "location": "man/mesh.html#",
     "page": "Meshes",
     "title": "Meshes",
@@ -1297,46 +1377,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/solution.html#",
-    "page": "The Solution Type",
-    "title": "The Solution Type",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/solution.html#The-Solution-Type-1",
-    "page": "The Solution Type",
-    "title": "The Solution Type",
-    "category": "section",
-    "text": "Each solver has an appropriate solution type. The solution type holds all of the information about the problem which was solved an its solution. If you enabled save_timeseries=true, then the solver also includes a time-course of the solution captured at every timeseries_steps steps.The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. We can usesol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i.If the solver allows for dense output (any ODE solver) and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)If the analytical solution, we also havesol.u_analytic # timeseries of analytical solution\nsol.prob.analytic(t) # The analytic solution at time tPlotting functionality is provided for each solution type. To plot the solution, simply useplot(sol)The plotting function is implemented as a recipe to Plots.jl and as such receives all of the features of a Plots.jl plot."
-},
-
-{
-    "location": "man/solution.html#DiffEqDevTools.appxtrue!",
-    "page": "The Solution Type",
-    "title": "DiffEqDevTools.appxtrue!",
-    "category": "Function",
-    "text": "appxtrue!(sol::FEMSolution,sol2::FEMSolution)\n\nAdds the solution from sol2 to the FEMSolution object sol. Useful to add a quasi-true solution when none is known by computing once at a very small time/space step and taking that solution as the \"true\" solution\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#FiniteElementDiffEq.FEMSolutionTS",
-    "page": "The Solution Type",
-    "title": "FiniteElementDiffEq.FEMSolutionTS",
-    "category": "Function",
-    "text": "S = FEMSolutionTS(timeseries::Vector{uType},numvars::Int)S[i][j]` => Variable i at time j.\n\n\n\n"
-},
-
-{
-    "location": "man/solution.html#Related-Functions-1",
-    "page": "The Solution Type",
-    "title": "Related Functions",
-    "category": "section",
-    "text": "DiffEqDevTools.appxtrue!\nFiniteElementDiffEq.FEMSolutionTS"
-},
-
-{
     "location": "man/output_specification.html#",
     "page": "Output Specification",
     "title": "Output Specification",
@@ -1409,9 +1449,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/callback_functions.html#Introduction-to-Callback-Function-1",
+    "location": "man/callback_functions.html#Introduction-to-Callback-Functions-1",
     "page": "Event Handling and Callback Functions",
-    "title": "Introduction to Callback Function",
+    "title": "Introduction to Callback Functions",
     "category": "section",
     "text": "DifferentialEquations.jl allows for using callback functions to inject user code into the solver algorithms. This is done by defining a callback function and passing that function to the solver. After each accepted iteration this function is called. The standard callback is defined as:default_callback = @ode_callback begin\n  @ode_savevalues\nendThis runs the saving routine at every timestep (inside of this saving routine it   checks the iterations vs timeseries_steps etc., so it's quite complicated).   However, you can add any code you want to this callback. For example, we can   make it print the value at each timestep by doing:my_callback = @ode_callback begin\n  println(u)\n  @ode_savevalues\nendand pass this to the solver:sol = solve(prob,tspan,callback=my_callback)Later in the manual the full API for callbacks is given (the callbacks are very   general and thus the full API is complex enough to handle just about anything),   but for most users it's recommended that you use the simplified event handling   DSL described below."
 },
@@ -1454,286 +1494,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Example: Bouncing Ball Without Macros",
     "category": "section",
     "text": "Here is an example of the defining the ball bouncing callback without the usage of macros. The entire code in its fully glory is generic enough to handle any of the implemented DifferentialEquations.jl algorithms, which special differences depending on the type of interpolant, implementation of FSAL, etc. For these reasons it's usually recommended to use the event handling macro, though this kind of code will allow you handle pretty much anything!manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)\n  reeval_fsal = false\n  event_occured = false\n  dt_safety = 1\n  interp_points = 10\n\n  # Event Handling\n  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n  Θs = linspace(0,1,interp_points)\n  interp_index = 0\n  # Check if the event occured\n  if event_f(t,u)<0\n    event_occured = true\n    interp_index = interp_points\n  elseif interp_points!=0 # Use the interpolants for safety checking\n    for i in 2:length(Θs)-1\n      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0\n        event_occured = true\n        interp_index = i\n        break\n      end\n    end\n  end\n\n  if event_occured\n    if interp_index == interp_points # If no safety interpolations, start in the middle as well\n      initial_Θ = [.5]\n    else\n      initial_Θ = [Θs[interp_index]] # Start at the closest\n    end\n    find_zero = (Θ,val) -> begin\n      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))\n    end\n    res = nlsolve(find_zero,initial_Θ)\n    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)\n    for i in eachindex(u)\n      u[i] = val[i]\n    end\n    dtprev *= res.zero[1]\n    t = tprev + dtprev\n\n    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      resize!(k,kshortsize) # Reset k for next step\n      k = typeof(k)() # Make a local blank k for saving\n      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n    elseif typeof(u) <: Number\n      k = f(t,u)\n    else\n      f(t,u,k)\n    end\n  end\n\n  @ode_savevalues\n\n  if event_occured\n    apply_event!(u)\n    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      if typeof(u) <: Number\n        k = f(t,u)\n      else\n        f(t,u,k)\n      end\n    end\n    @ode_savevalues\n    if fsal\n      reeval_fsal = true\n    end\n    dt *= dt_safety # Safety dt change\n  end\n\n  cursaveat,dt,t,T,reeval_fsal\nend"
-},
-
-{
-    "location": "man/plot.html#",
-    "page": "Plot Functions",
-    "title": "Plot Functions",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/plot.html#Plot-Functions-1",
-    "page": "Plot Functions",
-    "title": "Plot Functions",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "man/plot.html#Standard-Plots-1",
-    "page": "Plot Functions",
-    "title": "Standard Plots",
-    "category": "section",
-    "text": "Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information.A few extra arguments are provided addition to the Plots.jl keyword arguments. They are as follows:plot_analytic: Specifies whether the true solution (if known) should be plotted alongside the numerically approximated solution. Default is false.\nfilename: Specifies the filename to save an animation. Only applies to the animate function.\nfps: Determines the fps in an animation. Only applies to the animate function."
-},
-
-{
-    "location": "man/parameter_estimation.html#",
-    "page": "Parameter Estimation",
-    "title": "Parameter Estimation",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/parameter_estimation.html#Parameter-Estimation-1",
-    "page": "Parameter Estimation",
-    "title": "Parameter Estimation",
-    "category": "section",
-    "text": "Parameter estimation for ODE models is provided by the DiffEq suite. The current functionality includes build_optim_objective and lm_fit. Note these require that the problem is defined using a ParameterizedFunction."
-},
-
-{
-    "location": "man/parameter_estimation.html#build_optim_objective-1",
-    "page": "Parameter Estimation",
-    "title": "build_optim_objective",
-    "category": "section",
-    "text": "build_optim_objective builds an objective function to be used with Optim.jl.build_optim_objective(prob::DEProblem,tspan,t,data;loss_func = L2DistLoss,kwargs...)The first argument is the DEProblem to solve. Second is the tspan. Next is t, the set of timepoints which the data is found at. The last argument which is required is the data, which are the values where are known, in order to be optimized against. Optionally, one can choose a loss function from LossFunctions.jl or use the default of an L2 loss. The keyword arguments are passed to the ODE solver."
-},
-
-{
-    "location": "man/parameter_estimation.html#build_lsoptim_objective-1",
-    "page": "Parameter Estimation",
-    "title": "build_lsoptim_objective",
-    "category": "section",
-    "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob::DEProblem,tspan,t,data;kwargs...)The arguments are the same as build_optim_objective."
-},
-
-{
-    "location": "man/parameter_estimation.html#lm_fit-1",
-    "page": "Parameter Estimation",
-    "title": "lm_fit",
-    "category": "section",
-    "text": "lm_fit is a function for fitting the parameters of an ODE using the Levenberg-Marquardt algorithm. This algorithm is really bad and thus not recommended since, for example, the Optim.jl algorithms on an L2 loss are more performant and robust. However, this is provided for completeness as most other differential equation libraries use an LM-based algorithm, so this allows one to test the increased effectiveness of not using LM.lm_fit(prob::DEProblem,tspan,t,data,p0;kwargs...)The arguments are similar to before, but with p0 being the initial conditions for the parameters and the kwargs as the args passed to the LsqFit curve_fit function (which is used for the LM solver). This returns the fitted parameters."
-},
-
-{
-    "location": "man/parameter_estimation.html#Examples-1",
-    "page": "Parameter Estimation",
-    "title": "Examples",
-    "category": "section",
-    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = [0;10.0]\nprob = ODEProblem(f,u0)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:t = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)Here we used vecvec_to_mat from RecursiveArrayTools.jl to turn the result of an ODE to a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_optim_objective funtion:cost_function = build_optim_objective(prob,tspan,t,data,alg=:Vern6)Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:result = optimize(cost_function, 0.0, 10.0)This returns result.minimum[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 usingresult = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condtion. For more details on using Optim.jl, see the documentation for Optim.jl."
-},
-
-{
-    "location": "man/sensitivity.html#",
-    "page": "Sensitivity Analysis",
-    "title": "Sensitivity Analysis",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/sensitivity.html#Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
-    "title": "Sensitivity Analysis",
-    "category": "section",
-    "text": "Sensitivity analysis for ODE models is provided by the DiffEq suite."
-},
-
-{
-    "location": "man/sensitivity.html#Local-Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
-    "title": "Local Sensitivity Analysis",
-    "category": "section",
-    "text": "The local sensitivity of the solution to a parameter is defined by how much the solution would change by changes in the parameter, i.e. the sensitivity of the ith independent variable to the jth parameter is fracpartial ypartial p_j.The local sensitivity is computed using the sensitivity ODE:fracddtfracpartial upartial p_j=fracpartial fpartial yfracpartial ypartial p_j+fracpartial fpartial p_j=Jcdot S_j+F_jwhereJ=left(beginarraycccc\nfracpartial f_1partial y_1  fracpartial f_1partial y_2  cdots  fracpartial f_1partial y_k\nfracpartial f_2partial y_1  fracpartial f_2partial y_2  cdots  fracpartial f_2partial y_k\ncdots  cdots  cdots  cdots\nfracpartial f_kpartial y_1  fracpartial f_kpartial y_2  cdots  fracpartial f_kpartial y_k\nendarrayright)is the Jacobian of the system,F_j=left(beginarrayc\nfracpartial f_1partial p_j\nfracpartial f_2partial p_j\nvdots\nfracpartial f_kpartial p_j\nendarrayright)are the parameter derivatives, andS_j=left(beginarrayc\nfracpartial y_1partial p_j\nfracpartial y_2partial p_j\nvdots\nfracpartial y_kpartial p_j\nendarrayright)is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system."
-},
-
-{
-    "location": "man/sensitivity.html#Defining-a-Sensitivity-Problem-1",
-    "page": "Sensitivity Analysis",
-    "title": "Defining a Sensitivity Problem",
-    "category": "section",
-    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0])This generates a problem which the ODE solvers can solve:sol = solve(prob,[0;10],alg=:DP8)Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecvec_to_mat([sol[i][1:sol.prob.numvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecvec_to_mat from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecvec_to_mat(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
-},
-
-{
-    "location": "man/function_definition_macros.html#",
-    "page": "Function Definition Macros",
-    "title": "Function Definition Macros",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/function_definition_macros.html#Function-Definition-Macros-1",
-    "page": "Function Definition Macros",
-    "title": "Function Definition Macros",
-    "category": "section",
-    "text": "DifferentialEquations.jl provides a set of macros for more easily and legibly defining your differential equations. It exploits the standard notation for mathematically writing differential equations and the notation for \"punching differential equations into the computer\"; effectively doing the translation step for you. This is best shown by an example. Say we want to solve the ROBER model. Using the @ode_define macro, we can do this by writing:f = @ode_define begin\n  dy₁ = -k₁*y₁+k₃*y₂*y₃\n  dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃\n  dy₃ =  k₂*y₂^2\nend k₁=>0.04 k₂=>3e7 k₃=>1e4This looks just like psudocode! The macro will expand this to the \"standard form\", i.e. the ugly computer form:f = (t,u,du) -> begin\n  du[1] = -0.04*u[1] + 1e4*u[2]*u[3]\n  du[2] = 0.04*u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3]\n  du[3] = 3e7*u[2]^2\nendNote that one doesn't need to use numbered variables: DifferentialEquations.jl will number the variables for you. For example, the follows defines the function for the Lotka-Voltera model:f = @ode_define begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=1.5 b=1 c=3 d=1The other macro which is currently provided is the @fem_define macro. This macro is for parsing and writing FEM functions. For example, in the FEM methods you have to use x[:,1] instead of x and x[:,2] instead of y. The macro will automatically do this replacement, along with adding in parameters. Since FEM functions are more general, we also have to give it the function signature. Using the macro looks like this:f  = @fem_define (x) begin\n  sin(α.*x).*cos(α.*y)\nend α=>2π\ngD = @fem_define (x) begin\n  sin(α.*x).*cos(α.*y)/β\nend α=>2π β=>8π*πThis is equivalent to the definitionf(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\ngD(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π)The true power comes in when dealing with nonlinear equations. The second argument, which we skipped over as (), is for listing the variables you wish to define the equation by. Mathematically you may be using u,v,w, etc., but for array-based algorithms you need to use u[:,1],u[:,2],etc. To avoid obfuscated code, the @fem_define macro does this conversion. For example:l = @fem_define (t,x,u) begin\n  du = ones(length(u))-α*u\n  dv = ones(length(v))-v\nend α=>0.5says there are two equations, one for u: (ones(length(u))-α*u) and one for v: (ones(length(v))-v). This expands to the equationl = (t,x,u)  -> [ones(size(x,1))-.5u[:,1]   ones(size(x,1))-u[:,2]]When you have 10+ variables, using @fem_define leads to code which is much easier to read!"
-},
-
-{
-    "location": "man/benchmarks.html#",
-    "page": "Benchmark Suite",
-    "title": "Benchmark Suite",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/benchmarks.html#Benchmark-Suite-1",
-    "page": "Benchmark Suite",
-    "title": "Benchmark Suite",
-    "category": "section",
-    "text": "DiffernetialEquations.jl provides a benchmarking suite to be able to test the difference in error, speed, and efficiency between algorithms. DifferentialEquations.jl includes current benchmarking notebooks to help users understand the performance of the methods. These benchmarking notebooks use the included benchmarking suite. There are two parts to the benchmarking suite: shootouts and work-precision. The Shootout tests methods head-to-head for timing and error on the same problem. A WorkPrecision draws a work-precision diagram for the algorithms in question on the chosen problem."
-},
-
-{
-    "location": "man/benchmarks.html#Using-the-Benchmarking-Notebooks-1",
-    "page": "Benchmark Suite",
-    "title": "Using the Benchmarking Notebooks",
-    "category": "section",
-    "text": "To use the benchmarking notebooks, IJulia is required. The commands are as follows:using IJulia\nnotebook(dir = Pkg.dir(\"DifferentialEquations\")*\"/benchmarks\")"
-},
-
-{
-    "location": "man/benchmarks.html#Shootout-1",
-    "page": "Benchmark Suite",
-    "title": "Shootout",
-    "category": "section",
-    "text": "A shootout is where you compare between algorithms. For example, so see how different Runge-Kutta algorithms fair against each other, one can define a setup which is a dictionary of Symbols to Any, where the symbol is the keyword argument. Then you call ode_shootout on that setup. The code is as follows:tspan = [0,10]\nsetups = [Dict(:alg=>:DP5)\n          Dict(:abstol=>1e-3,:reltol=>1e-6,:alg=>:ode45) # Fix ODE to be normal\n          Dict(:alg=>:dopri5)]\nprob = DifferentialEquations.prob_ode_large2Dlinear\nnames = [\"DifferentialEquations\";\"ODE\";\"ODEInterface\"]\nshoot = ode_shootout(prob,tspan,setups;dt=1/2^(10),names=names)Note that keyword arguments applied to ode_shootout are applie dot every run, so in this example every run has the same starting timestep.  Here we explicitly chose names. If you don't, then the algorithm name is the default. This returns a Shootout type where which holds the times it took for each algorithm and the errors. Using these, it calculates the efficiency defnied as 1/(error*time), i.e. if the error is low or the run was quick then it's efficient. print(shoot) will show all of this information, and plot(shoot) will show the efficiencies of the algorithms in comparison to each other.For every benchmark function there is a special keyword numruns which controls the number of runs used in the time estimate. To be more precise, these functions by default run the algorithm 20 times on the problem and take the average time. This amount can be increased and decreased as needed.A ShootoutSet is a where you define a vector of probs and tspans and run a shootout on each of these values."
-},
-
-{
-    "location": "man/benchmarks.html#WorkPrecision-1",
-    "page": "Benchmark Suite",
-    "title": "WorkPrecision",
-    "category": "section",
-    "text": "A WorkPrecision calculates the necessary componnets of a work-precision plot. This shows how time scales with the user chosen tolerances on a given problem. To make a WorkPrecision, you give it a vector of absolute and relative tolerances:abstols = 1./10.^(3:10)\nreltols = 1./10.^(3:10)\nwp = ode_workprecision(prob,tspan,abstols,reltols;alg=:DP5,name=\"Dormand-Prince 4/5\")If we want to plot many WorkPrecisions together in order to compare between algorithms, you can make a WorkPrecisionSet. To do so, you pass the setups into the function as well:wp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;dt=1/2^4,numruns=2)\nsetups = [Dict(:alg=>:RK4);Dict(:alg=>:Euler);Dict(:alg=>:BS3);\n          Dict(:alg=>:Midpoint);Dict(:alg=>:BS5);Dict(:alg=>:DP5)]\nwp_set = ode_workprecision_set(prob,tspan,abstols,reltols,setups;dt=1/2^4,numruns=2)Both of these types have a plot recipe to produce a work-precision diagram, and a print which will show some relevant information."
-},
-
-{
-    "location": "man/convergence.html#",
-    "page": "Convergence Simulations",
-    "title": "Convergence Simulations",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/convergence.html#Convergence-Simulations-1",
-    "page": "Convergence Simulations",
-    "title": "Convergence Simulations",
-    "category": "section",
-    "text": "The convergence simulation type is useful for deriving order of convergence estimates from a group of simulations. This object will automatically assemble error vectors into a more useful manner and provide plotting functionality. Convergence estimates are also given by pair-wise estimates.One can automatically have DifferentialEquations.jl perform the error analysis by passing a ConvergenceSimulation a vector of solutions, or using one of the provided test_convergence functions. These will give order of convergence estimates and provide plotting functionality. This requires that the true solution was provided in the problem definition.ConvergenceSimulations can either be created by passing the constructor the appropriate solution array or by using one of the provided test_convergence functions."
-},
-
-{
-    "location": "man/convergence.html#The-ConvergenceSimulation-Type-1",
-    "page": "Convergence Simulations",
-    "title": "The ConvergenceSimulation Type",
-    "category": "section",
-    "text": "A type which holds the data from a convergence simulation."
-},
-
-{
-    "location": "man/convergence.html#Fields-1",
-    "page": "Convergence Simulations",
-    "title": "Fields",
-    "category": "section",
-    "text": "solutions::Array{<:DESolution}: Holds all the PdeSolutions.\nerrors: Dictionary of the error calculations. Can contain:\nh1Errors: Vector of the H1 errors.\nl2Errors: Vector of the L2 errors.\nmaxErrors: Vector of the nodal maximum errors.\nnode2Errors: Vector of the nodal l2 errors.\nN: The number of simulations.\nauxdata: Auxillary data of the convergence simluation. Entries can include:\ndts: The dt's in the simulations.\ndxs: The dx's in the simulations.\nμs: The CFL μ's in the simulations.\nνs: The CFL ν's in the simulations.\n𝒪est: Dictionary of order estimates. Can contain:\nConvEst_h1: The H1 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_h1)\nConvEst_l2: The L2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_l2)\nConvEst_max: The nodal maximum error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_max)\nConvEst_node2: The nodal l2 error order of convergence estimate for the convergence simulation.  Generated via log2(error[i+1]/error[i]). Thus only valid if generated by halving/doubling  the dt/dx. If alternate scaling, modify by dividing of log(base,ConvEst_node2)\nconvergence_axis: The axis along which convergence is calculated. For example, if  we calculate the dt convergence, convergence_axis is the dts used in the calculation."
-},
-
-{
-    "location": "man/convergence.html#Plot-Functions-1",
-    "page": "Convergence Simulations",
-    "title": "Plot Functions",
-    "category": "section",
-    "text": "The plot functionality is provided by a Plots.jl recipe. What is plotted is a line series for each calculated error along the convergence axis. To plot a convergence simulation, simply use:plot(sim::ConvergenceSimulation)All of the functionality (keyword arguments) provided by Plots.jl are able to be used in this command. Please see the Plots.jl documentation for more information."
-},
-
-{
-    "location": "man/convergence.html#ODE-1",
-    "page": "Convergence Simulations",
-    "title": "ODE",
-    "category": "section",
-    "text": "test_convergence(dts::AbstractArray,prob::AbstractODEProblem)Tests the order of the time convergence of the given algorithm on the given problem solved over the given dts."
-},
-
-{
-    "location": "man/convergence.html#Keyword-Arguments-1",
-    "page": "Convergence Simulations",
-    "title": "Keyword Arguments",
-    "category": "section",
-    "text": "T: The final time. Default is 1\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test.\ntableau: The tableau used for generic methods. Defaults to ODE_DEFAULT_TABLEAU."
-},
-
-{
-    "location": "man/convergence.html#SDE-1",
-    "page": "Convergence Simulations",
-    "title": "SDE",
-    "category": "section",
-    "text": "test_convergence(dts::AbstractArray,prob::AbstractSDEProblem)Tests the strong order time convergence of the given algorithm on the given problem solved over the given dts."
-},
-
-{
-    "location": "man/convergence.html#Keyword-Arguments-2",
-    "page": "Convergence Simulations",
-    "title": "Keyword Arguments",
-    "category": "section",
-    "text": "T: The final time. Default is 1\nnumMonte: The number of simulations for each dt. Default is 10000.\nsave_timeseries: Denotes whether to save at every timeseries_steps steps. Default is true.\ntimeseries_steps: Denotes the steps to save at if save_timeseries=true. Default is 1\nalg: The algorithm to test. Defaults to \"EM\"."
-},
-
-{
-    "location": "man/convergence.html#Poisson-1",
-    "page": "Convergence Simulations",
-    "title": "Poisson",
-    "category": "section",
-    "text": "test_convergence(dxs::AbstractArray,prob::PoissonProblem)Tests the convergence of the solver algorithm on the given Poisson problem with dxs as given. Uses the square mesh [0,1]x[0,1]."
-},
-
-{
-    "location": "man/convergence.html#Keyword-Arguments-3",
-    "page": "Convergence Simulations",
-    "title": "Keyword Arguments",
-    "category": "section",
-    "text": "solver: Which solver to use. Default is \"Direct\"."
-},
-
-{
-    "location": "man/convergence.html#Heat-1",
-    "page": "Convergence Simulations",
-    "title": "Heat",
-    "category": "section",
-    "text": "test_convergence(dts::AbstractArray,dxs::AbstractArray,prob::AbstractHeatProblem,convergence_axis)Tests the convergence of the solver algorithm on the given Heat problem with the dts and dxs as given. Uses the square mesh [0,1]x[0,1]. The convergence axis is the axis along which convergence is calculated. For example, when testing dt convergence, convergence_axis = dts."
-},
-
-{
-    "location": "man/convergence.html#Keyword-Arguments-4",
-    "page": "Convergence Simulations",
-    "title": "Keyword Arguments",
-    "category": "section",
-    "text": "T: The final time. Defaults to 1\nalg: The algorithm to test. Default is \"Euler\"."
-},
-
-{
-    "location": "man/convergence.html#Utilities-1",
-    "page": "Convergence Simulations",
-    "title": "Utilities",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "man/convergence.html#Order-Estimation-1",
-    "page": "Convergence Simulations",
-    "title": "Order Estimation",
-    "category": "section",
-    "text": "calc𝒪estimates(error::Vector{Number})`Computes the pairwise convergence estimate for a convergence test done by halving/doubling stepsizes vialog2(error[i+1]/error[i])Returns the mean of the convergence estimates."
 },
 
 {
@@ -1798,6 +1558,118 @@ var documenterSearchIndex = {"docs": [
     "title": "Juno Progress Bar Integration",
     "category": "section",
     "text": "DifferentialEquations.jl integrates with the Juno progress bar in order to make long calculations more manageable. By default this feature is off for ODE and SDE solvers, but can be turned on via the keyword argument progressbar=true. The progress bar updates every progress_steps timesteps, which has a default value of 1000. Note that making this value really low could cause a performance hit, though from some basic testing it seems that with updates of at least  1000 steps on number (the fastest problems) there's no discernable performance degradation,  giving an high upper bound."
+},
+
+{
+    "location": "addons/parameter_estimation.html#",
+    "page": "Parameter Estimation",
+    "title": "Parameter Estimation",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "addons/parameter_estimation.html#Parameter-Estimation-1",
+    "page": "Parameter Estimation",
+    "title": "Parameter Estimation",
+    "category": "section",
+    "text": "Parameter estimation for ODE models is provided by the DiffEq suite. The current functionality includes build_optim_objective and lm_fit. Note these require that the problem is defined using a ParameterizedFunction."
+},
+
+{
+    "location": "addons/parameter_estimation.html#build_optim_objective-1",
+    "page": "Parameter Estimation",
+    "title": "build_optim_objective",
+    "category": "section",
+    "text": "build_optim_objective builds an objective function to be used with Optim.jl.build_optim_objective(prob::DEProblem,tspan,t,data;loss_func = L2DistLoss,kwargs...)The first argument is the DEProblem to solve. Second is the tspan. Next is t, the set of timepoints which the data is found at. The last argument which is required is the data, which are the values where are known, in order to be optimized against. Optionally, one can choose a loss function from LossFunctions.jl or use the default of an L2 loss. The keyword arguments are passed to the ODE solver."
+},
+
+{
+    "location": "addons/parameter_estimation.html#build_lsoptim_objective-1",
+    "page": "Parameter Estimation",
+    "title": "build_lsoptim_objective",
+    "category": "section",
+    "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob::DEProblem,tspan,t,data;kwargs...)The arguments are the same as build_optim_objective."
+},
+
+{
+    "location": "addons/parameter_estimation.html#lm_fit-1",
+    "page": "Parameter Estimation",
+    "title": "lm_fit",
+    "category": "section",
+    "text": "lm_fit is a function for fitting the parameters of an ODE using the Levenberg-Marquardt algorithm. This algorithm is really bad and thus not recommended since, for example, the Optim.jl algorithms on an L2 loss are more performant and robust. However, this is provided for completeness as most other differential equation libraries use an LM-based algorithm, so this allows one to test the increased effectiveness of not using LM.lm_fit(prob::DEProblem,tspan,t,data,p0;kwargs...)The arguments are similar to before, but with p0 being the initial conditions for the parameters and the kwargs as the args passed to the LsqFit curve_fit function (which is used for the LM solver). This returns the fitted parameters."
+},
+
+{
+    "location": "addons/parameter_estimation.html#Examples-1",
+    "page": "Parameter Estimation",
+    "title": "Examples",
+    "category": "section",
+    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = [0;10.0]\nprob = ODEProblem(f,u0)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:t = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)Here we used vecvec_to_mat from RecursiveArrayTools.jl to turn the result of an ODE to a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_optim_objective funtion:cost_function = build_optim_objective(prob,tspan,t,data,alg=:Vern6)Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:result = optimize(cost_function, 0.0, 10.0)This returns result.minimum[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 usingresult = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condtion. For more details on using Optim.jl, see the documentation for Optim.jl."
+},
+
+{
+    "location": "addons/sensitivity.html#",
+    "page": "Sensitivity Analysis",
+    "title": "Sensitivity Analysis",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "addons/sensitivity.html#Sensitivity-Analysis-1",
+    "page": "Sensitivity Analysis",
+    "title": "Sensitivity Analysis",
+    "category": "section",
+    "text": "Sensitivity analysis for ODE models is provided by the DiffEq suite."
+},
+
+{
+    "location": "addons/sensitivity.html#Local-Sensitivity-Analysis-1",
+    "page": "Sensitivity Analysis",
+    "title": "Local Sensitivity Analysis",
+    "category": "section",
+    "text": "The local sensitivity of the solution to a parameter is defined by how much the solution would change by changes in the parameter, i.e. the sensitivity of the ith independent variable to the jth parameter is fracpartial ypartial p_j.The local sensitivity is computed using the sensitivity ODE:fracddtfracpartial upartial p_j=fracpartial fpartial yfracpartial ypartial p_j+fracpartial fpartial p_j=Jcdot S_j+F_jwhereJ=left(beginarraycccc\nfracpartial f_1partial y_1  fracpartial f_1partial y_2  cdots  fracpartial f_1partial y_k\nfracpartial f_2partial y_1  fracpartial f_2partial y_2  cdots  fracpartial f_2partial y_k\ncdots  cdots  cdots  cdots\nfracpartial f_kpartial y_1  fracpartial f_kpartial y_2  cdots  fracpartial f_kpartial y_k\nendarrayright)is the Jacobian of the system,F_j=left(beginarrayc\nfracpartial f_1partial p_j\nfracpartial f_2partial p_j\nvdots\nfracpartial f_kpartial p_j\nendarrayright)are the parameter derivatives, andS_j=left(beginarrayc\nfracpartial y_1partial p_j\nfracpartial y_2partial p_j\nvdots\nfracpartial y_kpartial p_j\nendarrayright)is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system."
+},
+
+{
+    "location": "addons/sensitivity.html#Defining-a-Sensitivity-Problem-1",
+    "page": "Sensitivity Analysis",
+    "title": "Defining a Sensitivity Problem",
+    "category": "section",
+    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0])This generates a problem which the ODE solvers can solve:sol = solve(prob,[0;10],alg=:DP8)Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecvec_to_mat([sol[i][1:sol.prob.numvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecvec_to_mat from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecvec_to_mat(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
+},
+
+{
+    "location": "addons/function_definition_macros.html#",
+    "page": "Function Definition Macros",
+    "title": "Function Definition Macros",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "addons/function_definition_macros.html#Function-Definition-Macros-1",
+    "page": "Function Definition Macros",
+    "title": "Function Definition Macros",
+    "category": "section",
+    "text": "DifferentialEquations.jl provides a set of macros for more easily and legibly defining your differential equations. It exploits the standard notation for mathematically writing differential equations and the notation for \"punching differential equations into the computer\"; effectively doing the translation step for you. This is best shown by an example. Say we want to solve the ROBER model. Using the @ode_define macro, we can do this by writing:f = @ode_define begin\n  dy₁ = -k₁*y₁+k₃*y₂*y₃\n  dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃\n  dy₃ =  k₂*y₂^2\nend k₁=>0.04 k₂=>3e7 k₃=>1e4This looks just like psudocode! The macro will expand this to the \"standard form\", i.e. the ugly computer form:f = (t,u,du) -> begin\n  du[1] = -0.04*u[1] + 1e4*u[2]*u[3]\n  du[2] = 0.04*u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3]\n  du[3] = 3e7*u[2]^2\nendNote that one doesn't need to use numbered variables: DifferentialEquations.jl will number the variables for you. For example, the follows defines the function for the Lotka-Voltera model:f = @ode_define begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=1.5 b=1 c=3 d=1The other macro which is currently provided is the @fem_define macro. This macro is for parsing and writing FEM functions. For example, in the FEM methods you have to use x[:,1] instead of x and x[:,2] instead of y. The macro will automatically do this replacement, along with adding in parameters. Since FEM functions are more general, we also have to give it the function signature. Using the macro looks like this:f  = @fem_define (x) begin\n  sin(α.*x).*cos(α.*y)\nend α=>2π\ngD = @fem_define (x) begin\n  sin(α.*x).*cos(α.*y)/β\nend α=>2π β=>8π*πThis is equivalent to the definitionf(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\ngD(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π)The true power comes in when dealing with nonlinear equations. The second argument, which we skipped over as (), is for listing the variables you wish to define the equation by. Mathematically you may be using u,v,w, etc., but for array-based algorithms you need to use u[:,1],u[:,2],etc. To avoid obfuscated code, the @fem_define macro does this conversion. For example:l = @fem_define (t,x,u) begin\n  du = ones(length(u))-α*u\n  dv = ones(length(v))-v\nend α=>0.5says there are two equations, one for u: (ones(length(u))-α*u) and one for v: (ones(length(v))-v). This expands to the equationl = (t,x,u)  -> [ones(size(x,1))-.5u[:,1]   ones(size(x,1))-u[:,2]]When you have 10+ variables, using @fem_define leads to code which is much easier to read!"
+},
+
+{
+    "location": "addons/dev_and_test.html#",
+    "page": "Algorithm Development and Testing Tools",
+    "title": "Algorithm Development and Testing Tools",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "addons/dev_and_test.html#Algorithm-Development-and-Testing-Tools-1",
+    "page": "Algorithm Development and Testing Tools",
+    "title": "Algorithm Development and Testing Tools",
+    "category": "section",
+    "text": ""
 },
 
 ]}
