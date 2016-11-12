@@ -253,15 +253,47 @@ var documenterSearchIndex = {"docs": [
     "page": "Overview of DifferentialEquations.jl",
     "title": "Overview of DifferentialEquations.jl",
     "category": "section",
-    "text": "The general workflow for using the package is as follows:Define a problem\nGenerate a mesh\nUse a solver on the problem and mesh\nAnalyze the outputProblems are specified via a type interface. For example, for the Poisson equation u = f, one defines a type which holds f and the boundary condition functions. Many examples problems can be found in src/premades/premade_problems.jlNext, for PDE problems, one generates a mesh. For example, if one wants to solve the Heat equation in the parabolic cylinder of the unit square, i.e. 01^2 times 0T, then one has to discretize this. Tools within the package will generate meshes from general characteristics. For example, most tools require only specifying the general shape, dx, dt, and T and will generate the mesh.One then passes the mesh and the problem to the solver interface. The solver then solves the differential equation using the some numerical methods (which can be specified via keyword arguments). The solver returns a solution object which hold all of the details for the solution.With the solution object, you do the analysis as you please! For some result sol, the field sol.u returns the final solution, and if you give a true solution, sol.u_analytic is the true solution at the final time. If you specified to the solver save_timeseries=true, then sol.timeseries and sol.ts will be outputted which hold the solution/time at every timeseries_steps (default set to 100, meaning it saves an output every 100 steps).Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information."
+    "text": "The general workflow for using the package is as follows:Define a problem\nSolve the problem\nAnalyze the output"
 },
 
 {
-    "location": "basics/overview.html#Extras-for-Developers-and-Researchers-1",
+    "location": "basics/overview.html#Defining-Problems-1",
     "page": "Overview of DifferentialEquations.jl",
-    "title": "Extras for Developers and Researchers",
+    "title": "Defining Problems",
     "category": "section",
-    "text": "DifferentialEquations.jl also provides some helper functionality to assist with general forms of analysis. The problem types allow one to optionally specify the true solution. When this is given to the solver, the solution object returns with many error calculations. An array of solutions can be made into a ConvergenceSimulation (or the test_convergence functions can be used) which then generates all of the convergence test results and allows for plotting (great for developing new methods!). The benchmark suite allows one to compare between methods and easily plot the results. Recipes are provided for Runge-Kutta tableaus to plot stability regions."
+    "text": "Problems are specified via a type interface. The problem types are designed to contained the necessary information to fully define their associated differential equation. Each problem type has a page explaining their problem type and the special features associated with them. For example, an ordinary differential equation is defined byfracdudt = f(tu)over some time interval tspan with some initial condition u0, and therefore the ODEProblem is defined by those components:prob = ODEProblem(f,u0,tspan)Note that the number types in the solution will match the types you designate in the problem. For example, if one uses Rational{BigInt} for specifying the timespan and BigFloat for specifying the initial condition, then the solution will solve using Rational{BigInt} for the timesteps and BigFloat for the independent variables. A wide variety of number types are compatible with the solvers such as complex numbers, unitful numbers (via Unitful.jl), decimals (via DecFP), Dual numbers, and many more which may not have been tested yet (thanks to the power of multiple dispatch!). For information on type-compatibilty, please see the solver pages for the specific problems."
+},
+
+{
+    "location": "basics/overview.html#Solving-the-Problems-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Solving the Problems",
+    "category": "section",
+    "text": "Each type of differential equation has its own problem type which allows the solvers to dispatch to the right methods. The common interface for calling the solvers is:sol = solve(prob,alg;kwargs)Into the command, one passes the differential equation problem that they defined prob, optionally choose an algorithm alg (a default is given if not chosen), and change the properties of the solver using keyword arguments. The common arguments which are accepted by most methods is defined in the common solver options manual page. The solver returns a solution object sol which hold all of the details for the solution."
+},
+
+{
+    "location": "basics/overview.html#Analyzing-the-Solution-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Analyzing the Solution",
+    "category": "section",
+    "text": "With the solution object, you do the analysis as you please! The solution type has a common interface which makes handling the solution similar between the different types of differential equations. Tools such as interpolations are seamlessly built into the solution interface to make analysis easy. This interface is described in the solution handling manual page.Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(sol) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations using the animate(sol) command. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information."
+},
+
+{
+    "location": "basics/overview.html#Add-on-Tools-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Add-on Tools",
+    "category": "section",
+    "text": "One of the most compelling features of DifferentialEquations.jl is that the common solver interface allows one to build tools which are \"algorithm and problem agnostic\". For example, one of the provided tools allows for performing parameter estimation on ODEProblems. Since the solve interface is the same for the different algorithms, one can use any of the associated solving algorithms. This modular structure allows one to mix and match overarching analysis tools with specialized algorithms to one's problem, leading to high performance with a large feature base. Isn't that the promise of Julia just being fulfilled?"
+},
+
+{
+    "location": "basics/overview.html#Development-and-Testing-Tools-1",
+    "page": "Overview of DifferentialEquations.jl",
+    "title": "Development and Testing Tools",
+    "category": "section",
+    "text": "Lastly, one unique feature of DifferentialEquations.jl is the existence of algorithm development and testing functionality. This suite was designed by researchers in the field of numerical differential equations to both try out new ideas and distribute finalized results to large audiences. The tools for algorithm development allow for easy convergence testing, benchmarking, and higher order analysis (stability plotting, etc.). This is one of the reasons why DifferentialEquations.jl contains many algorithms which are unique and the results of recent publications! Please check out the developer documentation for more information on using the development tools.Note that DifferentialEquations.jl allows for distributed development, meaning that algorithms which \"plug-into ecosystem\" don't have to be a part of the major packages. If you are interested in adding your work to the ecosystem, checkout the Contributor Guide for more information."
 },
 
 {
@@ -330,42 +362,42 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/solution.html#",
-    "page": "The Solution Type",
-    "title": "The Solution Type",
+    "page": "Solution Handling",
+    "title": "Solution Handling",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "basics/solution.html#The-Solution-Type-1",
-    "page": "The Solution Type",
-    "title": "The Solution Type",
+    "location": "basics/solution.html#Solution-Handling-1",
+    "page": "Solution Handling",
+    "title": "Solution Handling",
     "category": "section",
-    "text": "Each solver has an appropriate solution type. The solution type holds all of the information about the problem which was solved an its solution. If you enabled save_timeseries=true, then the solver also includes a time-course of the solution captured at every timeseries_steps steps.The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. We can usesol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i.If the solver allows for dense output (any ODE solver) and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)If the analytical solution, we also havesol.u_analytic # timeseries of analytical solution\nsol.prob.analytic(t) # The analytic solution at time tPlotting functionality is provided for each solution type. To plot the solution, simply useplot(sol)The plotting function is implemented as a recipe to Plots.jl and as such receives all of the features of a Plots.jl plot."
+    "text": ""
 },
 
 {
-    "location": "basics/solution.html#DiffEqDevTools.appxtrue!",
-    "page": "The Solution Type",
-    "title": "DiffEqDevTools.appxtrue!",
-    "category": "Function",
-    "text": "appxtrue!(sol::FEMSolution,sol2::FEMSolution)\n\nAdds the solution from sol2 to the FEMSolution object sol. Useful to add a quasi-true solution when none is known by computing once at a very small time/space step and taking that solution as the \"true\" solution\n\n\n\n"
-},
-
-{
-    "location": "basics/solution.html#FiniteElementDiffEq.FEMSolutionTS",
-    "page": "The Solution Type",
-    "title": "FiniteElementDiffEq.FEMSolutionTS",
-    "category": "Function",
-    "text": "S = FEMSolutionTS(timeseries::Vector{uType},numvars::Int)S[i][j]` => Variable i at time j.\n\n\n\n"
-},
-
-{
-    "location": "basics/solution.html#Related-Functions-1",
-    "page": "The Solution Type",
-    "title": "Related Functions",
+    "location": "basics/solution.html#Accessing-the-Values-1",
+    "page": "Solution Handling",
+    "title": "Accessing the Values",
     "category": "section",
-    "text": "DiffEqDevTools.appxtrue!\nFiniteElementDiffEq.FEMSolutionTS"
+    "text": "The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. Internally, the solution type has two important fields:u which holds the Vector of values at each timestep\nt which holds the times of each timestep.Different solution types may add extra information as necessary, such as the derivative at each timestep du or the spatial discretization x, y, etc.Instead of working on the Vector{uType} directly, we can use the provided array interface.sol[i]to access the value at timestep i (if the timeseres was saved), andsol.t[i]to access the value of t at timestep i. For multi-dimensional systems, this will address first by time and secondly by component, and thussol[i,j]will be the jth component at timestep i. If the independent variables had shape (for example, was a matrix), then j is the linear index. We can also access solutions with shape:sol[i,j,k]gives the [j,k] component of the system at timestep i. The colon operator is supported, meaning thatsol[:,j]gives the timeseries for the jth component.If the solver allows for dense output and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)Note that the interpolating function allows for t to be a vector and use this to speedup the interpolation calculations.The solver interface also gives tools for using comprehensions over the solution. Using the tuples(sol) function, we can get a tuple for the output at each timestep. This allows one to do the following:[t+2u for (t,u) in tuples(sol)]One can use the extra components of the solution object as well using zip. For example, say the solution type holds du, the derivative at each timestep. One can comprehend over the values using:[t+3u-du for (t,u,du) in zip(sol.t,sol.u,sol.du)]Note that the solution object acts as a vector in time, and so its length is the number of saved timepoints."
+},
+
+{
+    "location": "basics/solution.html#Special-Fields-1",
+    "page": "Solution Handling",
+    "title": "Special Fields",
+    "category": "section",
+    "text": "The solution interface also includes some special fields. The problem object prob and the algorithm used to solve the problem alg are included in the solution. Additionally, the field dense is a boolean which states whether the interpolation functionality is available. Lastly, there is a mutable state tslocation which controls the plot recipe behavior. By default, tslocation=0. Its values have different meanings between partial and ordinary differntial equations:tslocation=0  for non-spatial problems (ODEs) means that the plot recipe will plot the full solution. tslocation=i means that it will only plot the timepoint i.\ntslocation=0 for spatial problems (PDEs) means the plot recipe will plot the final timepoint. tslocation=i means that the plot recipe will plot the ith timepoint.What this means is that for ODEs, the plots will default to the full plot and PDEs will default to plotting the surface at the final timepoint. The iterator interface simply iterates the value of tslocation, and the animate function iterates the solution calling solve at each step."
+},
+
+{
+    "location": "basics/solution.html#Problem-Specific-Features-1",
+    "page": "Solution Handling",
+    "title": "Problem-Specific Features",
+    "category": "section",
+    "text": "Extra fields for solutions of specific problems are specified in the appropriate problem definition page.  "
 },
 
 {
@@ -389,7 +421,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Plot Functions",
     "title": "Standard Plots",
     "category": "section",
-    "text": "Plotting functionality is provided by a recipe to Plots.jl. To use plot solutions, simply call the plot(type) and the plotter will generate appropriate plots. If save_timeseries was used, the plotters can generate animations of the solutions to evolution equations. Plots can be customized using all of the keyword arguments provided by Plots.jl. Please see Plots.jl's documentation for more information.A few extra arguments are provided addition to the Plots.jl keyword arguments. They are as follows:plot_analytic: Specifies whether the true solution (if known) should be plotted alongside the numerically approximated solution. Default is false.\nfilename: Specifies the filename to save an animation. Only applies to the animate function.\nfps: Determines the fps in an animation. Only applies to the animate function."
+    "text": "Plotting functionality is provided by recipes to Plots.jl. To use plot solutions, simply call the plot(type) after importing Plots.jl and the plotter will generate appropriate plots.using Plots\nplot(sol) # Plots the solutionMany of the types defined in the DiffEq universe, such as ODESolution, ConvergenceSimulation WorkPrecision, etc. have plot recipes to handle the default plotting behavior. Plots can be customized using all of the keyword arguments provided by Plots.jl. For example, we can change the plotting backend to the GR package and put a title on the plot by doing:gr()\nplot(sol,title=\"I Love DiffEqs!\")"
+},
+
+{
+    "location": "basics/plot.html#Animations-1",
+    "page": "Plot Functions",
+    "title": "Animations",
+    "category": "section",
+    "text": "Using the iterator interface over the solutions, animations can also be generated via the animate(sol) command. One can choose the filename to save to, frames per second fps, and the density of steps to show every via keyword arguments. The rest of the arguments will be directly passed to the plot recipe to be handled as normal. For example, we can animate our solution with a larger line-width which saves every 4th frame via:animate(sol,lw=3,every=4)Please see Plots.jl's documentation for more information on the available attributes."
 },
 
 {
@@ -998,14 +1038,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Implicit Runge-Kutta Methods",
     "category": "section",
     "text": "constructImplicitEuler - The 1st order Implicit Euler method.\nconstructMidpointRule - The 2nd order Midpoint method.\nconstructTrapezoidalRule - The 2nd order Trapezoidal rule (2nd order LobattoIIIA)\nconstructLobattoIIIA4 - The 4th order LobattoIIIA\nconstructLobattoIIIB2 - The 2nd order LobattoIIIB\nconstructLobattoIIIB4 - The 4th order LobattoIIIB\nconstructLobattoIIIC2 - The 2nd order LobattoIIIC\nconstructLobattoIIIC4 - The 4th order LobattoIIIC\nconstructLobattoIIICStar2 - The 2nd order LobattoIIIC*\nconstructLobattoIIICStar4 - The 4th order LobattoIIIC*\nconstructLobattoIIID2 - The 2nd order LobattoIIID\nconstructLobattoIIID4 - The 4th order LobattoIIID\nconstructRadauIA3 - The 3rd order RadauIA\nconstructRadauIA5 - The 5th order RadauIA\nconstructRadauIIA3 - The 3rd order RadauIIA\nconstructRadauIIA5 - The 5th order RadauIIA"
-},
-
-{
-    "location": "solvers/ode_solve.html#Analysis-of-Methods-1",
-    "page": "Ordinary Differential Equation Solvers",
-    "title": "Analysis of Methods",
-    "category": "section",
-    "text": "For an in-depth walkthrough of the various method pros/cons, see notes on algorithms"
 },
 
 {
