@@ -244,7 +244,3 @@ A plot recipes is provided which will plot the stability region for a given tabl
 * `constructRadauIA5` - The 5th order RadauIA
 * `constructRadauIIA3` - The 3rd order RadauIIA
 * `constructRadauIIA5` - The 5th order RadauIIA
-
-## Analysis of Methods
-
-For an in-depth walkthrough of the various method pros/cons, see [notes on algorithms](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/internals/notes_on_algorithms.html)

@@ -7,10 +7,10 @@ condition ``u₀`` which define an ODE
 \frac{du}{dt} = f(t,u)
 ```
 
-`f` should be specified as `f(t,u)` (or in-place as `f(t,u,du)`),and `u₀` should be an AbstractArray
-(or number) whose geometry matches the desired geometry of `u`. Note that we are
-not limited to numbers or vectors for `u₀`, one is allowed to provide `u₀` as
-arbitrary matrices / higher dimension tensors as well.
+`f` should be specified as `f(t,u)` (or in-place as `f(t,u,du)`),and `u₀` should
+be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
+Note that we are not limited to numbers or vectors for `u₀`, one is allowed to
+provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type
 
