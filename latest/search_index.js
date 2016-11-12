@@ -333,7 +333,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Miscellaneous",
     "category": "section",
-    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page."
+    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain - Specifies a function isoutofdomain(t,u) where, when it returns false, it will reject the timestep. Defaults to always false."
 },
 
 {
