@@ -1794,16 +1794,16 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/dev_and_test.html#",
-    "page": "Algorithm Development and Testing Tools",
-    "title": "Algorithm Development and Testing Tools",
+    "page": "Algorithm Development and Testing",
+    "title": "Algorithm Development and Testing",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "analysis/dev_and_test.html#Algorithm-Development-and-Testing-Tools-1",
-    "page": "Algorithm Development and Testing Tools",
-    "title": "Algorithm Development and Testing Tools",
+    "location": "analysis/dev_and_test.html#Algorithm-Development-and-Testing-1",
+    "page": "Algorithm Development and Testing",
+    "title": "Algorithm Development and Testing",
     "category": "section",
     "text": "Algorithm developing and testing tools are provided by DiffEqDevTools.jl and are documented in the developer documentation."
 },
