@@ -7,10 +7,9 @@ given, a default algorithm will be chosen.
 
 ## Recommended Methods
 
-Currently, over 100 algorithm choices are available. Thus it is suggested that
-you try choosing an algorithm using the `alg_hints` keyword argument. However,
-in some cases you may want something specific, or you may just be curious.
-This guide is to help you choose the right algorithm.
+It is suggested that you try choosing an algorithm using the `alg_hints`
+keyword argument. However, in some cases you may want something specific,
+or you may just be curious. This guide is to help you choose the right algorithm.
 
 ### Non-Stiff Problems
 
@@ -131,6 +130,7 @@ The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation
 ## List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
+The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/internals/tableaus.html).
 For the most useful and common algorithms, a hand-optimized version is supplied
 and is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
 with `tableau=constructDormandPrince()`). However, these serve as a good method
@@ -139,108 +139,9 @@ Implemented are every published tableau (that I know exist). Note that user-defi
 tableaus also are accepted. To see how to define a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
-A plot recipes is provided which will plot the stability region for a given tableau.
+Plot recipes are provided which will plot the stability region for a given tableau.
 
-### Explicit Runge-Kutta Methods
+## Solver Compatibility and Defaults Chart
 
-* `constructEuler` - Euler's 1st order method.
-* `constructHuen()` Huen's order 2 method.
-* `constructRalston()` - Ralston's order 2 method.
-* `constructKutta3` - Kutta's classic 3rd order method
-* `constructRK4` - The classic 4th order "Runge-Kutta" method
-* `constructRK438Rule` - The classic 4th order "3/8th's Rule" method
-* `constructBogakiShampine3()` - Bogakai-Shampine's 2/3 method.
-* `constructRKF4()` - Runge-Kutta-Fehlberg 3/4.
-* `constructRKF5()` - Runge-Kutta-Fehlberg 4/5.
-* `constructRungeFirst5()` - Runge's first 5th order method.
-* `constructCassity5()` - Cassity's 5th order method.
-* `constructLawson5()` - Lawson's 5th order method.
-* `constructLutherKonen5` - Luther-Konen's first 5th order method.
-* `constructLutherKonen52()` - Luther-Konen's second 5th order method.
-* `constructLutherKonen53()` - Luther-Konen's third 5th order method.
-* `constructPapakostasPapaGeorgiou5()` - Papakostas and PapaGeorgiou more stable order 5 method.
-* `constructPapakostasPapaGeorgiou52()` - Papakostas and PapaGeorgiou more efficient order 5 method.
-* `constructTsitouras5()` - Tsitouras's order 5 method.
-* `constructBogakiShampine5()` - Bogaki and Shampine's Order 5 method.
-* `constructSharpSmart5()` - Sharp and Smart's Order 5 method.
-* `constructCashKarp()` - Cash-Karp method 4/5.
-* `constructDormandPrince()` - Dormand-Prince 4/5.
-* `constructButcher6()` - Butcher's first order 6 method.
-* `constructButcher62()` - Butcher's second order 6 method.
-* `constructButcher63()` - Butcher's third order 6 method.
-* `constructDormandPrince6()` - Dormand-Prince's 5/6 method.
-* `constructSharpVerner6()` Sharp-Verner's 5/6 method.
-* `constructVerner916()` - Verner's more efficient order 6 method (1991).
-* `constructVerner9162()` - Verner's second more efficient order 6 method (1991).
-* `constructVernerRobust6()` - Verner's "most robust" order 6 method.
-* `constructVernerEfficient6()` - Verner's "most efficient" order 6 method.
-* `constructPapakostas6()` - Papakostas's order 6 method.
-* `constructLawson6()` - Lawson's order 6 method.
-* `constructTsitourasPapakostas6()` - Tsitouras and Papakostas's order 6 method.
-* `constructDormandLockyerMcCorriganPrince6()` - the Dormand-Lockyer-McCorrigan-Prince order 6 method.
-* `constructTanakaKasugaYamashitaYazaki6A()` - Tanaka-Kasuga-Yamashita-Yazaki order 6 method A.
-* `constructTanakaKasugaYamashitaYazaki6B()` - Tanaka-Kasuga-Yamashita-Yazaki order 6 method B.
-* `constructTanakaKasugaYamashitaYazaki6C()` - Tanaka-Kasuga-Yamashita-Yazaki order 6 method C.
-* `constructTanakaKasugaYamashitaYazaki6D()` - Tanaka-Kasuga-Yamashita-Yazaki order 6 method D.
-* `constructMikkawyEisa()` - Mikkawy and Eisa's order 6 method.
-* `constructChummund6()` - Chummund's first order 6 method.
-* `constructChummund62()` - Chummund's second order 6 method.
-* `constructHuta6()` - Huta's first order 6 method.
-* `constructHuta62()` - Huta's second order 6 method.
-* `constructVerner6()` - An old order 6 method attributed to Verner.
-* `constructDverk()` - The classic DVERK algorithm attributed to Verner.
-* `constructClassicVerner6()` - A classic Verner order 6 algorithm (1978).
-* `constructButcher7()` - Butcher's order 7 algorithm.
-* `constructClassicVerner7()`- A classic Verner order 7 algorithm (1978).
-* `constructVernerRobust7()` - Verner's "most robust" order 7 algorithm.
-* `constructTanakaYamashitaStable7()` - Tanaka-Yamashita more stable order 7 algorithm.
-* `constructTanakaYamashitaEfficient7()` - Tanaka-Yamashita more efficient order 7 algorithm.
-* `constructSharpSmart7()` - Sharp-Smart's order 7 algorithm.
-* `constructSharpVerner7()` - Sharp-Verner's order 7 algorithm.
-* `constructVerner7()` - Verner's "most efficient" order 7 algorithm.
-* `constructVernerEfficient7()` - Verner's "most efficient" order 7 algorithm.
-* `constructClassicVerner8()` - A classic Verner order 8 algorithm (1978).
-* `constructCooperVerner8()` - Cooper-Verner's first order 8 algorithm.
-* `constructCooperVerner82()` - Cooper-Verner's second order 8 algorithm.
-* `constructTsitourasPapakostas8()` - Tsitouras-Papakostas order 8 algorithm.
-* `constructdverk78()` - The classic order 8 DVERK algorithm.
-* `constructEnrightVerner8()` - Enright-Verner order 8 algorithm.
-* `constructCurtis8()` - Curtis' order 8 algorithm.
-* `constructVerner8()` - Verner's "most efficient" order 8 algorithm.
-* `constructRKF8()` - Runge-Kutta-Fehlberg Order 7/8 method.
-* `constructDormandPrice8()` - Dormand-Prince Order 7/8 method.
-* `constructDormandPrince8_64bit()` - Dormand-Prince Order 7/8 method.
-  Coefficients are rational approximations good for 64 bits.
-* `constructVernerRobust9()` - Verner's "most robust" order 9 method.
-* `constructVernerEfficient9()` - Verner's "most efficient" order 9 method.
-* `constructSharp9()` - Sharp's order 9 method.
-* `constructTsitouras9()` - Tsitouras's first order 9 method.
-* `constructTsitouras92()` - Tsitouras's second order 9 method.
-* `constructCurtis10()` - Curtis' order 10 method.
-* `constructOno10()` - Ono's order 10 method.
-* `constructFeagin10Tableau()` - Feagin's order 10 method.
-* `constructCurtis10()` - Curtis' order 10 method.
-* `constructBaker10()` - Baker's order 10 method.
-* `constructHairer10()` Hairer's order 10 method.
-* `constructFeagin12Tableau()` - Feagin's order 12 method.
-* `constructOno12()` - Ono's order 12 method.
-* `constructFeagin14Tableau()` Feagin's order 14 method.
-
-### Implicit Runge-Kutta Methods
-
-* `constructImplicitEuler` - The 1st order Implicit Euler method.
-* `constructMidpointRule` - The 2nd order Midpoint method.
-* `constructTrapezoidalRule` - The 2nd order Trapezoidal rule (2nd order LobattoIIIA)
-* `constructLobattoIIIA4` - The 4th order LobattoIIIA
-* `constructLobattoIIIB2` - The 2nd order LobattoIIIB
-* `constructLobattoIIIB4` - The 4th order LobattoIIIB
-* `constructLobattoIIIC2` - The 2nd order LobattoIIIC
-* `constructLobattoIIIC4` - The 4th order LobattoIIIC
-* `constructLobattoIIICStar2` - The 2nd order LobattoIIIC*
-* `constructLobattoIIICStar4` - The 4th order LobattoIIIC*
-* `constructLobattoIIID2` - The 2nd order LobattoIIID
-* `constructLobattoIIID4` - The 4th order LobattoIIID
-* `constructRadauIA3` - The 3rd order RadauIA
-* `constructRadauIA5` - The 5th order RadauIA
-* `constructRadauIIA3` - The 3rd order RadauIIA
-* `constructRadauIIA5` - The 5th order RadauIIA
+The following chart describes the compatibility and defaults of the specific
+solvers to the common interface.
