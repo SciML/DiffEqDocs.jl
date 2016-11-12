@@ -1,6 +1,6 @@
 # Event Handling and Callback Functions
 
-## Introduction to Callback Function
+## Introduction to Callback Functions
 
 DifferentialEquations.jl allows for using callback functions to inject user code
 into the solver algorithms. This is done by defining a callback function and

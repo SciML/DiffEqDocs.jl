@@ -110,9 +110,26 @@ Pages = [
 Depth = 2
 ```
 
+## Basics
+
+These pages introduce you to the core of DifferentialEquations.jl and the common
+interface. It explains the general workflow, options which are generally available,
+and the general tools for analysis.
+
+```@contents
+Pages = [
+    "basics/overview.md",
+    "basics/common_solver_opts.md",
+    "basics/plot.md",
+    "basics/solution.md",
+    ]
+Depth = 2
+```
+
 ## Problem Types
 
-These pages describe building the problem types.
+These pages describe building the problem types to define differential equations
+for the solvers.
 
 ```@contents
 Pages = [
@@ -124,13 +141,12 @@ Pages = [
 Depth = 2
 ```
 
-## Solver Options
+## Solvers
 
-These pages describe the options available in the solvers.
+These pages describe the solvers and available algorithms in detail.
 
 ```@contents
 Pages = [
-  "solvers/common_solver_opts.md",
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
   "solvers/dae_solve.md",
@@ -145,23 +161,28 @@ Depth = 2
 
 ```@contents
 Pages = [
-    "man/overview.md",
-    "man/ODEProblem.md",
-    "man/SDEProblem.md",
-    "man/FEMProblem.md",
-    "man/StokesProblem.md",
     "man/mesh.md",
-    "man/solution.md",
     "man/output_specification.md",
     "man/callback_functions.md",
-    "man/plot.md",
-    "man/parameter_estimation.md",
-    "man/sensitivity.md",
-    "man/function_definition_macros.md",
-    "man/benchmarks.md",
-    "man/convergence.md",
     "man/conditional_dependencies.md",
     "man/progress_bar.md"
+]
+Depth = 2
+```
+
+## Add-ons
+
+Because DifferentialEquations.jl has a common interface on the solutions, it is
+easy to add functionality to the entire DiffEq ecosystem by developing it
+to the solution interface. These pages describe the add-on analysis tools which
+are available.
+
+```@contents
+Pages = [
+    "addons/function_definition_macros.md",
+    "addons/parameter_estimation.md",
+    "addons/sensitivity.md",
+    "addons/dev_and_test.md"
 ]
 Depth = 2
 ```

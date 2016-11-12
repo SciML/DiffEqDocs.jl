@@ -17,6 +17,12 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
              "tutorials/femheat_example.md",
              "tutorials/femstochastic_example.md"
          ],
+         "Basics" => Any[
+           "basics/overview.md",
+           "basics/common_solver_opts.md",
+           "basics/solution.md",
+           "basics/plot.md"
+         ],
          "Problem Types" => Any[
            "problems/ODEProblem.md",
            "problems/SDEProblem.md",
@@ -24,7 +30,6 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "problems/StokesProblem.md"
          ],
          "Solver Options" => Any[
-           "solvers/common_solver_opts.md",
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
            "solvers/dae_solve.md",
@@ -33,19 +38,17 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "solvers/fdmstokes_solve.md"
          ],
          "Manual" => Any[
-           "man/overview.md",
            "man/mesh.md",
-           "man/solution.md",
            "man/output_specification.md",
            "man/callback_functions.md",
-           "man/plot.md",
-           "man/parameter_estimation.md",
-           "man/sensitivity.md",
-           "man/function_definition_macros.md",
-           "man/benchmarks.md",
-           "man/convergence.md",
            "man/conditional_dependencies.md",
            "man/progress_bar.md"
+         ],
+         "Add-Ons" => Any[
+            "addons/parameter_estimation.md",
+            "addons/sensitivity.md",
+            "addons/function_definition_macros.md",
+            "addons/dev_and_test.md"
          ]
          ])
 
