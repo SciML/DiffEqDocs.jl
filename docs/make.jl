@@ -10,12 +10,12 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          pages = Any[
          "Home" => "index.md",
          "Tutorials" => Any[
-             "tutorials/ode_example.md",
-             "tutorials/sde_example.md",
-             "tutorials/dae_example.md",
-             "tutorials/fempoisson_example.md",
-             "tutorials/femheat_example.md",
-             "tutorials/femstochastic_example.md"
+         "tutorials/ode_example.md",
+         "tutorials/sde_example.md",
+         "tutorials/dae_example.md",
+         "tutorials/fempoisson_example.md",
+         "tutorials/femheat_example.md",
+         "tutorials/femstochastic_example.md"
          ],
          "Basics" => Any[
            "basics/overview.md",
@@ -47,7 +47,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Add-Ons" => Any[
             "addons/parameter_estimation.md",
             "addons/sensitivity.md",
-            "addons/function_definition_macros.md",
+            "addons/parameterized_functions.md",
             "addons/dev_and_test.md"
          ]
          ])

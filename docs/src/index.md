@@ -167,7 +167,7 @@ are available.
 
 ```@contents
 Pages = [
-    "addons/function_definition_macros.md",
+    "addons/parameterized_functions.md",
     "addons/parameter_estimation.md",
     "addons/sensitivity.md",
     "addons/dev_and_test.md"

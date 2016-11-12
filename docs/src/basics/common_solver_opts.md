@@ -5,8 +5,10 @@ for the `solve` function. These arguments apply to `solve` on any problem type a
 are only limited by limitations of the specific implementations.
 
 Many of the defaults depend on the algorithm or the package the algorithm derives
-from. For more detailed information on the defaults and the available options
-for specific algorithms / packages, see the [Option Availability manual page]().
+from. Not all of the interface is provided by every algorithm.
+For more detailed information on the defaults and the available options
+for specific algorithms / packages, see the manual pages for the solvers of specific
+problems.
 
 ## Default Algorithm Hinting
 
