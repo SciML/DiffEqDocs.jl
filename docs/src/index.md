@@ -26,7 +26,7 @@ If you find any example where there seems to be an error, please open an issue.
 
 If you have any questions, or just want to chat about solvers/using the package, please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby). For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the [Contributor's Guide](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/internals/contributors_guide.html).
 
-## Using the Package
+### Using the Package
 
 To install the package, use the following command inside the Julia REPL:
 ```julia
@@ -44,25 +44,13 @@ IJulia notebooks using DifferentialEquations can be found [in the examples folde
 Codes for the latest features can be found in [test/](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/test).
 
 For the most up to date on using the package information, please contact me [via the repository Gitter](https://gitter.im/JuliaDiffEq/Lobby)
-or [read the latest documentation](http://JuliaDiffEq.github.io/DifferentialEquations.jl/latest/)
+or [read the latest documentation](http://JuliaDiffEq.github.io/DifferentialEquations.jl/latest/).
 
-## Bleeding Edge
+Using the bleeding edge for the latest features and development is only recommended
+for power users. Information for how to get to the bleeding edge is found in the
+[developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html#Bleeding-Edge-1).
 
-This package suite is still under heavy development. If you are a power user
-and would like to try out the latest features, it is recommended you use the
-MetaDiffEq metapackage. To do so, use the following commands:
-
-```julia
-Pkg.clone("https://github.com/tbreloff/MetaPkg.jl") # Install MetaPkg
-using MetaPkg
-meta_add("MetaDiffEq") # Adds all of the packages, even those unregistered
-meta_checkout("MetaDiffEq") # Checks out the master branch on all of the packages
-```
-
-Note that this is for power users who are familiar with Julia. If you are having
-issues, please contact Chris Rackauckas in  [the Gitter channel.](https://gitter.im/JuliaDiffEq/Lobby)
-
-## Supported Equations
+### Supported Equations
 
 For PDEs, one can optionally specify a noise equation. The solvers currently have
 stochastic variants for handling Gaussian Space-time white noise SPDEs.
@@ -80,7 +68,7 @@ stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
 For help with choosing a solver algorithm, please see the solver options pages.
 
-## IJulia Notebook Tutorials
+### IJulia Notebook Tutorials
 
 You can access extra tutorials supplied in the [DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
@@ -92,7 +80,7 @@ using IJulia
 notebook(dir = Pkg.dir("DiffEqTutorials"))
 ```
 
-## Tutorials
+### Tutorials
 
 The following tutorials will introduce you to the functionality of DifferentialEquations.jl
 More examples can be found by [checking out the IJulia notebooks in the examples
@@ -110,7 +98,7 @@ Pages = [
 Depth = 2
 ```
 
-## Basics
+### Basics
 
 These pages introduce you to the core of DifferentialEquations.jl and the common
 interface. It explains the general workflow, options which are generally available,
@@ -126,7 +114,7 @@ Pages = [
 Depth = 2
 ```
 
-## Problem Types
+### Problem Types
 
 These pages describe building the problem types to define differential equations
 for the solvers.
@@ -141,7 +129,7 @@ Pages = [
 Depth = 2
 ```
 
-## Solvers
+### Solvers
 
 These pages describe the solvers and available algorithms in detail.
 
@@ -157,7 +145,7 @@ Pages = [
 Depth = 2
 ```
 
-## Manual
+### Manual
 
 ```@contents
 Pages = [
@@ -170,7 +158,7 @@ Pages = [
 Depth = 2
 ```
 
-## Add-ons
+### Add-ons
 
 Because DifferentialEquations.jl has a common interface on the solutions, it is
 easy to add functionality to the entire DiffEq ecosystem by developing it

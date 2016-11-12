@@ -10,7 +10,7 @@ In this example we will solve the equation
 \frac{du}{dt} = f(t,u)
 ```
 
-on the time interval `t\in[0,1]` where ``f(t,u)=αu``. We know via Calculus
+on the time interval ``t\in[0,1]`` where ``f(t,u)=αu``. We know via Calculus
 that the solution to this equation is ``u(t)=u₀\exp(αt)``. To solve this numerically,
 we define a problem type by giving it the equation, the initial condition, and
 the timespan to solve over:

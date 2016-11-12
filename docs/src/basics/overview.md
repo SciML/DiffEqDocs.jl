@@ -90,5 +90,5 @@ for more information on using the development tools.
 
 Note that DifferentialEquations.jl allows for distributed development, meaning that
 algorithms which "plug-into ecosystem" don't have to be a part of the major packages.
-If you are interested in adding your work to the ecosystem, checkout the [Contributor Guide](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/contributing/ecosystem_overview.html)
+If you are interested in adding your work to the ecosystem, checkout the [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html)
 for more information.
