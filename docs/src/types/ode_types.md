@@ -1,4 +1,6 @@
-# Defining an ODE Problem
+# ODE Types
+
+## Mathematical Specification of an ODE Problem
 
 To define an ODE Problem, you simply need to give the function ``f`` and the initial
 condition ``u₀`` which define an ODE

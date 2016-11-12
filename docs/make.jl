@@ -23,13 +23,13 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "basics/solution.md",
            "basics/plot.md"
          ],
-         "Problem Types" => Any[
-           "problems/ODEProblem.md",
-           "problems/SDEProblem.md",
-           "problems/FEMProblem.md",
-           "problems/StokesProblem.md"
+         "Equation Types" => Any[
+           "types/ode_types.md",
+           "types/sde_types.md",
+           "types/fem_types.md",
+           "types/stokes_types.md"
          ],
-         "Solver Options" => Any[
+         "Solver Algorithms" => Any[
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
            "solvers/dae_solve.md",
@@ -37,19 +37,19 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "solvers/femheat_solve.md",
            "solvers/fdmstokes_solve.md"
          ],
-         "Manual" => Any[
-           "man/performance_overloads.md",
-           "man/callback_functions.md",
-           "man/mesh.md",
-           "man/output_specification.md",
-           "man/conditional_dependencies.md",
-           "man/progress_bar.md"
+         "Additional Features" => Any[
+           "features/performance_overloads.md",
+           "features/callback_functions.md",
+           "features/mesh.md",
+           "features/output_specification.md",
+           "features/conditional_dependencies.md",
+           "features/progress_bar.md"
          ],
-         "Add-Ons" => Any[
-            "addons/parameter_estimation.md",
-            "addons/sensitivity.md",
-            "addons/parameterized_functions.md",
-            "addons/dev_and_test.md"
+         "Analysis Tools" => Any[
+           "analysis/parameterized_functions.md",
+           "analysis/parameter_estimation.md",
+           "analysis/sensitivity.md",
+           "analysis/dev_and_test.md"
          ]
          ])
 

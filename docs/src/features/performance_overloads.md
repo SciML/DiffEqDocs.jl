@@ -24,7 +24,7 @@ end
 To declare the Jacobian we simply add the dispatch:
 
 ```julia
-function f(::Type{Val{:Jac}},t,u,du,J)
+function f(::Type{Val{:Jac}},t,u,J)
   J[1,1] = p.a - p.b * u[2]
   J[1,2] = -(p.b) * u[1]
   J[2,1] = 1 * u[2]

@@ -1,4 +1,6 @@
-# Defining a SDE Problem
+# SDE Types
+
+## Mathematical Specification of a SDE Problem
 
 To define an SDE Problem, you simply need to give the forcing function ``f``,
 the noise function `g`, and the initial condition ``u₀`` which define an SDE

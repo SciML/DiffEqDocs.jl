@@ -114,22 +114,22 @@ Pages = [
 Depth = 2
 ```
 
-### Problem Types
+### Equation Types
 
 These pages describe building the problem types to define differential equations
-for the solvers.
+for the solvers, and the special features of the different solution types.
 
 ```@contents
 Pages = [
-  "problems/ODEProblem.md",
-  "problems/SDEProblem.md",
-  "problems/FEMProblem.md",
-  "problems/StokesProblem.md"
+  "types/ode_types.md",
+  "types/sde_types.md",
+  "types/fem_types.md",
+  "types/stokes_types.md"
 ]
 Depth = 2
 ```
 
-### Solvers
+### Solver Algorithms
 
 These pages describe the solvers and available algorithms in detail.
 
@@ -145,21 +145,24 @@ Pages = [
 Depth = 2
 ```
 
-### Manual
+### Additional Features
+
+These sections discuss extra performance enhancements, event handling, and other
+in-depth features.
 
 ```@contents
 Pages = [
-    "man/performance_overloads.md",
-    "man/callback_functions.md",
-    "man/mesh.md",
-    "man/output_specification.md",
-    "man/conditional_dependencies.md",
-    "man/progress_bar.md"
+    "features/performance_overloads.md",
+    "features/callback_functions.md",
+    "features/mesh.md",
+    "features/output_specification.md",
+    "features/conditional_dependencies.md",
+    "features/progress_bar.md"
 ]
 Depth = 2
 ```
 
-### Add-ons
+### Analysis Tools
 
 Because DifferentialEquations.jl has a common interface on the solutions, it is
 easy to add functionality to the entire DiffEq ecosystem by developing it
@@ -168,10 +171,10 @@ are available.
 
 ```@contents
 Pages = [
-    "addons/parameterized_functions.md",
-    "addons/parameter_estimation.md",
-    "addons/sensitivity.md",
-    "addons/dev_and_test.md"
+    "analysis/parameterized_functions.md",
+    "analysis/parameter_estimation.md",
+    "analysis/sensitivity.md",
+    "analysis/dev_and_test.md"
 ]
 Depth = 2
 ```

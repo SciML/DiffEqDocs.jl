@@ -28,7 +28,7 @@ end
 and pass this to the solver:
 
 ```julia
-sol = solve(prob,tspan,callback=my_callback)
+sol = solve(prob,callback=my_callback)
 ```
 
 Later in the manual the full API for callbacks is given (the callbacks are very
@@ -121,9 +121,9 @@ Then you can solve and plot:
 
 ```julia
 u0 = [50.0,0.0]
-prob = ODEProblem(f,u0)
-tspan = [0;15]
-sol = solve(prob,tspan,callback=callback)
+tspan = (0.0,15.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,callback=callback)
 plot(sol)
 ```
 
@@ -190,9 +190,9 @@ callback = @ode_callback begin
   @ode_event event_f apply_event! interp_points dt_safety
 end
 u0 = [0.2]
-prob = ODEProblem(f,u0)
-tspan = [0;10]
-sol = solve(prob,tspan,callback=callback)
+tspan = (0.0,10.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,callback=callback)
 ```
 
 The plot recipes do not have a way of handling the changing size, but we can

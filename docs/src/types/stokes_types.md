@@ -1,4 +1,4 @@
-# Defining a Stokes Problem
+# Stokes Types
 
 ## Problem Type
 

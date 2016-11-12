@@ -1,4 +1,4 @@
-# Ordinary Differential Equation Solvers
+# ODE Solvers
 
 `solve(prob::ODEProblem,alg;kwargs)`
 

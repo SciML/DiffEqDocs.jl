@@ -1,4 +1,4 @@
-# Defining a FEM Problem
+# FEM Types
 
 Below are the definitions of the types which specify problems. Some general notes are:
 
