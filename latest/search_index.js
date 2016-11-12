@@ -465,6 +465,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "problems/ODEProblem.html#Special-Solver-Options-1",
+    "page": "Defining an ODE Problem",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "problems/ODEProblem.html#Special-Solution-Fields-1",
+    "page": "Defining an ODE Problem",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "problems/ODEProblem.html#DiffEqProblemLibrary.prob_ode_linear",
     "page": "Defining an ODE Problem",
     "title": "DiffEqProblemLibrary.prob_ode_linear",
@@ -565,23 +581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining an ODE Problem",
     "title": "Example Problems",
     "category": "section",
-    "text": "Examples problems can be found in src/premades/premade_problems.jl.To use a sample problem, such as prob_ode_linear, you can do something like:prob = prob_ode_linear\nsol = solve(prob,[0;1])DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
-},
-
-{
-    "location": "problems/ODEProblem.html#Special-Solver-Options-1",
-    "page": "Defining an ODE Problem",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "problems/ODEProblem.html#Special-Solution-Fields-1",
-    "page": "Defining an ODE Problem",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:prob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
 },
 
 {
@@ -622,6 +622,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nanalytic: A function which describes the solution.\nknownanalytic: True if the solution is given.\nnumvars: The number of variables in the system\nsizeu: The size of the initial condition (and thus u)\nnoise: The noise process applied to the noise upon generation."
+},
+
+{
+    "location": "problems/SDEProblem.html#Special-Solver-Options-1",
+    "page": "Defining a SDE Problem",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "problems/SDEProblem.html#Special-Solution-Fields-1",
+    "page": "Defining a SDE Problem",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -1597,7 +1613,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Juno Progress Bar Integration",
     "title": "Juno Progress Bar Integration",
     "category": "section",
-    "text": "DifferentialEquations.jl integrates with the Juno progress bar in order to make long calculations more manageable. By default this feature is off for ODE and SDE solvers, but can be turned on via the keyword argument progressbar=true. The progress bar updates every progress_steps timesteps, which has a default value of 1000. Note that making this value really low could cause a performance hit, though from some basic testing it seems that with updates of at least  1000 steps on number (the fastest problems) there's no discernable performance degradation,  giving an high upper bound."
+    "text": "DifferentialEquations.jl integrates with the Juno progress bar in order to make long calculations more manageable. By default this feature is off for ODE and SDE solvers, but can be turned on via the keyword argument progressbar=true. The progress bar updates every progress_steps timesteps, which has a default value of 1000. Note that making this value really low could cause a performance hit, though from some basic testing it seems that with updates of at least 1000 steps on number (the fastest problems) there's no discernable performance degradation, giving an high upper bound.Note that the progressbar also includes a time estimate. This time-estimate is provided by linear extrapolation for how long it has taken to get to what percentage. For adaptive timestepping methods this should only be used as a rough estimate since the timesteps may (and will) change. By scrolling over the progressbar one will also see the current timestep. This can be used to track the solution's progress and find tough locations for the solvers."
 },
 
 {
