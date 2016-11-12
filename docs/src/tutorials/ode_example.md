@@ -55,8 +55,7 @@ this is the stepsize for the calculation. The available options is described on 
 The result of `solve` is a solution object. We can access the 5th value of the solution with
 
 ```julia
-sol[5]
-#.637
+sol[5] #.637
 ```
 
 or get the time of the 8th timestep by
@@ -66,7 +65,21 @@ sol.t[8]
 #.438
 ```
 
-The object that is returns by default acts as a continuous solution via an interpolation.
+Convenience features are also included. We can build an array using a comprehension
+over the solution tuples via
+
+```julia
+[t+u for (t,u) in tuples(sol)]
+```
+
+or more generally
+
+```julia
+[t+2u for (t,u) in zip(sol.t,sol.u)]
+```
+
+allows one to use more parts of the solution type. The object that is returns by
+default acts as a continuous solution via an interpolation.
 We can access the interpolated values by treating `sol` as a function, for example:
 
 ```julia
@@ -153,6 +166,27 @@ plot(sol)
 ```
 
 ![ODE System Solution](../assets/multiODEplot.png)
+
+Note that the analysis tools generalize over to systems of equations as well.
+
+```julia
+sol[4]
+```
+
+still returns the solution at the fourth timestep. It also indexes into the array
+as well.
+
+```julia
+sol[3,5]
+```
+
+is the value of the 5th component (by linear indexing) at the 3rd timepoint, or
+
+```julia
+sol[:,2,1]
+```
+
+is the timeseries for the component which is the 2nd row and 1 column.
 
 ### In-Place Updates
 

@@ -165,16 +165,3 @@ Pages = [
 ]
 Depth = 2
 ```
-
-## Internal Documentation
-
-```@contents
-Pages = [
-  "internals/contributors_guide.md",
-  "internals/fem_tools.md",
-  "internals/extras.md",
-  "internals/notes_on_algorithms.md",
-  "internals/function_index.md"
-]
-Depth = 2
-```
