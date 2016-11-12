@@ -39,6 +39,10 @@ defines the solution if analytic is given.
 * `sizeu`: The size of the initial condition (and thus `u`)
 * `noise`: The noise process applied to the noise upon generation.
 
+## Special Solver Options
+
+## Special Solution Fields
+
 ## Example Problems
 
 Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)

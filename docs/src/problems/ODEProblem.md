@@ -27,15 +27,19 @@ defines the solution if analytic is given.
   or not, `f(t,u)`
 * `tspan`: The timespan for the problem.
 
+## Special Solver Options
+
+## Special Solution Fields
+
 ## Example Problems
 
-Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl).
+Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
 ```julia
 prob = prob_ode_linear
-sol = solve(prob,[0;1])
+sol = solve(prob)
 ```
 
 ```@docs
@@ -52,7 +56,3 @@ DiffEqProblemLibrary.prob_ode_vanderpol_stiff
 DiffEqProblemLibrary.prob_ode_rober
 DiffEqProblemLibrary.prob_ode_rigidbody
 ```
-
-## Special Solver Options
-
-## Special Solution Fields
