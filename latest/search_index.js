@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Manual",
     "category": "section",
-    "text": "Pages = [\n    \"man/mesh.md\",\n    \"man/output_specification.md\",\n    \"man/callback_functions.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
+    "text": "Pages = [\n    \"man/performance_overloads.md\",\n    \"man/callback_functions.md\",\n    \"man/mesh.md\",\n    \"man/output_specification.md\",\n    \"man/conditional_dependencies.md\",\n    \"man/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -1233,6 +1233,110 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/performance_overloads.html#",
+    "page": "Performance Overloads",
+    "title": "Performance Overloads",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/performance_overloads.html#Performance-Overloads-1",
+    "page": "Performance Overloads",
+    "title": "Performance Overloads",
+    "category": "section",
+    "text": "The DiffEq ecosystem provides an extensive interface for declaring extra functions associated with the differential equation's data. In traditional libraries there is usually only one option: the Jacobian. However, we allow for a large array of pre-computed functions to speedup the calculations. This is offered via function overloading (or overloaded types) and allows for these extra features to be offered without cluttering the problem interface."
+},
+
+{
+    "location": "man/performance_overloads.html#Declaring-Explicit-Jacobians-1",
+    "page": "Performance Overloads",
+    "title": "Declaring Explicit Jacobians",
+    "category": "section",
+    "text": "The most standard case, declaring a function for a Jacobian is done by overloading the function f(t,u,du) with an in-place updating function for the Jacobian: f(Val{:Jac},t,u,J) where the value type is used for dispatch. For example, take the LotkaVolterra model:f(t,u,du) = begin\n         du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]\n         du[2] = -3 * u[2] + u[1]*u[2]\nendTo declare the Jacobian we simply add the dispatch:function f(::Type{Val{:Jac}},t,u,du,J)\n  J[1,1] = p.a - p.b * u[2]\n  J[1,2] = -(p.b) * u[1]\n  J[2,1] = 1 * u[2]\n  J[2,2] = -3 + u[1]\n  nothing\nendNote that this can also be done by generating a call-overloaded type. Indeed, this is what a ParameterizedFunctions.jl does, so see its README"
+},
+
+{
+    "location": "man/performance_overloads.html#Other-Available-Functions-1",
+    "page": "Performance Overloads",
+    "title": "Other Available Functions",
+    "category": "section",
+    "text": "The full interface available to the solvers is as follows:f.a # accesses the parameter a\nf(t,u,du) # Call the function\nf(t,u,params,du) # Call the function to calculate with parameters params (vector)\nf(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0\nf(Val{:a},Val{:Deriv},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0\nf(Val{:param_Jac},t,u,params,J) # Call the explicit parameter Jacobian function\nf(Val{:Jac},t,u,J) # Call the explicit Jacobian function\nf(Val{:InvJac},t,u,iJ) # Call the explicit Inverse Jacobian function\nf(Val{:Hes},t,u,H) # Call the explicit Hessian function\nf(Val{:InvHes},t,u,iH) # Call the explicit Inverse Hessian functionOverloads which require parameters should subtype ParameterizedFunction. These are all in-place functions which write into the last variable. See solver documentation specifics to know which optimizations the algorithms can use."
+},
+
+{
+    "location": "man/performance_overloads.html#Symbolically-Calculating-the-Functions-1",
+    "page": "Performance Overloads",
+    "title": "Symbolically Calculating the Functions",
+    "category": "section",
+    "text": "ParameterizedFunctions.jl automatically calculates as many of these functions as possible and generates the overloads using SymEngine. Thus for best performance with the least work, it is suggested one use ParameterizedFunctions.jl."
+},
+
+{
+    "location": "man/callback_functions.html#",
+    "page": "Event Handling and Callback Functions",
+    "title": "Event Handling and Callback Functions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "man/callback_functions.html#Event-Handling-and-Callback-Functions-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Event Handling and Callback Functions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "man/callback_functions.html#Introduction-to-Callback-Functions-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Introduction to Callback Functions",
+    "category": "section",
+    "text": "DifferentialEquations.jl allows for using callback functions to inject user code into the solver algorithms. This is done by defining a callback function and passing that function to the solver. After each accepted iteration this function is called. The standard callback is defined as:default_callback = @ode_callback begin\n  @ode_savevalues\nendThis runs the saving routine at every timestep (inside of this saving routine it   checks the iterations vs timeseries_steps etc., so it's quite complicated).   However, you can add any code you want to this callback. For example, we can   make it print the value at each timestep by doing:my_callback = @ode_callback begin\n  println(u)\n  @ode_savevalues\nendand pass this to the solver:sol = solve(prob,tspan,callback=my_callback)Later in the manual the full API for callbacks is given (the callbacks are very   general and thus the full API is complex enough to handle just about anything),   but for most users it's recommended that you use the simplified event handling   DSL described below."
+},
+
+{
+    "location": "man/callback_functions.html#Event-Handling-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Event Handling",
+    "category": "section",
+    "text": "Since event handling is a very common issue, a special domain-specific language (DSL) was created to make event handling callbacks simple to define."
+},
+
+{
+    "location": "man/callback_functions.html#Example-1:-Bouncing-Ball-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 1: Bouncing Ball",
+    "category": "section",
+    "text": "First let's look at the bouncing ball. @ode_def from ParameterizedFunctions.jl was to define the problem, where the first variable y is the height which changes by v the velocity, where the velocity is always changing at -g where is the gravitational constant. This is the equation:f = @ode_def BallBounce begin\n  dy =  v\n  dv = -g\nend g=9.81All we have to do in order specify the event is to have a function which should always be positive with an event occurring at 0. For now at least that's how it's specified, if a generalization is needed we can talk about this (but it needs to be \"root-findable\"). For here it's clear that we just want to check if the ball's height ever hits zero:function event_f(t,u) # Event when event_f(t,u) == 0\n  u[1]\nendNow we have to say what to do when the event occurs. In this case we just flip the velocity (the second variable)function apply_event!(u,cache)\n  u[2] = -u[2]\nendThat's all you need to specify the callback function with the macro:callback = @ode_callback begin\n  @ode_event event_f apply_event!\nendOne thing to note is that by default this will check at 5 evently-spaced interpolated values for if the event condition is satisfied (i.e. if event_f(t,u)<0). This is because if your problem is oscillatory, sometimes too large of a timestep will miss the event. One may want to specify a number of points in the interval to interpolate to match the computational effort to the problem. This is done with one more parameter to @ode_event. Note that the interpolations are comparatively cheap to calculate so it's recommended that one use a few (if the memory for calck is available).Another parameter you can set for @ode_event is whether to use a rootfinder. By default, when an event is detected, a rootfinding algorithm (provided by NLsolve) is used to find the exact timepoint of the event. This can be computationally costly for large systems and thus there's an option to turn it off.The next option is to allow for termination on event. This will make the ODE solver stop when the event happens. For example, if we set it to true in our example, then the ODE solver will return the solution the first time the ball hits the ground. Whether it will save the \"overshot\" point or the \"true end\" depends on whether rootfinding is used.Lastly, you can also tell the solver to decrease dt after the event occurs. This can be helpful if the discontinuity changes the problem immensely. Using the full power of the macro, we can define an event asconst dt_safety = 1 # Multiplier to dt after an event\nconst interp_points = 10\nconst terminate_on_event = false\ncallback = @ode_callback begin\n  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event dt_safety\nendThen you can solve and plot:u0 = [50.0,0.0]\nprob = ODEProblem(f,u0)\ntspan = [0;15]\nsol = solve(prob,tspan,callback=callback)\nplot(sol)(Image: BallBounce)As you can see from the resulting image, DifferentialEquations.jl is smart enough to use the interpolation to hone in on the time of the event and apply the event back at the correct time. Thus one does not have to worry about the adaptive timestepping \"overshooting\" the event as this is handled for you. Notice that the event macro will save the value(s) at the discontinuity."
+},
+
+{
+    "location": "man/callback_functions.html#Example-2:-Growing-Cell-Population-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 2: Growing Cell Population",
+    "category": "section",
+    "text": "Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function event_f(t,u) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as switching from positive to negative, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function apply_event!(u,cache)\n  @ode_change_cachesize cache length+1\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\nend@ode_change_cachesize cache length+1 is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:const dt_safety = 1\nconst interp_points = 10\ncallback = @ode_callback begin\n  @ode_event event_f apply_event! interp_points dt_safety\nend\nu0 = [0.2]\nprob = ODEProblem(f,u0)\ntspan = [0;10]\nsol = solve(prob,tspan,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is @ode_change_deleteat which performs deleteat! on the caches. For example, to delete the second cell, we could use:@ode_change_deleteat cache 2This allows you to build sophisticated models of populations with births and deaths."
+},
+
+{
+    "location": "man/callback_functions.html#Advanced:-Callback-Function-API-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Advanced: Callback Function API",
+    "category": "section",
+    "text": "The callback functions have access to a lot of the functionality of the solver. The macro defines a function which is written as follows:macro ode_callback(ex)\n  esc(quote\n    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)\n      reeval_fsal = false\n      event_occured = false\n      $(ex)\n      cursaveat,dt,t,T,reeval_fsal\n    end\n  end)\nendAll of the parts of the algorithm are defined in the internal solver documentation."
+},
+
+{
+    "location": "man/callback_functions.html#Example:-Bouncing-Ball-Without-Macros-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example: Bouncing Ball Without Macros",
+    "category": "section",
+    "text": "Here is an example of the defining the ball bouncing callback without the usage of macros. The entire code in its fully glory is generic enough to handle any of the implemented DifferentialEquations.jl algorithms, which special differences depending on the type of interpolant, implementation of FSAL, etc. For these reasons it's usually recommended to use the event handling macro, though this kind of code will allow you handle pretty much anything!manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)\n  reeval_fsal = false\n  event_occured = false\n  dt_safety = 1\n  interp_points = 10\n\n  # Event Handling\n  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n  Θs = linspace(0,1,interp_points)\n  interp_index = 0\n  # Check if the event occured\n  if event_f(t,u)<0\n    event_occured = true\n    interp_index = interp_points\n  elseif interp_points!=0 # Use the interpolants for safety checking\n    for i in 2:length(Θs)-1\n      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0\n        event_occured = true\n        interp_index = i\n        break\n      end\n    end\n  end\n\n  if event_occured\n    if interp_index == interp_points # If no safety interpolations, start in the middle as well\n      initial_Θ = [.5]\n    else\n      initial_Θ = [Θs[interp_index]] # Start at the closest\n    end\n    find_zero = (Θ,val) -> begin\n      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))\n    end\n    res = nlsolve(find_zero,initial_Θ)\n    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)\n    for i in eachindex(u)\n      u[i] = val[i]\n    end\n    dtprev *= res.zero[1]\n    t = tprev + dtprev\n\n    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      resize!(k,kshortsize) # Reset k for next step\n      k = typeof(k)() # Make a local blank k for saving\n      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n    elseif typeof(u) <: Number\n      k = f(t,u)\n    else\n      f(t,u,k)\n    end\n  end\n\n  @ode_savevalues\n\n  if event_occured\n    apply_event!(u)\n    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      if typeof(u) <: Number\n        k = f(t,u)\n      else\n        f(t,u,k)\n      end\n    end\n    @ode_savevalues\n    if fsal\n      reeval_fsal = true\n    end\n    dt *= dt_safety # Safety dt change\n  end\n\n  cursaveat,dt,t,T,reeval_fsal\nend"
+},
+
+{
     "location": "man/mesh.html#",
     "page": "Meshes",
     "title": "Meshes",
@@ -1478,70 +1582,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Timeseries Specifications",
     "category": "section",
     "text": "To further reduce the memory usage, we can control the density that the timeseries is saved at. By default timeseries_steps=1, meaning that every step is saved. Note that timeseries_steps=1 is required for dense output to work correctly. If we change this value to timeseries_steps=n, then every nth step will be saved. Note that it will always have the first and final steps. We can turn off the saving of intermediate steps completely via the keyword save_timeseries=false. This can be used to minimize the memory usage."
-},
-
-{
-    "location": "man/callback_functions.html#",
-    "page": "Event Handling and Callback Functions",
-    "title": "Event Handling and Callback Functions",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "man/callback_functions.html#Event-Handling-and-Callback-Functions-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Event Handling and Callback Functions",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "man/callback_functions.html#Introduction-to-Callback-Functions-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Introduction to Callback Functions",
-    "category": "section",
-    "text": "DifferentialEquations.jl allows for using callback functions to inject user code into the solver algorithms. This is done by defining a callback function and passing that function to the solver. After each accepted iteration this function is called. The standard callback is defined as:default_callback = @ode_callback begin\n  @ode_savevalues\nendThis runs the saving routine at every timestep (inside of this saving routine it   checks the iterations vs timeseries_steps etc., so it's quite complicated).   However, you can add any code you want to this callback. For example, we can   make it print the value at each timestep by doing:my_callback = @ode_callback begin\n  println(u)\n  @ode_savevalues\nendand pass this to the solver:sol = solve(prob,tspan,callback=my_callback)Later in the manual the full API for callbacks is given (the callbacks are very   general and thus the full API is complex enough to handle just about anything),   but for most users it's recommended that you use the simplified event handling   DSL described below."
-},
-
-{
-    "location": "man/callback_functions.html#Event-Handling-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Event Handling",
-    "category": "section",
-    "text": "Since event handling is a very common issue, a special domain-specific language (DSL) was created to make event handling callbacks simple to define."
-},
-
-{
-    "location": "man/callback_functions.html#Example-1:-Bouncing-Ball-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Example 1: Bouncing Ball",
-    "category": "section",
-    "text": "First let's look at the bouncing ball. @ode_def from ParameterizedFunctions.jl was to define the problem, where the first variable y is the height which changes by v the velocity, where the velocity is always changing at -g where is the gravitational constant. This is the equation:f = @ode_def BallBounce begin\n  dy =  v\n  dv = -g\nend g=9.81All we have to do in order specify the event is to have a function which should always be positive with an event occurring at 0. For now at least that's how it's specified, if a generalization is needed we can talk about this (but it needs to be \"root-findable\"). For here it's clear that we just want to check if the ball's height ever hits zero:function event_f(t,u) # Event when event_f(t,u) == 0\n  u[1]\nendNow we have to say what to do when the event occurs. In this case we just flip the velocity (the second variable)function apply_event!(u,cache)\n  u[2] = -u[2]\nendThat's all you need to specify the callback function with the macro:callback = @ode_callback begin\n  @ode_event event_f apply_event!\nendOne thing to note is that by default this will check at 5 evently-spaced interpolated values for if the event condition is satisfied (i.e. if event_f(t,u)<0). This is because if your problem is oscillatory, sometimes too large of a timestep will miss the event. One may want to specify a number of points in the interval to interpolate to match the computational effort to the problem. This is done with one more parameter to @ode_event. Note that the interpolations are comparatively cheap to calculate so it's recommended that one use a few (if the memory for calck is available).Another parameter you can set for @ode_event is whether to use a rootfinder. By default, when an event is detected, a rootfinding algorithm (provided by NLsolve) is used to find the exact timepoint of the event. This can be computationally costly for large systems and thus there's an option to turn it off.The next option is to allow for termination on event. This will make the ODE solver stop when the event happens. For example, if we set it to true in our example, then the ODE solver will return the solution the first time the ball hits the ground. Whether it will save the \"overshot\" point or the \"true end\" depends on whether rootfinding is used.Lastly, you can also tell the solver to decrease dt after the event occurs. This can be helpful if the discontinuity changes the problem immensely. Using the full power of the macro, we can define an event asconst dt_safety = 1 # Multiplier to dt after an event\nconst interp_points = 10\nconst terminate_on_event = false\ncallback = @ode_callback begin\n  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event dt_safety\nendThen you can solve and plot:u0 = [50.0,0.0]\nprob = ODEProblem(f,u0)\ntspan = [0;15]\nsol = solve(prob,tspan,callback=callback)\nplot(sol)(Image: BallBounce)As you can see from the resulting image, DifferentialEquations.jl is smart enough to use the interpolation to hone in on the time of the event and apply the event back at the correct time. Thus one does not have to worry about the adaptive timestepping \"overshooting\" the event as this is handled for you. Notice that the event macro will save the value(s) at the discontinuity."
-},
-
-{
-    "location": "man/callback_functions.html#Example-2:-Growing-Cell-Population-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Example 2: Growing Cell Population",
-    "category": "section",
-    "text": "Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function event_f(t,u) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as switching from positive to negative, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function apply_event!(u,cache)\n  @ode_change_cachesize cache length+1\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\nend@ode_change_cachesize cache length+1 is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:const dt_safety = 1\nconst interp_points = 10\ncallback = @ode_callback begin\n  @ode_event event_f apply_event! interp_points dt_safety\nend\nu0 = [0.2]\nprob = ODEProblem(f,u0)\ntspan = [0;10]\nsol = solve(prob,tspan,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is @ode_change_deleteat which performs deleteat! on the caches. For example, to delete the second cell, we could use:@ode_change_deleteat cache 2This allows you to build sophisticated models of populations with births and deaths."
-},
-
-{
-    "location": "man/callback_functions.html#Advanced:-Callback-Function-API-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Advanced: Callback Function API",
-    "category": "section",
-    "text": "The callback functions have access to a lot of the functionality of the solver. The macro defines a function which is written as follows:macro ode_callback(ex)\n  esc(quote\n    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)\n      reeval_fsal = false\n      event_occured = false\n      $(ex)\n      cursaveat,dt,t,T,reeval_fsal\n    end\n  end)\nendAll of the parts of the algorithm are defined in the internal solver documentation."
-},
-
-{
-    "location": "man/callback_functions.html#Example:-Bouncing-Ball-Without-Macros-1",
-    "page": "Event Handling and Callback Functions",
-    "title": "Example: Bouncing Ball Without Macros",
-    "category": "section",
-    "text": "Here is an example of the defining the ball bouncing callback without the usage of macros. The entire code in its fully glory is generic enough to handle any of the implemented DifferentialEquations.jl algorithms, which special differences depending on the type of interpolant, implementation of FSAL, etc. For these reasons it's usually recommended to use the event handling macro, though this kind of code will allow you handle pretty much anything!manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)\n  reeval_fsal = false\n  event_occured = false\n  dt_safety = 1\n  interp_points = 10\n\n  # Event Handling\n  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n  Θs = linspace(0,1,interp_points)\n  interp_index = 0\n  # Check if the event occured\n  if event_f(t,u)<0\n    event_occured = true\n    interp_index = interp_points\n  elseif interp_points!=0 # Use the interpolants for safety checking\n    for i in 2:length(Θs)-1\n      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0\n        event_occured = true\n        interp_index = i\n        break\n      end\n    end\n  end\n\n  if event_occured\n    if interp_index == interp_points # If no safety interpolations, start in the middle as well\n      initial_Θ = [.5]\n    else\n      initial_Θ = [Θs[interp_index]] # Start at the closest\n    end\n    find_zero = (Θ,val) -> begin\n      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))\n    end\n    res = nlsolve(find_zero,initial_Θ)\n    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)\n    for i in eachindex(u)\n      u[i] = val[i]\n    end\n    dtprev *= res.zero[1]\n    t = tprev + dtprev\n\n    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      resize!(k,kshortsize) # Reset k for next step\n      k = typeof(k)() # Make a local blank k for saving\n      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)\n    elseif typeof(u) <: Number\n      k = f(t,u)\n    else\n      f(t,u,k)\n    end\n  end\n\n  @ode_savevalues\n\n  if event_occured\n    apply_event!(u)\n    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS\n      if typeof(u) <: Number\n        k = f(t,u)\n      else\n        f(t,u,k)\n      end\n    end\n    @ode_savevalues\n    if fsal\n      reeval_fsal = true\n    end\n    dt *= dt_safety # Safety dt change\n  end\n\n  cursaveat,dt,t,T,reeval_fsal\nend"
 },
 
 {
