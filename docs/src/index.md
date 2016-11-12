@@ -149,9 +149,10 @@ Depth = 2
 
 ```@contents
 Pages = [
+    "man/performance_overloads.md",
+    "man/callback_functions.md",
     "man/mesh.md",
     "man/output_specification.md",
-    "man/callback_functions.md",
     "man/conditional_dependencies.md",
     "man/progress_bar.md"
 ]

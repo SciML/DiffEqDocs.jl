@@ -38,9 +38,10 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "solvers/fdmstokes_solve.md"
          ],
          "Manual" => Any[
+           "man/performance_overloads.md",
+           "man/callback_functions.md",
            "man/mesh.md",
            "man/output_specification.md",
-           "man/callback_functions.md",
            "man/conditional_dependencies.md",
            "man/progress_bar.md"
          ],
