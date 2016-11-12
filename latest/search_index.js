@@ -1074,23 +1074,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/sde_solve.html#",
-    "page": "Stochastic Differential Equation Solvers",
-    "title": "Stochastic Differential Equation Solvers",
+    "page": "SDE Solvers",
+    "title": "SDE Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/sde_solve.html#Stochastic-Differential-Equation-Solvers-1",
-    "page": "Stochastic Differential Equation Solvers",
-    "title": "Stochastic Differential Equation Solvers",
+    "location": "solvers/sde_solve.html#SDE-Solvers-1",
+    "page": "SDE Solvers",
+    "title": "SDE Solvers",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "solvers/sde_solve.html#Implemented-Solvers-1",
-    "page": "Stochastic Differential Equation Solvers",
+    "page": "SDE Solvers",
     "title": "Implemented Solvers",
     "category": "section",
     "text": "In addition to the standard Euler-Maruyama method, specialized versions of higher order Runge-Kutta methods are implemented which give increased accuracy and speed.Euler-Maruyama\nMilstein\nRossler-SRK"
@@ -1098,7 +1098,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/sde_solve.html#Solver-Documentation-1",
-    "page": "Stochastic Differential Equation Solvers",
+    "page": "SDE Solvers",
     "title": "Solver Documentation",
     "category": "section",
     "text": "solve(prob::SDEProblem,tspan)Solves the SDE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
@@ -1106,7 +1106,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/sde_solve.html#Special-Keyword-Arguments-1",
-    "page": "Stochastic Differential Equation Solvers",
+    "page": "SDE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
     "text": "discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\ntableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.\nalg: String which defines the solver algorithm. Defult is \"SRIW1Optimized\". Possibilities are:\n:EM- The Euler-Maruyama method.\n:RKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\n:SRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\n:SRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\n:SRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\n:SRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\n:SRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\n:SRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem."
@@ -1114,23 +1114,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dae_solve.html#",
-    "page": "Differential Algebraic Equation Solvers",
-    "title": "Differential Algebraic Equation Solvers",
+    "page": "DAE Solvers",
+    "title": "DAE Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/dae_solve.html#Differential-Algebraic-Equation-Solvers-1",
-    "page": "Differential Algebraic Equation Solvers",
-    "title": "Differential Algebraic Equation Solvers",
+    "location": "solvers/dae_solve.html#DAE-Solvers-1",
+    "page": "DAE Solvers",
+    "title": "DAE Solvers",
     "category": "section",
     "text": "solve(prob::DAEProblem,tspan)Solves the DAE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
 },
 
 {
     "location": "solvers/dae_solve.html#Special-Keyword-Arguments-1",
-    "page": "Differential Algebraic Equation Solvers",
+    "page": "DAE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
     "text": "alg: String which defines the solver algorithm. Default is \"idasol\". Possibilities are:\nidasol: The DAE solver from Sundials"
@@ -1138,23 +1138,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/fempoisson_solve.html#",
-    "page": "Finite Element Method Poisson Equation Solvers",
-    "title": "Finite Element Method Poisson Equation Solvers",
+    "page": "FEM Poisson Solvers",
+    "title": "FEM Poisson Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/fempoisson_solve.html#Finite-Element-Method-Poisson-Equation-Solvers-1",
-    "page": "Finite Element Method Poisson Equation Solvers",
-    "title": "Finite Element Method Poisson Equation Solvers",
+    "location": "solvers/fempoisson_solve.html#FEM-Poisson-Solvers-1",
+    "page": "FEM Poisson Solvers",
+    "title": "FEM Poisson Solvers",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "solvers/fempoisson_solve.html#List-of-Methods-1",
-    "page": "Finite Element Method Poisson Equation Solvers",
+    "page": "FEM Poisson Solvers",
     "title": "List of Methods",
     "category": "section",
     "text": "Direct\nFactorizations (LU, Cholesky, QR, SVD)\nConjugate-Gradient (CG)\nGMRES"
@@ -1162,7 +1162,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/fempoisson_solve.html#DiffEqBase.solve-Tuple{FiniteElementDiffEq.FEMmesh,FiniteElementDiffEq.PoissonProblem}",
-    "page": "Finite Element Method Poisson Equation Solvers",
+    "page": "FEM Poisson Solvers",
     "title": "DiffEqBase.solve",
     "category": "Method",
     "text": "Finite Element Poisson Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::PoissonProblem)\n\nTakes in a definition for the heat equation -u = f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic Poisson equation -u = f + dW.\n\nKeyword Arguments\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves Ax=b using \\\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\n\n\n\n"
@@ -1170,7 +1170,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/fempoisson_solve.html#Solver-Documentation-1",
-    "page": "Finite Element Method Poisson Equation Solvers",
+    "page": "FEM Poisson Solvers",
     "title": "Solver Documentation",
     "category": "section",
     "text": "solve(::FEMmesh,::PoissonProblem)"
@@ -1178,23 +1178,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/femheat_solve.html#",
-    "page": "Finite Element Method Heat Equation Solvers",
-    "title": "Finite Element Method Heat Equation Solvers",
+    "page": "FEM Heat Solvers",
+    "title": "FEM Heat Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/femheat_solve.html#Finite-Element-Method-Heat-Equation-Solvers-1",
-    "page": "Finite Element Method Heat Equation Solvers",
-    "title": "Finite Element Method Heat Equation Solvers",
+    "location": "solvers/femheat_solve.html#FEM-Heat-Solvers-1",
+    "page": "FEM Heat Solvers",
+    "title": "FEM Heat Solvers",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "solvers/femheat_solve.html#Avaliable-Methods-1",
-    "page": "Finite Element Method Heat Equation Solvers",
+    "page": "FEM Heat Solvers",
     "title": "Avaliable Methods",
     "category": "section",
     "text": "[method] denotes an additional version for handling stochastic partial differential equations.Finite Element Solvers (Stochastic) PDEs\nSemilinear Heat Equation (Reaction-Diffusion)\nForward Euler [Maruyama]\nBackward Euler [Maruyama]\nSemi-implicit Crank-Nicholson [Maruyama]\nSemi-implicit Backward Euler [Maruyama]\nLinear Heat Equation\nForward Euler [Maruyama]\nBackward Euler [Maruyama]\nCrank-Nicholson [Maruyama]Implicit Solvers\nDirect\nFactorizations (LU, Cholesky, QR, SVD)\nConjugate-Gradient (CG)\nGMRES"
@@ -1202,7 +1202,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/femheat_solve.html#DiffEqBase.solve-Tuple{FiniteElementDiffEq.FEMmesh,FiniteElementDiffEq.HeatProblem}",
-    "page": "Finite Element Method Heat Equation Solvers",
+    "page": "FEM Heat Solvers",
     "title": "DiffEqBase.solve",
     "category": "Method",
     "text": "Finite Element Heat Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::HeatProblem)\n\nTakes in a definition for the heat equation u_t = u + f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic heat equation u_t = u + f + dW_t.\n\nKeyword Arguments\n\nalg = Solution algorithm. Default is :Euler. The choices are:\nLinear\n:Euler (Explicit)\n:ImplicitEuler (Implicit)\n:CrankNicholson (Implicit)\nNonlinear\n:Euler (Explicit)\n:ImplicitEuler (Nonlinear Solve)\n:CrankNicholson (Nonlinear Solve)\n:SemiImplicitEuler (Implicit)\n:SemiImplicitCrankNicholson (Implicit)\n\nExplicit algorithms only require solving matrix multiplications Au. Implicit algorithms require solving the linear equation Ax=b where x is the unknown. Nonlinear Solve algorithms require solving the nonlinear equation f(x)=0 using methods like Newton's method and is provided by NLSolve.jl. Explicit algorithms have the least stability and should be used either small dt and non-stiff equations. The implicit algorithms have better stability, but for nonlinear equations require costly nonlinear solves in order to be solved exactly. The semi-implicit algorithms discretize with part of the equation implicit and another part explicit in order to allow for the algorithm to not require a nonlinear solve, but at the cost of some stability (though still vastly better at stability than explicit algorithms).\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves using \\ (no factorization). Not recommended.\n:Cholesky = Cholsky decomposition. Only stable of I  dtMA is positive definite. This means that this works best when dt is small. When applicable, this is the fastest.\n:LU = LU-Decomposition. A good mix between fast and stable.\n:QR = QR-Decomposition. Less numerical roundoff error than LU, but slightly slower.\n:SVD = SVD-Decomposition. By far the slowest, but the most robust to roundoff error.\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\nsave_timeseries = Makes the algorithm save the output at every timeseries_steps timesteps. By default save_timeseries is false.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\nprogress_steps = The number of steps between updates of the progress bar. Defaults to 1000.\nprogressbar = Turns on/off use of the Juno progress bar. Defaults to true. Requires Juno.\n\n\n\n"
@@ -1210,7 +1210,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/femheat_solve.html#Solver-Documentation-1",
-    "page": "Finite Element Method Heat Equation Solvers",
+    "page": "FEM Heat Solvers",
     "title": "Solver Documentation",
     "category": "section",
     "text": "solve(::FEMmesh,::HeatProblem)"
@@ -1218,23 +1218,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/fdmstokes_solve.html#",
-    "page": "Finite Difference Method Stokes Equation Solvers",
-    "title": "Finite Difference Method Stokes Equation Solvers",
+    "page": "Stokes Solvers",
+    "title": "Stokes Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/fdmstokes_solve.html#Finite-Difference-Method-Stokes-Equation-Solvers-1",
-    "page": "Finite Difference Method Stokes Equation Solvers",
-    "title": "Finite Difference Method Stokes Equation Solvers",
+    "location": "solvers/fdmstokes_solve.html#Stokes-Solvers-1",
+    "page": "Stokes Solvers",
+    "title": "Stokes Solvers",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "solvers/fdmstokes_solve.html#DiffEqBase.solve-Tuple{StokesDiffEq.StokesProblem,StokesDiffEq.FDMMesh}",
-    "page": "Finite Difference Method Stokes Equation Solvers",
+    "page": "Stokes Solvers",
     "title": "DiffEqBase.solve",
     "category": "Method",
     "text": "solve(prob::StokesProblem,mesh::FDMMesh)\n\nSolves the given stationary Stokes problem on the given finite difference mesh.\n\nKeyword Arguments\n\nconverrors: Whether to calculate all of the errors along the convergence. Default is true.\nmaxiters: Maximum number of iterations before haulting. Default is 100.\nalg: The solver algorithm. Default is \"dgs\". Other option is \"multigrid\".\nlevel: The number of levels in the Multigrid. Default is 2.\nsmoothSteps: The number of Gauss-Seidel iterations to do at each smoothing step. Default is 10.\ncoarseSteps: The number of Gauss-Seidel iterations to do at the coarsegrid. Default is 40.\ngsiters: The number of Gauss-Seidel iterations to do at each step. Default is 20.\n\n\n\n"
@@ -1242,7 +1242,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/fdmstokes_solve.html#Stokes-Equation-1",
-    "page": "Finite Difference Method Stokes Equation Solvers",
+    "page": "Stokes Solvers",
     "title": "Stokes Equation",
     "category": "section",
     "text": "solve(::StokesProblem,::FDMMesh)"
