@@ -445,7 +445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining an ODE Problem",
     "title": "Problem Type",
     "category": "section",
-    "text": "Wraps the data which defines an ODE problemfracdudt = f(tu)with initial condition u0."
+    "text": ""
 },
 
 {
@@ -461,7 +461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Defining an ODE Problem",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the ODE.\nu0: The initial condition.\nisinplace: Determines whether the function f uses the in-place syntax f(t,u,du) or not, f(t,u)\ntspan: The timespan for the problem."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\nisinplace: Determines whether the function f uses the in-place syntax f(t,u,du) or not, f(t,u)\ntspan: The timespan for the problem."
 },
 
 {
@@ -566,6 +566,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in src/premades/premade_problems.jl.To use a sample problem, such as prob_ode_linear, you can do something like:prob = prob_ode_linear\nsol = solve(prob,[0;1])DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
+},
+
+{
+    "location": "problems/ODEProblem.html#Special-Solver-Options-1",
+    "page": "Defining an ODE Problem",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "problems/ODEProblem.html#Special-Solution-Fields-1",
+    "page": "Defining an ODE Problem",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -1549,7 +1565,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Conditional Dependencies",
     "title": "What Methods Require Conditional Dependencies?",
     "category": "section",
-    "text": "That's a good question! The implicit algorithms implemented in DifferentialEquations.jl require NLsolve.jl. Also, the load function for the premade meshes requires JLD.jl.Lastly, there is a special conditional dependency for Juno. If you are using Juno, then the progress bar functionality is works. If you're not using Juno, then it won't do anything.The other conditional dependencies are external solvers wrapped by DifferentialEquations.jl. Currently these include:ODE.jl\nODEInterface.jl\nSundials.jl"
+    "text": "That's a good question! The implicit algorithms implemented in DifferentialEquations.jl require NLsolve.jl. Also, the load function for the premade meshes requires JLD.jl.Lastly, there is a special conditional dependency for Juno. If you are using Juno, then the progress bar functionality is works. If you're not using Juno, then it won't do anything.The other conditional dependencies are external solvers wrapped by DifferentialEquations.jl. Currently these include:ODE.jl\nODEInterface.jl"
 },
 
 {
@@ -1561,9 +1577,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "man/conditional_dependencies.html#ODE.jl.-1",
+    "location": "man/conditional_dependencies.html#ODE.jl-1",
     "page": "Conditional Dependencies",
-    "title": "ODE.jl.",
+    "title": "ODE.jl",
     "category": "section",
     "text": "The wrapper currently only works on the development branch of ODE.jl at JuliaODE/ODE.jl. To install this version of ODE.jl, use the following commands:Pkg.clone(\"https://github.com/JuliaODE/ODE.jl\")"
 },
