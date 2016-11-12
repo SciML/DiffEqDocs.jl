@@ -1725,7 +1725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Algorithm Development and Testing Tools",
     "title": "Algorithm Development and Testing Tools",
     "category": "section",
-    "text": ""
+    "text": "Algorithm developing and testing tools are provided by DiffEqDevTools.jl and are documented in the developer documentation."
 },
 
 ]}
