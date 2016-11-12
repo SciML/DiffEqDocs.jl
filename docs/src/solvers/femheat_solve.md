@@ -1,4 +1,4 @@
-# Finite Element Method Heat Equation Solvers
+# FEM Heat Solvers
 
 ## Avaliable Methods
 

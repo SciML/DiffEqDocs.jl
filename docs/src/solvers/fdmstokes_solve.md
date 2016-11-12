@@ -1,4 +1,4 @@
-# Finite Difference Method Stokes Equation Solvers
+# Stokes Solvers
 
 ## Stokes Equation
 

@@ -1,4 +1,4 @@
-# Stochastic Differential Equation Solvers
+# SDE Solvers
 
 ## Implemented Solvers
 

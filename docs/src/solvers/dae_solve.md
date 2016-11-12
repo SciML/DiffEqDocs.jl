@@ -1,4 +1,4 @@
-# Differential Algebraic Equation Solvers
+# DAE Solvers
 
 `solve(prob::DAEProblem,tspan)`
 

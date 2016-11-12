@@ -1,4 +1,4 @@
-# Finite Element Method Poisson Equation Solvers
+# FEM Poisson Solvers
 
 ## List of Methods
 
