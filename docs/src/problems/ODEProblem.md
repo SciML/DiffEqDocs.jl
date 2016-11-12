@@ -14,14 +14,6 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type
 
-Wraps the data which defines an ODE problem
-
-```math
-\\frac{du}{dt} = f(t,u)
-```
-
-with initial condition ``u0``.
-
 ### Constructors
 
 `ODEProblem(f,u0,tspan)` : Defines the ODE with the specified functions and
@@ -29,7 +21,7 @@ defines the solution if analytic is given.
 
 ### Fields
 
-* `f`: The drift function in the ODE.
+* `f`: The function in the ODE.
 * `u0`: The initial condition.
 * `isinplace`: Determines whether the function `f` uses the in-place syntax `f(t,u,du)`
   or not, `f(t,u)`
@@ -60,3 +52,7 @@ DiffEqProblemLibrary.prob_ode_vanderpol_stiff
 DiffEqProblemLibrary.prob_ode_rober
 DiffEqProblemLibrary.prob_ode_rigidbody
 ```
+
+## Special Solver Options
+
+## Special Solution Fields

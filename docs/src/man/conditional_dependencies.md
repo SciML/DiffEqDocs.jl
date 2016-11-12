@@ -52,7 +52,6 @@ Currently these include:
 
 - ODE.jl
 - ODEInterface.jl
-- Sundials.jl
 
 ## Installation Instructions
 
@@ -67,7 +66,8 @@ the following resources:
 
 The current special installation instructions are as follows:
 
-### ODE.jl.
+### ODE.jl
+
 The wrapper currently only works on the development branch of ODE.jl
 at JuliaODE/ODE.jl. To install this version of ODE.jl, use the following commands:
 
