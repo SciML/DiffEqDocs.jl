@@ -75,6 +75,8 @@ These arguments control the timestepping routines.
 * `callback` - Specifies a callback function. Defaults to a callback function which
   performs the saving routine. For more information, see the
   [Event Handling and Callback Functions manual page](https://juliadiffeq.github.io/DiffEqDocs.jl/latest/man/callback_functions.html).
+* `isoutofdomain` - Specifies a function `isoutofdomain(t,u)` where, when it returns
+  false, it will reject the timestep. Defaults to always false.
 
 ## Progress Bar Control
 
