@@ -41,14 +41,16 @@ is what a ParameterizedFunctions.jl does, so see [its README](https://github.com
 The full interface available to the solvers is as follows:
 
 ```julia
-f.a # accesses the parameter a
 f(t,u,du) # Call the function
 f(t,u,params,du) # Call the function to calculate with parameters params (vector)
+f(Val{:tgrad},t,u,J) # Call the explicit t-gradient function
 f(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0
 f(Val{:a},Val{:Deriv},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
 f(Val{:param_Jac},t,u,params,J) # Call the explicit parameter Jacobian function
 f(Val{:Jac},t,u,J) # Call the explicit Jacobian function
 f(Val{:InvJac},t,u,iJ) # Call the explicit Inverse Jacobian function
+f(Val{:InvW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)
+f(Val{:InvW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
 f(Val{:Hes},t,u,H) # Call the explicit Hessian function
 f(Val{:InvHes},t,u,iH) # Call the explicit Inverse Hessian function
 ```
