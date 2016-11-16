@@ -21,10 +21,7 @@ ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives
 a powerful mixture of speed and productivity features to help you solve and
 analyze your differential equations faster.
 
-Example IJulia notebooks [can be found in the examples folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
-If you find any example where there seems to be an error, please open an issue.
-
-If you have any questions, or just want to chat about solvers/using the package, please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby). For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the [Contributor's Guide](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/internals/contributors_guide.html).
+If you have any questions, or just want to chat about solvers/using the package, please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby). For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the [Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/).
 
 ### Using the Package
 
@@ -39,12 +36,11 @@ To load the package, use the command:
 using DifferentialEquations
 ```
 
-To understand the package in more detail, check out the following tutorials in the manual. Examples
-IJulia notebooks using DifferentialEquations can be found [in the examples folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
-Codes for the latest features can be found in [test/](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/test).
+To understand the package in more detail, check out the following tutorials in the manual.
+Example IJulia notebooks [can be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+If you find any example where there seems to be an error, please open an issue.
 
-For the most up to date on using the package information, please contact me [via the repository Gitter](https://gitter.im/JuliaDiffEq/Lobby)
-or [read the latest documentation](http://JuliaDiffEq.github.io/DifferentialEquations.jl/latest/).
+For the most up to date on using the package information, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby)
 
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information for how to get to the bleeding edge is found in the
@@ -83,8 +79,7 @@ notebook(dir = Pkg.dir("DiffEqTutorials"))
 ### Tutorials
 
 The following tutorials will introduce you to the functionality of DifferentialEquations.jl
-More examples can be found by [checking out the IJulia notebooks in the examples
-folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
+More examples can be found by [checking out the IJulia notebooks in the examples folder](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 ```@contents
 Pages = [
