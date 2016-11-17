@@ -45,14 +45,14 @@ f(t,u,du) # Call the function
 f(t,u,params,du) # Call the function to calculate with parameters params (vector)
 f(Val{:tgrad},t,u,J) # Call the explicit t-gradient function
 f(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0
-f(Val{:a},Val{:Deriv},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
-f(Val{:param_Jac},t,u,params,J) # Call the explicit parameter Jacobian function
-f(Val{:Jac},t,u,J) # Call the explicit Jacobian function
-f(Val{:InvJac},t,u,iJ) # Call the explicit Inverse Jacobian function
-f(Val{:InvW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)
-f(Val{:InvW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
-f(Val{:Hes},t,u,H) # Call the explicit Hessian function
-f(Val{:InvHes},t,u,iH) # Call the explicit Inverse Hessian function
+f(Val{:a},Val{:deriv},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
+f(Val{:paramjac},t,u,params,J) # Call the explicit parameter Jacobian function
+f(Val{:jac},t,u,J) # Call the explicit Jacobian function
+f(Val{:invjac},t,u,iJ) # Call the explicit Inverse Jacobian function
+f(Val{:invW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)
+f(Val{:invW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
+f(Val{:hes},t,u,H) # Call the explicit Hessian function
+f(Val{:invhes},t,u,iH) # Call the explicit Inverse Hessian function
 ```
 
 Overloads which require parameters should subtype `ParameterizedFunction`. These
