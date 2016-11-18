@@ -24,7 +24,7 @@ end
 To declare the Jacobian we simply add the dispatch:
 
 ```julia
-function f(::Type{Val{:Jac}},t,u,J)
+function f(::Type{Val{:jac}},t,u,J)
   J[1,1] = p.a - p.b * u[2]
   J[1,2] = -(p.b) * u[1]
   J[2,1] = 1 * u[2]
@@ -45,7 +45,7 @@ f(t,u,du) # Call the function
 f(t,u,params,du) # Call the function to calculate with parameters params (vector)
 f(Val{:tgrad},t,u,J) # Call the explicit t-gradient function
 f(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0
-f(Val{:a},Val{:deriv},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
+f(Val{:deriv},Val{:a},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
 f(Val{:paramjac},t,u,params,J) # Call the explicit parameter Jacobian function
 f(Val{:jac},t,u,J) # Call the explicit Jacobian function
 f(Val{:invjac},t,u,iJ) # Call the explicit Inverse Jacobian function
