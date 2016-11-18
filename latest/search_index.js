@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -149,7 +149,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Stochastic Differential Equations (SDE)",
     "title": "Stochastic Differential Equations (SDE)",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving SDE. Other introductions can be found by checking out the IJulia notebooks in the examples folder.In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation is u(tW)=uexp((-frac^22)t+W). To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4) #The initial timestepping size. It will automatically assigned if not given.\ntspan = [0,1] # The timespan. This is the default if not given.For reference, let's also give the SDEProblem the analytical solution. Note that each of the problem types allow for this, but it's always optional. This can be a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDEProblem(f,g,u₀,analytic=analytic)and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob::SDEProblem,tspan,dt=dt,alg=:EM)\nusing Plots\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob::SDEProblem,tspan,dt=dt,alg=:SRIW1Optimized)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)"
+    "text": "This tutorial will introduce you to the functionality for solving SDE. Other introductions can be found by checking out the IJulia notebooks in the examples folder."
+},
+
+{
+    "location": "tutorials/sde_example.html#Basics-1",
+    "page": "Stochastic Differential Equations (SDE)",
+    "title": "Basics",
+    "category": "section",
+    "text": "In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation is u(tW)=uexp((-frac^22)t+W). To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4)\ntspan = (0.0,1.0)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))The solve interface is then the same as with ODEs. Here we will use the classic Euler-Maruyama algorithm EM and plot the solution:sol = solve(prob,EM,dt=dt)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)(Image: Basic Solution)"
+},
+
+{
+    "location": "tutorials/sde_example.html#Higher-Order-Methods-1",
+    "page": "Stochastic Differential Equations (SDE)",
+    "title": "Higher Order Methods",
+    "category": "section",
+    "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be  a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDETestProblem(f,g,u₀,analytic)and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM,dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1Optimized,dt=dt)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)"
 },
 
 {
@@ -165,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Differential Algebraic Equations (DAE)",
     "title": "Differential Algebraic Equations (DAE)",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out the IJulia notebooks in the examples folder.In this example we will solve the equationf(tudu) = 0where f is the a variant of the Roberts equation. This equations is actually of the formbeginalign\ndu = f(tu) \n 0 = g(tu) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Roberts model can be written in the form:beginalign\ndy_1 = -004y + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1  y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(t,u,du,out) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:f = function (t,u,du,out)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditonsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]and make the DAEProblem:prob = DAEProblem(f,u₀,du₀)As with the other DifferentialEquations problems, the commands are then to solve and plot:tspan = [0;100000]\nsol = solve(prob,tspan)\nusing Plots\nplot(sol)which, despite how interesting the model looks, produces a relatively simple output:(Image: IntroDAEPlot)"
+    "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out the IJulia notebooks in the examples folder.In this example we will solve the implicit ODE equationf(tudu) = 0where f is the a variant of the Roberts equation. This equations is actually of the formbeginalign\ndu = f(tu) \n 0 = g(tu) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Roberts model can be written in the form:beginalign\ndy_1 = -004y + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1  y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(t,u,du,out) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:f = function (t,u,du,out)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditonsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]\ntspan = (0.0,100000.0)and make the DAEProblem:using DifferentialEquations\nprob = DAEProblem(f,u₀,du₀,tspan)As with the other DifferentialEquations problems, the commands are then to solve and plot. Here we will use the IDA solver from Sundials:sol = solve(prob,IDA)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)which, despite how interesting the model looks, produces a relatively simple output:(Image: IntroDAEPlot)"
 },
 
 {
@@ -461,7 +477,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ODEProblem(f,u0,tspan) : Defines the ODE with the specified functions and defines the solution if analytic is given."
+    "text": "ODEProblem(f,u0,tspan) : Defines the ODE with the specified functions."
 },
 
 {
@@ -469,7 +485,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\nisinplace: Determines whether the function f uses the in-place syntax f(t,u,du) or not, f(t,u)\ntspan: The timespan for the problem."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem."
 },
 
 {
@@ -629,7 +645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "SDEProblem(f,g,u0;analytic=nothing) : Defines the SDE with the specified functions and defines the solution if analytic is given."
+    "text": "SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE."
 },
 
 {
@@ -637,7 +653,15 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nanalytic: A function which describes the solution.\nknownanalytic: True if the solution is given.\nnumvars: The number of variables in the system\nsizeu: The size of the initial condition (and thus u)\nnoise: The noise process applied to the noise upon generation."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nnoise: The noise process applied to the noise upon generation."
+},
+
+{
+    "location": "types/sde_types.html#Noise-Processes-1",
+    "page": "SDE Types",
+    "title": "Noise Processes",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -718,6 +742,78 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in src/premades/premade_problems.jlDiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
+},
+
+{
+    "location": "types/dae_types.html#",
+    "page": "DAE Types",
+    "title": "DAE Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/dae_types.html#DAE-Types-1",
+    "page": "DAE Types",
+    "title": "DAE Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dae_types.html#Mathematical-Specification-of-an-ODE-Problem-1",
+    "page": "DAE Types",
+    "title": "Mathematical Specification of an ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE0 = f(tudu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,resid)). Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/dae_types.html#Problem-Type-1",
+    "page": "DAE Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dae_types.html#Constructors-1",
+    "page": "DAE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "DAEProblem(f,u0,du0,tspan) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/dae_types.html#Fields-1",
+    "page": "DAE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem."
+},
+
+{
+    "location": "types/dae_types.html#Special-Solver-Options-1",
+    "page": "DAE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dae_types.html#Special-Solution-Fields-1",
+    "page": "DAE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dae_types.html#Example-Problems-1",
+    "page": "DAE Types",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:prob = prob_dae_resrob\nsol = solve(prob,IDA)"
 },
 
 {
@@ -1089,19 +1185,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/sde_solve.html#Implemented-Solvers-1",
+    "location": "solvers/sde_solve.html#Recommended-Methods-1",
     "page": "SDE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Recommended Methods",
     "category": "section",
-    "text": "In addition to the standard Euler-Maruyama method, specialized versions of higher order Runge-Kutta methods are implemented which give increased accuracy and speed.Euler-Maruyama\nMilstein\nRossler-SRK"
-},
-
-{
-    "location": "solvers/sde_solve.html#Solver-Documentation-1",
-    "page": "SDE Solvers",
-    "title": "Solver Documentation",
-    "category": "section",
-    "text": "solve(prob::SDEProblem,tspan)Solves the SDE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
+    "text": "For most problems where a good amount of accuracy is required and stiffness may be an issue, the SRIW1Optimized algorithm should do well. If the problem has additive noise, then SRA1Optimized will be the optimal algorithm. If you simply need to quickly compute a large ensamble and don't need accuracy (and don't have stiffness problems), then EM can do well."
 },
 
 {
@@ -1109,7 +1197,23 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
-    "text": "discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\ntableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.\nalg: String which defines the solver algorithm. Defult is \"SRIW1Optimized\". Possibilities are:\n:EM- The Euler-Maruyama method.\n:RKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\n:SRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\n:SRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\n:SRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\n:SRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\n:SRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\n:SRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem."
+    "text": "discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\ntableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3."
+},
+
+{
+    "location": "solvers/sde_solve.html#Implemented-Solvers-1",
+    "page": "SDE Solvers",
+    "title": "Implemented Solvers",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/sde_solve.html#StochasticDiffEq.jl-1",
+    "page": "SDE Solvers",
+    "title": "StochasticDiffEq.jl",
+    "category": "section",
+    "text": "EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\nSRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\nSRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\nSRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem."
 },
 
 {
@@ -1125,7 +1229,15 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "DAE Solvers",
     "category": "section",
-    "text": "solve(prob::DAEProblem,tspan)Solves the DAE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1]."
+    "text": ""
+},
+
+{
+    "location": "solvers/dae_solve.html#Recomended-Methods-1",
+    "page": "DAE Solvers",
+    "title": "Recomended Methods",
+    "category": "section",
+    "text": "Currently, the only method in the ecosystem is IDA."
 },
 
 {
@@ -1133,7 +1245,23 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
-    "text": "alg: String which defines the solver algorithm. Default is \"idasol\". Possibilities are:\nidasol: The DAE solver from Sundials"
+    "text": ""
+},
+
+{
+    "location": "solvers/dae_solve.html#Implemented-Solvers-1",
+    "page": "DAE Solvers",
+    "title": "Implemented Solvers",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/dae_solve.html#Sundials.jl-1",
+    "page": "DAE Solvers",
+    "title": "Sundials.jl",
+    "category": "section",
+    "text": "IDA - This is the IDA method from the Sundials.jl package."
 },
 
 {
