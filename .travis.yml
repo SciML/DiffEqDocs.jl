@@ -21,3 +21,4 @@ script:
   - julia -e 'Pkg.checkout("StokesDiffEq")'
   - julia -e 'Pkg.checkout("DiffEqParamEstim")'
   - julia -e 'Pkg.add("Documenter")'
+  - julia -e 'cd(Pkg.dir("DiffEqDocs")); include(joinpath("docs", "make.jl"))'
