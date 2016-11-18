@@ -35,6 +35,7 @@ functions. The default noise is `WHITE_NOISE`.
 * `f`: The drift function in the SDE.
 * `g`: The noise function in the SDE.
 * `u0`: The initial condition.
+* `tspan`: The timespan for the problem.
 * `noise`: The noise process applied to the noise upon generation.
 
 ## Noise Processes
