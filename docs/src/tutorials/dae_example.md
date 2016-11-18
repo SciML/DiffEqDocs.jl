@@ -4,7 +4,7 @@ This tutorial will introduce you to the functionality for solving DAEs. Other
 introductions can be found by [checking out the IJulia notebooks in the examples
 folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
 
-In this example we will solve the equation
+In this example we will solve the implicit ODE equation
 
 ```math
 f(t,u,du) = 0
@@ -53,25 +53,26 @@ with initial conditons
 ```julia
 u₀ = [1.0, 0, 0]
 du₀ = [-0.04, 0.04, 0.0]
+tspan = (0.0,100000.0)
 ```
 
 and make the DAEProblem:
 
 ```julia
-prob = DAEProblem(f,u₀,du₀)
+using DifferentialEquations
+prob = DAEProblem(f,u₀,du₀,tspan)
 ```
 
 As with the other DifferentialEquations problems, the commands are then to solve
-and plot:
+and plot. Here we will use the IDA solver from Sundials:
 
 ```julia
-tspan = [0;100000]
-sol = solve(prob,tspan)
-using Plots
+sol = solve(prob,IDA)
+using Plots; plotly() # Using the Plotly backend
 plot(sol)
 ```
 
 which, despite how interesting the model looks, produces a relatively simple
 output:
 
-![IntroDAEPlot](../assets/introDAEplot.png)
+![IntroDAEPlot](../assets/intro_dae_plot.png)

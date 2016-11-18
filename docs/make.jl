@@ -26,6 +26,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Equation Types" => Any[
            "types/ode_types.md",
            "types/sde_types.md",
+           "types/dae_types.md",
            "types/fem_types.md",
            "types/stokes_types.md"
          ],

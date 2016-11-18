@@ -1,10 +1,13 @@
 # DAE Solvers
 
-`solve(prob::DAEProblem,tspan)`
+## Recomended Methods
 
-Solves the DAE as defined by prob on the time interval tspan. If not given, tspan defaults to [0,1].
+Currently, the only method in the ecosystem is `IDA`.
 
-### Special Keyword Arguments
+## Special Keyword Arguments
 
-* `alg`: String which defines the solver algorithm. Default is "idasol". Possibilities are:
-  - `idasol`: The DAE solver from Sundials
+## Implemented Solvers
+
+### Sundials.jl
+
+- `IDA` - This is the IDA method from the Sundials.jl package.

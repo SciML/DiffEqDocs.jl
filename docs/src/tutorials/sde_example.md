@@ -4,6 +4,8 @@ This tutorial will introduce you to the functionality for solving SDE. Other
 introductions can be found by [checking out the IJulia notebooks in the examples
 folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
 
+## Basics
+
 In this example we will solve the equation
 
 ```math
@@ -22,26 +24,41 @@ using DifferentialEquations
 u₀=1/2
 f(t,u) = α*u
 g(t,u) = β*u
-dt = 1//2^(4) #The initial timestepping size. It will automatically assigned if not given.
-tspan = [0,1] # The timespan. This is the default if not given.
+dt = 1//2^(4)
+tspan = (0.0,1.0)
+prob = SDEProblem(f,g,u₀,(0.0,1.0))
 ```
 
-For reference, let's also give the `SDEProblem` the analytical solution. Note that
-each of the problem types allow for this, but it's always optional. This can be
-a good way to judge how accurate the algorithms are, or is used to test convergence
-of the algorithms for methods developers. Thus we define the problem object with:
+The `solve` interface is then the same as with ODEs. Here we will use the classic
+Euler-Maruyama algorithm `EM` and plot the solution:
+
+```julia
+sol = solve(prob,EM,dt=dt)
+using Plots; plotly() # Using the Plotly backend
+plot(sol)
+```
+
+![Basic Solution](../assets/basic_sde.png)
+
+## Higher Order Methods
+
+One unique feature of DifferentialEquations.jl is that higher-order methods for
+stochastic differential equations are included. For reference, let's also give
+the `SDEProblem` the analytical solution. We can do this by making a test problem.
+This can be  a good way to judge how accurate the algorithms are, or is used to
+test convergence of the algorithms for methods developers. Thus we define the problem
+object with:
 
 ```julia
 analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)
-prob = SDEProblem(f,g,u₀,analytic=analytic)
+prob = SDETestProblem(f,g,u₀,analytic)
 ```
 
 and then we pass this information to the solver and plot:
 
 ```julia
 #We can plot using the classic Euler-Maruyama algorithm as follows:
-sol =solve(prob::SDEProblem,tspan,dt=dt,alg=:EM)
-using Plots
+sol =solve(prob,EM,dt=dt)
 plot(sol,plot_analytic=true)
 ```
 
@@ -50,7 +67,7 @@ plot(sol,plot_analytic=true)
 We can choose a higher-order solver for a more accurate result:
 
 ```julia
-sol =solve(prob::SDEProblem,tspan,dt=dt,alg=:SRIW1Optimized)
+sol =solve(prob,SRIW1Optimized,dt=dt)
 plot(sol,plot_analytic=true)
 ```
 

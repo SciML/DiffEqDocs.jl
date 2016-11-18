@@ -18,15 +18,12 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`ODEProblem(f,u0,tspan)` : Defines the ODE with the specified functions and
-defines the solution if analytic is given.
+`ODEProblem(f,u0,tspan)` : Defines the ODE with the specified functions.
 
 ### Fields
 
 * `f`: The function in the ODE.
 * `u0`: The initial condition.
-* `isinplace`: Determines whether the function `f` uses the in-place syntax `f(t,u,du)`
-  or not, `f(t,u)`
 * `tspan`: The timespan for the problem.
 
 ## Special Solver Options
