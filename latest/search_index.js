@@ -653,7 +653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\nnoise: The noise process applied to the noise upon generation."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation."
 },
 
 {
