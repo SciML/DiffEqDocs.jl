@@ -113,6 +113,23 @@ However, the BDF method is a classic method for stiff equations and "generally w
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver
 
+Note that the constructors for the Sundials algorithms take two arguments:
+
+  - `method` - This is the method for solving the implicit equation. For BDF this
+    defaults to `:Newton` while for Adams this defaults to `:Functional`. These
+    choices match the recommended pairing in the Sundials.jl manual. However,
+    note that using the `:Newton` method may take less iterations but requires
+    more memory than the `:Function` iteration approach.
+  - `linearsolver` - This is the linear solver which is used in the `:Newton` method.
+    Currently the only choice is the default which is `:Dense`.
+
+Example:
+
+```julia
+CVODE_BDF() # BDF method using Newton + Dense solver
+CVODE_BDF(method=:Functional) # BDF method using Functional iterations
+```
+
 ### ODE.jl
 
 The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.

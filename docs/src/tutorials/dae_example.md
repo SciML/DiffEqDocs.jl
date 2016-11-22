@@ -67,7 +67,7 @@ As with the other DifferentialEquations problems, the commands are then to solve
 and plot. Here we will use the IDA solver from Sundials:
 
 ```julia
-sol = solve(prob,IDA)
+sol = solve(prob,IDA())
 using Plots; plotly() # Using the Plotly backend
 plot(sol)
 ```

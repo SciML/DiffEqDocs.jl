@@ -33,7 +33,7 @@ The `solve` interface is then the same as with ODEs. Here we will use the classi
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```julia
-sol = solve(prob,EM,dt=dt)
+sol = solve(prob,EM(),dt=dt)
 using Plots; plotly() # Using the Plotly backend
 plot(sol)
 ```
@@ -58,7 +58,7 @@ and then we pass this information to the solver and plot:
 
 ```julia
 #We can plot using the classic Euler-Maruyama algorithm as follows:
-sol =solve(prob,EM,dt=dt)
+sol =solve(prob,EM(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
 
@@ -67,7 +67,7 @@ plot(sol,plot_analytic=true)
 We can choose a higher-order solver for a more accurate result:
 
 ```julia
-sol =solve(prob,SRIW1Optimized,dt=dt)
+sol =solve(prob,SRIW1(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
 

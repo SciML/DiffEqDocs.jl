@@ -44,7 +44,7 @@ and the (adaptive) stepsizes `dt`, and so this will find an efficient method to 
 problem. You can also explicitly choose an algorithm and pass in some parameters.
 
 ```julia
-sol = solve(prob,Euler,dt=1/2^4)
+sol = solve(prob,Euler(),dt=1/2^4)
 ```
 
 In this case I chose to use the classic Euler method, and gave it a stepsize `dt=1/2^4`.
@@ -116,7 +116,7 @@ recent research and have been shown to be more efficient than the "standard" alg
 (which are also available). For example, we can choose a 7th order Verner Efficient method:
 
 ```julia
-sol = solve(prob,Vern7)
+sol = solve(prob,Vern7())
 plot(sol,title="Solving using the Vern7 Method")
 ```
 

@@ -67,6 +67,17 @@ These arguments control the timestepping routines.
 * `qmin` - Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.
 * `qoldinit` - The initial `qold` in stabilization stepping. Defaults are algorithm-dependent.
 
+### Fixed Stepsize Usage
+
+Note that if a method does not have adaptivity, the following rules apply:
+
+* If `dt` is set, then the algorithm will step with size `dt` each iteration.
+* If `tstops` and `dt` are both set, then the algorithm will step with either a
+  size `dt`, or use a smaller step to hit the `tstops` point.
+* If `tstops` is set without `dt`, then the algorithm will step directly to each
+  value in `tstops`
+* If neither `dt` nor `tstops` are set, the solver will throw an error.
+
 ## Miscellaneous
 
 * `maxiters` - Maximum number of iterations before stopping. Defaults to 1e5.

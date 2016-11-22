@@ -11,7 +11,7 @@ offered without cluttering the problem interface.
 
 The most standard case, declaring a function for a Jacobian is done by overloading
 the function `f(t,u,du)` with an in-place updating function for the Jacobian:
-`f(Val{:Jac},t,u,J)` where the value type is used for dispatch. For example,
+`f(Val{:jac},t,u,J)` where the value type is used for dispatch. For example,
 take the LotkaVolterra model:
 
 ```julia
@@ -48,6 +48,7 @@ f(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0
 f(Val{:deriv},Val{:a},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0
 f(Val{:paramjac},t,u,params,J) # Call the explicit parameter Jacobian function
 f(Val{:jac},t,u,J) # Call the explicit Jacobian function
+f(Val{:expjac},t,u,γ,J) # Call the explicit exponential Jacobian function exp(γJ)
 f(Val{:invjac},t,u,iJ) # Call the explicit Inverse Jacobian function
 f(Val{:invW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)
 f(Val{:invW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
