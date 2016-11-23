@@ -89,13 +89,15 @@ Note that if a method does not have adaptivity, the following rules apply:
 * `isoutofdomain` - Specifies a function `isoutofdomain(t,u)` where, when it returns
   false, it will reject the timestep. Defaults to always false.
 
-## Progress Bar Control
+## Progress Monitoring
 
 These arguments control the usage of the progressbar in the Juno IDE.
 
-* `progressbar` - Turns on/off the Juno progressbar. Default is false.
+* `progress` - Turns on/off the Juno progressbar. Default is false.
 * `progress_steps` - Numbers of steps between updates of the progress bar. Default is 1000.
-* `progressbar_name` - Controls the name of the progressbar. Default is the name of the problem type.
+* `progress_name` - Controls the name of the progressbar. Default is the name of the problem type.
+* `progress_message` - Controls the message with the progressbar. Defaults to showing `dt`,
+  `t`, the maximum of `u`.
 
 ## Error Calculations
 

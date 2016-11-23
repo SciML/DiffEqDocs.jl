@@ -24,7 +24,5 @@ you simply need to quickly compute a large ensamble and don't need accuracy
   Default tableau is for SRA1.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler.
   Default tableau is for SRIW1.
-- `SRIW1Optimized` - An optimized version of SRIW1. Strong Order 1.5.
-- `SRA1Optimized` - An optimized version of SRIA1. Strong Order 2.0.
-- `SRAVectorized` - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.
-- `SRIVectorized` - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem.
+- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5.
+- `SRA1` - An optimized version of SRIA1. Strong Order 2.0.
