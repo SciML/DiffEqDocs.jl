@@ -64,13 +64,13 @@ f = @ode_def_nohes LotkaVolterra begin
   dy = -c*y + d*x*y
 end a=>1.5 b=>1 c=>3 d=1
 
-prob = ODELocalSensitivityProblem(f,[1.0;1.0])
+prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))
 ```
 
 This generates a problem which the ODE solvers can solve:
 
 ```julia
-sol = solve(prob,[0;10],alg=:DP8)
+sol = solve(prob,DP8())
 ```
 
 Note that the solution is the standard ODE system and the sensitivity system combined.
