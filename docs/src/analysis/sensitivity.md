@@ -59,7 +59,7 @@ Jacobian. For example, we generate an ODE with the sensitivity equations attache
 for the Lotka-Volterra equations by:
 
 ```julia
-f = @ode_def_nohes LotkaVolterra begin
+f = @ode_def_nohes LotkaVolterraSensitivity begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
 end a=>1.5 b=>1 c=>3 d=1
