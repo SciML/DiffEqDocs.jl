@@ -9,7 +9,7 @@ that the problem is defined using a [ParameterizedFunction](https://github.com/J
 `build_optim_objective` builds an objective function to be used with Optim.jl.
 
 ```julia
-build_optim_objective(prob::DEProblem,tspan,t,data;loss_func = L2DistLoss,kwargs...)
+build_optim_objective(prob,tspan,t,data;loss_func = L2DistLoss,kwargs...)
 ```
 
 The first argument is the DEProblem to solve. Second is the `tspan`. Next is `t`,
@@ -23,7 +23,7 @@ of an L2 loss. The keyword arguments are passed to the ODE solver.
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
 ```julia
-build_lsoptim_objective(prob::DEProblem,tspan,t,data;kwargs...)
+build_lsoptim_objective(prob,tspan,t,data;kwargs...)
 ```
 
 The arguments are the same as `build_optim_objective`.
@@ -58,16 +58,18 @@ f = @ode_def_nohes LotkaVolterraTest begin
 end a=>1.5 b=1.0 c=3.0 d=1.0
 
 u0 = [1.0;1.0]
-tspan = [0;10.0]
-prob = ODEProblem(f,u0)
+tspan = (0.0,10.0)
+prob = ODEProblem(f,u0,tspan)
 ```
 
 Notice that since we only used `=>` for `a`, it's the only free parameter.
 We create data using the numerical result with `a=1.5`:
 
 ```julia
+sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
 randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
+using RecursiveArrayTools
 data = vecvec_to_mat(randomized)
 ```
 
@@ -85,14 +87,17 @@ To build the objective function for Optim.jl, we simply call the `build_optim_ob
 funtion:
 
 ```julia
-cost_function = build_optim_objective(prob,tspan,t,data,alg=:Vern6)
+cost_function = build_optim_objective(prob,t,data,Tsit5(),maxiters=10000)
 ```
 
-Now this cost function can be used with Optim.jl in order to get the parameters.
+Note that we set `maxiters` so that way the differential equation solvers would
+error more quickly when in bad regions of the parameter space, speeding up the
+process. Now this cost function can be used with Optim.jl in order to get the parameters.
 For example, we can use Brent's algorithm to search for the best solution on
 the interval `[0,10]` by:
 
 ```julia
+using Optim
 result = optimize(cost_function, 0.0, 10.0)
 ```
 
