@@ -361,11 +361,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "basics/common_solver_opts.html#Progress-Bar-Control-1",
+    "location": "basics/common_solver_opts.html#Progress-Monitoring-1",
     "page": "Common Solver Options",
-    "title": "Progress Bar Control",
+    "title": "Progress Monitoring",
     "category": "section",
-    "text": "These arguments control the usage of the progressbar in the Juno IDE.progressbar - Turns on/off the Juno progressbar. Default is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nprogressbar_name - Controls the name of the progressbar. Default is the name of the problem type."
+    "text": "These arguments control the usage of the progressbar in the Juno IDE.progress - Turns on/off the Juno progressbar. Default is false.\nprogress_steps - Numbers of steps between updates of the progress bar. Default is 1000.\nprogress_name - Controls the name of the progressbar. Default is the name of the problem type.\nprogress_message - Controls the message with the progressbar. Defaults to showing dt, t, the maximum of u."
 },
 
 {
@@ -1221,7 +1221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1Optimized - An optimized version of SRIW1. Strong Order 1.5.\nSRA1Optimized - An optimized version of SRIA1. Strong Order 2.0.\nSRAVectorized - A vectorized implementation of SRA algorithms. Requires 1-dimensional problem.\nSRIVectorized - A vectorized implementation of SRI algorithms. Requires 1-dimensional problem."
+    "text": "EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5.\nSRA1 - An optimized version of SRIA1. Strong Order 2.0."
 },
 
 {
