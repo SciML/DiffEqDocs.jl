@@ -78,7 +78,7 @@ Therefore, the solution to the ODE are the first `n` components of the solution.
 This means we can grab the matrix of solution values like:
 
 ```julia
-x = vecvec_to_mat([sol[i][1:sol.prob.numvars] for i in 1:length(sol)])
+x = vecvec_to_mat([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])
 ```
 
 Since each sensitivity is a vector of derivatives for each function, the sensitivities
