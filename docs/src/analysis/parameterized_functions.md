@@ -88,12 +88,15 @@ do this replacement, along with adding in parameters. Since FEM functions are mo
 general, we also have to give it the function signature. Using the macro looks like this:
 
 ```julia
-f  = @fem_def (x) begin
+f  = @fem_def (x) DataFunction begin
   sin(α.*x).*cos(α.*y)
-end α=>2π
-gD = @fem_def (x) begin
+end α=>π
+
+a = 2π
+b = 8π*π
+gD = @fem_def (x) DirichletBC begin
   sin(α.*x).*cos(α.*y)/β
-end α=>2π β=>8π*π
+end α=>a β=>b
 ```
 
 This is equivalent to the definition
