@@ -35,10 +35,10 @@ will number the variables for you. For example, the follows defines the function
 for the Lotka-Volterra model:
 
 ```julia
-f = @ode_def LotkaVolterra begin
+f = @ode_def LotkaVolterraExample begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
-end a=>1.5 b=>1 c=>3 d=1
+end a=>1.5 b=>1.0 c=>3.0 d=1.0
 ```
 
 ## Extra Features
@@ -55,7 +55,7 @@ to change the parameter `f` to `0.2`. We can create a new function with new para
 using the name we gave the macro:
 
 ```julia
-g = LotkaVolterra(a=0.3,b=20.3)
+g = LotkaVolterraExample(a=0.3,b=20.3)
 ```
 
 In this case, `c` will default to the value we gave it in the macro.
