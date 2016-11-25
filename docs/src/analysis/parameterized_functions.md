@@ -12,7 +12,7 @@ Using the `@ode_def` macro from ParameterizedFunctions.jl, we can do this by wri
 
 ```julia
 using ParameterizedFunctions
-f = @ode_def ROBER begin
+f = @ode_def ROBERExample begin
   dy₁ = -k₁*y₁+k₃*y₂*y₃
   dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
   dy₃ =  k₂*y₂^2

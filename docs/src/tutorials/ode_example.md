@@ -231,7 +231,7 @@ at the end. For example, we can write the Lorenz system as:
 
 ```julia
 using ParameterizedFunctions
-g = @ode_def Lorenz begin
+g = @ode_def LorenzExample begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
@@ -261,7 +261,7 @@ it using `=`. We can create a new instance with new parameters via the name used
 the `@ode_def` command:
 
 ```julia
-h = Lorenz(σ=11.0,ρ=25.0)
+h = LorenzExample(σ=11.0,ρ=25.0)
 ```
 
 Note that the values will default to the values giving in the `@ode_def` command.
