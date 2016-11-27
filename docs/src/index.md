@@ -1,7 +1,7 @@
 # DifferentialEquations.jl Documentation
 
 DifferentialEquations.jl is a package for solving numerically solving differential
-equations. The purpose of this package is to supply
+equations using the various components of JuliaDiffEq. The purpose of this package is to supply
 efficient Julia implementations of solvers for various differential equations.
 Equations within the realm of this package include ordinary differential equations
 (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic
