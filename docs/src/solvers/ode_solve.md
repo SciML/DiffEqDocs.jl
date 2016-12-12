@@ -88,21 +88,6 @@ and thus are recommended for stiff problems on for non-Float64 numbers.
   - `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances.
     Note that this method is prone to instability in the presence of oscillations, so use with caution.
 
-### ODEInterface.jl
-
-The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
-nonstiff algorithms are superseded by the more featured and higher performance
-Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
-are some of the most efficient methods available (but are restricted for use on
-arrays of Float64).
-
-  - `dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
-  - `dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince
-  - `odex` - GBS extrapolation-algorithm based on the midpoint rule
-  - `seulex` - extrapolation-algorithm based on the linear implicit Euler method
-  - `radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
-  - `radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
-
 ### Sundials.jl
 
 The Sundials suite is built around multistep methods. These methods are more efficient
@@ -130,6 +115,44 @@ CVODE_BDF() # BDF method using Newton + Dense solver
 CVODE_BDF(method=:Functional) # BDF method using Functional iterations
 ```
 
+### ODEInterface.jl
+
+The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
+nonstiff algorithms are superseded by the more featured and higher performance
+Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
+are some of the most efficient methods available (but are restricted for use on
+arrays of Float64).
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:
+
+```julia
+Pkg.add("ODEInterfaceDiffEq")
+using ODEInterfaceDiffEq
+```
+
+  - `dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
+  - `dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince
+  - `odex` - GBS extrapolation-algorithm based on the midpoint rule
+  - `seulex` - extrapolation-algorithm based on the linear implicit Euler method
+  - `radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
+  - `radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
+
+### LSODA.jl
+
+This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching
+to solve both stiff and non-stiff equiations.
+
+  - `LSODAAlg` - The LSODA wrapper algorithm.
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use LSODA.jl:
+
+```julia
+Pkg.add("LSODA")
+using LSODA
+```
+
 ### ODE.jl
 
 The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.
@@ -149,7 +172,7 @@ The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
 The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/internals/tableaus.html).
 For the most useful and common algorithms, a hand-optimized version is supplied
-and is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
+in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
 with `tableau=constructDormandPrince()`). However, these serve as a good method
 for comparing between tableaus and understanding the pros/cons of the methods.
 Implemented are every published tableau (that I know exist). Note that user-defined

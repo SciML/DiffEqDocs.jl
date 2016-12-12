@@ -36,11 +36,13 @@ controlling the output behavior, see the [Output Specification manual page](../m
 
 * `dense`: Denotes whether to save the extra pieces for dense (continuous) output. Default is true
   for algorithms which have the ability to produce dense output.
-* `saveat`: Denotes extra times to save the solution at during the solving phase. Note that this
-  can be used even if `dense=false`. Default is `[]`.
+* `saveat`: Denotes extra times to save the solution at during the solving phase. The solver will save
+  at each of the timepoints in this array in the most efficient manner. Note that this
+  can be used even if `dense=false`. For methods where interpolation is not possible,
+  is this may be equivalent to `tstops`. Default is `[]`.
 * `tstops`: Denotes extra times that the timestepping algorithm must step to. This should
-  only be used if dense output via `saveat` is not available for the algorithm (for efficiency).
-  Default is `[]`.
+  be used to help the solver deal with discontinuities and singularities, since stepping
+  exactly at the time of the discontinuity will improve accuracy.  Default is `[]`.
 * `calck`: Turns on and off the internal ability for intermediate interpolations. This defaults
   to `dense || !isempty(saveat) || `"no custom callback is given". This can be used
   to turn off interpolations (to save memory) even when a custom callback is used.
