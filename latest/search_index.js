@@ -1141,7 +1141,15 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Sundials.jl",
     "category": "section",
-    "text": "The Sundials suite is built around multistep methods. These methods are more efficient than other methods when the cost of the function calculations is really high, but for less costly functions the cost of nurturing the timestep overweighs the benefits. However, the BDF method is a classic method for stiff equations and \"generally works\".CVODE_BDF - CVode Backward Differentiation Formula (BDF) solver.\nCVODE_Adams - CVode Adams-Moulton solverNote that the constructors for the Sundials algorithms take two arguments:method - This is the method for solving the implicit equation. For BDF this defaults to :Newton while for Adams this defaults to :Functional. These choices match the recommended pairing in the Sundials.jl manual. However, note that using the :Newton method may take less iterations but requires more memory than the :Function iteration approach.\nlinearsolver - This is the linear solver which is used in the :Newton method. Currently the only choice is the default which is :Dense.Example:CVODE_BDF() # BDF method using Newton + Dense solver\nCVODE_BDF(method=:Functional) # BDF method using Functional iterations"
+    "text": "The Sundials suite is built around multistep methods. These methods are more efficient than other methods when the cost of the function calculations is really high, but for less costly functions the cost of nurturing the timestep overweighs the benefits. However, the BDF method is a classic method for stiff equations and \"generally works\".CVODE_BDF - CVode Backward Differentiation Formula (BDF) solver.\nCVODE_Adams - CVode Adams-Moulton solverNote that the constructors for the Sundials algorithms take two arguments:method - This is the method for solving the implicit equation. For BDF this defaults to :Newton while for Adams this defaults to :Functional. These choices match the recommended pairing in the Sundials.jl manual. However, note that using the :Newton method may take less iterations but requires more memory than the :Function iteration approach.\nlinearsolver - This is the linear solver which is used in the :Newton method.The choices are:- `:Dense` - A dense linear solver\n- `:Band` - A solver specialized for banded Jacobians. If used, you must set the\n  position of the upper and lower non-zero diagonals via `jac_upper` and\n  `jac_lower`.\n- `:Diagonal` - This method is specialized for diagonal Jacobians.\n- `BCG` - A Biconjugate gradient method.\n- `TFQMR` - A TFQMR method.Example:CVODE_BDF() # BDF method using Newton + Dense solver\nCVODE_BDF(method=:Functional) # BDF method using Functional iterations\nCVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nCVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   "
+},
+
+{
+    "location": "solvers/ode_solve.html#ODE.jl-1",
+    "page": "ODE Solvers",
+    "title": "ODE.jl",
+    "category": "section",
+    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method\node4s - A 4th order Rosenbrock method due to Shampine"
 },
 
 {
@@ -1157,15 +1165,15 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "LSODA.jl",
     "category": "section",
-    "text": "This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching to solve both stiff and non-stiff equiations.LSODAAlg - The LSODA wrapper algorithm.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use LSODA.jl:Pkg.add(\"LSODA\")\nusing LSODA"
+    "text": "This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching to solve both stiff and non-stiff equiations.lsoda - The LSODA wrapper algorithm.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use LSODA.jl:Pkg.add(\"LSODA\")\nusing LSODA"
 },
 
 {
-    "location": "solvers/ode_solve.html#ODE.jl-1",
+    "location": "solvers/ode_solve.html#ODEIterators.jl-1",
     "page": "ODE Solvers",
-    "title": "ODE.jl",
+    "title": "ODEIterators.jl",
     "category": "section",
-    "text": "The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.rk23 - Bogakai-Shampine's 2/3 method\nrk45 - Dormand-Prince's 4/5 method\nfeh78 - Runge-Kutta-Fehlberg 7/8 method\nModifiedRosenbrockIntegrator - Rosenbrock's 2/3 method\nfeuler - Forward Euler\nmidpoint - Midpoint Method\nheun - Heun's Method\nrk4 - RK4\nfeh45 - Runge-Kutta-Fehlberg 4/5 method"
+    "text": "The ODEIterators.jl algorithms all come with a 3rd order Hermite polynomial interpolation.rk23 - Bogakai-Shampine's 2/3 method\nrk45 - Dormand-Prince's 4/5 method\nfeh78 - Runge-Kutta-Fehlberg 7/8 method\nModifiedRosenbrockIntegrator - Rosenbrock's 2/3 method\nfeuler - Forward Euler\nmidpoint - Midpoint Method\nheun - Heun's Method\nrk4 - RK4\nfeh45 - Runge-Kutta-Fehlberg 4/5 method"
 },
 
 {
@@ -1253,7 +1261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Recomended Methods",
     "category": "section",
-    "text": "Currently, the only method in the ecosystem is IDA."
+    "text": "The recommended method for performance is IDA from the Sundials package if you are solving problems with Float64. It's a very well-optimized method, and allows you to have a little bit of control over the linear solver to better tailor it to your problem. A similar algorithm is daskr. Which one is more efficient is problem dependent.If your problem requires special Julia types like arbitrary precision numbers, then dassl is the method of choice."
 },
 
 {
@@ -1277,7 +1285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Sundials.jl",
     "category": "section",
-    "text": "IDA - This is the IDA method from the Sundials.jl package."
+    "text": "IDA - This is the IDA method from the Sundials.jl package.Note that the constructors for the Sundials algorithms take an argument:linearsolver - This is the linear solver which is used in the Newton iterations. The choices are:\n:Dense - A dense linear solver\n:Band - A solver specialized for banded Jacobians. If used, you must set the position of the upper and lower non-zero diagonals via jac_upper and jac_lower.\n:Diagonal - This method is specialized for diagonal Jacobians.\nBCG - A Biconjugate gradient method.\nTFQMR - A TFQMR method.Example:IDA() # Newton + Dense solver\nIDA(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nIDA(linear_solver=:BCG) # Biconjugate gradient method                                   "
 },
 
 {
@@ -1285,7 +1293,15 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "DASKR.jl",
     "category": "section",
-    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRDASRK - This is a wrapper for the well-known DASKR algorithm."
+    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRdaskr - This is a wrapper for the well-known DASKR algorithm."
+},
+
+{
+    "location": "solvers/dae_solve.html#DASSL.jl-1",
+    "page": "DAE Solvers",
+    "title": "DASSL.jl",
+    "category": "section",
+    "text": "dassl - A native Julia implementation of the DASSL algorithm."
 },
 
 {
