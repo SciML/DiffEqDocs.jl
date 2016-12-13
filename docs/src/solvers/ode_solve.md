@@ -106,14 +106,34 @@ Note that the constructors for the Sundials algorithms take two arguments:
     note that using the `:Newton` method may take less iterations but requires
     more memory than the `:Function` iteration approach.
   - `linearsolver` - This is the linear solver which is used in the `:Newton` method.
-    Currently the only choice is the default which is `:Dense`.
+  The choices are:
+
+    - `:Dense` - A dense linear solver
+    - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
+      position of the upper and lower non-zero diagonals via `jac_upper` and
+      `jac_lower`.
+    - `:Diagonal` - This method is specialized for diagonal Jacobians.
+    - `BCG` - A Biconjugate gradient method.
+    - `TFQMR` - A TFQMR method.
 
 Example:
 
 ```julia
 CVODE_BDF() # BDF method using Newton + Dense solver
 CVODE_BDF(method=:Functional) # BDF method using Functional iterations
+CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down
+CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   
 ```
+
+### ODE.jl
+
+  - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
+  - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
+  - `ode23s` - A modified Rosenbrock order 2/3 method due to Shampine
+  - `ode78` - A Fehlburg order 7/8 Runge-Kutta method
+  - `ode4` - The classic Runge-Kutta order 4 method
+  - `ode4ms` - A fixed-step, fixed order Adams-Bashforth-Moulton method
+  - `ode4s` - A 4th order Rosenbrock method due to Shampine
 
 ### ODEInterface.jl
 
@@ -143,7 +163,7 @@ using ODEInterfaceDiffEq
 This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching
 to solve both stiff and non-stiff equiations.
 
-  - `LSODAAlg` - The LSODA wrapper algorithm.
+  - `lsoda` - The LSODA wrapper algorithm.
 
 Note that this setup is not automatically included with DifferentialEquaitons.jl.
 To use the following algorithms, you must install and use LSODA.jl:
@@ -153,9 +173,9 @@ Pkg.add("LSODA")
 using LSODA
 ```
 
-### ODE.jl
+### ODEIterators.jl
 
-The ODE.jl algorithms all come with a 3rd order Hermite polynomial interpolation.
+The ODEIterators.jl algorithms all come with a 3rd order Hermite polynomial interpolation.
 
   - `rk23` - Bogakai-Shampine's 2/3 method
   - `rk45` - Dormand-Prince's 4/5 method
