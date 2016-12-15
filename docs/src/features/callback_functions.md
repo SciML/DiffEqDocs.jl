@@ -241,7 +241,7 @@ macro ode_callback(ex)
   esc(quote
     function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
       reeval_fsal = false
-      event_occured = false
+      event_occurred = false
       $(ex)
       cursaveat,dt,t,T,reeval_fsal
     end
@@ -263,7 +263,7 @@ of code will allow you handle pretty much anything!
 ```julia
 manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
   reeval_fsal = false
-  event_occured = false
+  event_occurred = false
   dt_safety = 1
   interp_points = 10
 
@@ -273,19 +273,19 @@ manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtpre
   interp_index = 0
   # Check if the event occured
   if event_f(t,u)<0
-    event_occured = true
+    event_occurred = true
     interp_index = interp_points
   elseif interp_points!=0 # Use the interpolants for safety checking
     for i in 2:length(Θs)-1
       if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0
-        event_occured = true
+        event_occurred = true
         interp_index = i
         break
       end
     end
   end
 
-  if event_occured
+  if event_occurred
     if interp_index == interp_points # If no safety interpolations, start in the middle as well
       initial_Θ = [.5]
     else
@@ -315,7 +315,7 @@ manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtpre
 
   @ode_savevalues
 
-  if event_occured
+  if event_occurred
     apply_event!(u)
     if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
       if typeof(u) <: Number

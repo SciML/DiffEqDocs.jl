@@ -67,8 +67,28 @@ plot(sol,plot_analytic=true)
 We can choose a higher-order solver for a more accurate result:
 
 ```julia
-sol =solve(prob,SRIW1(),dt=dt)
+sol =solve(prob,SRIW1(),dt=dt,adaptive=false)
 plot(sol,plot_analytic=true)
 ```
 
 ![Better SDE Solution](../assets/introSDEplotSRI.png)
+
+By default, the higher order methods have adaptivity. Thus one can use
+
+```julia
+sol =solve(prob,SRIW1())
+plot(sol,plot_analytic=true)
+```
+
+![Better Automatic Solution](../assets/sde_auto_time.png)
+
+Here we allowed the solver to automatically determine a starting `dt`. This estimate
+at the beginning is conservative (small) to ensure accuracy. We can instead start
+the method with a larger `dt` by passing in a value for the starting `dt`:
+
+```julia
+sol =solve(prob,SRIW1(),dt=dt)
+plot(sol,plot_analytic=true)
+```
+
+![Better Automatic Solution](../assets/sde_start_time.png)
