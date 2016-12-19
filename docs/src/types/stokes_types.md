@@ -22,4 +22,11 @@ Defines the solution to a stationary Stokes problem:
 
 ## Example Problems
 
-Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)
+Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/stokes_premade_problems.jl).
+
+To use a sample problem, use:
+
+```julia
+# Pkg.add("DiffEqProblemLibrary")
+using DiffEqProblemLibrary
+```

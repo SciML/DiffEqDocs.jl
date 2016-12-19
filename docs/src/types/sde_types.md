@@ -46,7 +46,16 @@ functions. The default noise is `WHITE_NOISE`.
 
 ## Example Problems
 
-Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)
+Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/sde_premade_problems.jl).
+
+To use a sample problem, such as `prob_sde_linear`, you can do something like:
+
+```julia
+# Pkg.add("DiffEqProblemLibrary")
+using DiffEqProblemLibrary
+prob = prob_sde_linear
+sol = solve(prob)
+```
 
 ```@docs
 DiffEqProblemLibrary.prob_sde_linear

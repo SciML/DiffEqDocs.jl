@@ -37,6 +37,8 @@ Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/J
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
 ```julia
+# Pkg.add("DiffEqProblemLibrary")
+using DiffEqProblemLibrary
 prob = prob_ode_linear
 sol = solve(prob)
 ```

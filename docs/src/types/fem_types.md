@@ -112,8 +112,14 @@ with `u_i = u[:,i]` as the ith variable. See the example problems for more help.
 
 ## Example Problems
 
-Examples problems can be found in [src/premades/premade_problems.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl/blob/master/src/premades/premade_problems.jl)
+Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/fem_premade_problems.jl).
 
+To use a sample problem, you need to do:
+
+```julia
+# Pkg.add("DiffEqProblemLibrary")
+using DiffEqProblemLibrary
+```
 
 ### Poisson Equation
 
