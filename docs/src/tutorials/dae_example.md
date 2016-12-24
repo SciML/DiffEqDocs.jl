@@ -1,8 +1,7 @@
 # Differential Algebraic Equations (DAE)
 
 This tutorial will introduce you to the functionality for solving DAEs. Other
-introductions can be found by [checking out the IJulia notebooks in the examples
-folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
+introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 In this example we will solve the implicit ODE equation
 

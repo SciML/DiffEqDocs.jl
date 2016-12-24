@@ -1,8 +1,7 @@
 # Stochastic Differential Equations (SDE)
 
 This tutorial will introduce you to the functionality for solving SDE. Other
-introductions can be found by [checking out the IJulia notebooks in the examples
-folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
+introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 ## Basics
 

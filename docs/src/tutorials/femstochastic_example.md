@@ -1,8 +1,7 @@
 # Stochastic Finite Element Method
 
 This tutorial will introduce you to the functionality for solving SPDEs. Other
-introductions can be found by [checking out the IJulia notebooks in the examples
-folder](https://github.com/JuliaDiffEq/DifferentialEquations.jl/tree/master/examples).
+introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 For most PDE problem types, we can additionally specify them as a stochastic
 problem by giving the appropriate optional arguments to the constructor. These
