@@ -1,29 +1,27 @@
 # FEM Heat Solvers
 
+## Recommended Methods
+
+For nonstiff problems it's recommended you use `FEMDiffEqHeatEuler`, while for
+stiff problems it's recommended that you use `FEMDiffEqHeatSemiImplicitCrankNicholson`.
+
 ## Avaliable Methods
 
-[method] denotes an additional version for handling stochastic partial
-differential equations.
+* FEMDiffEqHeatEuler
+* FEMDiffEqHeatImplicitEuler
+* FEMDiffEqHeatCrankNicholson
+* FEMDiffEqHeatSemiImplicitEuler
+* FEMDiffEqHeatSemiImplicitCrankNicholson
 
-* Finite Element Solvers (Stochastic) PDEs
+Additionally, for linear solves, one can choose the method by which the linear solve
+takes place via the `method` keyword argument.
 
-  * Semilinear Heat Equation (Reaction-Diffusion)
+* Factorizations (`:LU`, `:Cholesky`, `:QR`, `:SVD`)
+* Conjugate-Gradient (`:CG`)
+* `:GMRES`
 
-    * Forward Euler [Maruyama]
-    * Backward Euler [Maruyama]
-    * Semi-implicit Crank-Nicholson [Maruyama]
-    * Semi-implicit Backward Euler [Maruyama]
+Example:
 
-  * Linear Heat Equation
-
-    * Forward Euler [Maruyama]
-    * Backward Euler [Maruyama]
-    * Crank-Nicholson [Maruyama]
-
-
-* Implicit Solvers
-
-  * Direct
-  * Factorizations (LU, Cholesky, QR, SVD)
-  * Conjugate-Gradient (CG)
-  * GMRES
+```julia
+sol = solve(prob,FEMDiffEqHeatCrankNicholson(),solver=:CG)
+```

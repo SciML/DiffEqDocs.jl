@@ -36,10 +36,10 @@ If they keyword `σ` is given, then this wraps the data that define a 2D stochas
 
 ### Constructors
 
-`PoissonProblem(f,analytic,Du)`: Defines the dirichlet problem with analytical solution `analytic`, solution gradient `Du = [u_x,u_y]`,
+`PoissonProblem(f,analytic,Du,mesh)`: Defines the dirichlet problem with analytical solution `analytic`, solution gradient `Du = [u_x,u_y]`,
 and forcing function `f`
 
-`PoissonProblem(u0,f)`: Defines the problem with initial value `u0` (as a function) and f.
+`PoissonProblem(u0,f,mesh)`: Defines the problem with initial value `u0` (as a function) and f.
 If your initial data is a vector, wrap it as `u0(x) = vector`.
 
 Note: If all functions are of `(x)`, then the program assumes it's linear. Write
@@ -83,10 +83,10 @@ u_t = Δu + f + σdW_t
 
 ### Constructors
 
-* `HeatProblem(analytic,Du,f)`: Defines the dirichlet problem with solution `analytic`,
+* `HeatProblem(analytic,Du,f,mesh)`: Defines the dirichlet problem with solution `analytic`,
   solution gradient `Du = [u_x,u_y]`, and the forcing function `f`.
 
-* `HeatProblem(u0,f)`: Defines the problem with initial value `u0` (as a function) and `f`.
+* `HeatProblem(u0,f,mesh)`: Defines the problem with initial value `u0` (as a function) and `f`.
   If your initial data is a vector, wrap it as `u0(x) = vector`.
 
 Note: If all functions are of `(t,x)`, then the program assumes it's linear. Write
