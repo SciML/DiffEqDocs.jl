@@ -23,6 +23,25 @@ gr()
 plot(sol,title="I Love DiffEqs!")
 ```
 
+## Density
+
+If the problem was solved with `dense=true`, then `denseplot` controls whether
+to use the dense function for generating the plot, and `plotdensity` is the number
+of evenly-spaced points (in time) to plot. For example:
+
+```julia
+plot(sol,denseplot=false)
+```
+
+means "only plot the points which the solver stepped to", while
+
+```julia
+plot(sol,plotdensity=1000)
+```
+
+means to plot 1000 points using the dense function (since `denseplot=true` by
+default)
+
 ## Choosing Variables
 
 In the plot command, one can choose the variables to be plotted in each plot. The
