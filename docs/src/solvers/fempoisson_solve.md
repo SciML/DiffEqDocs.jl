@@ -6,9 +6,3 @@
 * Factorizations (LU, Cholesky, QR, SVD)
 * Conjugate-Gradient (CG)
 * GMRES
-
-## Solver Documentation
-
-```@docs
-solve(::FEMmesh,::PoissonProblem)
-```
