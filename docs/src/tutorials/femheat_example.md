@@ -35,7 +35,7 @@ Notice that here we used the mesh to generate our `u0` from a function which spe
 `u0`. We then call the solver
 
 ```julia
-sol = solve(prob,alg=:ImplicitEuler)
+sol = solve(prob,FEMDiffEqHeatImplicitEuler())
 ```
 
 Here we have chosen to use the ImplicitEuler algorithm to solve the equation. Other algorithms
