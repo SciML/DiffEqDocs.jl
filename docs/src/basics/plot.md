@@ -23,11 +23,98 @@ gr()
 plot(sol,title="I Love DiffEqs!")
 ```
 
+## Choosing Variables
+
+In the plot command, one can choose the variables to be plotted in each plot. The
+master form is:
+
+```julia
+vars = [(0,1), (1,3), (4,5)]
+```
+
+where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph
+(0 is considered to be time, or the independent variable). While this can be used
+for everything, the following conveniences are provided:
+
+* Everywhere in a tuple position where we only find an integer, this
+variable is plotted as a function of time.  For example, the list above
+is equivalent to:
+
+```julia
+vars = [1, (1,3), (4,5)]
+```
+
+and
+
+```julia
+vars = [1, 3, 4]
+```
+
+is the most concise way to plot the variables 1, 3, and 4 as a function
+of time.
+
+* It is possible to omit the list if only one plot is wanted: `(2,3)`
+and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
+
+* A tuple containing one or several lists will be expanded by
+associating corresponding elements of the lists with each other:
+
+```julia
+vars = ([1,2,3], [4,5,6])
+```
+
+is equivalent to
+
+```julia
+vars = [(1,4), (2,5), (3,6)]
+```
+
+and
+
+```julia
+vars = (1, [2,3,4])
+```
+
+is equivalent to
+
+```julia
+vars = [(1,2), (1,3), (1,4)]
+```
+
+* Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
+For example, `vars=(:x,:y)` will replace the symbols with the integer values for
+components `:x` and `:y` .
+
+### Example
+
+```julia
+using DifferentialEquations, Plots
+lorenz = @ode_def Lorenz begin
+  dx = σ*(y-x)
+  dy = ρ*x-y-x*z
+  dz = x*y-β*z
+end σ = 10. β = 8./3. ρ => 28.
+
+u0 = [1., 5., 10.]
+tspan = (0., 100.)
+prob = ODEProblem(lorenz, u0, tspan)
+sol = solve(prob)
+
+xyzt = plot(sol, plotdensity=10000,lw=1.5)
+xy = plot(sol, plotdensity=10000, vars=(:x,:y))
+xz = plot(sol, plotdensity=10000, vars=(:x,:z))
+yz = plot(sol, plotdensity=10000, vars=(:y,:z))
+plot(xyzt, plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
+```
+
+![lorenz_plot](../assets/vars_plotting_example.png)
+
 ## Animations
 
 Using the iterator interface over the solutions, animations can also be generated
-via the `animate(sol)` command. One can choose the `filename` to save to,
-frames per second `fps`, and the density of steps to show `every` via keyword arguments.
+via the `animate(sol)` command. One can choose the `filename` to save to via
+`animate(sol,filename)`, while the frames per second `fps` and the density of steps
+to show `every` can be specified via keyword arguments.
 The rest of the arguments will be directly passed to the plot recipe to be handled
 as normal. For example, we can animate our solution with a larger line-width which
 saves every 4th frame via:
