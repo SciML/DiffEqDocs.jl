@@ -1,14 +1,20 @@
 # FEM Poisson Solvers
 
-## List of Methods
+## Recommended Methods
 
-* Direct
-* Factorizations (LU, Cholesky, QR, SVD)
-* Conjugate-Gradient (CG)
-* GMRES
+The only available method is `FEMDiffEqPoisson`. This method uses a chosen linear
+solver from IterativeSolvers.jl on a linear problem or a nonlinear solver
+from NLsolve.jl for nonlinear problems. Additionally, the keyword `method` can
+be used to specify the
 
-## Solver Documentation
+### List of Methods
 
-```@docs
-solve(::FEMmesh,::PoissonProblem)
+* Factorizations (`:LU`, `:Cholesky`, `:QR`, `:SVD`)
+* Conjugate-Gradient (`:CG`)
+* `:GMRES`
+
+Example:
+
+```julia
+sol = solve(prob,FEMDiffEqPoisson(),solver=:CG)
 ```

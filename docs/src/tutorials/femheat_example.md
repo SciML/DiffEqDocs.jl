@@ -9,8 +9,7 @@ specify one as follows:
 
 ```julia
 f(t,x,u)  = ones(size(x,1)) - .5u
-u₀(x) = zeros(size(x,1))
-prob = HeatProblem(u₀,f)
+u0_func(x) = zeros(size(x,1))
 ```
 
 Here the equation we chose was nonlinear since ``f`` depends on the variable ``u``.
@@ -24,17 +23,20 @@ We then generate a mesh. We will solve the equation on the parabolic cylinder
 to 1, the domain is the unit square. To generate this mesh, we use the command
 
 ```julia
-T = 1
+tspan = (0.0,1.0)
 dx = 1//2^(3)
 dt = 1//2^(7)
-fem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)
+mesh = parabolic_squaremesh([0 1 0 1],dx,dt,tspan,:neumann)
+u0 = u0_func(mesh.node)
+prob = HeatProblem(u0,f,mesh)
 ```  
 
-We then call the solver
+Notice that here we used the mesh to generate our `u0` from a function which specifies
+`u0`. We then call the solver
 
 ```julia
-sol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler)
+sol = solve(prob,alg=:ImplicitEuler)
 ```
 
-Here we have chosen to use the Euler algorithm to solve the equation. Other algorithms
+Here we have chosen to use the ImplicitEuler algorithm to solve the equation. Other algorithms
 and their descriptions can be found in the solvers part of the documentation.
