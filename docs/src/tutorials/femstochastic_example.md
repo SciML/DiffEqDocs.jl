@@ -20,9 +20,11 @@ We can solve the same PDE as in the Poisson Tutorial except as the stochastic PD
 
 ```julia
 f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])
-σ(x) = 5 #Additive noise
-prob = PoissonProblem(f,σ=σ)
-solve(prob)
+σ(x) = .01 #Additive noise
+dx = 1//2^(5)
+mesh = notime_squaremesh([0 1 0 1],dx,:dirichlet)
+prob = PoissonProblem(f,mesh,σ=σ)
+sol = solve(prob)
 ```
 
 This gives the following plot (with adding the deterministic solution from the previous example):
@@ -39,22 +41,22 @@ This is specified as follows:
 
 ```julia
 f(t,x,u)  = ones(size(x,1)) - .5u
-u₀(x) = zeros(size(x,1))
+u0_func(x) = zeros(size(x,1))
 σ(t,x,u) = 1u.^2
-prob = HeatProblem(u₀,f,σ=σ)
+tspan = (0.0,5.0)
+dx = 1//2^(3)
+dt = 1//2^(11)
+mesh = parabolic_squaremesh([0 1 0 1],dx,dt,tspan,:neumann)
+u0 = u0_func(mesh.node)
+prob = HeatProblem(u0,f,mesh,σ=σ)
 ```
 
 We use the following code create an animation of the solution:
 
 ```julia
-T = 5
-dx = 1//2^(3)
-dt = 1//2^(11)
-fem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)
-
-sol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler,save_timeseries=true,solver=:LU)
+sol = solve(prob,alg=:Euler,save_timeseries=true,solver=:LU)
 using Plots
-animate(sol::FEMSolution;zlim=(0,3),cbar=false)
+animate(sol;zlim=(0,3),cbar=false)
 ```
 
 ![Stochastic Heat Solution](../assets/stochasticHeatAnimation.gif)
