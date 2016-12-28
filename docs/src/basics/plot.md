@@ -37,8 +37,8 @@ where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same g
 for everything, the following conveniences are provided:
 
 * Everywhere in a tuple position where we only find an integer, this
-variable is plotted as a function of time.  For example, the list above
-is equivalent to:
+  variable is plotted as a function of time.  For example, the list above
+  is equivalent to:
 
 ```julia
 vars = [1, (1,3), (4,5)]
@@ -54,10 +54,10 @@ is the most concise way to plot the variables 1, 3, and 4 as a function
 of time.
 
 * It is possible to omit the list if only one plot is wanted: `(2,3)`
-and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
+  and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
 
 * A tuple containing one or several lists will be expanded by
-associating corresponding elements of the lists with each other:
+  associating corresponding elements of the lists with each other:
 
 ```julia
 vars = ([1,2,3], [4,5,6])
@@ -82,8 +82,11 @@ vars = [(1,2), (1,3), (1,4)]
 ```
 
 * Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
-For example, `vars=(:x,:y)` will replace the symbols with the integer values for
-components `:x` and `:y` .
+  For example, `vars=(:x,:y)` will replace the symbols with the integer values for
+  components `:x` and `:y` .
+
+* n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
+  5-dimensional plot between the associated variables.
 
 ### Example
 
@@ -104,7 +107,8 @@ xyzt = plot(sol, plotdensity=10000,lw=1.5)
 xy = plot(sol, plotdensity=10000, vars=(:x,:y))
 xz = plot(sol, plotdensity=10000, vars=(:x,:z))
 yz = plot(sol, plotdensity=10000, vars=(:y,:z))
-plot(xyzt, plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
+xyz = plot(sol, plotdensity=10000, vars=(:x,:y,:z))
+plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
 ![lorenz_plot](../assets/vars_plotting_example.png)
