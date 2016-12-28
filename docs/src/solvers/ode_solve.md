@@ -157,6 +157,7 @@ using ODEInterfaceDiffEq
   - `seulex` - extrapolation-algorithm based on the linear implicit Euler method
   - `radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
   - `radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
+  - `rodas` - Rosenbrock 4(3) method
 
 ### LSODA.jl
 
