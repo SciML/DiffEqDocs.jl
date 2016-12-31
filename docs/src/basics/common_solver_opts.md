@@ -83,8 +83,6 @@ Note that if a method does not have adaptivity, the following rules apply:
 ## Miscellaneous
 
 * `maxiters` - Maximum number of iterations before stopping. Defaults to 1e5.
-* `autodiff` - Turns on/off the use of autodifferentiation (via ForwardDiff) in the
-  implicit solvers which use `NLsolve`. Default is true.
 * `callback` - Specifies a callback function. Defaults to a callback function which
   performs the saving routine. For more information, see the
   [Event Handling and Callback Functions manual page](https://juliadiffeq.github.io/DiffEqDocs.jl/latest/man/callback_functions.html).

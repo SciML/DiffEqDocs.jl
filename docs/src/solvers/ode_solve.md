@@ -79,14 +79,31 @@ and thus are recommended for stiff problems on for non-Float64 numbers.
   - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
   - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
   - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
-  - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
-    are specified via the keyword argument `tab=tableau`. The default tableau is
-    for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.
   - `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
   - `Trapezoid` - A second order unconditionally stable implicit solver. Good for highly stiff.
   - `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.
   - `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances.
     Note that this method is prone to instability in the presence of oscillations, so use with caution.
+
+Example usage:
+
+```julia
+alg = Tsit5()
+solve(prob,alg)  
+```
+
+Additionally, there is the tableau method:
+
+  - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
+  are specified via the keyword argument `tab=tableau`. The default tableau is
+  for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.
+
+Example usage:
+
+```julia
+alg = ExplicitRK(tableau=constructDormandPrince())
+solve(prob,alg)
+```
 
 ### Sundials.jl
 
