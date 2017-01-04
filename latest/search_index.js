@@ -197,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Poisson Equation Finite Element Method",
     "title": "Poisson Equation Finite Element Method",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving a PDE. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the Poisson Equation u=f. For our example, we will take the linear equation where f(xy) = sin(2x)cos(2y). For this equation we know that solution is u(xyt)= sin(2x)cos(2y)(8^2) with gradient Du(xy) = cos(2x)cos(2y)(4) -sin(2x)sin(2y)(4). Thus, we define a PoissonProblem as follows:f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\ngD(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π)\nprob = PoissonProblem(f,gD)Or we can use the @fem_define macro to beautify our code. The first argument is the function signature, which here is (x). Second it's a list of variables to convert. This makes more sense in the Heat Equation examples, so we put in the blank expresion () for now. Then we put in our expression, and lastly we define the parameter values. @fem_define will automatically replace x by x[:,1] and y by x[:,2], and will also subtitute in the defined parameters. The previous definition using @fem_define is as follows:f  = @fem_define((x),(),begin\n  sin(α.*x).*cos(α.*y)\nend,α=>2π)\ngD = @fem_define((x),(),begin\n  sin(α.*x).*cos(α.*y)/β\nend,α=>2π,β=>8π*π)The linebreaks are not required but I think it makes it more legible!Here we chose the dirichlet boundary condition gD to give the theoretical solution.  Other example problems can be found in src/examples/exampleProblems.jl. To solve this problem, we first have to generate a mesh. Here we will simply generate a mesh of triangles on the square [0,1]x[0,1] with dx=2^(-5). To do so, we use the code:dx = 1//2^(5)\nfem_mesh = notime_squaremesh([0 1 0 1],dx,:dirichlet)Note that by specifying :dirichlet our boundary conditions is set on all boundaries to dirichlet. This gives an FEMmesh object which stores a finite element mesh in the same layout as iFEM. Notice this code shows that the package supports the use of rationals in meshes. Other numbers such as floating point and integers can be used as well. Finally, to solve the equation we usesol = solve(fem_mesh,pdeProb)solve takes in a mesh and a PoissonProblem and uses the solver to compute the solution. Here the solver was chosen to be GMRES. Other solvers can be found in the documentation. This returns a FEMSolution object which holds data about the solution, such as the solution values (u). To plot the solution, we use the commandusing Plots\nplot(sol::FEMSolution)\ngui()Here is the plot shown against the analytical solution to show the accuracy:(Image: Poisson Example Solution)"
+    "text": "This tutorial will introduce you to the functionality for solving a PDE. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the Poisson Equation u=f. For our example, we will take the linear equation where f(xy) = sin(2x)cos(2y). For this equation we know that solution is u(xyt)= sin(2x)cos(2y)(8^2) with gradient Du(xy) = cos(2x)cos(2y)(4) -sin(2x)sin(2y)(4). Thus, we define the functions for a PoissonProblem as follows:f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\ngD(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π)Or we can use the @fem_def macro to beautify our code. The first argument is the function signature, which here is (x). Second it's a list of variables to convert. This makes more sense in the Heat Equation examples, so we put in the blank expresion () for now. Then we put in our expression, and lastly we define the parameter values. @fem_def will automatically replace x by x[:,1] and y by x[:,2], and will also subtitute in the defined parameters. The previous definition using @fem_def is as follows:f  = @fem_def((x),TestF,begin\n  sin(α.*x).*cos(α.*y)\nend,α=>6.28)\ngD = @fem_def (x) TestgD begin\n  sin(α.*x).*cos(α.*y)/β\nend α=>6.28) β=>79.0The linebreaks are not required but I think it makes it more legible!Here we chose the dirichlet boundary condition gD to give the theoretical solution.  Other example problems can be found in src/examples/exampleProblems.jl. To solve this problem, we first have to generate a mesh. Here we will simply generate a mesh of triangles on the square [0,1]x[0,1] with dx=2^(-5). To do so, we use the code:dx = 1//2^(5)\nmesh = notime_squaremesh([0 1 0 1],dx,:dirichlet)\nprob = PoissonProblem(f,mesh,gD=gD)Note that by specifying :dirichlet our boundary conditions is set on all boundaries to dirichlet. This gives an FEMmesh object which stores a finite element mesh in the same layout as iFEM. Notice this code shows that the package supports the use of rationals in meshes. Other numbers such as floating point and integers can be used as well. Finally, to solve the equation we usesol = solve(prob)solve takes in a mesh and a PoissonProblem and uses the solver to compute the solution. Here the solver was chosen to be GMRES. Other solvers can be found in the documentation. This returns a FEMSolution object which holds data about the solution, such as the solution values (u). To plot the solution, we use the commandusing Plots\nplot(sol)Here is the plot shown against the analytical solution to show the accuracy:(Image: Poisson Example Solution)"
 },
 
 {
@@ -213,7 +213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Heat Equation Finite Element Method",
     "title": "Heat Equation Finite Element Method",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving a PDE. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the heat equation u_t=u+f. To do this, we define a HeatProblem which contains the function f and the boundary conditions. We specify one as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu₀(x) = zeros(size(x,1))\nprob = HeatProblem(u₀,f)Here the equation we chose was nonlinear since f depends on the variable u. Thus we specify f=f(u,x,t). If f did not depend on u, then we would specify f=f(x,t). We do need to specify gD (the dirichlet boundary condition) and gN (the neumann boundary condition) since both are zero. u_0 specifies the initial condition. These together give a HeatProblem object which holds everything which specifies a Heat Equation Problem.We then generate a mesh. We will solve the equation on the parabolic cylinder 01^2 times 01. You can think of this as the cube, or at every time point from 0 to 1, the domain is the unit square. To generate this mesh, we use the commandT = 1\ndx = 1//2^(3)\ndt = 1//2^(7)\nfem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)We then call the solversol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler)Here we have chosen to use the Euler algorithm to solve the equation. Other algorithms and their descriptions can be found in the solvers part of the documentation."
+    "text": "This tutorial will introduce you to the functionality for solving a PDE. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the heat equation u_t=u+f. To do this, we define a HeatProblem which contains the function f and the boundary conditions. We specify one as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu0_func(x) = zeros(size(x,1))Here the equation we chose was nonlinear since f depends on the variable u. Thus we specify f=f(u,x,t). If f did not depend on u, then we would specify f=f(x,t). We do need to specify gD (the dirichlet boundary condition) and gN (the neumann boundary condition) since both are zero. u_0 specifies the initial condition. These together give a HeatProblem object which holds everything which specifies a Heat Equation Problem.We then generate a mesh. We will solve the equation on the parabolic cylinder 01^2 times 01. You can think of this as the cube, or at every time point from 0 to 1, the domain is the unit square. To generate this mesh, we use the commandtspan = (0.0,1.0)\ndx = 1//2^(3)\ndt = 1//2^(7)\nmesh = parabolic_squaremesh([0 1 0 1],dx,dt,tspan,:neumann)\nu0 = u0_func(mesh.node)\nprob = HeatProblem(u0,f,mesh)Notice that here we used the mesh to generate our u0 from a function which specifies u0. We then call the solversol = solve(prob,FEMDiffEqHeatImplicitEuler())Here we have chosen to use the ImplicitEuler algorithm to solve the equation. Other algorithms and their descriptions can be found in the solvers part of the documentation."
 },
 
 {
@@ -237,7 +237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Stochastic Finite Element Method",
     "title": "Finite Element Stochastic Poisson Equation",
     "category": "section",
-    "text": "We can solve the same PDE as in the Poisson Tutorial except as the stochastic PDE,  -u=f+gdW, with additive space-time white noise by specifying the problem as:f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\nσ(x) = 5 #Additive noise\nprob = PoissonProblem(f,σ=σ)\nsolve(prob)This gives the following plot (with adding the deterministic solution from the previous example):(Image: Stochastic Poisson Example Solution)"
+    "text": "We can solve the same PDE as in the Poisson Tutorial except as the stochastic PDE,  -u=f+gdW, with additive space-time white noise by specifying the problem as:f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])\nσ(x) = .01 #Additive noise\ndx = 1//2^(5)\nmesh = notime_squaremesh([0 1 0 1],dx,:dirichlet)\nprob = PoissonProblem(f,mesh,σ=σ)\nsol = solve(prob)This gives the following plot (with adding the deterministic solution from the previous example):(Image: Stochastic Poisson Example Solution)"
 },
 
 {
@@ -245,7 +245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Stochastic Finite Element Method",
     "title": "Finite Element Stochastic Heat Equation",
     "category": "section",
-    "text": "This will solve a nonlinear stochastic heat equation u_t=Δu+f+gdW with forcing function f(u)=.5-u, noise function g(u)=100u^2 and initial condition u0=0. We would expect this system to rise towards the deterministic steady state u=2 (but stay in mean a bit below it due to 1st order \"Milstein\" effects), gaining more noise as it increases. This is specified as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu₀(x) = zeros(size(x,1))\nσ(t,x,u) = 1u.^2\nprob = HeatProblem(u₀,f,σ=σ)We use the following code create an animation of the solution:T = 5\ndx = 1//2^(3)\ndt = 1//2^(11)\nfem_mesh = parabolic_squaremesh([0 1 0 1],dx,dt,T,:neumann)\n\nsol = solve(fem_mesh::FEMmesh,prob::HeatProblem,alg=:Euler,save_timeseries=true,solver=:LU)\nusing Plots\nanimate(sol::FEMSolution;zlim=(0,3),cbar=false)(Image: Stochastic Heat Solution)"
+    "text": "This will solve a nonlinear stochastic heat equation u_t=Δu+f+gdW with forcing function f(u)=.5-u, noise function g(u)=100u^2 and initial condition u0=0. We would expect this system to rise towards the deterministic steady state u=2 (but stay in mean a bit below it due to 1st order \"Milstein\" effects), gaining more noise as it increases. This is specified as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu0_func(x) = zeros(size(x,1))\nσ(t,x,u) = 1u.^2\ntspan = (0.0,5.0)\ndx = 1//2^(3)\ndt = 1//2^(11)\nmesh = parabolic_squaremesh([0 1 0 1],dx,dt,tspan,:neumann)\nu0 = u0_func(mesh.node)\nprob = HeatProblem(u0,f,mesh,σ=σ)We use the following code create an animation of the solution:sol = solve(prob,FEMDiffEqHeatEuler(),save_timeseries=true,solver=:LU)\nusing Plots\nanimate(sol;zlim=(0,3),cbar=false)(Image: Stochastic Heat Solution)"
 },
 
 {
@@ -357,7 +357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Miscellaneous",
     "category": "section",
-    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\nautodiff - Turns on/off the use of autodifferentiation (via ForwardDiff) in the implicit solvers which use NLsolve. Default is true.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain - Specifies a function isoutofdomain(t,u) where, when it returns false, it will reject the timestep. Defaults to always false."
+    "text": "maxiters - Maximum number of iterations before stopping. Defaults to 1e5.\ncallback - Specifies a callback function. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain - Specifies a function isoutofdomain(t,u) where, when it returns false, it will reject the timestep. Defaults to always false."
 },
 
 {
@@ -441,11 +441,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/plot.html#Density-1",
+    "page": "Plot Functions",
+    "title": "Density",
+    "category": "section",
+    "text": "If the problem was solved with dense=true, then denseplot controls whether to use the dense function for generating the plot, and plotdensity is the number of evenly-spaced points (in time) to plot. For example:plot(sol,denseplot=false)means \"only plot the points which the solver stepped to\", whileplot(sol,plotdensity=1000)means to plot 1000 points using the dense function (since denseplot=true by default)"
+},
+
+{
+    "location": "basics/plot.html#Choosing-Variables-1",
+    "page": "Plot Functions",
+    "title": "Choosing Variables",
+    "category": "section",
+    "text": "In the plot command, one can choose the variables to be plotted in each plot. The master form is:vars = [(0,1), (1,3), (4,5)]where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph (0 is considered to be time, or the independent variable). While this can be used for everything, the following conveniences are provided:Everywhere in a tuple position where we only find an integer, this variable is plotted as a function of time.  For example, the list above is equivalent to:vars = [1, (1,3), (4,5)]andvars = [1, 3, 4]is the most concise way to plot the variables 1, 3, and 4 as a function of time.It is possible to omit the list if only one plot is wanted: (2,3) and 4 are respectively equivalent to [(2,3)] and [(0,4)].\nA tuple containing one or several lists will be expanded by associating corresponding elements of the lists with each other:vars = ([1,2,3], [4,5,6])is equivalent tovars = [(1,4), (2,5), (3,6)]andvars = (1, [2,3,4])is equivalent tovars = [(1,2), (1,3), (1,4)]Instead of using integers, one can use the symbols from a ParameterizedFunction. For example, vars=(:x,:y) will replace the symbols with the integer values for components :x and :y .\nn-dimensional groupings are allowed. For example, (1,2,3,4,5) would be a 5-dimensional plot between the associated variables."
+},
+
+{
+    "location": "basics/plot.html#Example-1",
+    "page": "Plot Functions",
+    "title": "Example",
+    "category": "section",
+    "text": "using DifferentialEquations, Plots\nlorenz = @ode_def Lorenz begin\n  dx = σ*(y-x)\n  dy = ρ*x-y-x*z\n  dz = x*y-β*z\nend σ = 10. β = 8./3. ρ => 28.\n\nu0 = [1., 5., 10.]\ntspan = (0., 100.)\nprob = ODEProblem(lorenz, u0, tspan)\nsol = solve(prob)\n\nxyzt = plot(sol, plotdensity=10000,lw=1.5)\nxy = plot(sol, plotdensity=10000, vars=(:x,:y))\nxz = plot(sol, plotdensity=10000, vars=(:x,:z))\nyz = plot(sol, plotdensity=10000, vars=(:y,:z))\nxyz = plot(sol, plotdensity=10000, vars=(:x,:y,:z))\nplot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))(Image: lorenz_plot)"
+},
+
+{
     "location": "basics/plot.html#Animations-1",
     "page": "Plot Functions",
     "title": "Animations",
     "category": "section",
-    "text": "Using the iterator interface over the solutions, animations can also be generated via the animate(sol) command. One can choose the filename to save to, frames per second fps, and the density of steps to show every via keyword arguments. The rest of the arguments will be directly passed to the plot recipe to be handled as normal. For example, we can animate our solution with a larger line-width which saves every 4th frame via:animate(sol,lw=3,every=4)Please see Plots.jl's documentation for more information on the available attributes."
+    "text": "Using the iterator interface over the solutions, animations can also be generated via the animate(sol) command. One can choose the filename to save to via animate(sol,filename), while the frames per second fps and the density of steps to show every can be specified via keyword arguments. The rest of the arguments will be directly passed to the plot recipe to be handled as normal. For example, we can animate our solution with a larger line-width which saves every 4th frame via:animate(sol,lw=3,every=4)Please see Plots.jl's documentation for more information on the available attributes."
 },
 
 {
@@ -853,7 +877,7 @@ var documenterSearchIndex = {"docs": [
     "page": "FEM Types",
     "title": "Constructors",
     "category": "section",
-    "text": "PoissonProblem(f,analytic,Du): Defines the dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function fPoissonProblem(u0,f): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
+    "text": "PoissonProblem(f,analytic,Du,mesh): Defines the dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function fPoissonProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
 },
 
 {
@@ -877,7 +901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "FEM Types",
     "title": "Constructors",
     "category": "section",
-    "text": "HeatProblem(analytic,Du,f): Defines the dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u0,f): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
+    "text": "HeatProblem(analytic,Du,f,mesh): Defines the dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntrax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
 },
 
 {
@@ -942,86 +966,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Poisson Equation",
     "category": "section",
     "text": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_poisson_noisywave\nDiffEqProblemLibrary.prob_poisson_birthdeathsystem\nDiffEqProblemLibrary.prob_poisson_wave\nDiffEqProblemLibrary.prob_poisson_birthdeath"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_diffuse",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
-    "category": "Constant",
-    "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "category": "Constant",
-    "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_moving",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_moving",
-    "category": "Constant",
-    "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.heatProblemExample_gierermeinhardt",
-    "category": "Function",
-    "text": "heatProblemExample_gierermeinhardt(;a=1,α=1,D=[0.01 1.0],ubar=1,vbar=0,β=10,startNoise=0.01)\n\nThe Gierer-Meinhardt equations wtih quasi-random initial perturbations.\n\nbeginalign\nu_t = fracauv^2 + baru -u \nv_t = au^2 + barv - v\nendalign\n\nThe equation starts at the steady state\n\nbeginalign\nu_ss = fracbaru+ \nv_ss = frac u_ss^2\nendalign\n\nwith a bit of noise.\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.heatProblemExample_grayscott",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.heatProblemExample_grayscott",
-    "category": "Function",
-    "text": "heatProblemExample_grayscott(;ρ=.03,k=.062,D=[1e-3 .5e-3])\n\nThe Gray-Scott equations with quasi-random initial conditions. The reaction equations are given by:\n\nbeginalign\nu_t = uv^2 + (1-v) \nv_t = uv^2 - (+k)v\nendalign\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_pure",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_pure",
-    "category": "Constant",
-    "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_diffusionconstants",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_diffusionconstants",
-    "category": "Constant",
-    "text": "Example problem which solves the homogeneous Heat equation with all mass starting at (1/2,1/2) with two different diffusion constants, D=001 and D=0001. Good animation test.\n\n\n\n"
-},
-
-{
-    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "page": "FEM Types",
-    "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "category": "Constant",
-    "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
 },
 
 {
@@ -1133,7 +1077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for nonstiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all nonstiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on for non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus are specified via the keyword argument tab=tableau. The default tableau is for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution."
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for nonstiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all nonstiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on for non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.Example usage:alg = Tsit5()\nsolve(prob,alg)  Additionally, there is the tableau method:ExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableausare specified via the keyword argument tab=tableau. The default tableau is   for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.Example usage:alg = ExplicitRK(tableau=constructDormandPrince())\nsolve(prob,alg)"
 },
 
 {
@@ -1157,7 +1101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "ODEInterface.jl",
     "category": "section",
-    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the nonstiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince\nodex - GBS extrapolation-algorithm based on the midpoint rule\nseulex - extrapolation-algorithm based on the linear implicit Euler method\nradau - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13\nradau5 - implicit Runge-Kutta method (Radau IIA) of order 5"
+    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the nonstiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince\nodex - GBS extrapolation-algorithm based on the midpoint rule\nseulex - extrapolation-algorithm based on the linear implicit Euler method\nradau - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13\nradau5 - implicit Runge-Kutta method (Radau IIA) of order 5\nrodas - Rosenbrock 4(3) method"
 },
 
 {
@@ -1321,27 +1265,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/fempoisson_solve.html#Recommended-Methods-1",
+    "page": "FEM Poisson Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "The only available method is FEMDiffEqPoisson. This method uses a chosen linear solver from IterativeSolvers.jl on a linear problem or a nonlinear solver from NLsolve.jl for nonlinear problems. Additionally, the keyword method can be used to specify the"
+},
+
+{
     "location": "solvers/fempoisson_solve.html#List-of-Methods-1",
     "page": "FEM Poisson Solvers",
     "title": "List of Methods",
     "category": "section",
-    "text": "Direct\nFactorizations (LU, Cholesky, QR, SVD)\nConjugate-Gradient (CG)\nGMRES"
-},
-
-{
-    "location": "solvers/fempoisson_solve.html#DiffEqBase.solve-Tuple{FiniteElementDiffEq.FEMmesh,FiniteElementDiffEq.PoissonProblem}",
-    "page": "FEM Poisson Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "Finite Element Poisson Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::PoissonProblem)\n\nTakes in a definition for the heat equation -u = f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic Poisson equation -u = f + dW.\n\nKeyword Arguments\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves Ax=b using \\\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\n\n\n\n"
-},
-
-{
-    "location": "solvers/fempoisson_solve.html#Solver-Documentation-1",
-    "page": "FEM Poisson Solvers",
-    "title": "Solver Documentation",
-    "category": "section",
-    "text": "solve(::FEMmesh,::PoissonProblem)"
+    "text": "Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqPoisson(),solver=:CG)"
 },
 
 {
@@ -1361,27 +1297,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/femheat_solve.html#Recommended-Methods-1",
+    "page": "FEM Heat Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "For nonstiff problems it's recommended you use FEMDiffEqHeatEuler, while for stiff problems it's recommended that you use FEMDiffEqHeatSemiImplicitCrankNicholson."
+},
+
+{
     "location": "solvers/femheat_solve.html#Avaliable-Methods-1",
     "page": "FEM Heat Solvers",
     "title": "Avaliable Methods",
     "category": "section",
-    "text": "[method] denotes an additional version for handling stochastic partial differential equations.Finite Element Solvers (Stochastic) PDEs\nSemilinear Heat Equation (Reaction-Diffusion)\nForward Euler [Maruyama]\nBackward Euler [Maruyama]\nSemi-implicit Crank-Nicholson [Maruyama]\nSemi-implicit Backward Euler [Maruyama]\nLinear Heat Equation\nForward Euler [Maruyama]\nBackward Euler [Maruyama]\nCrank-Nicholson [Maruyama]Implicit Solvers\nDirect\nFactorizations (LU, Cholesky, QR, SVD)\nConjugate-Gradient (CG)\nGMRES"
-},
-
-{
-    "location": "solvers/femheat_solve.html#DiffEqBase.solve-Tuple{FiniteElementDiffEq.FEMmesh,FiniteElementDiffEq.HeatProblem}",
-    "page": "FEM Heat Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "Finite Element Heat Equation Solver\n\nsolve(fem_mesh::FEMmesh,pdeProb::HeatProblem)\n\nTakes in a definition for the heat equation u_t = u + f on fem_mesh with functions as defined in pdeProb. If σ is specified in pdeProb, then this solves the stochastic heat equation u_t = u + f + dW_t.\n\nKeyword Arguments\n\nalg = Solution algorithm. Default is :Euler. The choices are:\nLinear\n:Euler (Explicit)\n:ImplicitEuler (Implicit)\n:CrankNicholson (Implicit)\nNonlinear\n:Euler (Explicit)\n:ImplicitEuler (Nonlinear Solve)\n:CrankNicholson (Nonlinear Solve)\n:SemiImplicitEuler (Implicit)\n:SemiImplicitCrankNicholson (Implicit)\n\nExplicit algorithms only require solving matrix multiplications Au. Implicit algorithms require solving the linear equation Ax=b where x is the unknown. Nonlinear Solve algorithms require solving the nonlinear equation f(x)=0 using methods like Newton's method and is provided by NLSolve.jl. Explicit algorithms have the least stability and should be used either small dt and non-stiff equations. The implicit algorithms have better stability, but for nonlinear equations require costly nonlinear solves in order to be solved exactly. The semi-implicit algorithms discretize with part of the equation implicit and another part explicit in order to allow for the algorithm to not require a nonlinear solve, but at the cost of some stability (though still vastly better at stability than explicit algorithms).\n\nsolver = Linear solver algorithm. This is the algorithm which is chosen for solving the implicit equation Ax=b. The default is LU. The choices are:\n:Direct = Solves using \\ (no factorization). Not recommended.\n:Cholesky = Cholsky decomposition. Only stable of I  dtMA is positive definite. This means that this works best when dt is small. When applicable, this is the fastest.\n:LU = LU-Decomposition. A good mix between fast and stable.\n:QR = QR-Decomposition. Less numerical roundoff error than LU, but slightly slower.\n:SVD = SVD-Decomposition. By far the slowest, but the most robust to roundoff error.\n:CG = Conjugate-Gradient. Best when the space is very large and I  dtMA is positive definite.\n:GMRES = GMRES. Best when the space is very large and I  dtMA is not positive definite.\nsave_timeseries = Makes the algorithm save the output at every timeseries_steps timesteps. By default save_timeseries is false.\ntimeseries_steps = If save_timeseries=true, then this is the number of steps between the saves.\nautodiff = Whether or not autodifferentiation (as provided by AutoDiff.jl) is used for the nonlinear solving. By default autodiff is false.\nmethod = Method the nonlinear solver uses. Defaults to :trust_region.\nshow_trace = Whether to show the output of the nonlinear solver. Defaults to false.\niterations = Maximum numer of iterations in the nonlinear solver. Defaults to 1000.\nprogress_steps = The number of steps between updates of the progress bar. Defaults to 1000.\nprogressbar = Turns on/off use of the Juno progress bar. Defaults to true. Requires Juno.\n\n\n\n"
-},
-
-{
-    "location": "solvers/femheat_solve.html#Solver-Documentation-1",
-    "page": "FEM Heat Solvers",
-    "title": "Solver Documentation",
-    "category": "section",
-    "text": "solve(::FEMmesh,::HeatProblem)"
+    "text": "FEMDiffEqHeatEuler\nFEMDiffEqHeatImplicitEuler\nFEMDiffEqHeatCrankNicholson\nFEMDiffEqHeatSemiImplicitEuler\nFEMDiffEqHeatSemiImplicitCrankNicholsonAdditionally, for linear solves, one can choose the method by which the linear solve takes place via the method keyword argument.Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqHeatCrankNicholson(),solver=:CG)"
 },
 
 {
@@ -1545,83 +1473,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/mesh.html#FiniteElementDiffEq.FEMmesh",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.FEMmesh",
-    "category": "Type",
-    "text": "FEMmesh\n\nHolds the information describing a finite element mesh. For information on how (node,elem) can be interpreted as a mesh describing a geometry, see the mesh specification documentation.\n\nFields\n\nnode: The nodes in the (node,elem) structure.\nelem: The elements in the (node,elem) structure.\nbdnode: Vector of indices for the boundary nodes.\nfreenode: Vector of indices for the free (non-dirichlet bound) nodes.\nbdedge: Indices of the edges in totaledge which are on the boundary.\nis_bdnode: Boolean which is true for nodes on the boundary.\nis_bdelem: Boolean which is true for elements on the boundary.\nbdflag: Flag which describes the type of boundary condition. 1=> dirichlet, 2=>neumann, 3=>robin.\ntotaledge: Vector of the edges.\narea: Vector which is the area for each element.\ndirichlet: Indices for the nodes on the boundary which have a dirichlet boundary condition.\nneumann: Indices for the nodes on the boundary which have a neumann boundary condition.\nrobin: Indices for the nodes on the boundary which have a robin boundary condition.\nN::Int: The number of nodes.\nNT::Int: The number of triangles (elements).\ndx: The spatial discretization size. If non-uniform, this is the average.\ndt: The time discretization size. If adaptive, this is the initial.\nT::Number: The end time.\nnumiters::Int: The number of iterations to go from 0 to T using dt.\nμ: The CFL μ stability parameter.\nν: The CFL ν stability parameter.\nevolutionEq: True for a mesh which has non-trivial time components.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.SimpleMesh",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.SimpleMesh",
-    "category": "Type",
-    "text": "SimpleMesh\n\nHolds the information describing a finite element mesh. For information on how (node,elem) can be interpreted as a mesh describing a geometry, see Programming of Finite Element Methods by Long Chen.\n\nFields\n\nnode: The nodes in the (node,elem) structure.\nelem: The elements in the (node,elem) structure.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqBase.Mesh",
-    "page": "Meshes",
-    "title": "DiffEqBase.Mesh",
-    "category": "Type",
-    "text": "Mesh: An abstract type which holds a (node,elem) pair and other information for a mesh\n\n\n\n"
-},
-
-{
     "location": "features/mesh.html#Mesh-Type-1",
     "page": "Meshes",
     "title": "Mesh Type",
     "category": "section",
     "text": "FiniteElementDiffEq.FEMmesh\nFiniteElementDiffEq.SimpleMesh\nDiffEqBase.Mesh"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.findboundary",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.findboundary",
-    "category": "Function",
-    "text": "findboundary(elem,bdflag=[])`\n\nfindboundary(fem_mesh::FEMmesh,bdflag=[])\n\nFinds elements which are on the boundary of the domain. If bdflag is given, then those indices are added as nodes for a dirichlet boundary condition (useful for creating cracks and other cutouts of domains).\n\nReturns\n\nbdnode = Vector of indices for bdnode. Using node[:,bdnode] returns boundary nodes.\n\nbdedge = Vector of indices for boundary edges.\n\nis_bdnode = Vector of booleans size N which donotes which are on the boundary\n\nis_bdelem = Vector of booleans size NT which denotes which are on the boundary\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.setboundary",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.setboundary",
-    "category": "Function",
-    "text": "setboundary(node::AbstractArray,elem::AbstractArray,bdtype)\n\nsetboundary(fem_mesh::FEMmesh,bdtype)\n\nTakes in the fem_mesh and creates an array bdflag which denotes the boundary types. 1 stands for dirichlet, 2 for neumann, 3 for robin.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.fem_squaremesh",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.fem_squaremesh",
-    "category": "Function",
-    "text": "fem_squaremesh(square,h)\n\nReturns the grid in the iFEM form of the two arrays (node,elem)\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.notime_squaremesh",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.notime_squaremesh",
-    "category": "Function",
-    "text": "notime_squaremesh(square,dx,bdtype)\n\nComputes the (node,elem) square mesh for the square with the chosen dx and boundary settings.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25\nnotime_squaremesh(square,dx,\"dirichlet\")\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#FiniteElementDiffEq.parabolic_squaremesh",
-    "page": "Meshes",
-    "title": "FiniteElementDiffEq.parabolic_squaremesh",
-    "category": "Function",
-    "text": "parabolic_squaremesh(square,dx,dt,T,bdtype)\n\nComputes the (node,elem) x [0,T] parabolic square mesh for the square with the chosen dx and boundary settings and with the constant time intervals dt.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25; dt=.25;T=2\nparabolic_squaremesh(square,dx,dt,T,:dirichlet)\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#Base.size-Tuple{StokesDiffEq.FDMMesh}",
-    "page": "Meshes",
-    "title": "Base.size",
-    "category": "Method",
-    "text": "size(mesh::FDMMesh)\n\nReturns gridSize.\n\n\n\n"
 },
 
 {
