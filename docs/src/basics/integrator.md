@@ -43,7 +43,7 @@ In addition, some helper iterators are provided to help monitor the solution. Fo
 example, the `tuples` iterators let's you view the values
 
 ```julia
-for (t,u) in integrator
+for (t,u) in tuples(integrator)
   @show t,u
 end
 ```
@@ -67,15 +67,15 @@ options field: `push!(integrator.opts.tstops,new_t)`.
 The `integrator` type holds all of the information for the intermediate solution
 of the differential equation. Useful fields are:
 
-* t - time of the proposed step
-* u - value at the proposed step
-* userdata - user-provided data type
-* opts - common solver options
-* alg - the algorithm associated with the solution
-* f - the function being solved
-* sol - the current state of the solution
-* tprev - the last timepoint
-* uprev - the value at the last timepoint
+* `t` - time of the proposed step
+* `u` - value at the proposed step
+* `userdata` - user-provided data type
+* `opts` - common solver options
+* `alg` - the algorithm associated with the solution
+* `f` - the function being solved
+* `sol` - the current state of the solution
+* `tprev` - the last timepoint
+* `uprev` - the value at the last timepoint
 
 The `userdata` is the type which is provided by the user as a keyword arg in
 `init`. `opts` holds all of the common solver options, and can be mutated to
