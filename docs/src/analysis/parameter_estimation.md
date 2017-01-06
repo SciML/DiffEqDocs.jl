@@ -118,3 +118,55 @@ result = optimize(cost_function, [1.42], BFGS())
 
 Note that some of the algorithms may be sensitive to the initial condtion. For more
 details on using Optim.jl, see the [documentation for Optim.jl](http://www.juliaopt.org/Optim.jl/latest/).
+
+Lastly, we can use the same tools to estimate multiple parameters simultaniously.
+Let's use the Lotka-Volterra equation with all parameters free:
+
+```julia
+f2 = @ode_def_nohes LotkaVolterraAll begin
+  dx = a*x - b*x*y
+  dy = -c*y + d*x*y
+end a=>1.5 b=>1.0 c=>3.0 d=>1.0
+
+u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+prob = ODEProblem(f2,u0,tspan)
+````
+
+To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
+
+```julia
+cost_function = build_lsoptim_objective(prob,t,data,Tsit5()))
+```
+
+The result is a cost function which can be used with LeastSquaresOptim. For mor
+details, consult the [documentation for LeastSquaresOptim.jl](https://github.com/matthieugomez/LeastSquaresOptim.jl):
+
+```julia
+x = [1.3,0.8,2.8,1.2]
+res = optimize!(LeastSquaresProblem(x = x, f! = cost_function,
+                output_length = length(t)*length(prob.u0)),
+                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),
+                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)
+```
+
+We can see the results are:
+
+```julia
+println(res.minimizer)
+
+Results of Optimization Algorithm
+ * Algorithm: Dogleg
+ * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]
+ * Sum of squares at Minimum: 0.035730
+ * Iterations: 63
+ * Convergence: true
+ * |x - x'| < 1.0e-15: true
+ * |f(x) - f(x')| / |f(x)| < 1.0e-14: false
+ * |g(x)| < 1.0e-14: false
+ * Function Calls: 64
+ * Gradient Calls: 9
+ * Multiplication Calls: 135
+```
+
+and thus this algorithm was able to correctly identify all four parameters. 
