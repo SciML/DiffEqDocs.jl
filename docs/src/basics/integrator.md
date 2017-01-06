@@ -150,6 +150,10 @@ The following functions make up the interface:
   been saved, one can provide the optional value `modify_save_endpoint` to also
   modify the endpoint of `sol` in the same manner.
 
+Note that not all of these functions will be implemented for every algorithm.
+Some have hard limitations. For example, Sundials.jl cannot resize problems.
+When a function is not limited, an error will be thrown.
+
 ## Additional Options
 
 The following options can additionally be specified in `init` (or be mutated in
