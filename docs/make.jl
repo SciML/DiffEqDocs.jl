@@ -22,7 +22,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "basics/common_solver_opts.md",
            "basics/solution.md",
            "basics/plot.md",
-           "basics/integrator"
+           "basics/integrator.md"
          ],
          "Equation Types" => Any[
            "types/ode_types.md",
