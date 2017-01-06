@@ -105,6 +105,25 @@ alg = ExplicitRK(tableau=constructDormandPrince())
 solve(prob,alg)
 ```
 
+#### CompositeAlgorithm
+
+One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
+you to, with very minimal overhead, design multimethod which switches between
+chosen algorithms as needed. The syntax is `CompositeAlgorthm(algtup,choice_function)`
+where `algtup` is a tuple of OrdinaryDiffEq.jl algorithms, and `choice_function`
+is a function which declares which method to use in the following step. For example,
+we can design a multimethod which uses `Tsit5()` but switches to `Vern7()` whenever
+`dt` is too small:
+
+```julia
+choice_function(integrator) = (Int(integrator.dt<0.001) + 1)
+alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
+```
+
+The `choice_function` takes in an `integrator` and thus all of the features
+available in the [`Integrator Interface`](@ref) 
+can be used in the choice function.
+
 ### Sundials.jl
 
 The Sundials suite is built around multistep methods. These methods are more efficient
