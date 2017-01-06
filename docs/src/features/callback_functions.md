@@ -19,8 +19,8 @@ The arguments are defined as follows:
 
 * `condition`: this is a function `condition(t,u,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition hits
-  `0` within the time interval. For example, `condition(t,u,integrator)=0` would
-  make the callback occur every step.
+  `0` within the time interval. Instead of a function, one could also pass
+  `condition=true` to make the callback occcur every accepted timestep.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
   modify the current state of the integrator. For more information on what can
   be done, see the [`Integrator Interface`](@ref) manual page.
@@ -37,6 +37,12 @@ The arguments are defined as follows:
   The first save will always occcur, and the second will only occur when an event
   is detected.  For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
+
+Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
+a tolerance from zero for the rootfinder: if the starting condition is less than
+the tolerance from zero, then no root will be detected. This is to stop repeat
+events happening just after a previously rootfound event. The default has `abstol=0`
+and `reltol=1e-10`.
 
 The callback type is then sent to the solver (or the integrator) via the `callback`
 keyword argument:
