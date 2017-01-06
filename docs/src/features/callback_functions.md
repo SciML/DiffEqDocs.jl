@@ -3,43 +3,60 @@
 ## Introduction to Callback Functions
 
 DifferentialEquations.jl allows for using callback functions to inject user code
-into the solver algorithms. This is done by defining a callback function and
-passing that function to the solver. After each accepted iteration this function
-is called. The standard callback is defined as:
+into the solver algorithms. It allows for safely and accurately applying events
+and discontinuities. Multiple callbacks can be chained together, and these callback
+types can be used to build libraries of extension behavior.
+
+## The Callback Type
+
+The callback type is defined as follows:
 
 ```julia
-default_callback = @ode_callback begin
-  @ode_savevalues
-end
+cb = Callback(condition,affect!,rootfind,interp_points,save_positions)
 ```
 
-This runs the saving routine at every timestep (inside of this saving routine it
-  checks the iterations vs `timeseries_steps` etc., so it's quite complicated).
-  However, you can add any code you want to this callback. For example, we can
-  make it print the value at each timestep by doing:
+The arguments are defined as follows:
+
+* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+  the callback should be used. A callback is initiated if the condition hits
+  `0` within the time interval. For example, `condition(t,u,integrator)=0` would
+  make the callback occur every step.
+* `affect!`: This is the function `affect!(integrator)` where one is allowed to
+  modify the current state of the integrator. For more information on what can
+  be done, see the [`Integrator Interface`](@ref) manual page.
+* `rootfind`: This is a boolean for whether to rootfind the event location. If
+  this is set to `true`, the solution will be backtracked to the point where
+  `condition==0`. Otherwise the systems and the `affect!` will occur at `t+dt`.
+* `interp_points`: The number of interpolated points to check the condition. The
+  condition is found by checking whether any interpolation point / endpoint has
+  a different sign. If `interp_points=0`, then conditions will only be noticed if
+  the sign of `condition` is different at `t` than at `t+dt`. This behavior is not
+  robust when the solution is oscillatory, and thus it's recommended that one use
+  some interpolation points (they're cheap to compute!).
+* `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
+  The first save will always occcur, and the second will only occur when an event
+  is detected.  For discontinuous changes like a modification to `u` to be
+  handled correctly (without error), one should set `save_positions=(true,true)`.
+
+The callback type is then sent to the solver (or the integrator) via the `callback`
+keyword argument:
 
 ```julia
-my_callback = @ode_callback begin
-  println(u)
-  @ode_savevalues
-end
+sol = solve(prob,alg,callback=cb)
 ```
 
-and pass this to the solver:
+Additionally, one can provide a tuple of callbacks which will be applied in order:
 
 ```julia
-sol = solve(prob,callback=my_callback)
+sol = solve(prob,alg,callback=(cb1,cb2))
 ```
 
-Later in the manual the full API for callbacks is given (the callbacks are very
-  general and thus the full API is complex enough to handle just about anything),
-  but for most users it's recommended that you use the simplified event handling
-  DSL described below.
+### Note About Saving
 
-## Event Handling
-
-Since event handling is a very common issue, a special domain-specific language
-(DSL) was created to make event handling callbacks simple to define.
+When a callback is supplied, the default saving behavior is turned off. This is
+because otherwise events would "double save" one of the values. To re-enable
+the standard saving behavior, one must have the first `save_positions` value
+be true for at least one callback.
 
 ### Example 1: Bouncing Ball
 
@@ -63,58 +80,37 @@ this (but it needs to be "root-findable"). For here it's clear that we just
 want to check if the ball's height ever hits zero:
 
 ```julia
-function event_f(t,u) # Event when event_f(t,u) == 0
+function condition(t,u,integrator) # Event when event_f(t,u) == 0
   u[1]
 end
 ```
+
+Notice that here we used the values `u` instead of the value from the `integrator`.
+This is because the values `t,u` will be appropriately modified at the interpolation
+points, allowing for the rootfinding behavior to occur.
 
 Now we have to say what to do when the event occurs. In this case we just
 flip the velocity (the second variable)
 
 ```julia
-function apply_event!(u,cache)
-  u[2] = -u[2]
+function apply_event!(integrator)
+  integrator.u[2] = -integrator.u[2]
 end
 ```
 
-That's all you need to specify the callback function with the macro:
+For safety, we use `interp_points=10`. We will enable `rootfind` because this means
+the when an event is detected, the solution will be approriately backtracked to
+the exact time at which the ball hits the floor. Lastly, since we are applying a
+discontinuous change, we set `save_values=(true,true)` so that way at the event
+location `t`, the solution for the velocity will be left continuous and then jump
+at `t` to start solving again (and the interpolations will work). The callback
+is thus specified by:
 
 ```julia
-callback = @ode_callback begin
-  @ode_event event_f apply_event!
-end
-```
-
-One thing to note is that by default this will check at 5 evently-spaced interpolated
-values for if the event condition is satisfied (i.e. if `event_f(t,u)<0`). This is
-because if your problem is oscillatory, sometimes too large of a timestep will
-miss the event. One may want to specify a number of points in the interval to interpolate
-to match the computational effort to the problem. This is done with one more parameter to `@ode_event`.
-Note that the interpolations are comparatively cheap to calculate so it's recommended
-that one use a few (if the memory for `calck` is available).
-
-Another parameter you can set for `@ode_event` is whether to use a rootfinder.
-By default, when an event is detected, a rootfinding algorithm (provided by
-NLsolve) is used to find the exact timepoint of the event. This can be computationally
-costly for large systems and thus there's an option to turn it off.
-
-The next option is to allow for termination on event. This will make the ODE
-solver stop when the event happens. For example, if we set it to true in our example,
-then the ODE solver will return the solution the first time the ball hits the
-ground. Whether it will save the "overshot" point or the "true end" depends on
-whether rootfinding is used.
-
-Lastly, you can also tell the solver to decrease dt after the event occurs.
-This can be helpful if the discontinuity changes the problem immensely.
-Using the full power of the macro, we can define an event as
-
-```julia
-const dt_safety = 1 # Multiplier to dt after an event
-const interp_points = 10
-const terminate_on_event = false
-callback = @ode_callback begin
-  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event dt_safety
-end
+interp_points = 10
+rootfind = true
+save_positions = (true,true)
+cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
 ```
 
 Then you can solve and plot:
@@ -123,7 +119,7 @@ Then you can solve and plot:
 u0 = [50.0,0.0]
 tspan = (0.0,15.0)
 prob = ODEProblem(f,u0,tspan)
-sol = solve(prob,callback=callback)
+sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
 
@@ -156,7 +152,7 @@ Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
 ```julia
-function event_f(t,u) # Event when event_f(t,u) == 0
+function condition(t,u,integrator) # Event when event_f(t,u) == 0
   1-maximum(u)
 end
 ```
@@ -169,8 +165,8 @@ by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
 
 ```julia
-function apply_event!(u,cache)
-  @ode_change_cachesize cache length+1
+function affect!(integrator)
+  resize!(integrator,length(integrator.u)+1)
   maxidx = findmax(u)[2]
   Θ = rand()
   u[maxidx] = Θ
@@ -178,17 +174,16 @@ function apply_event!(u,cache)
 end
 ```
 
-`@ode_change_cachesize cache length+1` is used to change the length of all of the
-internal caches (which includes `u`) to be their current length + 1, growing the
-ODE system. Then the following code sets the new protein concentrations. Now we
-can solve:
+As noted in the [`Integrator Interface`](@ref), `resize!(integrator,length(integrator.u)+1)`
+is used to change the length of all of the internal caches (which includes `u`)
+to be their current length + 1, growing the ODE system. Then the following code
+sets the new protein concentrations. Now we can solve:
 
 ```julia
-const dt_safety = 1
-const interp_points = 10
-callback = @ode_callback begin
-  @ode_event event_f apply_event! interp_points dt_safety
-end
+interp_points = 10
+rootfind = true
+save_positions = (true,true)
+cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
 u0 = [0.2]
 tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
@@ -226,111 +221,7 @@ which performs `deleteat!` on the caches. For example, to delete the second cell
 we could use:
 
 ```julia
-@ode_change_deleteat cache 2
+deleteat!(integrator,2)
 ```
 
 This allows you to build sophisticated models of populations with births and deaths.
-
-## Advanced: Callback Function API
-
-The callback functions have access to a lot of the functionality of the solver.
-The macro defines a function which is written as follows:
-
-```julia
-macro ode_callback(ex)
-  esc(quote
-    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
-      reeval_fsal = false
-      event_occurred = false
-      $(ex)
-      cursaveat,dt,t,T,reeval_fsal
-    end
-  end)
-end
-```
-
-All of the parts of the algorithm are defined in the internal solver documentation.
-
-### Example: Bouncing Ball Without Macros
-
-Here is an example of the defining the ball bouncing callback without the usage
-of macros. The entire code in its fully glory is generic enough to handle any
-of the implemented DifferentialEquations.jl algorithms, which special differences
-depending on the type of interpolant, implementation of FSAL, etc. For these
-reasons it's usually recommended to use the event handling macro, though this kind
-of code will allow you handle pretty much anything!
-
-```julia
-manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
-  reeval_fsal = false
-  event_occurred = false
-  dt_safety = 1
-  interp_points = 10
-
-  # Event Handling
-  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
-  Θs = linspace(0,1,interp_points)
-  interp_index = 0
-  # Check if the event occured
-  if event_f(t,u)<0
-    event_occurred = true
-    interp_index = interp_points
-  elseif interp_points!=0 # Use the interpolants for safety checking
-    for i in 2:length(Θs)-1
-      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0
-        event_occurred = true
-        interp_index = i
-        break
-      end
-    end
-  end
-
-  if event_occurred
-    if interp_index == interp_points # If no safety interpolations, start in the middle as well
-      initial_Θ = [.5]
-    else
-      initial_Θ = [Θs[interp_index]] # Start at the closest
-    end
-    find_zero = (Θ,val) -> begin
-      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))
-    end
-    res = nlsolve(find_zero,initial_Θ)
-    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)
-    for i in eachindex(u)
-      u[i] = val[i]
-    end
-    dtprev *= res.zero[1]
-    t = tprev + dtprev
-
-    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
-      resize!(k,kshortsize) # Reset k for next step
-      k = typeof(k)() # Make a local blank k for saving
-      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
-    elseif typeof(u) <: Number
-      k = f(t,u)
-    else
-      f(t,u,k)
-    end
-  end
-
-  @ode_savevalues
-
-  if event_occurred
-    apply_event!(u)
-    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
-      if typeof(u) <: Number
-        k = f(t,u)
-      else
-        f(t,u,k)
-      end
-    end
-    @ode_savevalues
-    if fsal
-      reeval_fsal = true
-    end
-    dt *= dt_safety # Safety dt change
-  end
-
-  cursaveat,dt,t,T,reeval_fsal
-end
-```
