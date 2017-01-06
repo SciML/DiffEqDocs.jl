@@ -41,8 +41,8 @@ The arguments are defined as follows:
 Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
 a tolerance from zero for the rootfinder: if the starting condition is less than
 the tolerance from zero, then no root will be detected. This is to stop repeat
-events happening just after a previously rootfound event. The default has `abstol=0`
-and `reltol=1e-10`.
+events happening just after a previously rootfound event. The default has `abstol=1e-14`
+and `reltol=0`.
 
 The callback type is then sent to the solver (or the integrator) via the `callback`
 keyword argument:
