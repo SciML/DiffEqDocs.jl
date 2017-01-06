@@ -102,6 +102,27 @@ Instead if one wants to introduce discontinuous changes, one should use the
 [`Event Handling and Callback Functions`](@ref). Modifications within a callback
 `affect!` surrounded by saves provides an error-free handling of the discontinuity.
 
+### Integrator vs Solution
+
+The integrator and the solution have very different actions because they have
+very different meanings. The `Solution` type is a type with history: it stores
+all of the (requested) timepoints and interpolates/acts using the values closest
+in time. On the otherhand, the `Integrator` type is a local object. It only knows
+the times of the interval it currently spans, the current caches and values,
+and the current state of the solver (the current options, tolerances, etc.).
+These serve very different purposes:
+
+* The `integrator`'s interpolation can extrapolate, both forward and backward in
+  in time. This is used to estimate events and is internally used for predictions.
+* The `integrator` is fully mutable upon iteration. This means that every time
+  an iterator affect is used, it will take timesteps from the current time. This
+  means that `first(integrator)!=first(integrator)` since the `integrator` will
+  step once to evaluate the left and then step once more (not backtracking).
+  This allows the iterator to keep dynamically stepping, though one should note
+  that it may violate some immutablity assumptions commonly made about iterators.
+
+If one wants the solution object, then one can find it in `integrator.sol`.
+
 ## Function Interface
 
 In addition to the type interface, a function interface is provided which allows
@@ -156,3 +177,36 @@ integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])
 integrator.opts.stop_at_next_tstop = true
 solve!(integrator)
 ```
+
+## Plot Recipe
+
+Like the `Solution` type, a plot recipe is provided for the `Integrator` type.
+Since the `Integrator` type is a local state type on the current interval,
+`plot(integrator)` returns the solution on the current interval. The same
+options for the plot recipe are provided as for `sol`, meaning one can choose
+variables via the `vars` keyword argument, or change the `plotdensity` / turn
+on/off `denseplot`.
+
+Additionally, since the `integrator` is an integrator, this can be used in the
+Plots.jl `animate` command to iteratively build an animation of the solution
+while solving the differentiation equation.
+
+For an example of manually chaining together the iterator interface and plotting,
+one should try the following:
+
+```julia
+using DifferentialEquations, DiffEqProblemLibrary, Plots
+prob = prob_ode_linear
+
+using Plots
+integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])
+pyplot(show=true)
+plot(integrator)
+for i in integrator
+  display(plot!(integrator,vars=(0,1),legend=false))
+end
+step!(integrator); plot!(integrator,vars=(0,1),legend=false)
+savefig("iteratorplot.png")
+```
+
+![Iterator Plot](../assets/iteratorplot.png)

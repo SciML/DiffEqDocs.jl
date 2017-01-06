@@ -103,8 +103,9 @@ and the general tools for analysis.
 Pages = [
     "basics/overview.md",
     "basics/common_solver_opts.md",
-    "basics/plot.md",
     "basics/solution.md",
+    "basics/plot.md",
+    "basics/integrator.md"
     ]
 Depth = 2
 ```
