@@ -1,6 +1,50 @@
 # ParameterizedFunctions
 
-## Function Definition
+## Transforming User-Defined Functions to ParameterizedFunctions
+
+### ParameterizedFunction Constructor
+
+The easiest way to make a `ParameterizedFunction` is to use the constructor:
+
+```julia
+pf = ParameterizedFunction(f,params)
+```
+
+The form for `f` is `f(t,u,params,du)`
+where `params` is any type which defines the parameters. The
+resulting `ParameterizedFunction` has the function call `pf(t,u,params,du)`
+which matches the original function, and a call `pf(t,u,du)` which uses internal
+parmaeters which can be used with a differential equation solver. Note that the
+internal parameters can be modified at any time via the field: `pf.p = ...`.
+
+An additional version exists for `f(t,u,params)` which will then act as the
+not inplace version `f(t,u)` in the differential equation solvers.
+
+### Examples
+
+```julia
+pf_func = function (t,u,p,du)
+  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
+  du[2] = -3 * u[2] + u[1]*u[2]
+end
+
+pf = ParameterizedFunction(pf_func,[1.5,1.0])
+```
+
+And now `pf` can be used in the differential equation solvers and the ecosystem
+functionality which requires explicit parameters (parameter estimation, etc.).
+
+Note that the not inplace version works the same:
+
+```julia
+pf_func2 = function (t,u,p)
+  [p[1] * u[1] - p[2] * u[1]*u[2];-3 * u[2] + u[1]*u[2]]
+end
+
+pf2 = ParameterizedFunction(pf_func2,[1.5,1.0])
+```
+
+## Function Definition Macros
 
 DifferentialEquations.jl provides a set of macros for more easily and legibly
 defining your differential equations. It exploits the standard notation for
