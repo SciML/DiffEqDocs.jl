@@ -111,11 +111,12 @@ sensitivity analysis, and bifurcation analysis.
 
 ## Extra Optimizations
 
-Because the ParameterizedFunction holds the definition at a symbolic level, optimizations
-are provided by SymEngine. Using the symbolic calculator, in-place functions for
-many things such as Jacobians, Hessians, etc. are symbolically pre-computed. In
-addition, functions for the inverse Jacobian, Hessian, etc. are also pre-computed.
-In addition, parameter gradients and Jacobians are also used.
+Because the ParameterizedFunction defined by the macro holds the definition at a
+symbolic level, optimizations are provided by SymEngine. Using the symbolic
+calculator, in-place functions for many things such as Jacobians, Hessians, etc.
+are symbolically pre-computed. In addition, functions for the inverse Jacobian,
+Hessian, etc. are also pre-computed. In addition, parameter gradients and
+Jacobians are also used.
 
 Normally these will be computed fast enough that the user doesn't have to worry.
 However, in some cases you may want to restrict the number of functions (or get rid
