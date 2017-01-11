@@ -45,6 +45,8 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Additional Features" => Any[
            "features/performance_overloads.md",
            "features/callback_functions.md",
+           "features/callback_library.md",
+           "features/monte_carlo.md",
            "features/mesh.md",
            "features/output_specification.md",
            "features/conditional_dependencies.md",
