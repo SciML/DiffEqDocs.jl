@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Analysis Tools",
     "category": "section",
-    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
+    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
 },
 
 {
@@ -2174,6 +2174,46 @@ var documenterSearchIndex = {"docs": [
     "title": "Defining a Sensitivity Problem",
     "category": "section",
     "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecvec_to_mat([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecvec_to_mat from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecvec_to_mat(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#",
+    "page": "Uncertainty Quantification",
+    "title": "Uncertainty Quantification",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#Uncertainty-Quantification-1",
+    "page": "Uncertainty Quantification",
+    "title": "Uncertainty Quantification",
+    "category": "section",
+    "text": "Uncertainty quantification allows a user to identify the uncertainty associated with the numerical approximation given by DifferentialEquations.jl. This page describes the different methods available for quanitifying such uncertainties."
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#Note-1",
+    "page": "Uncertainty Quantification",
+    "title": "Note",
+    "category": "section",
+    "text": "Since this is currently a work in progress, the package DiffEqUncertainty.jl which contains this functionality is currently unregistered and has to be installed viaPkg.clone(\"https://github.com/JuliaDiffEq/DiffEqUncertainty.jl\")"
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#ProbInts-1",
+    "page": "Uncertainty Quantification",
+    "title": "ProbInts",
+    "category": "section",
+    "text": "The ProbInts method for uncertainty quantification involves the transformation of an ODE into an associated SDE where the noise is related to the timesteps and the order of the algorithm. This is implmented into the DiffEq system via a callback function:ProbIntsUncertainty(σ,order,save=true)σ is the noise scaling factor and order is the order of the algorithm. save is for choosing whether this callback should control the saving behavior. Generally this is true unless one is stacking callbacks in a CallbackSet."
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#Example-1",
+    "page": "Uncertainty Quantification",
+    "title": "Example",
+    "category": "section",
+    "text": "To use the callback, we simply create it and pass it to the solver. Here I will use DiffEqMonteCarlo in order to perform the simulation 10 times and plot the results together.using DiffEqUncertainty, DiffEqBase, OrdinaryDiffEq, DiffEqProblemLibrary, DiffEqMonteCarlo\nusing Base.Test\n\nusing ParameterizedFunctions\ng = @ode_def_bare LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)\nu0 = [1.0;0.0;0.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(g,u0,tspan)\n\ncb = ProbIntsUncertainty(1e4,5)\nsolve(prob,Tsit5())\nsim = monte_carlo_simulation(prob,Tsit5(),num_monte=10,callback=cb,adaptive=false,dt=1/10)\n\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty)"
 },
 
 {
