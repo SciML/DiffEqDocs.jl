@@ -44,6 +44,8 @@ functions. The default noise is `WHITE_NOISE`.
 
 ## Special Solution Fields
 
+* `g`: The noise function in the SDE.
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/sde_premade_problems.jl).

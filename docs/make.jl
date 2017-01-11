@@ -12,6 +12,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Tutorials" => Any[
            "tutorials/ode_example.md",
            "tutorials/sde_example.md",
+           "tutorials/dde_example.md",
            "tutorials/dae_example.md",
            "tutorials/fempoisson_example.md",
            "tutorials/femheat_example.md",
@@ -27,6 +28,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Equation Types" => Any[
            "types/ode_types.md",
            "types/sde_types.md",
+           "types/dde_types.md",
            "types/dae_types.md",
            "types/fem_types.md",
            "types/stokes_types.md"
@@ -34,6 +36,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Solver Algorithms" => Any[
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
+           "solvers/dde_solve.md",
            "solvers/dae_solve.md",
            "solvers/fempoisson_solve.md",
            "solvers/femheat_solve.md",

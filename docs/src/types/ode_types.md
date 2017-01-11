@@ -30,6 +30,8 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ## Special Solution Fields
 
+None. The ODE type is as basic as it gets.
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).

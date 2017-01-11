@@ -1,8 +1,8 @@
 # DAE Types
 
-## Mathematical Specification of an ODE Problem
+## Mathematical Specification of an DAE Problem
 
-To define an ODE Problem, you simply need to give the function ``f`` and the initial
+To define a DAE Problem, you simply need to give the function ``f`` and the initial
 condition ``u₀`` which define an ODE
 
 ```math
@@ -29,6 +29,8 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 ## Special Solver Options
 
 ## Special Solution Fields
+
+* `du`: The saved derivative values.
 
 ## Example Problems
 

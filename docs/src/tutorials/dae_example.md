@@ -14,8 +14,8 @@ the form
 
 ```math
 \begin{align}
-du = f(t,u) \\
- 0 = g(t,u) \\
+du &= f(t,u) \\
+ 0 &= g(t,u) \\
  \end{align}
 ```
 

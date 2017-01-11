@@ -51,10 +51,11 @@ for power users. Information for how to get to the bleeding edge is found in the
 For PDEs, one can optionally specify a noise equation. The solvers currently have
 stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
-* ODEs
-* SODEs
-* DAEs
-* (Stochastic) PDEs
+* Ordinary Differential Equations
+* Stochastic Differential Equations
+* Differential Algebraic Equations
+* Delay Differential Equations
+* (Stochastic) PDEs:
 
   * Linear Poisson Equation
   * Semi-linear Poisson Equation
@@ -85,6 +86,7 @@ More examples can be found by [checking out the IJulia notebooks in the examples
 Pages = [
     "tutorials/ode_example.md",
     "tutorials/sde_example.md",
+    "tutorials/dde_example.md",
     "tutorials/dae_example.md",
     "tutorials/fempoisson_example.md",
     "tutorials/femheat_example.md",
@@ -119,6 +121,7 @@ for the solvers, and the special features of the different solution types.
 Pages = [
   "types/ode_types.md",
   "types/sde_types.md",
+  "types/dde_types.md",
   "types/dae_types.md",
   "types/fem_types.md",
   "types/stokes_types.md"
@@ -134,6 +137,7 @@ These pages describe the solvers and available algorithms in detail.
 Pages = [
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
+  "solvers/dde_solve.md",
   "solvers/dae_solve.md",
   "solvers/fempoisson_solve.md",
   "solvers/femheat_solve.md",
