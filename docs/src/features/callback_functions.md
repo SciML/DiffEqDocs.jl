@@ -7,20 +7,30 @@ into the solver algorithms. It allows for safely and accurately applying events
 and discontinuities. Multiple callbacks can be chained together, and these callback
 types can be used to build libraries of extension behavior.
 
-## The Callback Type
+## The Callback Types
 
-The callback type is defined as follows:
+The callback types are defined as follows. There are two callback types: the
+`ContinuousCallback` and the `DiscreteCallback`. The `ContinuousCallback` is
+applied when a continuous condition function hits zero. This type of callback
+implements what is known in other problem solving environments an Event. A
+`DiscreteCallback` is applied when its `condition` function is `true`.
+
+### ContinuousCallbacks
 
 ```julia
-cb = Callback(condition,affect!,rootfind,interp_points,save_positions)
+ContinuousCallback(condition,affect!,
+                   rootfind,
+                   save_positions;
+                   affect_neg! = affect!,
+                   interp_points=10,
+                   abstol=1e-14,reltol=0)
 ```
 
 The arguments are defined as follows:
 
 * `condition`: this is a function `condition(t,u,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition hits
-  `0` within the time interval. Instead of a function, one could also pass
-  `condition=true` to make the callback occcur every accepted timestep.
+  `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
   modify the current state of the integrator. For more information on what can
   be done, see the [`Integrator Interface`](@ref) manual page.
@@ -34,8 +44,8 @@ The arguments are defined as follows:
   robust when the solution is oscillatory, and thus it's recommended that one use
   some interpolation points (they're cheap to compute!).
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
-  The first save will always occcur, and the second will only occur when an event
-  is detected.  For discontinuous changes like a modification to `u` to be
+  The first save will always occcur (if true), and the second will only occur when
+  an event is detected.  For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
 
 Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
@@ -44,6 +54,48 @@ the tolerance from zero, then no root will be detected. This is to stop repeat
 events happening just after a previously rootfound event. The default has `abstol=1e-14`
 and `reltol=0`.
 
+### DiscreteCallback
+
+```julia
+DiscreteCallback(condition,affect!,save_positions)
+```
+
+* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+  the callback should be used. A callback is initiated if the condition evaluates
+  to `true`.
+* `affect!`: This is the function `affect!(integrator)` where one is allowed to
+  modify the current state of the integrator. For more information on what can
+  be done, see the [`Integrator Interface`](@ref) manual page.
+* `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
+  The first save will always occcur (if true), and the second will only occur when
+  an event is detected.  For discontinuous changes like a modification to `u` to be
+  handled correctly (without error), one should set `save_positions=(true,true)`.
+
+### CallbackSet
+
+Multiple callbacks can be chained together to form a `CallbackSet`. A `CallbackSet`
+is constructed by passing the constructor `ContinuousCallback`, `DiscreteCallback`,
+or other `CallbackSet` instances:
+
+```julia
+CallbackSet(cb1,cb2,cb3)
+```
+
+You can pass as many callbacks as you like. When the solvers encounter multiple
+callbacks, the following rules apply:
+
+* `ContinuousCallback`s are applied before `DiscreteCallback`s. (This is because
+  they often implement event-finding that will backtrack the timestep to smaller
+  than `dt`).
+* For `ContinuousCallback`s, the events times are found by rootfinding and only
+  the first `ContinuousCallback` affect is applied.
+* The `DiscreteCallback`s are then applied in order. Note that the ordering only
+  matters for the conditions: if a previous callback modifies `u` in such a way
+  that the next callback no longer evaluates condition to `true`, its `affect`
+  will not be applied.
+
+## Using Callbacks
+
 The callback type is then sent to the solver (or the integrator) via the `callback`
 keyword argument:
 
@@ -51,11 +103,8 @@ keyword argument:
 sol = solve(prob,alg,callback=cb)
 ```
 
-Additionally, one can provide a tuple of callbacks which will be applied in order:
-
-```julia
-sol = solve(prob,alg,callback=(cb1,cb2))
-```
+You can supply `nothing`, a single `DiscreteCallback` or `ContinuousCallback`,
+or a `CallbackSet`.
 
 ### Note About Saving
 
@@ -64,9 +113,89 @@ because otherwise events would "double save" one of the values. To re-enable
 the standard saving behavior, one must have the first `save_positions` value
 be true for at least one callback.
 
+## DiscreteCallback Examples
+
+### Example 1: AutoAbstol
+
+MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
+In this example we will implement a callback which will add this behavior to
+any JuliaDiffEq solver which implments the `integrator` and callback interface.
+
+The algorithm is as follows. The default value is set to start at `1e-6`, though
+we will give the user an option for this choice. Then as the simulation progresses,
+at each step the absolute tolerance is set to the maximum value that has been
+reached so far times the relative tolerance. This is the behavior that we will
+implement in `affect!`.
+
+Since the affect is supposed to occur every timestep, we use the trivial condition:
+
+```julia
+condition = function (t,u,integrator)
+    true
+end
+```
+
+which always returns true. For our effect we will overload the call on a type.
+This type will have a value for the current maximum. By doing it this way, we
+can store the current state for the running maximum. The code is as follows:
+
+```julia
+type AutoAbstolAffect{T}
+  curmax::T
+end
+# Now make `affect!` for this:
+function (p::AutoAbstolAffect)(integrator)
+  p.curmax = max(p.curmax,integrator.u)
+  integrator.opts.abstol = p.curmax * integrator.opts.reltol
+  u_modified!(integrator,false)
+end
+```
+
+This makes `affect!(integrator)` use an internal mutating value `curmax` to update
+the absolute tolerance of the integrator as the algorithm states.
+
+Lastly, we can wrap it in a nice little constructor:
+
+```julia
+function AutoAbstol(save=true;init_curmax=1e-6)
+  affect! = AutoAbstolAffect(init_curmax)
+  condtion = (t,u,integrator) -> true
+  save_positions = (save,false)
+  DiscreteCallback(condtion,affect!,save_positions)
+end
+```
+
+This creates the `DiscreteCallback` from the `affect!` and `condition` functions
+that we implemented. Now
+
+```julia
+cb = AutoAbstol(save=true;init_curmax=1e-6)
+```
+
+returns the callback that we created. We can then solve an equation using this
+by simply passing it with the `callback` keyword argument. Using the integrator
+interface rather than the solve interface, we can step through one by one
+to watch the absolute tolerance increase:
+
+```julia
+integrator = init(prob,BS3(),callback=cb)
+at1 = integrator.opts.abstol
+step!(integrator)
+at2 = integrator.opts.abstol
+@test at1 < at2
+step!(integrator)
+at3 = integrator.opts.abstol
+@test at2 < at3
+```
+
+Note that this example is contained in [DiffEqCallbacks.jl](https://github.com/JuliaDiffEq/DiffEqCallbacks.jl),
+a library of useful callbacks for JuliaDiffEq solvers.
+
+## ContinuousCallback Examples
+
 ### Example 1: Bouncing Ball
 
-First let's look at the bouncing ball. `@ode_def` from
+Let's look at the bouncing ball. `@ode_def` from
 [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 was to define the problem, where the first variable `y` is the height which changes
 by `v` the velocity, where the velocity is always changing at `-g` where is the
