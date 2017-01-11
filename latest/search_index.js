@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Supported Equations",
     "category": "section",
-    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.ODEs\nSODEs\nDAEs\n(Stochastic) PDEs\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
+    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Ordinary Differential Equations\nStochastic Differential Equations\nDifferential Algebraic Equations\nDelay Differential Equations\n(Stochastic) PDEs:\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
 },
 
 {
@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Tutorials",
     "category": "section",
-    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
+    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
 },
 
 {
@@ -166,6 +166,30 @@ var documenterSearchIndex = {"docs": [
     "title": "Higher Order Methods",
     "category": "section",
     "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be  a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDETestProblem(f,g,u₀,analytic)and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM(),dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1(),dt=dt,adaptive=false)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)By default, the higher order methods have adaptivity. Thus one can usesol =solve(prob,SRIW1())\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)Here we allowed the solver to automatically determine a starting dt. This estimate at the beginning is conservative (small) to ensure accuracy. We can instead start the method with a larger dt by passing in a value for the starting dt:sol =solve(prob,SRIW1(),dt=dt)\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)"
+},
+
+{
+    "location": "tutorials/dde_example.html#",
+    "page": "Delay Differential Equations (DDE)",
+    "title": "Delay Differential Equations (DDE)",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/dde_example.html#Delay-Differential-Equations-(DDE)-1",
+    "page": "Delay Differential Equations (DDE)",
+    "title": "Delay Differential Equations (DDE)",
+    "category": "section",
+    "text": "This tutorial will introduce you to the functionality for solving delay differential equations.Delay differential equations are equations which have a delayed argument. To allow for specifying the delayed argument, the function definition for a delay differential equation is expanded to include a history function h(t) which uses interpolations throughout the solution's history to form a continuous extension of the solver's past. The function signature for a delay differential equation is f(t,u,h) for not inplace computations, and f(t,u,h,du) for inplace computations.In this example we will solve a model of breast cancer growth kinetics:beginalign\ndx_0 = fracv_01+beta_0left(x_2(t-tau)right)^2left(p_0-q_0right)x_0(t)-d_0x_0(t)\ndx_1 = fracv_01+beta_0left(x_2(t-tau)right)^2left(1-p_0+q_0right)x_0(t)+fracv_11+beta_1left(x_2(t-tau)right)^2left(p_1-q_1right)x_1(t)-d_1x_1(t)\ndx_2 = fracv_11+beta_1left(x_2(t-tau)right)^2left(1-p_1+q_1right)x_1(t)-d_2x_2(t)\nendalignFor this problem we note that tau is constant, and thus we can use a method which exploits this behavoir. We first write out the equation using the appropriate function signature. Most of the equation writing is the same, though we use the history function by first interpolating and then choosing the components. Thus the ith component at time t-tau is given by h(t-tau)[i]. Components with no delays are written as in the ODE.Thus the function for this model is given by:const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5\nconst p1 = 0.2; const q1 = 0.3; const v1 = 1; const d1 = 1\nconst d2 = 1; const beta0 = 1; const beta1 = 1;\nfunction bc_model(t,u,h,du)\n  du[1] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]\n  du[2] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +\n          (v1/(1+beta1*(h(t-tau)[3]^2))) * (p1 - q1)*u[2] - d1*u[2]\n  du[3] = (v1/(1+beta1*(h(t-tau)[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]\nendTo use the constant lag model, we have to declare the lags. Here we will use tau=1.lags = [1]Now we build a ConstantLagDDEProblem.  The signature is very similar to ODEs, where we now have to give the lags and an h. h is the history function, or a function that declares what the values were before the time the model starts. Here we will assume that for all time before t0 the values were 1:h(t) = ones(3)We have h output a 3x1 vector since our differenital equation is given by a system of the same size. Next, we choose to solve on the timespan (0.0,10.0) and create the problem type:tspan = (0.0,10.0)\nprob = ConstantLagDDEProblem(bc_model,h,u0,lags,tspan)An efficient way to solve this problem (given the constant lags) is with the MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl ODE solver method into a method for delay differential equations which is highly efficient due to sweet compiler magic. A good choice is the order 5 Tsit5() method:alg = MethodOfSteps(Tsit5())For lower tolerance solving, one can use the BS3() algorithm to good effect (this combination is similar to the MATLAB dde23), and for high tolerances the DP8() algorithm will give an 8th order solution. Note that the Verner methods will not work here due to their lazy interpolation scheme.To solve the problem with this algorithm, we do the same thing we'd do with other methods on the common interface:sol = solve(prob,alg)Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:using Plots; plot(sol)(Image: DDE Example Plot)"
+},
+
+{
+    "location": "tutorials/dde_example.html#State-Dependent-Delays-1",
+    "page": "Delay Differential Equations (DDE)",
+    "title": "State-Dependent Delays",
+    "category": "section",
+    "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. To do this in DifferentialEquations.jl, one simply writes it in the natural manner h(g(t,u)) where g is the lag function. As before, you must declare the lag functions to the solver. Other than that, everything else is the same, where one instead constructs a DDEProblem type:prob = DDEProblem(f,h,u0,lags,tspan)and solves that using the common interface.However, currently there are no good algorithms for this. The developers are working on a defect control method which will give good quality results and have strict error bounds."
 },
 
 {
@@ -333,7 +357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Output Control",
     "category": "section",
-    "text": "These arguments control the output behavior the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. All of these options can be mixed and matched. For example, the combinationsaveat=[0:1/4:1],save_timeseries=false,dense=falsewill only save the solution at the timepoints 0:1/4:1 and no other locations. For more examples for controlling the output behavior, see the Output Specification manual page.dense: Denotes whether to save the extra pieces for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes extra times to save the solution at during the solving phase. The solver will save at each of the timepoints in this array in the most efficient manner. Note that this can be used even if dense=false. For methods where interpolation is not possible, this may be equivalent to tstops. Default is [].\ntstops: Denotes extra times that the timestepping algorithm must step to. This should be used to help the solver deal with discontinuities and singularities, since stepping exactly at the time of the discontinuity will improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods), then tstops will use an interpolation, matching the behavior of saveat. If a method cannot change timesteps and also cannot interpolation, then tstops must be a multiple of dt or elese an error will be thrown. Default is [].\ncalck: Turns on and off the internal ability for intermediate     interpolations. This defaults to dense || !isempty(saveat) || \"no custom callback is given\". This can be used to turn off interpolations (to save memory) if one isn't using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used no  where else. Note that this is only required if the algorithm doesn't have a free or lazy interpolation (DP8()).\nsave_timeseries: Saves the result at every timeseries_steps iteration.     Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1."
+    "text": "These arguments control the output behavior the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. All of these options can be mixed and matched. For example, the combinationsaveat=[0:1/4:1],save_timeseries=false,dense=falsewill only save the solution at the timepoints 0:1/4:1 and no other locations. For more examples for controlling the output behavior, see the Output Specification manual page.dense: Denotes whether to save the extra pieces for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes extra times to save the solution at during the solving phase. The solver will save at each of the timepoints in this array in the most efficient manner. Note that this can be used even if dense=false. For methods where interpolation is not possible, this may be equivalent to tstops. Default is [].\ntstops: Denotes extra times that the timestepping algorithm must step to. This should be used to help the solver deal with discontinuities and singularities, since stepping exactly at the time of the discontinuity will improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods), then tstops will use an interpolation, matching the behavior of saveat. If a method cannot change timesteps and also cannot interpolation, then tstops must be a multiple of dt or elese an error will be thrown. Default is [].\nd_discontinuities: Denotes locations of disccontinuities in low order derivatives. This will force FSAL algorithms which assume derivative continuity to re-evaluate the derivatives at point of discontinuity. The default is [].\ncalck: Turns on and off the internal ability for intermediate     interpolations. This defaults to dense || !isempty(saveat) || \"no custom callback is given\". This can be used to turn off interpolations (to save memory) if one isn't using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used no  where else. Note that this is only required if the algorithm doesn't have a free or lazy interpolation (DP8()).\nsave_timeseries: Saves the result at every timeseries_steps iteration.     Default is true.\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. Defaults to 1."
 },
 
 {
@@ -613,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Special Solution Fields",
     "category": "section",
-    "text": ""
+    "text": "None. The ODE type is as basic as it gets."
 },
 
 {
@@ -789,7 +813,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Special Solution Fields",
     "category": "section",
-    "text": ""
+    "text": "g: The noise function in the SDE."
 },
 
 {
@@ -857,6 +881,70 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/dde_types.html#",
+    "page": "DDE Types",
+    "title": "DDE Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/dde_types.html#DDE-Types-1",
+    "page": "DDE Types",
+    "title": "DDE Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dde_types.html#Mathematical-Specification-of-a-DDE-Problem-1",
+    "page": "DDE Types",
+    "title": "Mathematical Specification of a DDE Problem",
+    "category": "section",
+    "text": "To define a DDE Problem, you simply need to give the function f and the initial condition u0 which define an ODEdu = f(tuh)f should be specified as f(t,u,h) (or in-place as f(t,u,h,du)). h is the history function which is accessed for all delayed values. For example, the ith component delayed by a time tau is denoted by h(t-tau). Note that we are not limited to numbers or vectors for u0, one is allowed to provide u0 as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/dde_types.html#Problem-Type-1",
+    "page": "DDE Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dde_types.html#Constructors-1",
+    "page": "DDE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan)\nDDEProblem(f,h,u0,lags,tspan)"
+},
+
+{
+    "location": "types/dde_types.html#Fields-1",
+    "page": "DDE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem."
+},
+
+{
+    "location": "types/dde_types.html#Special-Solver-Options-1",
+    "page": "DDE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/dde_types.html#Special-Solution-Fields-1",
+    "page": "DDE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "types/dae_types.html#",
     "page": "DAE Types",
     "title": "DAE Types",
@@ -873,11 +961,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/dae_types.html#Mathematical-Specification-of-an-ODE-Problem-1",
+    "location": "types/dae_types.html#Mathematical-Specification-of-an-DAE-Problem-1",
     "page": "DAE Types",
-    "title": "Mathematical Specification of an ODE Problem",
+    "title": "Mathematical Specification of an DAE Problem",
     "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE0 = f(tudu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,resid)). Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+    "text": "To define a DAE Problem, you simply need to give the function f and the initial condition u which define an ODE0 = f(tudu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,resid)). Note that we are not limited to numbers or vectors for u₀, one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
 },
 
 {
@@ -917,7 +1005,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Types",
     "title": "Special Solution Fields",
     "category": "section",
-    "text": ""
+    "text": "du: The saved derivative values."
 },
 
 {
@@ -1270,6 +1358,30 @@ var documenterSearchIndex = {"docs": [
     "title": "StochasticDiffEq.jl",
     "category": "section",
     "text": "EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5.\nSRA1 - An optimized version of SRIA1. Strong Order 2.0."
+},
+
+{
+    "location": "solvers/dde_solve.html#",
+    "page": "DDE Solvers",
+    "title": "DDE Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/dde_solve.html#DDE-Solvers-1",
+    "page": "DDE Solvers",
+    "title": "DDE Solvers",
+    "category": "section",
+    "text": "solve(prob::AbstractDDEProblem,alg;kwargs)Solves the DDE defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
+},
+
+{
+    "location": "solvers/dde_solve.html#Recommended-Methods-1",
+    "page": "DDE Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "The recommended method for standard constant lag DDE problems are the MethodOfSteps algorithms. These are constructed from an OrdinaryDiffEq.jl algorithm as follows:MethodOfSteps(alg;constrained=false,\n             picardabstol = nothing,\n             picardreltol = nothing,\n             picardnorm   = nothing,\n             max_picard_iters = 10)where alg is an OrdinaryDiffEq.jl algorithm. Most algorithms will work, though a notable exception are algorithms which use a lazy interpolant (the Verner methods).The standard choice is MethodOfSteps(Tsit5()). This is a highly efficient FSAL 5th order algorithm which should handle most problems. For fast solving at where non-strict error control is needed, choosing BS3() can do well (this is similar to the MATLAB dde23). For algorithms where strict error control is needed, it is recommended that one uses DP8().If the method is having trouble, one may want to adjust the Picard parameters. Decreasing the Picard tolerances and increasing the Picard iterations can help ensure that the steps are correct. If the problem still is not correctly converging, one should lower dtmax. In the worst case scenarios, one may need to set constrained=true which will constrain the method in a manner that forces more stability at the cost of smaller timesteps.There is currently no recommended algorithm for state-dependent delay problems. An algorithm is currently in the works."
 },
 
 {
@@ -1793,9 +1905,33 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameterized_functions.html#Function-Definition-1",
+    "location": "analysis/parameterized_functions.html#Transforming-User-Defined-Functions-to-ParameterizedFunctions-1",
     "page": "ParameterizedFunctions",
-    "title": "Function Definition",
+    "title": "Transforming User-Defined Functions to ParameterizedFunctions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "analysis/parameterized_functions.html#ParameterizedFunction-Constructor-1",
+    "page": "ParameterizedFunctions",
+    "title": "ParameterizedFunction Constructor",
+    "category": "section",
+    "text": "The easiest way to make a ParameterizedFunction is to use the constructor:pf = ParameterizedFunction(f,params)The form for f is f(t,u,params,du) where params is any type which defines the parameters. The resulting ParameterizedFunction has the function call pf(t,u,params,du) which matches the original function, and a call pf(t,u,du) which uses internal parmaeters which can be used with a differential equation solver. Note that the internal parameters can be modified at any time via the field: pf.p = ....An additional version exists for f(t,u,params) which will then act as the not inplace version f(t,u) in the differential equation solvers."
+},
+
+{
+    "location": "analysis/parameterized_functions.html#Examples-1",
+    "page": "ParameterizedFunctions",
+    "title": "Examples",
+    "category": "section",
+    "text": "pf_func = function (t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\n\npf = ParameterizedFunction(pf_func,[1.5,1.0])And now pf can be used in the differential equation solvers and the ecosystem functionality which requires explicit parameters (parameter estimation, etc.).Note that the not inplace version works the same:pf_func2 = function (t,u,p)\n  [p[1] * u[1] - p[2] * u[1]*u[2];-3 * u[2] + u[1]*u[2]]\nend\n\npf2 = ParameterizedFunction(pf_func2,[1.5,1.0])"
+},
+
+{
+    "location": "analysis/parameterized_functions.html#Function-Definition-Macros-1",
+    "page": "ParameterizedFunctions",
+    "title": "Function Definition Macros",
     "category": "section",
     "text": "DifferentialEquations.jl provides a set of macros for more easily and legibly defining your differential equations. It exploits the standard notation for mathematically writing differential equations and the notation for \"punching differential equations into the computer\"; effectively doing the translation step for you. This is best shown by an example. Say we want to solve the ROBER model. Using the @ode_def macro from ParameterizedFunctions.jl, we can do this by writing:using ParameterizedFunctions\nf = @ode_def ROBERExample begin\n  dy₁ = -k₁*y₁+k₃*y₂*y₃\n  dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃\n  dy₃ =  k₂*y₂^2\nend k₁=>0.04 k₂=>3e7 k₃=>1e4This looks just like psudocode! The macro will expand this to the \"standard form\", i.e. the ugly computer form:f = (t,u,du) -> begin\n  du[1] = -0.04*u[1] + 1e4*u[2]*u[3]\n  du[2] = 0.04*u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3]\n  du[3] = 3e7*u[2]^2\nendNote that one doesn't need to use numbered variables: DifferentialEquations.jl will number the variables for you. For example, the follows defines the function for the Lotka-Volterra model:f = @ode_def LotkaVolterraExample begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1.0 c=>3.0 d=1.0"
 },
@@ -1813,7 +1949,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ParameterizedFunctions",
     "title": "Extra Optimizations",
     "category": "section",
-    "text": "Because the ParameterizedFunction holds the definition at a symbolic level, optimizations are provided by SymEngine. Using the symbolic calculator, in-place functions for many things such as Jacobians, Hessians, etc. are symbolically pre-computed. In addition, functions for the inverse Jacobian, Hessian, etc. are also pre-computed. In addition, parameter gradients and Jacobians are also used.Normally these will be computed fast enough that the user doesn't have to worry. However, in some cases you may want to restrict the number of functions (or get rid of a warning). Macros like @ode_def_nohes turn off the Hessian calculations, and @ode_def_noinvjac turns of the Jacobian inversion. For more information, please see the ParameterizedFunctions.jl documentation."
+    "text": "Because the ParameterizedFunction defined by the macro holds the definition at a symbolic level, optimizations are provided by SymEngine. Using the symbolic calculator, in-place functions for many things such as Jacobians, Hessians, etc. are symbolically pre-computed. In addition, functions for the inverse Jacobian, Hessian, etc. are also pre-computed. In addition, parameter gradients and Jacobians are also used.Normally these will be computed fast enough that the user doesn't have to worry. However, in some cases you may want to restrict the number of functions (or get rid of a warning). Macros like @ode_def_nohes turn off the Hessian calculations, and @ode_def_noinvjac turns of the Jacobian inversion. For more information, please see the ParameterizedFunctions.jl documentation."
 },
 
 {
