@@ -3,47 +3,199 @@
 ## Introduction to Callback Functions
 
 DifferentialEquations.jl allows for using callback functions to inject user code
-into the solver algorithms. This is done by defining a callback function and
-passing that function to the solver. After each accepted iteration this function
-is called. The standard callback is defined as:
+into the solver algorithms. It allows for safely and accurately applying events
+and discontinuities. Multiple callbacks can be chained together, and these callback
+types can be used to build libraries of extension behavior.
+
+## The Callback Types
+
+The callback types are defined as follows. There are two callback types: the
+`ContinuousCallback` and the `DiscreteCallback`. The `ContinuousCallback` is
+applied when a continuous condition function hits zero. This type of callback
+implements what is known in other problem solving environments an Event. A
+`DiscreteCallback` is applied when its `condition` function is `true`.
+
+### ContinuousCallbacks
 
 ```julia
-default_callback = @ode_callback begin
-  @ode_savevalues
+ContinuousCallback(condition,affect!,
+                   rootfind,
+                   save_positions;
+                   affect_neg! = affect!,
+                   interp_points=10,
+                   abstol=1e-14,reltol=0)
+```
+
+The arguments are defined as follows:
+
+* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+  the callback should be used. A callback is initiated if the condition hits
+  `0` within the time interval.
+* `affect!`: This is the function `affect!(integrator)` where one is allowed to
+  modify the current state of the integrator. For more information on what can
+  be done, see the [`Integrator Interface`](@ref) manual page.
+* `rootfind`: This is a boolean for whether to rootfind the event location. If
+  this is set to `true`, the solution will be backtracked to the point where
+  `condition==0`. Otherwise the systems and the `affect!` will occur at `t+dt`.
+* `interp_points`: The number of interpolated points to check the condition. The
+  condition is found by checking whether any interpolation point / endpoint has
+  a different sign. If `interp_points=0`, then conditions will only be noticed if
+  the sign of `condition` is different at `t` than at `t+dt`. This behavior is not
+  robust when the solution is oscillatory, and thus it's recommended that one use
+  some interpolation points (they're cheap to compute!).
+* `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
+  The first save will always occcur (if true), and the second will only occur when
+  an event is detected.  For discontinuous changes like a modification to `u` to be
+  handled correctly (without error), one should set `save_positions=(true,true)`.
+
+Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
+a tolerance from zero for the rootfinder: if the starting condition is less than
+the tolerance from zero, then no root will be detected. This is to stop repeat
+events happening just after a previously rootfound event. The default has `abstol=1e-14`
+and `reltol=0`.
+
+### DiscreteCallback
+
+```julia
+DiscreteCallback(condition,affect!,save_positions)
+```
+
+* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+  the callback should be used. A callback is initiated if the condition evaluates
+  to `true`.
+* `affect!`: This is the function `affect!(integrator)` where one is allowed to
+  modify the current state of the integrator. For more information on what can
+  be done, see the [`Integrator Interface`](@ref) manual page.
+* `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
+  The first save will always occcur (if true), and the second will only occur when
+  an event is detected.  For discontinuous changes like a modification to `u` to be
+  handled correctly (without error), one should set `save_positions=(true,true)`.
+
+### CallbackSet
+
+Multiple callbacks can be chained together to form a `CallbackSet`. A `CallbackSet`
+is constructed by passing the constructor `ContinuousCallback`, `DiscreteCallback`,
+or other `CallbackSet` instances:
+
+```julia
+CallbackSet(cb1,cb2,cb3)
+```
+
+You can pass as many callbacks as you like. When the solvers encounter multiple
+callbacks, the following rules apply:
+
+* `ContinuousCallback`s are applied before `DiscreteCallback`s. (This is because
+  they often implement event-finding that will backtrack the timestep to smaller
+  than `dt`).
+* For `ContinuousCallback`s, the events times are found by rootfinding and only
+  the first `ContinuousCallback` affect is applied.
+* The `DiscreteCallback`s are then applied in order. Note that the ordering only
+  matters for the conditions: if a previous callback modifies `u` in such a way
+  that the next callback no longer evaluates condition to `true`, its `affect`
+  will not be applied.
+
+## Using Callbacks
+
+The callback type is then sent to the solver (or the integrator) via the `callback`
+keyword argument:
+
+```julia
+sol = solve(prob,alg,callback=cb)
+```
+
+You can supply `nothing`, a single `DiscreteCallback` or `ContinuousCallback`,
+or a `CallbackSet`.
+
+### Note About Saving
+
+When a callback is supplied, the default saving behavior is turned off. This is
+because otherwise events would "double save" one of the values. To re-enable
+the standard saving behavior, one must have the first `save_positions` value
+be true for at least one callback.
+
+## DiscreteCallback Examples
+
+### Example 1: AutoAbstol
+
+MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
+In this example we will implement a callback which will add this behavior to
+any JuliaDiffEq solver which implments the `integrator` and callback interface.
+
+The algorithm is as follows. The default value is set to start at `1e-6`, though
+we will give the user an option for this choice. Then as the simulation progresses,
+at each step the absolute tolerance is set to the maximum value that has been
+reached so far times the relative tolerance. This is the behavior that we will
+implement in `affect!`.
+
+Since the affect is supposed to occur every timestep, we use the trivial condition:
+
+```julia
+condition = function (t,u,integrator)
+    true
 end
 ```
 
-This runs the saving routine at every timestep (inside of this saving routine it
-  checks the iterations vs `timeseries_steps` etc., so it's quite complicated).
-  However, you can add any code you want to this callback. For example, we can
-  make it print the value at each timestep by doing:
+which always returns true. For our effect we will overload the call on a type.
+This type will have a value for the current maximum. By doing it this way, we
+can store the current state for the running maximum. The code is as follows:
 
 ```julia
-my_callback = @ode_callback begin
-  println(u)
-  @ode_savevalues
+type AutoAbstolAffect{T}
+  curmax::T
+end
+# Now make `affect!` for this:
+function (p::AutoAbstolAffect)(integrator)
+  p.curmax = max(p.curmax,integrator.u)
+  integrator.opts.abstol = p.curmax * integrator.opts.reltol
+  u_modified!(integrator,false)
 end
 ```
 
-and pass this to the solver:
+This makes `affect!(integrator)` use an internal mutating value `curmax` to update
+the absolute tolerance of the integrator as the algorithm states.
+
+Lastly, we can wrap it in a nice little constructor:
 
 ```julia
-sol = solve(prob,callback=my_callback)
+function AutoAbstol(save=true;init_curmax=1e-6)
+  affect! = AutoAbstolAffect(init_curmax)
+  condtion = (t,u,integrator) -> true
+  save_positions = (save,false)
+  DiscreteCallback(condtion,affect!,save_positions)
+end
 ```
 
-Later in the manual the full API for callbacks is given (the callbacks are very
-  general and thus the full API is complex enough to handle just about anything),
-  but for most users it's recommended that you use the simplified event handling
-  DSL described below.
+This creates the `DiscreteCallback` from the `affect!` and `condition` functions
+that we implemented. Now
 
-## Event Handling
+```julia
+cb = AutoAbstol(save=true;init_curmax=1e-6)
+```
 
-Since event handling is a very common issue, a special domain-specific language
-(DSL) was created to make event handling callbacks simple to define.
+returns the callback that we created. We can then solve an equation using this
+by simply passing it with the `callback` keyword argument. Using the integrator
+interface rather than the solve interface, we can step through one by one
+to watch the absolute tolerance increase:
+
+```julia
+integrator = init(prob,BS3(),callback=cb)
+at1 = integrator.opts.abstol
+step!(integrator)
+at2 = integrator.opts.abstol
+@test at1 < at2
+step!(integrator)
+at3 = integrator.opts.abstol
+@test at2 < at3
+```
+
+Note that this example is contained in [DiffEqCallbacks.jl](https://github.com/JuliaDiffEq/DiffEqCallbacks.jl),
+a library of useful callbacks for JuliaDiffEq solvers.
+
+## ContinuousCallback Examples
 
 ### Example 1: Bouncing Ball
 
-First let's look at the bouncing ball. `@ode_def` from
+Let's look at the bouncing ball. `@ode_def` from
 [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 was to define the problem, where the first variable `y` is the height which changes
 by `v` the velocity, where the velocity is always changing at `-g` where is the
@@ -63,58 +215,37 @@ this (but it needs to be "root-findable"). For here it's clear that we just
 want to check if the ball's height ever hits zero:
 
 ```julia
-function event_f(t,u) # Event when event_f(t,u) == 0
+function condition(t,u,integrator) # Event when event_f(t,u) == 0
   u[1]
 end
 ```
+
+Notice that here we used the values `u` instead of the value from the `integrator`.
+This is because the values `t,u` will be appropriately modified at the interpolation
+points, allowing for the rootfinding behavior to occur.
 
 Now we have to say what to do when the event occurs. In this case we just
 flip the velocity (the second variable)
 
 ```julia
-function apply_event!(u,cache)
-  u[2] = -u[2]
+function apply_event!(integrator)
+  integrator.u[2] = -integrator.u[2]
 end
 ```
 
-That's all you need to specify the callback function with the macro:
+For safety, we use `interp_points=10`. We will enable `rootfind` because this means
+the when an event is detected, the solution will be approriately backtracked to
+the exact time at which the ball hits the floor. Lastly, since we are applying a
+discontinuous change, we set `save_values=(true,true)` so that way at the event
+location `t`, the solution for the velocity will be left continuous and then jump
+at `t` to start solving again (and the interpolations will work). The callback
+is thus specified by:
 
 ```julia
-callback = @ode_callback begin
-  @ode_event event_f apply_event!
-end
-```
-
-One thing to note is that by default this will check at 5 evently-spaced interpolated
-values for if the event condition is satisfied (i.e. if `event_f(t,u)<0`). This is
-because if your problem is oscillatory, sometimes too large of a timestep will
-miss the event. One may want to specify a number of points in the interval to interpolate
-to match the computational effort to the problem. This is done with one more parameter to `@ode_event`.
-Note that the interpolations are comparatively cheap to calculate so it's recommended
-that one use a few (if the memory for `calck` is available).
-
-Another parameter you can set for `@ode_event` is whether to use a rootfinder.
-By default, when an event is detected, a rootfinding algorithm (provided by
-NLsolve) is used to find the exact timepoint of the event. This can be computationally
-costly for large systems and thus there's an option to turn it off.
-
-The next option is to allow for termination on event. This will make the ODE
-solver stop when the event happens. For example, if we set it to true in our example,
-then the ODE solver will return the solution the first time the ball hits the
-ground. Whether it will save the "overshot" point or the "true end" depends on
-whether rootfinding is used.
-
-Lastly, you can also tell the solver to decrease dt after the event occurs.
-This can be helpful if the discontinuity changes the problem immensely.
-Using the full power of the macro, we can define an event as
-
-```julia
-const dt_safety = 1 # Multiplier to dt after an event
-const interp_points = 10
-const terminate_on_event = false
-callback = @ode_callback begin
-  @ode_event event_f apply_event! rootfind_event_loc interp_points terminate_on_event dt_safety
-end
+interp_points = 10
+rootfind = true
+save_positions = (true,true)
+cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
 ```
 
 Then you can solve and plot:
@@ -123,7 +254,7 @@ Then you can solve and plot:
 u0 = [50.0,0.0]
 tspan = (0.0,15.0)
 prob = ODEProblem(f,u0,tspan)
-sol = solve(prob,callback=callback)
+sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
 
@@ -156,7 +287,7 @@ Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
 ```julia
-function event_f(t,u) # Event when event_f(t,u) == 0
+function condition(t,u,integrator) # Event when event_f(t,u) == 0
   1-maximum(u)
 end
 ```
@@ -169,8 +300,8 @@ by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
 
 ```julia
-function apply_event!(u,cache)
-  @ode_change_cachesize cache length+1
+function affect!(integrator)
+  resize!(integrator,length(integrator.u)+1)
   maxidx = findmax(u)[2]
   Θ = rand()
   u[maxidx] = Θ
@@ -178,17 +309,16 @@ function apply_event!(u,cache)
 end
 ```
 
-`@ode_change_cachesize cache length+1` is used to change the length of all of the
-internal caches (which includes `u`) to be their current length + 1, growing the
-ODE system. Then the following code sets the new protein concentrations. Now we
-can solve:
+As noted in the [`Integrator Interface`](@ref), `resize!(integrator,length(integrator.u)+1)`
+is used to change the length of all of the internal caches (which includes `u`)
+to be their current length + 1, growing the ODE system. Then the following code
+sets the new protein concentrations. Now we can solve:
 
 ```julia
-const dt_safety = 1
-const interp_points = 10
-callback = @ode_callback begin
-  @ode_event event_f apply_event! interp_points dt_safety
-end
+interp_points = 10
+rootfind = true
+save_positions = (true,true)
+cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
 u0 = [0.2]
 tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
@@ -226,111 +356,7 @@ which performs `deleteat!` on the caches. For example, to delete the second cell
 we could use:
 
 ```julia
-@ode_change_deleteat cache 2
+deleteat!(integrator,2)
 ```
 
 This allows you to build sophisticated models of populations with births and deaths.
-
-## Advanced: Callback Function API
-
-The callback functions have access to a lot of the functionality of the solver.
-The macro defines a function which is written as follows:
-
-```julia
-macro ode_callback(ex)
-  esc(quote
-    function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
-      reeval_fsal = false
-      event_occurred = false
-      $(ex)
-      cursaveat,dt,t,T,reeval_fsal
-    end
-  end)
-end
-```
-
-All of the parts of the algorithm are defined in the internal solver documentation.
-
-### Example: Bouncing Ball Without Macros
-
-Here is an example of the defining the ball bouncing callback without the usage
-of macros. The entire code in its fully glory is generic enough to handle any
-of the implemented DifferentialEquations.jl algorithms, which special differences
-depending on the type of interpolant, implementation of FSAL, etc. For these
-reasons it's usually recommended to use the event handling macro, though this kind
-of code will allow you handle pretty much anything!
-
-```julia
-manual_callback = function (alg,f,t,u,k,tprev,uprev,kprev,ts,timeseries,ks,dtprev,dt,saveat,cursaveat,iter,save_timeseries,timeseries_steps,uEltype,ksEltype,dense,kshortsize,issimple_dense,fsal,fsalfirst,cache,calck,T,Ts)
-  reeval_fsal = false
-  event_occurred = false
-  dt_safety = 1
-  interp_points = 10
-
-  # Event Handling
-  ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
-  Θs = linspace(0,1,interp_points)
-  interp_index = 0
-  # Check if the event occured
-  if event_f(t,u)<0
-    event_occurred = true
-    interp_index = interp_points
-  elseif interp_points!=0 # Use the interpolants for safety checking
-    for i in 2:length(Θs)-1
-      if event_f(t+dt*Θs[i],ode_interpolant(Θs[i],dtprev,uprev,u,kprev,k,alg))<0
-        event_occurred = true
-        interp_index = i
-        break
-      end
-    end
-  end
-
-  if event_occurred
-    if interp_index == interp_points # If no safety interpolations, start in the middle as well
-      initial_Θ = [.5]
-    else
-      initial_Θ = [Θs[interp_index]] # Start at the closest
-    end
-    find_zero = (Θ,val) -> begin
-      val[1] = event_f(t+Θ[1]*dt,ode_interpolant(Θ[1],dtprev,uprev,u,kprev,k,alg))
-    end
-    res = nlsolve(find_zero,initial_Θ)
-    val = ode_interpolant(res.zero[1],dtprev,uprev,u,kprev,k,alg)
-    for i in eachindex(u)
-      u[i] = val[i]
-    end
-    dtprev *= res.zero[1]
-    t = tprev + dtprev
-
-    if alg ∈ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
-      resize!(k,kshortsize) # Reset k for next step
-      k = typeof(k)() # Make a local blank k for saving
-      ode_addsteps!(k,tprev,uprev,dtprev,alg,f)
-    elseif typeof(u) <: Number
-      k = f(t,u)
-    else
-      f(t,u,k)
-    end
-  end
-
-  @ode_savevalues
-
-  if event_occurred
-    apply_event!(u)
-    if alg ∉ DIFFERENTIALEQUATIONSJL_SPECIALDENSEALGS
-      if typeof(u) <: Number
-        k = f(t,u)
-      else
-        f(t,u,k)
-      end
-    end
-    @ode_savevalues
-    if fsal
-      reeval_fsal = true
-    end
-    dt *= dt_safety # Safety dt change
-  end
-
-  cursaveat,dt,t,T,reeval_fsal
-end
-```
