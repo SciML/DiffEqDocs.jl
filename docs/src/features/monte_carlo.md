@@ -21,8 +21,6 @@ The keyword arguments take in the arguments for the common solver interface.
 The special keyword arguments to note are:
 
 * num_monte: The number of simulations to run
-* save_timeseries: While it's normally `true` by default, it's `false` by default
-  here due to the fact that this can generate lots of data.
 
 In addition, one can specify a function `u0_func` which changes the initial
 condition around. For example:
