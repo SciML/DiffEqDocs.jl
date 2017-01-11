@@ -1749,7 +1749,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Performing a Monte Carlo Simulation",
     "category": "section",
-    "text": "To perform a Monte Carlo simulation, you simply use the interface:sim = monte_carlo_simulation(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface. The special keyword arguments to note are:num_monte: The number of simulations to run\nsave_timeseries: While it's normally true by default, it's false by default here due to the fact that this can generate lots of data.In addition, one can specify a function u0_func which changes the initial condition around. For example:function prob_func(prob)\n  prob.u0 = randn()*prob.u0\nendModifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. If your function is a ParameterizedFunction, you can do similar modifications to f to perform a parameter search. One then passes this function via:sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)"
+    "text": "To perform a Monte Carlo simulation, you simply use the interface:sim = monte_carlo_simulation(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface. The special keyword arguments to note are:num_monte: The number of simulations to run\nsave_timeseries: While it's normally true by default, it's false by default here due to the fact that this can generate lots of data.In addition, one can specify a function u0_func which changes the initial condition around. For example:function prob_func(prob)\n  prob.u0 = randn()*prob.u0\n  prob\nendModifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. If your function is a ParameterizedFunction, you can do similar modifications to f to perform a parameter search. One then passes this function via:sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)"
 },
 
 {
@@ -1757,7 +1757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Parallelism",
     "category": "section",
-    "text": "Since this is using pmap internally, it will use as many processors as you have Julia processes. To add more processes, use add_procs(n). See Julia's documentation for more details."
+    "text": "Since this is using pmap internally, it will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia's documentation for more details."
 },
 
 {
@@ -1765,7 +1765,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Solution",
     "category": "section",
-    "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well. "
+    "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well."
+},
+
+{
+    "location": "features/monte_carlo.html#Plot-Recipe-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Plot Recipe",
+    "category": "section",
+    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example",
+    "category": "section",
+    "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nsim = monte_carlo_simulation(prob,Tsit5(),prob_func,num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
 },
 
 {
