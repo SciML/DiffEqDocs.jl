@@ -56,6 +56,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "analysis/parameterized_functions.md",
            "analysis/parameter_estimation.md",
            "analysis/sensitivity.md",
+           "analysis/uncertainty.md",
            "analysis/dev_and_test.md"
          ]
          ])
