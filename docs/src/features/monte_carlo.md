@@ -30,6 +30,7 @@ condition around. For example:
 ```julia
 function prob_func(prob)
   prob.u0 = randn()*prob.u0
+  prob
 end
 ```
 
@@ -46,11 +47,42 @@ sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)
 ## Parallelism
 
 Since this is using `pmap` internally, it will use as many processors as you
-have Julia processes. To add more processes, use `add_procs(n)`. See Julia's
+have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
 documentation for more details.
 
 ## Solution
 
 The resulting type is a `MonteCarloSimulation`, which includes the array of
 solutions. If the problem was a `TestProblem`, summary statistics on the errors
-are returned as well. 
+are returned as well.
+
+## Plot Recipe
+
+There is a plot recipe for a `AbstractMonteCarloSimulation` which composes all
+of the plot recipes for the component solutions. The keyword arguments are passed
+along. A useful argument to use is `linealpha` which will change the transparency
+of the plots.
+
+### Example
+
+Let's test the sensitivity of the linear ODE to its initial condition.
+
+```julia
+addprocs(4)
+using DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq
+prob = prob_ode_linear
+prob_func = function (prob)
+  prob.u0 = rand()*prob.u0
+  prob
+end
+sim = monte_carlo_simulation(prob,Tsit5(),prob_func,num_monte=100)
+
+using Plots
+plotly()
+plot(sim,linealpha=0.4)
+```
+
+Here we solve the same ODE 100 times on 4 different cores, jiggling the initial
+condition by `rand()`. The resulting plot is as follows:
+
+![monte_carlo_plot](../assets/monte_carlo_plot.png)
