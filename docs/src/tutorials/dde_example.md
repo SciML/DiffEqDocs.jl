@@ -15,7 +15,8 @@ In this example we will solve [a model of breast cancer growth kinetics](http://
 ```math
 \begin{align}
 dx_{0} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{0}-q_{0}\right)x_{0}(t)-d_{0}x_{0}(t)\\
-dx_{1} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{0}+q_{0}\right)x_{0}(t)+\frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{1}-q_{1}\right)x_{1}(t)-d_{1}x_{1}(t)\\
+dx_{1} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{0}+q_{0}\right)x_{0}(t)\\
+       +& \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{1}-q_{1}\right)x_{1}(t)-d_{1}x_{1}(t)\\
 dx_{2} &= \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q_{1}\right)x_{1}(t)-d_{2}x_{2}(t)
 \end{align}
 ```
@@ -32,7 +33,7 @@ Thus the function for this model is given by:
 ```julia
 const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5
 const p1 = 0.2; const q1 = 0.3; const v1 = 1; const d1 = 1
-const d2 = 1; const beta0 = 1; const beta1 = 1;
+const d2 = 1; const beta0 = 1; const beta1 = 1; const tau = 1
 function bc_model(t,u,h,du)
   du[1] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
   du[2] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +
@@ -44,7 +45,7 @@ end
 To use the constant lag model, we have to declare the lags. Here we will use `tau=1`.
 
 ```julia
-lags = [1]
+lags = [tau]
 ```
 
 Now we build a `ConstantLagDDEProblem`.  The signature is very similar to ODEs,
@@ -97,7 +98,7 @@ as for ODEs. For example, we can use the same plot recipes to view the results:
 using Plots; plot(sol)
 ```
 
-![DDE Example Plot](dde_example_plot.png)
+![DDE Example Plot](../assets/dde_example_plot.png)
 
 ### State-Dependent Delays
 
