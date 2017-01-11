@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/callback_functions.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/conditional_dependencies.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/conditional_dependencies.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -1694,6 +1694,78 @@ var documenterSearchIndex = {"docs": [
     "title": "Example 2: Growing Cell Population",
     "category": "section",
     "text": "Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(t,u,integrator) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as switching from positive to negative, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function affect!(integrator)\n  resize!(integrator,length(integrator.u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:interp_points = 10\nrootfind = true\nsave_positions = (true,true)\ncb = Callback(condtion,affect!,rootfind,interp_points,save_positions)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is @ode_change_deleteat which performs deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
+},
+
+{
+    "location": "features/callback_library.html#",
+    "page": "Callback Library",
+    "title": "Callback Library",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/callback_library.html#Callback-Library-1",
+    "page": "Callback Library",
+    "title": "Callback Library",
+    "category": "section",
+    "text": "DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which can be used with any component solver which implements the callback interface. As the package is currently unregistered, it must first be installed via:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqCallbacks.jl\")\nusing DiffEqCallbacks"
+},
+
+{
+    "location": "features/callback_library.html#Callbacks-1",
+    "page": "Callback Library",
+    "title": "Callbacks",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/callback_library.html#AutoAbstol-1",
+    "page": "Callback Library",
+    "title": "AutoAbstol",
+    "category": "section",
+    "text": "Many problem solving environments such as MATLAB provide a way to automatically adapt the absolute tolerance to the problem. This helps the solvers automatically \"learn\" what appropriate limits are. Via the callback interface, DiffEqCallbacks.jl implements a callback AutoAbstol which has the same behavior as the MATLAB implementation, that is the absolute tolerance starts at init_curmax (default 1-e6), and at each iteration it is set to the maximum value that the state has thus far reached times the relative tolerance.To generate the callback, use the constructor:AutoAbstol(save=true;init_curmax=1e-6)"
+},
+
+{
+    "location": "features/monte_carlo.html#",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Parallel Monte Carlo Simulations",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Parallel-Monte-Carlo-Simulations-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Parallel Monte Carlo Simulations",
+    "category": "section",
+    "text": "DiffEqMonteCarlo.jl provides functionality for easily performing parallel Monte Carlo simulations using the DiffEq solvers. As the package is currently unregistered, it must first be installed via:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqMonteCarlo.jl\")\nusing DiffEqMonteCarlo"
+},
+
+{
+    "location": "features/monte_carlo.html#Performing-a-Monte-Carlo-Simulation-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Performing a Monte Carlo Simulation",
+    "category": "section",
+    "text": "To perform a Monte Carlo simulation, you simply use the interface:sim = monte_carlo_simulation(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface. The special keyword arguments to note are:num_monte: The number of simulations to run\nsave_timeseries: While it's normally true by default, it's false by default here due to the fact that this can generate lots of data.In addition, one can specify a function u0_func which changes the initial condition around. For example:function prob_func(prob)\n  prob.u0 = randn()*prob.u0\nendModifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. If your function is a ParameterizedFunction, you can do similar modifications to f to perform a parameter search. One then passes this function via:sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)"
+},
+
+{
+    "location": "features/monte_carlo.html#Parallelism-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Parallelism",
+    "category": "section",
+    "text": "Since this is using pmap internally, it will use as many processors as you have Julia processes. To add more processes, use add_procs(n). See Julia's documentation for more details."
+},
+
+{
+    "location": "features/monte_carlo.html#Solution-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Solution",
+    "category": "section",
+    "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well. "
 },
 
 {
