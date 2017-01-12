@@ -1,14 +1,5 @@
 # Parallel Monte Carlo Simulations
 
-DiffEqMonteCarlo.jl provides functionality for easily performing parallel Monte
-Carlo simulations using the DiffEq solvers. As the package is currently unregistered,
-it must first be installed via:
-
-```julia
-Pkg.clone("https://github.com/JuliaDiffEq/DiffEqMonteCarlo.jl")
-using DiffEqMonteCarlo
-```
-
 ## Performing a Monte Carlo Simulation
 
 To perform a Monte Carlo simulation, you simply use the interface:

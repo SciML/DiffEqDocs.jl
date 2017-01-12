@@ -268,6 +268,12 @@ will save the value(s) at the discontinuity.
 
 ### Example 2: Growing Cell Population
 
+#### Note
+
+This example will not work on the current version due to the changes in the
+callback infrustructure. This message will be removed when that is no longer
+the case.
+
 Another interesting issue are models of changing sizes. The ability to handle
 such events is a unique feature of DifferentialEquations.jl! The problem we would
 like to tackle here is a cell population. We start with 1 cell with a protein `X`

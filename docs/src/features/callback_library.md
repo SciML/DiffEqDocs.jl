@@ -2,12 +2,7 @@
 
 DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which
 can be used with any component solver which implements the callback interface.
-As the package is currently unregistered, it must first be installed via:
-
-```julia
-Pkg.clone("https://github.com/JuliaDiffEq/DiffEqCallbacks.jl")
-using DiffEqCallbacks
-```
+It adds the following callbacks which are available to users of DifferentialEquations.jl.
 
 ## Callbacks
 

@@ -1,4 +1,4 @@
-# Integrator Interface (Experimental Preview)
+# Integrator Interface
 
 The integrator interface gives one the ability to interactively step through
 the numerical solving of a differential equation. Through this interface,
@@ -153,6 +153,10 @@ The following functions make up the interface:
 Note that not all of these functions will be implemented for every algorithm.
 Some have hard limitations. For example, Sundials.jl cannot resize problems.
 When a function is not limited, an error will be thrown.
+
+#### Note
+
+Currently, many of these functions are not implemented.
 
 ## Additional Options
 

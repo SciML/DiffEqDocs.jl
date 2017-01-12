@@ -52,7 +52,10 @@ For more examples for controlling the output behavior, see the
 * `tstops`: Denotes extra times that the timestepping algorithm must step to.
   This should be used to help the solver deal with discontinuities and
   singularities, since stepping exactly at the time of the discontinuity will
-  improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods), then `tstops` will use an interpolation, matching the behavior of `saveat`. If a method cannot change timesteps and also cannot interpolation, then `tstops` must be a multiple of `dt` or elese an error will be thrown. Default is `[]`.
+  improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods),
+  then `tstops` will use an interpolation, matching the behavior of `saveat`.
+  If a method cannot change timesteps and also cannot interpolation,
+  then `tstops` must be a multiple of `dt` or elese an error will be thrown. Default is `[]`.
 * `d_discontinuities:` Denotes locations of disccontinuities in low order derivatives.
   This will force FSAL algorithms which assume derivative continuity to re-evaluate
   the derivatives at point of discontinuity. The default is `[]`.

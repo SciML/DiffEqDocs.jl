@@ -1,4 +1,4 @@
-# Ordinary Differential Equations (ODE)
+# Ordinary Differential Equations
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).

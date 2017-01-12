@@ -1,4 +1,4 @@
-# Delay Differential Equations (DDE)
+# Delay Differential Equations
 
 This tutorial will introduce you to the functionality for solving delay differential
 equations.

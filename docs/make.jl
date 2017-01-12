@@ -49,7 +49,6 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "features/monte_carlo.md",
            "features/mesh.md",
            "features/output_specification.md",
-           "features/conditional_dependencies.md",
            "features/progress_bar.md"
          ],
          "Analysis Tools" => Any[

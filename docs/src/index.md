@@ -55,11 +55,11 @@ for power users. Information for how to get to the bleeding edge is found in the
 For PDEs, one can optionally specify a noise equation. The solvers currently have
 stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
-* Ordinary Differential Equations
-* Stochastic Differential Equations
-* Differential Algebraic Equations
-* Delay Differential Equations
-* (Stochastic) PDEs:
+* Ordinary Differential Equations (ODEs)
+* Stochastic Differential Equations (SDEs)
+* Algebraic Differential Equations (DAEs)
+* Delay Differential Equations (DDEs)
+* (Stochastic) Partial Differential Equations ((S)PDEs):
 
   * Linear Poisson Equation
   * Semi-linear Poisson Equation
@@ -163,7 +163,6 @@ Pages = [
     "features/monte_carlo.md",
     "features/mesh.md",
     "features/output_specification.md",
-    "features/conditional_dependencies.md",
     "features/progress_bar.md"
 ]
 Depth = 2

@@ -1,9 +1,9 @@
-# Stochastic Differential Equations (SDE)
+# Stochastic Differential Equations
 
 This tutorial will introduce you to the functionality for solving SDE. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
-## Basics
+### Basics
 
 In this example we will solve the equation
 
@@ -39,7 +39,7 @@ plot(sol)
 
 ![Basic Solution](../assets/basic_sde.png)
 
-## Higher Order Methods
+### Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
 stochastic differential equations are included. For reference, let's also give
