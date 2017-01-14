@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "DifferentialEquations.jl Documentation",
     "category": "section",
-    "text": "DifferentialEquations.jl is a package for solving numerically solving differential equations using the various components of JuliaDiffEq. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
+    "text": "DifferentialEquations.jl is a package for numerically solving differential equations using the various components of JuliaDiffEq. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
 },
 
 {
@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Supported Equations",
     "category": "section",
-    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Ordinary Differential Equations\nStochastic Differential Equations\nDifferential Algebraic Equations\nDelay Differential Equations\n(Stochastic) PDEs:\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
+    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Ordinary Differential Equations (ODEs)\nStochastic Differential Equations (SDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
 },
 
 {
@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/conditional_dependencies.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -90,23 +90,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/ode_example.html#",
-    "page": "Ordinary Differential Equations (ODE)",
-    "title": "Ordinary Differential Equations (ODE)",
+    "page": "Ordinary Differential Equations",
+    "title": "Ordinary Differential Equations",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "tutorials/ode_example.html#Ordinary-Differential-Equations-(ODE)-1",
-    "page": "Ordinary Differential Equations (ODE)",
-    "title": "Ordinary Differential Equations (ODE)",
+    "location": "tutorials/ode_example.html#Ordinary-Differential-Equations-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Ordinary Differential Equations",
     "category": "section",
     "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the equationfracdudt = f(tu)on the time interval tin01 where f(tu)=u. We know via Calculus that the solution to this equation is u(t)=uexp(t). To solve this numerically, we define a problem type by giving it the equation, the initial condition, and the timespan to solve over:using DifferentialEquations\nα=1\nu0=1/2\nf(t,u) = α*u\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)Note that DifferentialEquations.jl will choose the types for the problem based on the types used to define the problem type. For our example, notice that u0 is a Float64, and therefore this will solve with the independent variables being Float64. Since tspan = (0.0,1.0) is a tuple of Float64's, the dependent variabes will be solved using Float64's (note that the start time and end time must match types). You can use this to choose to solve with arbitrary precision numbers, unitful numbers, etc. Please see the tutorials for more details.After defining a problem, you solve it using solve.sol = solve(prob)DifferentialEquations.jl has a method for choosing the default solver algorithm and the (adaptive) stepsizes dt, and so this will find an efficient method to solve your problem. You can also explicitly choose an algorithm and pass in some parameters.sol = solve(prob,Euler(),dt=1/2^4)In this case I chose to use the classic Euler method, and gave it a stepsize dt=1/2^4. Normally dt is the starting stepsize but since the Euler method is not adaptive this is the stepsize for the calculation. The available options is described on the Common Solver Options manual page.The result of solve is a solution object. We can access the 5th value of the solution withsol[5] #.637or get the time of the 8th timestep bysol.t[8]\n#.438Convenience features are also included. We can build an array using a comprehension over the solution tuples via[t+u for (t,u) in tuples(sol)]or more generally[t+2u for (t,u) in zip(sol.t,sol.u)]allows one to use more parts of the solution type. The object that is returns by default acts as a continuous solution via an interpolation. We can access the interpolated values by treating sol as a function, for example:sol(0.45) # The value of the solution at t=0.45For details on more finely controlling the output, see the Output Specification manual pagePlotting commands are provided via a recipe to Plots.jl. To plot the solution object, simply call plot:using Plots\n#gr() # You can optionally choose a plotting backend\nplot(sol)If you are in Juno, this will plot to the plot pane. To open an interactive GUI (dependent on the backend), use the gui command:gui()The plot function can be formatted using the attributes available in Plots.jl. For more of an introduction to plotting solutions, see the IJulia notebook."
 },
 
 {
     "location": "tutorials/ode_example.html#Other-Algorithms-1",
-    "page": "Ordinary Differential Equations (ODE)",
+    "page": "Ordinary Differential Equations",
     "title": "Other Algorithms",
     "category": "section",
     "text": "DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms (which are also available). For example, we can choose a 7th order Verner Efficient method:sol = solve(prob,Vern7())\nplot(sol,title=\"Solving using the Vern7 Method\")(Image: Better ODE Solution)Because these advanced algorithms may not be known to most users, DifferentialEquations.jl offers an advanced method for choosing algorithm defaults. This algorithm utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem but don't know the best stiff algorithm for this problem, we can usesol = solve(prob,alg_hints=[:stiff])Please see the solver documentation for details on the algorithms and recommendations."
@@ -114,7 +114,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/ode_example.html#Systems-of-Equations-1",
-    "page": "Ordinary Differential Equations (ODE)",
+    "page": "Ordinary Differential Equations",
     "title": "Systems of Equations",
     "category": "section",
     "text": "We can also solve systems of equations. DifferentialEquations.jl can handle many different independent variable types (generally, anything with a linear index should work!). So instead of showing solving a vector equation, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\ntspan = (0.0,1.0)\nf(t,u) = A*u\nprob = ODEProblem(f,u0,tspan)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob)\nplot(sol)(Image: ODE System Solution)Note that the analysis tools generalize over to systems of equations as well.sol[4]still returns the solution at the fourth timestep. It also indexes into the array as well.sol[3,5]is the value of the 5th component (by linear indexing) at the 3rd timepoint, orsol[:,2,1]is the timeseries for the component which is the 2nd row and 1 column."
@@ -122,7 +122,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/ode_example.html#In-Place-Updates-1",
-    "page": "Ordinary Differential Equations (ODE)",
+    "page": "Ordinary Differential Equations",
     "title": "In-Place Updates",
     "category": "section",
     "text": "Defining your ODE function to be in-place updating can have performance benefits. That this means is that, instead of writing a function which outputs its solution, write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl's solver packages are able to reduce the amount of array allocations and achieve better performance.For our example we will use the Lorenz system. What we do is simply write the output to the 3rd input of the function. For example:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)(Image: Lorenz System)"
@@ -130,7 +130,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/ode_example.html#Defining-Systems-of-Equations-Using-ParameterizedFunctions.jl-1",
-    "page": "Ordinary Differential Equations (ODE)",
+    "page": "Ordinary Differential Equations",
     "title": "Defining Systems of Equations Using ParameterizedFunctions.jl",
     "category": "section",
     "text": "To simplify your life, ParameterizedFunctions.jl provides the @ode_def macro for \"defining your ODE in pseudocode\" and getting a function which is efficient and runnable.To use the macro, you write out your system of equations with the left-hand side being d_ and those variables will be parsed as the independent variables. The dependent variable is t, and the other variables are parameters which you pass at the end. For example, we can write the Lorenz system as:using ParameterizedFunctions\ng = @ode_def LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)DifferentialEquations.jl will automatically translate this to be exactly the same as f. The result is more legible code with no performance loss. The result is that g is a function which you can now use to define the Lorenz problem.u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(g,u0,tspan)Since we used =>, σ and ρ are kept as mutable parameters. For example we can do:g.σ = 11.0to change the value of σ to 11.0. β is not able to be changed since we defined it using =. We can create a new instance with new parameters via the name used in the @ode_def command:h = LorenzExample(σ=11.0,ρ=25.0)Note that the values will default to the values giving in the @ode_def command.One last item to note is that you probably received a warning when defining this:WARNING: Hessian could not invertThis is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl does \"behind-the-scenes\" symbolic calculations to pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speedup calculations. Thus not only will this lead to legible ODE definitions, but \"unfairly fast\" code! We can turn off some of the calculations by using a more specific macro. Here, we can turn off the Hessian calculations via @ode_def_nohes. See ParameterizedFunctions.jl for more details.Since the parameters exist within the function, functions defined in this manner can also be used for sensitivity analysis, parameter estimation routines, and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution for differential equation analysis which also achieves high performance."
@@ -138,23 +138,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/sde_example.html#",
-    "page": "Stochastic Differential Equations (SDE)",
-    "title": "Stochastic Differential Equations (SDE)",
+    "page": "Stochastic Differential Equations",
+    "title": "Stochastic Differential Equations",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "tutorials/sde_example.html#Stochastic-Differential-Equations-(SDE)-1",
-    "page": "Stochastic Differential Equations (SDE)",
-    "title": "Stochastic Differential Equations (SDE)",
+    "location": "tutorials/sde_example.html#Stochastic-Differential-Equations-1",
+    "page": "Stochastic Differential Equations",
+    "title": "Stochastic Differential Equations",
     "category": "section",
     "text": "This tutorial will introduce you to the functionality for solving SDE. Other introductions can be found by checking out DiffEqTutorials.jl."
 },
 
 {
     "location": "tutorials/sde_example.html#Basics-1",
-    "page": "Stochastic Differential Equations (SDE)",
+    "page": "Stochastic Differential Equations",
     "title": "Basics",
     "category": "section",
     "text": "In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation is u(tW)=uexp((-frac^22)t+W). To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4)\ntspan = (0.0,1.0)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))The solve interface is then the same as with ODEs. Here we will use the classic Euler-Maruyama algorithm EM and plot the solution:sol = solve(prob,EM(),dt=dt)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)(Image: Basic Solution)"
@@ -162,7 +162,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/sde_example.html#Higher-Order-Methods-1",
-    "page": "Stochastic Differential Equations (SDE)",
+    "page": "Stochastic Differential Equations",
     "title": "Higher Order Methods",
     "category": "section",
     "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be  a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDETestProblem(f,g,u₀,analytic)and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM(),dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1(),dt=dt,adaptive=false)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)By default, the higher order methods have adaptivity. Thus one can usesol =solve(prob,SRIW1())\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)Here we allowed the solver to automatically determine a starting dt. This estimate at the beginning is conservative (small) to ensure accuracy. We can instead start the method with a larger dt by passing in a value for the starting dt:sol =solve(prob,SRIW1(),dt=dt)\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)"
@@ -170,23 +170,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/dde_example.html#",
-    "page": "Delay Differential Equations (DDE)",
-    "title": "Delay Differential Equations (DDE)",
+    "page": "Delay Differential Equations",
+    "title": "Delay Differential Equations",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "tutorials/dde_example.html#Delay-Differential-Equations-(DDE)-1",
-    "page": "Delay Differential Equations (DDE)",
-    "title": "Delay Differential Equations (DDE)",
+    "location": "tutorials/dde_example.html#Delay-Differential-Equations-1",
+    "page": "Delay Differential Equations",
+    "title": "Delay Differential Equations",
     "category": "section",
     "text": "This tutorial will introduce you to the functionality for solving delay differential equations.Delay differential equations are equations which have a delayed argument. To allow for specifying the delayed argument, the function definition for a delay differential equation is expanded to include a history function h(t) which uses interpolations throughout the solution's history to form a continuous extension of the solver's past. The function signature for a delay differential equation is f(t,u,h) for not inplace computations, and f(t,u,h,du) for inplace computations.In this example we will solve a model of breast cancer growth kinetics:beginalign\ndx_0 = fracv_01+beta_0left(x_2(t-tau)right)^2left(p_0-q_0right)x_0(t)-d_0x_0(t)\ndx_1 = fracv_01+beta_0left(x_2(t-tau)right)^2left(1-p_0+q_0right)x_0(t)\n       + fracv_11+beta_1left(x_2(t-tau)right)^2left(p_1-q_1right)x_1(t)-d_1x_1(t)\ndx_2 = fracv_11+beta_1left(x_2(t-tau)right)^2left(1-p_1+q_1right)x_1(t)-d_2x_2(t)\nendalignFor this problem we note that tau is constant, and thus we can use a method which exploits this behavoir. We first write out the equation using the appropriate function signature. Most of the equation writing is the same, though we use the history function by first interpolating and then choosing the components. Thus the ith component at time t-tau is given by h(t-tau)[i]. Components with no delays are written as in the ODE.Thus the function for this model is given by:const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5\nconst p1 = 0.2; const q1 = 0.3; const v1 = 1; const d1 = 1\nconst d2 = 1; const beta0 = 1; const beta1 = 1; const tau = 1\nfunction bc_model(t,u,h,du)\n  du[1] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]\n  du[2] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +\n          (v1/(1+beta1*(h(t-tau)[3]^2))) * (p1 - q1)*u[2] - d1*u[2]\n  du[3] = (v1/(1+beta1*(h(t-tau)[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]\nendTo use the constant lag model, we have to declare the lags. Here we will use tau=1.lags = [tau]Now we build a ConstantLagDDEProblem.  The signature is very similar to ODEs, where we now have to give the lags and an h. h is the history function, or a function that declares what the values were before the time the model starts. Here we will assume that for all time before t0 the values were 1:h(t) = ones(3)We have h output a 3x1 vector since our differenital equation is given by a system of the same size. Next, we choose to solve on the timespan (0.0,10.0) and create the problem type:tspan = (0.0,10.0)\nprob = ConstantLagDDEProblem(bc_model,h,u0,lags,tspan)An efficient way to solve this problem (given the constant lags) is with the MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl ODE solver method into a method for delay differential equations which is highly efficient due to sweet compiler magic. A good choice is the order 5 Tsit5() method:alg = MethodOfSteps(Tsit5())For lower tolerance solving, one can use the BS3() algorithm to good effect (this combination is similar to the MATLAB dde23), and for high tolerances the DP8() algorithm will give an 8th order solution. Note that the Verner methods will not work here due to their lazy interpolation scheme.To solve the problem with this algorithm, we do the same thing we'd do with other methods on the common interface:sol = solve(prob,alg)Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:using Plots; plot(sol)(Image: DDE Example Plot)"
 },
 
 {
     "location": "tutorials/dde_example.html#State-Dependent-Delays-1",
-    "page": "Delay Differential Equations (DDE)",
+    "page": "Delay Differential Equations",
     "title": "State-Dependent Delays",
     "category": "section",
     "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. To do this in DifferentialEquations.jl, one simply writes it in the natural manner h(g(t,u)) where g is the lag function. As before, you must declare the lag functions to the solver. Other than that, everything else is the same, where one instead constructs a DDEProblem type:prob = DDEProblem(f,h,u0,lags,tspan)and solves that using the common interface.However, currently there are no good algorithms for this. The developers are working on a defect control method which will give good quality results and have strict error bounds."
@@ -194,16 +194,16 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "tutorials/dae_example.html#",
-    "page": "Differential Algebraic Equations (DAE)",
-    "title": "Differential Algebraic Equations (DAE)",
+    "page": "Differential Algebraic Equations",
+    "title": "Differential Algebraic Equations",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "tutorials/dae_example.html#Differential-Algebraic-Equations-(DAE)-1",
-    "page": "Differential Algebraic Equations (DAE)",
-    "title": "Differential Algebraic Equations (DAE)",
+    "location": "tutorials/dae_example.html#Differential-Algebraic-Equations-1",
+    "page": "Differential Algebraic Equations",
+    "title": "Differential Algebraic Equations",
     "category": "section",
     "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the implicit ODE equationf(tudu) = 0where f is the a variant of the Roberts equation. This equations is actually of the formbeginalign\ndu = f(tu) \n 0 = g(tu) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Roberts model can be written in the form:beginalign\ndy_1 = -004y + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1  y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(t,u,du,out) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:f = function (t,u,du,out)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditonsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]\ntspan = (0.0,100000.0)and make the DAEProblem:using DifferentialEquations\nprob = DAEProblem(f,u₀,du₀,tspan)As with the other DifferentialEquations problems, the commands are then to solve and plot. Here we will use the IDA solver from Sundials:sol = solve(prob,IDA())\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)which, despite how interesting the model looks, produces a relatively simple output:(Image: IntroDAEPlot)"
 },
@@ -506,23 +506,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#",
-    "page": "Integrator Interface (Experimental Preview)",
-    "title": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
+    "title": "Integrator Interface",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "basics/integrator.html#Integrator-Interface-(Experimental-Preview)-1",
-    "page": "Integrator Interface (Experimental Preview)",
-    "title": "Integrator Interface (Experimental Preview)",
+    "location": "basics/integrator.html#Integrator-Interface-1",
+    "page": "Integrator Interface",
+    "title": "Integrator Interface",
     "category": "section",
     "text": "The integrator interface gives one the ability to interactively step through the numerical solving of a differential equation. Through this interface, one can easily monitor results, modify the problem during a run, and dynamically continue solving as one sees fit.Note: this is currently only offered by OrdinaryDiffEq.jl. It is currently an \"experimental preview\" which requires one be on the master branches of both OrdinaryDiffEq.jl and DiffEqBase.jl. We hope to bring this interface to other packages like Sundials.jl as well."
 },
 
 {
     "location": "basics/integrator.html#Initialization-and-Stepping-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Initialization and Stepping",
     "category": "section",
     "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve. The type which is returned is the integrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. This type also implements an interator interface, and so one can step n times (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the interator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterators let's you view the valuesfor (t,u) in tuples(integrator)\n  @show t,u\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,t,u) in intervals(integrator)\n  @show tprev,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: push!(integrator.opts.tstops,new_t)."
@@ -530,7 +530,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#Handing-Integrators-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Handing Integrators",
     "category": "section",
     "text": "The integrator type holds all of the information for the intermediate solution of the differential equation. Useful fields are:t - time of the proposed step\nu - value at the proposed step\nuserdata - user-provided data type\nopts - common solver options\nalg - the algorithm associated with the solution\nf - the function being solved\nsol - the current state of the solution\ntprev - the last timepoint\nuprev - the value at the last timepointThe userdata is the type which is provided by the user as a keyword arg in init. opts holds all of the common solver options, and can be mutated to change the solver characteristics. For example, to modify the absolute tolerance for the future timesteps, one can do:integrator.opts.abstol = 1e-9The sol field holds the current solution. This current solution includes the interpolation function if available, and thus integrator.sol(t) lets one interpolate efficiently over the whole current solution. Additionally, a a \"current interval interpolation function\" is provided on the integrator type via integrator(t). This uses only the solver information from the interval [tprev,t] to compute the interpolation, and is allowed to extrapolate beyond that interval."
@@ -538,7 +538,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#Note-about-mutating-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Note about mutating",
     "category": "section",
     "text": "Be cautious: one should not directly mutate the t and u fields of the integrator. Doing so will destroy the accuracy of the interpolator and can harm certain algorithms. Instead if one wants to introduce discontinuous changes, one should use the Event Handling and Callback Functions. Modifications within a callback affect! surrounded by saves provides an error-free handling of the discontinuity."
@@ -546,7 +546,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#Integrator-vs-Solution-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Integrator vs Solution",
     "category": "section",
     "text": "The integrator and the solution have very different actions because they have very different meanings. The Solution type is a type with history: it stores all of the (requested) timepoints and interpolates/acts using the values closest in time. On the otherhand, the Integrator type is a local object. It only knows the times of the interval it currently spans, the current caches and values, and the current state of the solver (the current options, tolerances, etc.). These serve very different purposes:The integrator's interpolation can extrapolate, both forward and backward in in time. This is used to estimate events and is internally used for predictions.\nThe integrator is fully mutable upon iteration. This means that every time an iterator affect is used, it will take timesteps from the current time. This means that first(integrator)!=first(integrator) since the integrator will step once to evaluate the left and then step once more (not backtracking). This allows the iterator to keep dynamically stepping, though one should note that it may violate some immutablity assumptions commonly made about iterators.If one wants the solution object, then one can find it in integrator.sol."
@@ -554,15 +554,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#Function-Interface-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Function Interface",
     "category": "section",
     "text": "In addition to the type interface, a function interface is provided which allows for safe modifications of the integrator type, and allows for uniform usage throughout the ecosystem (for packages/algorithms which implement the functions). The following functions make up the interface:u_modified!(integrator,bool): Bool which states whether a change to u occured, allowing the solver to handle the discontinuity.\nsavevalues!(integrator): Adds the current state to the sol.\nmodify_proposed_dt(integrator,factor):  Multiplies the proposed dt for the next timestep by the scaling factor.\nproposed_dt(integrator): Returns the dt of the proposed step\ncache_iter(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed.\nresize!(integrator,k): Resizes the ODE to a size k. This chops off the end of the array, or adds blank values at the end, depending on whether k>length(integrator.u).\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\ndeleteat!(integrator,k): Shrinks the ODE by deleting the ith component.\nget_du(integrator): Returns the derivative at t.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): this option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner.Note that not all of these functions will be implemented for every algorithm. Some have hard limitations. For example, Sundials.jl cannot resize problems. When a function is not limited, an error will be thrown."
 },
 
 {
+    "location": "basics/integrator.html#Note-1",
+    "page": "Integrator Interface",
+    "title": "Note",
+    "category": "section",
+    "text": "Currently, many of these functions are not implemented."
+},
+
+{
     "location": "basics/integrator.html#Additional-Options-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Additional Options",
     "category": "section",
     "text": "The following options can additionally be specified in init (or be mutated in the opts) for further control of the integrator:advance_to_tstop: This makes step! continue to the next value in tstop.\nstop_at_next_tstop: This forces the iterators to stop at the next value of tstop.For example, if one wants to iterate but only stop at specific values, one can choose:integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5],advance_to_tstop=true)\nfor (t,u) in tuples(integrator)\n  @test t ∈ [0.5,1.0]\nendwhich will only enter the loop body at the values in tstops (here, prob.tspan[2]==1.0 and thus there are two values of tstops which are hit). Addtionally, one can solve! only to 0.5 via:integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\nintegrator.opts.stop_at_next_tstop = true\nsolve!(integrator)"
@@ -570,7 +578,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/integrator.html#Plot-Recipe-1",
-    "page": "Integrator Interface (Experimental Preview)",
+    "page": "Integrator Interface",
     "title": "Plot Recipe",
     "category": "section",
     "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differentiation equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\nprob = prob_ode_linear\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
@@ -1693,7 +1701,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "Example 2: Growing Cell Population",
     "category": "section",
-    "text": "Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(t,u,integrator) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as switching from positive to negative, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function affect!(integrator)\n  resize!(integrator,length(integrator.u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:interp_points = 10\nrootfind = true\nsave_positions = (true,true)\ncb = Callback(condtion,affect!,rootfind,interp_points,save_positions)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is @ode_change_deleteat which performs deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
+    "text": ""
+},
+
+{
+    "location": "features/callback_functions.html#Note-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Note",
+    "category": "section",
+    "text": "This example will not work on the current version due to the changes in the callback infrustructure. This message will be removed when that is no longer the case.Another interesting issue are models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(t,u,integrator) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as switching from positive to negative, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the call splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function affect!(integrator)\n  resize!(integrator,length(integrator.u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:interp_points = 10\nrootfind = true\nsave_positions = (true,true)\ncb = Callback(condtion,affect!,rootfind,interp_points,save_positions)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is @ode_change_deleteat which performs deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
 },
 
 {
@@ -1709,7 +1725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Callback Library",
     "category": "section",
-    "text": "DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which can be used with any component solver which implements the callback interface. As the package is currently unregistered, it must first be installed via:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqCallbacks.jl\")\nusing DiffEqCallbacks"
+    "text": "DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which can be used with any component solver which implements the callback interface. It adds the following callbacks which are available to users of DifferentialEquations.jl."
 },
 
 {
@@ -1741,7 +1757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Parallel Monte Carlo Simulations",
     "category": "section",
-    "text": "DiffEqMonteCarlo.jl provides functionality for easily performing parallel Monte Carlo simulations using the DiffEq solvers. As the package is currently unregistered, it must first be installed via:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqMonteCarlo.jl\")\nusing DiffEqMonteCarlo"
+    "text": ""
 },
 
 {
@@ -1958,54 +1974,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Timeseries Specifications",
     "category": "section",
     "text": "To further reduce the memory usage, we can control the density that the timeseries is saved at. By default timeseries_steps=1, meaning that every step is saved. Note that timeseries_steps=1 is required for dense output to work correctly. If we change this value to timeseries_steps=n, then every nth step will be saved. Note that it will always have the first and final steps. We can turn off the saving of intermediate steps completely via the keyword save_timeseries=false. This can be used to minimize the memory usage."
-},
-
-{
-    "location": "features/conditional_dependencies.html#",
-    "page": "Conditional Dependencies",
-    "title": "Conditional Dependencies",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "features/conditional_dependencies.html#Conditional-Dependencies-1",
-    "page": "Conditional Dependencies",
-    "title": "Conditional Dependencies",
-    "category": "section",
-    "text": "DifferentialEquations.jl is conditionally dependent on some packages which may not be required for all users. The upside is that you can run DifferentialEquations.jl without installing these packages. However, the downside is that you will have to do the installation yourself (normal dependencies do a silent install). Luckily DifferentialEquations.jl warns you about missing dependencies when calling a method which requires one. This part of the manual will detail how to see if you're missing a conditional dependency and how to alleviate the issue."
-},
-
-{
-    "location": "features/conditional_dependencies.html#The-Conditional-Dependency-Notification-1",
-    "page": "Conditional Dependencies",
-    "title": "The Conditional Dependency Notification",
-    "category": "section",
-    "text": "When a conditional dependency is required, DifferentialEquations.jl will import the package the first time the method is called. When this happens, you will receive a notification as follows:[DifferentialEquations.jl] Initializing backend: PkgNamewhere PkgName is the name of the package it is importing. DifferentialEquations.jl will then run a standard startup procedure on this package. If it fails, you will receive the messageWARNING: Couldn't initialize PkgName.  (might need to install it?)Most likely the issue is that you need to install the package. Go to the package's Github repository for information on installing the package, and then come back to try again. If that does not work, you may need the latest version of the package by checking out master:Pkg.checkout(\"PkgName\")If all else fails, please ask for help on via the repository Gitter."
-},
-
-{
-    "location": "features/conditional_dependencies.html#What-Methods-Require-Conditional-Dependencies?-1",
-    "page": "Conditional Dependencies",
-    "title": "What Methods Require Conditional Dependencies?",
-    "category": "section",
-    "text": "That's a good question! The implicit algorithms implemented in DifferentialEquations.jl require NLsolve.jl. Also, the load function for the premade meshes requires JLD.jl.Lastly, there is a special conditional dependency for Juno. If you are using Juno, then the progress bar functionality is works. If you're not using Juno, then it won't do anything.The other conditional dependencies are external solvers wrapped by DifferentialEquations.jl. Currently these include:ODE.jl\nODEInterface.jl"
-},
-
-{
-    "location": "features/conditional_dependencies.html#Installation-Instructions-1",
-    "page": "Conditional Dependencies",
-    "title": "Installation Instructions",
-    "category": "section",
-    "text": "For most of the conditional dependencies, the installation instructions are standard. However, for some of the newest features, special instructions may be required. The best way to stay up-to-date on this information is to checkout the following resources:The packages which are conditional dependencies and use a standard installation can be found in the /test/REQUIRE file.\nAny special installation instructions are handled via the ci_setup.jl file.The current special installation instructions are as follows:"
-},
-
-{
-    "location": "features/conditional_dependencies.html#ODE.jl-1",
-    "page": "Conditional Dependencies",
-    "title": "ODE.jl",
-    "category": "section",
-    "text": "The wrapper currently only works on the development branch of ODE.jl at JuliaODE/ODE.jl. To install this version of ODE.jl, use the following commands:Pkg.clone(\"https://github.com/JuliaODE/ODE.jl\")"
 },
 
 {
