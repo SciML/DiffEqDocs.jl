@@ -17,7 +17,7 @@ features associated with them. For example, an ordinary differential equation is
 \frac{du}{dt} = f(t,u)
 ```
 
-over some time interval `tspan` with some initial condition `u0`, and therefore
+over some time interval `tspan` with some initial condition `u0`, and therefor
 the `ODEProblem` is defined by those components:
 
 ```julia
@@ -30,13 +30,13 @@ timespan and `BigFloat` for specifying the initial condition, then the solution
 will solve using `Rational{BigInt}` for the timesteps and `BigFloat` for the
 independent variables. A wide variety of number types are compatible with the
 solvers such as complex numbers, unitful numbers (via Unitful.jl),
-decimals (via DecFP), Dual numbers, and many more which may not have been tested
+decimals (via DecFP), dual numbers, and many more which may not have been tested
 yet (thanks to the power of multiple dispatch!). For information on type-compatibilty,
 please see the solver pages for the specific problems.
 
 ## Solving the Problems
 
-Each type of differential equation has its own problem type which allows the solvers
+Each type of differential equation has its own problem type which allow the solvers
 to dispatch to the right methods. The common interface for calling the solvers is:
 
 ```julia
