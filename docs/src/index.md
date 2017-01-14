@@ -44,10 +44,10 @@ To understand the package in more detail, check out the following tutorials in t
 Example IJulia notebooks [can be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
-For the most up to date on using the package information, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby)
+For the most up to date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
 
 Using the bleeding edge for the latest features and development is only recommended
-for power users. Information for how to get to the bleeding edge is found in the
+for power users. Information on how to get to the bleeding edge is found in the
 [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html#Bleeding-Edge-1).
 
 ### Supported Equations
@@ -83,7 +83,7 @@ notebook(dir = Pkg.dir("DiffEqTutorials"))
 
 ### Tutorials
 
-The following tutorials will introduce you to the functionality of DifferentialEquations.jl
+The following tutorials will introduce you to the functionality of DifferentialEquations.jl.
 More examples can be found by [checking out the IJulia notebooks in the examples folder](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 ```@contents
