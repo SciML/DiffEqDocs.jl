@@ -6,7 +6,7 @@ one can easily monitor results, modify the problem during a run, and dynamically
 continue solving as one sees fit.
 
 Note: this is currently only offered by OrdinaryDiffEq.jl. It is currently
-an "experimental preview" which requires one be on the master branches of both
+an "experimental preview" which requires one to be on the master branches of both
 OrdinaryDiffEq.jl and DiffEqBase.jl. We hope to bring this interface to other
 packages like Sundials.jl as well.
 
@@ -26,21 +26,21 @@ choose to step via the `step!` command:
 step!(integrator)
 ```
 
-which will take one successful step. This type also implements an interator interface,
-and so one can step `n` times (or to the last `tstop`) using the `take` iterator:
+which will take one successful step. This type also implements an integrator interface,
+so one can step `n` times (or to the last `tstop`) using the `take` iterator:
 
 ```julia
 for i in take(integrator,n) end
 ```
 
-One can loop to the end by using `solve!(integrator)` or using the interator interface:
+One can loop to the end by using `solve!(integrator)` or using the integrator interface:
 
 ```julia
 for i in integrator end
 ```
 
 In addition, some helper iterators are provided to help monitor the solution. For
-example, the `tuples` iterators let's you view the values
+example, the `tuples` iterator lets you view the values:
 
 ```julia
 for (t,u) in tuples(integrator)
@@ -107,7 +107,7 @@ Instead if one wants to introduce discontinuous changes, one should use the
 The integrator and the solution have very different actions because they have
 very different meanings. The `Solution` type is a type with history: it stores
 all of the (requested) timepoints and interpolates/acts using the values closest
-in time. On the otherhand, the `Integrator` type is a local object. It only knows
+in time. On the other hand, the `Integrator` type is a local object. It only knows
 the times of the interval it currently spans, the current caches and values,
 and the current state of the solver (the current options, tolerances, etc.).
 These serve very different purposes:
@@ -130,12 +130,12 @@ for safe modifications of the integrator type, and allows for uniform usage
 throughout the ecosystem (for packages/algorithms which implement the functions).
 The following functions make up the interface:
 
-* `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occured,
+* `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occurred,
   allowing the solver to handle the discontinuity.
 * `savevalues!(integrator)`: Adds the current state to the `sol`.
 * `modify_proposed_dt(integrator,factor)`:  Multiplies the proposed `dt` for the
   next timestep by the scaling `factor`.
-* `proposed_dt(integrator)`: Returns the `dt` of the proposed step
+* `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
 * `cache_iter(integrator)`:  Returns an iterator over the cache arrays of the method.
   This can be used to change internal values as needed.
 * `resize!(integrator,k)`: Resizes the ODE to a size `k`. This chops off the end
@@ -144,7 +144,7 @@ The following functions make up the interface:
   can be used in events and callbacks to immediately end the solution process.
 * `deleteat!(integrator,k)`: Shrinks the ODE by deleting the `i`th component.
 * `get_du(integrator)`: Returns the derivative at `t`.
-* `change_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false})`: this
+* `change_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false})`: This
   option lets one modify the current `t` and changes all of the corresponding
   values using the local interpolation. If the current solution has already
   been saved, one can provide the optional value `modify_save_endpoint` to also
@@ -197,7 +197,7 @@ on/off `denseplot`.
 
 Additionally, since the `integrator` is an integrator, this can be used in the
 Plots.jl `animate` command to iteratively build an animation of the solution
-while solving the differentiation equation.
+while solving the differential equation.
 
 For an example of manually chaining together the iterator interface and plotting,
 one should try the following:
