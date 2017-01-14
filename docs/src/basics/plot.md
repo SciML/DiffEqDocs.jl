@@ -33,14 +33,14 @@ of evenly-spaced points (in time) to plot. For example:
 plot(sol,denseplot=false)
 ```
 
-means "only plot the points which the solver stepped to", while
+means "only plot the points which the solver stepped to", while:
 
 ```julia
 plot(sol,plotdensity=1000)
 ```
 
 means to plot 1000 points using the dense function (since `denseplot=true` by
-default)
+default).
 
 ## Choosing Variables
 
@@ -102,7 +102,7 @@ vars = [(1,2), (1,3), (1,4)]
 
 * Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
   For example, `vars=(:x,:y)` will replace the symbols with the integer values for
-  components `:x` and `:y` .
+  components `:x` and `:y`.
 
 * n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
   5-dimensional plot between the associated variables.
