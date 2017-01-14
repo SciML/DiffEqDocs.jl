@@ -14,11 +14,11 @@ The form for `f` is `f(t,u,params,du)`
 where `params` is any type which defines the parameters. The
 resulting `ParameterizedFunction` has the function call `pf(t,u,params,du)`
 which matches the original function, and a call `pf(t,u,du)` which uses internal
-parmaeters which can be used with a differential equation solver. Note that the
+parameters which can be used with a differential equation solver. Note that the
 internal parameters can be modified at any time via the field: `pf.p = ...`.
 
 An additional version exists for `f(t,u,params)` which will then act as the
-not inplace version `f(t,u)` in the differential equation solvers.
+not in-place version `f(t,u)` in the differential equation solvers.
 
 ### Examples
 
@@ -34,7 +34,7 @@ pf = ParameterizedFunction(pf_func,[1.5,1.0])
 And now `pf` can be used in the differential equation solvers and the ecosystem
 functionality which requires explicit parameters (parameter estimation, etc.).
 
-Note that the not inplace version works the same:
+Note that the not in-place version works the same:
 
 ```julia
 pf_func2 = function (t,u,p)
@@ -63,7 +63,7 @@ f = @ode_def ROBERExample begin
 end k₁=>0.04 k₂=>3e7 k₃=>1e4
 ```
 
-This looks just like psudocode! The macro will expand this to the "standard form",
+This looks just like pseudocode! The macro will expand this to the "standard form",
 i.e. the ugly computer form:
 
 ```julia
@@ -75,7 +75,7 @@ end
 ```
 
 Note that one doesn't need to use numbered variables: DifferentialEquations.jl
-will number the variables for you. For example, the follows defines the function
+will number the variables for you. For example, the following defines the function
 for the Lotka-Volterra model:
 
 ```julia
@@ -89,7 +89,7 @@ end a=>1.5 b=>1.0 c=>3.0 d=1.0
 
 Functions defined using the `@ode_def` macro come with many other features. For
 example, since we used `=>` for `a`, `b`, and `c`, these parameters are explicitly
-saved. That is, one can do
+saved. That is, one can do:
 
 ```julia
 f.a = 0.2
@@ -105,7 +105,7 @@ g = LotkaVolterraExample(a=0.3,b=20.3)
 In this case, `c` will default to the value we gave it in the macro.
 
 Since the parameters are explicit, these functions can be used to analyze how the
-parameters effect the model. Thus ParameterizedFunctions, when coupled with the
+parameters affect the model. Thus ParameterizedFunctions, when coupled with the
 solvers, forms the backbone of functionality such as parameter estimation, parameter
 sensitivity analysis, and bifurcation analysis.
 
@@ -121,7 +121,7 @@ Jacobians are also used.
 Normally these will be computed fast enough that the user doesn't have to worry.
 However, in some cases you may want to restrict the number of functions (or get rid
 of a warning). Macros like `@ode_def_nohes` turn off the Hessian calculations,
-and `@ode_def_noinvjac` turns of the Jacobian inversion. For more information,
+and `@ode_def_noinvjac` turns off the Jacobian inversion. For more information,
 please see the [ParameterizedFunctions.jl documentation](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
 ## Finite Element Method Macros
@@ -144,7 +144,7 @@ gD = @fem_def (x) DirichletBC begin
 end α=>a β=>b
 ```
 
-This is equivalent to the definition
+This is equivalent to the definition:
 
 ```julia
 f(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])
@@ -164,7 +164,7 @@ l = @fem_def (t,x,u) begin
 end α=>0.5
 ```
 says there are two equations, one for `u`: (`ones(length(u))-α*u`) and one for `v`:
-`(ones(length(v))-v)`. This expands to the equation
+`(ones(length(v))-v)`. This expands to the equation:
 
 ```julia
 l = (t,x,u)  -> [ones(size(x,1))-.5u[:,1]   ones(size(x,1))-u[:,2]]
