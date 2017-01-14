@@ -18,7 +18,7 @@ To initialize an integrator, use the syntax:
 integrator = init(prob,alg;kwargs...)
 ```
 
-The keyword args which are accepted are the same [`Common Solver Options`](@ref)
+The keyword args which are accepted are the same [Common Solver Options](@ref)
 used by `solve`. The type which is returned is the integrator. One can manually
 choose to step via the `step!` command:
 
@@ -99,7 +99,7 @@ that interval.
 Be cautious: one should not directly mutate the `t` and `u` fields of the integrator.
 Doing so will destroy the accuracy of the interpolator and can harm certain algorithms.
 Instead if one wants to introduce discontinuous changes, one should use the
-[`Event Handling and Callback Functions`](@ref). Modifications within a callback
+[Event Handling and Callback Functions](@ref). Modifications within a callback
 `affect!` surrounded by saves provides an error-free handling of the discontinuity.
 
 ### Integrator vs Solution

@@ -33,7 +33,7 @@ The arguments are defined as follows:
   `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
   modify the current state of the integrator. For more information on what can
-  be done, see the [`Integrator Interface`](@ref) manual page.
+  be done, see the [Integrator Interface](@ref) manual page.
 * `rootfind`: This is a boolean for whether to rootfind the event location. If
   this is set to `true`, the solution will be backtracked to the point where
   `condition==0`. Otherwise the systems and the `affect!` will occur at `t+dt`.
@@ -65,7 +65,7 @@ DiscreteCallback(condition,affect!,save_positions)
   to `true`.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
   modify the current state of the integrator. For more information on what can
-  be done, see the [`Integrator Interface`](@ref) manual page.
+  be done, see the [Integrator Interface](@ref) manual page.
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
   The first save will always occcur (if true), and the second will only occur when
   an event is detected.  For discontinuous changes like a modification to `u` to be
@@ -315,7 +315,7 @@ function affect!(integrator)
 end
 ```
 
-As noted in the [`Integrator Interface`](@ref), `resize!(integrator,length(integrator.u)+1)`
+As noted in the [Integrator Interface](@ref), `resize!(integrator,length(integrator.u)+1)`
 is used to change the length of all of the internal caches (which includes `u`)
 to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:

@@ -121,7 +121,7 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
 ```
 
 The `choice_function` takes in an `integrator` and thus all of the features
-available in the [`Integrator Interface`](@ref) 
+available in the [Integrator Interface](@ref) 
 can be used in the choice function.
 
 ### Sundials.jl
