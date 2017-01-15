@@ -3,7 +3,7 @@
 ## Mathematical Specification of a DDE Problem
 
 To define a DDE Problem, you simply need to give the function ``f`` and the initial
-condition ``u0`` which define an ODE
+condition ``u0`` which define an ODE:
 
 ```math
 du = f(t,u,h)
@@ -12,7 +12,7 @@ du = f(t,u,h)
 `f` should be specified as `f(t,u,h)` (or in-place as `f(t,u,h,du)`).
 `h` is the history function which is accessed for all delayed values. For example,
 the `i`th component delayed by a time `tau` is denoted by `h(t-tau)`.
-Note that we are not limited to numbers or vectors for `u0`, one is allowed to
+Note that we are not limited to numbers or vectors for `u0`; one is allowed to
 provide `u0` as arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type

@@ -51,7 +51,7 @@ u0 = u0_func(mesh.node)
 prob = HeatProblem(u0,f,mesh,σ=σ)
 ```
 
-We use the following code create an animation of the solution:
+We use the following code to create an animation of the solution:
 
 ```julia
 sol = solve(prob,FEMDiffEqHeatEuler(),save_timeseries=true,solver=:LU)

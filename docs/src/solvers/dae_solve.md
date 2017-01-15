@@ -2,11 +2,11 @@
 
 ## Recomended Methods
 
-The recommended method for performance is `IDA` from the Sundials package if you
+The recommended method for performance is `IDA` from the Sundials.jl package if you
 are solving problems with `Float64`. It's a very well-optimized method, and allows
 you to have a little bit of control over the linear solver to better tailor it
 to your problem. A similar algorithm is `daskr`. Which one is more efficient
-is problem dependent.
+is problem-dependent.
 
 If your problem requires special Julia types like arbitrary precision numbers,
 then `dassl` is the method of choice.

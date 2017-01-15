@@ -23,7 +23,7 @@ function prob_func(prob)
 end
 ```
 
-Modifies the initial condition for all of the problems by a standard normal
+modifies the initial condition for all of the problems by a standard normal
 random number (a different random number per simulation). This can be used
 to perform searches over initial values. If your function is a `ParameterizedFunction`,
 you can do similar modifications to `f` to perform a parameter search. One then

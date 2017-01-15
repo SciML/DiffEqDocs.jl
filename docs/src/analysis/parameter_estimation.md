@@ -14,7 +14,7 @@ build_optim_objective(prob,tspan,t,data;loss_func = L2DistLoss,kwargs...)
 
 The first argument is the DEProblem to solve. Second is the `tspan`. Next is `t`,
 the set of timepoints which the data is found at. The last argument which is required
-is the data, which are the values where are known, in order to be optimized against.
+is the data, which are the values that are known, in order to be optimized against.
 Optionally, one can choose a loss function from LossFunctions.jl or use the default
 of an L2 loss. The keyword arguments are passed to the ODE solver.
 
@@ -74,7 +74,7 @@ data = vecvec_to_mat(randomized)
 ```
 
 Here we used `vecvec_to_mat` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
-to turn the result of an ODE to a matrix.
+to turn the result of an ODE into a matrix.
 
 If we plot the solution with the parameter at `a=1.42`, we get the following:
 
@@ -110,16 +110,16 @@ Thus we see that after fitting, the lines match up with the generated data and
 receive the right parameter value.
 
 We can also use the multivariate optimization functions. For example, we can use
-the `BFGS` algorithm to optimize the parameter starting at `a=1.42` using
+the `BFGS` algorithm to optimize the parameter starting at `a=1.42` using:
 
 ```julia
 result = optimize(cost_function, [1.42], BFGS())
 ```
 
-Note that some of the algorithms may be sensitive to the initial condtion. For more
+Note that some of the algorithms may be sensitive to the initial condition. For more
 details on using Optim.jl, see the [documentation for Optim.jl](http://www.juliaopt.org/Optim.jl/latest/).
 
-Lastly, we can use the same tools to estimate multiple parameters simultaniously.
+Lastly, we can use the same tools to estimate multiple parameters simultaneously.
 Let's use the Lotka-Volterra equation with all parameters free:
 
 ```julia
@@ -139,7 +139,7 @@ To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` fun
 cost_function = build_lsoptim_objective(prob,t,data,Tsit5()))
 ```
 
-The result is a cost function which can be used with LeastSquaresOptim. For mor
+The result is a cost function which can be used with LeastSquaresOptim. For more
 details, consult the [documentation for LeastSquaresOptim.jl](https://github.com/matthieugomez/LeastSquaresOptim.jl):
 
 ```julia

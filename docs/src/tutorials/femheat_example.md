@@ -14,9 +14,9 @@ u0_func(x) = zeros(size(x,1))
 
 Here the equation we chose was nonlinear since ``f`` depends on the variable ``u``.
 Thus we specify `f=f(u,x,t)`. If ``f`` did not depend on u, then we would specify f=f(x,t).
-We do need to specify ``gD`` (the dirichlet boundary condition) and ``gN`` (the neumann
+We do need to specify ``gD`` (the Dirichlet boundary condition) and ``gN`` (the Neumann
 boundary condition) since both are zero. ``u_0`` specifies the initial condition. These together
-give a HeatProblem object which holds everything which specifies a Heat Equation Problem.
+give a HeatProblem object which holds everything that specifies a Heat Equation Problem.
 
 We then generate a mesh. We will solve the equation on the parabolic cylinder
 ``[0,1]^2 \times [0,1]``. You can think of this as the cube, or at every time point from 0

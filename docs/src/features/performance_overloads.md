@@ -3,7 +3,7 @@
 The DiffEq ecosystem provides an extensive interface for declaring extra functions
 associated with the differential equation's data. In traditional libraries there
 is usually only one option: the Jacobian. However, we allow for a large array
-of pre-computed functions to speedup the calculations. This is offered via function
+of pre-computed functions to speed up the calculations. This is offered via function
 overloading (or overloaded types) and allows for these extra features to be
 offered without cluttering the problem interface.
 
@@ -34,7 +34,7 @@ end
 ```
 
 Note that this can also be done by generating a call-overloaded type. Indeed, this
-is what a ParameterizedFunctions.jl does, so see [its README](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
+is what ParameterizedFunctions.jl does, so see [its README](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
 ## Other Available Functions
 
@@ -63,5 +63,5 @@ specifics to know which optimizations the algorithms can use.
 ## Symbolically Calculating the Functions
 
 ParameterizedFunctions.jl automatically calculates as many of these functions as
-possible and generates the overloads using SymEngine. Thus for best performance
+possible and generates the overloads using SymEngine. Thus, for best performance
 with the least work, it is suggested one use ParameterizedFunctions.jl.

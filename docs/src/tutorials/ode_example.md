@@ -48,7 +48,7 @@ sol = solve(prob,Euler(),dt=1/2^4)
 
 In this case I chose to use the classic Euler method, and gave it a stepsize `dt=1/2^4`.
 Normally `dt` is the starting stepsize but since the Euler method is not adaptive
-this is the stepsize for the calculation. The available options is described on the
+this is the stepsize for the calculation. The available options are described on the
 [Common Solver Options manual page](../basics/common_solvers_opts.html).
 
 The result of `solve` is a solution object. We can access the 5th value of the solution with
@@ -77,7 +77,7 @@ or more generally
 [t+2u for (t,u) in zip(sol.t,sol.u)]
 ```
 
-allows one to use more parts of the solution type. The object that is returns by
+allows one to use more parts of the solution type. The object that is returned by
 default acts as a continuous solution via an interpolation.
 We can access the interpolated values by treating `sol` as a function, for example:
 
@@ -139,7 +139,7 @@ sol = solve(prob,alg_hints=[:stiff])
 
 We can also solve systems of equations. DifferentialEquations.jl can handle many
 different independent variable types (generally, anything with a linear index
-should work!). So instead of showing solving a vector equation, let's let u be
+should work!). So instead of solving a vector equation, let's let u be
 a matrix! To do this, we simply need to have u₀ be a matrix, and define f such
 that it takes in a matrix and outputs a matrix. We can define a matrix of linear
 ODEs as follows:
@@ -190,7 +190,7 @@ is the timeseries for the component which is the 2nd row and 1 column.
 ### In-Place Updates
 
 Defining your ODE function to be in-place updating can have performance benefits.
-That this means is that, instead of writing a function which outputs its solution,
+What this means is that, instead of writing a function which outputs its solution,
 write a function which updates a vector that is designated to hold the solution.
 By doing this, DifferentialEquations.jl's solver packages are able to reduce the
 amount of array allocations and achieve better performance.
@@ -263,7 +263,7 @@ the `@ode_def` command:
 h = LorenzExample(σ=11.0,ρ=25.0)
 ```
 
-Note that the values will default to the values giving in the `@ode_def` command.
+Note that the values will default to the values given to the `@ode_def` command.
 
 One last item to note is that you probably received a warning when defining this:
 
@@ -273,7 +273,7 @@ WARNING: Hessian could not invert
 
 This is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl
 does "behind-the-scenes" symbolic calculations to pre-compute things like the Jacobian,
-inverse Jacobian, etc. in order to speedup calculations. Thus not only will this
+inverse Jacobian, etc. in order to speed up calculations. Thus not only will this
 lead to legible ODE definitions, but "unfairly fast" code! We can turn off some of
 the calculations by using a more specific macro. Here, we can turn off the Hessian
 calculations via `@ode_def_nohes`. See [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)

@@ -8,7 +8,7 @@ for specifying the delayed argument, the function definition for a delay differe
 equation is expanded to include a history function `h(t)` which uses interpolations
 throughout the solution's history to form a continuous extension of the solver's
 past. The function signature for a delay differential equation is `f(t,u,h)` for
-not inplace computations, and `f(t,u,h,du)` for inplace computations.
+not in-place computations, and `f(t,u,h,du)` for in-place computations.
 
 In this example we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
 
@@ -22,13 +22,13 @@ dx_{2} &= \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q
 ```
 
 For this problem we note that ``\tau`` is constant, and thus we can use a method
-which exploits this behavoir. We first write out the equation using the appropriate
+which exploits this behavior. We first write out the equation using the appropriate
 function signature. Most of the equation writing is the same, though we use the
 history function by first interpolating and then choosing the components. Thus
 the `i`th component at time `t-tau` is given by `h(t-tau)[i]`. Components with
 no delays are written as in the ODE.
 
-Thus the function for this model is given by:
+Thus, the function for this model is given by:
 
 ```julia
 const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5
@@ -58,7 +58,7 @@ were before the time the model starts. Here we will assume that for all time bef
 h(t) = ones(3)
 ```
 
-We have `h` output a 3x1 vector since our differenital equation is given by
+We have `h` output a 3x1 vector since our differential equation is given by
 a system of the same size. Next, we choose to solve on the timespan `(0.0,10.0)`
 and create the problem type:
 

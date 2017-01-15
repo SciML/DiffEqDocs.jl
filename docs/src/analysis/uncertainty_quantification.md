@@ -8,7 +8,7 @@ uncertainties.
 ## Note
 
 Since this is currently a work in progress, the package DiffEqUncertainty.jl which
-contains this functionality is currently unregistered and has to be installed via
+contains this functionality is currently unregistered and has to be installed via:
 
 ```julia
 Pkg.clone("https://github.com/JuliaDiffEq/DiffEqUncertainty.jl")
@@ -19,7 +19,7 @@ Pkg.clone("https://github.com/JuliaDiffEq/DiffEqUncertainty.jl")
 The [ProbInts](http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/girolami/probints)
 method for uncertainty quantification involves the transformation of an ODE
 into an associated SDE where the noise is related to the timesteps and the order
-of the algorithm. This is implmented into the DiffEq system via a callback function:
+of the algorithm. This is implemented into the DiffEq system via a callback function:
 
 ```julia
 ProbIntsUncertainty(σ,order,save=true)

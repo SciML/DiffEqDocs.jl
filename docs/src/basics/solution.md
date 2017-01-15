@@ -19,7 +19,7 @@ array interface.
 sol[i]
 ```
 
-to access the value at timestep `i` (if the timeseres was saved), and
+to access the value at timestep `i` (if the timeseries was saved), and
 
 ```julia
 sol.t[i]
@@ -57,8 +57,8 @@ at a time `t` using the command
 sol(t)
 ```
 
-Note that the interpolating function allows for `t` to be a vector and use this
-to speedup the interpolation calculations.
+Note that the interpolating function allows for `t` to be a vector and uses this
+to speed up the interpolation calculations.
 
 The solver interface also gives tools for using comprehensions over the solution.
 Using the `tuples(sol)` function, we can get a tuple for the output at each
@@ -68,7 +68,7 @@ timestep. This allows one to do the following:
 [t+2u for (t,u) in tuples(sol)]
 ```
 
-One can use the extra components of the solution object as well using `zip`. For
+One can use the extra components of the solution object as well as using `zip`. For
 example, say the solution type holds `du`, the derivative at each timestep. One
 can comprehend over the values using:
 
@@ -86,7 +86,7 @@ The solution interface also includes some special fields. The problem object
 solution. Additionally, the field `dense` is a boolean which states whether
 the interpolation functionality is available. Lastly, there is a mutable state
 `tslocation` which controls the plot recipe behavior. By default, `tslocation=0`.
-Its values have different meanings between partial and ordinary differntial equations:
+Its values have different meanings between partial and ordinary differential equations:
 
 - `tslocation=0`  for non-spatial problems (ODEs) means that the plot recipe
   will plot the full solution. `tslocation=i` means that it will only plot the

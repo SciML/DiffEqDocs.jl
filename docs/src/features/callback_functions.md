@@ -12,7 +12,7 @@ types can be used to build libraries of extension behavior.
 The callback types are defined as follows. There are two callback types: the
 `ContinuousCallback` and the `DiscreteCallback`. The `ContinuousCallback` is
 applied when a continuous condition function hits zero. This type of callback
-implements what is known in other problem solving environments an Event. A
+implements what is known in other problem solving environments as an Event. A
 `DiscreteCallback` is applied when its `condition` function is `true`.
 
 ### ContinuousCallbacks
@@ -28,7 +28,7 @@ ContinuousCallback(condition,affect!,
 
 The arguments are defined as follows:
 
-* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+* `condition`: This is a function `condition(t,u,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition hits
   `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
@@ -60,7 +60,7 @@ and `reltol=0`.
 DiscreteCallback(condition,affect!,save_positions)
 ```
 
-* `condition`: this is a function `condition(t,u,integrator)` for declaring when
+* `condition`: This is a function `condition(t,u,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition evaluates
   to `true`.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
@@ -87,7 +87,7 @@ callbacks, the following rules apply:
 * `ContinuousCallback`s are applied before `DiscreteCallback`s. (This is because
   they often implement event-finding that will backtrack the timestep to smaller
   than `dt`).
-* For `ContinuousCallback`s, the events times are found by rootfinding and only
+* For `ContinuousCallback`s, the event times are found by rootfinding and only
   the first `ContinuousCallback` affect is applied.
 * The `DiscreteCallback`s are then applied in order. Note that the ordering only
   matters for the conditions: if a previous callback modifies `u` in such a way
@@ -127,7 +127,7 @@ at each step the absolute tolerance is set to the maximum value that has been
 reached so far times the relative tolerance. This is the behavior that we will
 implement in `affect!`.
 
-Since the affect is supposed to occur every timestep, we use the trivial condition:
+Since the effect is supposed to occur every timestep, we use the trivial condition:
 
 ```julia
 condition = function (t,u,integrator)
@@ -198,7 +198,7 @@ a library of useful callbacks for JuliaDiffEq solvers.
 Let's look at the bouncing ball. `@ode_def` from
 [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 was to define the problem, where the first variable `y` is the height which changes
-by `v` the velocity, where the velocity is always changing at `-g` where is the
+by `v` the velocity, where the velocity is always changing at `-g` which is the
 gravitational constant. This is the equation:
 
 ```julia
@@ -208,9 +208,9 @@ f = @ode_def BallBounce begin
 end g=9.81
 ```
 
-All we have to do in order specify the event is to have a function which
+All we have to do in order to specify the event is to have a function which
 should always be positive with an event occurring at 0. For now at least
-that's how it's specified, if a generalization is needed we can talk about
+that's how it's specified. If a generalization is needed we can talk about
 this (but it needs to be "root-findable"). For here it's clear that we just
 want to check if the ball's height ever hits zero:
 
@@ -234,7 +234,7 @@ end
 ```
 
 For safety, we use `interp_points=10`. We will enable `rootfind` because this means
-the when an event is detected, the solution will be approriately backtracked to
+that when an event is detected, the solution will be approriately backtracked to
 the exact time at which the ball hits the floor. Lastly, since we are applying a
 discontinuous change, we set `save_values=(true,true)` so that way at the event
 location `t`, the solution for the velocity will be left continuous and then jump
@@ -274,7 +274,7 @@ This example will not work on the current version due to the changes in the
 callback infrustructure. This message will be removed when that is no longer
 the case.
 
-Another interesting issue are models of changing sizes. The ability to handle
+Another interesting issue is with models of changing sizes. The ability to handle
 such events is a unique feature of DifferentialEquations.jl! The problem we would
 like to tackle here is a cell population. We start with 1 cell with a protein `X`
 which increases linearly with time with rate parameter `α`. Since we are going
@@ -300,7 +300,7 @@ end
 
 Again, recall that this function finds events as switching from positive to negative,
 so `1-maximum(u)` is positive until a cell has a concentration of `X` which is
-1, which then triggers the event. At the event, we have that the call splits
+1, which then triggers the event. At the event, we have that the cell splits
 into two cells, giving a random amount of protein to each one. We can do this
 by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
