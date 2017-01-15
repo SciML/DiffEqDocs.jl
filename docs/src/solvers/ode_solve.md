@@ -52,9 +52,9 @@ interpolation means that no extra steps are required for the interpolation. For
 the non-free higher order interpolating functions, the extra steps are computed
 lazily (i.e. not during the solve).
 
-The OrdinaryDiffEq.jl algorithms achieve the highest performance for nonstiff equations
+The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations
 while being the most generic: accepting the most Julia-based types, allow for
-sophisticated event handling, etc. They are recommended for all nonstiff problems.
+sophisticated event handling, etc. They are recommended for all non-stiff problems.
 For stiff problems, the algorithms are currently not as high of order or as well-optimized
 as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on
 arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl
@@ -108,7 +108,7 @@ solve(prob,alg)
 #### CompositeAlgorithm
 
 One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
-you to, with very minimal overhead, design multimethod which switches between
+you to, with very minimal overhead, design a multimethod which switches between
 chosen algorithms as needed. The syntax is `CompositeAlgorthm(algtup,choice_function)`
 where `algtup` is a tuple of OrdinaryDiffEq.jl algorithms, and `choice_function`
 is a function which declares which method to use in the following step. For example,
@@ -132,7 +132,7 @@ for less costly functions the cost of nurturing the timestep overweighs the bene
 However, the BDF method is a classic method for stiff equations and "generally works".
 
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
-  - `CVODE_Adams` - CVode Adams-Moulton solver
+  - `CVODE_Adams` - CVode Adams-Moulton solver.
 
 Note that the constructors for the Sundials algorithms take two arguments:
 
@@ -144,7 +144,7 @@ Note that the constructors for the Sundials algorithms take two arguments:
   - `linearsolver` - This is the linear solver which is used in the `:Newton` method.
   The choices are:
 
-    - `:Dense` - A dense linear solver
+    - `:Dense` - A dense linear solver.
     - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
       position of the upper and lower non-zero diagonals via `jac_upper` and
       `jac_lower`.
@@ -174,7 +174,7 @@ CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method
 ### ODEInterface.jl
 
 The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
-nonstiff algorithms are superseded by the more featured and higher performance
+non-stiff algorithms are superseded by the more featured and higher performance
 Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
 are some of the most efficient methods available (but are restricted for use on
 arrays of Float64).
@@ -188,17 +188,17 @@ using ODEInterfaceDiffEq
 ```
 
   - `dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
-  - `dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince
-  - `odex` - GBS extrapolation-algorithm based on the midpoint rule
-  - `seulex` - extrapolation-algorithm based on the linear implicit Euler method
-  - `radau` - implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13
-  - `radau5` - implicit Runge-Kutta method (Radau IIA) of order 5
-  - `rodas` - Rosenbrock 4(3) method
+  - `dop853` - Explicit Runge-Kutta 8(5,3) by Dormand-Prince.
+  - `odex` - GBS extrapolation-algorithm based on the midpoint rule.
+  - `seulex` - Extrapolation-algorithm based on the linear implicit Euler method.
+  - `radau` - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.
+  - `radau5` - Implicit Runge-Kutta method (Radau IIA) of order 5.
+  - `rodas` - Rosenbrock 4(3) method.
 
 ### LSODA.jl
 
 This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching
-to solve both stiff and non-stiff equiations.
+to solve both stiff and non-stiff equations.
 
   - `lsoda` - The LSODA wrapper algorithm.
 
@@ -232,7 +232,7 @@ For the most useful and common algorithms, a hand-optimized version is supplied
 in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
 with `tableau=constructDormandPrince()`). However, these serve as a good method
 for comparing between tableaus and understanding the pros/cons of the methods.
-Implemented are every published tableau (that I know exist). Note that user-defined
+Implemented are every published tableau (that I know exists). Note that user-defined
 tableaus also are accepted. To see how to define a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
