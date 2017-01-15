@@ -3,14 +3,14 @@
 ## Mathematical Specification of an DAE Problem
 
 To define a DAE Problem, you simply need to give the function ``f`` and the initial
-condition ``u₀`` which define an ODE
+condition ``u₀`` which define an ODE:
 
 ```math
 0 = f(t,u,du)
 ```
 
 `f` should be specified as `f(t,u,du)` (or in-place as `f(t,u,du,resid)`).
-Note that we are not limited to numbers or vectors for `u₀`, one is allowed to
+Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type
