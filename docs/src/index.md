@@ -27,7 +27,7 @@ For bug reports, feature requests, etc., please submit an issue. If you're
 interested in contributing, please see the
 [Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/).
 
-## Supporting and Citing
+### Supporting and Citing
 
 The software in this ecosystem was developed as part of academic research. If you 
 would like to help support it, please star the repository as such metrics may help 
