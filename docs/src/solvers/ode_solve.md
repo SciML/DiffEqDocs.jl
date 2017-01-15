@@ -242,3 +242,5 @@ Plot recipes are provided which will plot the stability region for a given table
 
 The following chart describes the compatibility and defaults of the specific
 solvers to the common interface.
+
+### Chart coming soon. Open an issue or PR to push this forward!
