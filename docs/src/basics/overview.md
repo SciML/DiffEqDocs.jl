@@ -17,7 +17,7 @@ features associated with them. For example, an ordinary differential equation is
 \frac{du}{dt} = f(t,u)
 ```
 
-over some time interval `tspan` with some initial condition `u0`, and therefor
+over some time interval `tspan` with some initial condition `u0`, and therefore
 the `ODEProblem` is defined by those components:
 
 ```julia
