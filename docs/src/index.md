@@ -27,6 +27,15 @@ For bug reports, feature requests, etc., please submit an issue. If you're
 interested in contributing, please see the
 [Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/).
 
+## Supporting and Citing
+
+The software in this ecosystem was developed as part of academic research. If you 
+would like to help support it, please star the repository as such metrics may help 
+fund this work in the future. If you use JuliaDiffEq software as part of your 
+research, teaching, or other activities, we would be greatful if you could 
+cite our work. 
+[Please see our citation page for guidelines](http://juliadiffeq.org/citing.html).
+
 ### Using the Package
 
 To install the package, use the following command inside the Julia REPL:
