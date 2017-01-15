@@ -3,15 +3,15 @@
 ## Mathematical Specification of an ODE Problem
 
 To define an ODE Problem, you simply need to give the function ``f`` and the initial
-condition ``u₀`` which define an ODE
+condition ``u₀`` which define an ODE:
 
 ```math
 \frac{du}{dt} = f(t,u)
 ```
 
-`f` should be specified as `f(t,u)` (or in-place as `f(t,u,du)`),and `u₀` should
+`f` should be specified as `f(t,u)` (or in-place as `f(t,u,du)`), and `u₀` should
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
-Note that we are not limited to numbers or vectors for `u₀`, one is allowed to
+Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ## Problem Type
@@ -34,7 +34,7 @@ None. The ODE type is as basic as it gets.
 
 ## Example Problems
 
-Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).
+Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
