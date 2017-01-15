@@ -17,6 +17,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Supporting-and-Citing-1",
+    "page": "Home",
+    "title": "Supporting and Citing",
+    "category": "section",
+    "text": "The software in this ecosystem was developed as part of academic research.  If you would like to help support it, please star the repository as such  metrics may help us secure funding in the future. If you use JuliaDiffEq  software as part of your research, teaching, or other activities, we would  be grateful if you could cite our work.  Please see our citation page for guidelines."
+},
+
+{
     "location": "index.html#Using-the-Package-1",
     "page": "Home",
     "title": "Using the Package",
