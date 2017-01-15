@@ -44,7 +44,7 @@ plot(sol)
 One unique feature of DifferentialEquations.jl is that higher-order methods for
 stochastic differential equations are included. For reference, let's also give
 the `SDEProblem` the analytical solution. We can do this by making a test problem.
-This can be  a good way to judge how accurate the algorithms are, or is used to
+This can be a good way to judge how accurate the algorithms are, or is used to
 test convergence of the algorithms for methods developers. Thus we define the problem
 object with:
 
