@@ -33,8 +33,8 @@ Many of the special Runge-Kutta methods include a high-order interpolant which
 matches or is one less than the order of the solver. By default the other methods
 use an Order 3 Hermite interpolation. Since the `k` array must be stored, this
 has the highest memory requirement. Note that for methods which use extra steps
-for the high order interpolant that the extra steps are lazy evaluated and thus
-only computing when an interpolated value in the appropriate interval is requested
+for the high order interpolant, the extra steps are lazy evaluated and thus
+only computing when an interpolated value in the appropriate interval is requested.
 
 ## Choosing Intermediate Locations for the Solution
 
@@ -56,7 +56,7 @@ Another way to specify an output location is to add that value to `tspan`. For e
 we can force the solver to solve at `0.5` via `tspan=[0,0.5,1]`. However, notice that
 this will require that the solver actually hits `t=0.5`. In some cases this can slow
 down the solver by lowering the `dt` leading to extra steps. In some cases, this may
-be advantagous. For example, if you know that there is a large discontinuity at
+be advantageous. For example, if you know that there is a large discontinuity at
 `t=0.5`, using `tspan=[0,0.5,1]` will force the solver to first solve on `[0,0.5]`,
 and then continue to solve on `[0.5,1]`. This will give a much better approximation
 by perfectly specifying the moment of discontinuity, and can help the solver through
@@ -67,7 +67,7 @@ tough regions.
 The dense output storage can be turned on even if `saveat` and `dense` are not
 being used by setting `calck=true`. This can be useful for event handling since
 this will allow one to do the interpolations in the event even if you aren't saving
-the information for continuous dense output
+the information for continuous dense output.
 
 ## Timeseries Specifications
 
