@@ -20,6 +20,18 @@ internal parameters can be modified at any time via the field: `pf.p = ...`.
 An additional version exists for `f(t,u,params)` which will then act as the
 not in-place version `f(t,u)` in the differential equation solvers.
 
+Note that versions exist for the other types of differential equations as well.
+There are
+
+```julia
+pf = DAEParameterizedFunction(f,params)
+pf = DDEParameterizedFunction(f,params)
+```
+
+for DAEs and DDEs respectively. For DAEs, the in-place syntax is `f(t,u,params,du,out)`
+and the not in-place syntax is `f(t,u,params,du)`. For DDEs, the in-place syntax is
+`f(t,u,h,params,du)` and the not in-place syntax is `f(t,u,h,params)`
+
 ### Examples
 
 ```julia
