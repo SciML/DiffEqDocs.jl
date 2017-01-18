@@ -41,7 +41,9 @@ issue or submit a pull-request.
 | Parameter Sensitivity Analysis         | x                 | x           | x      | x               | x        | x                   | x              | x        | x        | x               |
 | Plotting and solution handling         | x                 | x           | x      | x               | x        | x                   | x              | x        | x        | x               |
 
-n: general compatibility, but not compaitble with routines which require being able to autodifferentiate through the entire solver.
+* p: partial compatibility, only in nonstiff methods
+* n: general compatibility, but not compatible with routines which
+  require being able to autodifferentiate through the entire solver.
 
 ## Note on PDEs
 
