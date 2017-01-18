@@ -50,4 +50,5 @@ issue or submit a pull-request.
 This chart is only for the basic (ODE/SDE/DAE/DDE) solver methods. The PDE
 solvers (will be) built on top of these packages and thus will have the same
 options available. Current, FiniteElementDiffEq.jl  is a solo implemention
-which is compatible with `save_timeseries`
+which is compatible with `save_timeseries`, `timeseries_steps`, plotting and
+solution handling, arbitrary precision, and choice of `dt`.
