@@ -41,7 +41,7 @@ saveat=[0:1/4:1],save_timeseries=false,dense=false
 
 will only save the solution at the timepoints `0:1/4:1` and no other locations.
 For more examples for controlling the output behavior, see the
-[Output Specification manual page](../man/output_specification.html).
+[Output Specification manual page](../features/output_specification.html).
 
 * `dense`: Denotes whether to save the extra pieces for dense (continuous)
   output. Default is true for algorithms which have the ability to produce dense output.
