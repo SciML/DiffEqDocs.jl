@@ -14,7 +14,7 @@ issue or submit a pull-request.
 | Advanced stepsize control              | x                 |             |        | x               |          | x                   | x              |          |          |                 |
 | internalnorm                           | x                 |             | x      |                 |          |                     |                |          |          |                 |
 | Initial dt                             | x                 |             | x      | x               |          | x                   | x              |          |          |                 |
-| save_timeseries                        | x                 | x           | x      |                 | x        | x                   | x              |          |          |                 |
+| save_timeseries                        | x                 | x           | x      |                 | x        | x                   | x              | x        |          |                 |
 | timeseries_steps                       | x                 |             |        |                 |          | x                   | x              |          |          |                 |
 | saveat                                 | x                 | x           | x      |                 | x        |                     | x              | x        |          |                 |
 | tstops                                 | x                 |             |        |                 |          |                     | x              |          |          |                 |
@@ -37,8 +37,8 @@ issue or submit a pull-request.
 | Continuous Callbacks                   | x                 |             |        |                 |          |                     | x              |          |          |                 |
 | Discrete Callbacks                     | x                 |             |        |                 |          |                     | x              |          |          |                 |
 | Monte Carlo Simulations                | x                 | x           | x      | x               | x        | x                   | x              | x        | x        | x               |
-| Parameter Estimation                   | x                 | n           | n      | n               | n        | n                   | x              | n        | n        | n               |
-| Parameter Sensitivity Analysis         | x                 | x           | x      | x               | x        | x                   | x              | x        | x        | x               |
+| Parameter Estimation                   | x                 | n           | n      | n               | n        |                     |                |          |          | x               |
+| Parameter Sensitivity Analysis         | x                 | x           | x      | x               | x        |                     |                |          |          | x               |
 | Plotting and solution handling         | x                 | x           | x      | x               | x        | x                   | x              | x        | x        | x               |
 
 * p: partial compatibility, only in nonstiff methods
