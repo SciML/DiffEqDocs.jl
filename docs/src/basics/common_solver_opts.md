@@ -8,7 +8,8 @@ Many of the defaults depend on the algorithm or the package the algorithm derive
 from. Not all of the interface is provided by every algorithm.
 For more detailed information on the defaults and the available options
 for specific algorithms / packages, see the manual pages for the solvers of specific
-problems.
+problems. To see whether a specific package is compaible with the use of a
+given option, see the [compatibility chart](compatibility_chart.html)
 
 ## Default Algorithm Hinting
 

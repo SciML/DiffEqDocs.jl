@@ -32,8 +32,11 @@ The arguments are defined as follows:
   the callback should be used. A callback is initiated if the condition hits
   `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
-  modify the current state of the integrator. For more information on what can
-  be done, see the [Integrator Interface](@ref) manual page.
+  modify the current state of the integrator. This is called when `condition` is
+  found to be `0` (at a root) and the cross is an upcrossing (from negative to
+  positive). For more information on what can
+  be done, see the [Integrator Interface](@ref) manual page. Modifications to
+  `u` are safe in this function.
 * `rootfind`: This is a boolean for whether to rootfind the event location. If
   this is set to `true`, the solution will be backtracked to the point where
   `condition==0`. Otherwise the systems and the `affect!` will occur at `t+dt`.
@@ -43,6 +46,13 @@ The arguments are defined as follows:
   the sign of `condition` is different at `t` than at `t+dt`. This behavior is not
   robust when the solution is oscillatory, and thus it's recommended that one use
   some interpolation points (they're cheap to compute!).
+  `0` within the time interval.
+* `affect_neg!`: This is the function `affect_neg!(integrator)` where one is allowed to
+  modify the current state of the integrator. This is called when `condition` is
+  found to be `0` (at a root) and the cross is an downcrossing (from positive to
+  negative). For more information on what can
+  be done, see the [Integrator Interface](@ref) manual page. Modifications to
+  `u` are safe in this function.
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
   The first save will always occcur (if true), and the second will only occur when
   an event is detected.  For discontinuous changes like a modification to `u` to be
@@ -298,7 +308,7 @@ function condition(t,u,integrator) # Event when event_f(t,u) == 0
 end
 ```
 
-Again, recall that this function finds events as switching from positive to negative,
+Again, recall that this function finds events as when `condition==0`,
 so `1-maximum(u)` is positive until a cell has a concentration of `X` which is
 1, which then triggers the event. At the event, we have that the cell splits
 into two cells, giving a random amount of protein to each one. We can do this

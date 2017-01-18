@@ -121,7 +121,7 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
 ```
 
 The `choice_function` takes in an `integrator` and thus all of the features
-available in the [Integrator Interface](@ref) 
+available in the [Integrator Interface](@ref)
 can be used in the choice function.
 
 ### Sundials.jl
@@ -237,10 +237,3 @@ tableaus also are accepted. To see how to define a tableau, checkout the [premad
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.
-
-## Solver Compatibility and Defaults Chart
-
-The following chart describes the compatibility and defaults of the specific
-solvers to the common interface.
-
-### Chart coming soon. Open an issue or PR to push this forward!
