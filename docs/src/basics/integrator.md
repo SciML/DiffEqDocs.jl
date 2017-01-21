@@ -136,7 +136,11 @@ The following functions make up the interface:
 * `modify_proposed_dt(integrator,factor)`:  Multiplies the proposed `dt` for the
   next timestep by the scaling `factor`.
 * `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
-* `cache_iter(integrator)`:  Returns an iterator over the cache arrays of the method.
+* `u_cache(integrator)`:  Returns an iterator over the cache arrays for `u` in the method.
+  This can be used to change internal values as needed.
+* `du_cache(integrator)`:  Returns an iterator over the cache arrays for rate quantities the method.
+  This can be used to change internal values as needed.
+* `full_cache(integrator)`:  Returns an iterator over the cache arrays of the method.
   This can be used to change internal values as needed.
 * `resize!(integrator,k)`: Resizes the ODE to a size `k`. This chops off the end
   of the array, or adds blank values at the end, depending on whether `k>length(integrator.u)`.

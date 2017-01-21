@@ -283,12 +283,6 @@ will save the value(s) at the discontinuity.
 
 ### Example 2: Growing Cell Population
 
-#### Note
-
-This example will not work on the current version due to the changes in the
-callback infrustructure. This message will be removed when that is no longer
-the case.
-
 Another interesting issue is with models of changing sizes. The ability to handle
 such events is a unique feature of DifferentialEquations.jl! The problem we would
 like to tackle here is a cell population. We start with 1 cell with a protein `X`
@@ -321,12 +315,14 @@ by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
 
 ```julia
-function affect!(integrator)
-  resize!(integrator,length(integrator.u)+1)
+affect! = function (integrator)
+  u = integrator.u
+  resize!(integrator,length(u)+1)
   maxidx = findmax(u)[2]
   Θ = rand()
   u[maxidx] = Θ
   u[end] = 1-Θ
+  nothing
 end
 ```
 
@@ -336,10 +332,9 @@ to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:
 
 ```julia
-interp_points = 10
 rootfind = true
 save_positions = (true,true)
-cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
+callback = ContinuousCallback(condition,affect!,rootfind,save_positions)
 u0 = [0.2]
 tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
@@ -372,9 +367,8 @@ plot(ts,map((x)->x[1],sol.(ts)),lw=3,
 Notice that every time it hits 1 the cell divides, giving cell 1 a random amount
 of `X` which then grows until the next division.
 
-Note that one macro which was not shown in this example is `@ode_change_deleteat`
-which performs `deleteat!` on the caches. For example, to delete the second cell,
-we could use:
+Note that one macro which was not shown in this example is `deleteat!` on the caches.
+For example, to delete the second cell, we could use:
 
 ```julia
 deleteat!(integrator,2)
