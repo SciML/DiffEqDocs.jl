@@ -21,9 +21,14 @@ implements what is known in other problem solving environments as an Event. A
 ContinuousCallback(condition,affect!,
                    rootfind,
                    save_positions;
-                   affect_neg! = affect!,
                    interp_points=10,
                    abstol=1e-14,reltol=0)
+
+ContinuousCallback(condition,affect!,affect_neg!,
+                  rootfind,
+                  save_positions;
+                  interp_points=10,
+                  abstol=1e-14,reltol=0)
 ```
 
 The arguments are defined as follows:
