@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -1614,6 +1614,38 @@ var documenterSearchIndex = {"docs": [
     "title": "Symbolically Calculating the Functions",
     "category": "section",
     "text": "ParameterizedFunctions.jl automatically calculates as many of these functions as possible and generates the overloads using SymEngine. Thus, for best performance with the least work, it is suggested one use ParameterizedFunctions.jl."
+},
+
+{
+    "location": "features/linear_nonlinear.html#",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Specifying (Non)Linear Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/linear_nonlinear.html#Specifying-(Non)Linear-Solvers-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Specifying (Non)Linear Solvers",
+    "category": "section",
+    "text": "One of the key features of DifferentialEquations.jl is its flexibility. Keeping with this trend, many of the native Julia solvers provided by DifferentialEquations.jl allow you to choose the method for linear and nonlinear solving. This section details how to make that choice."
+},
+
+{
+    "location": "features/linear_nonlinear.html#Linear-Solvers:-factorization-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Linear Solvers: factorization",
+    "category": "section",
+    "text": "For differential equation integrators which use linear solvers, an argument to the method factorization determines the factorization object which is used. For example, the Rosenbrock23 takes in a factorization function, which we can choose to be a QR-factorization by:Rosenbrock23(factorization=qrfact!)factorization is a function which returns an object that can \\. Direct methods like qrfact! will automatically cache the factorization, making it efficient for small dense problems.However, for large sparse problems, you can let \\ be an iterative method. For example, using PETSc.jl, we can define our factorization function to be:factorization = (A) -> KSP(A, ksp_type=\"gmres\", ksp_rtol=1e-6)This function creates a KSP type which makes \\ perform the GMRES iterative method provided by PETSc.jl. Thus if we pass this function into the algorithm as the factorization method, all internal linear solves will happen by PETSc.jl.To make this compatible with more linear solvers, all that needs to happen is such a type needs to be implemented. Feel free to contact me if you would like help submitting a PR to help more packages use this interface."
+},
+
+{
+    "location": "features/linear_nonlinear.html#Nonlinear-Solvers-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Nonlinear Solvers",
+    "category": "section",
+    "text": "Choice of nonlinear solvers is currently not available. For the current state of this work, see this Discourse thread."
 },
 
 {
