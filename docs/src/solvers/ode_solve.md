@@ -92,6 +92,14 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
+The following methods allow for specification of `factorization`: the linear
+solver which is used:
+
+- `Rosenbrock23`
+- `Rosenbrock32`
+
+For more information on specifying the linear solver, see [the manual page on solver specification](../features/linear_nonlinear.html)
+
 Additionally, there is the tableau method:
 
   - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
