@@ -32,6 +32,25 @@ For `SRA` and `SRI`, the following option is allowed:
 
 * `tableau`: The tableau for an `:SRA` or `:SRI` algorithm. Defaults to SRIW1 or SRA1.
 
+#### StochasticCompositeAlgorithm
+
+One unique feature of StochasticDiffEq.jl is the `StochasticCompositeAlgorithm`, which allows
+you to, with very minimal overhead, design a multimethod which switches between
+chosen algorithms as needed. The syntax is `StochasticCompositeAlgorithm(algtup,choice_function)`
+where `algtup` is a tuple of StochasticDiffEq.jl algorithms, and `choice_function`
+is a function which declares which method to use in the following step. For example,
+we can design a multimethod which uses `EM()` but switches to `RKMil()` whenever
+`dt` is too small:
+
+```julia
+choice_function(integrator) = (Int(integrator.dt<0.001) + 1)
+alg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)
+```
+
+The `choice_function` takes in an `integrator` and thus all of the features
+available in the [Integrator Interface](@ref)
+can be used in the choice function.
+
 ### Adaptive Type: RSWM
 
 Algorithms which allow for adaptive timestepping (all except `EM` and `RKMil`)
