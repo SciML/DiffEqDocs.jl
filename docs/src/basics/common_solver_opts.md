@@ -122,6 +122,11 @@ Note that if a method does not have adaptivity, the following rules apply:
   [Event Handling and Callback Functions manual page](https://juliadiffeq.github.io/DiffEqDocs.jl/latest/man/callback_functions.html).
 * `isoutofdomain`: Specifies a function `isoutofdomain(t,u)` where, when it
   returns false, it will reject the timestep. Defaults to always false.
+* `unstable_check`: Specifies a function `unstable_check(dt,t,u)` where, when
+  it returns true, it will cause the solver to exit and throw a warning. Defaults
+  to `any(isnan,u)`, i.e. checking if any value is a NaN.
+* `verbose`: Toggles whether warnings are thrown when the solver exits early.
+  Defualts to true.
 
 ## Progress Monitoring
 
