@@ -525,7 +525,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Integrator Interface",
     "category": "section",
-    "text": "The integrator interface gives one the ability to interactively step through the numerical solving of a differential equation. Through this interface, one can easily monitor results, modify the problem during a run, and dynamically continue solving as one sees fit.Note: this is currently only offered by OrdinaryDiffEq.jl. It is currently an \"experimental preview\" which requires one to be on the master branches of both OrdinaryDiffEq.jl and DiffEqBase.jl. We hope to bring this interface to other packages like Sundials.jl as well."
+    "text": "The integrator interface gives one the ability to interactively step through the numerical solving of a differential equation. Through this interface, one can easily monitor results, modify the problem during a run, and dynamically continue solving as one sees fit.Note: this is currently only offered by OrdinaryDiffEq.jl, DelayDiffEq.jl, and StochasticDiffEq.jl. Solvers from other packages will support this in the near future."
 },
 
 {
