@@ -1,22 +1,32 @@
 # Parameter Estimation
 
 Parameter estimation for ODE models is provided by the DiffEq suite. The current
-functionality includes `build_optim_objective` and `lm_fit`. Note these require
+functionality includes `build_loss_objective` and `lm_fit`. Note these require
 that the problem is defined using a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
-### build_optim_objective
+### build_loss_objective
 
-`build_optim_objective` builds an objective function to be used with Optim.jl.
+`build_loss_objective` builds an objective function to be used with Optim.jl and
+MathProgBase-associated solvers like NLopt.
 
 ```julia
-build_optim_objective(prob,tspan,t,data;loss_func = L2DistLoss,kwargs...)
+function build_loss_objective(prob::DEProblem,t,data,alg;
+                              loss_func = L2DistLoss,
+                              mpg_autodiff = false,
+                              verbose = false,
+                              verbose_steps = 100,
+                              kwargs...)
 ```
 
-The first argument is the DEProblem to solve. Second is the `tspan`. Next is `t`,
+The first argument is the DEProblem to solve. Next is `t`,
 the set of timepoints which the data is found at. The last argument which is required
 is the data, which are the values that are known, in order to be optimized against.
 Optionally, one can choose a loss function from LossFunctions.jl or use the default
-of an L2 loss. The keyword arguments are passed to the ODE solver.
+of an L2 loss. One can also choose `verbose` and `verbose_steps`, which, in the
+MathProgBase interface, will print the steps and the values at the steps every
+`verbose_steps` steps. `mpg_autodiff` uses autodifferentiation to define the
+derivative for the MathProgBase solver. The extra keyword arguments are passed
+to the differential equation solver.
 
 ### build_lsoptim_objective
 
@@ -26,7 +36,7 @@ of an L2 loss. The keyword arguments are passed to the ODE solver.
 build_lsoptim_objective(prob,tspan,t,data;kwargs...)
 ```
 
-The arguments are the same as `build_optim_objective`.
+The arguments are the same as `build_loss_objective`.
 
 ### lm_fit
 
@@ -45,7 +55,7 @@ The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
 
-#### Examples
+#### Local Optimization Examples
 
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
 by defining the function as a [ParmaeterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
@@ -83,11 +93,11 @@ If we plot the solution with the parameter at `a=1.42`, we get the following:
 Notice that after one period this solution begins to drift very far off: this
 problem is sensitive to the choice of `a`.
 
-To build the objective function for Optim.jl, we simply call the `build_optim_objective`
+To build the objective function for Optim.jl, we simply call the `build_loss_objective`
 funtion:
 
 ```julia
-cost_function = build_optim_objective(prob,t,data,Tsit5(),maxiters=10000)
+cost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
 ```
 
 Note that we set `maxiters` so that way the differential equation solvers would
@@ -170,3 +180,68 @@ Results of Optimization Algorithm
 ```
 
 and thus this algorithm was able to correctly identify all four parameters.
+
+### More Algorithms (Global Optimization) via MathProgBase Solvers
+
+The `build_loss_objective` function builds an objective function which is able
+to be used with MathProgBase-associated solvers. This includes packages like
+IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a
+cost function for the single parameter optimization problem like:
+
+```julia
+f = @ode_def_nohes LotkaVolterraTest begin
+  dx = a*x - b*x*y
+  dy = -c*y + d*x*y
+end a=>1.5 b=1.0 c=3.0 d=1.0
+
+u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5())
+
+t = collect(linspace(0,10,200))
+randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
+data = vecvec_to_mat(randomized)
+
+obj = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
+```
+
+We can now use this `obj` as the objective function with MathProgBase solvers.
+For our example, we will use NLopt. To use the local derivative-free
+Constrained Optimization BY Linear Approximations algorithm, we can simply do:
+
+```julia
+using NLopt
+opt = Opt(:LN_COBYLA, 1)
+min_objective!(opt, obj)
+(minf,minx,ret) = NLopt.optimize(opt,[1.3])
+```
+
+This finds a minimum at `[1.49997]`. For a modified evolutionary algorithm, we
+can use:
+
+```julia
+opt = Opt(:GN_ESCH, 1)
+min_objective!(opt, obj.cost_function2)
+lower_bounds!(opt,[0.0])
+upper_bounds!(opt,[5.0])
+xtol_rel!(opt,1e-3)
+maxeval!(opt, 100000)
+(minf,minx,ret) = NLopt.optimize(opt,[1.3])
+```
+
+We can even use things like the Improved Stochastic Ranking Evolution Strategy
+(and add constraints if needed). This is done via:
+
+```julia
+opt = Opt(:GN_ISRES, 1)
+min_objective!(opt, obj.cost_function2)
+lower_bounds!(opt,[-1.0])
+upper_bounds!(opt,[5.0])
+xtol_rel!(opt,1e-3)
+maxeval!(opt, 100000)
+(minf,minx,ret) = NLopt.optimize(opt,[0.2])
+```
+
+which is very robust to the initial condition. For more information, see the
+NLopt documentation for more details. And give IPOPT or MOSEK a try!
