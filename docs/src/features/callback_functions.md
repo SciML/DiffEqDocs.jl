@@ -22,13 +22,15 @@ ContinuousCallback(condition,affect!,
                    rootfind,
                    save_positions;
                    interp_points=10,
-                   abstol=1e-14,reltol=0)
+                   abstol=1e-12,reltol=0
+                   idxs=nothing)
 
 ContinuousCallback(condition,affect!,affect_neg!,
                   rootfind,
                   save_positions;
                   interp_points=10,
-                  abstol=1e-14,reltol=0)
+                  abstol=1e-12,reltol=0,
+                  idxs=nothing)
 ```
 
 The arguments are defined as follows:
@@ -62,12 +64,14 @@ The arguments are defined as follows:
   The first save will always occcur (if true), and the second will only occur when
   an event is detected.  For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
+* `idxs`: The components which will be interpolated into the condition. Defaults
+  to `nothing` which means `u` will be all components.
 
 Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
 a tolerance from zero for the rootfinder: if the starting condition is less than
 the tolerance from zero, then no root will be detected. This is to stop repeat
-events happening just after a previously rootfound event. The default has `abstol=1e-14`
-and `reltol=0`.
+events happening just after a previously rootfound event. The default has
+`abstol=1e-14` and `reltol=0`.
 
 ### DiscreteCallback
 
@@ -217,7 +221,7 @@ by `v` the velocity, where the velocity is always changing at `-g` which is the
 gravitational constant. This is the equation:
 
 ```julia
-f = @ode_def BallBounce begin
+f = @ode_def_bare BallBounce begin
   dy =  v
   dv = -g
 end g=9.81
@@ -243,24 +247,15 @@ Now we have to say what to do when the event occurs. In this case we just
 flip the velocity (the second variable)
 
 ```julia
-function apply_event!(integrator)
+function affect!(integrator)
   integrator.u[2] = -integrator.u[2]
 end
 ```
 
-For safety, we use `interp_points=10`. We will enable `rootfind` because this means
-that when an event is detected, the solution will be approriately backtracked to
-the exact time at which the ball hits the floor. Lastly, since we are applying a
-discontinuous change, we set `save_values=(true,true)` so that way at the event
-location `t`, the solution for the velocity will be left continuous and then jump
-at `t` to start solving again (and the interpolations will work). The callback
-is thus specified by:
+The callback is thus specified by:
 
 ```julia
-interp_points = 10
-rootfind = true
-save_positions = (true,true)
-cb = Callback(condtion,affect!,rootfind,interp_points,save_positions)
+cb = ContinuousCallback(condition,affect!)
 ```
 
 Then you can solve and plot:
@@ -280,6 +275,141 @@ to use the interpolation to hone in on the time of the event and apply the event
 back at the correct time. Thus one does not have to worry about the adaptive timestepping
 "overshooting" the event as this is handled for you. Notice that the event macro
 will save the value(s) at the discontinuity.
+
+
+#### Tweaking the Defaults to Specialized Event Detection To Your Problem
+
+Event detection is by nature a difficult issue due to floating point problems.
+The defaults given by DifferentialEquations.jl works pretty well for most
+problems where events are well-spaced, but if the events are close to each
+other (relative to the stepsize), the defaults may need to be tweaked.
+
+The bouncing ball is a good example of this behavior. Let's see what happens
+if we change the timespan to be very long:
+
+```julia
+u0 = [50.0,0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol,plotdensity=10000)
+```
+
+![ball_miss](../assets/ball_miss.png)
+
+
+To see why the event was missed, let's see the timesteps:
+
+```julia
+println(sol.t)
+# [0.0,0.000101935,0.00112128,0.0113148,0.11325,1.1326,3.19275,3.19275,100.0]
+```
+
+The last timestep was huge! The reason why this happened is because the bouncing
+ball's solution between discontinuities is only quadratic, and thus a second order
+method (`Tsit5()`) can integrate it exactly. This means that the error is essentially
+zero, and so it will grow `dt` by `qmax` every step (for almost all problems this
+is not an issue that will come up, but it makes this into a good test example).
+
+One way we can help with event detection is by giving a reasonable limit to the
+timestep. By default it will allow stepping the size of the whole interval. Let's
+capt it at 10:
+
+
+```julia
+u0 = [50.0,0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),callback=cb,dtmax=10)
+plot(sol,plotdensity=10000)
+```
+
+![bounce_long](../assets/bounce_long.png)
+
+If we don't want to constrain the timestep, we can instead change the `interp_points`.
+`interp_points` is the number of interpolation points used to check for an event.
+By default it is 10. Here's a little illustration of what's going on when the timestep
+is unconstrained. To check if there's an event in `[3.1925,100.0]`, it will check
+if the sign is different at any timepoint in `linspace(3.1925,100.0,interp_points)`
+using an interpolation (cheap, low cost, not function evaluation). Because `3.1925`
+was a previous event (and thus too close to zero, as seen by the callback's `abstol`
+and `reltol`), it will ignore the sign there (in order to prevent repeat events)
+and thus check if the sign changes on `[13.94,100.0]` where `13.94` is the first
+point in the `linspace`. However, the ball has already gone negative by this point,
+and thus there is no sign change which means it cannot detect the event.
+
+This is why, in most cases, increasing the `interp_points` will help with event
+detection (another case where this will show up is if the problem is highly
+oscillatory and you need to detect events inside the interval). Thus we can solve
+the problem without constraining the timestep by:
+
+```julia
+cb = ContinuousCallback(condition,affect!,interp_points=100000)
+u0 = [50.0,0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol,plotdensity=10000)
+```
+
+Note that the `interp_points` only has to be that high because the problem is
+odd in a way that causes large timesteps. Decreasing the `interp_points` a bit
+shows another issue that can occur:
+
+```julia
+cb = ContinuousCallback(condition,affect!,interp_points=1000)
+u0 = [50.0,0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol,plotdensity=10000)
+```
+
+In this case there are many events, and it steps working at around `t=54.2768`:
+
+```julia
+println(sol.t)
+# [0.0,0.000101935,0.00112128,0.0113148,0.11325,1.1326,3.19275,3.19275,9.57826,9.57826,15.9638,15.9638,22.3493,22.3493,28.7348,28.7348,35.1203,35.1203,41.5058,41.5058,47.8913,47.8913,54.2768,54.2768,54.2768,54.2768,100.0]
+```
+
+The reason because of a repeat event at `t=54.2768`. Not that every time an event
+occurs, there are by default two saves (as denoted by the `save_positions` keyword
+argument), and so the four repeat of this timepoint denotes a double event. We
+can see why this occurred by printing out the value:
+
+```julia
+println(sol[24])
+# [-1.50171e-12,31.3209]
+```
+
+This value is not exactly zero due to floating point errors, and "the faster" the
+changes the larger this error (this is one reason for using higher precision numbers
+when necessary). Recall that by default, the `abstol` for an event is `1e-12`,
+and so this does not recognize `t=54.2768` as being a zero, and instead sees
+it as a negative timepoint. Thus since it's position just soon after, it will
+see there's a negative -> positive event, flipping the sign once more, and then
+continuing to fall below the ground.
+
+To fix this, we can increase the tolerance a bit. For this problem, we can safely
+say that anything below `1e-10` can be considered zero. Thus we modify the callback:
+
+```julia
+cb = ContinuousCallback(condition,affect!,interp_points=1000,abstol=1e-10)
+u0 = [50.0,0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol,plotdensity=10000)
+```
+
+and it once again detects properly.
+
+The short of it is: the defaults may need to be tweaked for your given problem,
+and usually the answer is increasing the number of interpolation points, or if
+you are noticing multi-events at a single timepoint, changing the tolerances.
+If these fail, constraining the timestep is another option. For most problems
+the defaults should be fine, but these steps will be necessary for "fast" problems
+or highly oscillatory problems.
 
 ### Example 2: Growing Cell Population
 
