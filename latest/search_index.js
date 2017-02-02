@@ -437,7 +437,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Solution Handling",
     "title": "Accessing the Values",
     "category": "section",
-    "text": "The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. Internally, the solution type has two important fields:u which holds the Vector of values at each timestep\nt which holds the times of each timestep.Different solution types may add extra information as necessary, such as the derivative at each timestep du or the spatial discretization x, y, etc.Instead of working on the Vector{uType} directly, we can use the provided array interface.sol[i]to access the value at timestep i (if the timeseries was saved), andsol.t[i]to access the value of t at timestep i. For multi-dimensional systems, this will address first by time and secondly by component, and thussol[i,j]will be the jth component at timestep i. If the independent variables had shape (for example, was a matrix), then j is the linear index. We can also access solutions with shape:sol[i,j,k]gives the [j,k] component of the system at timestep i. The colon operator is supported, meaning thatsol[:,j]gives the timeseries for the jth component.If the solver allows for dense output and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)Note that the interpolating function allows for t to be a vector and uses this to speed up the interpolation calculations.The solver interface also gives tools for using comprehensions over the solution. Using the tuples(sol) function, we can get a tuple for the output at each timestep. This allows one to do the following:[t+2u for (t,u) in tuples(sol)]One can use the extra components of the solution object as well as using zip. For example, say the solution type holds du, the derivative at each timestep. One can comprehend over the values using:[t+3u-du for (t,u,du) in zip(sol.t,sol.u,sol.du)]Note that the solution object acts as a vector in time, and so its length is the number of saved timepoints."
+    "text": "The solution type has a lot of built in functionality to help analysis. For example, it has an array interface for accessing the values. Internally, the solution type has two important fields:u which holds the Vector of values at each timestep\nt which holds the times of each timestep.Different solution types may add extra information as necessary, such as the derivative at each timestep du or the spatial discretization x, y, etc."
+},
+
+{
+    "location": "basics/solution.html#Array-Interface-1",
+    "page": "Solution Handling",
+    "title": "Array Interface",
+    "category": "section",
+    "text": "Instead of working on the Vector{uType} directly, we can use the provided array interface.sol[i]to access the value at timestep i (if the timeseries was saved), andsol.t[i]to access the value of t at timestep i. For multi-dimensional systems, this will address first by time and secondly by component, and thussol[i,j]will be the jth component at timestep i. If the independent variables had shape (for example, was a matrix), then j is the linear index. We can also access solutions with shape:sol[i,j,k]gives the [j,k] component of the system at timestep i. The colon operator is supported, meaning thatsol[:,j]gives the timeseries for the jth component."
+},
+
+{
+    "location": "basics/solution.html#Interpolations-1",
+    "page": "Solution Handling",
+    "title": "Interpolations",
+    "category": "section",
+    "text": "If the solver allows for dense output and dense=true was set for the solving (which is the default), then we can access the approximate value at a time t using the commandsol(t)Note that the interpolating function allows for t to be a vector and uses this to speed up the interpolation calculations. The full API for the interpolations issol(t,deriv=Val{0};idxs=nothing)The optional argument deriv lets you choose the number n derivative to solve the interpolation for, defaulting with n=0. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done by hand for each algorithm. Open an issue if there's a specific one you need). idxs allows you to choose the indices the interpolation should solve for. For example,sol(t,idxs=1:2:5)will return a Vector of length 3 which is the interpolated values at t for components 1, 3, and 5. idxs=nothing, the default, means it will return every component. In addition, we can dosol(t,idxs=1)and it will return a Number for the interpolation of the single value. Note that this interpolation only computes the values which are requested, and thus it's much faster on large systems to use this rather than computing the full interpolation and using only a few values.In addition, there is an inplace form:sol(out,t,deriv=Val{0};idxs=nothing)which will write the output to out. This allows one to use pre-allocated vectors for the output to improve the speed even more."
+},
+
+{
+    "location": "basics/solution.html#Comprehensions-1",
+    "page": "Solution Handling",
+    "title": "Comprehensions",
+    "category": "section",
+    "text": "The solver interface also gives tools for using comprehensions over the solution. Using the tuples(sol) function, we can get a tuple for the output at each timestep. This allows one to do the following:[t+2u for (t,u) in tuples(sol)]One can use the extra components of the solution object as well as using zip. For example, say the solution type holds du, the derivative at each timestep. One can comprehend over the values using:[t+3u-du for (t,u,du) in zip(sol.t,sol.u,sol.du)]Note that the solution object acts as a vector in time, and so its length is the number of saved timepoints."
 },
 
 {
@@ -1389,7 +1413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5.\nSRA1 - An optimized version of SRIA1. Strong Order 2.0.For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.\nSRA - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5.\nSRA1 - An optimized version of SRIA1. Strong Order 2.0.For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1."
 },
 
 {
