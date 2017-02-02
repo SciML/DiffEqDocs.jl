@@ -6,6 +6,7 @@ add-on functionality will work with the given solver. A blank means that
 the option has not been implemented or that a given add-on has not been tested
 with a given package. If there are any errors in this chart, please file an
 issue or submit a pull-request.
+
 | Option                                 | OrdinaryDiffEq.jl | Sundials.jl | ODE.jl | ODEInterface.jl | LSODA.jl | StochasticDiffEq.jl | DelayDiffEq.jl | DASKR.jl | DASSL.jl | ODEIterators.jl |
 |----------------------------------------|-------------------|-------------|--------|-----------------|----------|---------------------|----------------|----------|----------|-----------------|
 | Dense (continuous) output              | x                 |             | x      |                 |          | x                   | x              |          |          |                 |
