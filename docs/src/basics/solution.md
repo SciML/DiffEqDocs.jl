@@ -12,6 +12,8 @@ has two important fields:
 Different solution types may add extra information as necessary, such as the
 derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
+## Array Interface
+
 Instead of working on the `Vector{uType}` directly, we can use the provided
 array interface.
 
@@ -49,6 +51,8 @@ sol[:,j]
 
 gives the timeseries for the `j`th component.
 
+## Interpolations
+
 If the solver allows for dense output and `dense=true` was set for the solving
 (which is the default), then we can access the approximate value
 at a time `t` using the command
@@ -57,8 +61,35 @@ at a time `t` using the command
 sol(t)
 ```
 
-Note that the interpolating function allows for `t` to be a vector and uses this
-to speed up the interpolation calculations.
+Note that the interpolating function allows for `t` to be a vector and uses this to speed up the interpolation calculations. The full API for the interpolations is
+
+```julia
+sol(t,deriv=Val{0};idxs=nothing)
+```
+
+The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done by hand for each algorithm. Open an issue if there's a specific one you need). `idxs` allows you to choose the indices the interpolation should solve for. For example,
+
+```julia
+sol(t,idxs=1:2:5)
+```
+
+will return a `Vector` of length 3 which is the interpolated values at `t` for components `1`, `3`, and `5`. `idxs=nothing`, the default, means it will return every component. In addition, we can do
+
+```julia
+sol(t,idxs=1)
+```
+
+and it will return a `Number` for the interpolation of the single value. Note that this interpolation only computes the values which are requested, and thus it's much faster on large systems to use this rather than computing the full interpolation and using only a few values.
+
+In addition, there is an inplace form:
+
+```julia
+sol(out,t,deriv=Val{0};idxs=nothing)
+```
+
+which will write the output to `out`. This allows one to use pre-allocated vectors for the output to improve the speed even more.
+
+## Comprehensions
 
 The solver interface also gives tools for using comprehensions over the solution.
 Using the `tuples(sol)` function, we can get a tuple for the output at each

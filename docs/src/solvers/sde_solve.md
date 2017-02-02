@@ -19,6 +19,8 @@ you simply need to quickly compute a large ensamble and don't need accuracy
 
 ### StochasticDiffEq.jl
 
+Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
+
 - `EM`- The Euler-Maruyama method.
 - `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.
 - `SRA` - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented.
