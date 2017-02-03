@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "DifferentialEquations.jl Documentation",
     "category": "section",
-    "text": "DifferentialEquations.jl is a package for numerically solving differential equations using the various components of JuliaDiffEq. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
+    "text": "DifferentialEquations.jl is a package for numerically solving differential equations using the various components of JuliaDiffEq. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include discrete equations (function maps, discrete stochastic simulations like Gillespie/Markov models), ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Supported Equations",
     "category": "section",
-    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Ordinary Differential Equations (ODEs)\nStochastic Differential Equations (SDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
+    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Discrete Equations (function maps, discrete stochastic (Markov) simulations)\nOrdinary Differential Equations (ODEs)\nStochastic Differential Equations (SDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
 },
 
 {
@@ -638,6 +638,70 @@ var documenterSearchIndex = {"docs": [
     "title": "Note on PDEs",
     "category": "section",
     "text": "This chart is only for the basic (ODE/SDE/DAE/DDE) solver methods. The PDE solvers (will be) built on top of these packages and thus will have the same options available. Current, FiniteElementDiffEq.jl  is a solo implemention which is compatible with save_timeseries, timeseries_steps, plotting and solution handling, arbitrary precision, and choice of dt."
+},
+
+{
+    "location": "types/discrete_types.html#",
+    "page": "Discrete Types",
+    "title": "Discrete Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/discrete_types.html#Discrete-Types-1",
+    "page": "Discrete Types",
+    "title": "Discrete Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/discrete_types.html#Mathematical-Specification-of-a-Discrete-Problem-1",
+    "page": "Discrete Types",
+    "title": "Mathematical Specification of a Discrete Problem",
+    "category": "section",
+    "text": "To define an Discrete Problem, you simply need to give the function f and the initial condition u which define a function map:u_n+1 = f(tu_n)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that if the discrete solver is set to have scale_by_time=true, then the problem is interpreted as the map:u_n+1 = u_n + dtf(tu_n)"
+},
+
+{
+    "location": "types/discrete_types.html#Problem-Type-1",
+    "page": "Discrete Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/discrete_types.html#Constructors-1",
+    "page": "Discrete Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "DiscreteProblem(f,u0,tspan) : Defines the discrete problem with the specified functions."
+},
+
+{
+    "location": "types/discrete_types.html#Fields-1",
+    "page": "Discrete Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the map.\nu0: The initial condition.\ntspan: The timespan for the problem."
+},
+
+{
+    "location": "types/discrete_types.html#Special-Solver-Options-1",
+    "page": "Discrete Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/discrete_types.html#Special-Solution-Fields-1",
+    "page": "Discrete Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": "None. The Discrete type is as basic as it gets."
 },
 
 {
@@ -1254,6 +1318,38 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, use:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary"
+},
+
+{
+    "location": "solvers/discrete_solve.html#",
+    "page": "Discrete Solvers",
+    "title": "Discrete Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/discrete_solve.html#Discrete-Solvers-1",
+    "page": "Discrete Solvers",
+    "title": "Discrete Solvers",
+    "category": "section",
+    "text": "solve(prob::DiscreteProblem,alg;kwargs)Solves the discrete function map defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
+},
+
+{
+    "location": "solvers/discrete_solve.html#Recommended-Methods-1",
+    "page": "Discrete Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "The implementation for solving discrete equations is the Discrete algorithm in OrdinaryDiffEq.jl. It has zero overhead and uses compilation to build a separate setup that allows you to use the common interface (including events/callbacks) to solve function maps, along with everything else like plot recipes, while completely ignoring the ODE functionality related to continuous equations (except for a tiny bit of initialization)."
+},
+
+{
+    "location": "solvers/discrete_solve.html#Discrete-Algorithm-1",
+    "page": "Discrete Solvers",
+    "title": "Discrete Algorithm",
+    "category": "section",
+    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_nu_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=true,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the update u_n+1 = f(t_nu_n). If in addition scale_by_time=true, then every step is the update u_n+1 = u_n + dtf(t_nu_n). Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
 },
 
 {
