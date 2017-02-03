@@ -27,6 +27,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "basics/compatibility_chart.md"
          ],
          "Equation Types" => Any[
+           "types/discrete_types.md",
            "types/ode_types.md",
            "types/sde_types.md",
            "types/dde_types.md",
@@ -35,6 +36,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "types/stokes_types.md"
          ],
          "Solver Algorithms" => Any[
+           "solvers/discrete_solve.md",
            "solvers/ode_solve.md",
            "solvers/sde_solve.md",
            "solvers/dde_solve.md",

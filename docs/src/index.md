@@ -1,19 +1,20 @@
 # DifferentialEquations.jl Documentation
 
 DifferentialEquations.jl is a package for numerically solving differential
-equations using the various components of JuliaDiffEq. The purpose of this package is to supply
-efficient Julia implementations of solvers for various differential equations.
-Equations within the realm of this package include ordinary differential equations
-(ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic
-partial differential equations (SPDEs), partial differential equations (with both
-finite difference and finite element methods), differential algebraic equations
-(DAEs), and differential delay equations (DDEs). The well-optimized
-DifferentialEquations solvers benchmark as the fastest Julia implementations,
-using classic algorithms and ones from recent research, and include algorithms
-optimized for high-precision and HPC applications.  It integrates with the
-Julia package sphere, for example using Juno's progress meter, automatic plotting,
-built-in interpolations, and wraps other differential equation solvers so
-that many different methods for solving the equations can be accessed by
+equations using the various components of JuliaDiffEq. The purpose of this package
+is to supply efficient Julia implementations of solvers for various differential
+equations. Equations within the realm of this package include discrete equations
+(function maps, discrete stochastic simulations like Gillespie/Markov models),
+ordinary differential equations (ODEs), stochastic ordinary differential
+equations (SODEs or SDEs), stochastic partial differential equations (SPDEs),
+partial differential equations (with both finite difference and finite element methods),
+differential algebraic equations (DAEs), and differential delay equations (DDEs).
+The well-optimized DifferentialEquations solvers benchmark as the fastest Julia
+implementations, using classic algorithms and ones from recent research, and
+include algorithms optimized for high-precision and HPC applications.  It integrates
+with the Julia package sphere, for example using Juno's progress meter, automatic
+plotting, built-in interpolations, and wraps other differential equation solvers
+so that many different methods for solving the equations can be accessed by
 simply switching a keyword argument. It utilizes Julia's generality to be
 able to solve problems specified with arbitrary number types (types with
 units like Unitful, and arbitrary precision numbers like BigFloats and
@@ -64,6 +65,7 @@ for power users. Information on how to get to the bleeding edge is found in the
 For PDEs, one can optionally specify a noise equation. The solvers currently have
 stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
+* Discrete Equations (function maps, discrete stochastic (Markov) simulations)
 * Ordinary Differential Equations (ODEs)
 * Stochastic Differential Equations (SDEs)
 * Algebraic Differential Equations (DAEs)
@@ -133,6 +135,7 @@ for the solvers, and the special features of the different solution types.
 
 ```@contents
 Pages = [
+  "types/discrete_types.md",
   "types/ode_types.md",
   "types/sde_types.md",
   "types/dde_types.md",
@@ -149,6 +152,7 @@ These pages describe the solvers and available algorithms in detail.
 
 ```@contents
 Pages = [
+  "solvers/discrete_solve.md",
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
   "solvers/dde_solve.md",
