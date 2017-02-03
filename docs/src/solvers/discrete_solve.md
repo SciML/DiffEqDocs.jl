@@ -29,7 +29,18 @@ Discrete(;apply_map=true,scale_by_time=false)
 ```
 
 If `apply_map=false`, `f` is completely ignored. If `apply_map=true`, then
-every step is the update ``u_{n+1} = f(t_n,u_n)``. If in addition `scale_by_time=true`,
-then every step is the update ``u_{n+1} = u_n + dtf(t_n,u_n)``. Notice that this is
-the same as updates from the Euler method, except in this case we assume that its
-a discrete change and thus the interpolation is piecewise constant.
+every step is the update
+
+```math
+u_{n+1} = f(t_n,u_n)
+```
+
+If in addition `scale_by_time=true`,
+then every step is the update
+
+```math
+u_{n+1} = u_n + dt \times f(t_n,u_n)
+```
+
+Notice that this is the same as updates from the Euler method, except in this
+case we assume that its a discrete change and thus the interpolation is piecewise constant.

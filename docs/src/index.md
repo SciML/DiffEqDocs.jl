@@ -65,7 +65,7 @@ for power users. Information on how to get to the bleeding edge is found in the
 For PDEs, one can optionally specify a noise equation. The solvers currently have
 stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
-* Discrete Equations (function maps, discrete stochastic (Markov) simulations)
+* Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)
 * Ordinary Differential Equations (ODEs)
 * Stochastic Differential Equations (SDEs)
 * Algebraic Differential Equations (DAEs)
