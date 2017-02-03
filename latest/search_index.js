@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Supported Equations",
     "category": "section",
-    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Discrete Equations (function maps, discrete stochastic (Markov) simulations)\nOrdinary Differential Equations (ODEs)\nStochastic Differential Equations (SDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
+    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)\nOrdinary Differential Equations (ODEs)\nStochastic Differential Equations (SDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
 },
 
 {
@@ -1349,7 +1349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Solvers",
     "title": "Discrete Algorithm",
     "category": "section",
-    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_nu_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=true,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the update u_n+1 = f(t_nu_n). If in addition scale_by_time=true, then every step is the update u_n+1 = u_n + dtf(t_nu_n). Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
+    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_nu_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=true,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_nu_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dt times f(t_nu_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
 },
 
 {
