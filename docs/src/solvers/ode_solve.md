@@ -150,15 +150,16 @@ Note that the constructors for the Sundials algorithms take two arguments:
     note that using the `:Newton` method may take less iterations but requires
     more memory than the `:Function` iteration approach.
   - `linearsolver` - This is the linear solver which is used in the `:Newton` method.
-  The choices are:
 
-    - `:Dense` - A dense linear solver.
-    - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
-      position of the upper and lower non-zero diagonals via `jac_upper` and
-      `jac_lower`.
-    - `:Diagonal` - This method is specialized for diagonal Jacobians.
-    - `BCG` - A Biconjugate gradient method.
-    - `TFQMR` - A TFQMR method.
+  The choices for the linear solver are:
+
+  - `:Dense` - A dense linear solver.
+  - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
+    position of the upper and lower non-zero diagonals via `jac_upper` and
+    `jac_lower`.
+  - `:Diagonal` - This method is specialized for diagonal Jacobians.
+  - `BCG` - A Biconjugate gradient method.
+  - `TFQMR` - A TFQMR method.
 
 Example:
 
