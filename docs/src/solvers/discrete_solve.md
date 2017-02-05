@@ -25,7 +25,7 @@ assumed `rootfind=false`).
 The constructor is:
 
 ```julia
-Discrete(;apply_map=true,scale_by_time=false)
+Discrete(;apply_map=false,scale_by_time=false)
 ```
 
 If `apply_map=false`, `f` is completely ignored. If `apply_map=true`, then
@@ -44,3 +44,16 @@ u_{n+1} = u_n + dtf(t_n,u_n).
 
 Notice that this is the same as updates from the Euler method, except in this
 case we assume that its a discrete change and thus the interpolation is piecewise constant.
+
+As a shorthand,
+
+```julia
+FunctionMap(scale_by_time=false)
+```
+
+is a `Discrete` with `apply_map=true`, and thus corresponds to the function map
+equation
+
+```math
+u_{n+1} = f(t_n,u_n).
+```

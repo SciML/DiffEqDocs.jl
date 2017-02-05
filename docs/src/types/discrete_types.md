@@ -33,6 +33,14 @@ u_{n+1} = u_n + dtf(t,u_n)
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
 
+#### Note About Timing
+
+Note that if no `dt` and not `tstops` is given, it's assumed that `dt=1` and thus
+`tspan=(0,n)` will solve for `n` iterations. If in the solver `dt` is given, then
+the number of iterations will change. And if `tstops` is not empty, the solver will
+revert to the standard behavior of fixed timestep methods, which is "step to each
+tstop".
+
 ## Special Solver Options
 
 ## Special Solution Fields
