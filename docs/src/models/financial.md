@@ -12,8 +12,8 @@ the stochastic differential equation solvers.
 ### HestonProblem
 
 ```math
-dS = μSdt + \sqrt{v}SdW_1
-dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
+dS = μSdt + \sqrt{v}SdW_1 \\
+dv = κ(Θ-v)dt + σ\sqrt{v}dW_2 \\
 dW_1 dW_2 = ρ dt
 ```
 
