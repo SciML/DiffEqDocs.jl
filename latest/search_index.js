@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Tutorials",
     "category": "section",
-    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
+    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -94,6 +94,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Analysis Tools",
     "category": "section",
     "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
+},
+
+{
+    "location": "index.html#Modeling-Tools-1",
+    "page": "Home",
+    "title": "Modeling Tools",
+    "category": "section",
+    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/financial.md\",\n    \"models/biological.md\"\n]\nDepth = 2"
 },
 
 {
@@ -214,6 +222,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Differential Algebraic Equations",
     "category": "section",
     "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the implicit ODE equationf(tudu) = 0where f is the a variant of the Roberts equation. This equations is actually of the formbeginalign\ndu = f(tu) \n 0 = g(tu) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Roberts model can be written in the form:beginalign\ndy_1 = -004y + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1  y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(t,u,du,out) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:f = function (t,u,du,out)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditonsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]\ntspan = (0.0,100000.0)and make the DAEProblem:using DifferentialEquations\nprob = DAEProblem(f,u₀,du₀,tspan)As with the other DifferentialEquations problems, the commands are then to solve and plot. Here we will use the IDA solver from Sundials:sol = solve(prob,IDA())\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)which, despite how interesting the model looks, produces a relatively simple output:(Image: IntroDAEPlot)"
+},
+
+{
+    "location": "tutorials/discrete_stochastic_example.html#",
+    "page": "Discrete Stochastic (Gillespie) Equations",
+    "title": "Discrete Stochastic (Gillespie) Equations",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/discrete_stochastic_example.html#Discrete-Stochastic-(Gillespie)-Equations-1",
+    "page": "Discrete Stochastic (Gillespie) Equations",
+    "title": "Discrete Stochastic (Gillespie) Equations",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -1150,6 +1174,70 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA)"
+},
+
+{
+    "location": "types/jump_types.html#",
+    "page": "Jump Types",
+    "title": "Jump Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/jump_types.html#Jump-Types-1",
+    "page": "Jump Types",
+    "title": "Jump Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/jump_types.html#Mathematical-Specification-of-an-problem-with-jumps-1",
+    "page": "Jump Types",
+    "title": "Mathematical Specification of an problem with jumps",
+    "category": "section",
+    "text": "Jumps are defined as a Poisson process which occur according to some rate. When multiple jumps are together, the process is a compound Poisson process. On their own, a jump equation on is continuous-time Markov Chain where the time to the next jump is exponentially distributed as calculated by the rate. This type of process, known in biology as \"Gillespie discrete stochastic simulations\" and modeled by the Chemical Master Equation (CME), is the same thing as adding jumps to a DiscreteProblem. However, any differential equation can be extended by jumps as well. For example, we have an ODE with jumps, denoted byfracdudt = f(tu) +  h_i(tu)N_i(t)where N_i is a Poisson counter of rate lambda_i(tu). Extending a stochastic differential equation to have jumps is commonly known as a Jump Diffusion, and is denoted byfracdudt = f(tu) + g(ut)dW +  h_i(tu)N_i(t)"
+},
+
+{
+    "location": "types/jump_types.html#Variable-and-Constant-Rate-Jumps-1",
+    "page": "Jump Types",
+    "title": "Variable and Constant Rate Jumps",
+    "category": "section",
+    "text": "We denote a jump as variable rate if its rate function is dependent on values which may change between constant rate jumps. For example, if there are multiple jumps whose rates only change when one of them occur, than that set of jumps is a constant rate jump. If the jump's rate depends on the differential equation, time, or by some value which changes outside of some constant rate jump, then it is denoted as variable."
+},
+
+{
+    "location": "types/jump_types.html#Defining-a-Constant-Rate-Jump-1",
+    "page": "Jump Types",
+    "title": "Defining a Constant Rate Jump",
+    "category": "section",
+    "text": "The constructor for a ConstantRateJump is:ConstantRateJump(rate,affect!;save_positions=(true,true))rate(t,u) is a function which calculates the rate given the time and the state.\naffect!(integrator) is the effect on the equation, using the integrator interface."
+},
+
+{
+    "location": "types/jump_types.html#Defining-a-Variable-Rate-Jump-1",
+    "page": "Jump Types",
+    "title": "Defining a Variable Rate Jump",
+    "category": "section",
+    "text": "The constructor for a VariableRateJump is:VariableRateJump(rate,affect!;\n                   idxs = nothing,\n                   rootfind=true,\n                   save_positions=(true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0)Note that this is the same as defining a ContinuousCallback, except that instead of the condition function, you provide a rate(t,u) function for the rate at a given time and state."
+},
+
+{
+    "location": "types/jump_types.html#Defining-a-Jump-Problem-1",
+    "page": "Jump Types",
+    "title": "Defining a Jump Problem",
+    "category": "section",
+    "text": "To define a JumpProblem, you must first define the basic problem. This can be a DiscreteProblem if there is no differential equation, or an ODE/SDE/DDE/DAE if you would like to augment a differential equation with jumps. Denote this previously defined problem as prob. Then the constructor for the jump problem is:JumpProblem(prob,aggregator::Direct,jumps::JumpSet;\n            save_positions = typeof(prob) <: AbstractDiscreteProblem ? (false,true) : (true,true))The aggregator is the method for aggregating the constant jumps. These are defined below. jumps is a JumpSet which is just a gathering of jumps. Instead of passing a JumpSet, one may just pass a list of jumps themselves. For example:JumpProblem(prob,aggregator,jump1,jump2)and the internals will automatically build the JumpSet. save_positions is the save_positions argument built by the aggregation of the constant rate jumps."
+},
+
+{
+    "location": "types/jump_types.html#Constant-Rate-Jump-Aggregator-1",
+    "page": "Jump Types",
+    "title": "Constant Rate Jump Aggregator",
+    "category": "section",
+    "text": "The constant rate jump aggregator is the method by which the constant rate jumps are lumped together. This is required in all algorithms for both speed and accuracy. The current methods are:Direct: the Gillespie SSA Direct method.To pass the aggregator, pass the instantiation of the type. For example:JumpProblem(prob,Direct(),jump1,jump2)will build a problem where the constant rate jumps are solved using Gillespie's Direct SSA method."
 },
 
 {
@@ -2406,6 +2494,142 @@ var documenterSearchIndex = {"docs": [
     "title": "Algorithm Development and Testing",
     "category": "section",
     "text": "Algorithm developing and testing tools are provided by DiffEqDevTools.jl and are documented in the developer documentation."
+},
+
+{
+    "location": "models/multiscale.html#",
+    "page": "Multi-Scale Models",
+    "title": "Multi-Scale Models",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "models/multiscale.html#Multi-Scale-Models-1",
+    "page": "Multi-Scale Models",
+    "title": "Multi-Scale Models",
+    "category": "section",
+    "text": "The multi-scale modeling functionality is provided by MultiScaleModels.jl. It allows for designing a multi-scale model as an extension of an array, which in turn can be directly used in the native Julia solvers of DifferentialEquations.jl."
+},
+
+{
+    "location": "models/multiscale.html#More-Information-1",
+    "page": "Multi-Scale Models",
+    "title": "More Information",
+    "category": "section",
+    "text": "For more information, please see the MultiScaleModels.jl README."
+},
+
+{
+    "location": "models/financial.html#",
+    "page": "Financial Models",
+    "title": "Financial Models",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "models/financial.html#Financial-Models-1",
+    "page": "Financial Models",
+    "title": "Financial Models",
+    "category": "section",
+    "text": "The financial models functionality is provided by FinancialModels.jl and helps the user build and solve the differential equation based financial models biological models."
+},
+
+{
+    "location": "models/financial.html#SDE-Model-Library-1",
+    "page": "Financial Models",
+    "title": "SDE Model Library",
+    "category": "section",
+    "text": "The following constructors create SDEProblem types which can be solved using the stochastic differential equation solvers."
+},
+
+{
+    "location": "models/financial.html#HestonProblem-1",
+    "page": "Financial Models",
+    "title": "HestonProblem",
+    "category": "section",
+    "text": "dS = Sdt + sqrtvSdW_1\ndv = (-v)dt + sqrtvdW_2\ndW_1 dW_2 =  dtConstructor:HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan)"
+},
+
+{
+    "location": "models/financial.html#GeneralizedBlackScholesProblem-1",
+    "page": "Financial Models",
+    "title": "GeneralizedBlackScholesProblem",
+    "category": "section",
+    "text": "d ln S(t) = (r(t) - q(t) - frac(tS)^22)dt +  dW_tSolves for log S(t). Constructor:GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)"
+},
+
+{
+    "location": "models/financial.html#BlackScholesProblem-1",
+    "page": "Financial Models",
+    "title": "BlackScholesProblem",
+    "category": "section",
+    "text": "d ln S(t) = (r(t) - frac(tS)^22)dt +  dW_tSolves for log S(t). Constructor:BlackScholesProblem(r,Θ,σ,u0,tspan)"
+},
+
+{
+    "location": "models/financial.html#ExtendedOrnsteinUhlenbeckProblem-1",
+    "page": "Financial Models",
+    "title": "ExtendedOrnsteinUhlenbeckProblem",
+    "category": "section",
+    "text": "dx = a(b(t)-x)dt +  dW_tConstructor:ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan)"
+},
+
+{
+    "location": "models/financial.html#OrnsteinUhlenbeckProblem-1",
+    "page": "Financial Models",
+    "title": "OrnsteinUhlenbeckProblem",
+    "category": "section",
+    "text": "dx = a(r-x)dt +  dW_tConstructor:OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan)"
+},
+
+{
+    "location": "models/biological.html#",
+    "page": "Biological Models",
+    "title": "Biological Models",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "models/biological.html#Biological-Models-1",
+    "page": "Biological Models",
+    "title": "Biological Models",
+    "category": "section",
+    "text": "The biological models functionality is provided by BiologicalModels.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
+},
+
+{
+    "location": "models/biological.html#The-Reaction-Type-1",
+    "page": "Biological Models",
+    "title": "The Reaction Type",
+    "category": "section",
+    "text": "The basic type for BiologicalModels.jl is the reaction type. Its constructor is:Reaction(rate_constant,reactants,stoichiometry)rate_constant is the rate constant for the reaction. reactants is a list of reactants for the reaction. For example, reactants=(2,3) means that the reaction rate is rate_constant*u[2]*u[3]. stoichiometry is then the stoichiometry for the result. It is a list of tuples of changes to apply when the reaction takes place. Each tuple (i,j) means \"modify reactiant i by amount j\". For example, the tuple (2,-1) means \"decrease reactant 2 by 1\"."
+},
+
+{
+    "location": "models/biological.html#Example-Reaction-1",
+    "page": "Biological Models",
+    "title": "Example Reaction",
+    "category": "section",
+    "text": "An example reaction is:r1 = Reaction(1e-4,(1,2),((1,-1),(2,1)))Here, the rate_constant is 1e-4. The reactants are components 1 and 2, meaning the reaction rate is calculated by rate_constant*u[1]*u[2]. The stoichiometry does two things. First, the (1,-1) means that, when the reaction occurs, we decrease u[1] by 1. Secondly, the (2,1) means we increase u[2] by 1. Thus this reaction is a reaction where chemical 1 changes into chemical 2, and it is enhanced by chemical 2 itself."
+},
+
+{
+    "location": "models/biological.html#GillespieProblem-1",
+    "page": "Biological Models",
+    "title": "GillespieProblem",
+    "category": "section",
+    "text": "These reactions can be added to a differential equation (or discrete) problem using the GillespieProblem. This is simply a constructor which interprets the reactions as jumps, and builds the associated JumpProblem. Thus its constructor is the same:GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::Reaction...;kwargs...)This is the exact same constructor as the JumpProblem, except now we pass reactions (or a ReactionSet) instead of jumps. Thus for more information, see the description of the JumpProblem."
+},
+
+{
+    "location": "models/biological.html#Note-About-Rate-Dependency-1",
+    "page": "Biological Models",
+    "title": "Note About Rate Dependency",
+    "category": "section",
+    "text": "Note that currently, the reactions are used to build ConstantRateJumps. This means that the solver requires that the rates are constant between jumps in order to achieve full accuracy. The rates for the ConstantRateJump may depend on each other, but they may not depend on the differential equation themselves. Allowing for VariableRateJumps from reactions is set for the next release. "
 },
 
 ]}
