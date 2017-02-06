@@ -124,7 +124,7 @@ there exists a plot recipe, which we can plot with:
 using Plots; plot(sol)
 ```
 
-![gillespie_solution](gillespie_solution.png)
+![gillespie_solution](../assets/gillespie_solution.png)
 
 ## Defining the Jumps Directly
 
@@ -189,7 +189,7 @@ jump_prob = GillespieProblem(prob,Direct(),r1,r2)
 sol = solve(jump_prob,Tsit5())
 ```
 
-![gillespie_ode](gillespie_ode.png)
+![gillespie_ode](../assets/gillespie_ode.png)
 
 ### Caution about Constant Rate Jumps
 
