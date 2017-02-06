@@ -2,7 +2,7 @@
 
 In this tutorial we will describe how to define and solve discrete stochastic
 simulations, also known in biological fields as Gillespie-type models. Discrete
-stochastic simulations are a form of jump equation with a "trivial" (non-existant)
+stochastic simulations are a form of jump equation with a "trivial" (non-existent)
 differential equation. We will first demonstrate how to build these types of models
 using the biological modeling functionality, and then describe how to build it
 directly and more generally using jumps, and finally show how to add discrete
