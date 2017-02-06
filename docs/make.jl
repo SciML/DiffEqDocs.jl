@@ -14,7 +14,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "tutorials/sde_example.md",
            "tutorials/dde_example.md",
            "tutorials/dae_example.md",
-           "tutorials/discrete_stochastic_example.md"
+           "tutorials/discrete_stochastic_example.md",
            "tutorials/fempoisson_example.md",
            "tutorials/femheat_example.md",
            "tutorials/femstochastic_example.md"
