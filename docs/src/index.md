@@ -103,6 +103,7 @@ Pages = [
     "tutorials/sde_example.md",
     "tutorials/dde_example.md",
     "tutorials/dae_example.md",
+    "tutorials/discrete_stochastic_example.md"
     "tutorials/fempoisson_example.md",
     "tutorials/femheat_example.md",
     "tutorials/femstochastic_example.md"
@@ -128,6 +129,7 @@ Pages = [
 Depth = 2
 ```
 
+
 ### Equation Types
 
 These pages describe building the problem types to define differential equations
@@ -140,6 +142,7 @@ Pages = [
   "types/sde_types.md",
   "types/dde_types.md",
   "types/dae_types.md",
+  "types/jump_types.md",
   "types/fem_types.md",
   "types/stokes_types.md"
 ]
@@ -197,6 +200,22 @@ Pages = [
     "analysis/sensitivity.md",
     "analysis/uncertainty_quantification.md",
     "analysis/dev_and_test.md"
+]
+Depth = 2
+```
+
+### Modeling Tools
+
+While DifferentialEquations.jl can be used to directly build any differential
+or difference equation (/ discrete stochastic) model, in many cases it can be
+helpful to have a tailored-built API for making certain types of common models
+easier. This is provided by the modeling functionality.
+
+```@contents
+Pages = [
+    "models/multiscale.md",
+    "models/financial.md",
+    "models/biological.md"
 ]
 Depth = 2
 ```

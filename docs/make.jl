@@ -14,6 +14,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "tutorials/sde_example.md",
            "tutorials/dde_example.md",
            "tutorials/dae_example.md",
+           "tutorials/discrete_stochastic_example.md"
            "tutorials/fempoisson_example.md",
            "tutorials/femheat_example.md",
            "tutorials/femstochastic_example.md"
@@ -32,6 +33,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "types/sde_types.md",
            "types/dde_types.md",
            "types/dae_types.md",
+           "types/jump_types.md",
            "types/fem_types.md",
            "types/stokes_types.md"
          ],
@@ -61,6 +63,11 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
            "analysis/sensitivity.md",
            "analysis/uncertainty_quantification.md",
            "analysis/dev_and_test.md"
+         ],
+         "Modeling Tools" => Any[
+             "models/multiscale.md",
+             "models/financial.md",
+             "models/biological.md"
          ]
          ])
 
