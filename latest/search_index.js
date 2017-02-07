@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/data_arrays.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -653,7 +653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Function Interface",
     "category": "section",
-    "text": "In addition to the type interface, a function interface is provided which allows for safe modifications of the integrator type, and allows for uniform usage throughout the ecosystem (for packages/algorithms which implement the functions). The following functions make up the interface:u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity.\nsavevalues!(integrator): Adds the current state to the sol.\nmodify_proposed_dt(integrator,factor):  Multiplies the proposed dt for the next timestep by the scaling factor.\nproposed_dt(integrator): Returns the dt of the proposed step.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed.\nresize!(integrator,k): Resizes the ODE to a size k. This chops off the end of the array, or adds blank values at the end, depending on whether k>length(integrator.u).\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\ndeleteat!(integrator,k): Shrinks the ODE by deleting the ith component.\nget_du(integrator): Returns the derivative at t.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner.Note that not all of these functions will be implemented for every algorithm. Some have hard limitations. For example, Sundials.jl cannot resize problems. When a function is not limited, an error will be thrown."
+    "text": "In addition to the type interface, a function interface is provided which allows for safe modifications of the integrator type, and allows for uniform usage throughout the ecosystem (for packages/algorithms which implement the functions). The following functions make up the interface:u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity.\nsavevalues!(integrator): Adds the current state to the sol.\nmodify_proposed_dt(integrator,factor):  Multiplies the proposed dt for the next timestep by the scaling factor.\nproposed_dt(integrator): Returns the dt of the proposed step.\nuser_cache(integrator): Returns an iterator over the user-facing cache arrays.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed.\nresize!(integrator,k): Resizes the ODE to a size k. This chops off the end of the array, or adds blank values at the end, depending on whether k>length(integrator.u).\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\ndeleteat!(integrator,k): Shrinks the ODE by deleting the ith component.\nget_du(integrator): Returns the derivative at t.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner.Note that not all of these functions will be implemented for every algorithm. Some have hard limitations. For example, Sundials.jl cannot resize problems. When a function is not limited, an error will be thrown."
 },
 
 {
@@ -1889,6 +1889,46 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/data_arrays.html#",
+    "page": "Data Arrays",
+    "title": "Data Arrays",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/data_arrays.html#Data-Arrays-1",
+    "page": "Data Arrays",
+    "title": "Data Arrays",
+    "category": "section",
+    "text": "In many cases, a standard array may not be enough to fully hold the data for a model. Many of the solvers in DifferentialEquations.jl allow you to solve problems on AbstractArray types which allow you to extend the meaning of an array. The DEDataArray{T} type allows one to add other \"non-continuous\" variables to an array, which can be useful in many modeling situations involving lots of events."
+},
+
+{
+    "location": "features/data_arrays.html#The-Data-Array-Interface-1",
+    "page": "Data Arrays",
+    "title": "The Data Array Interface",
+    "category": "section",
+    "text": "To define an DEDataArray, make a type which subtypes DEDataArray{T} with a field x for the \"array of continuous variables\" for which you would like the differential equation to treat directly. For example:type MyDataArray{T} <: DEDataArray{T}\n    x::Array{T,1}\n    a::T\n    b::Symbol\nendIn this example, our resultant array is a SimType, and its data which is presented to the differential equation solver will be the array x. Any array which the differential equation solver can use is allowed to be made as the field x, including other DEDataArrays. Other than that, you can add whatever fields you please, and let them be whatever type you please. These extra fields are carried along in the differential equation solver that the user can use in their f equation and modify via callbacks."
+},
+
+{
+    "location": "features/data_arrays.html#Example:-A-Control-Problem-1",
+    "page": "Data Arrays",
+    "title": "Example: A Control Problem",
+    "category": "section",
+    "text": "In this example we will use a DEDataArray to solve a problem where control parameters change at various timepoints. First we will buildtype SimType{T} <: DEDataArray{T}\n    x::Array{T,1}\n    f1::T\nendas our DEDataArray. It has an extra field f1 which we will use as our control variable. Our ODE function will use this field as follows:function f(t,u,du)\n    du[1] = -0.5*u[1] + u.f1\n    du[2] = -0.5*u[2]\nendNow we will setup our control mechanism. It will be a simple setup which uses set timepoints at which we will change f1. At t=5.0 we will want to increase the value of f1, and at t=8.0 we will want to decrease the value of f1. Using the DiscreteCallback interface, we code these conditions as follows:const tstop1 = [5.]\nconst tstop2 = [8.]\n\n\nfunction condition(t,u,integrator)\n  t in tstop1\nend\n\nfunction condition2(t,u,integrator)\n  t in tstop2\nendNow we have to apply an affect when these conditions are reached. When condition is hit (at t=5.0), we will increase f1 to 1.5. When condition2 is reached, we will decrease f1 to -1.5. This is done via the affects:function affect!(integrator)\n  for c in user_cache(integrator)\n    c.f1 = 1.5\n  end\nend\n\nfunction affect2!(integrator)\n  for c in user_cache(integrator)\n    c.f1 = -1.5\n  end\nendNotice that we have to loop through the user_cache array (provided by the integrator interface) to ensure that all internal caches are also updated. With these functions we can build our callbacks:save_positions = (true,true)\n\ncb = DiscreteCallback(condition, affect!, save_positions)\n\nsave_positions = (false,true)\n\ncb2 = DiscreteCallback(condition2, affect2!, save_positions)\n\ncbs = CallbackSet(cb,cb2)Now we define our initial condition. We will start at [10.0;10.0] with f1=0.0.u0 = SimType([10.0;10.0], 0.0)\nprob = ODEProblem(f,u0,(0.0,10.0))Lastly we solve the problem. Note that we must pass tstop values of 5.0 and 8.0 to ensure the solver hits those timepoints exactly:const tstop = [5.;8.]\nsol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)(Image: data_array_plot)It's clear from the plot how the controls affected the outcome."
+},
+
+{
+    "location": "features/data_arrays.html#Data-Arrays-vs-ParameterizedFunctions-1",
+    "page": "Data Arrays",
+    "title": "Data Arrays vs ParameterizedFunctions",
+    "category": "section",
+    "text": "The reason for using a DEDataArray is because the solution will then save the control parameters. For example, we can see what the control parameter was at every timepoint by checking:[sol[i].f1 for i in 1:length(sol)]A similar solution can be achieved using a ParameterizedFunction. We could have instead created our function as:function f(t,u,param,du)\n    du[1] = -0.5*u[1] + param\n    du[2] = -0.5*u[2]\nend\npf = ParameterizedFunction(f,0.0)\nu0 = SimType([10.0;10.0], 0.0)\nprob = ODEProblem(f,u0,(0.0,10.0))\nconst tstop = [5.;8.]\nsol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)where we now change the callbacks to changing the parameter in the function:function affect!(integrator)\n  integrator.f.params = 1.5\nend\n\nfunction affect2!(integrator)\n  integrator.f.params = -1.5\nendThis will also solve the equation and get a similar result. It will also be slightly faster in some cases. However, if the equation is solved in this manner, there will be no record of what the parameter was at each timepoint. That is the tradeoff between DEDataArrays and ParameterizedFunctions."
+},
+
+{
     "location": "features/linear_nonlinear.html#",
     "page": "Specifying (Non)Linear Solvers",
     "title": "Specifying (Non)Linear Solvers",
@@ -2349,7 +2389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ParameterizedFunctions",
     "title": "ParameterizedFunction Constructor",
     "category": "section",
-    "text": "The easiest way to make a ParameterizedFunction is to use the constructor:pf = ParameterizedFunction(f,params)The form for f is f(t,u,params,du) where params is any type which defines the parameters. The resulting ParameterizedFunction has the function call pf(t,u,params,du) which matches the original function, and a call pf(t,u,du) which uses internal parameters which can be used with a differential equation solver. Note that the internal parameters can be modified at any time via the field: pf.p = ....An additional version exists for f(t,u,params) which will then act as the not in-place version f(t,u) in the differential equation solvers.Note that versions exist for the other types of differential equations as well. There arepf = DAEParameterizedFunction(f,params)\npf = DDEParameterizedFunction(f,params)for DAEs and DDEs respectively. For DAEs, the in-place syntax is f(t,u,params,du,out) and the not in-place syntax is f(t,u,params,du). For DDEs, the in-place syntax is f(t,u,h,params,du) and the not in-place syntax is f(t,u,h,params)"
+    "text": "The easiest way to make a ParameterizedFunction is to use the constructor:pf = ParameterizedFunction(f,params)The form for f is f(t,u,params,du) where params is any type which defines the parameters (it does not have to be an array, and it can be any user-defined type as well). The resulting ParameterizedFunction has the function call  pf(t,u,params,du) which matches the original function, and a call pf(t,u,du) which uses internal parameters which can be used with a differential equation solver. Note that the internal parameters can be modified at any time via the field: pf.p = ....An additional version exists for f(t,u,params) which will then act as the not in-place version f(t,u) in the differential equation solvers.Note that versions exist for the other types of differential equations as well. There arepf = DAEParameterizedFunction(f,params)\npf = DDEParameterizedFunction(f,params)for DAEs and DDEs respectively. For DAEs, the in-place syntax is f(t,u,params,du,out) and the not in-place syntax is f(t,u,params,du). For DDEs, the in-place syntax is f(t,u,h,params,du) and the not in-place syntax is f(t,u,h,params)"
 },
 
 {
