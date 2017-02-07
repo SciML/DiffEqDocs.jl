@@ -121,7 +121,7 @@ const tstop = [5.;8.]
 sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
 ```
 
-![data_array_plot](data_array.png)
+![data_array_plot](../assets/data_array.png)
 
 It's clear from the plot how the controls affected the outcome.
 
