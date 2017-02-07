@@ -10,12 +10,12 @@ The easiest way to make a `ParameterizedFunction` is to use the constructor:
 pf = ParameterizedFunction(f,params)
 ```
 
-The form for `f` is `f(t,u,params,du)`
-where `params` is any type which defines the parameters. The
-resulting `ParameterizedFunction` has the function call `pf(t,u,params,du)`
-which matches the original function, and a call `pf(t,u,du)` which uses internal
-parameters which can be used with a differential equation solver. Note that the
-internal parameters can be modified at any time via the field: `pf.p = ...`.
+The form for `f` is `f(t,u,params,du)` where `params` is any type which defines
+the parameters (it does not have to be an array, and it can be any user-defined
+type as well). The resulting `ParameterizedFunction` has the function call 
+`pf(t,u,params,du)` which matches the original function, and a call `pf(t,u,du)`
+which uses internal parameters which can be used with a differential equation solver.
+Note that the internal parameters can be modified at any time via the field: `pf.p = ...`.
 
 An additional version exists for `f(t,u,params)` which will then act as the
 not in-place version `f(t,u)` in the differential equation solvers.

@@ -49,6 +49,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          ],
          "Additional Features" => Any[
            "features/performance_overloads.md",
+           "features/data_arrays.md",
            "features/linear_nonlinear.md",
            "features/callback_functions.md",
            "features/callback_library.md",
