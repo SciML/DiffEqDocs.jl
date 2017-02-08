@@ -11,10 +11,11 @@ sim = monte_carlo_simulation(prob,alg,kwargs...)
 The keyword arguments take in the arguments for the common solver interface.
 The special keyword arguments to note are:
 
-* num_monte: The number of simulations to run
+* `num_monte`: The number of simulations to run. Default is 10,000.
+* `prob_func`: The function by which the problem is to be modified.
+* `output_func`: The reduction function.
 
-In addition, one can specify a function `u0_func` which changes the initial
-condition around. For example:
+One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
 function prob_func(prob)
@@ -26,11 +27,12 @@ end
 modifies the initial condition for all of the problems by a standard normal
 random number (a different random number per simulation). This can be used
 to perform searches over initial values. If your function is a `ParameterizedFunction`,
-you can do similar modifications to `f` to perform a parameter search. One then
-passes this function via:
+you can do similar modifications to `f` to perform a parameter search. The `output_func`
+is a reduction function. For example, if we wish to only save the 2nd coordinate
+at the end of the solution, we can do:
 
 ```julia
-sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)
+output_func(sol) = sol[end,2]
 ```
 
 ## Parallelism
@@ -64,7 +66,7 @@ prob_func = function (prob)
   prob.u0 = rand()*prob.u0
   prob
 end
-sim = monte_carlo_simulation(prob,Tsit5(),prob_func,num_monte=100)
+sim = monte_carlo_simulation(prob,Tsit5(),prob_func=prob_func,num_monte=100)
 
 using Plots
 plotly()
