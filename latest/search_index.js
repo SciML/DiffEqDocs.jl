@@ -2133,7 +2133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Performing a Monte Carlo Simulation",
     "category": "section",
-    "text": "To perform a Monte Carlo simulation, you simply use the interface:sim = monte_carlo_simulation(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface. The special keyword arguments to note are:num_monte: The number of simulations to runIn addition, one can specify a function u0_func which changes the initial condition around. For example:function prob_func(prob)\n  prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. If your function is a ParameterizedFunction, you can do similar modifications to f to perform a parameter search. One then passes this function via:sim = monte_carlo_simulation(prob,alg,prob_func,kwargs...)"
+    "text": "To perform a Monte Carlo simulation, you simply use the interface:sim = monte_carlo_simulation(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nprob_func: The function by which the problem is to be modified.\noutput_func: The reduction function.One can specify a function prob_func which changes the problem. For example:function prob_func(prob)\n  prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. If your function is a ParameterizedFunction, you can do similar modifications to f to perform a parameter search. The output_func is a reduction function. For example, if we wish to only save the 2nd coordinate at the end of the solution, we can do:output_func(sol) = sol[end,2]"
 },
 
 {
@@ -2165,7 +2165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Example",
     "category": "section",
-    "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nsim = monte_carlo_simulation(prob,Tsit5(),prob_func,num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
+    "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nsim = monte_carlo_simulation(prob,Tsit5(),prob_func=prob_func,num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
 },
 
 {
