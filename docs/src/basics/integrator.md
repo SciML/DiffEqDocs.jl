@@ -140,8 +140,13 @@ The following functions make up the interface:
   This can be used to change internal values as needed.
 * `full_cache(integrator)`:  Returns an iterator over the cache arrays of the method.
   This can be used to change internal values as needed.
-* `resize!(integrator,k)`: Resizes the ODE to a size `k`. This chops off the end
+* `resize!(integrator,k)`: Resizes the DE to a size `k`. This chops off the end
   of the array, or adds blank values at the end, depending on whether `k>length(integrator.u)`.
+* `resize_non_user_cache!(integrator,k)`: Resizes the non-user facing caches to be
+  compatible with a DE of size `k`. This includes resizing Jacobian caches. Note
+  that in many cases, `resize!` simple resizes `user_cache` variables and then
+  calls this function. This finer control is required for some `AbstractArray`
+  operations.
 * `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
   can be used in events and callbacks to immediately end the solution process.
 * `deleteat!(integrator,k)`: Shrinks the ODE by deleting the `i`th component.
