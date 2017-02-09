@@ -213,6 +213,46 @@ about to follow this rule when choosing rates.
 updated in a continuous manner!)
 
 If your problem must have the rates depend on a continuously changing quantity,
-you need to use the `VariableRateJump` instead. This functionality is currently
-under construction but is set to be released soon. It will also allow one to define
-`VariableRateReactions` similarly.
+you need to use the `VariableRateJump` or `VariableRateReaction` instead.
+
+## Adding a VariableRateReaction
+
+Now let's consider adding a reaction whose rate changes continuously with the
+differential equation. To continue our example, let's let there be a new reaction
+which has the same effect as `r2`, but now is dependent on the amount of `u[4]`.
+
+```julia
+r3 = VariableRateReaction(1e-2,[4],[(2,-1),(3,1)])
+```
+
+We would expect this reaction to increase the amount of transitions from state
+2 to 3. Solving the equation is exactly the same:
+
+```julia
+prob = ODEProblem(f,[999.0,1.0,0.0,1.0],(0.0,250.0))
+jump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)
+sol = solve(jump_prob,Tsit5())
+```
+
+![variable_rate_gillespie](../assets/variable_rate_gillespie.png)
+
+Notice that this increases the amount of 3 at the end, reducing the falloff in
+the rate (though this model is kind of nonsensical).
+
+Note that even if the problem is a `DiscreteProblem`, `VariableRateJump`s and
+`VariableRateReaction`s require a continuous solver, like an ODE/SDE/DDE/DAE solver.
+
+Lastly, we are not restricted to ODEs. For example, we can solve the same jump
+problem except with multiplicative noise on `u[4]` by using an `SDEProblem` instead:
+
+```julia
+g = function (t,u,du)
+  du[4] = 0.1u[4]
+end
+
+prob = SDEProblem(f,g,[999.0,1.0,0.0,1.0],(0.0,250.0))
+jump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)
+sol = solve(jump_prob,SRIW1())
+```
+
+![sde_gillespie](../assets/sde_gillespie.png)
