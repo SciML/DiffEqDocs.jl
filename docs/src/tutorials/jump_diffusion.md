@@ -115,7 +115,7 @@ sol = solve(jump_prob,Tsit5())
 plot(sol)
 ```
 
-![variable_rate_jump](../assets/constant_rate_jump.png)
+![variable_rate_jump](../assets/variable_rate_jump.png)
 
 ## Jump Diffusion
 
