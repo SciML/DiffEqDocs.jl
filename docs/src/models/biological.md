@@ -1,6 +1,6 @@
 # Biological Models
 
-The biological models functionality is provided by BiologicalModels.jl and helps
+The biological models functionality is provided by DiffEqBiological.jl and helps
 the user build discrete stochastic and differential equation based systems
 biological models. These tools allow one to define the models at a high level
 by specifying reactions and rate constants, and the creation of the actual problems
