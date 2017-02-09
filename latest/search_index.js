@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Tutorials",
     "category": "section",
-    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
+    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/jump_diffusion.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -286,6 +286,46 @@ var documenterSearchIndex = {"docs": [
     "title": "Adding a VariableRateReaction",
     "category": "section",
     "text": "Now let's consider adding a reaction whose rate changes continuously with the differential equation. To continue our example, let's let there be a new reaction which has the same effect as r2, but now is dependent on the amount of u[4].r3 = VariableRateReaction(1e-2,[4],[(2,-1),(3,1)])We would expect this reaction to increase the amount of transitions from state 2 to 3. Solving the equation is exactly the same:prob = ODEProblem(f,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)\nsol = solve(jump_prob,Tsit5())(Image: variable_rate_gillespie)Notice that this increases the amount of 3 at the end, reducing the falloff in the rate (though this model is kind of nonsensical).Note that even if the problem is a DiscreteProblem, VariableRateJumps and VariableRateReactions require a continuous solver, like an ODE/SDE/DDE/DAE solver.Lastly, we are not restricted to ODEs. For example, we can solve the same jump problem except with multiplicative noise on u[4] by using an SDEProblem instead:g = function (t,u,du)\n  du[4] = 0.1u[4]\nend\n\nprob = SDEProblem(f,g,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)\nsol = solve(jump_prob,SRIW1())(Image: sde_gillespie)"
+},
+
+{
+    "location": "tutorials/jump_diffusion.html#",
+    "page": "Jump Diffusion Equations",
+    "title": "Jump Diffusion Equations",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/jump_diffusion.html#Jump-Diffusion-Equations-1",
+    "page": "Jump Diffusion Equations",
+    "title": "Jump Diffusion Equations",
+    "category": "section",
+    "text": "Jump Diffusion equations are stochastic diffeential equations with discontinuous jumps. These can be written as:fracdudt = f(tu) + g(ut)dW +  h_i(tu)N_i(t)where N_i is a Poisson-counter which denotes jumps of size h_i. In this tutorial we will show how to solve problems with even more general jumps."
+},
+
+{
+    "location": "tutorials/jump_diffusion.html#Defining-a-ConstantRateJump-Problem-1",
+    "page": "Jump Diffusion Equations",
+    "title": "Defining a ConstantRateJump Problem",
+    "category": "section",
+    "text": "To start, let's solve an ODE with constant rate jumps. A jump is defined as being \"constant rate\" if the rate is only dependent on values from other constant rate jumps, meaning that its rate must not be coupled with time or the solution to the differential equation. However, these types of jumps are cheaper to compute.(Note: if your rate is only \"slightly\" dependent on the solution of the differential equation, then it may be okay to use a ConstantRateJump. Accuracy loss will be related to the percentage that the rate changes over the jump intervals.)Let's solve the following problem. We will have a linear ODE with a Poisson counter of rate 2 (which is the mean and variance), where at each jump the current solution will be halved. To solve this problem, we first define the ODEProblem:f = function (t,u,du)\n  du[1] = u[1]\nend\n\nprob = ODEProblem(f,[0.2],(0.0,10.0))Notice that, even though our equation is on 1 number, we define it using the in-place array form. Variable rate jump equations will require this form. Note that for this tutorial we solve a one-dimensional problem, but the same syntax applies for solving a system of differential equations with multiple jumps.Now we define our rate equation for our jump. Since it's just the constant value 2, we do:rate = (t,u) -> 2Now we define the affect! of the jump. This is the same as an affect! from a DiscreteCallback, and thus acts directly on the integrator. Therefore, to make it halve the current value of u, we do:affect! = (integrator) -> (integrator.u[1] = integrator.u[1]/2)Then we build our jump:jump = ConstantRateJump(rate,affect!)Next, we extend our ODEProblem to a JumpProblem by attaching the jump:jump_prob = JumpProblem(prob,Direct(),jump)We can now solve this extended problem using any ODE solver:sol = solve(jump_prob,Tsit5())\nplot(sol)(Image: constant_rate_jump)"
+},
+
+{
+    "location": "tutorials/jump_diffusion.html#Variable-Rate-Jumps-1",
+    "page": "Jump Diffusion Equations",
+    "title": "Variable Rate Jumps",
+    "category": "section",
+    "text": "Now let's define a jump which is coupled to the differential equation. Let's let the rate be the current value of the solution, that is:rate = (t,u) -> u[1]Using the same affect!affect! = (integrator) -> (integrator.u[1] = integrator.u[1]/2)we build a VariableRateJump:jump = VariableRateJump(rate,affect!)To make things interesting, let's copy this jump:jump2 = deepcopy(jump)so that way we have two independent jump processes. We now couple these jumps to the ODEProblem:jump_prob = JumpProblem(prob,Direct(),jump,jump2)which we once again solve using an ODE solver:sol = solve(jump_prob,Tsit5())\nplot(sol)(Image: variable_rate_jump)"
+},
+
+{
+    "location": "tutorials/jump_diffusion.html#Jump-Diffusion-1",
+    "page": "Jump Diffusion Equations",
+    "title": "Jump Diffusion",
+    "category": "section",
+    "text": "Now we will finally solve the jump diffusion problem. The steps are the same as before, except we now start with a SDEProblem instead of an ODEProblem. Using the same drift function f as before, we add multiplicative noise via:g = function (t,u,du)\n  du[1] = u[1]\nend\n\nprob = SDEProblem(f,g,[0.2],(0.0,10.0))and couple it to the jumps:jump_prob = JumpProblem(prob,Direct(),jump,jump2)We then solve it using an SDE algorithm:sol = solve(jump_prob,SRIW1())\nplot(sol)(Image: jump_diffusion)"
 },
 
 {
@@ -2697,6 +2737,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "models/biological.html#Note-About-Rate-Dependency-1",
+    "page": "Biological Models",
+    "title": "Note About Rate Dependency",
+    "category": "section",
+    "text": "Note that currently, the reactions are used to build ConstantRateJumps. This means that the solver requires that the rates are constant between jumps in order to achieve full accuracy. The rates for the ConstantRateJump may depend on each other, but they may not depend on the differential equation themselves."
+},
+
+{
+    "location": "models/biological.html#Variable-Rate-Reactions-1",
+    "page": "Biological Models",
+    "title": "Variable Rate Reactions",
+    "category": "section",
+    "text": "VariableRateReaction are allowed to have their rates change continuously, depending on time or values related to a differential equation. The constructor is:function VariableRateReaction(rate_constant,reactants,stoichiometry;\n                              idxs = nothing,\n                              rootfind=true,\n                              interp_points=10,\n                              abstol=1e-12,reltol=0)The additional keyword arguments are for controlling the associated ContinuousCallback used to handle VariableRateReactions in simulations."
+},
+
+{
     "location": "models/biological.html#Example-Reaction-1",
     "page": "Biological Models",
     "title": "Example Reaction",
@@ -2709,15 +2765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Biological Models",
     "title": "GillespieProblem",
     "category": "section",
-    "text": "These reactions can be added to a differential equation (or discrete) problem using the GillespieProblem. This is simply a constructor which interprets the reactions as jumps, and builds the associated JumpProblem. Thus its constructor is the same:GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::Reaction...;kwargs...)This is the exact same constructor as the JumpProblem, except now we pass reactions (or a ReactionSet) instead of jumps. Thus for more information, see the description of the JumpProblem."
-},
-
-{
-    "location": "models/biological.html#Note-About-Rate-Dependency-1",
-    "page": "Biological Models",
-    "title": "Note About Rate Dependency",
-    "category": "section",
-    "text": "Note that currently, the reactions are used to build ConstantRateJumps. This means that the solver requires that the rates are constant between jumps in order to achieve full accuracy. The rates for the ConstantRateJump may depend on each other, but they may not depend on the differential equation themselves. Allowing for VariableRateJumps from reactions is set for the next release. "
+    "text": "These reactions can be added to a differential equation (or discrete) problem using the GillespieProblem. This is simply a constructor which interprets the reactions as jumps, and builds the associated JumpProblem. Thus its constructor is the same:GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::AbstractReaction...;kwargs...)This is the exact same constructor as the JumpProblem, except now we pass reactions (or VariableRateReactions, or a ReactionSet) instead of jumps. Thus for more information, see the description of the JumpProblem."
 },
 
 ]}
