@@ -2637,7 +2637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Multi-Scale Models",
     "title": "Multi-Scale Models",
     "category": "section",
-    "text": "The multi-scale modeling functionality is provided by MultiScaleModels.jl. It allows for designing a multi-scale model as an extension of an array, which in turn can be directly used in the native Julia solvers of DifferentialEquations.jl."
+    "text": "The multi-scale modeling functionality is provided by MultiScaleArrays.jl. It allows for designing a multi-scale model as an extension of an array, which in turn can be directly used in the native Julia solvers of DifferentialEquations.jl."
 },
 
 {
@@ -2645,7 +2645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Multi-Scale Models",
     "title": "More Information",
     "category": "section",
-    "text": "For more information, please see the MultiScaleModels.jl README."
+    "text": "For more information, please see the MultiScaleArrays.jl README."
 },
 
 {
@@ -2661,7 +2661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Financial Models",
     "title": "Financial Models",
     "category": "section",
-    "text": "The financial models functionality is provided by FinancialModels.jl and helps the user build and solve the differential equation based financial models biological models."
+    "text": "The financial models functionality is provided by DiffEqFinancial.jl and helps the user build and solve the differential equation based financial models biological models."
 },
 
 {
@@ -2725,7 +2725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Biological Models",
     "title": "Biological Models",
     "category": "section",
-    "text": "The biological models functionality is provided by BiologicalModels.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
+    "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
 },
 
 {
