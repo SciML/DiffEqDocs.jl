@@ -66,7 +66,7 @@ Therefore, in total, our reaction is:
 r1 = Reaction(1e-4,[2,3],[(1,-1),(2,1)])
 ```
 
-To finish the model, we define one more reaction. Overtime, infected people become
+To finish the model, we define one more reaction. Over time, infected people become
 less infected. The chance that any one person heals during some time unit depends
 on the number of people who are infected. Thus the rate at which infected persons
 are turning into recovered persons is
