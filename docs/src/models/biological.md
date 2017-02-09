@@ -21,6 +21,29 @@ the result. It is a list of tuples of changes to apply when the reaction takes p
 Each tuple `(i,j)` means "modify reactiant i by amount j". For example, the tuple
 `(2,-1)` means "decrease reactant 2 by 1".
 
+## Note About Rate Dependency
+
+Note that currently, the reactions are used to build `ConstantRateJump`s. This means
+that the solver requires that the rates are constant between jumps in order to
+achieve full accuracy. The rates for the `ConstantRateJump` may depend on each other,
+but they may not depend on the differential equation themselves.
+
+## Variable Rate Reactions
+
+`VariableRateReaction` are allowed to have their rates change continuously, depending
+on time or values related to a differential equation. The constructor is:
+
+```julia
+function VariableRateReaction(rate_constant,reactants,stoichiometry;
+                              idxs = nothing,
+                              rootfind=true,
+                              interp_points=10,
+                              abstol=1e-12,reltol=0)
+```
+
+The additional keyword arguments are for controlling the associated `ContinuousCallback`
+used to handle `VariableRateReaction`s in simulations.
+
 ### Example Reaction
 
 An example reaction is:
@@ -44,17 +67,9 @@ reactions as jumps, and builds the associated `JumpProblem`. Thus its constructo
 is the same:
 
 ```julia
-GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::Reaction...;kwargs...)
+GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::AbstractReaction...;kwargs...)
 ```
 
 This is the exact same constructor as the `JumpProblem`, except now we pass reactions
-(or a `ReactionSet`) instead of jumps. Thus for more information, see the description
-of the `JumpProblem`.
-
-## Note About Rate Dependency
-
-Note that currently, the reactions are used to build `ConstantRateJump`s. This means
-that the solver requires that the rates are constant between jumps in order to
-achieve full accuracy. The rates for the `ConstantRateJump` may depend on each other,
-but they may not depend on the differential equation themselves. Allowing for
-`VariableRateJump`s from reactions is set for the next release. 
+(or `VariableRateReaction`s, or a `ReactionSet`) instead of jumps. Thus for more
+information, see the description of the `JumpProblem`.
