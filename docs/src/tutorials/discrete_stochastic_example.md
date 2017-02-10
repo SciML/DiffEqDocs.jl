@@ -55,7 +55,7 @@ Reaction(rate_constant,reactants,stoichiometry)
 
 The first value is the rate constant. We will use `1e-4`. Secondly, we pass in the
 indices for the reactants. In this case, since it uses the susceptible and infected
-persons, the indices are `[2,3]`. Lastly, we detail the stoichometric changes. These
+persons, the indices are `[1,2]`. Lastly, we detail the stoichometric changes. These
 are tuples `(i,j)` where `i` is the reactant and `j` is the number to change by.
 Thus `(1,-1)` means "decrease the number of susceptible persons by 1" and
 `(2,1)` means "increase the number of infected persons by 1".
@@ -63,7 +63,7 @@ Thus `(1,-1)` means "decrease the number of susceptible persons by 1" and
 Therefore, in total, our reaction is:
 
 ```julia
-r1 = Reaction(1e-4,[2,3],[(1,-1),(2,1)])
+r1 = Reaction(1e-4,[1,2],[(1,-1),(2,1)])
 ```
 
 To finish the model, we define one more reaction. Over time, infected people become

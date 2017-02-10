@@ -127,12 +127,12 @@ for safe modifications of the integrator type, and allows for uniform usage
 throughout the ecosystem (for packages/algorithms which implement the functions).
 The following functions make up the interface:
 
-* `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occurred,
-  allowing the solver to handle the discontinuity.
+### Saving Controls
+
 * `savevalues!(integrator)`: Adds the current state to the `sol`.
-* `modify_proposed_dt(integrator,factor)`:  Multiplies the proposed `dt` for the
-  next timestep by the scaling `factor`.
-* `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
+
+### Cache Iterators
+
 * `user_cache(integrator)`: Returns an iterator over the user-facing cache arrays.
 * `u_cache(integrator)`:  Returns an iterator over the cache arrays for `u` in the method.
   This can be used to change internal values as needed.
@@ -140,6 +140,24 @@ The following functions make up the interface:
   This can be used to change internal values as needed.
 * `full_cache(integrator)`:  Returns an iterator over the cache arrays of the method.
   This can be used to change internal values as needed.
+
+### Stepping Controls
+
+* `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occurred,
+  allowing the solver to handle the discontinuity.
+* `modify_proposed_dt(integrator,factor)`:  Multiplies the proposed `dt` for the
+  next timestep by the scaling `factor`.
+* `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
+* `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
+  can be used in events and callbacks to immediately end the solution process.
+* `change_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false})`: This
+  option lets one modify the current `t` and changes all of the corresponding
+  values using the local interpolation. If the current solution has already
+  been saved, one can provide the optional value `modify_save_endpoint` to also
+  modify the endpoint of `sol` in the same manner.
+
+### Resizing
+
 * `resize!(integrator,k)`: Resizes the DE to a size `k`. This chops off the end
   of the array, or adds blank values at the end, depending on whether `k>length(integrator.u)`.
 * `resize_non_user_cache!(integrator,k)`: Resizes the non-user facing caches to be
@@ -147,23 +165,29 @@ The following functions make up the interface:
   that in many cases, `resize!` simple resizes `user_cache` variables and then
   calls this function. This finer control is required for some `AbstractArray`
   operations.
-* `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
-  can be used in events and callbacks to immediately end the solution process.
-* `deleteat!(integrator,k)`: Shrinks the ODE by deleting the `i`th component.
+* `deleteat_non_user_cache!(integrator,idxs)`: `deleteat!`s the non-user facing caches
+  at indices `idxs`. This includes resizing Jacobian caches. Note
+  that in many cases, `deleteat!` simple `deleteat!`s `user_cache` variables and then
+  calls this function. This finer control is required for some `AbstractArray`
+  operations.
+* `addat_non_user_cache!(integrator,idxs)`: `addat!`s the non-user facing caches
+  at indices `idxs`. This includes resizing Jacobian caches. Note
+  that in many cases, `addat!` simple `addat!`s `user_cache` variables and then
+  calls this function. This finer control is required for some `AbstractArray`
+  operations.
+* `deleteat!(integrator,idxs)`: Shrinks the ODE by deleting the `idxs` components.
+* `addat!(integrator,idxs)`: Grows the ODE by adding the `idxs` components.
+  Must be contiguous indices.
+
+### Misc
+
 * `get_du(integrator)`: Returns the derivative at `t`.
-* `change_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false})`: This
-  option lets one modify the current `t` and changes all of the corresponding
-  values using the local interpolation. If the current solution has already
-  been saved, one can provide the optional value `modify_save_endpoint` to also
-  modify the endpoint of `sol` in the same manner.
+
+#### Note
 
 Note that not all of these functions will be implemented for every algorithm.
 Some have hard limitations. For example, Sundials.jl cannot resize problems.
 When a function is not limited, an error will be thrown.
-
-#### Note
-
-Currently, many of these functions are not implemented.
 
 ## Additional Options
 
