@@ -245,7 +245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining a Model using Reactions",
     "category": "section",
-    "text": "For our example, we will build an SIR model. SIR stands for susceptible, infected, and recovered, and is a model is disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since when there are more people there is a greater chance that two come in contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is some constant determined by other factors like the type of the disease.Let's build our model using a vector u, and let u[1] be the number of susceptible persons, u[2] be the number of infected persons, and u[3] be the number of recovered persons. In this case, we can re-write our rate as being:rate_constant*u[1]*u[2]Thus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:u[1] -= 1\nu[2] += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts that are required to build a Reaction. The constructor for a Reaction is as follows:Reaction(rate_constant,reactants,stoichiometry)The first value is the rate constant. We will use 1e-4. Secondly, we pass in the indices for the reactants. In this case, since it uses the susceptible and infected persons, the indices are [2,3]. Lastly, we detail the stoichometric changes. These are tuples (i,j) where i is the reactant and j is the number to change by. Thus (1,-1) means \"decrease the number of susceptible persons by 1\" and (2,1) means \"increase the number of infected persons by 1\".Therefore, in total, our reaction is:r1 = Reaction(1e-4,[2,3],[(1,-1),(2,1)])To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected persons are turning into recovered persons israte_constant*u[2]When this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:r2 = Reaction(0.01,[2],[(2,-1),(3,1)])where we have chosen the rate constant 0.01."
+    "text": "For our example, we will build an SIR model. SIR stands for susceptible, infected, and recovered, and is a model is disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since when there are more people there is a greater chance that two come in contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is some constant determined by other factors like the type of the disease.Let's build our model using a vector u, and let u[1] be the number of susceptible persons, u[2] be the number of infected persons, and u[3] be the number of recovered persons. In this case, we can re-write our rate as being:rate_constant*u[1]*u[2]Thus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:u[1] -= 1\nu[2] += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts that are required to build a Reaction. The constructor for a Reaction is as follows:Reaction(rate_constant,reactants,stoichiometry)The first value is the rate constant. We will use 1e-4. Secondly, we pass in the indices for the reactants. In this case, since it uses the susceptible and infected persons, the indices are [1,2]. Lastly, we detail the stoichometric changes. These are tuples (i,j) where i is the reactant and j is the number to change by. Thus (1,-1) means \"decrease the number of susceptible persons by 1\" and (2,1) means \"increase the number of infected persons by 1\".Therefore, in total, our reaction is:r1 = Reaction(1e-4,[1,2],[(1,-1),(2,1)])To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected persons are turning into recovered persons israte_constant*u[2]When this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:r2 = Reaction(0.01,[2],[(2,-1),(3,1)])where we have chosen the rate constant 0.01."
 },
 
 {
@@ -701,7 +701,47 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Function Interface",
     "category": "section",
-    "text": "In addition to the type interface, a function interface is provided which allows for safe modifications of the integrator type, and allows for uniform usage throughout the ecosystem (for packages/algorithms which implement the functions). The following functions make up the interface:u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity.\nsavevalues!(integrator): Adds the current state to the sol.\nmodify_proposed_dt(integrator,factor):  Multiplies the proposed dt for the next timestep by the scaling factor.\nproposed_dt(integrator): Returns the dt of the proposed step.\nuser_cache(integrator): Returns an iterator over the user-facing cache arrays.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed.\nresize!(integrator,k): Resizes the DE to a size k. This chops off the end of the array, or adds blank values at the end, depending on whether k>length(integrator.u).\nresize_non_user_cache!(integrator,k): Resizes the non-user facing caches to be compatible with a DE of size k. This includes resizing Jacobian caches. Note that in many cases, resize! simple resizes user_cache variables and then calls this function. This finer control is required for some AbstractArray operations.\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\ndeleteat!(integrator,k): Shrinks the ODE by deleting the ith component.\nget_du(integrator): Returns the derivative at t.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner.Note that not all of these functions will be implemented for every algorithm. Some have hard limitations. For example, Sundials.jl cannot resize problems. When a function is not limited, an error will be thrown."
+    "text": "In addition to the type interface, a function interface is provided which allows for safe modifications of the integrator type, and allows for uniform usage throughout the ecosystem (for packages/algorithms which implement the functions). The following functions make up the interface:"
+},
+
+{
+    "location": "basics/integrator.html#Saving-Controls-1",
+    "page": "Integrator Interface",
+    "title": "Saving Controls",
+    "category": "section",
+    "text": "savevalues!(integrator): Adds the current state to the sol."
+},
+
+{
+    "location": "basics/integrator.html#Cache-Iterators-1",
+    "page": "Integrator Interface",
+    "title": "Cache Iterators",
+    "category": "section",
+    "text": "user_cache(integrator): Returns an iterator over the user-facing cache arrays.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed."
+},
+
+{
+    "location": "basics/integrator.html#Stepping-Controls-1",
+    "page": "Integrator Interface",
+    "title": "Stepping Controls",
+    "category": "section",
+    "text": "u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity.\nmodify_proposed_dt(integrator,factor):  Multiplies the proposed dt for the next timestep by the scaling factor.\nproposed_dt(integrator): Returns the dt of the proposed step.\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner."
+},
+
+{
+    "location": "basics/integrator.html#Resizing-1",
+    "page": "Integrator Interface",
+    "title": "Resizing",
+    "category": "section",
+    "text": "resize!(integrator,k): Resizes the DE to a size k. This chops off the end of the array, or adds blank values at the end, depending on whether k>length(integrator.u).\nresize_non_user_cache!(integrator,k): Resizes the non-user facing caches to be compatible with a DE of size k. This includes resizing Jacobian caches. Note that in many cases, resize! simple resizes user_cache variables and then calls this function. This finer control is required for some AbstractArray operations.\ndeleteat_non_user_cache!(integrator,idxs): deleteat!s the non-user facing caches at indices idxs. This includes resizing Jacobian caches. Note that in many cases, deleteat! simple deleteat!s user_cache variables and then calls this function. This finer control is required for some AbstractArray operations.\naddat_non_user_cache!(integrator,idxs): addat!s the non-user facing caches at indices idxs. This includes resizing Jacobian caches. Note that in many cases, addat! simple addat!s user_cache variables and then calls this function. This finer control is required for some AbstractArray operations.\ndeleteat!(integrator,idxs): Shrinks the ODE by deleting the idxs components.\naddat!(integrator,idxs): Grows the ODE by adding the idxs components. Must be contiguous indices."
+},
+
+{
+    "location": "basics/integrator.html#Misc-1",
+    "page": "Integrator Interface",
+    "title": "Misc",
+    "category": "section",
+    "text": "get_du(integrator): Returns the derivative at t."
 },
 
 {
@@ -709,7 +749,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Note",
     "category": "section",
-    "text": "Currently, many of these functions are not implemented."
+    "text": "Note that not all of these functions will be implemented for every algorithm. Some have hard limitations. For example, Sundials.jl cannot resize problems. When a function is not limited, an error will be thrown."
 },
 
 {
