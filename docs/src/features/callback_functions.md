@@ -462,7 +462,7 @@ to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:
 
 ```julia
-callback = ContinuousCallback(condition,affect!,rootfind = true,save_positions = (true,true))
+callback = ContinuousCallback(condition,affect!)
 u0 = [0.2]
 tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
