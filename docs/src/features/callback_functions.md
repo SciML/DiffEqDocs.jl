@@ -18,16 +18,16 @@ implements what is known in other problem solving environments as an Event. A
 ### ContinuousCallbacks
 
 ```julia
-ContinuousCallback(condition,affect!,
-                   rootfind,
-                   save_positions;
+ContinuousCallback(condition,affect!;
+                   rootfind = true,
+                   save_positions = (true,true),
                    interp_points=10,
                    abstol=1e-12,reltol=0
                    idxs=nothing)
 
-ContinuousCallback(condition,affect!,affect_neg!,
-                  rootfind,
-                  save_positions;
+ContinuousCallback(condition,affect!,affect_neg!;
+                  rootfind = true,
+                  save_positions = (true,true),
                   interp_points=10,
                   abstol=1e-12,reltol=0,
                   idxs=nothing)
@@ -462,9 +462,7 @@ to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:
 
 ```julia
-rootfind = true
-save_positions = (true,true)
-callback = ContinuousCallback(condition,affect!,rootfind,save_positions)
+callback = ContinuousCallback(condition,affect!)
 u0 = [0.2]
 tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
