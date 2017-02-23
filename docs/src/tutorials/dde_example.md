@@ -65,6 +65,7 @@ and create the problem type:
 
 ```julia
 tspan = (0.0,10.0)
+u0 = [1.0,1.0,1.0]
 prob = ConstantLagDDEProblem(bc_model,h,u0,lags,tspan)
 ```
 
