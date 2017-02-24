@@ -25,8 +25,8 @@ prob = ODEProblem(f,u0,tspan)
 
 Note that DifferentialEquations.jl will choose the types for the problem based on
 the types used to define the problem type. For our example, notice that `u0` is
-a Float64, and therefore this will solve with the independent variables being
-Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the dependent variabes
+a Float64, and therefore this will solve with the dependent variables being
+Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent variabes
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
 unitful numbers, etc. Please see the [tutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
@@ -138,7 +138,7 @@ sol = solve(prob,alg_hints=[:stiff])
 ### Systems of Equations
 
 We can also solve systems of equations. DifferentialEquations.jl can handle many
-different independent variable types (generally, anything with a linear index
+different dependent variable types (generally, anything with a linear index
 should work!). So instead of solving a vector equation, let's let u be
 a matrix! To do this, we simply need to have u₀ be a matrix, and define f such
 that it takes in a matrix and outputs a matrix. We can define a matrix of linear
@@ -224,8 +224,8 @@ for "defining your ODE in pseudocode" and getting a function which is efficient
 and runnable.
 
 To use the macro, you write out your system of equations with the left-hand side
-being `d_` and those variables will be parsed as the independent variables. The
-dependent variable is `t`, and the other variables are parameters which you pass
+being `d_` and those variables will be parsed as the dependent variables. The
+independent variable is `t`, and the other variables are parameters which you pass
 at the end. For example, we can write the Lorenz system as:
 
 ```julia
