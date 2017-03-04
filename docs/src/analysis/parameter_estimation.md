@@ -111,7 +111,7 @@ using Optim
 result = optimize(cost_function, 0.0, 10.0)
 ```
 
-This returns `result.minimum[1]==1.5` as the best parameter to match the data.
+This returns `result.minimizer[1]==1.5` as the best parameter to match the data.
 When we plot the fitted equation on the data, we receive the following:
 
 ![Parameter Estimation Fit](../assets/paramest_fit.png)
