@@ -33,7 +33,7 @@ This gives the following plot (with adding the deterministic solution from the p
 
 ## Finite Element Stochastic Heat Equation
 
-This will solve a nonlinear stochastic heat equation u_t=Δu+f+gdW with forcing function `f(u)=.5-u`,
+This will solve a nonlinear stochastic heat equation ``u_t=Δu+f+gdW`` with forcing function `f(u)=.5-u`,
 noise function `g(u)=100u^2` and initial condition `u0=0`. We would expect this system
 to rise towards the deterministic steady state `u=2` (but stay in mean a bit below
 it due to 1st order "Milstein" effects), gaining more noise as it increases.
