@@ -144,8 +144,13 @@ The following functions make up the interface:
 ### Stepping Controls
 
 * `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occurred,
-  allowing the solver to handle the discontinuity.
-* `modify_proposed_dt(integrator,factor)`:  Multiplies the proposed `dt` for the
+  allowing the solver to handle the discontinuity. By default, this is assumed
+  to be true if a callback is used. This will result in the re-calculation of
+  the derivative at `t+dt`, which is not necessary if the algorithm is FSAL
+  and `u` does not experience a discontinuous change at the end of the interval.
+  Thus if `u` is unmodified in a callback, a single call to the derivative calculation 
+  can be eliminated by `u_modified!(integrator,false)`.
+* `modify_proposed_dt!(integrator,factor)`:  Multiplies the proposed `dt` for the
   next timestep by the scaling `factor`.
 * `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
 * `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
