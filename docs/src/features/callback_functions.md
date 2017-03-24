@@ -132,6 +132,13 @@ because otherwise events would "double save" one of the values. To re-enable
 the standard saving behavior, one must have the first `save_positions` value
 be true for at least one callback.
 
+### Modifying the Stepping Within A Callback
+
+A common issue with callbacks is that they cause a large discontinuous change,
+and so it may be wise to pull down `dt` after such a change. To control the
+timestepping from a callback, please see [the timestepping controls in the integrator interface](../basics/integrator.html#Stepping-Controls-1). Specifically, `set_proposed_dt!` is used to set the next stepsize,
+and `terminate!` can be used to cause the simulation to stop.
+
 ## DiscreteCallback Examples
 
 ### Example 1: AutoAbstol
