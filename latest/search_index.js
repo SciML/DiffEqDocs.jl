@@ -2121,6 +2121,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_functions.html#Modifying-the-Stepping-Within-A-Callback-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Modifying the Stepping Within A Callback",
+    "category": "section",
+    "text": "A common issue with callbacks is that they cause a large discontinuous change, and so it may be wise to pull down dt after such a change. To control the timestepping from a callback, please see the timestepping controls in the integrator interface. Specifically, set_proposed_dt! is used to set the next stepsize, and terminate! can be used to cause the simulation to stop."
+},
+
+{
     "location": "features/callback_functions.html#DiscreteCallback-Examples-1",
     "page": "Event Handling and Callback Functions",
     "title": "DiscreteCallback Examples",
