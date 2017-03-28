@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Analysis Tools",
     "category": "section",
-    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
+    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/bifurcation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
 },
 
 {
@@ -2590,6 +2590,38 @@ var documenterSearchIndex = {"docs": [
     "title": "More Algorithms (Global Optimization) via MathProgBase Solvers",
     "category": "section",
     "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\n\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)\n\nobj = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
+},
+
+{
+    "location": "analysis/bifurcation.html#",
+    "page": "Bifurcation Analysis",
+    "title": "Bifurcation Analysis",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "analysis/bifurcation.html#Bifurcation-Analysis-1",
+    "page": "Bifurcation Analysis",
+    "title": "Bifurcation Analysis",
+    "category": "section",
+    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.Note that this functionality is very rudimentary and still in development."
+},
+
+{
+    "location": "analysis/bifurcation.html#Calcium-Bifurcation-Tutorial-1",
+    "page": "Bifurcation Analysis",
+    "title": "Calcium Bifurcation Tutorial",
+    "category": "section",
+    "text": "In this tutorial we will show how to do some simple bifurcation plots. We will follow the PyDSTool tutorial for the calcium channel model and re-create the results using the wrapped functionality."
+},
+
+{
+    "location": "analysis/bifurcation.html#Specification-of-a-Model-1",
+    "page": "Bifurcation Analysis",
+    "title": "Specification of a Model",
+    "category": "section",
+    "text": "We will specify the model using a ParameterizedFunction:f = @ode_def_bare Calcium begin\n  dv = ( i + gl * (vl - v) - gca * 0.5 * (1 + tanh( (v-v1)/v2 )) * (v-vca) )/c\n  dw = v-w\nend vl=>-60 vca=>120 i=>0.0 gl=>2 gca=>4 c=>20 v1=>-1.2 v2=>18Next to build the ODE we need an initial condition and a starting timepoint.u0 = [0;0]\ntspan = [0;30]Then we use the following command to build the PyDSTool ODE:dsargs = build_ode(f,u0,tspan)Now we need to build the continuation type. Following the setup of PyDSTool's tutorial, we need to start near the steady state. The commands translate as:ode = ds[:Generator][:Vode_ODEsystem](dsargs)\node[:set](pars = Dict(\"i\"=>-220))\node[:set](ics  = Dict(\"v\"=>-170))\nPC = ds[:ContClass](ode)Once we have the continuation type, we can call the bifurcation_curve function. Instead of building the args into some object one-by-one, we simply make a function call with keyword arguments. Using the same arguments as the PyDSTool tutorial:bif = bifurcation_curve(PC,\"EP-C\",[\"i\"],\n                        max_num_points=450,\n                        max_stepsize=2,min_stepsize=1e-5,\n                        stepsize=2e-2,loc_bif_points=\"all\",\n                        save_eigen=true,name=\"EQ1\",\n                        print_info=true,calc_stab=true)This returns a BifurcationCurve type. Important fields of this type are:d: the values along the curve\nspecial_points: the values for the bifurcation points\nstab: an array which gives the stability of each point along the curve. \"S\" is for stable, N is for neutral, and U is for unstable.Instead of using the fields directly, we will use the plot recipe. The plot recipe requires you give the x,y coordinates to plot. Here we will plot it in the (i,v) plane:using Plots\nplot(bif,(:i,:v))(Image: bifurcation_plot)"
 },
 
 {
