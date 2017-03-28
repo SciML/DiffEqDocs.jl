@@ -77,4 +77,4 @@ using Plots
 plot(bif,(:i,:v))
 ```
 
-![bifurcation_plot](bifplot.png)
+![bifurcation_plot](../assets/bifplot.png)
