@@ -162,7 +162,7 @@ We can then use `JumpProblem` to augment a problem with jumps. To add the jumps
 to the `DiscreteProblem` and solve it, we would simply do:
 
 ```julia
-jump_prob = JumpProblem(prob,jump,jump2)
+jump_prob = JumpProblem(prob,Direct(),jump,jump2)
 sol = solve(jump_prob,Discrete(apply_map=false))
 ```
 
