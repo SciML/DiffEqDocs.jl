@@ -10,7 +10,8 @@ stochastic simulations to differential equation models.
 
 ## Defining a Model using Reactions
 
-For our example, we will build an SIR model. SIR stands for susceptible, infected,
+For our example, we will build an SIR model which matches the tutorial from 
+[Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for susceptible, infected,
 and recovered, and is a model is disease spread. When a susceptible person comes
 in contact with an infected person, the disease has a chance of infecting the
 susceptible person. This "chance" is determined by the number of susceptible
