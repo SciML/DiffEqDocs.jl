@@ -96,11 +96,11 @@ we can build our callbacks:
 ```julia
 save_positions = (true,true)
 
-cb = DiscreteCallback(condition, affect!, save_positions)
+cb = DiscreteCallback(condition, affect!, save_positions=save_positions)
 
 save_positions = (false,true)
 
-cb2 = DiscreteCallback(condition2, affect2!, save_positions)
+cb2 = DiscreteCallback(condition2, affect2!, save_positions=save_positions)
 
 cbs = CallbackSet(cb,cb2)
 ```
