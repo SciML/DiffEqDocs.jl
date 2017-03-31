@@ -181,6 +181,7 @@ Pages = [
     "features/callback_functions.md",
     "features/callback_library.md",
     "features/monte_carlo.md",
+    "features/low_dep.md",
     "features/mesh.md",
     "features/output_specification.md",
     "features/progress_bar.md"
