@@ -20,6 +20,7 @@ implements what is known in other problem solving environments as an Event. A
 ```julia
 ContinuousCallback(condition,affect!;
                    rootfind = true,
+                   initialize = (c,t,u,integrator) -> nothing,
                    save_positions = (true,true),
                    interp_points=10,
                    abstol=1e-12,reltol=0
@@ -27,6 +28,7 @@ ContinuousCallback(condition,affect!;
 
 ContinuousCallback(condition,affect!,affect_neg!;
                   rootfind = true,
+                  initialize = (c,t,u,integrator) -> nothing,
                   save_positions = (true,true),
                   interp_points=10,
                   abstol=1e-12,reltol=0,
@@ -66,6 +68,9 @@ The arguments are defined as follows:
   handled correctly (without error), one should set `save_positions=(true,true)`.
 * `idxs`: The components which will be interpolated into the condition. Defaults
   to `nothing` which means `u` will be all components.
+* `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
+  the state of the callback `c`. It should modify the argument `c` and the return is
+  ignored. 
 
 Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
 a tolerance from zero for the rootfinder: if the starting condition is less than
@@ -89,6 +94,9 @@ DiscreteCallback(condition,affect!,save_positions)
   The first save will always occcur (if true), and the second will only occur when
   an event is detected.  For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
+* `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
+  the state of the callback `c`. It should modify the argument `c` and the return is
+  ignored. 
 
 ### CallbackSet
 
