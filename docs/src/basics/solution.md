@@ -131,6 +131,19 @@ will default to plotting the surface at the final timepoint. The iterator interf
 simply iterates the value of `tslocation`, and the `animate` function iterates
 the solution calling solve at each step.
 
+## Return Codes (RetCodes)
+
+The solution types have a `retcode` field which returns a symbol signifying the
+error state of the solution. The retcodes are as follows:
+
+- `:Default`: The solver did not set retcodes.
+- `:Success`: The integration completed without erroring.
+- `:MaxIters`: The integration exited early because it reached its maximum number
+  of iterations.
+- `:DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
+  allowed minimum timestep, and exited early.
+- `:Unstable`: The solver detected that the solution was unstable and exited early.
+
 ## Problem-Specific Features
 
 Extra fields for solutions of specific problems are specified in the appropriate
