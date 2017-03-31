@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/data_arrays.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/data_arrays.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/output_specification.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -590,6 +590,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Special Fields",
     "category": "section",
     "text": "The solution interface also includes some special fields. The problem object prob and the algorithm used to solve the problem alg are included in the solution. Additionally, the field dense is a boolean which states whether the interpolation functionality is available. Lastly, there is a mutable state tslocation which controls the plot recipe behavior. By default, tslocation=0. Its values have different meanings between partial and ordinary differential equations:tslocation=0  for non-spatial problems (ODEs) means that the plot recipe will plot the full solution. tslocation=i means that it will only plot the timepoint i.\ntslocation=0 for spatial problems (PDEs) means the plot recipe will plot the final timepoint. tslocation=i means that the plot recipe will plot the ith timepoint.What this means is that for ODEs, the plots will default to the full plot and PDEs will default to plotting the surface at the final timepoint. The iterator interface simply iterates the value of tslocation, and the animate function iterates the solution calling solve at each step."
+},
+
+{
+    "location": "basics/solution.html#Return-Codes-(RetCodes)-1",
+    "page": "Solution Handling",
+    "title": "Return Codes (RetCodes)",
+    "category": "section",
+    "text": "The solution types have a retcode field which returns a symbol signifying the error state of the solution. The retcodes are as follows::Default: The solver did not set retcodes.\n:Success: The integration completed without erroring.\n:MaxIters: The integration exited early because it reached its maximum number of iterations.\n:DtLessThanMin: The timestep method chose a stepsize which is smaller than the allowed minimum timestep, and exited early.\n:Unstable: The solver detected that the solution was unstable and exited early."
 },
 
 {
@@ -2270,6 +2278,38 @@ var documenterSearchIndex = {"docs": [
     "title": "Example",
     "category": "section",
     "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nsim = monte_carlo_simulation(prob,Tsit5(),prob_func=prob_func,num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
+},
+
+{
+    "location": "features/low_dep.html#",
+    "page": "Low Dependency Usage",
+    "title": "Low Dependency Usage",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/low_dep.html#Low-Dependency-Usage-1",
+    "page": "Low Dependency Usage",
+    "title": "Low Dependency Usage",
+    "category": "section",
+    "text": "DifferentialEquations.jl is a large library containing the functionality of many different solver and addon packages. However in many cases you may want to cut down on the size of the dependency and only use the parts of the the library which are essential to your application. This is possible due to JuliaDiffEq's modular package structure."
+},
+
+{
+    "location": "features/low_dep.html#Common-Example:-Using-only-OrdinaryDiffEq.jl-1",
+    "page": "Low Dependency Usage",
+    "title": "Common Example: Using only OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "One common example is using only the ODE solvers OrdinaryDiffEq.jl. In this case you will need a dependency on both DiffEqBase.jl (which holds the problem and solution types) and OrdinaryDiffEq.jl. Thus replacingusing DifferentialEquationswithusing OrdinaryDiffEq, DiffEqBasewill work if these are the only features you are using."
+},
+
+{
+    "location": "features/low_dep.html#Generalizing-the-Idea-1",
+    "page": "Low Dependency Usage",
+    "title": "Generalizing the Idea",
+    "category": "section",
+    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nf = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecvec_to_mat(randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing DiffEqBase, OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
 },
 
 {
