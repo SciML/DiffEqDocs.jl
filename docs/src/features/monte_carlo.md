@@ -8,8 +8,8 @@ To perform a Monte Carlo simulation, you simply use the interface:
 sim = monte_carlo_simulation(prob,alg,kwargs...)
 ```
 
-The keyword arguments take in the arguments for the common solver interface.
-The special keyword arguments to note are:
+The keyword arguments take in the arguments for the common solver interface and will
+pass them to the differential equation solver. The special keyword arguments to note are:
 
 * `num_monte`: The number of simulations to run. Default is 10,000.
 * `prob_func`: The function by which the problem is to be modified.
