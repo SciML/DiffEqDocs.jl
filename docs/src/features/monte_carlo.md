@@ -40,11 +40,14 @@ end
 If your function is a `ParameterizedFunction`,
 you can do similar modifications to `prob.f` to perform a parameter search. The `output_func`
 is a reduction function. For example, if we wish to only save the 2nd coordinate
-at the end of the solution, we can do:
+at the end of each solution, we can do:
 
 ```julia
 output_func(sol) = sol[end,2]
 ```
+
+Thus the Monte Carlo Simulation would return as its data an array which is the
+end value of the 2nd dependent variable for each of the runs.
 
 ## Parallelism
 
