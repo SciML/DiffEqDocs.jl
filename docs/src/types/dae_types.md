@@ -42,5 +42,5 @@ To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 #Pkg.add("DiffEqProblemLibrary")
 using DiffEqProblemLibrary
 prob = prob_dae_resrob
-sol = solve(prob,IDA)
+sol = solve(prob,IDA())
 ```
