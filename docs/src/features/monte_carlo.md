@@ -38,7 +38,7 @@ end
 ```
 
 If your function is a `ParameterizedFunction`,
-you can do similar modifications to `f` to perform a parameter search. The `output_func`
+you can do similar modifications to `prob.f` to perform a parameter search. The `output_func`
 is a reduction function. For example, if we wish to only save the 2nd coordinate
 at the end of the solution, we can do:
 
