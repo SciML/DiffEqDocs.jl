@@ -18,7 +18,7 @@ The special keyword arguments to note are:
 One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
-function prob_func(prob)
+function prob_func(prob,i)
   prob.u0 = randn()*prob.u0
   prob
 end
@@ -26,7 +26,18 @@ end
 
 modifies the initial condition for all of the problems by a standard normal
 random number (a different random number per simulation). This can be used
-to perform searches over initial values. If your function is a `ParameterizedFunction`,
+to perform searches over initial values. Note that the parameter `i` is a unique
+counter over the simulations. Thus if you have an array of initial conditions `u0_arr`,
+you can have the `i`th simulation use the `i`th initial condition via:
+
+```julia
+function prob_func(prob,i)
+  prob.u0 = u0_arr[i]
+  prob
+end
+```
+
+If your function is a `ParameterizedFunction`,
 you can do similar modifications to `f` to perform a parameter search. The `output_func`
 is a reduction function. For example, if we wish to only save the 2nd coordinate
 at the end of the solution, we can do:
