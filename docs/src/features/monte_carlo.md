@@ -2,16 +2,17 @@
 
 ## Performing a Monte Carlo Simulation
 
-To perform a Monte Carlo simulation, you simply use the interface:
+### Building a Problem
+
+To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The constructor is:
 
 ```julia
-sim = monte_carlo_simulation(prob,alg,kwargs...)
+
+MonteCarloProblem(prob::DEProblem;
+                  output_func = identity,
+                  prob_func= (prob,i)->prob)
 ```
 
-The keyword arguments take in the arguments for the common solver interface and will
-pass them to the differential equation solver. The special keyword arguments to note are:
-
-* `num_monte`: The number of simulations to run. Default is 10,000.
 * `prob_func`: The function by which the problem is to be modified.
 * `output_func`: The reduction function.
 
@@ -49,6 +50,39 @@ output_func(sol) = sol[end,2]
 Thus the Monte Carlo Simulation would return as its data an array which is the
 end value of the 2nd dependent variable for each of the runs.
 
+#### Parameterizing the Monte Carlo Components
+
+The Monte Carlo components can be parameterized by using the `ConcreteParameterizedFunction`
+constructors.
+
+```julia
+ProbParameterizedFunction(prob_func,params)
+OutputParameterizedFunction(output_func,params)
+```
+
+Here, the signatures are `prob_func(prob,i,params)` and `output_func(sol,params)`.
+These parameters are added to the parameter list for use in the parameter estimation
+schemes.
+
+### Solving the Problem
+
+```julia
+sim = solve(prob,alg,kwargs...)
+```
+
+The keyword arguments take in the arguments for the common solver interface and will
+pass them to the differential equation solver. The special keyword arguments to note are:
+
+* `num_monte`: The number of simulations to run. Default is 10,000.
+
+Additionally, a `MonteCarloEstimator` can be supplied
+
+```julia
+sim = solve(prob,estimator,alg,kwargs...)
+```
+
+These will be detailed when implemented.
+
 ## Parallelism
 
 Since this is using `pmap` internally, it will use as many processors as you
@@ -80,7 +114,8 @@ prob_func = function (prob)
   prob.u0 = rand()*prob.u0
   prob
 end
-sim = monte_carlo_simulation(prob,Tsit5(),prob_func=prob_func,num_monte=100)
+monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
+sim = solve(monte_prob,Tsit5(),num_monte=100)
 
 using Plots
 plotly()

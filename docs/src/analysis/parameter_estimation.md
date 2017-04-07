@@ -6,27 +6,38 @@ that the problem is defined using a [ParameterizedFunction](https://github.com/J
 
 ### build_loss_objective
 
-`build_loss_objective` builds an objective function to be used with Optim.jl and
-MathProgBase-associated solvers like NLopt.
+`build_loss_objective` builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.
 
 ```julia
-function build_loss_objective(prob::DEProblem,t,data,alg;
-                              loss_func = L2DistLoss,
+function build_loss_objective(prob::DEProblem,alg,loss_func;
                               mpg_autodiff = false,
-                              verbose = false,
+                              verbose_opt = false,
                               verbose_steps = 100,
                               kwargs...)
 ```
 
-The first argument is the DEProblem to solve. Next is `t`,
-the set of timepoints which the data is found at. The last argument which is required
-is the data, which are the values that are known, in order to be optimized against.
-Optionally, one can choose a loss function from LossFunctions.jl or use the default
-of an L2 loss. One can also choose `verbose` and `verbose_steps`, which, in the
-MathProgBase interface, will print the steps and the values at the steps every
+The first argument is the DEProblem to solve, and next is the `alg` to use.
+One can also choose `verbose_opt` and `verbose_steps`, which, in the optimization routines, will print the steps and the values at the steps every
 `verbose_steps` steps. `mpg_autodiff` uses autodifferentiation to define the
 derivative for the MathProgBase solver. The extra keyword arguments are passed
 to the differential equation solver.
+
+#### The Loss Function
+
+```julia
+loss_func(sol)
+```
+
+is a function which reduces the problem's solution. While this is very
+flexible, a convenience routine is included for fitting to data:
+
+```julia
+CostVData(t,data;loss_func = L2DistLoss)
+```
+
+where `t` is the set of timepoints which the data is found at, and
+`data` which are the values that are known. Optionally, one can choose a loss
+function from LossFunctions.jl or use the default of an L2 loss.
 
 ### build_lsoptim_objective
 
@@ -97,7 +108,7 @@ To build the objective function for Optim.jl, we simply call the `build_loss_obj
 funtion:
 
 ```julia
-cost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
+cost_function = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)
 ```
 
 Note that we set `maxiters` so that way the differential equation solvers would
@@ -146,7 +157,7 @@ prob = ODEProblem(f2,u0,tspan)
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
 ```julia
-cost_function = build_lsoptim_objective(prob,t,data,Tsit5()))
+cost_function = build_lsoptim_objective(prob,Tsit5(),CostVData(t,data))
 ```
 
 The result is a cost function which can be used with LeastSquaresOptim. For more
@@ -203,7 +214,7 @@ t = collect(linspace(0,10,200))
 randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
 data = vecvec_to_mat(randomized)
 
-obj = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
+obj = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)
 ```
 
 We can now use this `obj` as the objective function with MathProgBase solvers.
