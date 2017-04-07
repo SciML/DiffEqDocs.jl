@@ -48,12 +48,20 @@ In the plot command, one can choose the variables to be plotted in each plot. Th
 master form is:
 
 ```julia
+vars = [(f1,0,1), (f2,1,3), (f3,4,5)]
+```
+
+where this would mean plot f1(variable 1, variable 2), f2(variable 1, variable 3),
+f3(variable 4, variable 5) all on the same graph. (0 is considered to be time,
+or the independent variable). The function `f1` should take in scalars and return
+a tuple. If no function is given, for example,
+
+```julia
 vars = [(0,1), (1,3), (4,5)]
 ```
 
-where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph
-(0 is considered to be time, or the independent variable). While this can be used
-for everything, the following conveniences are provided:
+where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph.
+While this can be used for everything, the following conveniences are provided:
 
 * Everywhere in a tuple position where we only find an integer, this
   variable is plotted as a function of time.  For example, the list above
@@ -131,6 +139,15 @@ plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
 ![lorenz_plot](../assets/vars_plotting_example.png)
+
+An example using the functions:
+
+```julia
+f(x,y,z) = (sqrt(x^2+y^2+z^2),x)
+plot(sol,vars=(f,:x,:y,:z))
+```
+
+![norm_plot](../assets/normalized.png)
 
 ## Animations
 
