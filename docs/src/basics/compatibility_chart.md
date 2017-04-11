@@ -14,7 +14,7 @@ issue or submit a pull-request.
 | Advanced stepsize control              | x                 |             |        | x               |          | x                   | x              |          |          |                 |
 | internalnorm                           | x                 |             | x      |                 |          | x                   | x              |          |          |                 |
 | Initial dt                             | x                 |             | x      | x               |          | x                   | x              |          |          |                 |
-| save_timeseries                        | x                 | x           | x      |                 | x        | x                   | x              | x        |          |                 |
+| save_everystep                        | x                 | x           | x      |                 | x        | x                   | x              | x        |          |                 |
 | timeseries_steps                       | x                 |             |        |                 |          | x                   | x              |          |          |                 |
 | saveat                                 | x                 | x           | x      |                 | x        | x                   | x              | x        |          |                 |
 | tstops                                 | x                 |             |        |                 |          | x                   | x              |          |          |                 |
@@ -53,5 +53,5 @@ issue or submit a pull-request.
 This chart is only for the basic (ODE/SDE/DAE/DDE) solver methods. The PDE
 solvers (will be) built on top of these packages and thus will have the same
 options available. Current, FiniteElementDiffEq.jl  is a solo implemention
-which is compatible with `save_timeseries`, `timeseries_steps`, plotting and
+which is compatible with `save_everystep`, `timeseries_steps`, plotting and
 solution handling, arbitrary precision, and choice of `dt`.

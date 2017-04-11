@@ -54,7 +54,7 @@ prob = HeatProblem(u0,f,mesh,σ=σ)
 We use the following code to create an animation of the solution:
 
 ```julia
-sol = solve(prob,FEMDiffEqHeatEuler(),save_timeseries=true,solver=:LU)
+sol = solve(prob,FEMDiffEqHeatEuler(),save_everystep=true,solver=:LU)
 using Plots
 animate(sol;zlim=(0,3),cbar=false)
 ```

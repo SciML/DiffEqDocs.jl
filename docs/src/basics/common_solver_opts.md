@@ -36,7 +36,7 @@ way to only saving the solution at the final timepoint. All of these options
 can be mixed and matched. For example, the combination:
 
 ```julia
-saveat=[0:1/4:1],save_timeseries=false,dense=false
+saveat=[0:1/4:1],save_everystep=false,dense=false
 ```
 
 will only save the solution at the timepoints `0:1/4:1` and no other locations.
@@ -49,7 +49,10 @@ For more examples for controlling the output behavior, see the
   phase. The solver will save at each of the timepoints in this array in the
   most efficient manner. Note that this can be used even if `dense=false`.
   For methods where interpolation is not possible, this may be equivalent to
-  `tstops`. Default is `[]`.
+  `tstops`. Default is `[]`. Note that if `saveat` is a number, then it will
+  automatically expand to `tspan[1]:saveat:tspan[2]`.
+* `save_idxs`: Denotes the indices for the components of the equation to save.
+  Defaults to saving all indices.
 * `tstops`: Denotes extra times that the timestepping algorithm must step to.
   This should be used to help the solver deal with discontinuities and
   singularities, since stepping exactly at the time of the discontinuity will
@@ -68,10 +71,12 @@ For more examples for controlling the output behavior, see the
   usage in the integrator interface even when interpolations are used no
    where else. Note that this is only required if the algorithm doesn't have
   a free or lazy interpolation (`DP8()`).
-* `save_timeseries`: Saves the result at every timeseries_steps iteration.    
-  Default is true.
+* `save_everystep`: Saves the result at every timeseries_steps iteration.    
+  Default is true if `isempty(saveat)`.
 * `timeseries_steps`: Denotes how many steps between saving a value for the
   timeseries. Defaults to 1.
+* `save_start`: Denotes whether the initial condition should be included in
+  the solution type as the first timepoint. Defaults to true.
 
 ## Stepsize Control
 

@@ -2,11 +2,11 @@
 
 ## Recommended Methods
 
-For most problems where a good amount of accuracy is required and stiffness may
-be an issue, the `SRIW1Optimized` algorithm should do well. If the problem
-has additive noise, then `SRA1Optimized` will be the optimal algorithm. If
-you simply need to quickly compute a large ensamble and don't need accuracy
-(and don't have stiffness problems), then `EM` can do well.
+For most diagonal and scalar noise problems where a good amount of accuracy is
+required and stiffness may be an issue, the `SRIW1Optimized` algorithm should do
+well. If the problem has additive noise, then `SRA1Optimized` will be the optimal
+algorithm. For non-commutative noise, `EM` and `EulerHeun` will be the most accurate
+(for Ito and Stratonovich interpretations respectively).
 
 ## Special Keyword Arguments
 
@@ -21,14 +21,15 @@ you simply need to quickly compute a large ensamble and don't need accuracy
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
-- `EM`- The Euler-Maruyama method.
-- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 Milstein method.
-- `SRA` - The strong Order 2.0 methods for additive SDEs due to Rossler. Not yet implemented.
+- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.
+- `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
+- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.
+- `SRA` - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler.
   Default tableau is for SRA1.
-- `SRI` - The strong Order 1.5 methods for diagonal/scalar SDEs due to Rossler.
+- `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler.
   Default tableau is for SRIW1.
-- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5.
-- `SRA1` - An optimized version of SRIA1. Strong Order 2.0.
+- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.
+- `SRA1` - An optimized version of SRIA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.
 
 For `SRA` and `SRI`, the following option is allowed:
 
@@ -56,7 +57,7 @@ can be used in the choice function.
 ### Adaptive Type: RSWM
 
 Algorithms which allow for adaptive timestepping (all except `EM` and `RKMil`)
-can take in an `RSWM` type which specifies the rejction sampling with memory
+can take in an `RSWM` type which specifies the rejection sampling with memory
 algorithm used. The constructor is:
 
 ```julia

@@ -8,7 +8,7 @@ usage. This page is to describe the different techniques which can be employed
 to change the output specification. It will be described from the top down: the
 most powerful is continuous (dense) output, which can instead be used for step-wise
 interpolation via `saveat`, to using no interpolations and only save the timeseries
-at `timeseries_steps`, to finally turning `save_timeseries=false` to only save the
+at `timeseries_steps`, to finally turning `save_everystep=false` to only save the
 value at the end.
 
 ## Availability
@@ -48,7 +48,7 @@ saving the derivatives at two timesteps, and thus has a drastically reduced memo
 footprint than full dense output. Note that this, being associated with dense output,
 is only available for the ODE solvers.
 
-One fact to note is that `saveat` can be used even when `save_timeseries=false`.
+One fact to note is that `saveat` can be used even when `save_everystep=false`.
 If this is done, then the only values that will be saved are the values chosen
 in `saveat` (matching Sundial's default behavior).
 
@@ -76,5 +76,5 @@ is saved at. By default `timeseries_steps=1`, meaning that every step is saved.
 Note that `timeseries_steps=1` is required for dense output to work correctly.
 If we change this value to `timeseries_steps=n`, then every `n`th step will be
 saved. Note that it will always have the first and final steps. We can turn off
-the saving of intermediate steps completely via the keyword `save_timeseries=false`.
+the saving of intermediate steps completely via the keyword `save_everystep=false`.
 This can be used to minimize the memory usage.

@@ -32,7 +32,9 @@ u_{n+1} = u_n + dtf(t,u_n)
 * `f`: The function in the map.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-
+* `callback`: A callback to be applied to every solver which uses the problem.
+  Defaults to a black CallbackSet, which will have no effect.
+  
 #### Note About Timing
 
 Note that if no `dt` and not `tstops` is given, it's assumed that `dt=1` and thus

@@ -68,6 +68,7 @@ stochastic variants for handling Gaussian Space-time white noise SPDEs.
 * Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)
 * Ordinary Differential Equations (ODEs)
 * Stochastic Differential Equations (SDEs)
+* Random Differential Equations (RDEs)
 * Algebraic Differential Equations (DAEs)
 * Delay Differential Equations (DDEs)
 * (Stochastic) Partial Differential Equations ((S)PDEs):
@@ -141,6 +142,7 @@ Pages = [
   "types/discrete_types.md",
   "types/ode_types.md",
   "types/sde_types.md",
+  "types/rode_types.md",
   "types/dde_types.md",
   "types/dae_types.md",
   "types/jump_types.md",
@@ -159,6 +161,7 @@ Pages = [
   "solvers/discrete_solve.md",
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
+  "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
   "solvers/fempoisson_solve.md",
@@ -177,6 +180,7 @@ in-depth features.
 Pages = [
     "features/performance_overloads.md",
     "features/data_arrays.md",
+    "features/noise_process.md",
     "features/linear_nonlinear.md",
     "features/callback_functions.md",
     "features/callback_library.md",

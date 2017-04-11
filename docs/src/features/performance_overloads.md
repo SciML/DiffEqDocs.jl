@@ -42,6 +42,7 @@ The full interface available to the solvers is as follows:
 
 ```julia
 f(t,u,du) # Call the function
+f(Val{:analytic},t,u,du) # The analytical solution. Used in testing
 f(t,u,params,du) # Call the function to calculate with parameters params (vector)
 f(Val{:tgrad},t,u,J) # Call the explicit t-gradient function
 f(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0

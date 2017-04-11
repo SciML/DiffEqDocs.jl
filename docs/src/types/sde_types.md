@@ -27,8 +27,8 @@ with initial condition ``u0``.
 
 ### Constructors
 
-`SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE)` : Defines the SDE with the specified
-functions. The default noise is `WHITE_NOISE`.
+`SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
+Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`.
 
 ### Fields
 
@@ -36,9 +36,16 @@ functions. The default noise is `WHITE_NOISE`.
 * `g`: The noise function in the SDE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-* `noise`: The noise process applied to the noise upon generation.
-
-## Noise Processes
+* `noise`: The noise process applied to the noise upon generation. Defaults to
+  Gaussian white noise. For information on defining different noise processes,
+  see [the noise process documentation page](../features/noise_process.html)
+* `noise_rate_prototype`: A prototype type instance for the noise rates, that
+  is the output `g`. It can be any type which overloads `A_mul_B!` with itself
+  being the middle argument. Commonly, this is a matrix or sparse matrix. If
+  this is not given, it defaults to `nothing`, which means the problem should
+  be interpreted as having diagonal noise.  
+* `callback`: A callback to be applied to every solver which uses the problem.
+  Defaults to a black CallbackSet, which will have no effect.
 
 ## Special Solver Options
 

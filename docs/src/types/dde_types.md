@@ -31,7 +31,9 @@ DDEProblem(f,h,u0,lags,tspan)
 * `lags`: An array of lags. For constant lag problems this should be numbers.
   For state-dependent delay problems this is a tuple of functions.
 * `tspan`: The timespan for the problem.
-
+* `callback`: A callback to be applied to every solver which uses the problem.
+  Defaults to a black CallbackSet, which will have no effect.
+  
 ## Special Solver Options
 
 ## Special Solution Fields
