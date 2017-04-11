@@ -70,7 +70,7 @@ The arguments are defined as follows:
   to `nothing` which means `u` will be all components.
 * `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
   the state of the callback `c`. It should modify the argument `c` and the return is
-  ignored. 
+  ignored.
 
 Additionally, keyword arguments for `abstol` and `reltol` can be used to specify
 a tolerance from zero for the rootfinder: if the starting condition is less than
@@ -81,7 +81,9 @@ events happening just after a previously rootfound event. The default has
 ### DiscreteCallback
 
 ```julia
-DiscreteCallback(condition,affect!,save_positions)
+DiscreteCallback(condition,affect!;
+                 save_positions=(true,true),
+                 initialize = (c,t,u,integrator) -> nothing)
 ```
 
 * `condition`: This is a function `condition(t,u,integrator)` for declaring when
@@ -96,7 +98,7 @@ DiscreteCallback(condition,affect!,save_positions)
   handled correctly (without error), one should set `save_positions=(true,true)`.
 * `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
   the state of the callback `c`. It should modify the argument `c` and the return is
-  ignored. 
+  ignored.
 
 ### CallbackSet
 
