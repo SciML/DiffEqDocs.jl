@@ -161,6 +161,8 @@ as normal. For example, we can animate our solution with a larger line-width whi
 saves every 4th frame via:
 
 ```julia
+#Pkg.add("ImageMagick") # You may need to install ImageMagick.jl before your first time using it!
+#using ImageMagick # Some installations require using ImageMagick for good animations
 animate(sol,lw=3,every=4)
 ```
 
