@@ -88,6 +88,7 @@ If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
 view them locally and interactively, by cloning the repository:
 
 ```julia
+#Pkg.add("IJulia") # Need to do this the first time to install IJulia!
 Pkg.clone("https://github.com/JuliaDiffEq/DiffEqTutorials.jl")
 using IJulia
 notebook(dir = Pkg.dir("DiffEqTutorials"))
