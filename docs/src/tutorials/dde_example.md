@@ -1,7 +1,7 @@
 # Delay Differential Equations
 
 This tutorial will introduce you to the functionality for solving delay differential
-equations. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html)
+equations. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html).
 
 Delay differential equations are equations which have a delayed argument. To allow
 for specifying the delayed argument, the function definition for a delay differential
