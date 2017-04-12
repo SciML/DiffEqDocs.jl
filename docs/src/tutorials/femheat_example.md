@@ -2,6 +2,7 @@
 
 This tutorial will introduce you to the functionality for solving a PDE. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html)
 
 In this example we will solve the heat equation ``u_t=Δu+f``. To do this, we define
 a HeatProblem which contains the function ``f`` and the boundary conditions. We
