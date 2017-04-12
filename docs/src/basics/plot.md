@@ -7,6 +7,7 @@ use plot solutions, simply call the `plot(type)` after importing Plots.jl
 and the plotter will generate appropriate plots.
 
 ```julia
+#Pkg.add("Plots") # You need to install Plots.jl before your first time using it!
 using Plots
 plot(sol) # Plots the solution
 ```
