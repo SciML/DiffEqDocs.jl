@@ -12,6 +12,7 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Tutorials" => Any[
            "tutorials/ode_example.md",
            "tutorials/sde_example.md",
+           "tutorials/rode_example.md",
            "tutorials/dde_example.md",
            "tutorials/dae_example.md",
            "tutorials/discrete_stochastic_example.md",

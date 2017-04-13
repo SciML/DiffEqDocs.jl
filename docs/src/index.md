@@ -163,6 +163,7 @@ Pages = [
   "solvers/ode_solve.md",
   "solvers/sde_solve.md",
   "solvers/rode_solve.md",
+  "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
   "solvers/fempoisson_solve.md",
