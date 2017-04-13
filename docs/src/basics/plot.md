@@ -7,6 +7,7 @@ use plot solutions, simply call the `plot(type)` after importing Plots.jl
 and the plotter will generate appropriate plots.
 
 ```julia
+#Pkg.add("Plots") # You need to install Plots.jl before your first time using it!
 using Plots
 plot(sol) # Plots the solution
 ```
@@ -160,6 +161,8 @@ as normal. For example, we can animate our solution with a larger line-width whi
 saves every 4th frame via:
 
 ```julia
+#Pkg.add("ImageMagick") # You may need to install ImageMagick.jl before your first time using it!
+#using ImageMagick # Some installations require using ImageMagick for good animations
 animate(sol,lw=3,every=4)
 ```
 

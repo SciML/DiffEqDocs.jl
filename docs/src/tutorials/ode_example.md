@@ -91,6 +91,7 @@ Plotting commands are provided via a recipe to Plots.jl. To plot the solution
 object, simply call plot:
 
 ```julia
+#Pkg.add("Plots") # You need to install Plots.jl before your first time using it!
 using Plots
 #gr() # You can optionally choose a plotting backend
 plot(sol)

@@ -1,7 +1,7 @@
 # Differential Algebraic Equations
 
 This tutorial will introduce you to the functionality for solving DAEs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html).
 
 In this example we will solve the implicit ODE equation
 
