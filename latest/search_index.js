@@ -1845,7 +1845,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.RandomEM- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity."
 },
 
 {
