@@ -12,7 +12,7 @@ pf = ParameterizedFunction(f,params)
 
 The form for `f` is `f(t,u,params,du)` where `params` is any type which defines
 the parameters (it does not have to be an array, and it can be any user-defined
-type as well). The resulting `ParameterizedFunction` has the function call 
+type as well). The resulting `ParameterizedFunction` has the function call
 `pf(t,u,params,du)` which matches the original function, and a call `pf(t,u,du)`
 which uses internal parameters which can be used with a differential equation solver.
 Note that the internal parameters can be modified at any time via the field: `pf.p = ...`.
@@ -120,6 +120,49 @@ Since the parameters are explicit, these functions can be used to analyze how th
 parameters affect the model. Thus ParameterizedFunctions, when coupled with the
 solvers, forms the backbone of functionality such as parameter estimation, parameter
 sensitivity analysis, and bifurcation analysis.
+
+## Extra Little Tricks
+
+There are some extra little tricks you can do. Since `@ode_def` is a macro,
+you cannot directly make the parameters something that requires a runtime value.
+Thus the following will error:
+
+```julia
+vec = rand(1,4)
+f = @ode_def LotkaVolterraExample begin
+dx = ax - bxy
+dy = -cy + dxy
+end a=>vec[1] b=>vec[2] c=>vec[3] d=vec[4]
+```
+
+To do the same thing, instead initialize it with values of the same type, and simply
+replace them:
+
+```julia
+vec = rand(1,4)
+f = @ode_def LotkaVolterraExample begin
+dx = ax - bxy
+dy = -cy + dxy
+end a=>1.0 b=>1.0 c=>1.0 d=vec[4]
+f.a,f.b,f.c = vec[1:3]
+```
+
+Notice that when using `=`, it can inline expressions. It can even inline expressions
+of time, like `d=3*t` or `d=2π`. However, do not use something like `d=3*x` as that will
+fail to transform the `x`.
+
+In addition, one can also use their own function inside of the macro. For example:
+
+```julia
+f(x,y,d) = erf(x*y/d)
+NJ = @ode_def FuncTest begin
+  dx = a*x - b*x*y
+  dy = -c*y + f(x,y,d)
+end a=>1.5 b=>1 c=3 d=4
+```
+
+will do fine. The symbolic derivatives will not work unless you define a derivative
+for `f`.
 
 ## Extra Optimizations
 
