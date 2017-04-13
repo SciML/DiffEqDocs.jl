@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
 },
 
 {
@@ -190,6 +190,38 @@ var documenterSearchIndex = {"docs": [
     "title": "Non-Diagonal Noise",
     "category": "section",
     "text": "All of the previous examples had diagonal noise, that is a vector of random numbers dW whose size matches the output of g, and the noise is applied element-wise. However, a more general type of noise allows for the terms to linearly mixed.Let's define a problem with four Wiener processes and two dependent random variables. In this case, we will want the output of g to be a 2x4 matrix, such that the solution is g(t,u)*dW, the matrix multiplication. For example, we can do the following:f = (t,u,du) -> du.=1.01u\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,2] = 0.6u[1]\n  du[1,3] = 0.9u[1]\n  du[1,4] = 0.12u[2]\n  du[2,1] = 1.2u[1]\n  du[2,2] = 0.2u[2]\n  du[2,3] = 0.3u[2]\n  du[2,4] = 1.8u[2]\nend\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))In our g we define the functions for computing the values of the matrix. The matrix itself is determined by the keyword argument noise_rate_prototype in the SDEProblem constructor. This is a prototype for the type that du will be in g. This can be any AbstractMatrix type. Thus for example, we can define the problem as\n# Define a sparse matrix by making a dense matrix and setting some values as not zero\nA = zeros(2,4)\nA[1,1] = 1\nA[1,4] = 1\nA[2,4] = 1\nsparse(A)\n\n# Make `g` write the sparse matrix values\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,4] = 0.12u[2]\n  du[2,4] = 1.8u[2]\nend\n\n# Make `g` use the sparse matrix\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)and now g(t,u) writes into a sparse matrix, and g(t,u)*dW is sparse matrix multiplication."
+},
+
+{
+    "location": "tutorials/rode_example.html#",
+    "page": "Random Ordinary Differential Equations",
+    "title": "Random Ordinary Differential Equations",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/rode_example.html#Random-Ordinary-Differential-Equations-1",
+    "page": "Random Ordinary Differential Equations",
+    "title": "Random Ordinary Differential Equations",
+    "category": "section",
+    "text": "This tutorial will introduce you to the functionality for solving RODEs. Other introductions can be found by checking out DiffEqTutorials.jl."
+},
+
+{
+    "location": "tutorials/rode_example.html#Basics-1",
+    "page": "Random Ordinary Differential Equations",
+    "title": "Basics",
+    "category": "section",
+    "text": "In this example we will solve the equationdu = f(tuy)dtwhere f(tuW)=2usin(W) and W(t) is a Wiener process (Gaussian process).using DifferentialEquations\nfunction f(t,u,W)\n  2u*sin(W)\nend\nu0 = 1.00\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: intro_rode)The random process defaults to a Gaussian/Wiener process, so there is nothing else required here! See the documentation on NoiseProcesses for details on how to define other noise proceses."
+},
+
+{
+    "location": "tutorials/rode_example.html#System-of-RODEs-1",
+    "page": "Random Ordinary Differential Equations",
+    "title": "System of RODEs",
+    "category": "section",
+    "text": "As with the other problem types, there is an in-place version which is more efficient for systems. The signature is f(t,u,W,du). For example,using DifferentialEquations\nfunction f(t,u,W,du)\n  du[1] = 2u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: rode_system)By default, the size of the noise process matches the size of u0. However, you can use the rand_prototype keyword to explicitly set the size of the random process:f = function (t,u,W,du)\n  du[1] = -2W[3]*u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan,rand_prototype=zeros(3))\nsol = solve(prob,RandomEM(),dt=1/100)(Image: noise_choice)"
 },
 
 {
