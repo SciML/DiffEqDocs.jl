@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/second_order_ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -957,7 +957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ODEProblem(f,u0,tspan,callback=CallbackSet()) : Defines the ODE with the specified functions."
+    "text": "ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -965,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1089,6 +1089,70 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/second_order_ode_types.html#",
+    "page": "Second Order ODE Types",
+    "title": "Second Order ODE Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/second_order_ode_types.html#Second-Order-ODE-Types-1",
+    "page": "Second Order ODE Types",
+    "title": "Second Order ODE Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/second_order_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
+    "page": "Second Order ODE Types",
+    "title": "Mathematical Specification of an Second Order ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/second_order_ode_types.html#Problem-Type-1",
+    "page": "Second Order ODE Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/second_order_ode_types.html#Constructors-1",
+    "page": "Second Order ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/second_order_ode_types.html#Fields-1",
+    "page": "Second Order ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/second_order_ode_types.html#Special-Solver-Options-1",
+    "page": "Second Order ODE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/second_order_ode_types.html#Special-Solution-Fields-1",
+    "page": "Second Order ODE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "types/refined_ode_types.html#",
     "page": "Refined ODE Types",
     "title": "Refined ODE Types",
@@ -1117,7 +1181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1125,7 +1189,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1157,7 +1221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1165,7 +1229,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1197,7 +1261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1205,7 +1269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1221,7 +1285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1229,7 +1293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1245,7 +1309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1253,7 +1317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1301,7 +1365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1413,7 +1477,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mm=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
+    "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
 },
 
 {
@@ -1421,7 +1485,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1461,7 +1525,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)"
+    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)"
 },
 
 {
@@ -1469,7 +1533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1589,7 +1653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined DAE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1597,7 +1661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined DAE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1629,7 +1693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined DAE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+    "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
 },
 
 {
@@ -1637,7 +1701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined DAE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
