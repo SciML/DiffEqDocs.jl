@@ -26,7 +26,8 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to a black CallbackSet, which will have no effect.
+  Defaults to nothing.
+* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Special Solver Options
 

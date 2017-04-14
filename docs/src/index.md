@@ -142,10 +142,12 @@ for the solvers, and the special features of the different solution types.
 Pages = [
   "types/discrete_types.md",
   "types/ode_types.md",
+  "types/refined_ode_types.md",
   "types/sde_types.md",
   "types/rode_types.md",
   "types/dde_types.md",
   "types/dae_types.md",
+  "types/refined_dae_types.md",
   "types/jump_types.md",
   "types/fem_types.md",
   "types/stokes_types.md"

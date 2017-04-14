@@ -20,8 +20,8 @@ provide `u0` as arbitrary matrices / higher dimension tensors as well.
 ### Constructors
 
 ```julia
-ConstantLagDDEProblem(f,h,u0,lags,tspan)
-DDEProblem(f,h,u0,lags,tspan)
+ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)
+DDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)
 ```
 
 ### Fields
@@ -32,8 +32,9 @@ DDEProblem(f,h,u0,lags,tspan)
   For state-dependent delay problems this is a tuple of functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to a black CallbackSet, which will have no effect.
-  
+  Defaults to nothing.
+* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+
 ## Special Solver Options
 
 ## Special Solution Fields
