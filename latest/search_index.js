@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
 },
 
 {
@@ -965,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1089,6 +1089,174 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/refined_ode_types.html#",
+    "page": "Refined ODE Types",
+    "title": "Refined ODE Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Refined-ODE-Types-1",
+    "page": "Refined ODE Types",
+    "title": "Refined ODE Types",
+    "category": "section",
+    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
+},
+
+{
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of a Split ODE Problem",
+    "category": "section",
+    "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-1",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-1",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solver-Options-1",
+    "page": "Refined ODE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solution-Fields-1",
+    "page": "Refined ODE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": "None. It returns a standard ODE solution."
+},
+
+{
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of a Partitioned ODE Problem",
+    "category": "section",
+    "text": "To define a PartitionedODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-2",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-2",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solver-Options-2",
+    "page": "Refined ODE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solution-Fields-2",
+    "page": "Refined ODE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Constrained-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of a Constrained ODE Problem",
+    "category": "section",
+    "text": "The constrained ODE:fracdudt = f(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-3",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-3",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-Constrained-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of a Split Constrained ODE Problem",
+    "category": "section",
+    "text": "The split constrained ODE:fracdudt = f_1(tuv) + f_2(tuv) +  + f_n(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-4",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-4",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-Constrained-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of a Partitioned Constrained ODE Problem",
+    "category": "section",
+    "text": "The constrained ODE:fracdudt = f(tuv) \nfracdvdt = f(tuv) \n\n0 = g(tuv)is a type of refined ODE which specifies a DAE."
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-5",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-5",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
     "location": "types/sde_types.html#",
     "page": "SDE Types",
     "title": "SDE Types",
@@ -1133,7 +1301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1245,7 +1413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
+    "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mm=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
 },
 
 {
@@ -1253,7 +1421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
+    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1293,7 +1461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Types",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan)\nDDEProblem(f,h,u0,lags,tspan)"
+    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)"
 },
 
 {
@@ -1301,7 +1469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Types",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
+    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1390,6 +1558,102 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
+},
+
+{
+    "location": "types/refined_dae_types.html#",
+    "page": "Refined DAE Types",
+    "title": "Refined DAE Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/refined_dae_types.html#Refined-DAE-Types-1",
+    "page": "Refined DAE Types",
+    "title": "Refined DAE Types",
+    "category": "section",
+    "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
+},
+
+{
+    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
+    "page": "Refined DAE Types",
+    "title": "Mathematical Specification of a Split DAE Problem",
+    "category": "section",
+    "text": "To define a SplitDAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
+},
+
+{
+    "location": "types/refined_dae_types.html#Constructors-1",
+    "page": "Refined DAE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_dae_types.html#Fields-1",
+    "page": "Refined DAE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_dae_types.html#Special-Solver-Options-1",
+    "page": "Refined DAE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_dae_types.html#Special-Solution-Fields-1",
+    "page": "Refined DAE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": "None. It returns a standard DAE solution."
+},
+
+{
+    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "Refined DAE Types",
+    "title": "Mathematical Specification of a Partitioned ODE Problem",
+    "category": "section",
+    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) \nf should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/refined_dae_types.html#Constructors-2",
+    "page": "Refined DAE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mm=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_dae_types.html#Fields-2",
+    "page": "Refined DAE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmm: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_dae_types.html#Special-Solver-Options-2",
+    "page": "Refined DAE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_dae_types.html#Special-Solution-Fields-2",
+    "page": "Refined DAE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
 },
 
 {
