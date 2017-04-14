@@ -20,7 +20,7 @@ of `u`.
 
 ### Constructors
 
-`SplitDAEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with the specified functions.
+`SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with the specified functions.
 
 ### Fields
 
@@ -30,7 +30,7 @@ of `u`.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ### Special Solver Options
 
@@ -58,7 +58,7 @@ tensors as well.
 
 ### Constructors
 
-`PartitionedDAEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with
+`PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with
 the specified functions.
 
 ### Fields
@@ -69,7 +69,7 @@ the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ### Special Solver Options
 

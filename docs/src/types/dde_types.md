@@ -20,8 +20,8 @@ provide `u0` as arbitrary matrices / higher dimension tensors as well.
 ### Constructors
 
 ```julia
-ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)
-DDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)
+ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
+DDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
 ```
 
 ### Fields
@@ -33,7 +33,7 @@ DDEProblem(f,h,u0,lags,tspan,callback=nothing,mm=I)
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Special Solver Options
 

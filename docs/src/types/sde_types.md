@@ -46,7 +46,7 @@ Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`
   be interpreted as having diagonal noise.  
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Special Solver Options
 

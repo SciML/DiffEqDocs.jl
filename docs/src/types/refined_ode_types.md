@@ -21,7 +21,7 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`SplitODEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with the specified functions.
+`SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with the specified functions.
 
 ### Fields
 
@@ -30,7 +30,7 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ### Special Solver Options
 
@@ -58,7 +58,7 @@ tensors as well.
 
 ### Constructors
 
-`PartitionedODEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with
+`PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with
 the specified functions.
 
 ### Fields
@@ -68,7 +68,7 @@ the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ### Special Solver Options
 
@@ -87,7 +87,7 @@ is a type of refined ODE which specifies a DAE.
 
 ### Constructors
 
-`ConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with
+`ConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with
 the specified functions.
 
 ### Fields
@@ -99,7 +99,7 @@ the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Mathematical Specification of a Split Constrained ODE Problem
 
@@ -114,7 +114,7 @@ is a type of refined ODE which specifies a DAE.
 
 ### Constructors
 
-`SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mm=I)` : Defines the ODE with
+`SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with
 the specified functions.
 
 ### Fields
@@ -125,7 +125,7 @@ the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Mathematical Specification of a Partitioned Constrained ODE Problem
 
@@ -134,7 +134,7 @@ The constrained ODE:
 ```math
 \frac{du}{dt} = f(t,u,v,...) \\
 \frac{dv}{dt} = f(t,u,v,...) \\
-...
+...\\
 0 = g(t,u,v)
 ```
 
@@ -142,7 +142,7 @@ is a type of refined ODE which specifies a DAE.
 
 ### Constructors
 
-`ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mm=I)` : Defines the ODE with
+`ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mass_matrix=I)` : Defines the ODE with
 the specified functions.
 
 ### Fields
@@ -154,4 +154,4 @@ the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.

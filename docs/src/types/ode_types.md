@@ -18,7 +18,7 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`ODEProblem(f,u0,tspan,callback=CallbackSet())` : Defines the ODE with the specified functions.
+`ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I)` : Defines the ODE with the specified functions.
 
 ### Fields
 
@@ -27,7 +27,7 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Special Solver Options
 

@@ -17,7 +17,7 @@ to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary 
 
 ### Constructors
 
-`RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mm=I)` :
+`RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I)` :
 Defines the RODE with the specified functions. The default noise is `WHITE_NOISE`.
 
 ### Fields
@@ -33,4 +33,4 @@ Defines the RODE with the specified functions. The default noise is `WHITE_NOISE
   vector whose size matches `u0`.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mm`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
+* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
