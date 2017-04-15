@@ -17,8 +17,8 @@ the function ignores the appropriate argument.
 For example, one type of special form is the dynamical ODE:
 
 ```math
-\frac{dx}{dt} = f_1(t,v) \\
-\frac{dv}{dt} = f_2(t,x) \\
+\frac{du}{dt} = f_1(t,v) \\
+\frac{dv}{dt} = f_2(t,u) \\
 ...
 ```
 
@@ -43,12 +43,12 @@ lazily (i.e. not during the solve).
 These algorithms require a Partitioned ODE of the form:
 
 ```math
-\frac{dx}{dt} = f_1(t,v) \\
+\frac{du}{dt} = f_1(t,v) \\
 \frac{dv}{dt} = f_2(t,u) \\
 ...
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
-specified as `f1(t,x,v,dx)` and `f2(t,x,v,dx)` (in the inplace form), where `f1`
+specified as `f1(t,u,v,dx)` and `f2(t,u,v,dx)` (in the inplace form), where `f1`
 is independent of `x` and `f2` is independent of `v`. This includes discretizations
 arising from `SecondOrderODEProblem`s where the velocity is not used in the acceleration
 function.
