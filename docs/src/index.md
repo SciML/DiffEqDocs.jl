@@ -67,6 +67,7 @@ stochastic variants for handling Gaussian Space-time white noise SPDEs.
 
 * Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)
 * Ordinary Differential Equations (ODEs)
+* Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
 * Stochastic Differential Equations (SDEs)
 * Random Differential Equations (RDEs)
 * Algebraic Differential Equations (DAEs)

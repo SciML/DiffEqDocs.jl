@@ -91,8 +91,8 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 From this form, a partitioned ODE
 
 ```math
-\u' = v \\
-\v' = f(t,u,v) \\
+u' = v \\
+v' = f(t,u,v) \\
 ```
 
 is generated.
