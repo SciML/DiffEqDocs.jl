@@ -22,19 +22,19 @@ Element Methods by Long Chen](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.p
 ## Mesh Type
 
 ```@docs
-FiniteElementDiffEq.FEMmesh
-FiniteElementDiffEq.SimpleMesh
+DiffEqPDEBase.FEMmesh
+DiffEqPDEBase.SimpleMesh
 DiffEqBase.Mesh
 ```
 
 ## Mesh Generation Functions
 
 ```@docs
-FiniteElementDiffEq.findboundary
-FiniteElementDiffEq.setboundary
-FiniteElementDiffEq.fem_squaremesh
-FiniteElementDiffEq.notime_squaremesh
-FiniteElementDiffEq.parabolic_squaremesh
+DiffEqPDEBase.findboundary
+DiffEqPDEBase.setboundary
+DiffEqPDEBase.fem_squaremesh
+DiffEqPDEBase.notime_squaremesh
+DiffEqPDEBase.parabolic_squaremesh
 Base.size(::StokesDiffEq.FDMMesh)
 ```
 

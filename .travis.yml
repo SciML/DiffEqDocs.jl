@@ -10,10 +10,7 @@ script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd())'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqBase.jl")'
-  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqDevTools.jl")'
-  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/FiniteElementDiffEq.jl")'
+  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqPDEBase.jl")'
   - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl")'
-  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/StokesDiffEq.jl")'
-  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/OrdinaryDiffEq.jl")'
   - julia -e 'Pkg.add("Documenter")'
   - julia -e 'cd(Pkg.dir("DiffEqDocs")); include(joinpath("docs", "make.jl"))'

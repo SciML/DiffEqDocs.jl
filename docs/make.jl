@@ -1,8 +1,6 @@
-using Documenter,DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
-      DiffEqProblemLibrary, StokesDiffEq, OrdinaryDiffEq
+using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary
 
-makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
-                  StokesDiffEq,OrdinaryDiffEq,DiffEqProblemLibrary],
+makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
          doctest=false, clean=true,
          format =:html,
          sitename="DifferentialEquations.jl",
