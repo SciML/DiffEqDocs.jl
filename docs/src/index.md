@@ -163,14 +163,13 @@ These pages describe the solvers and available algorithms in detail.
 Pages = [
   "solvers/discrete_solve.md",
   "solvers/ode_solve.md",
+  "solvers/refined_ode_solve.md",
   "solvers/sde_solve.md",
-  "solvers/rode_solve.md",
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
   "solvers/fempoisson_solve.md",
   "solvers/femheat_solve.md",
-  "solvers/fdmstokes_solve.md"
 ]
 Depth = 2
 ```
