@@ -2117,7 +2117,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Special Forms",
     "category": "section",
-    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdxdt = f_1(tv) \nfracdvdt = f_2(tx) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Followed the requirements for the integrator is required to achieve the suggested accuracy."
+    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Followed the requirements for the integrator is required to achieve the suggested accuracy."
 },
 
 {
@@ -2141,7 +2141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Dynamical ODE",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdxdt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
 },
 
 {
