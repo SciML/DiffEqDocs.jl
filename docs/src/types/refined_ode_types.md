@@ -54,7 +54,16 @@ of the same size) which define an ODE:
 the initial conditions should be AbstractArrays (or numbers) whose geometry matches
 the desired geometry of `u`. Note that we are not limited to numbers or vectors
 for `u₀`; one is allowed to provide `u₀` as arbitrary matrices / higher dimension
-tensors as well.
+tensors as well. In some cases, the solvers may specify the functions in a split
+form, for example:
+
+```math
+\frac{du}{dt} = f_1(t,u,v,...) + f_2(t,u,v,...) \\
+\frac{dv}{dt} = f_3(t,u,v,...) \\
+...
+```
+
+See the solver's documentation for the form it is expecting.
 
 ### Constructors
 
