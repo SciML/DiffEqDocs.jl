@@ -106,7 +106,7 @@ v' = f(t,u,v) \\
 
 is generated.
 
-## Problem Type
+### Problem Type
 
 ### Constructors
 
@@ -122,9 +122,9 @@ is generated.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-## Special Solver Options
+### Special Solver Options
 
-## Special Solution Fields
+### Special Solution Fields
 
 ## Mathematical Specification of a Constrained ODE Problem
 
