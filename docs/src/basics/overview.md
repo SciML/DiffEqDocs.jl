@@ -9,7 +9,7 @@ The general workflow for using the package is as follows:
 ## Defining Problems
 
 Problems are specified via a type interface. The problem types are designed to
-contained the necessary information to fully define their associated differential
+contain the necessary information to fully define their associated differential
 equation. Each problem type has a page explaining their problem type and the special
 features associated with them. For example, an ordinary differential equation is defined by
 
