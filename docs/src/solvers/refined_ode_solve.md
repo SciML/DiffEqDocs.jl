@@ -49,7 +49,9 @@ These algorithms require a Partitioned ODE of the form:
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(t,x,v,dx)` and `f2(t,x,v,dx)` (in the inplace form), where `f1`
-is independent of `x` and `f2` is independent of `v`.
+is independent of `x` and `f2` is independent of `v`. This includes discretizations
+arising from `SecondOrderODEProblem`s where the velocity is not used in the acceleration
+function.
 
 The appropriate algorithms for this form are:
 
