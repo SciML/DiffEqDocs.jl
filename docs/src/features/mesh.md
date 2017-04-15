@@ -19,14 +19,6 @@ for ``i=1,2,3``.
 For more information, please see [Programming of Finite
 Element Methods by Long Chen](http://www.math.uci.edu/~chenlong/226/Ch3FEMCode.pdf).
 
-## Mesh Type
-
-```@docs
-DiffEqPDEBase.FEMmesh
-DiffEqPDEBase.SimpleMesh
-DiffEqBase.Mesh
-```
-
 ## Mesh Generation Functions
 
 ```@docs
@@ -35,7 +27,6 @@ DiffEqPDEBase.setboundary
 DiffEqPDEBase.fem_squaremesh
 DiffEqPDEBase.notime_squaremesh
 DiffEqPDEBase.parabolic_squaremesh
-Base.size(::StokesDiffEq.FDMMesh)
 ```
 
 ## Example Meshes
