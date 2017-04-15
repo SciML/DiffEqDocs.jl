@@ -150,7 +150,6 @@ Pages = [
   "types/refined_dae_types.md",
   "types/jump_types.md",
   "types/fem_types.md",
-  "types/stokes_types.md"
 ]
 Depth = 2
 ```

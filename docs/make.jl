@@ -38,7 +38,6 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
            "types/refined_dae_types.md",
            "types/jump_types.md",
            "types/fem_types.md",
-           "types/stokes_types.md"
          ],
          "Solver Algorithms" => Any[
            "solvers/discrete_solve.md",
