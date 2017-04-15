@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Equation Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/second_order_ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n  \"types/stokes_types.md\"\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
 
 {
@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n  \"solvers/fdmstokes_solve.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/refined_ode_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n]\nDepth = 2"
 },
 
 {
@@ -1089,70 +1089,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/second_order_ode_types.html#",
-    "page": "Second Order ODE Types",
-    "title": "Second Order ODE Types",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/second_order_ode_types.html#Second-Order-ODE-Types-1",
-    "page": "Second Order ODE Types",
-    "title": "Second Order ODE Types",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/second_order_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "Second Order ODE Types",
-    "title": "Mathematical Specification of an Second Order ODE Problem",
-    "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
-},
-
-{
-    "location": "types/second_order_ode_types.html#Problem-Type-1",
-    "page": "Second Order ODE Types",
-    "title": "Problem Type",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/second_order_ode_types.html#Constructors-1",
-    "page": "Second Order ODE Types",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/second_order_ode_types.html#Fields-1",
-    "page": "Second Order ODE Types",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/second_order_ode_types.html#Special-Solver-Options-1",
-    "page": "Second Order ODE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/second_order_ode_types.html#Special-Solution-Fields-1",
-    "page": "Second Order ODE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/refined_ode_types.html#",
     "page": "Refined ODE Types",
     "title": "Refined ODE Types",
@@ -1249,6 +1185,54 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/refined_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
+    "page": "Refined ODE Types",
+    "title": "Mathematical Specification of an Second Order ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
+},
+
+{
+    "location": "types/refined_ode_types.html#Problem-Type-1",
+    "page": "Refined ODE Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Constructors-3",
+    "page": "Refined ODE Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/refined_ode_types.html#Fields-3",
+    "page": "Refined ODE Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solver-Options-3",
+    "page": "Refined ODE Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/refined_ode_types.html#Special-Solution-Fields-3",
+    "page": "Refined ODE Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Constrained-ODE-Problem-1",
     "page": "Refined ODE Types",
     "title": "Mathematical Specification of a Constrained ODE Problem",
@@ -1257,7 +1241,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Constructors-3",
+    "location": "types/refined_ode_types.html#Constructors-4",
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
@@ -1265,7 +1249,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Fields-3",
+    "location": "types/refined_ode_types.html#Fields-4",
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
@@ -1281,7 +1265,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Constructors-4",
+    "location": "types/refined_ode_types.html#Constructors-5",
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
@@ -1289,7 +1273,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Fields-4",
+    "location": "types/refined_ode_types.html#Fields-5",
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
@@ -1305,7 +1289,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Constructors-5",
+    "location": "types/refined_ode_types.html#Constructors-6",
     "page": "Refined ODE Types",
     "title": "Constructors",
     "category": "section",
@@ -1313,7 +1297,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Fields-5",
+    "location": "types/refined_ode_types.html#Fields-6",
     "page": "Refined ODE Types",
     "title": "Fields",
     "category": "section",
@@ -1905,59 +1889,67 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_diffuse",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
+    "category": "Constant",
+    "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
+    "category": "Constant",
+    "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_moving",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_moving",
+    "category": "Constant",
+    "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_pure",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_pure",
+    "category": "Constant",
+    "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
+},
+
+{
+    "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
+    "page": "FEM Types",
+    "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
+    "category": "Constant",
+    "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
+},
+
+{
     "location": "types/fem_types.html#Heat-Equation-1",
     "page": "FEM Types",
     "title": "Heat Equation",
     "category": "section",
-    "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.heatProblemExample_gierermeinhardt\nDiffEqProblemLibrary.heatProblemExample_grayscott\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_diffusionconstants\nDiffEqProblemLibrary.prob_femheat_birthdeath"
-},
-
-{
-    "location": "types/stokes_types.html#",
-    "page": "Stokes Types",
-    "title": "Stokes Types",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/stokes_types.html#Stokes-Types-1",
-    "page": "Stokes Types",
-    "title": "Stokes Types",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/stokes_types.html#Problem-Type-1",
-    "page": "Stokes Types",
-    "title": "Problem Type",
-    "category": "section",
-    "text": "StokesProblem Defines the solution to a stationary Stokes problem:"
-},
-
-{
-    "location": "types/stokes_types.html#Constructors-1",
-    "page": "Stokes Types",
-    "title": "Constructors",
-    "category": "section",
-    "text": "StokesProblem(f₁,f₂,g,uanalytic,vanalytic,panalytic) StokesProblem(f₁,f₂,g,ugD,vgD)"
-},
-
-{
-    "location": "types/stokes_types.html#Fields-1",
-    "page": "Stokes Types",
-    "title": "Fields",
-    "category": "section",
-    "text": "f₁::Function\nf₂::Function\ng::Function\nugD::Function\nvgD::Function\nuanalytic::Function\nvanalytic::Function\npanalytic::Function\ntrueknown::Bool"
-},
-
-{
-    "location": "types/stokes_types.html#Example-Problems-1",
-    "page": "Stokes Types",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, use:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary"
+    "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_birthdeath"
 },
 
 {
@@ -2102,6 +2094,102 @@ var documenterSearchIndex = {"docs": [
     "title": "List of Supplied Tableaus",
     "category": "section",
     "text": "A large variety of tableaus have been supplied by default via DiffEqDevTools.jl. The list of tableaus can be found in the developer docs. For the most useful and common algorithms, a hand-optimized version is supplied in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use DP5 instead of ExplicitRK with tableau=constructDormandPrince()). However, these serve as a good method for comparing between tableaus and understanding the pros/cons of the methods. Implemented are every published tableau (that I know exists). Note that user-defined tableaus also are accepted. To see how to define a tableau, checkout the premade tableau source code. Tableau docstrings should have appropriate citations (if not, file an issue).Plot recipes are provided which will plot the stability region for a given tableau."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#",
+    "page": "Refined ODE Solvers",
+    "title": "Refined ODE Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Refined-ODE-Solvers-1",
+    "page": "Refined ODE Solvers",
+    "title": "Refined ODE Solvers",
+    "category": "section",
+    "text": "solve(prob::ODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen.This area is still under major development."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Special-Forms-1",
+    "page": "Refined ODE Solvers",
+    "title": "Special Forms",
+    "category": "section",
+    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdxdt = f_1(tv) \nfracdvdt = f_2(tx) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Followed the requirements for the integrator is required to achieve the suggested accuracy."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Note-About-OrdinaryDiffEq.jl-1",
+    "page": "Refined ODE Solvers",
+    "title": "Note About OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve)."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Functional-Forms-1",
+    "page": "Refined ODE Solvers",
+    "title": "Functional Forms",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Dynamical-ODE-1",
+    "page": "Refined ODE Solvers",
+    "title": "Dynamical ODE",
+    "category": "section",
+    "text": "These algorithms require a Partitioned ODE of the form:fracdxdt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-1",
+    "page": "Refined ODE Solvers",
+    "title": "OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator. Not yet implemented."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Implicit-Explicit-(IMEX)-ODE-1",
+    "page": "Refined ODE Solvers",
+    "title": "Implicit-Explicit (IMEX) ODE",
+    "category": "section",
+    "text": "The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-2",
+    "page": "Refined ODE Solvers",
+    "title": "OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Sundials.jl-1",
+    "page": "Refined ODE Solvers",
+    "title": "Sundials.jl",
+    "category": "section",
+    "text": "ARKODE: An additive Runge-Kutta method. Not yet implemented."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Linear-Nonlinear-(LNL)-ODE-1",
+    "page": "Refined ODE Solvers",
+    "title": "Linear-Nonlinear (LNL) ODE",
+    "category": "section",
+    "text": "The Linear-Nonlinear (LNL) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a linear operator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-3",
+    "page": "Refined ODE Solvers",
+    "title": "OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "IIF1 - First order Implicit Integrating Factor method. Not yet implemented.\nIIF2 - Second order Implicit Integrating Factor method. Not yet implemented.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nExpEuler - First order exponential Euler scheme. Not yet implemented.\nNorsettEuler - First order exponential-RK scheme. Not yet implemented."
 },
 
 {
@@ -2366,38 +2454,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Avaliable Methods",
     "category": "section",
     "text": "FEMDiffEqHeatEuler\nFEMDiffEqHeatImplicitEuler\nFEMDiffEqHeatCrankNicholson\nFEMDiffEqHeatSemiImplicitEuler\nFEMDiffEqHeatSemiImplicitCrankNicholsonAdditionally, for linear solves, one can choose the method by which the linear solve takes place via the method keyword argument.Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqHeatCrankNicholson(),solver=:CG)"
-},
-
-{
-    "location": "solvers/fdmstokes_solve.html#",
-    "page": "Stokes Solvers",
-    "title": "Stokes Solvers",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "solvers/fdmstokes_solve.html#Stokes-Solvers-1",
-    "page": "Stokes Solvers",
-    "title": "Stokes Solvers",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "solvers/fdmstokes_solve.html#DiffEqBase.solve-Tuple{StokesDiffEq.StokesProblem,StokesDiffEq.FDMMesh}",
-    "page": "Stokes Solvers",
-    "title": "DiffEqBase.solve",
-    "category": "Method",
-    "text": "solve(prob::StokesProblem,mesh::FDMMesh)\n\nSolves the given stationary Stokes problem on the given finite difference mesh.\n\nKeyword Arguments\n\nconverrors: Whether to calculate all of the errors along the convergence. Default is true.\nmaxiters: Maximum number of iterations before haulting. Default is 100.\nalg: The solver algorithm. Default is \"dgs\". Other option is \"multigrid\".\nlevel: The number of levels in the Multigrid. Default is 2.\nsmoothSteps: The number of Gauss-Seidel iterations to do at each smoothing step. Default is 10.\ncoarseSteps: The number of Gauss-Seidel iterations to do at the coarsegrid. Default is 40.\ngsiters: The number of Gauss-Seidel iterations to do at each step. Default is 20.\n\n\n\n"
-},
-
-{
-    "location": "solvers/fdmstokes_solve.html#Stokes-Equation-1",
-    "page": "Stokes Solvers",
-    "title": "Stokes Equation",
-    "category": "section",
-    "text": "solve(::StokesProblem,::FDMMesh)"
 },
 
 {
@@ -2833,11 +2889,43 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/mesh.html#Mesh-Type-1",
+    "location": "features/mesh.html#DiffEqPDEBase.findboundary",
     "page": "Meshes",
-    "title": "Mesh Type",
-    "category": "section",
-    "text": "FiniteElementDiffEq.FEMmesh\nFiniteElementDiffEq.SimpleMesh\nDiffEqBase.Mesh"
+    "title": "DiffEqPDEBase.findboundary",
+    "category": "Function",
+    "text": "findboundary(elem,bdflag=[])`\n\nfindboundary(fem_mesh::FEMMesh,bdflag=[])\n\nFinds elements which are on the boundary of the domain. If bdflag is given, then those indices are added as nodes for a dirichlet boundary condition (useful for creating cracks and other cutouts of domains).\n\nReturns\n\nbdnode = Vector of indices for bdnode. Using node[:,bdnode] returns boundary nodes.\n\nbdedge = Vector of indices for boundary edges.\n\nis_bdnode = Vector of booleans size N which donotes which are on the boundary\n\nis_bdelem = Vector of booleans size NT which denotes which are on the boundary\n\n\n\n"
+},
+
+{
+    "location": "features/mesh.html#DiffEqPDEBase.setboundary",
+    "page": "Meshes",
+    "title": "DiffEqPDEBase.setboundary",
+    "category": "Function",
+    "text": "setboundary(node::AbstractArray,elem::AbstractArray,bdtype)\n\nsetboundary(fem_mesh::FEMMesh,bdtype)\n\nTakes in the fem_mesh and creates an array bdflag which denotes the boundary types. 1 stands for dirichlet, 2 for neumann, 3 for robin.\n\n\n\n"
+},
+
+{
+    "location": "features/mesh.html#DiffEqPDEBase.fem_squaremesh",
+    "page": "Meshes",
+    "title": "DiffEqPDEBase.fem_squaremesh",
+    "category": "Function",
+    "text": "fem_squaremesh(square,h)\n\nReturns the grid in the iFEM form of the two arrays (node,elem)\n\n\n\n"
+},
+
+{
+    "location": "features/mesh.html#DiffEqPDEBase.notime_squaremesh",
+    "page": "Meshes",
+    "title": "DiffEqPDEBase.notime_squaremesh",
+    "category": "Function",
+    "text": "notime_squaremesh(square,dx,bdtype)\n\nComputes the (node,elem) square mesh for the square with the chosen dx and boundary settings.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25\nnotime_squaremesh(square,dx,\"dirichlet\")\n\n\n\n"
+},
+
+{
+    "location": "features/mesh.html#DiffEqPDEBase.parabolic_squaremesh",
+    "page": "Meshes",
+    "title": "DiffEqPDEBase.parabolic_squaremesh",
+    "category": "Function",
+    "text": "parabolic_squaremesh(square,dx,dt,T,bdtype)\n\nComputes the (node,elem) x [0,T] parabolic square mesh for the square with the chosen dx and boundary settings and with the constant time intervals dt.\n\n###Example\n\nsquare=[0 1 0 1] #Unit Square\ndx=.25; dt=.25;T=2\nparabolic_squaremesh(square,dx,dt,T,:dirichlet)\n\n\n\n"
 },
 
 {
@@ -2845,7 +2933,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Meshes",
     "title": "Mesh Generation Functions",
     "category": "section",
-    "text": "FiniteElementDiffEq.findboundary\nFiniteElementDiffEq.setboundary\nFiniteElementDiffEq.fem_squaremesh\nFiniteElementDiffEq.notime_squaremesh\nFiniteElementDiffEq.parabolic_squaremesh\nBase.size(::StokesDiffEq.FDMMesh)"
+    "text": "DiffEqPDEBase.findboundary\nDiffEqPDEBase.setboundary\nDiffEqPDEBase.fem_squaremesh\nDiffEqPDEBase.notime_squaremesh\nDiffEqPDEBase.parabolic_squaremesh"
 },
 
 {
