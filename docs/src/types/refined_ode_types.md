@@ -184,13 +184,15 @@ the specified functions.
 The constrained ODE:
 
 ```math
-\frac{du}{dt} = f(t,u,v,...) \\
-\frac{dv}{dt} = f(t,u,v,...) \\
+\frac{du}{dt} = f_1(t,u,v,...) \\
+\frac{dv}{dt} = f_2(t,u,v,...) \\
 ...\\
 0 = g(t,u,v)
 ```
 
-is a type of refined ODE which specifies a DAE.
+is a type of refined ODE which specifies a DAE. As with the standard Partitioned
+problem, the solver may specify a special form which may result in splitting ODEs
+in some of the systems.
 
 ### Constructors
 
