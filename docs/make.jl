@@ -32,7 +32,6 @@ makedocs(modules=[DiffEqDevTools,DiffEqBase,FiniteElementDiffEq,
          "Equation Types" => Any[
            "types/discrete_types.md",
            "types/ode_types.md",
-           "types/second_order_ode_types.md",
            "types/refined_ode_types.md",
            "types/sde_types.md",
            "types/rode_types.md",
