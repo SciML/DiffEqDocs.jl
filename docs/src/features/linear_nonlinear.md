@@ -19,7 +19,7 @@ This is an in-place function which updates `x` by solving `Ax=b`. `matrix_update
 determines whether the matrix `A` has changed from the last call. This can be
 used to smartly cache factorizations.
 
-## Basic linsolve method: Factorization
+### Basic linsolve method: Factorization
 
 The easiest way to specify a `linsolve` is by a `factorization` function which
 generates a type on which `\` (or `A_ldiv_B!`) is called.  This is done through
@@ -46,7 +46,7 @@ This function creates a `KSP` type which makes `\` perform the GMRES iterative
 method provided by PETSc.jl. Thus if we pass this function into the algorithm
 as the factorization method, all internal linear solves will happen by PETSc.jl.
 
-## How LinSolveFactorize Was Created
+### How LinSolveFactorize Was Created
 
 In order to make your own `linsolve` functions, let's look at how the `LinSolveFactorize`
 function is created. For example, for an LU-Factorization, we would like to use
@@ -91,7 +91,97 @@ matrix. If `matrix_updated` is true, it will re-compute the factorization. Other
 it just solves the linear system with the cached factorization. This general
 idea of using a call-overloaded type can be employed to do many other things.
 
-## Nonlinear Solvers
+## Nonlinear Solvers: `nlsolve` Specification
 
-Choice of nonlinear solvers is currently not available. For the current state of this work,
-see [this Discourse thread](https://discourse.julialang.org/t/a-unified-interface-for-rootfinding/698/16).
+Nonlinear solvers can be chosen via the `nlsolve` option. An `nlsolve` function
+should have two dispatches:
+
+- `nlsolve(Val{init},f,u0_prototype)` : Does an initialization phase. Returns a
+  type `init_f` for later use in the solver. `u0_prototype` is the expected type
+  for the initial condition `u0`.
+- `nlsolve(init_f,u0)` : Solves for the root units the initialized `f` and the initial
+  condition `u0`.
+
+### Basic nlsolve mehtod: `NLSOLVEJL_SETUP`
+
+By default, a basic nonlinear solver setup is given as `NLSOLVEJL_SETUP`. For example,
+the default `nlsolve` in `Trapezoid` is
+
+```julia
+Trapezoid(nlsolve=NLSOLVEJL_SETUP())
+```
+
+This will use NLsolve.jl with autodifferentiation to solve the nonlinear systems.
+`NLSOLVEJL_SETUP` has two options:
+
+- `chunk_size` : The autodifferentiation chunk size. Integer. Defaults to ForwardDiff.jl's
+  auto-detection.
+- `autodiff` : Whether to use autodifferentiation. Defaults to true.
+
+For example, to turn off autodifferentiation, use
+
+```julia
+Trapezoid(nlsolve=NLSOLVEJL_SETUP(autodiff=false))
+```
+
+### How NLSOLVEJL_SETUP Was Created
+
+To create a nonlinear solver, you need to define the two functions. Here we use
+a call-overloaded type so that way we can hold the chunk size and autodifferentiation
+information.
+
+```julia
+immutable NLSOLVEJL_SETUP{CS,AD} end
+Base.@pure NLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()
+```
+
+The solver function just calls NLsolve
+
+```julia
+(p::NLSOLVEJL_SETUP)(f,u0) = NLsolve.nlsolve(f,u0)
+```
+
+while the initialization function has a different initialization for autodifferentiation
+or not:
+
+```julia
+function (p::NLSOLVEJL_SETUP{CS,AD}){CS,AD}(::Type{Val{:init}},f,u0_prototype)
+  if AD
+    return non_autodiff_setup(f,u0_prototype)
+  else
+    return autodiff_setup(f,u0_prototype,Val{determine_chunksize(initial_x,CS)})
+  end
+end
+```
+
+We need to declare the `get_chunksize` trait for the solver:
+
+```julia
+get_chunksize{CS,AD}(x::NLSOLVEJL_SETUP{CS,AD}) = CS
+```
+
+The initialization functions are directly for NLsolve. See the NLsolve.jl docs
+for the types of inputs it expects to see. This does exactly that:
+
+```julia
+function autodiff_setup{CS}(f!, initial_x::Vector,chunk_size::Type{Val{CS}})
+
+    permf! = (fx, x) -> f!(x, fx)
+
+    fx2 = copy(initial_x)
+    jac_cfg = ForwardDiff.JacobianConfig{CS}(initial_x, initial_x)
+    g! = (x, gx) -> ForwardDiff.jacobian!(gx, permf!, fx2, x, jac_cfg)
+
+    fg! = (x, fx, gx) -> begin
+        jac_res = DiffBase.DiffResult(fx, gx)
+        ForwardDiff.jacobian!(jac_res, permf!, fx2, x, jac_cfg)
+        DiffBase.value(jac_res)
+    end
+
+    return DifferentiableMultivariateFunction(f!, g!, fg!)
+end
+
+function non_autodiff_setup(f!, initial_x::Vector)
+  DifferentiableMultivariateFunction(f!)
+end
+```
