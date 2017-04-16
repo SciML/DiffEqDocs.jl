@@ -95,7 +95,7 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
-The following methods allow for specification of `factorization`: the linear
+The following methods allow for specification of `linsolve`: the linear
 solver which is used:
 
 - `Rosenbrock23`
