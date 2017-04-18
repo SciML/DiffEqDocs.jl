@@ -7,9 +7,8 @@
 To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The constructor is:
 
 ```julia
-
 MonteCarloProblem(prob::DEProblem;
-                  output_func = identity,
+                  output_func = (sol,i) -> sol,
                   prob_func= (prob,i)->prob)
 ```
 
@@ -40,11 +39,12 @@ end
 
 If your function is a `ParameterizedFunction`,
 you can do similar modifications to `prob.f` to perform a parameter search. The `output_func`
-is a reduction function. For example, if we wish to only save the 2nd coordinate
+is a reduction function. It's arguments are the generated solution and the unique
+index for the run. For example, if we wish to only save the 2nd coordinate
 at the end of each solution, we can do:
 
 ```julia
-output_func(sol) = sol[end,2]
+output_func(sol,i) = sol[end,2]
 ```
 
 Thus the Monte Carlo Simulation would return as its data an array which is the
