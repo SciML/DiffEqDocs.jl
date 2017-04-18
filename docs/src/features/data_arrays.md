@@ -1,15 +1,40 @@
-# Data Arrays
+# DiffEq-Specific Array Types
 
 In many cases, a standard array may not be enough to fully hold the data for a
 model. Many of the solvers in DifferentialEquations.jl allow you to solve problems
-on `AbstractArray` types which allow you to extend the meaning of an array.
+on `AbstractArray` types which allow you to extend the meaning of an array. This
+page describes some of the `AbstractArray` types which can be helpful for modeling
+differential equations problems.
+
+## ArrayPartitions
+
+ArrayPartitions in DiffEq are used for heterogeneous arrays. For example,
+`PartitionedODEProblem` solvers use them internally to turn the separate parts
+into a single array. You can construct an `ArrayPartition` using RecursiveArrayTools.jl:
+
+```julia
+using RecursiveArrayTools
+A = ArrayPartition(x::AbstractArray...)
+```
+
+where is a list of arrays. The resulting `A` will act like a single array, and its
+broadcast will be type stable, allowing for it to be used inside of the native Julia
+DiffEq solvers in an efficient way. This is a good way to generate an array which
+has different units for different parts, or different amounts of precision.
+
+## MultiScaleArrays
+
+The multi-scale modeling functionality is provided by MultiScaleArrays.jl. It
+allows for designing a multi-scale model as an extension of an array, which in
+turn can be directly used in the native Julia solvers of DifferentialEquations.jl.
+
+For more information, please see [the MultiScaleArrays.jl README](https://github.com/JuliaDiffEq/MultiScaleArrays.jl).
+
+## DEDataArrays
+
 The `DEDataArray{T}` type allows one to add other "non-continuous" variables
 to an array, which can be useful in many modeling situations involving lots of
-events.
-
-## The Data Array Interface
-
-To define an `DEDataArray`, make a type which subtypes `DEDataArray{T}`
+events. To define an `DEDataArray`, make a type which subtypes `DEDataArray{T}`
 with a field `x` for the "array of continuous variables" for which you would
 like the differential equation to treat directly. For example:
 
@@ -29,7 +54,7 @@ let them be whatever type you please. These extra fields are carried along in th
 differential equation solver that the user can use in their `f` equation and
 modify via callbacks.
 
-## Example: A Control Problem
+### Example: A Control Problem
 
 In this example we will use a `DEDataArray` to solve a problem where control parameters
 change at various timepoints. First we will build
@@ -125,7 +150,7 @@ sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
 
 It's clear from the plot how the controls affected the outcome.
 
-## Data Arrays vs ParameterizedFunctions
+### Data Arrays vs ParameterizedFunctions
 
 The reason for using a `DEDataArray` is because the solution will then save the
 control parameters. For example, we can see what the control parameter was at
