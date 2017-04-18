@@ -222,20 +222,6 @@ Pkg.add("LSODA")
 using LSODA
 ```
 
-### ODEIterators.jl
-
-The ODEIterators.jl algorithms all come with a 3rd order Hermite polynomial interpolation.
-
-  - `rk23` - Bogakai-Shampine's 2/3 method
-  - `rk45` - Dormand-Prince's 4/5 method
-  - `feh78` - Runge-Kutta-Fehlberg 7/8 method
-  - `ModifiedRosenbrockIntegrator` - Rosenbrock's 2/3 method
-  - `feuler` - Forward Euler
-  - `midpoint` - Midpoint Method
-  - `heun` - Heun's Method
-  - `rk4` - RK4
-  - `feh45` - Runge-Kutta-Fehlberg 4/5 method
-
 ## List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
