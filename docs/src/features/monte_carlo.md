@@ -74,6 +74,23 @@ The keyword arguments take in the arguments for the common solver interface and 
 pass them to the differential equation solver. The special keyword arguments to note are:
 
 * `num_monte`: The number of simulations to run. Default is 10,000.
+* `parallel_type` : The type of parallelism to employ.
+
+The types of parallelism included are:
+
+* `:none` - No parallelism
+* `:threads` - This uses multithreading. It's local (single computer, shared memory)
+  parallelism only. Fastest when the trajectories are quick.
+* `:parfor` - A multiprocessing parallelism. Slightly better than `pmap` when the
+  calculations are fast. Does not re-distribute work: each trajectory is assumed
+  to take as long to calculate.
+* `:pmap` - The default. Uses `pmap` internally. It will use as many processors as you
+  have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
+  documentation for more details. Recommended for the case when each trajectory
+  calculation isn't "too quick" (at least about a millisecond each?).
+* `:split_threads` - This uses threading on each process, splitting the problem
+  into `nprocs()` even parts. This is for solving many quick trajectories on a
+  multi-node machine. It's recommended you have one process on each node.
 
 Additionally, a `MonteCarloEstimator` can be supplied
 
@@ -82,12 +99,6 @@ sim = solve(prob,estimator,alg,kwargs...)
 ```
 
 These will be detailed when implemented.
-
-## Parallelism
-
-Since this is using `pmap` internally, it will use as many processors as you
-have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
-documentation for more details.
 
 ## Solution
 
