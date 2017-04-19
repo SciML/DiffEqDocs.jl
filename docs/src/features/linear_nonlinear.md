@@ -100,7 +100,7 @@ should have two dispatches:
   type `init_f` for later use in the solver. `u0_prototype` is the expected type
   for the initial condition `u0`.
 - `nlsolve(init_f,u0)` : Solves for the root units the initialized `f` and the initial
-  condition `u0`.
+  condition `u0`. Returns the zeros of the equation.
 
 ### Basic nlsolve mehtod: `NLSOLVEJL_SETUP`
 
