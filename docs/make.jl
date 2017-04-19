@@ -52,7 +52,7 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
          ],
          "Additional Features" => Any[
            "features/performance_overloads.md",
-           "features/data_arrays.md",
+           "features/diffeq_arrays.md",
            "features/noise_process.md",
            "features/linear_nonlinear.md",
            "features/callback_functions.md",
