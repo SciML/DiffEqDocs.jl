@@ -135,10 +135,10 @@ immutable NLSOLVEJL_SETUP{CS,AD} end
 Base.@pure NLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()
 ```
 
-The solver function just calls NLsolve
+The solver function just calls NLsolve and returns the zeros
 
 ```julia
-(p::NLSOLVEJL_SETUP)(f,u0) = NLsolve.nlsolve(f,u0)
+(p::NLSOLVEJL_SETUP)(f,u0) = (res=NLsolve.nlsolve(f,u0); res.zero)
 ```
 
 while the initialization function has a different initialization for autodifferentiation
