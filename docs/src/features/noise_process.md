@@ -205,4 +205,4 @@ plot(sol4)
 plot!(sol5)
 ```
 
-[SRI_SRIW1_diff](../assets/SRI_SRIW1_diff.png)
+![SRI_SRIW1_diff](../assets/SRI_SRIW1_diff.png)
