@@ -182,3 +182,27 @@ plot!(sol3.W)
 
 the coupled Wiener processes coincide at every other timepoint, and the intermediate
 timepoints were calculated according to a Brownian bridge.
+
+
+#### Adaptive Example
+
+Here we will show that the same noise can be used with the adaptive methods
+using the `NoiseWrapper`. `SRI` and `SRIW1` use slightly different error
+estimators, and thus give slightly different stepping behavior. We can
+see how they solve the same 2D SDE differently by using the noise
+wrapper:
+
+```julia
+prob = SDEProblem(f1,g1,ones(2),(0.0,1.0))
+sol4 = solve(prob,SRI(),abstol=1e-8)
+
+W2 = NoiseWrapper(sol4.W)
+prob2 = SDEProblem(f1,g1,ones(2),(0.0,1.0),noise=W2)
+sol5 = solve(prob2,SRIW1(),abstol=1e-8)
+
+using Plots
+plot(sol4)
+plot!(sol5)
+```
+
+[SRI_SRIW1_diff](../assets/SRI_SRIW1_diff.png)
