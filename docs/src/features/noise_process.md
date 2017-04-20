@@ -13,7 +13,8 @@ NoiseProcess(t0,W0,Z0,dist,bridge;
 - `Z0` is the first value of the psudo-process. This is necessary for higher
   order algorithms. If it's not needed, set to `nothing`.
 - `dist` the distribution for the steps over time.
-- `bridge` the bridging distribution.
+- `bridge` the bridging distribution. Optional, but required for adaptivity and interpolating
+  at new values.
 
 The signature for the `dist` is
 
