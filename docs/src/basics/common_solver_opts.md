@@ -13,7 +13,7 @@ given option, see the [compatibility chart](compatibility_chart.html)
 
 ## Default Algorithm Hinting
 
-To help choose the default algorithm, the keyword argument `alg_hints` is provided.
+To help choose the default algorithm, the keyword argument `alg_hints` is provided to `solve`.
 `alg_hints` is a `Vector{Symbol}` which describe the problem at a high level
 to the solver. The options are:
 
@@ -36,24 +36,32 @@ way to only saving the solution at the final timepoint. All of these options
 can be mixed and matched. For example, the combination:
 
 ```julia
-saveat=[0:1/4:1],save_everystep=false,dense=false
+sol = solve(prob; saveat=[0.2, 0.5], dense = true)
 ```
 
-will only save the solution at the timepoints `0:1/4:1` and no other locations.
+will only save the solution (`sol.u`) at the timepoints `tspan[1], 0.2, 0.5, tspan[end]`. 
+It will also enable dense output to the `sol` object, enabling you to do something like `sol(0.345)` which interpolates
+the solution to the time equal to 0.345.
 For more examples for controlling the output behavior, see the
 [Output Specification manual page](../features/output_specification.html).
 
-* `dense`: Denotes whether to save the extra pieces for dense (continuous)
+* `dense`: Denotes whether to save the extra pieces required for dense (continuous)
   output. Default is true for algorithms which have the ability to produce dense output.
-* `saveat`: Denotes extra times to save the solution at during the solving
+* `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
-  most efficient manner. Note that this can be used even if `dense=false`.
-  For methods where interpolation is not possible, this may be equivalent to
-  `tstops`. Default is `[]`. Note that if `saveat` is a number, then it will
-  automatically expand to `tspan[1]:saveat:tspan[2]`.
+  most efficient manner (always including the points of `tspan`). 
+  Note that this can be used even if `dense=false`. In fact, if only `saveat` is given, then the 
+  arguments `save_everystep` and `dense` are becoming `false` by default and must be explicitly given as `true` if desired.
+  If `saveat` is given a number, then it will
+  automatically expand to `tspan[1]:saveat:tspan[2]`. 
+  For methods where interpolation is not possible, `saveat` may be equivalent to
+  `tstops`. Default is `[]`. 
 * `save_idxs`: Denotes the indices for the components of the equation to save.
-  Defaults to saving all indices.
-* `tstops`: Denotes extra times that the timestepping algorithm must step to.
+  Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE, 
+  and given `save_idxs = [1, 3]`, only the first and third components of the solution will be outputted. 
+  Notice that of course in this case the outputed solution will be two-dimensional.
+  
+* `tstops`: Denotes *extra* times that the timestepping algorithm must step to.
   This should be used to help the solver deal with discontinuities and
   singularities, since stepping exactly at the time of the discontinuity will
   improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods),
@@ -63,20 +71,14 @@ For more examples for controlling the output behavior, see the
 * `d_discontinuities:` Denotes locations of discontinuities in low order derivatives.
   This will force FSAL algorithms which assume derivative continuity to re-evaluate
   the derivatives at the point of discontinuity. The default is `[]`.
-* `calck`: Turns on and off the internal ability for intermediate    
-  interpolations. This defaults to `dense || !isempty(saveat) || `
-  "no custom callback is given". This can be used to turn off interpolations
-  (to save memory) if one isn't using interpolations when a custom callback is
-  used. Another case where this may be used is to turn on interpolations for
-  usage in the integrator interface even when interpolations are used no
-   where else. Note that this is only required if the algorithm doesn't have
-  a free or lazy interpolation (`DP8()`).
 * `save_everystep`: Saves the result at every timeseries_steps iteration.    
   Default is true if `isempty(saveat)`.
 * `timeseries_steps`: Denotes how many steps between saving a value for the
-  timeseries. Defaults to 1.
+  timeseries. These "steps" are the steps that the solver stops internally, not the ones that are 
+  instructed by the user (all solvers work in a step-like manner). Defaults to 1.
 * `save_start`: Denotes whether the initial condition should be included in
   the solution type as the first timepoint. Defaults to true.
+
 
 ## Stepsize Control
 
@@ -132,6 +134,16 @@ Note that if a method does not have adaptivity, the following rules apply:
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
 * `verbose`: Toggles whether warnings are thrown when the solver exits early.
   Defualts to true.
+* `calck`: Turns on and off the internal ability for intermediate    
+  interpolations (also known as intermediate density). Not the same as `dense`, which is post-solution interpolation.
+  This defaults to `dense || !isempty(saveat) ||  "no custom callback is given"`. 
+  This can be used to turn off interpolations
+  (to save memory) if one isn't using interpolations when a custom callback is
+  used. Another case where this may be used is to turn on interpolations for
+  usage in the integrator interface even when interpolations are used nowhere else. 
+  Note that this is only required if the algorithm doesn't have
+  a free or lazy interpolation (`DP8()`). If `calck = false`, `saveat` cannot be used.
+  The rare keyword `calck` can be useful in event handling.
 
 ## Progress Monitoring
 
