@@ -175,7 +175,7 @@ options control the errors which are calculated:
   throughout `tspan`. An example is the `L2` error. Default is false.
   
 # Examples 
-The following lines are examples of how on could use the configuration of `solve()`. For these examples a 3-dimensional ODE problem is assumed, however the extention to other types is straightforward. 
+The following lines are examples of how one could use the configuration of `solve()`. For these examples a 3-dimensional ODE problem is assumed, however the extention to other types is straightforward. 
 
 1. `solve(prob, AlgorithmName())` : The "default" setting. All parameters get their default values. 
   This means that the solution is saved at the steps the Algorithm stops internally and dense output is enabled. 
