@@ -186,4 +186,4 @@ The following lines are examples of how on could use the configuration of `solve
 3. `solve(prob, maxiters = 1e7, progress = true, save_idxs = [1])` : Using longer maximum number of solver iterations 
   can be useful when a given `tspan` is very long. This example only saves the first of the variables of the system, 
   either to save size or because the user does not carry about the others. Finally, with `progress = true` you are enabling
-  the progress bar, provided you are using the Atom+Juno set-up for your Julia.
+  the progress bar, provided you are using the Atom+Juno IDE set-up for your Julia.
