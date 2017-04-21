@@ -74,7 +74,7 @@ For more examples for controlling the output behavior, see the
 * `save_everystep`: Saves the result at every timeseries_steps iteration.    
   Default is true if `isempty(saveat)`.
 * `timeseries_steps`: Denotes how many steps between saving a value for the
-  timeseries. These "steps" are the steps that the solver stops internally, not the ones that are 
+  timeseries. These "steps" are the steps that the solver stops internally (the ones you get by `save_everystep = true`), not the ones that are 
   instructed by the user (all solvers work in a step-like manner). Defaults to 1.
 * `save_start`: Denotes whether the initial condition should be included in
   the solution type as the first timepoint. Defaults to true.
