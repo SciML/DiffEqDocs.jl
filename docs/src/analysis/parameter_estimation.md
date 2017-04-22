@@ -13,6 +13,7 @@ function build_loss_objective(prob::DEProblem,alg,loss_func;
                               mpg_autodiff = false,
                               verbose_opt = false,
                               verbose_steps = 100,
+                              prob_generator = problem_new_parameters,
                               kwargs...)
 ```
 
@@ -39,12 +40,50 @@ where `t` is the set of timepoints which the data is found at, and
 `data` which are the values that are known. Optionally, one can choose a loss
 function from LossFunctions.jl or use the default of an L2 loss.
 
+#### The Problem Generator
+
+The argument `prob_generator` allows one to specify a the function for generating
+new problems from a given parameter set. By default, this just builds a new
+version of `f` that inserts all of the parameters. For example, for ODEs this
+is given by the dispatch on `DiffEqBase.problem_new_parameters` that does the
+following:
+
+```julia
+function problem_new_parameters(prob::ODEProblem,p)
+  f = (t,u,du) -> prob.f(t,u,p,du)
+  uEltype = eltype(p)
+  u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
+  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
+  ODEProblem(f,u0,tspan)
+end
+```
+
+`f = (t,u,du) -> prob.f(t,u,p,du)` creates a new version of `f` that encloses
+the new parameters. The element types for `u0` and `tspan` are set to match the
+parameters. This is required to make autodifferentiation work. Then the new
+problem with these new values is returned.
+
+One can use this to change the meaning of the parameters using this function. For
+example, if one instead wanted to optimize the initial conditions for a function
+without parameters, you could change this to:
+
+```julia
+my_problem_new_parameters = function (prob::ODEProblem,p)
+  uEltype = eltype(p)
+  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
+  ODEProblem(prob.f,p,tspan)
+end
+```
+
+which simply matches the type for time to `p` (once again, for autodifferentiation)
+and uses `p` as the initial condition in the initial value problem.
+
 ### build_lsoptim_objective
 
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
 ```julia
-build_lsoptim_objective(prob,tspan,t,data;kwargs...)
+build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameters,kwargs...)
 ```
 
 The arguments are the same as `build_loss_objective`.
@@ -59,7 +98,7 @@ use an LM-based algorithm, so this allows one to test the increased effectivenes
 of not using LM.
 
 ```julia
-lm_fit(prob::DEProblem,tspan,t,data,p0;kwargs...)
+lm_fit(prob::DEProblem,tspan,t,data,p0;prob_generator = problem_new_parameters,kwargs...)
 ```
 
 The arguments are similar to before, but with `p0` being the initial conditions
