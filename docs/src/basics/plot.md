@@ -116,6 +116,13 @@ vars = [(1,2), (1,3), (1,4)]
 * n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
   5-dimensional plot between the associated variables.
 
+### Complex Numbers and High Dimensional Plots
+
+The recipe library DimensionalPlotRecipes.jl is provided for extra functionality
+on high dimensional numbers (complex numbers) and other high dimensional plots.
+See [the README](https://github.com/JuliaDiffEq/DimensionalPlotRecipes.jl) for
+more details on the extra controls that exist.
+
 ### Example
 
 ```julia
