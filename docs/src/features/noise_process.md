@@ -97,6 +97,17 @@ WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIS
 
 These will generate a Wiener process, which can be stepped with `step!(W,dt)`, and interpolated as `W(t)`.
 
+### Correlated Noise
+
+One can define a `CorrelatedWienerProcess` which is a Wiener process with correlations between the Wiener processes. The constructor is:
+
+```julia
+CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing)
+CorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing)
+```
+
+where `Γ` is the constant covariance matrix.
+
 ### NoiseWrapper
 
 Another `AbstractNoiseProcess` is the `NoiseWrapper`. This produces a new
