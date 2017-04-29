@@ -1,6 +1,6 @@
-using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary
+using Documenter,DiffEqPDEBase,DiffEqProblemLibrary
 
-makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
+makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
          doctest=false, clean=true,
          format =:html,
          sitename="DifferentialEquations.jl",

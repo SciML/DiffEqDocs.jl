@@ -134,7 +134,7 @@ In this example, we will solve an SDE three times:
 First we will generate a noise process by solving an SDE:
 
 ```julia
-using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess, Base.Test
+using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess
 f1 = (t,u) -> 1.01u
 g1 = (t,u) -> 1.01u
 dt = 1//2^(4)
