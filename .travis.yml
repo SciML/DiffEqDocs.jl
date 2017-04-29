@@ -9,8 +9,8 @@ notifications:
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd())'
-  - julia -e 'Pkg.add("DiffEqBase.jl")'
-  - julia -e 'Pkg.add("DiffEqPDEBase.jl")'
-  - julia -e 'Pkg.clone("https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl")'
+  - julia -e 'Pkg.add("DiffEqBase")'
+  - julia -e 'Pkg.add("DiffEqPDEBase")'
+  - julia -e 'Pkg.add("DiffEqProblemLibrary")'
   - julia -e 'Pkg.add("Documenter")'
   - julia -e 'cd(Pkg.dir("DiffEqDocs")); include(joinpath("docs", "make.jl"))'
