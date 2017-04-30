@@ -174,16 +174,17 @@ sol[4]
 ```
 
 still returns the solution at the fourth timestep. It also indexes into the array
-as well.
+as well. The last value is the timestep, and the beginning values are for the component.
+This means
 
 ```julia
-sol[3,5]
+sol[5,3]
 ```
 
 is the value of the 5th component (by linear indexing) at the 3rd timepoint, or
 
 ```julia
-sol[:,2,1]
+sol[2,1,:]
 ```
 
 is the timeseries for the component which is the 2nd row and 1 column.
