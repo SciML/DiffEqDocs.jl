@@ -86,8 +86,8 @@ These arguments control the timestepping routines.
 
 * `adaptive`: Turns on adaptive timestepping for appropriate methods. Default
   is true.
-* `abstol`: Absolute tolerance in adaptive timestepping. Defaults to 1e-3.
-* `reltol`: Relative tolerance in adaptive timestepping. Defaults to 1e-6.
+* `abstol`: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.
+* `reltol`: Relative tolerance in adaptive timestepping. Defaults to 1e-3.
 * `dt`: Sets the initial stepsize. This is also the stepsize for fixed
   timestep methods. Defaults to an automatic choice.
 * `internalnorm`: The norm function `internalnorm(u)` which error estimates
