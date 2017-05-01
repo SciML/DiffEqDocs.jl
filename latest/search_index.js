@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Dynamical ODE",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
 },
 
 {
@@ -2849,11 +2849,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_library.html#Manifold-Conservation-and-Projection-1",
+    "page": "Callback Library",
+    "title": "Manifold Conservation and Projection",
+    "category": "section",
+    "text": "In many cases, you may want to declare a manifold on which a solution lives. Mathematically, a manifold M is defined by a function g as the set of points where g(u)=0. An embedded manifold can be a lower dimensional object which constrains the solution. For example, g(u)=E(u)-C where E is the energy of the system in state u, meaning that the energy must be constant (energy preservation). Thus by defining the manifold the solution should live on, you can retain desired properties of the solution.It is a consequence of convergence proofs both in the deterministic and stochastic cases that post-step projection to manifolds keep the same convergence rate (stochastic requires a truncation in the proof, details details), thus any algorithm can be easily extended to conserve properties. If the solution is supposed to live on a specific manifold or conserve such property, this guarantees the conservation law without modifying the convergence properties."
+},
+
+{
+    "location": "features/callback_library.html#Constructor-1",
+    "page": "Callback Library",
+    "title": "Constructor",
+    "category": "section",
+    "text": "ManifoldProjection(g;nlsolve=NLSOLVEJL_SETUP(),save=true)g: The residual function for the manifold: g(u,resid). This is an inplace function which writes to the residual the difference from the manifold components.\nnlsolve: A nonlinear solver as defined in the nlsolve format\nsave: Whether to do the standard saving (applied after the callback)"
+},
+
+{
+    "location": "features/callback_library.html#Example-1",
+    "page": "Callback Library",
+    "title": "Example",
+    "category": "section",
+    "text": "Here we solve the harmonic oscillator:u0 = ones(2)\nf = function (t,u,du)\n  du[1] = u[2]\n  du[2] = -u[1]\nend\nprob = ODEProblem(f,u0,(0.0,100.0))However, this problem is supposed to conserve energy, and thus we define our manifold to conserve the sum of squares:function g(u,resid)\n  resid[1] = u[2]^2 + u[1]^2 - 2\n  resid[2] = 0\nendTo build the callback, we just callcb = ManifoldProjection(g)Using this callback, the Runge-Kutta method Vern7 conserves energy:sol = solve(prob,Vern7(),callback=cb)\n@test sol[end][1]^2 + sol[end][2]^2 ≈ 2(Image: manifold_projection)"
+},
+
+{
     "location": "features/callback_library.html#AutoAbstol-1",
     "page": "Callback Library",
     "title": "AutoAbstol",
     "category": "section",
-    "text": "Many problem solving environments such as MATLAB provide a way to automatically adapt the absolute tolerance to the problem. This helps the solvers automatically \"learn\" what appropriate limits are. Via the callback interface, DiffEqCallbacks.jl implements a callback AutoAbstol which has the same behavior as the MATLAB implementation, that is the absolute tolerance starts at init_curmax (default 1-e6), and at each iteration it is set to the maximum value that the state has thus far reached times the relative tolerance.To generate the callback, use the constructor:AutoAbstol(save=true;init_curmax=1e-6)"
+    "text": "Many problem solving environments such as MATLAB provide a way to automatically adapt the absolute tolerance to the problem. This helps the solvers automatically \"learn\" what appropriate limits are. Via the callback interface, DiffEqCallbacks.jl implements a callback AutoAbstol which has the same behavior as the MATLAB implementation, that is the absolute tolerance starts and at each iteration it is set to the maximum value that the state has thus far reached times the relative tolerance. If init_curmax is zero, then the initial value is determined by the abstol of the solver. Otherwise this is the initial value for the current maximum abstol.To generate the callback, use the constructor:AutoAbstol(save=true;init_curmax=0.0)"
 },
 
 {
