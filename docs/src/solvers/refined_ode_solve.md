@@ -45,7 +45,6 @@ These algorithms require a Partitioned ODE of the form:
 ```math
 \frac{du}{dt} = f_1(t,v) \\
 \frac{dv}{dt} = f_2(t,u) \\
-...
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(t,u,v,dx)` and `f2(t,u,v,dx)` (in the inplace form), where `f1`
