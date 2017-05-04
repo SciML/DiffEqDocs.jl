@@ -3381,15 +3381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Uncertainty Quantification",
     "title": "Uncertainty Quantification",
     "category": "section",
-    "text": "Uncertainty quantification allows a user to identify the uncertainty associated with the numerical approximation given by DifferentialEquations.jl. This page describes the different methods available for quanitifying such uncertainties."
-},
-
-{
-    "location": "analysis/uncertainty_quantification.html#Note-1",
-    "page": "Uncertainty Quantification",
-    "title": "Note",
-    "category": "section",
-    "text": "Since this is currently a work in progress, the package DiffEqUncertainty.jl which contains this functionality is currently unregistered and has to be installed via:Pkg.clone(\"https://github.com/JuliaDiffEq/DiffEqUncertainty.jl\")"
+    "text": "Uncertainty quantification allows a user to identify the uncertainty associated with the numerical approximation given by DifferentialEquations.jl. This page describes the different methods available for quantifying such uncertainties."
 },
 
 {
@@ -3397,15 +3389,31 @@ var documenterSearchIndex = {"docs": [
     "page": "Uncertainty Quantification",
     "title": "ProbInts",
     "category": "section",
-    "text": "The ProbInts method for uncertainty quantification involves the transformation of an ODE into an associated SDE where the noise is related to the timesteps and the order of the algorithm. This is implemented into the DiffEq system via a callback function:ProbIntsUncertainty(σ,order,save=true)σ is the noise scaling factor and order is the order of the algorithm. save is for choosing whether this callback should control the saving behavior. Generally this is true unless one is stacking callbacks in a CallbackSet."
+    "text": "The ProbInts method for uncertainty quantification involves the transformation of an ODE into an associated SDE where the noise is related to the timesteps and the order of the algorithm. This is implemented into the DiffEq system via a callback function. The first form is:ProbIntsUncertainty(σ,order,save=true)σ is the noise scaling factor and order is the order of the algorithm. save is for choosing whether this callback should control the saving behavior. Generally this is true unless one is stacking callbacks in a CallbackSet. It is recommended that σ is representative of the size of the errors in a single step of the equation.If you are using an adaptive algorithm, the callbackAdaptiveProbIntsUncertainty(order,save=true)determines the noise scaling automatically using an internal error estimate."
 },
 
 {
-    "location": "analysis/uncertainty_quantification.html#Example-1",
+    "location": "analysis/uncertainty_quantification.html#Example-1:-FitzHugh-Nagumo-1",
     "page": "Uncertainty Quantification",
-    "title": "Example",
+    "title": "Example 1: FitzHugh-Nagumo",
     "category": "section",
-    "text": "To use the callback, we simply create it and pass it to the solver. Here I will use DiffEqMonteCarlo in order to perform the simulation 10 times and plot the results together.using DiffEqUncertainty, DiffEqBase, OrdinaryDiffEq, DiffEqProblemLibrary, DiffEqMonteCarlo\nusing Base.Test\n\nusing ParameterizedFunctions\ng = @ode_def_bare LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)\nu0 = [1.0;0.0;0.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(g,u0,tspan)\n\ncb = ProbIntsUncertainty(1e4,5)\nsolve(prob,Tsit5())\nsim = monte_carlo_simulation(prob,Tsit5(),num_monte=10,callback=cb,adaptive=false,dt=1/10)\n\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty)"
+    "text": "In this example we will determine our uncertainty when solving the FitzHugh-Nagumo model with the Euler() method. We define the FitzHugh-Nagumo model using the @ode_def macro:fitz = @ode_def_nohes FitzhughNagumo begin\n  dV = c*(V - V^3/3 + R)\n  dR = -(1/c)*(V -  a - b*R)\nend a=0.2 b=0.2 c=3.0\nu0 = [-1.0;1.0]\ntspan = (0.0,20.0)\nprob = ODEProblem(fitz,u0,tspan)Now we define the ProbInts callback. In this case, our method is the Euler method and thus it is order 1. For the noise scaling, we will try a few different values and see how it changes. For σ=0.2, we define the callback as:cb = ProbIntsUncertainty(0.2,1)This is akin to having an error of approximately 0.2 at each step. We now build and solve a MonteCarloProblem for 100 trajectories:monte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/10)Now we can plot the resulting Monte Carlo solution:using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_02)If we increase the amount of error, we see that some parts of the equation have less uncertainty than others. For example, at σ=0.5:cb = ProbIntsUncertainty(0.5,1)\nmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/10)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_05)But at this amount of noise, we can see how we contract to the true solution by decreasing dt:cb = ProbIntsUncertainty(0.5,1)\nmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/100)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_lowh)"
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#Example-2:-Adaptive-ProbInts-on-FitzHugh-Nagumo-1",
+    "page": "Uncertainty Quantification",
+    "title": "Example 2: Adaptive ProbInts on FitzHugh-Nagumo",
+    "category": "section",
+    "text": "While the first example is academic and shows how the ProbInts method scales, the fact that one should have some idea of the error in order to calibrate σ can lead to complications. Thus the more useful method in many cases is the AdaptiveProbIntsUncertainty version. In this version, no σ is required since this is calculated using an internal error estimate. Thus this gives an accurate representation of the possible error without user input.Let's try this with the order 5 Tsit5() method on the same problem as before:cb = AdaptiveProbIntsUncertainty(5)\nsol = solve(prob,Tsit5())\nmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_adaptive_default)In this case, we see that the default tolerances give us a very good solution. However, if we increase the tolerance a lot:cb = AdaptiveProbIntsUncertainty(5)\nsol = solve(prob,Tsit5())\nmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb,abstol=1e-3,reltol=1e-1)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_adaptive_default)we can see that the moments just after the rise can be uncertain."
+},
+
+{
+    "location": "analysis/uncertainty_quantification.html#Example-3:-Adaptive-ProbInts-on-the-Lorenz-Attractor-1",
+    "page": "Uncertainty Quantification",
+    "title": "Example 3: Adaptive ProbInts on the Lorenz Attractor",
+    "category": "section",
+    "text": "One very good use of uncertainty quantification is on chaotic models. Chaotic equations diverge from the true solution according to the error exponentially. This means that as time goes on, you get further and further from the solution. The ProbInts method can help diagnose how much of the timeseries is reliable.As in the previous example, we first define the model:g = @ode_def_bare LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)\nu0 = [1.0;0.0;0.0]\ntspan = (0.0,30.0)\nprob = ODEProblem(g,u0,tspan)and then we build the ProbInts type. Let's use the order 5 Tsit5 again.cb = AdaptiveProbIntsUncertainty(5)Then we solve the MonteCarloProblemmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_chaos)Here we see that by t about 22 we start to receive junk. We can increase the amount of time before error explosion by using a higher order method with stricter tolerances:tspan = (0.0,40.0)\nprob = ODEProblem(g,u0,tspan)\ncb = AdaptiveProbIntsUncertainty(7)\nmonte_prob = MonteCarloProblem(prob)\nsim = solve(monte_prob,Vern7(),num_monte=100,callback=cb,reltol=1e-6)\nusing Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)(Image: uncertainty_high_order)we see that we can extend the amount of time until we recieve junk."
 },
 
 {
