@@ -114,7 +114,7 @@ sim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
-![uncertainty_adaptive_default](../assets/unceratinty_adaptive_default.png)
+![uncertainty_adaptive_default](../assets/uncertainty_adaptive_default.png)
 
 In this case, we see that the default tolerances give us a very good solution. However, if we increase the tolerance a lot:
 
