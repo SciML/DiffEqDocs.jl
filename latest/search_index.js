@@ -1321,6 +1321,70 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/steady_state_types.html#",
+    "page": "Steady State Types",
+    "title": "Steady State Types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/steady_state_types.html#Steady-State-Types-1",
+    "page": "Steady State Types",
+    "title": "Steady State Types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/steady_state_types.html#Mathematical-Specification-of-a-Steady-State-Problem-1",
+    "page": "Steady State Types",
+    "title": "Mathematical Specification of a Steady State Problem",
+    "category": "section",
+    "text": "To define an Steady State Problem, you simply need to give the function f which defines the ODE:fracdudt = f(tu)and an initial guess u of where f(t,u)=0. f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that for the steady-state to be defined, we must have that f is autonomous, that is f is independent of t. But the form which matches the standard ODE solver should still be used. The steady state solvers interpret the f by fixing t=0."
+},
+
+{
+    "location": "types/steady_state_types.html#Problem-Type-1",
+    "page": "Steady State Types",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/steady_state_types.html#Constructors-1",
+    "page": "Steady State Types",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SteadyStateProblem(f,u0,mass_matrix=I)Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
+},
+
+{
+    "location": "types/steady_state_types.html#Fields-1",
+    "page": "Steady State Types",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial guess for the steady state.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/steady_state_types.html#Special-Solver-Options-1",
+    "page": "Steady State Types",
+    "title": "Special Solver Options",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/steady_state_types.html#Special-Solution-Fields-1",
+    "page": "Steady State Types",
+    "title": "Special Solution Fields",
+    "category": "section",
+    "text": "The SteadyStateSolution type is different from the other DiffEq solutions because it does not have temporal information."
+},
+
+{
     "location": "types/sde_types.html#",
     "page": "SDE Types",
     "title": "SDE Types",
@@ -2198,6 +2262,46 @@ var documenterSearchIndex = {"docs": [
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
     "text": "IIF1 - First order Implicit Integrating Factor method. Not yet implemented.\nIIF2 - Second order Implicit Integrating Factor method. Not yet implemented.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nExpEuler - First order exponential Euler scheme. Not yet implemented.\nNorsettEuler - First order exponential-RK scheme. Not yet implemented."
+},
+
+{
+    "location": "solvers/steady_state_solve.html#",
+    "page": "Steady State Solvers",
+    "title": "Steady State Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/steady_state_solve.html#Steady-State-Solvers-1",
+    "page": "Steady State Solvers",
+    "title": "Steady State Solvers",
+    "category": "section",
+    "text": "solve(prob::SteadyStateProblem,alg;kwargs)Solves for the steady states in the problem defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
+},
+
+{
+    "location": "solvers/steady_state_solve.html#Recommended-Methods-1",
+    "page": "Steady State Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "Currently the only method is SSRootfind and so I am pretty sure it's the best option right now."
+},
+
+{
+    "location": "solvers/steady_state_solve.html#Full-List-of-Methods-1",
+    "page": "Steady State Solvers",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/steady_state_solve.html#SteadyStateDiffEq.jl-1",
+    "page": "Steady State Solvers",
+    "title": "SteadyStateDiffEq.jl",
+    "category": "section",
+    "text": "SSRootfind : Using a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument."
 },
 
 {
