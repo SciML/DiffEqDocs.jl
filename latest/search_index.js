@@ -2713,6 +2713,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/noise_process.html#Geometric-Brownian-Motion-1",
+    "page": "Noise Processes",
+    "title": "Geometric Brownian Motion",
+    "category": "section",
+    "text": "One can define a GeometricBrownianMotion process which is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = \\mu X_t dt + \\sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)"
+},
+
+{
+    "location": "features/noise_process.html#Ornstein-Uhlenbeck-1",
+    "page": "Noise Processes",
+    "title": "Ornstein-Uhlenbeck",
+    "category": "section",
+    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = \\theta (\\mu - X_t) dt + \\sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)"
+},
+
+{
     "location": "features/noise_process.html#NoiseWrapper-1",
     "page": "Noise Processes",
     "title": "NoiseWrapper",
@@ -2721,9 +2737,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/noise_process.html#Example-1",
+    "location": "features/noise_process.html#Direct-Simulation-of-the-Noise-Process-1",
     "page": "Noise Processes",
-    "title": "Example",
+    "title": "Direct Simulation of the Noise Process",
+    "category": "section",
+    "text": "Since the NoiseProcess types are distribution-exact and do not require the stochastic differential equation solvers, many times one would like to directly simulate trajectories from these proecesses. The NoiseProcess has a NoiseProcessProblem type:NoiseProblem(noise,tspan)for which solve works. For example, we can simulate a distributionally-exact Geometric Brownian Motion solution by:μ = 1.0\nσ = 2.0\nW = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)\nprob = NoiseProblem(W,(0.0,1.0))\nsol = solve(prob;dt=0.1)solve requires the dt is given, the solution it returns is a NoiseProcess which has stepped through the timespan. Because this follows the common interface, all of the normal functionality works. For example, we can use the Monte Carlo functionality as follows:monte_prob = MonteCarloProblem(prob)\nsol = solve(monte_prob;dt=0.1,num_monte=100)simulates 100 Geometric Brownian Motions."
+},
+
+{
+    "location": "features/noise_process.html#Example-Using-Noise-Processes-1",
+    "page": "Noise Processes",
+    "title": "Example Using Noise Processes",
     "category": "section",
     "text": "In this example, we will solve an SDE three times:First to generate a noise process\nSecond with the same timesteps to show the values are the same\nThird with half-sized timstepsFirst we will generate a noise process by solving an SDE:using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess\nf1 = (t,u) -> 1.01u\ng1 = (t,u) -> 1.01u\ndt = 1//2^(4)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))\nsol1 = solve(prob1,EM(),dt=dt)Now we wrap the noise into a NoiseWrapper and solve the same problem:W2 = NoiseWrapper(sol1.W)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W2)\nsol2 = solve(prob1,EM(),dt=dt)We can test@test sol1.u ≈ sol2.uto see that the values are essentially equal. Now we can use the same process to solve the same trajectory with a smaller dt:W3 = NoiseWrapper(sol1.W)\nprob2 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W3)\n\ndt = 1//2^(5)\nsol3 = solve(prob2,EM(),dt=dt)We can plot the results to see what this looks like:using Plots\nplot(sol1)\nplot!(sol2)\nplot!(sol3)(Image: noise_process)In this plot, sol2 covers up sol1 because they hit essentially the same values. You can see that sol3 its similar to the others, because it's using the same underlying noise process just sampled much finer.To double check, we see that:plot(sol1.W)\nplot!(sol2.W)\nplot!(sol3.W)coupled_wienerthe coupled Wiener processes coincide at every other timepoint, and the intermediate timepoints were calculated according to a Brownian bridge."
 },
