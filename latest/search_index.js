@@ -3029,13 +3029,13 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Solving the Problem",
     "category": "section",
-    "text": "sim = solve(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nparallel_type : The type of parallelism to employ.The types of parallelism included are::none - No parallelism\n:threads - This uses multithreading. It's local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\n:pmap - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia's documentation for more details. Recommended for the case when each trajectory calculation isn't \"too quick\" (at least about a millisecond each?).\n:split_threads - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It's recommended you have one process on each node.Additionally, a MonteCarloEstimator can be suppliedsim = solve(prob,estimator,alg,kwargs...)These will be detailed when implemented."
+    "text": "sim = solve(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nparallel_type : The type of parallelism to employ. Default is :pmap.The types of parallelism included are::none - No parallelism\n:threads - This uses multithreading. It's local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\n:pmap - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia's documentation for more details. Recommended for the case when each trajectory calculation isn't \"too quick\" (at least about a millisecond each?).\n:split_threads - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It's recommended you have one process on each node.Additionally, a MonteCarloEstimator can be suppliedsim = solve(prob,estimator,alg,kwargs...)These will be detailed when implemented."
 },
 
 {
-    "location": "features/monte_carlo.html#Solution-1",
+    "location": "features/monte_carlo.html#Solution-Type-1",
     "page": "Parallel Monte Carlo Simulations",
-    "title": "Solution",
+    "title": "Solution Type",
     "category": "section",
     "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well."
 },
@@ -3045,7 +3045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots."
+    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots. An additional argument is idxs which allows you to choose which components of the solution to plot. For example, if the differential equation is a vector of 9 values, idxs=1:2:9 will plot only the Monte Carlo solutions of the odd components."
 },
 
 {
@@ -3054,6 +3054,62 @@ var documenterSearchIndex = {"docs": [
     "title": "Example",
     "category": "section",
     "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
+},
+
+{
+    "location": "features/monte_carlo.html#Analyzing-a-Monte-Carlo-Experiment-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Analyzing a Monte Carlo Experiment",
+    "category": "section",
+    "text": "Analysis tools are included for generating summary statistics and summary plots for a MonteCarloSimulation."
+},
+
+{
+    "location": "features/monte_carlo.html#Summary-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Summary Statistics",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Single-Time-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Single Time Statistics",
+    "category": "section",
+    "text": "For the summary statistics, there are two types. You can either summarize by time steps or by time points. Summarizing by time steps assumes that the time steps are all the same time point, i.e. the integrator used a fixed dt or the values were saved using saveat. Summarizing by time points requires interpolating the solution.The available functions for time steps are:timestep_mean(sim,i) # Computes the mean of each component at time step i\ntimestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i\ntimestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component\ntimestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component\ntimestep_weighted_meancov(sim,W,i,j) # Computes the mean at i and j, and the weighted covariance W, for each componentThe available functions for time points are:timepoint_mean(sim,t) # Computes the mean of each component at time t\ntimepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t\ntimepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component\ntimepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component\ntimepoint_weighted_meancov(sim,W,t1,t2) # Computes the mean at t1 and t2, the weighted covariance W, for each component"
+},
+
+{
+    "location": "features/monte_carlo.html#Full-Timeseries-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Full Timeseries Statistics",
+    "category": "section",
+    "text": "Additionally, the following functions are provided for analyzing the full timeseries. The mean and meanvar versions return a DiffEqArray which can be directly plotted. The meancov and meancor return a matrix of tuples, where the tuples are the (mean_t1,mean_t2,cov or cor).The available functions for the time steps are:timeseries_steps_mean(sim) # Computes the mean at each time step\ntimeseries_steps_meanvar(sim) # Computes the mean and variance at each time step\ntimeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step\ntimeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step\ntimeseries_steps_weighted_meancov(sim) # Computes the weighted covariance matrix and means at each time stepThe available functions for the time points are:timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts\ntimeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts\ntimeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts\ntimeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts\ntimeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts"
+},
+
+{
+    "location": "features/monte_carlo.html#MonteCarloSummary-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "MonteCarloSummary",
+    "category": "section",
+    "text": "The MonteCarloSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:MonteCarloSummary(sim)\nMonteCarloSummary(sim,ts)The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution."
+},
+
+{
+    "location": "features/monte_carlo.html#Plot-Recipe-2",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Plot Recipe",
+    "category": "section",
+    "text": "The MonteCarloSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.One useful argument is fillalpha which controls the transparency of the ribbon around the mean. The confidence interval is the Gaussian CI 1.96*var."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-Analysis-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example Analysis",
+    "category": "section",
+    "text": "In this example we will show how to analyze a MonteCarloSolution. First, let's generate a 10 solution Monte Carlo experiment:prob = prob_sde_2Dlinear\nprob2 = MonteCarloProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)The system, prob_sde_2Dlinear, is a (4,2) system of stochastic differential equations which we solved 10 times. We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a MonteCarloSummary type.summ = MonteCarloSummary(sim)will summarize at each time step, whilesumm = MonteCarloSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let's only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
 },
 
 {
