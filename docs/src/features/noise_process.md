@@ -219,8 +219,8 @@ The first function that must be defined is the noise distribution. This is how
 to generate ``W(t+dt)`` given that we know ``W(x)`` for ``x∈[t₀,t]``. For Gaussian
 white noise, we know that
 
-```julia
-W(dt) ~ N(0,dt)
+```math
+W(dt) ∼ N(0,dt)
 ```
 
 for ``W(0)=0`` which defines the stepping distribution. Thus its noise distribution
@@ -251,7 +251,7 @@ Brownian motion, this is known as the Brownian Bridge, and is well known to have
 the distribution:
 
 ```math
-W(qh) ~ N(q(Wₕ-W₀)+W₀,(1-q)qh)
+W(qh) ∼ N(q(Wₕ-W₀)+W₀,(1-q)qh)
 ```
 
 Thus we have the out-of-place and in-place versions as:
