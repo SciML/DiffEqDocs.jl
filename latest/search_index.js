@@ -3065,6 +3065,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/monte_carlo.html#Time-steps-vs-time-points-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Time steps vs time points",
+    "category": "section",
+    "text": "For the summary statistics, there are two types. You can either summarize by time steps or by time points. Summarizing by time steps assumes that the time steps are all the same time point, i.e. the integrator used a fixed dt or the values were saved using saveat. Summarizing by time points requires interpolating the solution."
+},
+
+{
+    "location": "features/monte_carlo.html#Analysis-at-a-time-step-or-time-point-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Analysis at a time step or time point",
+    "category": "section",
+    "text": "get_timestep(sim,i) # Returns an iterator of each simulation at time step i\nget_timepoint(sim,t) # Returns an iterator of each simulation at time point t\ncomponentwise_vectors_timestep(sim,i) # Returns a vector of each simulation at time step i\ncomponentwise_vectors_timepoint(sim,t) # Returns a vector of each simulation at time point t"
+},
+
+{
     "location": "features/monte_carlo.html#Summary-Statistics-1",
     "page": "Parallel Monte Carlo Simulations",
     "title": "Summary Statistics",
@@ -3077,7 +3093,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Single Time Statistics",
     "category": "section",
-    "text": "For the summary statistics, there are two types. You can either summarize by time steps or by time points. Summarizing by time steps assumes that the time steps are all the same time point, i.e. the integrator used a fixed dt or the values were saved using saveat. Summarizing by time points requires interpolating the solution.The available functions for time steps are:timestep_mean(sim,i) # Computes the mean of each component at time step i\ntimestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i\ntimestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component\ntimestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component\ntimestep_weighted_meancov(sim,W,i,j) # Computes the mean at i and j, and the weighted covariance W, for each componentThe available functions for time points are:timepoint_mean(sim,t) # Computes the mean of each component at time t\ntimepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t\ntimepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component\ntimepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component\ntimepoint_weighted_meancov(sim,W,t1,t2) # Computes the mean at t1 and t2, the weighted covariance W, for each component"
+    "text": "The available functions for time steps are:timestep_mean(sim,i) # Computes the mean of each component at time step i\ntimestep_median(sim,i) # Computes the median of each component at time step i\ntimestep_quantile(sim,q,i) # Computes the quantile q of each component at time step i\ntimestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i\ntimestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component\ntimestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component\ntimestep_weighted_meancov(sim,W,i,j) # Computes the mean at i and j, and the weighted covariance W, for each componentThe available functions for time points are:timepoint_mean(sim,t) # Computes the mean of each component at time t\ntimepoint_median(sim,t) # Computes the median of each component at time t\ntimepoint_quantile(sim,q,t) # Computes the quantile q of each component at time t\ntimepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t\ntimepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component\ntimepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component\ntimepoint_weighted_meancov(sim,W,t1,t2) # Computes the mean at t1 and t2, the weighted covariance W, for each component"
 },
 
 {
@@ -3085,7 +3101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Full Timeseries Statistics",
     "category": "section",
-    "text": "Additionally, the following functions are provided for analyzing the full timeseries. The mean and meanvar versions return a DiffEqArray which can be directly plotted. The meancov and meancor return a matrix of tuples, where the tuples are the (mean_t1,mean_t2,cov or cor).The available functions for the time steps are:timeseries_steps_mean(sim) # Computes the mean at each time step\ntimeseries_steps_meanvar(sim) # Computes the mean and variance at each time step\ntimeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step\ntimeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step\ntimeseries_steps_weighted_meancov(sim) # Computes the weighted covariance matrix and means at each time stepThe available functions for the time points are:timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts\ntimeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts\ntimeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts\ntimeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts\ntimeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts"
+    "text": "Additionally, the following functions are provided for analyzing the full timeseries. The mean and meanvar versions return a DiffEqArray which can be directly plotted. The meancov and meancor return a matrix of tuples, where the tuples are the (mean_t1,mean_t2,cov or cor).The available functions for the time steps are:timeseries_steps_mean(sim) # Computes the mean at each time step\ntimeseries_steps_median(sim) # Computes the median at each time step\ntimeseries_steps_quantile(sim,q) # Computes the quantile q at each time step\ntimeseries_steps_meanvar(sim) # Computes the mean and variance at each time step\ntimeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step\ntimeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step\ntimeseries_steps_weighted_meancov(sim) # Computes the weighted covariance matrix and means at each time stepThe available functions for the time points are:timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts\ntimeseries_point_median(sim,ts) # Computes the median at each time point in ts\ntimeseries_point_quantile(sim,q,ts) # Computes the quantile q at each time point in ts\ntimeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts\ntimeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts\ntimeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts\ntimeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts"
 },
 
 {
