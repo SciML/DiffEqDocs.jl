@@ -2693,7 +2693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Noise Processes",
     "category": "section",
-    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM())t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
+    "text": "Noise processes are essential in continuous stochastic modeling. The noise processes defined here are distributionally-exact, meaning they are not solutions of stochastic differential equations and instead are directly generated according to their analytical distributions. These processes are used as the noise term in the SDE and RODE solvers. Additionally, the noise processes themselves can be simulated and solved using the DiffEq common interface (including the Monte Carlo interface).This page first describes how to analyze and simulate noise processes, and then describes the standard noise processes which are available. Then it is shown how one can define the distributions for a new noise process. Then, some practice usage is shown. It is demonstrated how the NoiseWrapper can be used to wrap the NoiseProcess of one SDE/RODE solution in order to re-use the same noise process in another simulation."
 },
 
 {
@@ -2737,11 +2737,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/noise_process.html#White-Noise-1",
+    "location": "features/noise_process.html#Wiener-Process-(White-Noise)-1",
     "page": "Noise Processes",
-    "title": "White Noise",
+    "title": "Wiener Process (White Noise)",
     "category": "section",
-    "text": "The default noise is WHITE_NOISE. This is the noise process which uses randn!. A special dispatch is added for complex numbers for (randn()+im*randn())/sqrt(2). This function is DiffEqBase.wiener_randn (or with ! respectively). Thus its noise function is essentially:function WHITE_NOISE_DIST(W,dt)\n  if typeof(W.dW) <: AbstractArray\n    return sqrt(abs(dt))*wiener_randn(size(W.dW))\n  else\n    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))\n  end\nend\nfunction WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)\n  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0\nendfor the out of place versions, and for the inplace versionsfunction INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)\n  wiener_randn!(rand_vec)\n  rand_vec .*= sqrt(abs(dt))\nend\nfunction INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)\n  wiener_randn!(rand_vec)\n  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0\nendNotice these functions correspond to the distributions for the Wiener process, that is the first one is simply that Brownian steps are distributed N(0,dt), while the second function is the distribution of the Brownian Bridge N(q(Wh-W0)+W0,(1-q)qh). These functions are then placed in a noise process:NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nNoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())For convenience, the following constructors are predefined:WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nWienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())These will generate a Wiener process, which can be stepped with step!(W,dt), and interpolated as W(t)."
+    "text": "The WienerProcess, also known as Gaussian white noise, Brownian motion, or the noise in the Langevin equation, is the stationary process with distribution N(0,t). The constructor is:WienerProcess(t0,W0,Z0=nothing)\nWienerProcess!(t0,W0,Z0=nothing)"
 },
 
 {
@@ -2757,7 +2757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Geometric Brownian Motion",
     "category": "section",
-    "text": "One can define a GeometricBrownianMotion process which is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = \\mu X_t dt + \\sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)"
+    "text": "A GeometricBrownianMotion process is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = mu X_t dt + sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)"
 },
 
 {
@@ -2765,7 +2765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Ornstein-Uhlenbeck",
     "category": "section",
-    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = \\theta (\\mu - X_t) dt + \\sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)"
+    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = theta (mu - X_t) dt + sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)"
 },
 
 {
@@ -2774,6 +2774,22 @@ var documenterSearchIndex = {"docs": [
     "title": "NoiseWrapper",
     "category": "section",
     "text": "Another AbstractNoiseProcess is the NoiseWrapper. This produces a new noise process from an old one, which will use its interpolation to generate the noise. This allows you to re-use a previous noise process not just with the same timesteps, but also with new (adaptive) timesteps as well. Thus this is very good for doing Multi-level Monte Carlo schemes and strong convergence testing.To wrap a noise process, simply use:NoiseWrapper(W::NoiseProcess)"
+},
+
+{
+    "location": "features/noise_process.html#Direct-Construction-of-a-Noise-Process-1",
+    "page": "Noise Processes",
+    "title": "Direct Construction of a Noise Process",
+    "category": "section",
+    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM())t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Construction-Example-1",
+    "page": "Noise Processes",
+    "title": "Direct Construction Example",
+    "category": "section",
+    "text": "The easiest way to show how to directly construct a NoiseProcess is by example. Here we will show how to directly construct a NoiseProcess which generates Gaussian white noise.This is the noise process which uses randn!. A special dispatch is added for complex numbers for (randn()+im*randn())/sqrt(2). This function is DiffEqBase.wiener_randn (or with ! respectively).The first function that must be defined is the noise distribution. This is how to generate W(t+dt) given that we know W(x) for xtt. For Gaussian white noise, we know thatW(dt) ~ N(0,dt)for W(0)=0 which defines the stepping distribution. Thus its noise distribution function is:function WHITE_NOISE_DIST(W,dt)\n  if typeof(W.dW) <: AbstractArray\n    return sqrt(abs(dt))*wiener_randn(size(W.dW))\n  else\n    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))\n  end\nendfor the out of place versions, and for the inplace versionsfunction INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)\n  wiener_randn!(rand_vec)\n  rand_vec .*= sqrt(abs(dt))\nendOptionally, we can provide a bridging distribution. This is the distribution of W(qh) for q01 given that we know W(0)=W and W(h)=W. For Brownian motion, this is known as the Brownian Bridge, and is well known to have the distribution:W(qh)  N(q(W-W)+W(1-q)qh)Thus we have the out-of-place and in-place versions as:function WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)\n  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0\nend\nfunction INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)\n  wiener_randn!(rand_vec)\n  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0\nendThese functions are then placed in a noise process:NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nNoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())Notice that we can optionally provide an alternative adaptive algorithm for the timestepping rejections. RSWM() defaults to the Rejection Sampling with Memory 3 algorithm (RSwM3).Note that the standard constructors are simply:WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nWienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())These will generate a Wiener process, which can be stepped with step!(W,dt), and interpolated as W(t)."
 },
 
 {
