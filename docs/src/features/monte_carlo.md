@@ -146,19 +146,32 @@ condition by `rand()`. The resulting plot is as follows:
 Analysis tools are included for generating summary statistics and summary plots
 for a `MonteCarloSimulation`.
 
-### Summary Statistics
-
-#### Single Time Statistics
+### Time steps vs time points
 
 For the summary statistics, there are two types. You can either summarize by
 time steps or by time points. Summarizing by time steps assumes that the time steps
 are all the same time point, i.e. the integrator used a fixed `dt` or the values were
 saved using `saveat`. Summarizing by time points requires interpolating the solution.
 
+### Analysis at a time step or time point
+
+```julia
+get_timestep(sim,i) # Returns an iterator of each simulation at time step i
+get_timepoint(sim,t) # Returns an iterator of each simulation at time point t
+componentwise_vectors_timestep(sim,i) # Returns a vector of each simulation at time step i
+componentwise_vectors_timepoint(sim,t) # Returns a vector of each simulation at time point t
+```
+
+### Summary Statistics
+
+#### Single Time Statistics
+
 The available functions for time steps are:
 
 ```julia
 timestep_mean(sim,i) # Computes the mean of each component at time step i
+timestep_median(sim,i) # Computes the median of each component at time step i
+timestep_quantile(sim,q,i) # Computes the quantile q of each component at time step i
 timestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i
 timestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component
 timestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component
@@ -169,6 +182,8 @@ The available functions for time points are:
 
 ```julia
 timepoint_mean(sim,t) # Computes the mean of each component at time t
+timepoint_median(sim,t) # Computes the median of each component at time t
+timepoint_quantile(sim,q,t) # Computes the quantile q of each component at time t
 timepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t
 timepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component
 timepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component
@@ -186,6 +201,8 @@ The available functions for the time steps are:
 
 ```julia
 timeseries_steps_mean(sim) # Computes the mean at each time step
+timeseries_steps_median(sim) # Computes the median at each time step
+timeseries_steps_quantile(sim,q) # Computes the quantile q at each time step
 timeseries_steps_meanvar(sim) # Computes the mean and variance at each time step
 timeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step
 timeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step
@@ -196,6 +213,8 @@ The available functions for the time points are:
 
 ```julia
 timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts
+timeseries_point_median(sim,ts) # Computes the median at each time point in ts
+timeseries_point_quantile(sim,q,ts) # Computes the quantile q at each time point in ts
 timeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts
 timeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts
 timeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts
