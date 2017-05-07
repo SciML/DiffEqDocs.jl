@@ -44,6 +44,74 @@ Here, `W` is the noise process, `W0` is the left side of the current interval,
 `Wh` is the right side of the current interval, `h` is the interval length,
 and `q` is the proportion from the left where the interpolation is occuring.
 
+## Noise Process Interface
+
+### Basic Interface
+
+The `NoiseProcess` acts like a DiffEq solution. For some noise process `W`, you
+can get its `i`th timepoint like `W[i]` and the associated time `W.t[i]`. If the
+`NoiseProcess` has a bridging distribution defined, it can be interpolated to
+arbitrary time points using `W(t)`. Note that every interpolated value is saved
+to the `NoiseProcess` so that way it can stay distributionally correct. A plot
+recipe is provided which plots the timeseries.
+
+### Direct Simulation of the Noise Process
+
+Since the `NoiseProcess` types are distribution-exact and do not require the
+stochastic differential equation solvers, many times one would like to directly
+simulate trajectories from these proecesses. The `NoiseProcess` has a
+`NoiseProcessProblem` type:
+
+```julia
+NoiseProblem(noise,tspan)
+```
+
+for which `solve` works. For example, we can simulate a distributionally-exact
+Geometric Brownian Motion solution by:
+
+```julia
+μ = 1.0
+σ = 2.0
+W = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)
+prob = NoiseProblem(W,(0.0,1.0))
+sol = solve(prob;dt=0.1)
+```
+
+`solve` requires the `dt` is given, the solution it returns is a `NoiseProcess`
+which has stepped through the timespan. Because this follows the common interface,
+all of the normal functionality works. For example, we can use the Monte Carlo
+functionality as follows:
+
+```julia
+monte_prob = MonteCarloProblem(prob)
+sol = solve(monte_prob;dt=0.1,num_monte=100)
+```
+
+simulates 100 Geometric Brownian Motions.
+
+### Direct Interface
+
+Most of the time, a `NoiseProcess` is received from the solution of a stochastic
+or random differential equation, in which case `sol.W` gives the `NoiseProcess`
+and it is already defined along some timeseries. In other cases, `NoiseProcess`
+types are directly simulated (see below). However, `NoiseProcess` types can also
+be directly acted on. The basic functionality is given by `calculate_step!`
+to calculate a future time point, and `accept_step!` to accept the step. If steps
+are rejected, the Rejection Sampling with Memory algorithm is applied to keep
+the solution distributionally exact. This kind of stepping is done via:
+
+```julia
+W = WienerProcess(0.0,1.0,1.0)
+dt = 0.1
+calculate_step!(W,dt)
+for i in 1:10
+  accept_step!(W,dt)
+end
+```
+
+## Noise Process Types
+
+This section describes the available `NoiseProcess` types.
 
 ### White Noise
 
@@ -160,41 +228,9 @@ To wrap a noise process, simply use:
 NoiseWrapper(W::NoiseProcess)
 ```
 
-## Direct Simulation of the Noise Process
-
-Since the `NoiseProcess` types are distribution-exact and do not require the
-stochastic differential equation solvers, many times one would like to directly
-simulate trajectories from these proecesses. The `NoiseProcess` has a
-`NoiseProcessProblem` type:
-
-```julia
-NoiseProblem(noise,tspan)
-```
-
-for which `solve` works. For example, we can simulate a distributionally-exact
-Geometric Brownian Motion solution by:
-
-```julia
-μ = 1.0
-σ = 2.0
-W = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)
-prob = NoiseProblem(W,(0.0,1.0))
-sol = solve(prob;dt=0.1)
-```
-
-`solve` requires the `dt` is given, the solution it returns is a `NoiseProcess`
-which has stepped through the timespan. Because this follows the common interface,
-all of the normal functionality works. For example, we can use the Monte Carlo
-functionality as follows:
-
-```julia
-monte_prob = MonteCarloProblem(prob)
-sol = solve(monte_prob;dt=0.1,num_monte=100)
-```
-
-simulates 100 Geometric Brownian Motions.
-
 ## Example Using Noise Processes
+
+### Noise Wrapper Example
 
 In this example, we will solve an SDE three times:
 
@@ -267,7 +303,7 @@ the coupled Wiener processes coincide at every other timepoint, and the intermed
 timepoints were calculated according to a Brownian bridge.
 
 
-#### Adaptive Example
+### Adaptive Example
 
 Here we will show that the same noise can be used with the adaptive methods
 using the `NoiseWrapper`. `SRI` and `SRIW1` use slightly different error
