@@ -2697,6 +2697,46 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/noise_process.html#Noise-Process-Interface-1",
+    "page": "Noise Processes",
+    "title": "Noise Process Interface",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/noise_process.html#Basic-Interface-1",
+    "page": "Noise Processes",
+    "title": "Basic Interface",
+    "category": "section",
+    "text": "The NoiseProcess acts like a DiffEq solution. For some noise process W, you can get its ith timepoint like W[i] and the associated time W.t[i]. If the NoiseProcess has a bridging distribution defined, it can be interpolated to arbitrary time points using W(t). Note that every interpolated value is saved to the NoiseProcess so that way it can stay distributionally correct. A plot recipe is provided which plots the timeseries."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Simulation-of-the-Noise-Process-1",
+    "page": "Noise Processes",
+    "title": "Direct Simulation of the Noise Process",
+    "category": "section",
+    "text": "Since the NoiseProcess types are distribution-exact and do not require the stochastic differential equation solvers, many times one would like to directly simulate trajectories from these proecesses. The NoiseProcess has a NoiseProcessProblem type:NoiseProblem(noise,tspan)for which solve works. For example, we can simulate a distributionally-exact Geometric Brownian Motion solution by:μ = 1.0\nσ = 2.0\nW = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)\nprob = NoiseProblem(W,(0.0,1.0))\nsol = solve(prob;dt=0.1)solve requires the dt is given, the solution it returns is a NoiseProcess which has stepped through the timespan. Because this follows the common interface, all of the normal functionality works. For example, we can use the Monte Carlo functionality as follows:monte_prob = MonteCarloProblem(prob)\nsol = solve(monte_prob;dt=0.1,num_monte=100)simulates 100 Geometric Brownian Motions."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Interface-1",
+    "page": "Noise Processes",
+    "title": "Direct Interface",
+    "category": "section",
+    "text": "Most of the time, a NoiseProcess is received from the solution of a stochastic or random differential equation, in which case sol.W gives the NoiseProcess and it is already defined along some timeseries. In other cases, NoiseProcess types are directly simulated (see below). However, NoiseProcess types can also be directly acted on. The basic functionality is given by calculate_step! to calculate a future time point, and accept_step! to accept the step. If steps are rejected, the Rejection Sampling with Memory algorithm is applied to keep the solution distributionally exact. This kind of stepping is done via:W = WienerProcess(0.0,1.0,1.0)\ndt = 0.1\ncalculate_step!(W,dt)\nfor i in 1:10\n  accept_step!(W,dt)\nend"
+},
+
+{
+    "location": "features/noise_process.html#Noise-Process-Types-1",
+    "page": "Noise Processes",
+    "title": "Noise Process Types",
+    "category": "section",
+    "text": "This section describes the available NoiseProcess types."
+},
+
+{
     "location": "features/noise_process.html#White-Noise-1",
     "page": "Noise Processes",
     "title": "White Noise",
@@ -2737,17 +2777,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/noise_process.html#Direct-Simulation-of-the-Noise-Process-1",
-    "page": "Noise Processes",
-    "title": "Direct Simulation of the Noise Process",
-    "category": "section",
-    "text": "Since the NoiseProcess types are distribution-exact and do not require the stochastic differential equation solvers, many times one would like to directly simulate trajectories from these proecesses. The NoiseProcess has a NoiseProcessProblem type:NoiseProblem(noise,tspan)for which solve works. For example, we can simulate a distributionally-exact Geometric Brownian Motion solution by:μ = 1.0\nσ = 2.0\nW = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)\nprob = NoiseProblem(W,(0.0,1.0))\nsol = solve(prob;dt=0.1)solve requires the dt is given, the solution it returns is a NoiseProcess which has stepped through the timespan. Because this follows the common interface, all of the normal functionality works. For example, we can use the Monte Carlo functionality as follows:monte_prob = MonteCarloProblem(prob)\nsol = solve(monte_prob;dt=0.1,num_monte=100)simulates 100 Geometric Brownian Motions."
-},
-
-{
     "location": "features/noise_process.html#Example-Using-Noise-Processes-1",
     "page": "Noise Processes",
     "title": "Example Using Noise Processes",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/noise_process.html#Noise-Wrapper-Example-1",
+    "page": "Noise Processes",
+    "title": "Noise Wrapper Example",
     "category": "section",
     "text": "In this example, we will solve an SDE three times:First to generate a noise process\nSecond with the same timesteps to show the values are the same\nThird with half-sized timstepsFirst we will generate a noise process by solving an SDE:using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess\nf1 = (t,u) -> 1.01u\ng1 = (t,u) -> 1.01u\ndt = 1//2^(4)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))\nsol1 = solve(prob1,EM(),dt=dt)Now we wrap the noise into a NoiseWrapper and solve the same problem:W2 = NoiseWrapper(sol1.W)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W2)\nsol2 = solve(prob1,EM(),dt=dt)We can test@test sol1.u ≈ sol2.uto see that the values are essentially equal. Now we can use the same process to solve the same trajectory with a smaller dt:W3 = NoiseWrapper(sol1.W)\nprob2 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W3)\n\ndt = 1//2^(5)\nsol3 = solve(prob2,EM(),dt=dt)We can plot the results to see what this looks like:using Plots\nplot(sol1)\nplot!(sol2)\nplot!(sol3)(Image: noise_process)In this plot, sol2 covers up sol1 because they hit essentially the same values. You can see that sol3 its similar to the others, because it's using the same underlying noise process just sampled much finer.To double check, we see that:plot(sol1.W)\nplot!(sol2.W)\nplot!(sol3.W)coupled_wienerthe coupled Wiener processes coincide at every other timepoint, and the intermediate timepoints were calculated according to a Brownian bridge."
 },
