@@ -355,9 +355,9 @@ plot!(sol2.W)
 plot!(sol3.W)
 ```
 
-[coupled_wiener](../assets/coupled_wiener.png)
+![coupled_wiener](../assets/coupled_wiener.png)
 
-the coupled Wiener processes coincide at every other timepoint, and the intermediate
+the coupled Wiener processes coincide at every other time point, and the intermediate
 timepoints were calculated according to a Brownian bridge.
 
 
