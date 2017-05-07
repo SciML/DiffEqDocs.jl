@@ -1,48 +1,19 @@
 # Noise Processes
 
-A `NoiseProcess` is a type defined as
+Noise processes are essential in continuous stochastic modeling. The noise processes
+defined here are distributionally-exact, meaning they are not solutions of
+stochastic differential equations and instead are directly generated according
+to their analytical distributions. These processes are used as the noise term
+in the SDE and RODE solvers. Additionally, the noise processes themselves can
+be simulated and solved using the DiffEq common interface (including the Monte
+Carlo interface).
 
-```julia
-NoiseProcess(t0,W0,Z0,dist,bridge;
-             iip=DiffEqBase.isinplace(dist,3),
-             rswm = RSWM())
-```
-
-- `t0` is the first timepoint
-- `W0` is the first value of the process.
-- `Z0` is the first value of the psudo-process. This is necessary for higher
-  order algorithms. If it's not needed, set to `nothing`.
-- `dist` the distribution for the steps over time.
-- `bridge` the bridging distribution. Optional, but required for adaptivity and interpolating
-  at new values.
-
-The signature for the `dist` is
-
-```julia
-dist!(rand_vec,W,dt)
-```
-
-for inplace functions, and
-
-```julia
-rand_vec = dist(W,dt)
-```
-
-otherwise. The signature for `bridge` is
-
-```julia
-bridge!(rand_vec,W,W0,Wh,q,h)
-```
-
-and the out of place syntax is
-
-```julia
-rand_vec = bridge!(W,W0,Wh,q,h)
-```
-
-Here, `W` is the noise process, `W0` is the left side of the current interval,
-`Wh` is the right side of the current interval, `h` is the interval length,
-and `q` is the proportion from the left where the interpolation is occuring.
+This page first describes how to analyze and simulate noise processes, and then
+describes the standard noise processes which are available. Then it is shown
+how one can define the distributions for a new noise process. Then, some practice
+usage is shown. It is demonstrated how the `NoiseWrapper` can be used to wrap
+the `NoiseProcess` of one SDE/RODE solution in order to re-use the same noise
+process in another simulation.
 
 ## Noise Process Interface
 
@@ -113,61 +84,21 @@ end
 
 This section describes the available `NoiseProcess` types.
 
-### White Noise
+### Wiener Process (White Noise)
 
-The default noise is `WHITE_NOISE`. This is the noise process which uses `randn!`.
-A special dispatch is added for complex numbers for `(randn()+im*randn())/sqrt(2)`.
-This function is `DiffEqBase.wiener_randn` (or with `!` respectively). Thus
-its noise function is essentially:
-
-```julia
-function WHITE_NOISE_DIST(W,dt)
-  if typeof(W.dW) <: AbstractArray
-    return sqrt(abs(dt))*wiener_randn(size(W.dW))
-  else
-    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))
-  end
-end
-function WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)
-  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0
-end
-```
-
-for the out of place versions, and for the inplace versions
+The `WienerProcess`, also known as Gaussian white noise, Brownian motion, or
+the noise in the Langevin equation, is the stationary process with distribution
+`N(0,t)`. The constructor is:
 
 ```julia
-function INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)
-  wiener_randn!(rand_vec)
-  rand_vec .*= sqrt(abs(dt))
-end
-function INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)
-  wiener_randn!(rand_vec)
-  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0
-end
+WienerProcess(t0,W0,Z0=nothing)
+WienerProcess!(t0,W0,Z0=nothing)
 ```
-
-Notice these functions correspond to the distributions for the Wiener process,
-that is the first one is simply that Brownian steps are distributed `N(0,dt)`,
-while the second function is the distribution of the Brownian Bridge `N(q(Wh-W0)+W0,(1-q)qh)`.
-These functions are then placed in a noise process:
-
-```julia
-NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
-NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
-```
-
-For convenience, the following constructors are predefined:
-
-```julia
-WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
-WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
-```
-
-These will generate a Wiener process, which can be stepped with `step!(W,dt)`, and interpolated as `W(t)`.
 
 ### Correlated Noise
 
-One can define a `CorrelatedWienerProcess` which is a Wiener process with correlations between the Wiener processes. The constructor is:
+One can define a `CorrelatedWienerProcess` which is a Wiener process with
+correlations between the Wiener processes. The constructor is:
 
 ```julia
 CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing)
@@ -178,11 +109,11 @@ where `Γ` is the constant covariance matrix.
 
 ### Geometric Brownian Motion
 
-One can define a `GeometricBrownianMotion` process which is a Wiener process with
+A `GeometricBrownianMotion` process is a Wiener process with
 constant drift `μ` and constant diffusion `σ`. I.e. this is the solution of the
 stochastic differential equation
 
-```julia
+```math
 dX_t = \mu X_t dt + \sigma X_t dW_t
 ```
 
@@ -200,7 +131,7 @@ GeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)
 One can define a `Ornstein-Uhlenbeck` process which is a Wiener process defined
 by the stochastic differential equation
 
-```julia
+```math
 dX_t = \theta (\mu - X_t) dt + \sigma X_t dW_t
 ```
 
@@ -227,6 +158,133 @@ To wrap a noise process, simply use:
 ```julia
 NoiseWrapper(W::NoiseProcess)
 ```
+
+### Direct Construction of a Noise Process
+
+A `NoiseProcess` is a type defined as
+
+```julia
+NoiseProcess(t0,W0,Z0,dist,bridge;
+             iip=DiffEqBase.isinplace(dist,3),
+             rswm = RSWM())
+```
+
+- `t0` is the first timepoint
+- `W0` is the first value of the process.
+- `Z0` is the first value of the psudo-process. This is necessary for higher
+  order algorithms. If it's not needed, set to `nothing`.
+- `dist` the distribution for the steps over time.
+- `bridge` the bridging distribution. Optional, but required for adaptivity and interpolating
+  at new values.
+
+The signature for the `dist` is
+
+```julia
+dist!(rand_vec,W,dt)
+```
+
+for inplace functions, and
+
+```julia
+rand_vec = dist(W,dt)
+```
+
+otherwise. The signature for `bridge` is
+
+```julia
+bridge!(rand_vec,W,W0,Wh,q,h)
+```
+
+and the out of place syntax is
+
+```julia
+rand_vec = bridge!(W,W0,Wh,q,h)
+```
+
+Here, `W` is the noise process, `W0` is the left side of the current interval,
+`Wh` is the right side of the current interval, `h` is the interval length,
+and `q` is the proportion from the left where the interpolation is occuring.
+
+### Direct Construction Example
+
+The easiest way to show how to directly construct a `NoiseProcess` is by example.
+Here we will show how to directly construct a `NoiseProcess` which generates
+Gaussian white noise.
+
+This is the noise process which uses `randn!`. A special dispatch is added for
+complex numbers for `(randn()+im*randn())/sqrt(2)`. This function is
+`DiffEqBase.wiener_randn` (or with `!` respectively).
+
+The first function that must be defined is the noise distribution. This is how
+to generate ``W(t+dt)`` given that we know ``W(x)`` for ``x∈[t₀,t]``. For Gaussian
+white noise, we know that
+
+```julia
+W(dt) ~ N(0,dt)
+```
+
+for ``W(0)=0`` which defines the stepping distribution. Thus its noise distribution
+function is:
+
+```julia
+function WHITE_NOISE_DIST(W,dt)
+  if typeof(W.dW) <: AbstractArray
+    return sqrt(abs(dt))*wiener_randn(size(W.dW))
+  else
+    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))
+  end
+end
+```
+
+for the out of place versions, and for the inplace versions
+
+```julia
+function INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)
+  wiener_randn!(rand_vec)
+  rand_vec .*= sqrt(abs(dt))
+end
+```
+
+Optionally, we can provide a bridging distribution. This is the distribution of
+``W(qh)`` for ``q∈[0,1]`` given that we know ``W(0)=W₀`` and ``W(h)=Wₕ``. For
+Brownian motion, this is known as the Brownian Bridge, and is well known to have
+the distribution:
+
+```math
+W(qh) ~ N(q(Wₕ-W₀)+W₀,(1-q)qh)
+```
+
+Thus we have the out-of-place and in-place versions as:
+
+```julia
+function WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)
+  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0
+end
+function INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)
+  wiener_randn!(rand_vec)
+  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0
+end
+```
+
+These functions are then placed in a noise process:
+
+```julia
+NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
+NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
+```
+
+Notice that we can optionally provide an alternative adaptive algorithm for the
+timestepping rejections. `RSWM()` defaults to the Rejection Sampling with Memory
+3 algorithm (RSwM3).
+
+Note that the standard constructors are simply:
+
+```julia
+WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
+WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
+```
+
+These will generate a Wiener process, which can be stepped with `step!(W,dt)`, and interpolated as `W(t)`.
 
 ## Example Using Noise Processes
 
