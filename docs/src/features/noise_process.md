@@ -1,21 +1,54 @@
 # Noise Processes
 
-Noise processes are essential in continuous stochastic modeling. The noise processes
-defined here are distributionally-exact, meaning they are not solutions of
+Noise processes are essential in continuous stochastic modeling. The `NoiseProcess`
+types are distributionally-exact, meaning they are not solutions of
 stochastic differential equations and instead are directly generated according
 to their analytical distributions. These processes are used as the noise term
 in the SDE and RODE solvers. Additionally, the noise processes themselves can
 be simulated and solved using the DiffEq common interface (including the Monte
 Carlo interface).
 
-This page first describes how to analyze and simulate noise processes, and then
-describes the standard noise processes which are available. Then it is shown
-how one can define the distributions for a new noise process. Then, some practice
-usage is shown. It is demonstrated how the `NoiseWrapper` can be used to wrap
-the `NoiseProcess` of one SDE/RODE solution in order to re-use the same noise
-process in another simulation.
+This page first describes how to use noise processes in SDEs, and analyze/simulate
+them directly noise processes. Then it describes the standard noise processes
+which are available. Processes like `WienerProcess`, `CorrelatedWienerProcess`,
+`GeometricBrownianMotionProcess`, and `OrnsteinUhlenbeckProcess` are pre-defined.
+Then it is shown how one can define the distributions for a new `NoiseProcess`.
 
-## Noise Process Interface
+In addition to the `NoiseProcess` type, more general `AbstractNoiseProcess`es
+are defined. The `NoiseGrid` allows you to define a noise process from a set
+of pre-calculated points (the "normal" way). The `NoiseApproximation` allows
+you to define a new noise process as the solution to some stochastic differential
+equation. While these methods are only approximate, they are more general and
+allow the user to easily define their own colored noise to use in simulations.
+
+The `NoiseWrapper` allows one to wrap a `NoiseProcess` from a previous simulation
+to re-use it in a new simulation in a way that follows the same stochastic
+trajectory (even if different points are hit, for example solving with a
+smaller `dt`) in a distributionally-exact manner. It is demonstrated how the
+`NoiseWrapper` can be used to wrap the `NoiseProcess` of one SDE/RODE solution
+in order to re-use the same noise process in another simulation.
+
+Lastly, the `NoiseFunction` allows you to use any function of time as the
+noise process. Together, this functionality allows you to define any colored
+noise process and use this efficiently and accurately in your simulations.
+
+## Using Noise Processes
+
+### Passing a Noise Process to a Problem Type
+
+`AbstractNoiseProcess`es can be passed directly to the problem types to replace
+the standard Wiener process (Brownian motion) with your choice of noise. To do
+this, simply construct the noise and pass it to the `noise` keyword argument:
+
+```julia
+μ = 1.0
+σ = 2.0
+W = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)
+# ...
+# Define f,g,u0,tspan for a SDEProblem
+# ...
+prob = SDEProblem(f,g,u0,tspan,noise=W)
+```
 
 ### Basic Interface
 
@@ -144,22 +177,7 @@ OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)
 OrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)
 ```
 
-### NoiseWrapper
-
-Another `AbstractNoiseProcess` is the `NoiseWrapper`. This produces a new
-noise process from an old one, which will use its interpolation to generate
-the noise. This allows you to re-use a previous noise process not just with
-the same timesteps, but also with new (adaptive) timesteps as well. Thus
-this is very good for doing Multi-level Monte Carlo schemes and strong
-convergence testing.
-
-To wrap a noise process, simply use:
-
-```julia
-NoiseWrapper(W::NoiseProcess)
-```
-
-### Direct Construction of a Noise Process
+### Direct Construction of a NoiseProcess
 
 A `NoiseProcess` is a type defined as
 
@@ -286,9 +304,121 @@ WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIS
 
 These will generate a Wiener process, which can be stepped with `step!(W,dt)`, and interpolated as `W(t)`.
 
-## Example Using Noise Processes
+## Non-Standard Noise Processes
 
-### Noise Wrapper Example
+In addition to the mathematically-defined noise processes above, there exist
+more generic functionality for building noise processes from other noise processes,
+from arbitrary functions, from arrays, and from approximations of stochastic
+differential equations.
+
+### NoiseWrapper
+
+This produces a new noise process from an old one, which will use its interpolation
+to generate the noise. This allows you to re-use a previous noise process not just
+with the same timesteps, but also with new (adaptive) timesteps as well. Thus
+this is very good for doing Multi-level Monte Carlo schemes and strong
+convergence testing.
+
+To wrap a noise process, simply use:
+
+```julia
+NoiseWrapper(W::NoiseProcess)
+```
+
+### NoiseFunction
+
+This allows you to use any arbitrary function `W(t)` as a `NoiseProcess`. This
+will use the function lazily, only caching values required to minimize function
+calls, but not store the entire noise array. This requires an initial time point
+`t0` in the domain of `W`. A second function is needed if the desired SDE algorithm
+requires multiple processes.
+
+```julia
+NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0))
+```
+
+Additionally, one can use an in-place function `W(out1,out2,t)` for more efficient
+generation of the arrays for multi-dimensional processes. When the in-place version
+is used without a dispatch for the out-of-place version, the `noise_prototype`
+needs to be set.
+
+### NoiseGrid
+
+A noise grid builds a noise process from arrays of points. For example, you
+can generate your desired noise process as an array `W` with timepoints `t`,
+and use the constructor:
+
+```julia
+NoiseGrid(t,W,Z=nothing)
+```
+
+to build the associated noise process. This process comes with a linear
+interpolation of the given points, and thus the grid does not have to match
+the grid of integration. Thus this can be used for adaptive solutions as
+well. However, one must make note that the fidelity of the noise process
+is linked to how fine the noise grid is determined: if the noise grid is
+sparse on points compared to the integration, then its distributional
+properties may be slightly perturbed by the linear interpolation. Thus its
+suggested that the grid size at least approximately match the number of
+time steps in the integration to ensure accuracy.
+
+For a one-dimensional process, `W` should be an `AbstractVector` of `Number`s.
+For multi-dimensional processes, `W` should be an `AbstractVector` of the
+`noise_prototype`.
+
+### NoiseApproximation
+
+In many cases, one would like to define a noise process directly by a stochastic
+differential equation which does not have an analytical solution. Of course,
+this will not be distributionally-exact and how well the properties match
+depends on how well the differential equation is integrated, but in many
+cases this can be used as a good approximation when other methods are much
+more difficult.
+
+A `NoiseApproximation` is defined by a `DEIntegrator`. The constructor for a
+`NoiseApproximation` is:
+
+```julia
+NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing)
+```
+
+The `DEIntegrator` should have a final time point of integration far enough such
+that it will not halt during the integration. For ease of use, you can use a
+final time point as `Inf`. Note that the time points do not have to match the
+time points of the future integration since the interpolant of the SDE solution
+will be used. Thus the limiting factor is error tolerance and not hitting specific
+points.
+
+## Examples Using Non-Standard Noise Processes
+
+### NoiseGrid
+
+In this example, we will show you how to define your own version of Brownian
+motion using an array of pre-calculated points. In normal usage you should use
+`WienerProcess` instead since this will have distributionally-exact interpolations
+while the noise grid uses linear interpolations, but this is a nice example
+of the workflow.
+
+To define a `NoiseGrid` you need to have a set of time points and a set of
+values for the process. Let's define a Brownian motion on `(0.0,1.0)` with
+a `dt=0.001`. To do this,
+
+```julia
+dt = 0.001
+t = 0:dt:1
+brownian_values = cumsum([0;[sqrt(dt)*randn() for i in 1:length(t)-1]])
+```
+
+Now we build the `NoiseGrid` using these values:
+
+```julia
+W = NoiseGrid(t,brownian_values)
+```
+
+We can then pass `W` as the `noise` argument of an `SDEProblem` to use it in
+an SDE.
+
+### NoiseWrapper Example
 
 In this example, we will solve an SDE three times:
 
@@ -361,7 +491,7 @@ the coupled Wiener processes coincide at every other time point, and the interme
 timepoints were calculated according to a Brownian bridge.
 
 
-### Adaptive Example
+### Adaptive NoiseWrapper Example
 
 Here we will show that the same noise can be used with the adaptive methods
 using the `NoiseWrapper`. `SRI` and `SRIW1` use slightly different error
@@ -383,3 +513,59 @@ plot!(sol5)
 ```
 
 ![SRI_SRIW1_diff](../assets/SRI_SRIW1_diff.png)
+
+### NoiseApproximation Example
+
+In this example we will show how to use the `NoiseApproximation` in order to
+build our own Geometric Brownian Motion from its stochastic differential
+equation definition. In normal usage, you should use the `GeometricBrownianMotionProcess`
+instead since that is more efficient and distributionally-exact.
+
+First, let's define the `SDEProblem`. Here will use a timespan `(0.0,Inf)` so
+that way the noise can be used over an indefinite integral.
+
+```julia
+const μ = 1.5
+const σ = 1.2
+f = (t,u) -> μ*u
+g = (t,u) -> σ*u
+prob = SDEProblem(f,g,1.0,(0.0,Inf))
+```
+
+Now we build the noise process by building the integrator and sending that
+integrator to the `NoiseApproximation` constructor:
+
+```julia
+integrator = init(prob,SRIW1())
+W = NoiseApproximation(integrator)
+```
+
+We can use this noise process like any other noise process. For example, we
+can now build a geometric Brownian motion whose noise process is colored noise
+that itself is a geometric Brownian motion:
+
+```julia
+prob = SDEProblem(f,g,1.0,(0.0,Inf),noise=W)
+```
+
+The possibilities are endless.
+
+### NoiseFunction Example
+
+The `NoiseFunction` is pretty simple: pass a function. As a silly example, we
+can use `exp` as a noise process by doing:
+
+```julia
+f = (t) -> exp(t)
+W = NoiseFunction(0.0,f)
+```
+
+If it's multi-dimensional and an in-place function is used, the `noise_prototype`
+must be given. For example:
+
+```julia
+f = (out,t) -> (out.=exp(t))
+W = NoiseFunction(0.0,f,noise_prototype=rand(4))
+```
+
+This allows you to put arbitrarily weird noise into SDEs and RODEs. Have fun.
