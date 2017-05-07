@@ -108,6 +108,43 @@ CorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing)
 
 where `Γ` is the constant covariance matrix.
 
+### Geometric Brownian Motion
+
+One can define a `GeometricBrownianMotion` process which is a Wiener process with
+constant drift `μ` and constant diffusion `σ`. I.e. this is the solution of the
+stochastic differential equation
+
+```julia
+dX_t = \mu X_t dt + \sigma X_t dW_t
+```
+
+The `GeometricBrownianMotionProcess` is distribution exact (meaning, not a numerical
+solution of the stochastic differential equation, and instead follows the exact
+distribution properties). It can be back interpolated exactly as well. The constructor is:
+
+```julia
+GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)
+GeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)
+```
+
+### Ornstein-Uhlenbeck
+
+One can define a `Ornstein-Uhlenbeck` process which is a Wiener process defined
+by the stochastic differential equation
+
+```julia
+dX_t = \theta (\mu - X_t) dt + \sigma X_t dW_t
+```
+
+The `OrnsteinUhlenbeckProcess` is distribution exact (meaning, not a numerical
+solution of the stochastic differential equation, and instead follows the exact
+distribution properties). The constructor is:
+
+```julia
+OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)
+OrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)
+```
+
 ### NoiseWrapper
 
 Another `AbstractNoiseProcess` is the `NoiseWrapper`. This produces a new
@@ -123,7 +160,41 @@ To wrap a noise process, simply use:
 NoiseWrapper(W::NoiseProcess)
 ```
 
-#### Example
+## Direct Simulation of the Noise Process
+
+Since the `NoiseProcess` types are distribution-exact and do not require the
+stochastic differential equation solvers, many times one would like to directly
+simulate trajectories from these proecesses. The `NoiseProcess` has a
+`NoiseProcessProblem` type:
+
+```julia
+NoiseProblem(noise,tspan)
+```
+
+for which `solve` works. For example, we can simulate a distributionally-exact
+Geometric Brownian Motion solution by:
+
+```julia
+μ = 1.0
+σ = 2.0
+W = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)
+prob = NoiseProblem(W,(0.0,1.0))
+sol = solve(prob;dt=0.1)
+```
+
+`solve` requires the `dt` is given, the solution it returns is a `NoiseProcess`
+which has stepped through the timespan. Because this follows the common interface,
+all of the normal functionality works. For example, we can use the Monte Carlo
+functionality as follows:
+
+```julia
+monte_prob = MonteCarloProblem(prob)
+sol = solve(monte_prob;dt=0.1,num_monte=100)
+```
+
+simulates 100 Geometric Brownian Motions.
+
+## Example Using Noise Processes
 
 In this example, we will solve an SDE three times:
 
