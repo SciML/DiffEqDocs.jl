@@ -291,11 +291,11 @@ Thus we have the out-of-place and in-place versions as:
 
 ```julia
 function WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)
-  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0
+  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*Wh
 end
 function INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)
   wiener_randn!(rand_vec)
-  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0
+  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*Wh
 end
 ```
 
