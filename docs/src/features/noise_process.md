@@ -279,12 +279,12 @@ end
 ```
 
 Optionally, we can provide a bridging distribution. This is the distribution of
-``W(qh)`` for ``q∈[0,1]`` given that we know ``W(0)=W₀`` and ``W(h)=Wₕ``. For
+``W(qh)`` for ``q∈[0,1]`` given that we know ``W(0)=0`` and ``W(h)=Wₕ``. For
 Brownian motion, this is known as the Brownian Bridge, and is well known to have
 the distribution:
 
 ```math
-W(qh) ∼ N(q(Wₕ-W₀)+W₀,(1-q)qh)
+W(qh) ∼ N(qWₕ,(1-q)qh)
 ```
 
 Thus we have the out-of-place and in-place versions as:
