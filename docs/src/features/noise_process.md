@@ -11,8 +11,9 @@ Carlo interface).
 This page first describes how to use noise processes in SDEs, and analyze/simulate
 them directly noise processes. Then it describes the standard noise processes
 which are available. Processes like `WienerProcess`, `CorrelatedWienerProcess`,
-`GeometricBrownianMotionProcess`, and `OrnsteinUhlenbeckProcess` are pre-defined.
-Then it is shown how one can define the distributions for a new `NoiseProcess`.
+`GeometricBrownianMotionProcess`, `BrownianBridgeProcess` and
+`OrnsteinUhlenbeckProcess` are pre-defined. Then it is shown how one can define
+the distributions for a new `NoiseProcess`.
 
 In addition to the `NoiseProcess` type, more general `AbstractNoiseProcess`es
 are defined. The `NoiseGrid` allows you to define a noise process from a set
@@ -107,7 +108,8 @@ the solution distributionally exact. This kind of stepping is done via:
 ```julia
 W = WienerProcess(0.0,1.0,1.0)
 dt = 0.1
-calculate_step!(W,dt)
+W.dt = dt
+setup_next_step!(W)
 for i in 1:10
   accept_step!(W,dt)
 end
@@ -158,6 +160,19 @@ distribution properties). It can be back interpolated exactly as well. The const
 GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)
 GeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)
 ```
+
+### Brownian Bridge
+
+A `BrownianBridge` process is a Wiener process with a pre-defined start and end
+value. This process is distribution exact and back be back interpolated exactly
+as well. The constructor is:
+
+```julia
+BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)
+BrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)
+```
+
+where `W(t0)=W₀`, `W(tend)=Wend`, and likewise for the `Z` process if defined.
 
 ### Ornstein-Uhlenbeck
 
