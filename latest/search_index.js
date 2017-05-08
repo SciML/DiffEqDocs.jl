@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -3278,6 +3278,46 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Analysis",
     "category": "section",
     "text": "In this example we will show how to analyze a MonteCarloSolution. First, let's generate a 10 solution Monte Carlo experiment:prob = prob_sde_2Dlinear\nprob2 = MonteCarloProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)The system, prob_sde_2Dlinear, is a (4,2) system of stochastic differential equations which we solved 10 times. We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a MonteCarloSummary type.summ = MonteCarloSummary(sim)will summarize at each time step, whilesumm = MonteCarloSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let's only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
+},
+
+{
+    "location": "features/io.html#",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "I/O: Saving and Loading Solution Data",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/io.html#I/O:-Saving-and-Loading-Solution-Data-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "I/O: Saving and Loading Solution Data",
+    "category": "section",
+    "text": "The ability to save and load solutions is important for handling large datasets and analyzing the results over multiple Julia sessions. This page explains the existing functionality for doing so."
+},
+
+{
+    "location": "features/io.html#Note-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "Note",
+    "category": "section",
+    "text": "Note that this currently is not included with DifferentialEquations.jl, and requires that you Pkg.add(\"DiffEqIO\") and using DiffEqIO."
+},
+
+{
+    "location": "features/io.html#Tabular-Data:-IterableTables-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "Tabular Data: IterableTables",
+    "category": "section",
+    "text": "An interface to IterableTables.jl is provided by DiffEqIO.jl. This IterableTables link allows you to use a solution type as the data source to convert to other tabular data formats. For example, let's solve a 4x2 system of ODEs:f_2dlinear = (t,u,du) -> du.=1.01u\nprob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))\nsol1 =solve(prob,Euler();dt=1//2^(4))then we can convert this to a dataframe using DataFrame:using DataFrames\ndf = DataFrame(sol1)\n\n# Result\n17×5 DataFrames.DataFrame\n│ Row │ timestamp │ value 1  │ value 2  │ value 3  │ value 4  │\n├─────┼───────────┼──────────┼──────────┼──────────┼──────────┤\n│ 1   │ 0.0       │ 0.110435 │ 0.569561 │ 0.918336 │ 0.508044 │\n│ 2   │ 0.0625    │ 0.117406 │ 0.605515 │ 0.976306 │ 0.540114 │\n│ 3   │ 0.125     │ 0.124817 │ 0.643738 │ 1.03794  │ 0.574208 │\n│ 4   │ 0.1875    │ 0.132696 │ 0.684374 │ 1.10345  │ 0.610455 │\n│ 5   │ 0.25      │ 0.141073 │ 0.727575 │ 1.17311  │ 0.64899  │\n│ 6   │ 0.3125    │ 0.149978 │ 0.773503 │ 1.24716  │ 0.689958 │\n│ 7   │ 0.375     │ 0.159445 │ 0.822331 │ 1.32589  │ 0.733511 │\n│ 8   │ 0.4375    │ 0.16951  │ 0.87424  │ 1.40959  │ 0.779814 │\n│ 9   │ 0.5       │ 0.18021  │ 0.929427 │ 1.49857  │ 0.82904  │\n│ 10  │ 0.5625    │ 0.191586 │ 0.988097 │ 1.59316  │ 0.881373 │\n│ 11  │ 0.625     │ 0.20368  │ 1.05047  │ 1.69373  │ 0.93701  │\n│ 12  │ 0.6875    │ 0.216537 │ 1.11678  │ 1.80065  │ 0.996159 │\n│ 13  │ 0.75      │ 0.230206 │ 1.18728  │ 1.91432  │ 1.05904  │\n│ 14  │ 0.8125    │ 0.244738 │ 1.26222  │ 2.03516  │ 1.12589  │\n│ 15  │ 0.875     │ 0.260187 │ 1.3419   │ 2.16363  │ 1.19697  │\n│ 16  │ 0.9375    │ 0.276611 │ 1.42661  │ 2.30021  │ 1.27252  │\n│ 17  │ 1.0       │ 0.294072 │ 1.51667  │ 2.44541  │ 1.35285  │If a ParameterizedFunction is used, the output will use the variable names:using ParameterizedFunctions\n\nf = @ode_def LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=3 d=1\n\nprob = ODEProblem(f,[1.0,1.0],(0.0,1.0))\nsol2 =solve(prob,Tsit5())\n\ndf = DataFrame(sol2)\n\n7×3 DataFrames.DataFrame\n│ Row │ timestamp │ x       │ y        │\n├─────┼───────────┼─────────┼──────────┤\n│ 1   │ 0.0       │ 1.0     │ 1.0      │\n│ 2   │ 0.0776085 │ 1.04549 │ 0.857668 │\n│ 3   │ 0.232645  │ 1.17587 │ 0.63946  │\n│ 4   │ 0.429118  │ 1.41968 │ 0.456996 │\n│ 5   │ 0.679082  │ 1.87672 │ 0.324733 │\n│ 6   │ 0.944406  │ 2.58825 │ 0.263362 │\n│ 7   │ 1.0       │ 2.77285 │ 0.25871  │Additionally, this data can be saved to a CSV:using CSV\nCSV.write(\"out.csv\",df)For more information on using the IterableTables interface and other output formats, see IterableTables.jl."
+},
+
+{
+    "location": "features/io.html#JLD-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "JLD",
+    "category": "section",
+    "text": "Julia types can be saved via JLD.jl. However, they cannot save types which have functions, which means that the solution type is currently not compatible with JLD.using JLD\nJLD.save(\"out.jld\",\"sol\",sol)"
 },
 
 {
