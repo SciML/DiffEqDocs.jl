@@ -52,17 +52,19 @@ master form is:
 vars = [(f1,0,1), (f2,1,3), (f3,4,5)]
 ```
 
-where this would mean plot f1(variable 1, variable 2), f2(variable 1, variable 3),
-f3(variable 4, variable 5) all on the same graph. (0 is considered to be time,
-or the independent variable). The function `f1` should take in scalars and return
-a tuple. If no function is given, for example,
+which could be used to plot `f1(var₀, var₁)`, `f2(var₁, var₃)`, and
+`f3(var₄, var₅)`, all on the same graph. (`0` is considered to be *time*,
+or the independent variable). Functions `f1`, `f2` and `f3` should take in scalars
+and return a tuple. If no function is given, for example,
 
 ```julia
 vars = [(0,1), (1,3), (4,5)]
 ```
 
-where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph.
-While this can be used for everything, the following conveniences are provided:
+this would mean "plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁`, and
+`var₅(var₄)` vs `var₄` all on the same graph, putting the independent variables
+(`t`, `var₁` and `var₄`) on the x-axis." While this can be used for everything,
+the following conveniences are provided:
 
 * Everywhere in a tuple position where we only find an integer, this
   variable is plotted as a function of time.  For example, the list above
