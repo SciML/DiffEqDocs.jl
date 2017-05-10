@@ -95,13 +95,40 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
+#### Extra Options
+
 The following methods allow for specification of `linsolve`: the linear
 solver which is used:
 
 - `Rosenbrock23`
 - `Rosenbrock32`
 
-For more information on specifying the linear solver, see [the manual page on solver specification](../features/linear_nonlinear.html)
+For more information on specifying the linear solver, see
+[the manual page on solver specification](../features/linear_nonlinear.html).
+Additionally, the following methods have extra differentiation controls:
+
+- `Rosenbrock23`
+- `Rosenbrock32`
+- `ImplicitEuler`
+- `Trapezoid`
+
+In each of these, `autodiff` can be set to turn on/off autodifferentiation, and
+`chunk_size` can be used to set the chunksize of the Dual numbers (see the
+[documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/advanced_usage.html#configuring-chunk-size)).
+In addition, `Rosenbrock23` and `Rosenbrock32` can set `diff_type`, which is the
+type of numerical differentiation that is used (when autodifferentiation is
+disabled). The choices are `:central` or `:forward`.
+
+Examples:
+
+```julia
+sol = solve(prob,Rosenbrock23()) # Standard, uses autodiff
+sol = solve(prob,Rosenbrock23(chunk_size=10)) # Autodiff with chunksize of 10
+sol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with central differencing
+sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing
+```
+
+#### Tableau Method
 
 Additionally, there is the tableau method:
 
