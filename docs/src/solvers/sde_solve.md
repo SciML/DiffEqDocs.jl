@@ -29,7 +29,7 @@ Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler.
   Default tableau is for SRIW1.
 - `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.
-- `SRA1` - An optimized version of SRIA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.
+- `SRA1` - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.
 
 For `SRA` and `SRI`, the following option is allowed:
 
