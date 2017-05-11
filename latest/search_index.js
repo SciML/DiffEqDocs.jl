@@ -3717,7 +3717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Bifurcation Analysis",
     "title": "Bifurcation Analysis",
     "category": "section",
-    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.Note that this functionality is very rudimentary and still in development."
+    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install PyDSTool.jl:Pkg.add(\"PyDSTool\")\nusing PyDSTool"
 },
 
 {
