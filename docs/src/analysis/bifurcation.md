@@ -5,7 +5,13 @@ wraps the functionality of PyDSTool. The the package has an interface for
 directly using PyDSTool itself, included is a higher level interface that
 makes these tools compatible with more standard JuliaDiffEq types.
 
-Note that this functionality is very rudimentary and still in development.
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install PyDSTool.jl:
+
+```julia
+Pkg.add("PyDSTool")
+using PyDSTool
+```
 
 ## Calcium Bifurcation Tutorial
 
