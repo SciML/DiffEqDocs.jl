@@ -1,4 +1,4 @@
-# Refined ODE Types
+# Refined ODE Problems
 
 The refined ODE types are types that specify the ODE to a much greater degree of
 detail, and thus give the solver more information and make it easier to optimize.

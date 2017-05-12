@@ -1,4 +1,4 @@
-# Refined DAE Types
+# Refined DAE Problems
 
 The refined DAE types are types that specify the DAE to a much greater degree of
 detail, and thus give the solver more information and make it easier to optimize.

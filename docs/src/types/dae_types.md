@@ -1,4 +1,4 @@
-# DAE Types
+# DAE Problems
 
 ## Mathematical Specification of an DAE Problem
 

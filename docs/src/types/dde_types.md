@@ -1,4 +1,4 @@
-# DDE Types
+# DDE Problems
 
 ## Mathematical Specification of a DDE Problem
 

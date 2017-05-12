@@ -1,4 +1,4 @@
-# RODE Types
+# RODE Problems
 
 ## Mathematical Specification of a RODE Problem
 

@@ -1,4 +1,4 @@
-# Steady State Types
+# Steady State Problems
 
 ## Mathematical Specification of a Steady State Problem
 

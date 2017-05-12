@@ -1,4 +1,4 @@
-# ODE Types
+# ODE Problems
 
 ## Mathematical Specification of an ODE Problem
 

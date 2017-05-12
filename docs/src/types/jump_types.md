@@ -1,4 +1,4 @@
-# Jump Types
+# Jump Problems
 
 ### Mathematical Specification of an problem with jumps
 

@@ -1,4 +1,4 @@
-# SDE Types
+# SDE Problems
 
 ## Mathematical Specification of a SDE Problem
 
