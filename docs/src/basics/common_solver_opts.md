@@ -47,6 +47,8 @@ The following options are all related to output control. See the "Examples" sect
 
 * `dense`: Denotes whether to save the extra pieces required for dense (continuous)
   output. Default is true for algorithms which have the ability to produce dense output.
+  If dense is false, the solution still acts like a function, and `sol(t)` is a
+  linear interpolation between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
   most efficient manner (always including the points of `tspan`).

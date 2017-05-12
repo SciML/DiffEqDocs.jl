@@ -183,6 +183,7 @@ However, the BDF method is a classic method for stiff equations and "generally w
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver.
 
+The Sundials algorithms all come with a 3rd order Hermite polynomial interpolation.
 Note that the constructors for the Sundials algorithms take two main arguments:
 
   - `method` - This is the method for solving the implicit equation. For BDF this

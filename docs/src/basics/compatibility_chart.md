@@ -9,7 +9,7 @@ issue or submit a pull-request.
 
 | Option                                 | OrdinaryDiffEq.jl | Sundials.jl | ODE.jl | ODEInterface.jl | LSODA.jl | StochasticDiffEq.jl | DelayDiffEq.jl | DASKR.jl | DASSL.jl
 |----------------------------------------|-------------------|-------------|--------|-----------------|----------|---------------------|----------------|----------|----------
-| Dense (continuous) output              | x                 |             |        |                 |          | x                   | x              |          |          
+| Nonlinear Dense (continuous) output    | x                 | x           |        |                 |          | x                   | x              | x        |          
 | Tolerance control                      | x                 | x           | x      | x               | x        | x                   | x              | x        | x        
 | Advanced stepsize control              | x                 |             |        | x               |          | x                   | x              |          |          
 | Mass Matrices^                         | x                 |             |        | x               |          | x                   | x              |          |     
