@@ -105,6 +105,17 @@ solver which is used:
 
 For more information on specifying the linear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
+
+The following methods allow for specification of `nlsolve`: the nonlinear
+solver which is used:
+
+- `ImplicitEuler`
+- `Trapezoid`
+
+Note that performance overload information (Jacobians etc.) are not used in this
+mode. For more information on specifying the nonlinear solver, see
+[the manual page on solver specification](../features/linear_nonlinear.html).
+
 Additionally, the following methods have extra differentiation controls:
 
 - `Rosenbrock23`
@@ -172,7 +183,7 @@ However, the BDF method is a classic method for stiff equations and "generally w
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver.
 
-Note that the constructors for the Sundials algorithms take two arguments:
+Note that the constructors for the Sundials algorithms take two main arguments:
 
   - `method` - This is the method for solving the implicit equation. For BDF this
     defaults to `:Newton` while for Adams this defaults to `:Functional`. These
@@ -199,6 +210,31 @@ CVODE_BDF(method=:Functional) # BDF method using Functional iterations
 CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down
 CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   
 ```
+
+All of the additional options are available. The full constructor is:
+
+```julia
+CVODE_BDF(;method=:Newton,linear_solver=:Dense,
+          jac_upper=0,jac_lower=0,non_zero=0,krylov_dim=0,
+          stability_limit_detect=false,
+          max_hnil_warns = 10,
+          max_order = 5,
+          max_error_test_failures = 7,
+          max_nonlinear_iters = 3,
+          max_convergence_failures = 10)
+
+CVODE_Adams(;method=:Functional,linear_solver=:None,
+            jac_upper=0,jac_lower=0,krylov_dim=0,
+            stability_limit_detect=false,
+            max_hnil_warns = 10,
+            max_order = 12,
+            max_error_test_failures = 7,
+            max_nonlinear_iters = 3,
+            max_convergence_failures = 10)
+```
+
+See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
+for details on the additional options.
 
 ### ODE.jl
 

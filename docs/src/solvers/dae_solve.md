@@ -19,7 +19,7 @@ then `dassl` is the method of choice.
 
 - `IDA` - This is the IDA method from the Sundials.jl package.
 
-Note that the constructors for the Sundials algorithms take an argument:
+Note that the constructors for the Sundials algorithms take a main argument:
 
 - `linearsolver` - This is the linear solver which is used in the Newton iterations.
   The choices are:
@@ -39,6 +39,26 @@ IDA() # Newton + Dense solver
 IDA(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down
 IDA(linear_solver=:BCG) # Biconjugate gradient method                                   
 ```
+
+All of the additional options are available. The constructor is:
+
+```julia
+IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
+    max_order = 5,
+    max_error_test_failures = 7,
+    max_nonlinear_iters = 3,
+    nonlinear_convergence_coefficient = 0.33,
+    nonlinear_convergence_coefficient_ic = 0.0033,
+    max_num_steps_ic = 5,
+    max_num_jacs_ic = 4,
+    max_num_iters_ic = 10,
+    max_num_backs_ic = 100,
+    use_linesearch_ic = true,
+    max_convergence_failures = 10)
+```
+
+See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf)
+for details on the additional options.
 
 ### DASKR.jl
 
