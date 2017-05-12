@@ -27,7 +27,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "basics/integrator.md",
            "basics/compatibility_chart.md"
          ],
-         "Equation Types" => Any[
+         "Problem Types" => Any[
            "types/discrete_types.md",
            "types/ode_types.md",
            "types/refined_ode_types.md",
@@ -73,7 +73,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "analysis/uncertainty_quantification.md",
            "analysis/dev_and_test.md"
          ],
-         "Modeling Tools" => Any[
+         "Domain Modeling Tools" => Any[
              "models/multiscale.md",
              "models/financial.md",
              "models/biological.md"

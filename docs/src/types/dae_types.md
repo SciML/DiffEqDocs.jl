@@ -27,7 +27,11 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to a black CallbackSet, which will have no effect.
-  
+* `differential_vars`: A logical array which declares which variables are the
+  differential (non algebraic) vars (i.e. `du'` is in the equations for this
+  variable). Defaults to nothing. Some solvers may require this be set if an
+  initial condition needs to be determined.
+
 ## Special Solver Options
 
 ## Special Solution Fields

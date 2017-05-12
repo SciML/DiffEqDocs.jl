@@ -136,7 +136,7 @@ Depth = 2
 ```
 
 
-### Equation Types
+### Problem Types
 
 These pages describe building the problem types to define differential equations
 for the solvers, and the special features of the different solution types.
