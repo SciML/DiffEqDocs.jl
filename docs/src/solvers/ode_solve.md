@@ -207,8 +207,12 @@ CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method
   - `ode23s` - A modified Rosenbrock order 2/3 method due to Shampine
   - `ode78` - A Fehlburg order 7/8 Runge-Kutta method
   - `ode4` - The classic Runge-Kutta order 4 method
-  - `ode4ms` - A fixed-step, fixed order Adams-Bashforth-Moulton method
+  - `ode4ms` - A fixed-step, fixed order Adams-Bashforth-Moulton method†
   - `ode4s` - A 4th order Rosenbrock method due to Shampine
+
+
+†: Does not step to the interval endpoint. This can cause issues with discontinuity
+detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
 ### ODEInterface.jl
 
