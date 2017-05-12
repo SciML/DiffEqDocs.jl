@@ -882,23 +882,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#",
-    "page": "Discrete Types",
-    "title": "Discrete Types",
+    "page": "Discrete Problems",
+    "title": "Discrete Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/discrete_types.html#Discrete-Types-1",
-    "page": "Discrete Types",
-    "title": "Discrete Types",
+    "location": "types/discrete_types.html#Discrete-Problems-1",
+    "page": "Discrete Problems",
+    "title": "Discrete Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/discrete_types.html#Mathematical-Specification-of-a-Discrete-Problem-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Mathematical Specification of a Discrete Problem",
     "category": "section",
     "text": "To define an Discrete Problem, you simply need to give the function f and the initial condition u which define a function map:u_n+1 = f(tu_n)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that if the discrete solver is set to have scale_by_time=true, then the problem is interpreted as the map:u_n+1 = u_n + dtf(tu_n)"
@@ -906,7 +906,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Problem-Type-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -914,7 +914,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Constructors-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
     "text": "DiscreteProblem(f,u0,tspan) : Defines the discrete problem with the specified functions."
@@ -922,7 +922,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Fields-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the map.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
@@ -930,7 +930,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Note-About-Timing-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Note About Timing",
     "category": "section",
     "text": "Note that if no dt and not tstops is given, it's assumed that dt=1 and thus tspan=(0,n) will solve for n iterations. If in the solver dt is given, then the number of iterations will change. And if tstops is not empty, the solver will revert to the standard behavior of fixed timestep methods, which is \"step to each tstop\"."
@@ -938,7 +938,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Special-Solver-Options-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -946,7 +946,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Special-Solution-Fields-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "None. The Discrete type is as basic as it gets."
@@ -954,23 +954,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#",
-    "page": "ODE Types",
-    "title": "ODE Types",
+    "page": "ODE Problems",
+    "title": "ODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/ode_types.html#ODE-Types-1",
-    "page": "ODE Types",
-    "title": "ODE Types",
+    "location": "types/ode_types.html#ODE-Problems-1",
+    "page": "ODE Problems",
+    "title": "ODE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/ode_types.html#Mathematical-Specification-of-an-ODE-Problem-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Mathematical Specification of an ODE Problem",
     "category": "section",
     "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:fracdudt = f(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -978,7 +978,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Problem-Type-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -986,7 +986,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Constructors-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
@@ -994,7 +994,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Fields-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1002,7 +1002,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Special-Solver-Options-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1010,7 +1010,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Special-Solution-Fields-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "None. The ODE type is as basic as it gets."
@@ -1018,7 +1018,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_linear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_linear",
     "category": "Constant",
     "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1026,7 +1026,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_2Dlinear",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1034,7 +1034,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_bigfloatlinear",
     "category": "Constant",
     "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
@@ -1042,7 +1042,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
@@ -1050,7 +1050,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_large2Dlinear",
     "category": "Constant",
     "text": "100x100 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1058,7 +1058,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\non Float64. Purposefully not in-place as a test.\n\n\n\n"
@@ -1066,7 +1066,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_threebody",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_threebody",
     "category": "Constant",
     "text": "The ThreeBody problem as written by Hairer:\n\nbeginalign\ny = y + 2y - fracy+D - fracy-D \ny = y - 2y - fracyD - fracyD \nD = ((y+)^2 + y^2)^32 \nD = ((y-)^2+y^2)^32 \n = 0012277471 \n =1-\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on t₀ = 0.0; T = parse(BigFloat,\"17.0652165601579625588917206249\") Periodic with that setup.\n\n\n\n"
@@ -1074,7 +1074,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_pleides",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_pleides",
     "category": "Constant",
     "text": "Pleides Problem\n\nbeginalign\nx = sum_ji m(x-x)r \ny = sum_ji m(y-y)r\nendalign\n\nwhere\n\nr = ((x-x)^2 + (y-y)^2)^32\n\nand inital condtions are\n\nbeginalign\nx(0)=3  \nx(0)=3  \nx(0)=-1  \nx(0)=-3  \nx(0)=2  \nx(0)=-2  \nx(0)=2  \ny(0)=3  \ny(0)=-3  \ny(0)=2  \ny(0)=0  \ny(0)=0  \ny(0)=-4  \ny(0)=4\nendalign\n\nand with x(0)=y(0)=0 except for\n\nbeginalign\nx(0)=175 \nx(0)=-15 \ny(0)=-125 \ny(0)=1\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 3.\n\n\n\n"
@@ -1082,7 +1082,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_vanderpol",
     "category": "Constant",
     "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10 and u0=0sqrt3\n\nNon-stiff parameters.\n\n\n\n"
@@ -1090,7 +1090,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
     "category": "Constant",
     "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10^6 and u0=0sqrt3\n\nStiff parameters.\n\n\n\n"
@@ -1098,7 +1098,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rober",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_rober",
     "category": "Constant",
     "text": "The Robertson biochemical reactions:\n\nbeginalign\nfracdydt = -ky+kyy  \nfracdydt =  ky-ky^2-kyy \nfracdydt =  ky^2\nendalign\n\nwhere k=004, k=3times10^7, k=10^4. For details, see:\n\nHairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on [0,1e11]\n\n\n\n"
@@ -1106,7 +1106,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rigidbody",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_rigidbody",
     "category": "Constant",
     "text": "Rigid Body Equations\n\nbeginalign\nfracdydt  = Iyy \nfracdydt  = Iyy \nfracdydt  = Iyy\nendalign\n\nwith I=-2, I=125, and I=-12.\n\nThe initial condition is y=100009.\n\nFrom Solving Differential Equations in R by Karline Soetaert\n\nor Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 20.\n\n\n\n"
@@ -1114,7 +1114,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Example-Problems-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
@@ -1122,23 +1122,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#",
-    "page": "Refined ODE Types",
-    "title": "Refined ODE Types",
+    "page": "Refined ODE Problems",
+    "title": "Refined ODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/refined_ode_types.html#Refined-ODE-Types-1",
-    "page": "Refined ODE Types",
-    "title": "Refined ODE Types",
+    "location": "types/refined_ode_types.html#Refined-ODE-Problems-1",
+    "page": "Refined ODE Problems",
+    "title": "Refined ODE Problems",
     "category": "section",
     "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Split ODE Problem",
     "category": "section",
     "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1146,7 +1146,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1154,7 +1154,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1162,7 +1162,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solver-Options-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1170,7 +1170,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solution-Fields-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "None. It returns a standard ODE solution."
@@ -1178,7 +1178,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
     "text": "To define a PartitionedODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
@@ -1186,7 +1186,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1194,7 +1194,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1202,7 +1202,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solver-Options-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1210,7 +1210,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solution-Fields-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": ""
@@ -1218,7 +1218,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of an Second Order ODE Problem",
     "category": "section",
     "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
@@ -1226,7 +1226,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Problem-Type-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1234,7 +1234,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1242,7 +1242,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1250,7 +1250,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solver-Options-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1258,7 +1258,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Special-Solution-Fields-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": ""
@@ -1266,7 +1266,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Constrained ODE Problem",
     "category": "section",
     "text": "The constrained ODE:fracdudt = f(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
@@ -1274,7 +1274,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-4",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1282,7 +1282,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-4",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1290,7 +1290,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Split Constrained ODE Problem",
     "category": "section",
     "text": "The split constrained ODE:fracdudt = f_1(tuv) + f_2(tuv) +  + f_n(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
@@ -1298,7 +1298,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-5",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1306,7 +1306,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-5",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1314,7 +1314,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Partitioned Constrained ODE Problem",
     "category": "section",
     "text": "The constrained ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \n\n0 = g(tuv)is a type of refined ODE which specifies a DAE. As with the standard Partitioned problem, the solver may specify a special form which may result in splitting ODEs in some of the systems."
@@ -1322,7 +1322,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-6",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1330,7 +1330,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-6",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1338,23 +1338,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#",
-    "page": "Steady State Types",
-    "title": "Steady State Types",
+    "page": "Steady State Problems",
+    "title": "Steady State Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/steady_state_types.html#Steady-State-Types-1",
-    "page": "Steady State Types",
-    "title": "Steady State Types",
+    "location": "types/steady_state_types.html#Steady-State-Problems-1",
+    "page": "Steady State Problems",
+    "title": "Steady State Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/steady_state_types.html#Mathematical-Specification-of-a-Steady-State-Problem-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Mathematical Specification of a Steady State Problem",
     "category": "section",
     "text": "To define an Steady State Problem, you simply need to give the function f which defines the ODE:fracdudt = f(tu)and an initial guess u of where f(t,u)=0. f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that for the steady-state to be defined, we must have that f is autonomous, that is f is independent of t. But the form which matches the standard ODE solver should still be used. The steady state solvers interpret the f by fixing t=0."
@@ -1362,7 +1362,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Problem-Type-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1370,7 +1370,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Constructors-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SteadyStateProblem(f,u0,mass_matrix=I)Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
@@ -1378,7 +1378,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Fields-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial guess for the steady state.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1386,7 +1386,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Special-Solver-Options-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1394,7 +1394,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Special-Solution-Fields-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "The SteadyStateSolution type is different from the other DiffEq solutions because it does not have temporal information."
@@ -1402,23 +1402,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#",
-    "page": "SDE Types",
-    "title": "SDE Types",
+    "page": "SDE Problems",
+    "title": "SDE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/sde_types.html#SDE-Types-1",
-    "page": "SDE Types",
-    "title": "SDE Types",
+    "location": "types/sde_types.html#SDE-Problems-1",
+    "page": "SDE Problems",
+    "title": "SDE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/sde_types.html#Mathematical-Specification-of-a-SDE-Problem-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Mathematical Specification of a SDE Problem",
     "category": "section",
     "text": "To define an SDE Problem, you simply need to give the forcing function f, the noise function g, and the initial condition u which define an SDE:du = f(tu)dt + g(tu)dWf and g should be specified as f(t,u) and  g(t,u) respectively, and u₀ should be an AbstractArray whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. A vector of gs can also be defined to determine an SDE of higher Ito dimension."
@@ -1426,7 +1426,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Problem-Type-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": "Wraps the data which defines an SDE problemu = f(ut)dt + g(ut)dWwith initial condition u0."
@@ -1434,7 +1434,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Constructors-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE."
@@ -1442,7 +1442,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Fields-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1450,7 +1450,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Special-Solver-Options-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1458,7 +1458,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Special-Solution-Fields-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "g: The noise function in the SDE."
@@ -1466,7 +1466,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_linear",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_linear",
     "category": "Constant",
     "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
@@ -1474,7 +1474,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_2Dlinear",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
     "category": "Constant",
     "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
@@ -1482,7 +1482,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_wave",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_wave",
     "category": "Constant",
     "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(tu0W_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
@@ -1490,7 +1490,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_lorenz",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_lorenz",
     "category": "Constant",
     "text": "Lorenz Attractor with additive noise\n\nbeginalign\ndx = *(y-x)dt + dW_t \ndy = (x*(-z) - y)dt + dW_t \ndz = (x*y - *z)dt + dW_t \nendalign\n\nwith =10, =28, =83, =30 and inital condition u0=111.\n\n\n\n"
@@ -1498,7 +1498,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_cubic",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_cubic",
     "category": "Constant",
     "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(tu0W_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
@@ -1506,7 +1506,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additive",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additive",
     "category": "Constant",
     "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(tu0W_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
@@ -1514,7 +1514,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additivesystem",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additivesystem",
     "category": "Constant",
     "text": "A multiple dimension extension of additiveSDEExample\n\n\n\n"
@@ -1522,7 +1522,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Example-Problems-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_sde_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_sde_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
@@ -1530,23 +1530,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#",
-    "page": "RODE Types",
-    "title": "RODE Types",
+    "page": "RODE Problems",
+    "title": "RODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/rode_types.html#RODE-Types-1",
-    "page": "RODE Types",
-    "title": "RODE Types",
+    "location": "types/rode_types.html#RODE-Problems-1",
+    "page": "RODE Problems",
+    "title": "RODE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/rode_types.html#Mathematical-Specification-of-a-RODE-Problem-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Mathematical Specification of a RODE Problem",
     "category": "section",
     "text": "To define a RODE Problem, you simply need to give the function f and the initial condition u which define an ODE:fracdudt = f(tuW(t))where W(t) is a random process. f should be specified as f(t,u,W) (or in-place as f(t,u,W,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1554,7 +1554,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#Constructors-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
@@ -1562,7 +1562,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#Fields-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1570,23 +1570,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#",
-    "page": "DDE Types",
-    "title": "DDE Types",
+    "page": "DDE Problems",
+    "title": "DDE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/dde_types.html#DDE-Types-1",
-    "page": "DDE Types",
-    "title": "DDE Types",
+    "location": "types/dde_types.html#DDE-Problems-1",
+    "page": "DDE Problems",
+    "title": "DDE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/dde_types.html#Mathematical-Specification-of-a-DDE-Problem-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Mathematical Specification of a DDE Problem",
     "category": "section",
     "text": "To define a DDE Problem, you simply need to give the function f and the initial condition u0 which define an ODE:du = f(tuh)f should be specified as f(t,u,h) (or in-place as f(t,u,h,du)). h is the history function which is accessed for all delayed values. For example, the ith component delayed by a time tau is denoted by h(t-tau). Note that we are not limited to numbers or vectors for u0; one is allowed to provide u0 as arbitrary matrices / higher dimension tensors as well."
@@ -1594,7 +1594,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Problem-Type-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1602,7 +1602,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Constructors-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)"
@@ -1610,7 +1610,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Fields-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1618,7 +1618,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Special-Solver-Options-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1626,7 +1626,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Special-Solution-Fields-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": ""
@@ -1634,23 +1634,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#",
-    "page": "DAE Types",
-    "title": "DAE Types",
+    "page": "DAE Problems",
+    "title": "DAE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/dae_types.html#DAE-Types-1",
-    "page": "DAE Types",
-    "title": "DAE Types",
+    "location": "types/dae_types.html#DAE-Problems-1",
+    "page": "DAE Problems",
+    "title": "DAE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/dae_types.html#Mathematical-Specification-of-an-DAE-Problem-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of an DAE Problem",
     "category": "section",
     "text": "To define a DAE Problem, you simply need to give the function f and the initial condition u which define an ODE:0 = f(tudu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,resid)). Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1658,7 +1658,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Problem-Type-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1666,7 +1666,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Constructors-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "DAEProblem(f,u0,du0,tspan) : Defines the ODE with the specified functions."
@@ -1674,7 +1674,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Fields-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
@@ -1682,7 +1682,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Special-Solver-Options-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1690,7 +1690,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Special-Solution-Fields-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "du: The saved derivative values."
@@ -1698,7 +1698,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Example-Problems-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
@@ -1706,23 +1706,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#",
-    "page": "Refined DAE Types",
-    "title": "Refined DAE Types",
+    "page": "Refined DAE Problems",
+    "title": "Refined DAE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/refined_dae_types.html#Refined-DAE-Types-1",
-    "page": "Refined DAE Types",
-    "title": "Refined DAE Types",
+    "location": "types/refined_dae_types.html#Refined-DAE-Problems-1",
+    "page": "Refined DAE Problems",
+    "title": "Refined DAE Problems",
     "category": "section",
     "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
     "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Mathematical Specification of a Split DAE Problem",
     "category": "section",
     "text": "To define a SplitDAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
@@ -1730,7 +1730,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Constructors-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1738,7 +1738,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Fields-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1746,7 +1746,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Special-Solver-Options-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1754,7 +1754,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Special-Solution-Fields-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "None. It returns a standard DAE solution."
@@ -1762,7 +1762,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
     "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) \nf should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1770,7 +1770,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Constructors-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1778,7 +1778,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Fields-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1786,7 +1786,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Special-Solver-Options-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Special Solver Options",
     "category": "section",
     "text": ""
@@ -1794,7 +1794,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Special-Solution-Fields-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": ""
@@ -1802,23 +1802,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#",
-    "page": "Jump Types",
-    "title": "Jump Types",
+    "page": "Jump Problems",
+    "title": "Jump Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/jump_types.html#Jump-Types-1",
-    "page": "Jump Types",
-    "title": "Jump Types",
+    "location": "types/jump_types.html#Jump-Problems-1",
+    "page": "Jump Problems",
+    "title": "Jump Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/jump_types.html#Mathematical-Specification-of-an-problem-with-jumps-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Mathematical Specification of an problem with jumps",
     "category": "section",
     "text": "Jumps are defined as a Poisson process which occur according to some rate. When multiple jumps are together, the process is a compound Poisson process. On their own, a jump equation on is continuous-time Markov Chain where the time to the next jump is exponentially distributed as calculated by the rate. This type of process, known in biology as \"Gillespie discrete stochastic simulations\" and modeled by the Chemical Master Equation (CME), is the same thing as adding jumps to a DiscreteProblem. However, any differential equation can be extended by jumps as well. For example, we have an ODE with jumps, denoted byfracdudt = f(tu) +  h_i(tu)N_i(t)where N_i is a Poisson counter of rate lambda_i(tu). Extending a stochastic differential equation to have jumps is commonly known as a Jump Diffusion, and is denoted byfracdudt = f(tu) + g(ut)dW +  h_i(tu)N_i(t)"
@@ -1826,7 +1826,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Variable-and-Constant-Rate-Jumps-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Variable and Constant Rate Jumps",
     "category": "section",
     "text": "We denote a jump as variable rate if its rate function is dependent on values which may change between constant rate jumps. For example, if there are multiple jumps whose rates only change when one of them occur, than that set of jumps is a constant rate jump. If the jump's rate depends on the differential equation, time, or by some value which changes outside of some constant rate jump, then it is denoted as variable."
@@ -1834,7 +1834,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Constant-Rate-Jump-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Constant Rate Jump",
     "category": "section",
     "text": "The constructor for a ConstantRateJump is:ConstantRateJump(rate,affect!;save_positions=(true,true))rate(t,u) is a function which calculates the rate given the time and the state.\naffect!(integrator) is the effect on the equation, using the integrator interface."
@@ -1842,7 +1842,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Variable-Rate-Jump-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Variable Rate Jump",
     "category": "section",
     "text": "The constructor for a VariableRateJump is:VariableRateJump(rate,affect!;\n                   idxs = nothing,\n                   rootfind=true,\n                   save_positions=(true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0)Note that this is the same as defining a ContinuousCallback, except that instead of the condition function, you provide a rate(t,u) function for the rate at a given time and state."
@@ -1850,7 +1850,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Jump-Problem-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Jump Problem",
     "category": "section",
     "text": "To define a JumpProblem, you must first define the basic problem. This can be a DiscreteProblem if there is no differential equation, or an ODE/SDE/DDE/DAE if you would like to augment a differential equation with jumps. Denote this previously defined problem as prob. Then the constructor for the jump problem is:JumpProblem(prob,aggregator::Direct,jumps::JumpSet;\n            save_positions = typeof(prob) <: AbstractDiscreteProblem ? (false,true) : (true,true))The aggregator is the method for aggregating the constant jumps. These are defined below. jumps is a JumpSet which is just a gathering of jumps. Instead of passing a JumpSet, one may just pass a list of jumps themselves. For example:JumpProblem(prob,aggregator,jump1,jump2)and the internals will automatically build the JumpSet. save_positions is the save_positions argument built by the aggregation of the constant rate jumps."
@@ -1858,7 +1858,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Constant-Rate-Jump-Aggregator-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Constant Rate Jump Aggregator",
     "category": "section",
     "text": "The constant rate jump aggregator is the method by which the constant rate jumps are lumped together. This is required in all algorithms for both speed and accuracy. The current methods are:Direct: the Gillespie SSA Direct method.To pass the aggregator, pass the instantiation of the type. For example:JumpProblem(prob,Direct(),jump1,jump2)will build a problem where the constant rate jumps are solved using Gillespie's Direct SSA method."
@@ -1866,23 +1866,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#",
-    "page": "FEM Types",
-    "title": "FEM Types",
+    "page": "FEM Problems",
+    "title": "FEM Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/fem_types.html#FEM-Types-1",
-    "page": "FEM Types",
-    "title": "FEM Types",
+    "location": "types/fem_types.html#FEM-Problems-1",
+    "page": "FEM Problems",
+    "title": "FEM Problems",
     "category": "section",
     "text": "Below are the definitions of the types which specify problems. Some general notes are:(t,x) vs (t,x,y): Mathematically one normally specifies equations in 2D as f(txy). However, in this code we use x as a vector. Thus you can think of x=x[:,1] and y=x[:,2]. Thus input equations are of the form f(x,t) no matter the dimension. If time is not included in the problem (for example, a Poisson equation problem), then we use f(x). An example is the equation u(xy)= sin(2x)cos(2y)(8^2) would be specified as sol(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π).\nLinearity: If the equation has a linear term, they are specified with functions f(t,x). If it is nonlinear, it is specified with functions f(t,x,u). The boundary conditions are always (t,x)\nStochastic: By default the equation is deterministic. For each equation, one can specify a σ term which adds a stochastic (txu)dW_t term to the equation (or with (tx)dW_t if linear, must match f). dW_t corresponds to the type of noise which is chosen. By default this is space-time Gaussian white noise."
 },
 
 {
     "location": "types/fem_types.html#Poisson-Equation-Problem-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Poisson Equation Problem",
     "category": "section",
     "text": "Wraps the data that defines a 2D linear Poisson equation problem:-u = fwith bounday conditions gD on the Dirichlet boundary and gN on the Neumann boundary. Linearity is determined by whether the forcing function f is a function of one variable (x) or two (u,x) (with x=[:,1] and y=[:,2]).If the keyword σ is given, then this wraps the data that defines a 2D stochastic heat equation-u = f + dW"
@@ -1890,7 +1890,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Constructors-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PoissonProblem(f,analytic,Du,mesh): Defines the Dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function fPoissonProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
@@ -1898,7 +1898,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Keyword-Arguments-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Keyword Arguments",
     "category": "section",
     "text": "gD = Dirichlet boundary function\ngN = Neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = The number of variables in the Poisson system. Automatically calculated in many cases.\nD = Vector of diffusion coefficients. Defaults is D=ones(1,numvars)."
@@ -1906,7 +1906,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Heat-Equation-Problem-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Heat Equation Problem",
     "category": "section",
     "text": "Wraps the data that defines a 2D heat equation problem:u_t = u + fwith bounday conditions gD on the Dirichlet boundary and gN on the Neumann boundary. Linearity is determined by whether the forcing function f is a function of two variables (t,x) or three (t,x,u) (with x=[:,1] and y=[:,2]).If the keyword σ is given, then this wraps the data that defines a 2D stochastic heat equation.u_t = u + f + dW_t"
@@ -1914,7 +1914,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Constructors-2",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Constructors",
     "category": "section",
     "text": "HeatProblem(analytic,Du,f,mesh): Defines the Dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
@@ -1922,7 +1922,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Keyword-Arguments-2",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Keyword Arguments",
     "category": "section",
     "text": "gD = Dirichlet boundary function\ngN = Neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = Number of variables in the system. Automatically calculated from u0 in most cases.\nD = Array which defines the diffusion coefficients. Default is D=ones(1,numvars)."
@@ -1930,7 +1930,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Example-Problems-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, you need to do:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary"
@@ -1938,7 +1938,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=5u-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1946,7 +1946,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_noisywave",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_noisywave",
     "category": "Constant",
     "text": "Problem with deterministic solution: u(xy)= sin(2x)cos(2y)(8^2) and additive noise (xy)=5\n\n\n\n"
@@ -1954,7 +1954,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=1-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1962,7 +1962,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_wave",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_wave",
     "category": "Constant",
     "text": "Problem defined by the solution: u(xy)= sin(2x)cos(2y)(8^2)\n\n\n\n"
@@ -1970,7 +1970,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeath",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1978,7 +1978,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Poisson-Equation-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Poisson Equation",
     "category": "section",
     "text": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_poisson_noisywave\nDiffEqProblemLibrary.prob_poisson_birthdeathsystem\nDiffEqProblemLibrary.prob_poisson_wave\nDiffEqProblemLibrary.prob_poisson_birthdeath"
@@ -1986,7 +1986,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
@@ -1994,7 +1994,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
@@ -2002,7 +2002,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_diffuse",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
     "category": "Constant",
     "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
@@ -2010,7 +2010,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
     "category": "Constant",
     "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
@@ -2018,7 +2018,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_moving",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_moving",
     "category": "Constant",
     "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
@@ -2026,7 +2026,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_pure",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_pure",
     "category": "Constant",
     "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
@@ -2034,7 +2034,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
@@ -2042,7 +2042,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Heat-Equation-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Heat Equation",
     "category": "section",
     "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_birthdeath"
