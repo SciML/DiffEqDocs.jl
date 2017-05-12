@@ -79,7 +79,6 @@ The following options are all related to output control. See the "Examples" sect
 * `save_start`: Denotes whether the initial condition should be included in
   the solution type as the first timepoint. Defaults to true.
 
-
 ## Stepsize Control
 
 These arguments control the timestepping routines.

@@ -21,19 +21,22 @@ algorithm. For non-commutative noise, `EM` and `EulerHeun` will be the most accu
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
-- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.
+- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
-- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.
+- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.†
 - `SRA` - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler.
   Default tableau is for SRA1.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler.
   Default tableau is for SRIW1.
-- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.
-- `SRA1` - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.
+- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†
+- `SRA1` - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†
 
 For `SRA` and `SRI`, the following option is allowed:
 
 * `tableau`: The tableau for an `:SRA` or `:SRI` algorithm. Defaults to SRIW1 or SRA1.
+
+†: Does not step to the interval endpoint. This can cause issues with discontinuity
+detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
 #### StochasticCompositeAlgorithm
 

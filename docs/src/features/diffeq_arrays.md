@@ -1,10 +1,10 @@
 # DiffEq-Specific Array Types
 
 In many cases, a standard array may not be enough to fully hold the data for a
-model. Many of the solvers in DifferentialEquations.jl allow you to solve problems
-on `AbstractArray` types which allow you to extend the meaning of an array. This
-page describes some of the `AbstractArray` types which can be helpful for modeling
-differential equations problems.
+model. Many of the solvers in DifferentialEquations.jl (only the native Julia
+methods) allow you to solve problems on `AbstractArray` types which allow you
+to extend the meaning of an array. This page describes some of the `AbstractArray`
+types which can be helpful for modeling differential equations problems.
 
 ## ArrayPartitions
 
@@ -88,7 +88,8 @@ The `DEDataArray{T}` type allows one to add other "non-continuous" variables
 to an array, which can be useful in many modeling situations involving lots of
 events. To define an `DEDataArray`, make a type which subtypes `DEDataArray{T}`
 with a field `x` for the "array of continuous variables" for which you would
-like the differential equation to treat directly. For example:
+like the differential equation to treat directly. The other fields are treated
+as "discrete variables". For example:
 
 ```julia
 type MyDataArray{T} <: DEDataArray{T}
@@ -102,9 +103,20 @@ In this example, our resultant array is a `SimType`, and its data which is prese
 to the differential equation solver will be the array `x`. Any array which the
 differential equation solver can use is allowed to be made as the field `x`, including
 other `DEDataArray`s. Other than that, you can add whatever fields you please, and
-let them be whatever type you please. These extra fields are carried along in the
-differential equation solver that the user can use in their `f` equation and
-modify via callbacks.
+let them be whatever type you please.
+
+These extra fields are carried along in the differential equation solver that
+the user can use in their `f` equation and modify via callbacks. For example,
+inside of a an update function, it is safe to do:
+
+```julia
+function f(t,u,du)
+  u.a = t
+end
+```
+
+to update the discrete variables (unless the algorithm notes that it does not
+step to the endpoint, in which case a callback must be used to update appropriately.)
 
 ### Example: A Control Problem
 

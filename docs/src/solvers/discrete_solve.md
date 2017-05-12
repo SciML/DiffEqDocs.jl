@@ -17,7 +17,7 @@ for a tiny bit of initialization).
 #### Discrete Algorithm
 
 OrdinaryDiffEq.jl also contains the `Discrete` algorithm which lets you solve
-a problem where `f` is a map: ``u_{n+1} = f(t_n,u_n)``. It has a piecewise constant
+a problem where `f` is a map: ``u_{n+1} = f(t_{n+1},u_n)``. It has a piecewise constant
 interpolation and allows for all of the callback/event handling capabilities
 (of course, with `rootfind=false`. If a `ContinuousCallback` is given, it's always
 assumed `rootfind=false`).
@@ -32,14 +32,14 @@ If `apply_map=false`, `f` is completely ignored. If `apply_map=true`, then
 every step is the update
 
 ```math
-u_{n+1} = f(t_n,u_n).
+u_{n+1} = f(t_{n+1},u_n).
 ```
 
 If in addition `scale_by_time=true`,
 then every step is the update
 
 ```math
-u_{n+1} = u_n + dtf(t_n,u_n).
+u_{n+1} = u_n + dtf(t_{n+1},u_n).
 ```
 
 Notice that this is the same as updates from the Euler method, except in this
