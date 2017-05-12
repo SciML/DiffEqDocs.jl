@@ -2077,7 +2077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Solvers",
     "title": "Discrete Algorithm",
     "category": "section",
-    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_nu_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=false,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_nu_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_nu_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant.As a shorthand,FunctionMap(scale_by_time=false)is a Discrete with apply_map=true, and thus corresponds to the function map equationu_n+1 = f(t_nu_n)"
+    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_n+1u_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=false,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant.As a shorthand,FunctionMap(scale_by_time=false)is a Discrete with apply_map=true, and thus corresponds to the function map equationu_n+1 = f(t_nu_n)"
 },
 
 {
@@ -2173,7 +2173,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "ODE.jl",
     "category": "section",
-    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method\node4s - A 4th order Rosenbrock method due to Shampine"
+    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2381,7 +2381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.\nSRA1 - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.†\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†\nSRA1 - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2653,7 +2653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEq-Specific Array Types",
     "title": "DiffEq-Specific Array Types",
     "category": "section",
-    "text": "In many cases, a standard array may not be enough to fully hold the data for a model. Many of the solvers in DifferentialEquations.jl allow you to solve problems on AbstractArray types which allow you to extend the meaning of an array. This page describes some of the AbstractArray types which can be helpful for modeling differential equations problems."
+    "text": "In many cases, a standard array may not be enough to fully hold the data for a model. Many of the solvers in DifferentialEquations.jl (only the native Julia methods) allow you to solve problems on AbstractArray types which allow you to extend the meaning of an array. This page describes some of the AbstractArray types which can be helpful for modeling differential equations problems."
 },
 
 {
@@ -2693,7 +2693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEq-Specific Array Types",
     "title": "DEDataArrays",
     "category": "section",
-    "text": "The DEDataArray{T} type allows one to add other \"non-continuous\" variables to an array, which can be useful in many modeling situations involving lots of events. To define an DEDataArray, make a type which subtypes DEDataArray{T} with a field x for the \"array of continuous variables\" for which you would like the differential equation to treat directly. For example:type MyDataArray{T} <: DEDataArray{T}\n    x::Array{T,1}\n    a::T\n    b::Symbol\nendIn this example, our resultant array is a SimType, and its data which is presented to the differential equation solver will be the array x. Any array which the differential equation solver can use is allowed to be made as the field x, including other DEDataArrays. Other than that, you can add whatever fields you please, and let them be whatever type you please. These extra fields are carried along in the differential equation solver that the user can use in their f equation and modify via callbacks."
+    "text": "The DEDataArray{T} type allows one to add other \"non-continuous\" variables to an array, which can be useful in many modeling situations involving lots of events. To define an DEDataArray, make a type which subtypes DEDataArray{T} with a field x for the \"array of continuous variables\" for which you would like the differential equation to treat directly. The other fields are treated as \"discrete variables\". For example:type MyDataArray{T} <: DEDataArray{T}\n    x::Array{T,1}\n    a::T\n    b::Symbol\nendIn this example, our resultant array is a SimType, and its data which is presented to the differential equation solver will be the array x. Any array which the differential equation solver can use is allowed to be made as the field x, including other DEDataArrays. Other than that, you can add whatever fields you please, and let them be whatever type you please.These extra fields are carried along in the differential equation solver that the user can use in their f equation and modify via callbacks. For example, inside of a an update function, it is safe to do:function f(t,u,du)\n  u.a = t\nendto update the discrete variables (unless the algorithm notes that it does not step to the endpoint, in which case a callback must be used to update appropriately.)"
 },
 
 {
