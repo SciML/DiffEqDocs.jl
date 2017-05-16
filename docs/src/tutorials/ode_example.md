@@ -140,6 +140,10 @@ the methods from many different packages into a single API. For a comprehensive
 list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](../solvers/ode_solve.html). Every problem
 type has an associated page detailing all of the solvers associated with the problem.
+In many cases, you may not need the full functionality of all of the packages
+together and may want to reduce the size of your dependency. To find out
+require use only the parts of DifferentialEquations.jl you're specifically using,
+see the [low dependency usage manual page](../featuers/low_dep.html).
 
 Note that the solver controls can be combined with the algorithm choice. Thus
 we can for example solve the problem using `Vern7()` with a lower tolerance
