@@ -9,11 +9,18 @@ To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The construct
 ```julia
 MonteCarloProblem(prob::DEProblem;
                   output_func = (sol,i) -> sol,
-                  prob_func= (prob,i)->prob)
+                  prob_func= (prob,i)->prob),
+                  reduction = (u,data,I)->(append!(u,data),false),
+                  u_init = [])
 ```
 
 * `prob_func`: The function by which the problem is to be modified.
-* `output_func`: The reduction function.
+* `output_func`: The function determines what is saved from the solution to the
+  output array. Defaults to saving the solution itself.
+* `reduction`: This function determines how to reduce the data in each batch.
+  Defaults to appending the data from the batches. The second part of the output
+  determines whether the simulation has converged. If `true`, the simulation
+  will exit early. By default, this is always `false`.
 
 One can specify a function `prob_func` which changes the problem. For example:
 
@@ -75,6 +82,7 @@ pass them to the differential equation solver. The special keyword arguments to 
 
 * `num_monte`: The number of simulations to run. Default is 10,000.
 * `parallel_type` : The type of parallelism to employ. Default is `:pmap`.
+* `batch_size` : The size of the batches on which the reductions are applies. Defaults to `num_monte`.
 
 The types of parallelism included are:
 
@@ -116,7 +124,7 @@ components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the Monte Carlo solutions
 of the odd components.
 
-### Example
+### Simple Example
 
 Let's test the sensitivity of the linear ODE to its initial condition.
 
@@ -140,6 +148,71 @@ Here we solve the same ODE 100 times on 4 different cores, jiggling the initial
 condition by `rand()`. The resulting plot is as follows:
 
 ![monte_carlo_plot](../assets/monte_carlo_plot.png)
+
+### Reduction Examples
+
+In this problem we will solve the equation just as many times as needed to get
+the standard error of the mean for the final time point below our tolerance
+`0.5`. Since we only care about the endpoint, we can tell the `output_func`
+to discard the rest of the data.
+
+```julia
+output_func = function (sol,i)
+  last(sol)
+end
+```
+
+Our `prob_func` wull simply randomize the initial condition:
+
+```julia
+# using DiffEqProblemLibrary
+prob = prob_ode_linear
+prob_func = function (prob,i)
+  prob.u0 = rand()*prob.u0
+  prob
+end
+```
+
+Our reduction function will append the data from the current batch to the previous
+batch, and declare convergence if the standard error of the mean is calculated
+as sufficiently small:
+
+```julia
+reduction = function (u,batch,I)
+  u = append!(u,batch)
+  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false
+end
+```
+
+Then we can define and solve the problem:
+
+```julia
+prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
+sim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)
+```
+
+Since `batch_size=20`, this means that every 20 simulations, it will take this batch,
+append the results to the previous batch, calculate `(var(u)/sqrt(last(I)))/mean(u)`,
+and if that's small enough, exit the simulation. In this case, the simulation
+exits only after 20 simulations (i.e. after calculating the first batch). This
+can save a lot of time!
+
+In addition to saving time by checking convergence, we can save memory by reducing
+between batches. For example, say we only care about the mean at the end once
+again. Instead of saving the solution at the end for each trajectory, we can instead
+save the running summation of the endpoints:
+
+```julia
+reduction = function (u,batch,I)
+  u+sum(batch),false
+end
+prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
+sim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)
+```
+
+this will sum up the endpoints after every 20 solutions, and save the running sum.
+The final result will have `sim2.u` as simply a number, and thus `sim2.u/100` would
+be the mean.
 
 ## Analyzing a Monte Carlo Experiment
 
