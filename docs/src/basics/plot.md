@@ -133,7 +133,7 @@ lorenz = @ode_def Lorenz begin
   dx = σ*(y-x)
   dy = ρ*x-y-x*z
   dz = x*y-β*z
-end σ = 10. β = 8./3. ρ => 28.
+end σ = 10.0 β = 8.0/3.0 ρ => 28.0
 
 u0 = [1., 5., 10.]
 tspan = (0., 100.)
