@@ -53,6 +53,7 @@ using DifferentialEquations
 The command `Pkg.add("DifferentialEquations")` will add solvers and dependencies for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of `DifferentialEquations.jl` or simply want a more lightweight version, see the [Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep.html) page.
 
 To understand the package in more detail, check out the following tutorials in this manual.
+**It is highly recommended that new users start with the [ODE tutorial](/tutorials/ode_example.html)**.
 Example IJulia notebooks [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
