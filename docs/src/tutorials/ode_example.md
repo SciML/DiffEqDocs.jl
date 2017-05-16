@@ -362,8 +362,8 @@ for differential equation analysis which also achieves high performance.
 
 DifferentialEquations.jl can handle many different dependent variable types
 (generally, anything with a linear index should work!). So instead of solving a
-vector equation, let's let u be a matrix! To do this, we simply need to have u₀
-be a matrix, and define f such that it takes in a matrix and outputs a matrix.
+vector equation, let's let `u` be a matrix! To do this, we simply need to have `u0`
+be a matrix, and define `f` such that it takes in a matrix and outputs a matrix.
 We can define a matrix of linear ODEs as follows:
 
 ```julia
