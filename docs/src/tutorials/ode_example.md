@@ -123,8 +123,9 @@ methods are as follows:
 
 In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 
+- `BS3()` for fast low accuracy non-stiff
 - `Tsit5()` for non-stiff
-- `Vern7()` for
+- `Vern7()` for high accuracy non-stiff
 - `Rosenbrock23()` for stiff equations with Julia-defined types, events, etc.
 - `CVODE_BDF()` or `radau()` for stiff equations of `Vector{Float64}`
 
