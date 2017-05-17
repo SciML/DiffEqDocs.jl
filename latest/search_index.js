@@ -249,17 +249,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/sde_example.html#Basics-1",
+    "location": "tutorials/sde_example.html#Example-1:-Scalar-SDEs-1",
     "page": "Stochastic Differential Equations",
-    "title": "Basics",
+    "title": "Example 1: Scalar SDEs",
     "category": "section",
     "text": "In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation isu(tW)=uexp((-frac^22)t+W)To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4)\ntspan = (0.0,1.0)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))The solve interface is then the same as with ODEs. Here we will use the classic Euler-Maruyama algorithm EM and plot the solution:sol = solve(prob,EM(),dt=dt)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)(Image: Basic Solution)"
 },
 
 {
-    "location": "tutorials/sde_example.html#Higher-Order-Methods-1",
+    "location": "tutorials/sde_example.html#Using-Higher-Order-Methods-1",
     "page": "Stochastic Differential Equations",
-    "title": "Higher Order Methods",
+    "title": "Using Higher Order Methods",
     "category": "section",
     "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:f(::Type{Val{:analytic}},t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM(),dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1(),dt=dt,adaptive=false)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)By default, the higher order methods have adaptivity. Thus one can usesol =solve(prob,SRIW1())\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)Here we allowed the solver to automatically determine a starting dt. This estimate at the beginning is conservative (small) to ensure accuracy. We can instead start the method with a larger dt by passing in a value for the starting dt:sol =solve(prob,SRIW1(),dt=dt)\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)"
 },
@@ -273,41 +273,33 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/sde_example.html#Systems-of-Equations-1",
+    "location": "tutorials/sde_example.html#Example-2:-Systems-of-SDEs-with-Diagonal-Noise-1",
     "page": "Stochastic Differential Equations",
-    "title": "Systems of Equations",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "tutorials/sde_example.html#Diagonal-Noise-1",
-    "page": "Stochastic Differential Equations",
-    "title": "Diagonal Noise",
+    "title": "Example 2: Systems of SDEs with Diagonal Noise",
     "category": "section",
     "text": "Generalizing to systems of equations is done in the same way as ODEs. In this case, we can define both f and g as in-place functions. Without any other input, the problem is assumed to have diagonal noise, meaning that each component of the system has a unique Wiener process. Thus f(t,u,du) gives a vector of du which is the deterministic change, and g(t,u,du2) gives a vector du2 for which du2.*W is the stochastic portion of the equation.For example, the Lorenz equation with additive noise has the same deterministic portion as the Lorenz equations, but adds an additive noise, which is simply 3*N(0,dt) where N is the normal distribution dt is the time step, to each step of the equation. This is done via:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nend\n\nfunction σ_lorenz(t,u,du)\n du[1] = 3.0\n du[2] = 3.0\n du[3] = 3.0\nend\n\nprob_sde_lorenz = SDEProblem(lorenz,σ_lorenz,[1.0,0.0,0.0],(0.0,10.0))\nsol = solve(prob_sde_lorenz)\nplot(sol,vars=(1,2,3))(Image: stochastic_3d_lorenz)Note that it's okay for the noise function to mix terms. For examplefunction σ_lorenz(t,u,du)\n du[1] = sin(u[3])*3.0\n du[2] = u[2]*u[1]*3.0\n du[3] = 3.0\nendis a valid noise function, which will once again give diagonal noise by du2.*W. Note also that in this format, it is fine to use ParameterizedFunctions. For example, the Lorenz equation could have been defined as:f = @ode_def_nohes LorenzSDE begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10. ρ=>28. β=>2.66\n\ng = @ode_def_nohes LorenzSDENoise begin\n  dx = α\n  dy = α\n  dz = α\nend α=>3.0"
 },
 
 {
-    "location": "tutorials/sde_example.html#Non-Diagonal-Noise-1",
+    "location": "tutorials/sde_example.html#Example-3:-Systems-of-SDEs-with-Non-Diagonal-Noise-1",
     "page": "Stochastic Differential Equations",
-    "title": "Non-Diagonal Noise",
+    "title": "Example 3: Systems of SDEs with Non-Diagonal Noise",
     "category": "section",
     "text": "In the previous example we had diagonal noise, that is a vector of random numbers dW whose size matches the output of g, and the noise is applied element-wise. However, a more general type of noise allows for the terms to linearly mixed.Let's define a problem with four Wiener processes and two dependent random variables. In this case, we will want the output of g to be a 2x4 matrix, such that the solution is g(t,u)*dW, the matrix multiplication. For example, we can do the following:f = (t,u,du) -> du.=1.01u\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,2] = 0.6u[1]\n  du[1,3] = 0.9u[1]\n  du[1,4] = 0.12u[2]\n  du[2,1] = 1.2u[1]\n  du[2,2] = 0.2u[2]\n  du[2,3] = 0.3u[2]\n  du[2,4] = 1.8u[2]\nend\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))In our g we define the functions for computing the values of the matrix. The matrix itself is determined by the keyword argument noise_rate_prototype in the SDEProblem constructor. This is a prototype for the type that du will be in g. This can be any AbstractMatrix type. Thus for example, we can define the problem as\n# Define a sparse matrix by making a dense matrix and setting some values as not zero\nA = zeros(2,4)\nA[1,1] = 1\nA[1,4] = 1\nA[2,4] = 1\nsparse(A)\n\n# Make `g` write the sparse matrix values\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,4] = 0.12u[2]\n  du[2,4] = 1.8u[2]\nend\n\n# Make `g` use the sparse matrix\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)and now g(t,u) writes into a sparse matrix, and g(t,u)*dW is sparse matrix multiplication."
 },
 
 {
-    "location": "tutorials/sde_example.html#Colored-Noise-1",
+    "location": "tutorials/sde_example.html#Example-4:-Colored-Noise-1",
     "page": "Stochastic Differential Equations",
-    "title": "Colored Noise",
+    "title": "Example 4: Colored Noise",
     "category": "section",
     "text": "Colored noise can be defined using the Noise Process interface. In that portion of the docs, it is shown how to define your own noise process my_noise, which can be passed to the SDEProblemSDEProblem(f,g,u0,tspan,noise=my_noise)"
 },
 
 {
-    "location": "tutorials/sde_example.html#Example:-Spatially-Colored-Noise-1",
+    "location": "tutorials/sde_example.html#Example:-Spatially-Colored-Noise-in-the-Heston-Model-1",
     "page": "Stochastic Differential Equations",
-    "title": "Example: Spatially-Colored Noise",
+    "title": "Example: Spatially-Colored Noise in the Heston Model",
     "category": "section",
     "text": "Let's define the Heston equation from financial mathematics:dS = Sdt + sqrtvSdW_1 \ndv = (-v)dt + sqrtvdW_2 \ndW_1 dW_2 =  dtIn this problem, we have a diagonal noise problem given by:f = function (t,u,du)\n  du[1] = μ*u[1]\n  du[2] = κ*(Θ-u[2])\nend\ng = function (t,u,du)\n  du[1] = √u[2]*u[1]\n  du[2] = Θ*√u[2]\nendHowever, our noise has a correlation matrix for some constant ρ. Choosing ρ=0.2:Γ = [1 ρ;ρ 1]To solve this, we can define a CorrelatedWienerProcess which starts at zero (W(0)=0) via:heston_noise = CorrelatedWienerProcess!(Γ,tspan[1],zeros(2),zeros(2))This is then used to build the SDE:SDEProblem(f,g,u0,tspan,noise=heston_noise)Of course, to fully define this problem we need to define our constants. Constructors for making common models like this easier to define can be found in the modeling toolkits. For example, the HestonProblem is pre-defined as part of the financial modeling tools."
 },
@@ -329,17 +321,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/rode_example.html#Basics-1",
+    "location": "tutorials/rode_example.html#Example-1:-Scalar-RODEs-1",
     "page": "Random Ordinary Differential Equations",
-    "title": "Basics",
+    "title": "Example 1: Scalar RODEs",
     "category": "section",
     "text": "In this example we will solve the equationdu = f(tuy)dtwhere f(tuW)=2usin(W) and W(t) is a Wiener process (Gaussian process).using DifferentialEquations\nfunction f(t,u,W)\n  2u*sin(W)\nend\nu0 = 1.00\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: intro_rode)The random process defaults to a Gaussian/Wiener process, so there is nothing else required here! See the documentation on NoiseProcesses for details on how to define other noise proceses."
 },
 
 {
-    "location": "tutorials/rode_example.html#System-of-RODEs-1",
+    "location": "tutorials/rode_example.html#Example-2:-Systems-of-RODEs-1",
     "page": "Random Ordinary Differential Equations",
-    "title": "System of RODEs",
+    "title": "Example 2: Systems of RODEs",
     "category": "section",
     "text": "As with the other problem types, there is an in-place version which is more efficient for systems. The signature is f(t,u,W,du). For example,using DifferentialEquations\nfunction f(t,u,W,du)\n  du[1] = 2u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: rode_system)By default, the size of the noise process matches the size of u0. However, you can use the rand_prototype keyword to explicitly set the size of the random process:f = function (t,u,W,du)\n  du[1] = -2W[3]*u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan,rand_prototype=zeros(3))\nsol = solve(prob,RandomEM(),dt=1/100)(Image: noise_choice)"
 },
