@@ -57,7 +57,7 @@ Lastly, one can dynamically control the "endpoint". The initialization simply ma
 `prob.tspan[2]` the last value of `tstop`, and many of the iterators are made to stop
 at the final `tstop` value. However, `step!` will always take a step, and one
 can dynamically add new values of `tstops` by modifiying the variable in the
-options field: `push!(integrator.opts.tstops,new_t)`.
+options field: `add_tstop!(integrator,new_t)`.
 
 ## Handing Integrators
 
@@ -148,7 +148,7 @@ The following functions make up the interface:
   to be true if a callback is used. This will result in the re-calculation of
   the derivative at `t+dt`, which is not necessary if the algorithm is FSAL
   and `u` does not experience a discontinuous change at the end of the interval.
-  Thus if `u` is unmodified in a callback, a single call to the derivative calculation 
+  Thus if `u` is unmodified in a callback, a single call to the derivative calculation
   can be eliminated by `u_modified!(integrator,false)`.
 * `get_proposed_dt(integrator,factor)`:  Gets the proposed `dt` for the
   next timestep.
