@@ -4,7 +4,7 @@ This tutorial will introduce you to the functionality for solving SDEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html).
 
-### Basics
+## Example 1: Scalar SDEs
 
 In this example we will solve the equation
 
@@ -45,7 +45,7 @@ plot(sol)
 
 ![Basic Solution](../assets/basic_sde.png)
 
-### Higher Order Methods
+### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
 stochastic differential equations are included. For reference, let's also give
@@ -137,9 +137,7 @@ and `t=0.7` via
 timepoint_meancor(sim,0.2,0.7) # Gives both means and then the correlation coefficient
 ```
 
-## Systems of Equations
-
-### Diagonal Noise
+## Example 2: Systems of SDEs with Diagonal Noise
 
 Generalizing to systems of equations is done in the same way as ODEs. In this case,
 we can define both `f` and `g` as in-place functions. Without any other input,
@@ -201,7 +199,7 @@ g = @ode_def_nohes LorenzSDENoise begin
 end α=>3.0
 ```
 
-### Non-Diagonal Noise
+## Example 3: Systems of SDEs with Non-Diagonal Noise
 
 In the previous example we had diagonal noise, that is a vector of random numbers
 `dW` whose size matches the output of `g`, and the noise is applied element-wise.
@@ -254,7 +252,7 @@ prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)
 and now `g(t,u)` writes into a sparse matrix, and `g(t,u)*dW` is sparse matrix
 multiplication.
 
-## Colored Noise
+## Example 4: Colored Noise
 
 Colored noise can be defined [using the Noise Process interface](../features/noise_process.html).
 In that portion of the docs, it is shown how to define your own noise process
@@ -264,7 +262,7 @@ In that portion of the docs, it is shown how to define your own noise process
 SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
-### Example: Spatially-Colored Noise
+### Example: Spatially-Colored Noise in the Heston Model
 
 Let's define the Heston equation from financial mathematics:
 

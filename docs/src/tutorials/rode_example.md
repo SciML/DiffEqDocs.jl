@@ -3,7 +3,7 @@
 This tutorial will introduce you to the functionality for solving RODEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
-### Basics
+## Example 1: Scalar RODEs
 
 In this example we will solve the equation
 
@@ -31,7 +31,7 @@ else required here! See the documentation on
 [`NoiseProcess`es](../features/noise_process.html) for details on how to define
 other noise proceses.
 
-### System of RODEs
+## Example 2: Systems of RODEs
 
 As with the other problem types, there is an in-place version which is more
 efficient for systems. The signature is `f(t,u,W,du)`. For example,
