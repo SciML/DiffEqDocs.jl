@@ -242,9 +242,11 @@ plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line")
 In this example we will solve the Lorenz equations:
 
 ```math
-  \frac{dx}{dt} = σ(y-x) \\
-  \frac{dy}{dt} = x(ρ-z) - y \\
-  \frac{dz}{dt} = xy - βz \\
+\begin{align}
+\frac{dx}{dt} &= σ(y-x) \\
+\frac{dy}{dt} &= x(ρ-z) - y \\
+\frac{dz}{dt} &= xy - βz \\
+\end{align}
 ```
 
 Defining your ODE function to be in-place updating can have performance benefits.
