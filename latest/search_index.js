@@ -2009,6 +2009,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/discrete_solve.html#Full-List-of-Methods-1",
+    "page": "Discrete Solvers",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "solvers/discrete_solve.html#Discrete-Algorithm-1",
     "page": "Discrete Solvers",
     "title": "Discrete Algorithm",
@@ -2313,9 +2321,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/sde_solve.html#Implemented-Solvers-1",
+    "location": "solvers/sde_solve.html#Full-List-of-Methods-1",
     "page": "SDE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Full List of Methods",
     "category": "section",
     "text": ""
 },
@@ -2358,6 +2366,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Recommended Methods",
     "category": "section",
     "text": "Currently, the only implemented method is the RandomEM method in StochasticDiffEq.jl. It is strong order alpha for a alpha-Holder continuous noise process."
+},
+
+{
+    "location": "solvers/rode_solve.html#Full-List-of-Methods-1",
+    "page": "RODE Solvers",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -2417,9 +2433,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/dae_solve.html#Implemented-Solvers-1",
+    "location": "solvers/dae_solve.html#Full-List-of-Methods-1",
     "page": "DAE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Full List of Methods",
     "category": "section",
     "text": ""
 },
@@ -2473,9 +2489,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/fempoisson_solve.html#List-of-Methods-1",
+    "location": "solvers/fempoisson_solve.html#Full-List-of-Methods-1",
     "page": "FEM Poisson Solvers",
-    "title": "List of Methods",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/fempoisson_solve.html#FiniteElementDiffEq.jl-1",
+    "page": "FEM Poisson Solvers",
+    "title": "FiniteElementDiffEq.jl",
     "category": "section",
     "text": "Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqPoisson(),solver=:CG)"
 },
@@ -2505,9 +2529,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/femheat_solve.html#Avaliable-Methods-1",
+    "location": "solvers/femheat_solve.html#Full-List-of-Methods-1",
     "page": "FEM Heat Solvers",
-    "title": "Avaliable Methods",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/femheat_solve.html#FiniteElementDiffEq.jl-1",
+    "page": "FEM Heat Solvers",
+    "title": "FiniteElementDiffEq.jl",
     "category": "section",
     "text": "FEMDiffEqHeatEuler\nFEMDiffEqHeatImplicitEuler\nFEMDiffEqHeatCrankNicholson\nFEMDiffEqHeatSemiImplicitEuler\nFEMDiffEqHeatSemiImplicitCrankNicholsonAdditionally, for linear solves, one can choose the method by which the linear solve takes place via the method keyword argument.Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqHeatCrankNicholson(),solver=:CG)"
 },
