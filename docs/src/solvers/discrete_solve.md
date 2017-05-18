@@ -14,6 +14,8 @@ to solve function maps, along with everything else like plot recipes, while
 completely ignoring the ODE functionality related to continuous equations (except
 for a tiny bit of initialization).
 
+# Full List of Methods
+
 ## Discrete Algorithm
 
 OrdinaryDiffEq.jl also contains the `Discrete` algorithm which lets you solve

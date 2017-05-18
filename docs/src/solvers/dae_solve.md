@@ -11,9 +11,9 @@ is problem-dependent.
 If your problem requires special Julia types like arbitrary precision numbers,
 then `dassl` is the method of choice.
 
-## Implemented Solvers
+# Full List of Methods
 
-### Sundials.jl
+## Sundials.jl
 
 - `IDA` - This is the IDA method from the Sundials.jl package.
 
@@ -58,7 +58,7 @@ IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
 See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf)
 for details on the additional options.
 
-### DASKR.jl
+## DASKR.jl
 
 DASKR.jl is not automatically included by DifferentialEquations.jl. To use this
 algorithm, you will need to install and use the package:
@@ -70,6 +70,6 @@ using DASKR
 
 - `daskr` - This is a wrapper for the well-known DASKR algorithm.
 
-### DASSL.jl
+## DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.

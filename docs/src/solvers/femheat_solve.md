@@ -5,7 +5,9 @@
 For nonstiff problems it's recommended you use `FEMDiffEqHeatEuler`, while for
 stiff problems it's recommended that you use `FEMDiffEqHeatSemiImplicitCrankNicholson`.
 
-## Avaliable Methods
+# Full List of Methods
+
+## FiniteElementDiffEq.jl
 
 * `FEMDiffEqHeatEuler`
 * `FEMDiffEqHeatImplicitEuler`

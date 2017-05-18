@@ -55,11 +55,11 @@ library methods are as follows:
 - `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
 - `ode15i` --> `IDA()`
 
-## Full List of Methods
+# Full List of Methods
 
 Choose one of these methods with the `alg` keyword in `solve`.
 
-### OrdinaryDiffEq.jl
+## OrdinaryDiffEq.jl
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a "free"
@@ -110,7 +110,7 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
-#### Extra Options
+### Extra Options
 
 The following methods allow for specification of `linsolve`: the linear
 solver which is used:
@@ -154,7 +154,7 @@ sol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with 
 sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing
 ```
 
-#### Tableau Method
+### Tableau Method
 
 Additionally, there is the tableau method:
 
@@ -169,7 +169,7 @@ alg = ExplicitRK(tableau=constructDormandPrince())
 solve(prob,alg)
 ```
 
-#### CompositeAlgorithm
+### CompositeAlgorithm
 
 One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
 you to, with very minimal overhead, design a multimethod which switches between
@@ -188,7 +188,7 @@ The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
 
-### Sundials.jl
+## Sundials.jl
 
 The Sundials suite is built around multistep methods. These methods are more efficient
 than other methods when the cost of the function calculations is really high, but
@@ -252,7 +252,7 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
 See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
 for details on the additional options.
 
-### ODE.jl
+## ODE.jl
 
   - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
   - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
@@ -266,7 +266,7 @@ for details on the additional options.
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
-### ODEInterface.jl
+## ODEInterface.jl
 
 The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
 non-stiff algorithms are superseded by the more featured and higher performance
@@ -290,7 +290,7 @@ using ODEInterfaceDiffEq
   - `radau5` - Implicit Runge-Kutta method (Radau IIA) of order 5.
   - `rodas` - Rosenbrock 4(3) method.
 
-### LSODA.jl
+## LSODA.jl
 
 This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching
 to solve both stiff and non-stiff equations.

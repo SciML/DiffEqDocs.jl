@@ -15,7 +15,7 @@ algorithm. For non-commutative noise, `EM` and `EulerHeun` will be the most accu
 * `delta`: The `delta` adaptivity parameter for the natural error estimator. For
   more details, see [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
 
-## Implemented Solvers
+# Full List of Methods
 
 ### StochasticDiffEq.jl
 
