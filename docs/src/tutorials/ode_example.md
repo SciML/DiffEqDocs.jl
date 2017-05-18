@@ -11,8 +11,25 @@ In this example we will solve the equation
 \frac{du}{dt} = f(t,u)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(t,u)=αu``. We know via Calculus
+on the time interval ``t\in[0,1]`` where ``f(t,u)=αu``. We know by Calculus
 that the solution to this equation is ``u(t)=u₀\exp(αt)``.
+
+The general workflow is to define a problem, solve the problem, and then analyze
+the solution. The full code for solving this problem is:
+
+```julia
+using DifferentialEquations
+f(t,u) = 1.01*u
+u0=1/2
+tspan = (0.0,1.0)
+prob = ODEProblem(f,u0,tspan)
+sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
+using Plots
+plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
+     xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
+```
+
+where the pieces are described below.
 
 ### Step 1: Defining a Problem
 
@@ -21,8 +38,8 @@ the initial condition, and the timespan to solve over:
 
 ```julia
 using DifferentialEquations
-u0=1/2
 f(t,u) = 1.01*u
+u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
 ```
@@ -33,7 +50,8 @@ a Float64, and therefore this will solve with the dependent variables being
 Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent variabes
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
-unitful numbers, etc. Please see the [notebook tutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
+unitful numbers, etc. Please see the
+[notebook tutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
 for more examples.
 
 The problem types include many other features, including the ability to define
@@ -85,12 +103,12 @@ which will only save the final time point.
 #### Choosing a Solver Algorithm
 
 DifferentialEquations.jl has a method for choosing the default solver algorithm
-and the (adaptive) stepsizes `dt`, and so this will find an efficient method to solve your
-problem. Because these advanced algorithms may not be known to most users, DifferentialEquations.jl
-offers a method for choosing algorithms through hints. This default chooser utilizes
-the precisions of the number types and the keyword arguments (such as the tolerances)
-to select an algorithm. Additionally one can provide `alg_hints` to help choose
-good defaults using properties of the problem and necessary features for the solution.
+which will find an efficient method to solve your problem. To help users receive
+the right algorithm, DifferentialEquations.jl offers a method for choosing
+algorithms through hints. This default chooser utilizes the precisions of the
+number types and the keyword arguments (such as the tolerances) to select an
+algorithm. Additionally one can provide `alg_hints` to help choose good defaults
+using properties of the problem and necessary features for the solution.
 For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
@@ -101,38 +119,33 @@ sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)
 You can also explicitly choose the algorithm to use. DifferentialEquations.jl
 offers a much wider variety of solver algorithms than traditional differential
 equations libraries. Many of these algorithms are from recent research and have
-been shown to be more efficient than the "standard" algorithms (which are also
-available). For example, we can choose a 7th order Verner Efficient method:
+been shown to be more efficient than the "standard" algorithms.
+For example, we can choose a 5th order Tsitouras method:
 
 ```julia
-sol = solve(prob,Vern7())
+sol = solve(prob,Tsit5())
+```
+
+Note that the solver controls can be combined with the algorithm choice. Thus
+we can for example solve the problem using `Tsit5()` with a lower tolerance
+via:
+
+```julia
+sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
 ```
 
 In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 
-- `BS3()` for fast low accuracy non-stiff
-- `Tsit5()` for non-stiff
-- `Vern7()` for high accuracy non-stiff
+- `BS3()` for fast low accuracy non-stiff.
+- `Tsit5()` for standard non-stiff. This is the first algorithm to try in
+  most cases.
+- `Vern7()` for high accuracy non-stiff.
 - `Rosenbrock23()` for stiff equations with Julia-defined types, events, etc.
-- `CVODE_BDF()` for stiff equations on `Vector{Float64}`
+- `CVODE_BDF()` for stiff equations on `Vector{Float64}`.
 
-This solve interface, known as the common interface, is actually pooling together
-the methods from many different packages into a single API. For a comprehensive
-list of the available algorithms and detailed recommendations,
+For a comprehensive list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](../solvers/ode_solve.html). Every problem
 type has an associated page detailing all of the solvers associated with the problem.
-In many cases, you may not need the full functionality of all of the packages
-together and may want to reduce the size of your dependency. To find out how to
-require only the parts of DifferentialEquations.jl you're specifically using,
-see the [low dependency usage manual page](../featuers/low_dep.html).
-
-Note that the solver controls can be combined with the algorithm choice. Thus
-we can for example solve the problem using `Vern7()` with a lower tolerance
-via:
-
-```julia
-sol = solve(prob,Vern7(),reltol=1e-8,abstol=1e-8)
-```
 
 ### Step 3: Analyzing the Solution
 
@@ -172,7 +185,7 @@ interpolated values by treating `sol` as a function, for example:
 sol(0.45) # The value of the solution at t=0.45
 ```
 
-Note the difference between these. Indexing with `[i]` is the value at the `i`th
+Note the difference between these: indexing with `[i]` is the value at the `i`th
 step, while `(t)` is an interpolation at time `t`!
 
 If in the solver `dense=true` (this is the default unless `saveat` is used), then
@@ -260,7 +273,8 @@ prob = ODEProblem(lorenz,u0,tspan)
 sol = solve(prob)
 ```
 
-Using the plot recipe tools [defined on the plotting page](http://docs.juliadiffeq.org/latest/basics/plot.html#Choosing-Variables-1),
+Using the plot recipe tools
+[defined on the plotting page](http://docs.juliadiffeq.org/latest/basics/plot.html#Choosing-Variables-1),
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
@@ -338,7 +352,8 @@ does "behind-the-scenes" symbolic calculations to pre-compute things like the Ja
 inverse Jacobian, etc. in order to speed up calculations. Thus not only will this
 lead to legible ODE definitions, but "unfairly fast" code! We can turn off some of
 the calculations by using a more specific macro. Here, we can turn off the Hessian
-calculations via `@ode_def_nohes`. See [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
+calculations via `@ode_def_nohes`. See
+[ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 for more details.
 
 Since the parameters exist within the function, functions defined in this manner
