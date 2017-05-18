@@ -30,15 +30,17 @@ loss_func(sol)
 ```
 
 is a function which reduces the problem's solution. While this is very
-flexible, a convenience routine is included for fitting to data:
+flexible, a two convenience routines is included for fitting to data:
 
 ```julia
+L2DistLoss(t,data)
 CostVData(t,data;loss_func = L2DistLoss)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
-`data` which are the values that are known. Optionally, one can choose a loss
-function from LossFunctions.jl or use the default of an L2 loss.
+`data` which are the values that are known. `L2DistLoss` is an optimized version
+of the L2-distance. In `CostVData`, one can choose any loss function from
+LossFunctions.jl or use the default of an L2 loss.
 
 ### The Problem Generator
 
@@ -147,7 +149,7 @@ To build the objective function for Optim.jl, we simply call the `build_loss_obj
 funtion:
 
 ```julia
-cost_function = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)
+cost_function = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
 ```
 
 Note that we set `maxiters` so that way the differential equation solvers would
@@ -196,7 +198,7 @@ prob = ODEProblem(f2,u0,tspan)
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
 ```julia
-cost_function = build_lsoptim_objective(prob,Tsit5(),CostVData(t,data))
+cost_function = build_lsoptim_objective(prob,Tsit5(),L2DistLoss(t,data))
 ```
 
 The result is a cost function which can be used with LeastSquaresOptim. For more
@@ -253,7 +255,7 @@ t = collect(linspace(0,10,200))
 randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
 data = vecvec_to_mat(randomized)
 
-obj = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)
+obj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
 ```
 
 We can now use this `obj` as the objective function with MathProgBase solvers.
@@ -293,5 +295,15 @@ maxeval!(opt, 100000)
 (minf,minx,ret) = NLopt.optimize(opt,[0.2])
 ```
 
-which is very robust to the initial condition. For more information, see the
-NLopt documentation for more details. And give IPOPT or MOSEK a try!
+which is very robust to the initial condition. The fastest result comes from the
+following:
+
+```julia
+using NLopt
+opt = Opt(:LN_BOBYQA, 1)
+min_objective!(opt, obj)
+(minf,minx,ret) = NLopt.optimize(opt,[1.3])
+```
+
+For more information, see the NLopt documentation for more details. And give IPOPT
+or MOSEK a try!
