@@ -1049,22 +1049,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/discrete_types.html#Special-Solver-Options-1",
-    "page": "Discrete Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/discrete_types.html#Special-Solution-Fields-1",
-    "page": "Discrete Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. The Discrete type is as basic as it gets."
-},
-
-{
     "location": "types/ode_types.html#",
     "page": "ODE Problems",
     "title": "ODE Problems",
@@ -1110,22 +1094,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/ode_types.html#Special-Solver-Options-1",
-    "page": "ODE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/ode_types.html#Special-Solution-Fields-1",
-    "page": "ODE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. The ODE type is as basic as it gets."
 },
 
 {
@@ -1273,22 +1241,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_ode_types.html#Special-Solver-Options-1",
-    "page": "Refined ODE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-1",
-    "page": "Refined ODE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. It returns a standard ODE solution."
-},
-
-{
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
     "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
@@ -1310,22 +1262,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solver-Options-2",
-    "page": "Refined ODE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-2",
-    "page": "Refined ODE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -1358,22 +1294,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solver-Options-3",
-    "page": "Refined ODE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-3",
-    "page": "Refined ODE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -1497,14 +1417,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/steady_state_types.html#Special-Solver-Options-1",
-    "page": "Steady State Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/steady_state_types.html#Special-Solution-Fields-1",
     "page": "Steady State Problems",
     "title": "Special Solution Fields",
@@ -1558,22 +1470,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/sde_types.html#Special-Solver-Options-1",
-    "page": "SDE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/sde_types.html#Special-Solution-Fields-1",
-    "page": "SDE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "g: The noise function in the SDE."
 },
 
 {
@@ -1729,22 +1625,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/dde_types.html#Special-Solver-Options-1",
-    "page": "DDE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/dde_types.html#Special-Solution-Fields-1",
-    "page": "DDE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/dae_types.html#",
     "page": "DAE Problems",
     "title": "DAE Problems",
@@ -1790,22 +1670,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
-},
-
-{
-    "location": "types/dae_types.html#Special-Solver-Options-1",
-    "page": "DAE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/dae_types.html#Special-Solution-Fields-1",
-    "page": "DAE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "du: The saved derivative values."
 },
 
 {
@@ -1857,22 +1721,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/refined_dae_types.html#Special-Solver-Options-1",
-    "page": "Refined DAE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Special-Solution-Fields-1",
-    "page": "Refined DAE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. It returns a standard DAE solution."
-},
-
-{
     "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
     "page": "Refined DAE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
@@ -1894,22 +1742,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_dae_types.html#Special-Solver-Options-2",
-    "page": "Refined DAE Problems",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Special-Solution-Fields-2",
-    "page": "Refined DAE Problems",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -2505,14 +2337,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/sde_solve.html#Adaptive-Type:-RSWM-1",
-    "page": "SDE Solvers",
-    "title": "Adaptive Type: RSWM",
-    "category": "section",
-    "text": "Algorithms which allow for adaptive timestepping (all except EM and RKMil) can take in an RSWM type which specifies the rejection sampling with memory algorithm used. The constructor is:RSWM(;discard_length=1e-15,\n     adaptivealg::Symbol=:RSwM3)discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.For more details, see the publication."
-},
-
-{
     "location": "solvers/rode_solve.html#",
     "page": "RODE Solvers",
     "title": "RODE Solvers",
@@ -2534,22 +2358,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Recommended Methods",
     "category": "section",
     "text": "Currently, the only implemented method is the RandomEM method in StochasticDiffEq.jl. It is strong order alpha for a alpha-Holder continuous noise process."
-},
-
-{
-    "location": "solvers/rode_solve.html#Special-Keyword-Arguments-1",
-    "page": "RODE Solvers",
-    "title": "Special Keyword Arguments",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "solvers/rode_solve.html#Implemented-Solvers-1",
-    "page": "RODE Solvers",
-    "title": "Implemented Solvers",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -2606,14 +2414,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Recomended Methods",
     "category": "section",
     "text": "The recommended method for performance is IDA from the Sundials.jl package if you are solving problems with Float64. It's a very well-optimized method, and allows you to have a little bit of control over the linear solver to better tailor it to your problem. A similar algorithm is daskr. Which one is more efficient is problem-dependent.If your problem requires special Julia types like arbitrary precision numbers, then dassl is the method of choice."
-},
-
-{
-    "location": "solvers/dae_solve.html#Special-Keyword-Arguments-1",
-    "page": "DAE Solvers",
-    "title": "Special Keyword Arguments",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -3238,14 +3038,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Callback Library",
     "category": "section",
     "text": "DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which can be used with any component solver which implements the callback interface. It adds the following callbacks which are available to users of DifferentialEquations.jl."
-},
-
-{
-    "location": "features/callback_library.html#Callbacks-1",
-    "page": "Callback Library",
-    "title": "Callbacks",
-    "category": "section",
-    "text": ""
 },
 
 {
