@@ -40,6 +40,21 @@ However, for the most efficient highly stiff solvers, use `radau` or `CVODE_BDF`
 to the ODEInterface and Sundials packages respectively ([see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html)).
 These algorithms require that the number types are Float64.
 
+## Translations from MATLAB/Python/R
+
+For users familiar with MATLAB/Python/R, good translations of the standard
+library methods are as follows:
+
+- `ode23` --> `BS3()`
+- `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
+- `ode23s` --> `Rosenbrock23()`
+- `ode113` --> `CVODE_Adams()`, though in many cases `Vern7()` is more efficient
+- `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
+- `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `radau()` is more efficient
+- `ode23t` --> `Trapezoid()`
+- `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
+- `ode15i` --> `IDA()`
+
 ## Full List of Methods
 
 Choose one of these methods with the `alg` keyword in `solve`.

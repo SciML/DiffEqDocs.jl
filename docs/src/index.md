@@ -46,7 +46,7 @@ software as part of your research, teaching, or other activities, we would
 be grateful if you could cite our work.
 [Please see our citation page for guidelines](http://juliadiffeq.org/citing.html).
 
-## Using the Package
+## Getting Started: Installation And First Steps
 
 To install the package, use the following command inside the Julia REPL:
 ```julia

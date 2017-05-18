@@ -108,33 +108,13 @@ available). For example, we can choose a 7th order Verner Efficient method:
 sol = solve(prob,Vern7())
 ```
 
-For users familiar with MATLAB/Python/R, good translations of the standard library
-methods are as follows:
-
-- `ode23` --> `BS3()`
-- `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
-- `ode23s` --> `Rosenbrock23()`
-- `ode113` --> `CVODE_Adams()`, though in many cases `Vern7()` is more efficient
-- `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-- `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `radau()` is more efficient
-- `ode23t` --> `Trapezoid()`
-- `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
-- `ode15i` --> `IDA()`
-
 In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 
 - `BS3()` for fast low accuracy non-stiff
 - `Tsit5()` for non-stiff
 - `Vern7()` for high accuracy non-stiff
 - `Rosenbrock23()` for stiff equations with Julia-defined types, events, etc.
-- `CVODE_BDF()` or `radau()` for stiff equations of `Vector{Float64}`
-
-Note that `radau()` requires the installation of `ODEInterfaceDiffEq`:
-
-```julia
-Pkg.add("ODEInterfaceDiffEq")
-using ODEInterfaceDiffEq
-```
+- `CVODE_BDF()` for stiff equations on `Vector{Float64}`
 
 This solve interface, known as the common interface, is actually pooling together
 the methods from many different packages into a single API. For a comprehensive
@@ -168,8 +148,7 @@ sol[5] #.637
 or get the time of the 8th timestep by:
 
 ```julia
-sol.t[8]
-#.438
+sol.t[8] #.438
 ```
 
 Convenience features are also included. We can build an array using a
@@ -193,6 +172,9 @@ interpolated values by treating `sol` as a function, for example:
 sol(0.45) # The value of the solution at t=0.45
 ```
 
+Note the difference between these. Indexing with `[i]` is the value at the `i`th
+step, while `(t)` is an interpolation at time `t`!
+
 If in the solver `dense=true` (this is the default unless `saveat` is used), then
 this interpolation is a high order interpolation and thus usually matches the
 error of the solution time points. The interpolations associated with each solver
@@ -211,7 +193,7 @@ object, simply call plot:
 ```julia
 #Pkg.add("Plots") # You need to install Plots.jl before your first time using it!
 using Plots
-#gr() # You can optionally choose a plotting backend
+#plotly() # You can optionally choose a plotting backend
 plot(sol)
 ```
 
@@ -229,10 +211,13 @@ Additional DiffEq-specific controls are documented [at the plotting page](../bas
 
 For example, from the Plots.jl attribute page we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
-Thus we add these to our plot command to get the correct output:
+Thus we add these to our plot command to get the correct output, fix up some
+axis labels, and change the legend (note we can disable the legend with
+`legend=false`) to get a nice looking plot:
 
 ```julia
-plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line")
+plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
+     xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
 ```
 
 ![ode_tutorial_thick_linear](../assets/ode_tutorial_thick_linear.png)
