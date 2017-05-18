@@ -47,7 +47,7 @@ prob = ODEProblem(f,u0,tspan)
 Note that DifferentialEquations.jl will choose the types for the problem based on
 the types used to define the problem type. For our example, notice that `u0` is
 a Float64, and therefore this will solve with the dependent variables being
-Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent variabes
+Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent variables
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
 unitful numbers, etc. Please see the
