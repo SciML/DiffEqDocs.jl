@@ -14,7 +14,7 @@ to solve function maps, along with everything else like plot recipes, while
 completely ignoring the ODE functionality related to continuous equations (except
 for a tiny bit of initialization).
 
-#### Discrete Algorithm
+## Discrete Algorithm
 
 OrdinaryDiffEq.jl also contains the `Discrete` algorithm which lets you solve
 a problem where `f` is a map: ``u_{n+1} = f(t_{n+1},u_n)``. It has a piecewise constant

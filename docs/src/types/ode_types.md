@@ -29,12 +29,6 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-## Special Solver Options
-
-## Special Solution Fields
-
-None. The ODE type is as basic as it gets.
-
 ## Example Problems
 
 Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).

@@ -42,9 +42,3 @@ Note that if no `dt` and not `tstops` is given, it's assumed that `dt=1` and thu
 the number of iterations will change. And if `tstops` is not empty, the solver will
 revert to the standard behavior of fixed timestep methods, which is "step to each
 tstop".
-
-## Special Solver Options
-
-## Special Solution Fields
-
-None. The Discrete type is as basic as it gets.

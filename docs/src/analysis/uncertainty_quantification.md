@@ -30,7 +30,7 @@ AdaptiveProbIntsUncertainty(order,save=true)
 
 determines the noise scaling automatically using an internal error estimate.
 
-### Example 1: FitzHugh-Nagumo
+## Example 1: FitzHugh-Nagumo
 
 In this example we will determine our uncertainty when solving the FitzHugh-Nagumo
 model with the `Euler()` method. We define the FitzHugh-Nagumo model using the

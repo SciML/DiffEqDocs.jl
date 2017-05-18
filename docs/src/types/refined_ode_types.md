@@ -32,12 +32,6 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-### Special Solver Options
-
-### Special Solution Fields
-
-None. It returns a standard ODE solution.
-
 ## Mathematical Specification of a Partitioned ODE Problem
 
 To define a `PartitionedODEProblem`, you need to give a tuple of functions
@@ -79,10 +73,6 @@ the specified functions.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-### Special Solver Options
-
-### Special Solution Fields
-
 ## Mathematical Specification of an Second Order ODE Problem
 
 To define an ODE Problem, you simply need to give the function ``f`` and the initial
@@ -121,10 +111,6 @@ is generated.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
-
-### Special Solver Options
-
-### Special Solution Fields
 
 ## Mathematical Specification of a Constrained ODE Problem
 

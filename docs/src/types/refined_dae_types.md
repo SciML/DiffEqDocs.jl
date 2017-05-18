@@ -32,12 +32,6 @@ of `u`.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-### Special Solver Options
-
-### Special Solution Fields
-
-None. It returns a standard DAE solution.
-
 ## Mathematical Specification of a Partitioned ODE Problem
 
 To define a `PartitionedDAEProblem`, you need to give a tuple of functions
@@ -70,7 +64,3 @@ the specified functions.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
-
-### Special Solver Options
-
-### Special Solution Fields

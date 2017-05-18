@@ -4,9 +4,7 @@ DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which
 can be used with any component solver which implements the callback interface.
 It adds the following callbacks which are available to users of DifferentialEquations.jl.
 
-## Callbacks
-
-### Manifold Conservation and Projection
+## Manifold Conservation and Projection
 
 In many cases, you may want to declare a manifold on which a solution lives.
 Mathematically, a manifold `M` is defined by a function `g` as the set of points
@@ -23,7 +21,7 @@ can be easily extended to conserve properties. If the solution is supposed to li
 on a specific manifold or conserve such property, this guarantees the conservation
 law without modifying the convergence properties.
 
-#### Constructor
+### Constructor
 
 ```julia
 ManifoldProjection(g;nlsolve=NLSOLVEJL_SETUP(),save=true)
@@ -34,7 +32,7 @@ ManifoldProjection(g;nlsolve=NLSOLVEJL_SETUP(),save=true)
 - `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html)
 - `save`: Whether to do the standard saving (applied after the callback)
 
-#### Example
+### Example
 
 Here we solve the harmonic oscillator:
 
@@ -73,7 +71,7 @@ sol = solve(prob,Vern7(),callback=cb)
 ![manifold_projection](../assets/manifold_projection.png)
 
 
-### AutoAbstol
+## AutoAbstol
 
 Many problem solving environments [such as MATLAB](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html)
 provide a way to automatically adapt the absolute tolerance to the problem. This

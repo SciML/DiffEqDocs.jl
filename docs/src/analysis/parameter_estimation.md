@@ -4,7 +4,7 @@ Parameter estimation for ODE models is provided by the DiffEq suite. The current
 functionality includes `build_loss_objective` and `lm_fit`. Note these require
 that the problem is defined using a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
-### build_loss_objective
+## build_loss_objective
 
 `build_loss_objective` builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.
 
@@ -23,7 +23,7 @@ One can also choose `verbose_opt` and `verbose_steps`, which, in the optimizatio
 derivative for the MathProgBase solver. The extra keyword arguments are passed
 to the differential equation solver.
 
-#### The Loss Function
+### The Loss Function
 
 ```julia
 loss_func(sol)
@@ -40,7 +40,7 @@ where `t` is the set of timepoints which the data is found at, and
 `data` which are the values that are known. Optionally, one can choose a loss
 function from LossFunctions.jl or use the default of an L2 loss.
 
-#### The Problem Generator
+### The Problem Generator
 
 The argument `prob_generator` allows one to specify a the function for generating
 new problems from a given parameter set. By default, this just builds a new
@@ -78,7 +78,7 @@ end
 which simply matches the type for time to `p` (once again, for autodifferentiation)
 and uses `p` as the initial condition in the initial value problem.
 
-### build_lsoptim_objective
+## build_lsoptim_objective
 
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
@@ -88,7 +88,7 @@ build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameter
 
 The arguments are the same as `build_loss_objective`.
 
-### lm_fit
+## lm_fit
 
 `lm_fit` is a function for fitting the parameters of an ODE using the Levenberg-Marquardt
 algorithm. This algorithm is really bad and thus not recommended since, for example,
@@ -105,7 +105,7 @@ The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
 
-#### Local Optimization Examples
+## Local Optimization Examples
 
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
 by defining the function as a [ParmaeterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
@@ -231,7 +231,7 @@ Results of Optimization Algorithm
 
 and thus this algorithm was able to correctly identify all four parameters.
 
-### More Algorithms (Global Optimization) via MathProgBase Solvers
+## More Algorithms (Global Optimization) via MathProgBase Solvers
 
 The `build_loss_objective` function builds an objective function which is able
 to be used with MathProgBase-associated solvers. This includes packages like

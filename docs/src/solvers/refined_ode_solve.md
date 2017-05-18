@@ -36,9 +36,9 @@ interpolation means that no extra steps are required for the interpolation. For
 the non-free higher order interpolating functions, the extra steps are computed
 lazily (i.e. not during the solve).
 
-## Functional Forms
+# Functional Forms
 
-### Dynamical ODE
+## Dynamical ODE
 
 These algorithms require a Partitioned ODE of the form:
 
@@ -54,12 +54,12 @@ function.
 
 The appropriate algorithms for this form are:
 
-#### OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl
 
 - `SymplecticEuler`: First order explicit symplectic integrator
 - `VelocityVerlet`: 2nd order explicit symplectic integrator. Not yet implemented.
 
-### Implicit-Explicit (IMEX) ODE
+## Implicit-Explicit (IMEX) ODE
 
 The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:
 
@@ -72,15 +72,15 @@ part (implicit integration on `f1`, explicit integration on `f2`).
 
 The appropriate algorithms for this form are:
 
-#### OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl
 
 - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy of splits.
 
-#### Sundials.jl
+### Sundials.jl
 
 - `ARKODE`: An additive Runge-Kutta method. Not yet implemented.
 
-### Linear-Nonlinear (LNL) ODE
+## Linear-Nonlinear (LNL) ODE
 
 The Linear-Nonlinear (LNL) ODE is a SplitODEProblem with two functions:
 
@@ -93,7 +93,7 @@ part (implicit integration on `f1`, explicit integration on `f2`).
 
 The appropriate algorithms for this form are:
 
-#### OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl
 
 - `IIF1` - First order Implicit Integrating Factor method. Not yet implemented.
 - `IIF2` - Second order Implicit Integrating Factor method. Not yet implemented.

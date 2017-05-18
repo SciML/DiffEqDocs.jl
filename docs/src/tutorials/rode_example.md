@@ -11,7 +11,7 @@ In this example we will solve the equation
 du = f(t,u,y)dt
 ```
 
-where ``f(t,u,W)=2usin(W)`` and ``W(t)`` is a Wiener process (Gaussian process).
+where ``f(t,u,W)=2u\sin(W)`` and ``W(t)`` is a Wiener process (Gaussian process).
 
 ```julia
 using DifferentialEquations

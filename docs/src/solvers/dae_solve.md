@@ -11,8 +11,6 @@ is problem-dependent.
 If your problem requires special Julia types like arbitrary precision numbers,
 then `dassl` is the method of choice.
 
-## Special Keyword Arguments
-
 ## Implemented Solvers
 
 ### Sundials.jl

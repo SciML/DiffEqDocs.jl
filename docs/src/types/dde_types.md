@@ -34,7 +34,3 @@ DDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
-
-## Special Solver Options
-
-## Special Solution Fields

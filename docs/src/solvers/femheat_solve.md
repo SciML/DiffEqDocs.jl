@@ -7,11 +7,11 @@ stiff problems it's recommended that you use `FEMDiffEqHeatSemiImplicitCrankNich
 
 ## Avaliable Methods
 
-* FEMDiffEqHeatEuler
-* FEMDiffEqHeatImplicitEuler
-* FEMDiffEqHeatCrankNicholson
-* FEMDiffEqHeatSemiImplicitEuler
-* FEMDiffEqHeatSemiImplicitCrankNicholson
+* `FEMDiffEqHeatEuler`
+* `FEMDiffEqHeatImplicitEuler`
+* `FEMDiffEqHeatCrankNicholson`
+* `FEMDiffEqHeatSemiImplicitEuler`
+* `FEMDiffEqHeatSemiImplicitCrankNicholson`
 
 Additionally, for linear solves, one can choose the method by which the linear solve
 takes place via the `method` keyword argument.

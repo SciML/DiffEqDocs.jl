@@ -48,12 +48,6 @@ Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-## Special Solver Options
-
-## Special Solution Fields
-
-* `g`: The noise function in the SDE.
-
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/sde_premade_problems.jl).

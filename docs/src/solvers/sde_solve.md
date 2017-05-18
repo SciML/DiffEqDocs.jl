@@ -56,19 +56,3 @@ alg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)
 The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
-
-### Adaptive Type: RSWM
-
-Algorithms which allow for adaptive timestepping (all except `EM` and `RKMil`)
-can take in an `RSWM` type which specifies the rejection sampling with memory
-algorithm used. The constructor is:
-
-```julia
-RSWM(;discard_length=1e-15,
-     adaptivealg::Symbol=:RSwM3)
-```
-
-* `discard_length` - Size at which to discard future information in adaptive. Default is 1e-15.
-* `adaptivealg`: The adaptive timestepping algorithm. Default is `:RSwm3`.
-
-For more details, see [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).

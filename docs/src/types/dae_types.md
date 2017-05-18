@@ -32,12 +32,6 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
   variable). Defaults to nothing. Some solvers may require this be set if an
   initial condition needs to be determined.
 
-## Special Solver Options
-
-## Special Solution Fields
-
-* `du`: The saved derivative values.
-
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/dae_premade_problems.jl).

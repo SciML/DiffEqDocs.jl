@@ -40,8 +40,6 @@ SteadyStateProblem(prob::ODEProblem)
 * `u0`: The initial guess for the steady state.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
-## Special Solver Options
-
 ## Special Solution Fields
 
 The `SteadyStateSolution` type is different from the other DiffEq solutions because
