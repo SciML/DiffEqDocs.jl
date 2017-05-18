@@ -124,96 +124,6 @@ components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the Monte Carlo solutions
 of the odd components.
 
-### Simple Example
-
-Let's test the sensitivity of the linear ODE to its initial condition.
-
-```julia
-addprocs(4)
-using DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq
-prob = prob_ode_linear
-prob_func = function (prob)
-  prob.u0 = rand()*prob.u0
-  prob
-end
-monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
-sim = solve(monte_prob,Tsit5(),num_monte=100)
-
-using Plots
-plotly()
-plot(sim,linealpha=0.4)
-```
-
-Here we solve the same ODE 100 times on 4 different cores, jiggling the initial
-condition by `rand()`. The resulting plot is as follows:
-
-![monte_carlo_plot](../assets/monte_carlo_plot.png)
-
-### Reduction Examples
-
-In this problem we will solve the equation just as many times as needed to get
-the standard error of the mean for the final time point below our tolerance
-`0.5`. Since we only care about the endpoint, we can tell the `output_func`
-to discard the rest of the data.
-
-```julia
-output_func = function (sol,i)
-  last(sol)
-end
-```
-
-Our `prob_func` wull simply randomize the initial condition:
-
-```julia
-# using DiffEqProblemLibrary
-prob = prob_ode_linear
-prob_func = function (prob,i)
-  prob.u0 = rand()*prob.u0
-  prob
-end
-```
-
-Our reduction function will append the data from the current batch to the previous
-batch, and declare convergence if the standard error of the mean is calculated
-as sufficiently small:
-
-```julia
-reduction = function (u,batch,I)
-  u = append!(u,batch)
-  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false
-end
-```
-
-Then we can define and solve the problem:
-
-```julia
-prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
-sim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)
-```
-
-Since `batch_size=20`, this means that every 20 simulations, it will take this batch,
-append the results to the previous batch, calculate `(var(u)/sqrt(last(I)))/mean(u)`,
-and if that's small enough, exit the simulation. In this case, the simulation
-exits only after 20 simulations (i.e. after calculating the first batch). This
-can save a lot of time!
-
-In addition to saving time by checking convergence, we can save memory by reducing
-between batches. For example, say we only care about the mean at the end once
-again. Instead of saving the solution at the end for each trajectory, we can instead
-save the running summation of the endpoints:
-
-```julia
-reduction = function (u,batch,I)
-  u+sum(batch),false
-end
-prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
-sim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)
-```
-
-this will sum up the endpoints after every 20 solutions, and save the running sum.
-The final result will have `sim2.u` as simply a number, and thus `sim2.u/100` would
-be the mean.
-
 ## Analyzing a Monte Carlo Experiment
 
 Analysis tools are included for generating summary statistics and summary plots
@@ -300,14 +210,15 @@ The `MonteCarloSummary` type is included to help with analyzing the general summ
 statistics. Two constructors are provided:
 
 ```julia
-MonteCarloSummary(sim)
-MonteCarloSummary(sim,ts)
+MonteCarloSummary(sim;quantile=[0.05,0.95])
+MonteCarloSummary(sim,ts;quantile=[0.05,0.95])
 ```
 
 The first produces a `(mean,var)` summary at each time step. As with the summary
 statistics, this assumes that the time steps are all the same. The second produces
 a `(mean,var)` summary at each time point `t` in `ts`. This requires the ability
-to interpolate the solution.
+to interpolate the solution. Quantile is used to determine the `qlow` and `qhigh`
+quantiles at each timepoint. It defaults to the 5% and 95% quantiles.
 
 #### Plot Recipe
 
@@ -317,11 +228,232 @@ statistics. The extra keyword arguments are:
 - `idxs`: the solution components to plot. Defaults to plotting all components.
 - `error_style`: The style for plotting the error. Defaults to `ribbon`. Other
   choices are `:bars` for error bars and `:none` for no error bars.
+- `ci_type` : Defaults to `:quantile` which has `(qlow,qhigh)` quantiles
+  whose limits were determined when constructing the `MonteCarloSummary`.
+  Gaussian CI `1.96*(standard error of the mean)` can be set using `ci_type=:SEM`.
 
 One useful argument is `fillalpha` which controls the transparency of the ribbon
-around the mean. The confidence interval is the Gaussian CI `1.96*var`.
+around the mean.
 
-### Example Analysis
+## Example 1: Solving an ODE With Different Initial Conditions
+
+### Random Initial Conditions
+
+Let's test the sensitivity of the linear ODE to its initial condition. To do this,
+we would like to solve the linear ODE 100 times and plot what the trajectories
+look like. Let's start by opening up some extra processes so that way the computation
+will be parallelized:
+
+```julia
+addprocs()
+using DifferentialEquations
+```
+
+Now let's define the linear ODE which is our base problem:
+
+```julia
+# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
+prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+```
+
+For our Monte Carlo simulation, we would like to change the initial condition around.
+This is done through the `prob_func`. This function takes in the base problem
+and modifies it to create the new problem that the trajectory actually solves.
+Here we will take the base problem, multiply the initial condition by a `rand()`,
+and use that for calculating the trajectory:
+
+```julia
+prob_func = function (prob,i)
+  prob.u0 = rand()*prob.u0
+  prob
+end
+```
+
+Now we build and solve the `MonteCarloProblem` with this base problem and `prob_func`:
+
+```julia
+monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
+sim = solve(monte_prob,Tsit5(),num_monte=100)
+```
+
+We can use the plot recipe to plot what the 100 ODEs look like:
+
+```julia
+using Plots
+plotly()
+plot(sim,linealpha=0.4)
+```
+
+![monte_carlo_plot](../assets/monte_carlo_plot.png)
+
+We note that if we wanted to find out what the initial condition was for a given
+trajectory, we can retrieve it from the solution. `sim[i]` returns the `i`th
+solution object. `sim[i].prob` is the problem that specific trajectory solved,
+and `sim[i].prob.u0` would then be the initial condition used in the `i`th
+trajectory.
+
+### Pre-Determined Initial Conditions
+
+In many cases, you may already know what initial conditions you want to use. This
+can be specified by the `i` argument of the `prob_func`. This `i` is the unique
+index of each trajectory. So, if we have `num_monte=100`, then we have `i` as
+some index in `1:100`, and it's different for each trajectory.
+
+So, if we wanted to use a grid of evenly spaced initial conditions from `0` to `1`,
+we could simply index the `linspace` type:
+
+```julia
+initial_conditions = linspace(0,1,100)
+prob_func = function (prob,i)
+  prob.u0 = initial_conditions[i]
+  prob
+end
+```
+
+## Example 2: Solving an SDE with Different Parameters
+
+### Using the Parameterized Function Wrappers
+
+Let's solve the same SDE but with varying parameters. Instead of using the macro,
+we will use [the parameterized function wrappers](../analysis/parameterized_functions.html)
+(though either can be used). Let's create a Lotka-Volterra system with multiplicative
+noise. Our Lotka-Volterra system will have as its drift component:
+
+```julia
+pf_func = function (t,u,p,du)
+  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
+  du[2] = -3 * u[2] + u[1]*u[2]
+end
+pf = ParameterizedFunction(pf_func,[1.5,1.0])
+```
+
+where `pf` is the function with the parameters `1.5` and `1.0` associated with it.
+For our noise function we will use multiplicative noise:
+
+```julia
+pg_func = function (t,u,p,du)
+  du[1] = p[1]*u[1]
+  du[2] = p[2]*u[2]
+end
+pg = ParameterizedFunction(pg_func,[0.1,0.1])
+```
+
+Now we build the SDE with these functions:
+
+```julia
+prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0))
+```
+
+This is the base problem for our study. What would like to do with this experiment
+is keep the same parameters in the deterministic component each time, but very
+the parameters for the amount of noise using `0.3rand(2)` as our parameters.
+Once again, we do this with a `prob_func`. In a `ParameterizedFunction` `f`, the
+parameters are accessed at `f.params`. Thus we will modify those values in the
+`prob_func`. Note that in the `SDEProblem`, the noise function is referred to as
+`g`:
+
+```julia
+prob_func = function (prob,i)
+  set_param_values!(prob.g,0.3rand(2))
+  prob
+end
+```
+
+Now we solve the problem 10 times and plot all of the trajectories in phase space:
+
+```julia
+monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
+sim = solve(monte_prob,SRIW1(),num_monte=10)
+using Plots; plotly()
+using Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title="Phase Space Plot")
+plot!(sim,linealpha=0.6,color=:red,vars=(0,2),title="Phase Space Plot")
+```
+
+![monte_lotka_blue](../assets/monte_lotka_blue.png)
+
+We can then summarize this information with the mean/variance bounds using a
+`MonteCarloSummary` plot. We will take the mean/quantile at every `0.1` time
+units and directly plot the summary:
+
+```julia
+summ = MonteCarloSummary(sim,0:0.1:10)
+pyplot() # Note that plotly does not support ribbon plots
+plot(summ,fillalpha=0.5)
+```
+
+![monte_carlo_quantile](../assets/monte_carlo_quantile.png)
+
+Note that here we used the quantile bounds, which default to `[0.05,0.95]` in
+the `MonteCarloSummary` constructor. We can change to standard error of the mean
+bounds using `ci_type=:SEM` in the plot recipe.
+
+## Example 3: Using the Reduction to Halt When Estimator is Within Tolerance
+
+In this problem we will solve the equation just as many times as needed to get
+the standard error of the mean for the final time point below our tolerance
+`0.5`. Since we only care about the endpoint, we can tell the `output_func`
+to discard the rest of the data.
+
+```julia
+output_func = function (sol,i)
+  last(sol)
+end
+```
+
+Our `prob_func` wull simply randomize the initial condition:
+
+```julia
+# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
+prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+
+prob_func = function (prob,i)
+  prob.u0 = rand()*prob.u0
+  prob
+end
+```
+
+Our reduction function will append the data from the current batch to the previous
+batch, and declare convergence if the standard error of the mean is calculated
+as sufficiently small:
+
+```julia
+reduction = function (u,batch,I)
+  u = append!(u,batch)
+  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false
+end
+```
+
+Then we can define and solve the problem:
+
+```julia
+prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
+sim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)
+```
+
+Since `batch_size=20`, this means that every 20 simulations, it will take this batch,
+append the results to the previous batch, calculate `(var(u)/sqrt(last(I)))/mean(u)`,
+and if that's small enough, exit the simulation. In this case, the simulation
+exits only after 20 simulations (i.e. after calculating the first batch). This
+can save a lot of time!
+
+In addition to saving time by checking convergence, we can save memory by reducing
+between batches. For example, say we only care about the mean at the end once
+again. Instead of saving the solution at the end for each trajectory, we can instead
+save the running summation of the endpoints:
+
+```julia
+reduction = function (u,batch,I)
+  u+sum(batch),false
+end
+prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
+sim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)
+```
+
+this will sum up the endpoints after every 20 solutions, and save the running sum.
+The final result will have `sim2.u` as simply a number, and thus `sim2.u/100` would
+be the mean.
+
+## Example 4: Using the Analysis Tools
 
 In this example we will show how to analyze a `MonteCarloSolution`. First, let's
 generate a 10 solution Monte Carlo experiment:

@@ -1,8 +1,21 @@
 # ParameterizedFunctions
 
-## Transforming User-Defined Functions to ParameterizedFunctions
+## The AbstractParameterizedFunction Interface
 
-### ParameterizedFunction Constructor
+`AbstractParameterizedFunction`s are ways for functions to hold parameters in
+ways that the solvers can directly solve the function, yet parameter estimation
+routines can access and change these values as needed. The interface has the
+following functions:
+
+```julia
+param_values(pf::AbstractParameterizedFunction) = # Get the values of the parameters
+num_params(pf::AbstractParameterizedFunction) = # Get the number of the parameters
+set_param_values!(pf::AbstractParameterizedFunction,params) = # Set the parameter values using an AbstractArray
+```
+
+`AbstractParameterizedFunction`s can be constructed in the two ways below.
+
+## ParameterizedFunction Constructor
 
 The easiest way to make a `ParameterizedFunction` is to use the constructor:
 
@@ -32,7 +45,7 @@ for DAEs and DDEs respectively. For DAEs, the in-place syntax is `f(t,u,params,d
 and the not in-place syntax is `f(t,u,params,du)`. For DDEs, the in-place syntax is
 `f(t,u,h,params,du)` and the not in-place syntax is `f(t,u,h,params)`
 
-### Examples
+### Examples using the Constructor
 
 ```julia
 pf_func = function (t,u,p,du)
@@ -97,7 +110,7 @@ f = @ode_def LotkaVolterraExample begin
 end a=>1.5 b=>1.0 c=>3.0 d=1.0
 ```
 
-## Extra Features
+### Extra Features
 
 Functions defined using the `@ode_def` macro come with many other features. For
 example, since we used `=>` for `a`, `b`, and `c`, these parameters are explicitly
@@ -121,7 +134,7 @@ parameters affect the model. Thus ParameterizedFunctions, when coupled with the
 solvers, forms the backbone of functionality such as parameter estimation, parameter
 sensitivity analysis, and bifurcation analysis.
 
-## Extra Little Tricks
+### Extra Little Tricks
 
 There are some extra little tricks you can do. Since `@ode_def` is a macro,
 you cannot directly make the parameters something that requires a runtime value.
@@ -164,7 +177,7 @@ end a=>1.5 b=>1 c=3 d=4
 will do fine. The symbolic derivatives will not work unless you define a derivative
 for `f`.
 
-## Extra Optimizations
+### Extra Optimizations
 
 Because the ParameterizedFunction defined by the macro holds the definition at a
 symbolic level, optimizations are provided by SymEngine. Using the symbolic
