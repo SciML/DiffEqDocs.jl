@@ -965,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\nprob = prob_ode_linear\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
+    "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\n\n# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
 },
 
 {
@@ -3345,22 +3345,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/monte_carlo.html#Simple-Example-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Simple Example",
-    "category": "section",
-    "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
-},
-
-{
-    "location": "features/monte_carlo.html#Reduction-Examples-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Reduction Examples",
-    "category": "section",
-    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.output_func = function (sol,i)\n  last(sol)\nendOur prob_func wull simply randomize the initial condition:# using DiffEqProblemLibrary\nprob = prob_ode_linear\nprob_func = function (prob,i)\n  prob.u0 = rand()*prob.u0\n  prob\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:reduction = function (u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that's small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:reduction = function (u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
-},
-
-{
     "location": "features/monte_carlo.html#Analyzing-a-Monte-Carlo-Experiment-1",
     "page": "Parallel Monte Carlo Simulations",
     "title": "Analyzing a Monte Carlo Experiment",
@@ -3413,7 +3397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "MonteCarloSummary",
     "category": "section",
-    "text": "The MonteCarloSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:MonteCarloSummary(sim)\nMonteCarloSummary(sim,ts)The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution."
+    "text": "The MonteCarloSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:MonteCarloSummary(sim;quantile=[0.05,0.95])\nMonteCarloSummary(sim,ts;quantile=[0.05,0.95])The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution. Quantile is used to determine the qlow and qhigh quantiles at each timepoint. It defaults to the 5% and 95% quantiles."
 },
 
 {
@@ -3421,13 +3405,61 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "The MonteCarloSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.One useful argument is fillalpha which controls the transparency of the ribbon around the mean. The confidence interval is the Gaussian CI 1.96*var."
+    "text": "The MonteCarloSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.\nci_type : Defaults to :quantile which has (qlow,qhigh) quantiles whose limits were determined when constructing the MonteCarloSummary. Gaussian CI 1.96*(standard error of the mean) can be set using ci_type=:SEM.One useful argument is fillalpha which controls the transparency of the ribbon around the mean."
 },
 
 {
-    "location": "features/monte_carlo.html#Example-Analysis-1",
+    "location": "features/monte_carlo.html#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions-1",
     "page": "Parallel Monte Carlo Simulations",
-    "title": "Example Analysis",
+    "title": "Example 1: Solving an ODE With Different Initial Conditions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Random-Initial-Conditions-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Random Initial Conditions",
+    "category": "section",
+    "text": "Let's test the sensitivity of the linear ODE to its initial condition. To do this, we would like to solve the linear ODE 100 times and plot what the trajectories look like. Let's start by opening up some extra processes so that way the computation will be parallelized:addprocs()\nusing DifferentialEquationsNow let's define the linear ODE which is our base problem:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))For our Monte Carlo simulation, we would like to change the initial condition around. This is done through the prob_func. This function takes in the base problem and modifies it to create the new problem that the trajectory actually solves. Here we will take the base problem, multiply the initial condition by a rand(), and use that for calculating the trajectory:prob_func = function (prob,i)\n  prob.u0 = rand()*prob.u0\n  prob\nendNow we build and solve the MonteCarloProblem with this base problem and prob_func:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)We can use the plot recipe to plot what the 100 ODEs look like:using Plots\nplotly()\nplot(sim,linealpha=0.4)(Image: monte_carlo_plot)We note that if we wanted to find out what the initial condition was for a given trajectory, we can retrieve it from the solution. sim[i] returns the ith solution object. sim[i].prob is the problem that specific trajectory solved, and sim[i].prob.u0 would then be the initial condition used in the ith trajectory."
+},
+
+{
+    "location": "features/monte_carlo.html#Pre-Determined-Initial-Conditions-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Pre-Determined Initial Conditions",
+    "category": "section",
+    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have num_monte=100, then we have i as some index in 1:100, and it's different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = linspace(0,1,100)\nprob_func = function (prob,i)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
+},
+
+{
+    "location": "features/monte_carlo.html#Example-2:-Solving-an-SDE-with-Different-Parameters-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 2: Solving an SDE with Different Parameters",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Using-the-Parameterized-Function-Wrappers-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Using the Parameterized Function Wrappers",
+    "category": "section",
+    "text": "Let's solve the same SDE but with varying parameters. Instead of using the macro, we will use the parameterized function wrappers (though either can be used). Let's create a Lotka-Volterra system with multiplicative noise. Our Lotka-Volterra system will have as its drift component:pf_func = function (t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\npf = ParameterizedFunction(pf_func,[1.5,1.0])where pf is the function with the parameters 1.5 and 1.0 associated with it. For our noise function we will use multiplicative noise:pg_func = function (t,u,p,du)\n  du[1] = p[1]*u[1]\n  du[2] = p[2]*u[2]\nend\npg = ParameterizedFunction(pg_func,[0.1,0.1])Now we build the SDE with these functions:prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0))This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using 0.3rand(2) as our parameters. Once again, we do this with a prob_func. In a ParameterizedFunction f, the parameters are accessed at f.params. Thus we will modify those values in the prob_func. Note that in the SDEProblem, the noise function is referred to as g:prob_func = function (prob,i)\n  set_param_values!(prob.g,0.3rand(2))\n  prob\nendNow we solve the problem 10 times and plot all of the trajectories in phase space:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,SRIW1(),num_monte=10)\nusing Plots; plotly()\nusing Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title=\"Phase Space Plot\")\nplot!(sim,linealpha=0.6,color=:red,vars=(0,2),title=\"Phase Space Plot\")(Image: monte_lotka_blue)We can then summarize this information with the mean/variance bounds using a MonteCarloSummary plot. We will take the mean/quantile at every 0.1 time units and directly plot the summary:summ = MonteCarloSummary(sim,0:0.1:10)\npyplot() # Note that plotly does not support ribbon plots\nplot(summ,fillalpha=0.5)(Image: monte_carlo_quantile)Note that here we used the quantile bounds, which default to [0.05,0.95] in the MonteCarloSummary constructor. We can change to standard error of the mean bounds using ci_type=:SEM in the plot recipe."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 3: Using the Reduction to Halt When Estimator is Within Tolerance",
+    "category": "section",
+    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.output_func = function (sol,i)\n  last(sol)\nendOur prob_func wull simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))\n\nprob_func = function (prob,i)\n  prob.u0 = rand()*prob.u0\n  prob\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:reduction = function (u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that's small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:reduction = function (u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-4:-Using-the-Analysis-Tools-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 4: Using the Analysis Tools",
     "category": "section",
     "text": "In this example we will show how to analyze a MonteCarloSolution. First, let's generate a 10 solution Monte Carlo experiment:prob = prob_sde_2Dlinear\nprob2 = MonteCarloProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)The system, prob_sde_2Dlinear, is a (4,2) system of stochastic differential equations which we solved 10 times. We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a MonteCarloSummary type.summ = MonteCarloSummary(sim)will summarize at each time step, whilesumm = MonteCarloSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let's only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
 },
@@ -3689,11 +3721,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameterized_functions.html#Transforming-User-Defined-Functions-to-ParameterizedFunctions-1",
+    "location": "analysis/parameterized_functions.html#The-AbstractParameterizedFunction-Interface-1",
     "page": "ParameterizedFunctions",
-    "title": "Transforming User-Defined Functions to ParameterizedFunctions",
+    "title": "The AbstractParameterizedFunction Interface",
     "category": "section",
-    "text": ""
+    "text": "AbstractParameterizedFunctions are ways for functions to hold parameters in ways that the solvers can directly solve the function, yet parameter estimation routines can access and change these values as needed. The interface has the following functions:param_values(pf::AbstractParameterizedFunction) = # Get the values of the parameters\nnum_params(pf::AbstractParameterizedFunction) = # Get the number of the parameters\nset_param_values!(pf::AbstractParameterizedFunction,params) = # Set the parameter values using an AbstractArrayAbstractParameterizedFunctions can be constructed in the two ways below."
 },
 
 {
@@ -3705,9 +3737,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameterized_functions.html#Examples-1",
+    "location": "analysis/parameterized_functions.html#Examples-using-the-Constructor-1",
     "page": "ParameterizedFunctions",
-    "title": "Examples",
+    "title": "Examples using the Constructor",
     "category": "section",
     "text": "pf_func = function (t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\n\npf = ParameterizedFunction(pf_func,[1.5,1.0])And now pf can be used in the differential equation solvers and the ecosystem functionality which requires explicit parameters (parameter estimation, etc.).Note that the not in-place version works the same:pf_func2 = function (t,u,p)\n  [p[1] * u[1] - p[2] * u[1]*u[2];-3 * u[2] + u[1]*u[2]]\nend\n\npf2 = ParameterizedFunction(pf_func2,[1.5,1.0])"
 },
