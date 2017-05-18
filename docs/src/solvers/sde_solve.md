@@ -17,7 +17,7 @@ algorithm. For non-commutative noise, `EM` and `EulerHeun` will be the most accu
 
 # Full List of Methods
 
-### StochasticDiffEq.jl
+## StochasticDiffEq.jl
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
