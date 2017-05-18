@@ -128,7 +128,7 @@ summ = MonteCarloSummary(sol,0:0.01:1)
 plot(summ)
 ```
 
-![sde_tutorial_monte](sde_tutorial_monte.png)
+![sde_tutorial_monte](../assets/sde_tutorial_monte.png)
 
 Additionally we can easily calculate the correlation between the values at `t=0.2`
 and `t=0.7` via
