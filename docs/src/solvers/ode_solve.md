@@ -32,8 +32,7 @@ should choose `Vern9` which is Order 9 with an Order 9 interpolant.
 ### Stiff Problems
 
 For stiff problems at low tolerances it is recommended that you use `Rosenbrock23`
-As a native DifferentialEquations.jl solver, many Julia-defined numbers
-(Unitful, ArbFloats) will work. When the equation is defined via the `@ode_def`
+As a native DifferentialEquations.jl solver, many Julia numeric types (such as [Unitful](https://github.com/ajkeller34/Unitful.jl), [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is defined via the `@ode_def`
 macro, this will be the most efficient. For faster solving when only the Jacobian
 is known and the macro is not used, use `radau`. High precision numbers are also
 compatible with `Trapezoid` which is a symplectic integrator. However, for the
@@ -76,7 +75,7 @@ For stiff problems, the algorithms are currently not as high of order or as well
 as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on
 arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl
 are able to handle a larger generality of number types (arbitrary precision, etc.)
-and thus are recommended for stiff problems on for non-Float64 numbers.
+and thus are recommended for stiff problems on non-Float64 numbers.
 
   - `Euler`- The canonical forward Euler method.
   - `Midpoint` - The second order midpoint method.
@@ -276,7 +275,7 @@ Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
 are some of the most efficient methods available (but are restricted for use on
 arrays of Float64).
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:
 
 ```julia
