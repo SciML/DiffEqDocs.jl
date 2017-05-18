@@ -1,26 +1,35 @@
 # DifferentialEquations.jl Documentation
 
-DifferentialEquations.jl is a package for numerically solving differential
-equations using the various components of JuliaDiffEq. The purpose of this package
-is to supply efficient Julia implementations of solvers for various differential
-equations. Equations within the realm of this package include discrete equations
-(function maps, discrete stochastic simulations like Gillespie/Markov models),
-ordinary differential equations (ODEs), stochastic ordinary differential
-equations (SODEs or SDEs), stochastic partial differential equations (SPDEs),
-partial differential equations (with both finite difference and finite element methods),
-differential algebraic equations (DAEs), and differential delay equations (DDEs).
-The well-optimized DifferentialEquations solvers benchmark as the fastest Julia
-implementations, using classic algorithms and ones from recent research, and
-include algorithms optimized for high-precision and HPC applications.  It integrates
-with the Julia package sphere, for example using Juno's progress meter, automatic
-plotting, built-in interpolations, and wraps other differential equation solvers
-so that many different methods for solving the equations can be accessed by
-simply switching a keyword argument. It utilizes Julia's generality to be
-able to solve problems specified with arbitrary number types (types with
-units like Unitful, and arbitrary precision numbers like BigFloats and
-ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives
-a powerful mixture of speed and productivity features to help you solve and
-analyze your differential equations faster.
+This is a suite for numerically solving differential equations in Julia. The
+purpose of this package is to supply efficient Julia implementations of solvers
+for various differential equations. Equations within the realm of this package
+include:
+
+- Discrete equations (function maps, discrete stochastic (Gillespie/Markov)
+  simulations)
+- Ordinary differential equations (ODEs)
+- Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
+- Stochastic ordinary differential equations (SODEs or SDEs)
+- Random differential equations (RODEs or RDEs)
+- Algebraic differential equations (DAEs)
+- Delay differential equations (DDEs)
+- Mixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)
+- (Stochastic) partial differential equations ((S)PDEs) (with both finite
+  difference and finite element methods)
+
+The well-optimized DifferentialEquations solvers benchmark as the some of the fastest  
+implementations, using classic algorithms and ones from recent research which
+routinely outperform the "standard" C/Fortran methods, and include algorithms
+optimized for high-precision and HPC applications. It integrates with the Julia
+package sphere, for example using Juno's progress meter, automatic plotting,
+built-in interpolations, and wraps other differential equation solvers so that
+many different methods for solving the equations can be accessed by simply
+switching a keyword argument. It utilizes Julia's generality to be able to
+solve problems specified with arbitrary number types (types with units like
+Unitful, and arbitrary precision numbers like BigFloats and ArbFloats),
+arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful
+mixture of speed and productivity features to help you solve and analyze your
+differential equations faster.
 
 If you have any questions, or just want to chat about solvers/using the package,
 please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -28,7 +37,7 @@ For bug reports, feature requests, etc., please submit an issue. If you're
 interested in contributing, please see the
 [Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/).
 
-### Supporting and Citing
+## Supporting and Citing
 
 The software in this ecosystem was developed as part of academic research.
 If you would like to help support it, please star the repository as such
@@ -37,7 +46,7 @@ software as part of your research, teaching, or other activities, we would
 be grateful if you could cite our work.
 [Please see our citation page for guidelines](http://juliadiffeq.org/citing.html).
 
-### Using the Package
+## Using the Package
 
 To install the package, use the following command inside the Julia REPL:
 ```julia
@@ -50,11 +59,18 @@ To load the package, use the command:
 using DifferentialEquations
 ```
 
-The command `Pkg.add("DifferentialEquations")` will add solvers and dependencies for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of `DifferentialEquations.jl` or simply want a more lightweight version, see the [Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep.html) page.
+The command `Pkg.add("DifferentialEquations")` will add solvers and dependencies
+for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported
+Equations section below). If you are interested in only one type of equation
+solvers of `DifferentialEquations.jl` or simply want a more lightweight
+version, see the
+[Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep.html)
+page.
 
-To understand the package in more detail, check out the following tutorials in this manual.
-**It is highly recommended that new users start with the [ODE tutorial](/tutorials/ode_example.html)**.
-Example IJulia notebooks [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+To understand the package in more detail, check out the following tutorials in
+this manual. **It is highly recommended that new users start with the
+[ODE tutorial](/tutorials/ode_example.html)**. Example IJulia notebooks
+[can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
 For the most up to date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -63,31 +79,10 @@ Using the bleeding edge for the latest features and development is only recommen
 for power users. Information on how to get to the bleeding edge is found in the
 [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html#Bleeding-Edge-1).
 
-### Supported Equations
-
-For PDEs, one can optionally specify a noise equation. The solvers currently have
-stochastic variants for handling Gaussian Space-time white noise SPDEs.
-
-* Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)
-* Ordinary Differential Equations (ODEs)
-* Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
-* Stochastic Differential Equations (SDEs)
-* Random Differential Equations (RDEs)
-* Algebraic Differential Equations (DAEs)
-* Delay Differential Equations (DDEs)
-* (Stochastic) Partial Differential Equations ((S)PDEs):
-
-  * Linear Poisson Equation
-  * Semi-linear Poisson Equation
-  * Linear Heat Equation
-  * Semi-linear Heat Equation (aka Reaction-Diffusion Equation)
-  * Stationary Stokes Equation
-
-For help with choosing a solver algorithm, please see the solver options pages.
-
 ### IJulia Notebook Tutorials
 
-You can access extra tutorials supplied in the [DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+You can access extra tutorials supplied in the
+[DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
 view them locally and interactively, by cloning the repository:
 
@@ -100,8 +95,9 @@ notebook(dir = Pkg.dir("DiffEqTutorials"))
 
 ### Tutorials
 
-The following tutorials will introduce you to the functionality of DifferentialEquations.jl.
-More examples can be found by [checking out the IJulia notebooks in the examples folder](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+The following tutorials will introduce you to the functionality of
+DifferentialEquations.jl. More examples can be found by
+[checking out the IJulia notebooks in the examples folder](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
 ```@contents
 Pages = [
