@@ -17,16 +17,22 @@ To help choose the default algorithm, the keyword argument `alg_hints` is provid
 `alg_hints` is a `Vector{Symbol}` which describe the problem at a high level
 to the solver. The options are:
 
-* `:nonstiff` - Denotes the equation as nonstiff.
-* `:stiff` - Denotes the equation as stiff.
+* `:nonstiff` vs `:stiff` - Denotes the equation as nonstiff/stiff.
 
 Currently unused options include:
 
 * `:interpolant` - Denotes that a high-precision interpolation is important.
 * `:memorybound` - Denotes that the solver will be memory bound.
 
-This functionality is derived via the benchmarks in [DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl)
+This functionality is derived via the benchmarks in
+[DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl)
 and is under active development.
+
+### SDE Specific
+
+* `:additive` - Denotes that the underlying SDE has additive noise.
+* `:stratonovich` - Denotes that the solution should adhere to the Stratonovich
+  interpretation.
 
 ## Output Control
 
@@ -40,10 +46,11 @@ sol = solve(prob; saveat=[0.2, 0.5], dense = true)
 ```
 
 will only save the solution (`sol.u`) at the timepoints `tspan[1], 0.2, 0.5, tspan[end]`.
-It will also enable dense output to the `sol` object, enabling you to do something like `sol(0.345)` which interpolates
-the solution to the time equal to 0.345.
+It will also enable dense output to the `sol` object, enabling you to do something
+like `sol(0.345)` which interpolates the solution to the time equal to 0.345.
 
-The following options are all related to output control. See the "Examples" section at the end of this page for some example usage.
+The following options are all related to output control. See the "Examples"
+section at the end of this page for some example usage.
 
 * `dense`: Denotes whether to save the extra pieces required for dense (continuous)
   output. Default is true for algorithms which have the ability to produce dense output.
@@ -51,18 +58,17 @@ The following options are all related to output control. See the "Examples" sect
   linear interpolation between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
-  most efficient manner (always including the points of `tspan`).
-  Note that this can be used even if `dense=false`. In fact, if only `saveat` is given, then the
-  arguments `save_everystep` and `dense` are becoming `false` by default and must be explicitly given as `true` if desired.
-  If `saveat` is given a number, then it will
-  automatically expand to `tspan[1]:saveat:tspan[2]`.
-  For methods where interpolation is not possible, `saveat` may be equivalent to
-  `tstops`. Default is `[]`.
+  most efficient manner (always including the points of `tspan`). Note that this
+  can be used even if `dense=false`. In fact, if only `saveat` is given, then
+  the arguments `save_everystep` and `dense` are becoming `false` by default and
+  must be explicitly given as `true` if desired.   If `saveat` is given a number,
+  then it will automatically expand to `tspan[1]:saveat:tspan[2]`. For methods
+  where interpolation is not possible, `saveat` may be equivalent to `tstops`.
+  Default is `[]`.
 * `save_idxs`: Denotes the indices for the components of the equation to save.
   Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE,
   and given `save_idxs = [1, 3]`, only the first and third components of the solution will be outputted.
   Notice that of course in this case the outputed solution will be two-dimensional.
-
 * `tstops`: Denotes *extra* times that the timestepping algorithm must step to.
   This should be used to help the solver deal with discontinuities and
   singularities, since stepping exactly at the time of the discontinuity will
@@ -76,7 +82,8 @@ The following options are all related to output control. See the "Examples" sect
 * `save_everystep`: Saves the result at every timeseries_steps iteration.    
   Default is true if `isempty(saveat)`.
 * `timeseries_steps`: Denotes how many steps between saving a value for the
-  timeseries. These "steps" are the steps that the solver stops internally (the ones you get by `save_everystep = true`), not the ones that are
+  timeseries. These "steps" are the steps that the solver stops internally
+  (the ones you get by `save_everystep = true`), not the ones that are
   instructed by the user (all solvers work in a step-like manner). Defaults to 1.
 * `save_start`: Denotes whether the initial condition should be included in
   the solution type as the first timepoint. Defaults to true.
@@ -185,17 +192,23 @@ options control the errors which are calculated:
   throughout `tspan`. An example is the `L2` error. Default is false.
 
 # Examples
-The following lines are examples of how one could use the configuration of `solve()`. For these examples a 3-dimensional ODE problem is assumed, however the extention to other types is straightforward.
+The following lines are examples of how one could use the configuration of
+`solve()`. For these examples a 3-dimensional ODE problem is assumed, however
+the extention to other types is straightforward.
 
-1. `solve(prob, AlgorithmName())` : The "default" setting, with a user-specified algorithm (given by `AlgorithmName()`).
-  All parameters get their default values.
-  This means that the solution is saved at the steps the Algorithm stops internally and dense output is enabled if the
-  chosen algorithm allows for it.
+1. `solve(prob, AlgorithmName())` : The "default" setting, with a user-specified
+  algorithm (given by `AlgorithmName()`).All parameters get their default values.
+  This means that the solution is saved at the steps the Algorithm stops internally
+  and dense output is enabled if the chosen algorithm allows for it.
   All other integration parameters (e.g. stepsize) are chosen automatically.
-2. `solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9)` : Standard setting for accurate output at specified
-  (and equidistant) time intervals, used for e.g. Fourier Transform. The solution is given every 0.01 time units,
-  starting from `tspan[1]`. The solver used is Tsit5() since no keyword `alg_hits` is given.
-3. `solve(prob, maxiters = 1e7, progress = true, save_idxs = [1])` : Using longer maximum number of solver iterations
-  can be useful when a given `tspan` is very long. This example only saves the first of the variables of the system,
-  either to save size or because the user does not care about the others. Finally, with `progress = true` you are enabling
-  the progress bar, provided you are using the Atom+Juno IDE set-up for your Julia.
+2. `solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9)` : Standard setting
+  for accurate output at specified (and equidistant) time intervals, used for
+  e.g. Fourier Transform. The solution is given every 0.01 time units,
+  starting from `tspan[1]`. The solver used is Tsit5() since no keyword
+  `alg_hits` is given.
+3. `solve(prob, maxiters = 1e7, progress = true, save_idxs = [1])` : Using longer
+  maximum number of solver iterations can be useful when a given `tspan` is very
+  long. This example only saves the first of the variables of the system, either
+  to save size or because the user does not care about the others. Finally, with
+  `progress = true` you are enabling the progress bar, provided you are using
+  the Atom+Juno IDE set-up for your Julia.
