@@ -17,3 +17,9 @@ option right now.
 - `SSRootfind` : Using a rootfinding algorithm to find a steady state. Defaults
   to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
   keyword argument.
+
+Example usage:
+
+```julia
+sol = solve(prob,SSRootfind())
+```

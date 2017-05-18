@@ -215,8 +215,8 @@ Note that the constructors for the Sundials algorithms take two main arguments:
     position of the upper and lower non-zero diagonals via `jac_upper` and
     `jac_lower`.
   - `:Diagonal` - This method is specialized for diagonal Jacobians.
-  - `BCG` - A Biconjugate gradient method.
-  - `TFQMR` - A TFQMR method.
+  - `:BCG` - A Biconjugate gradient method.
+  - `:TFQMR` - A TFQMR method.
 
 Example:
 

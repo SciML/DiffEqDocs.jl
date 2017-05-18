@@ -31,6 +31,12 @@ Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 - `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†
 - `SRA1` - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†
 
+Example usage:
+
+```julia
+sol = solve(prob,SRIW1())
+```
+
 For `SRA` and `SRI`, the following option is allowed:
 
 * `tableau`: The tableau for an `:SRA` or `:SRI` algorithm. Defaults to SRIW1 or SRA1.
