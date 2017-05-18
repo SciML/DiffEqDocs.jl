@@ -2061,7 +2061,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For mildly stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
+    "text": "For stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers (Unitful, ArbFloats) will work. When the equation is defined via the @ode_def macro, this will be the most efficient. For faster solving when only the Jacobian is known and the macro is not used, use radau. High precision numbers are also compatible with Trapezoid which is a symplectic integrator. However, for the most efficient solvers for highly stiff equations which need high accuracy, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
 },
 
 {
