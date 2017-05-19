@@ -456,17 +456,37 @@ be the mean.
 ## Example 4: Using the Analysis Tools
 
 In this example we will show how to analyze a `MonteCarloSolution`. First, let's
-generate a 10 solution Monte Carlo experiment:
+generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x2`
+system of linear stochastic differential equations:
 
 ```julia
-prob = prob_sde_2Dlinear
+f = (t,u,du) -> begin
+  for i = 1:length(u)
+    du[i] = 1.01*u[i]
+  end
+end
+σ = (t,u,du) -> begin
+  for i in 1:length(u)
+    du[i] = .87*u[i]
+  end
+end
+prob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2Dlinear
+```
+
+To solve this 10 times, we use the `MonteCarloProblem` constructor and solve
+with `num_monte=10`. Since we wish to compare values at the timesteps, we need
+to make sure the steps all hit the same times. Thus we set `adaptive=false` and
+explicitly give a `dt`.
+
+```julia
 prob2 = MonteCarloProblem(prob)
 sim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)
 ```
 
-The system, `prob_sde_2Dlinear`, is a `(4,2)` system of stochastic
-differential equations which we solved 10 times. We can compute the
-mean and the variance at the 3rd timestep using:
+**Note that if you don't do the `timeseries_steps` calculations, this code is
+compatible with adaptive timestepping. Using adaptivity is usually more efficient!**
+
+We can compute the mean and the variance at the 3rd timestep using:
 
 ```julia
 m,v = timestep_meanvar(sim,3)
