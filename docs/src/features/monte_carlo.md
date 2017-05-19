@@ -369,7 +369,7 @@ using Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title="Phase Space Pl
 plot!(sim,linealpha=0.6,color=:red,vars=(0,2),title="Phase Space Plot")
 ```
 
-![monte_lotka_blue](../assets/monte_lotka_blue.png)
+![monte_lotka_blue](../assets/monte_carlo_blue.png)
 
 We can then summarize this information with the mean/variance bounds using a
 `MonteCarloSummary` plot. We will take the mean/quantile at every `0.1` time
