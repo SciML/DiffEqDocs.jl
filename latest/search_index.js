@@ -653,7 +653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Basic Stepsize Control",
     "category": "section",
-    "text": "These are the standard options for controlling stepping behavior.adaptive: Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.\nreltol: Relative tolerance in adaptive timestepping. Defaults to 1e-3.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ndtmax: Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin: Minimum dt for adaptive timestepping. Defaults are package-dependent."
+    "text": "These are the standard options for controlling stepping behavior.adaptive: Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.\nreltol: Relative tolerance in adaptive timestepping. Defaults to 1e-3.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ndtmax: Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin: Minimum dt for adaptive timestepping. Defaults are package-dependent.\nforce_dtmin: Declares whether to continue, forcing the minimum dt usage. Default is false, which has the solver throw a warning and exit early when encountering the minimum dt. Setting this true allows the solver to continue, never letting dt go below dtmin (and ignoring error tolerances in those cases). Note that true is not compatible with most interop packages."
 },
 
 {
