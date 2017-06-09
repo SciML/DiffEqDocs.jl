@@ -99,7 +99,11 @@ These are the standard options for controlling stepping behavior.
 * `adaptive`: Turns on adaptive timestepping for appropriate methods. Default
   is true.
 * `abstol`: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.
+  In addition, tolerances can be specified element-wise by passing a vector
+  whose size matches `u0`.
 * `reltol`: Relative tolerance in adaptive timestepping. Defaults to 1e-3.
+  In addition, tolerances can be specified element-wise by passing a vector
+  whose size matches `u0`.
 * `dt`: Sets the initial stepsize. This is also the stepsize for fixed
   timestep methods. Defaults to an automatic choice.
 * `dtmax`: Maximum dt for adaptive timestepping. Defaults are
