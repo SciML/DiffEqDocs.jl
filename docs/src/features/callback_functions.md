@@ -227,6 +227,10 @@ at3 = integrator.opts.abstol
 Note that this example is contained in [DiffEqCallbacks.jl](https://github.com/JuliaDiffEq/DiffEqCallbacks.jl),
 a library of useful callbacks for JuliaDiffEq solvers.
 
+### Example 2: A Control Problem
+
+Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/latest/features/diffeq_arrays.html#Example:-A-Control-Problem-1).
+
 ## ContinuousCallback Examples
 
 ### Example 1: Bouncing Ball
@@ -428,7 +432,88 @@ If these fail, constraining the timestep is another option. For most problems
 the defaults should be fine, but these steps will be necessary for "fast" problems
 or highly oscillatory problems.
 
-### Example 2: Growing Cell Population
+### Example 2: Terminating an Integration
+
+In many cases you might want to terminate an integration when some condition is
+satisfied. To terminate an integration, use `terminate!(integrator)` as the `affect!`
+in a callback.
+
+In this example we will solve the differential equation:
+
+```julia
+u0 = [1.,0.]
+function fun2(t,u,du)
+   du[2] = -u[1]
+   du[1] = u[2]
+end
+tspan = (0.0,10.0)
+prob = ODEProblem(fun2,u0,tspan)
+```
+
+which has cosine and -sine as the solutions respectively. We wish to solve until
+the sine part, `u[2]` becomes positive. There are two things we may be looking for.
+
+A `DiscreteCallback` will cause this to halt at the first step such that the condition
+is satisfied. For example, we could use:
+
+```julia
+condition(t,u,integrator) = u[2]>0
+affect!(integrator) = terminate!(integrator)
+cb = DiscreteCallback(condition,affect!)
+sol = solve(prob,Tsit5(),callback=cb)
+```
+
+![discrete_terminate](../assets/discrete_terminate.png)
+
+However, in many cases we wish to halt exactly at the point of time that the
+condition is satisfied. To do that, we use a continuous callback. The condition
+must thus be a function which is zero at the point we want to halt. Thus we
+use the following:
+
+```julia
+condition(t,u,integrator) = u[2]
+affect!(integrator) = terminate!(integrator)
+cb = ContinuousCallback(condition,affect!)
+sol = solve(prob,Tsit5(),callback=cb)
+```
+
+![simple_terminate](../assets/simple_terminate.png)
+
+Note that this uses rootfinding to approximate the "exact" moment of the crossing.
+Analytically we know the value is `pi`, and here the integration terminates at
+
+```julia
+sol.t[end] # 3.1415902502224307
+```
+
+Using a more accurate integration increases the accuracy of this prediction:
+
+```julia
+sol = solve(prob,Vern8(),callback=cb,reltol=1e-12,abstol=1e-12)
+sol.t[end] # 3.1415926535896035
+#π = 3.141592653589703...
+```
+
+Now say we wish to find the when the first period is over, i.e. we want to ignore
+the upcrossing and only stop on the downcrossing. We do this by ignoring the
+`affect!` and only passing an `affect!` for the second:
+
+```julia
+condition(t,u,integrator) = u[2]
+affect!(integrator) = terminate!(integrator)
+cb = ContinuousCallback(condition,nothing,affect!)
+sol = solve(prob,Tsit5(),callback=cb)
+```
+
+![downcrossing_terminate](../assets/downcrossing_terminate.png)
+
+Notice that passing only one `affect!` is the same as
+`ContinuousCallback(condition,affect!,affect!)`, i.e. both upcrossings and
+downcrossings will activate the event. Using
+`ContinuousCallback(condition,affect!,nothing)` will thus be the same as above
+because the first event is an upcrossing.
+
+### Example 3: Growing Cell Population
 
 Another interesting issue is with models of changing sizes. The ability to handle
 such events is a unique feature of DifferentialEquations.jl! The problem we would
