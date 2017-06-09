@@ -510,7 +510,7 @@ sol = solve(prob,Tsit5(),callback=cb)
 Notice that passing only one `affect!` is the same as
 `ContinuousCallback(condition,affect!,affect!)`, i.e. both upcrossings and
 downcrossings will activate the event. Using
-`ContinuousCallback(condition,affect!,nothing)` will thus be the same as above
+`ContinuousCallback(condition,affect!,nothing)`will thus be the same as above
 because the first event is an upcrossing.
 
 ### Example 3: Growing Cell Population
