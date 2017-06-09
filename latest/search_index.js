@@ -3033,6 +3033,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_functions.html#Example-2:-A-Control-Problem-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 2: A Control Problem",
+    "category": "section",
+    "text": "Another example of a DiscreteCallback is the control problem demonstrated on the DiffEq-specific arrays page."
+},
+
+{
     "location": "features/callback_functions.html#ContinuousCallback-Examples-1",
     "page": "Event Handling and Callback Functions",
     "title": "ContinuousCallback Examples",
@@ -3057,9 +3065,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/callback_functions.html#Example-2:-Growing-Cell-Population-1",
+    "location": "features/callback_functions.html#Example-2:-Terminating-an-Integration-1",
     "page": "Event Handling and Callback Functions",
-    "title": "Example 2: Growing Cell Population",
+    "title": "Example 2: Terminating an Integration",
+    "category": "section",
+    "text": "In many cases you might want to terminate an integration when some condition is satisfied. To terminate an integration, use terminate!(integrator) as the affect! in a callback.In this example we will solve the differential equation:u0 = [1.,0.]\nfunction fun2(t,u,du)\n   du[2] = -u[1]\n   du[1] = u[2]\nend\ntspan = (0.0,10.0)\nprob = ODEProblem(fun2,u0,tspan)which has cosine and -sine as the solutions respectively. We wish to solve until the sine part, u[2] becomes positive. There are two things we may be looking for.A DiscreteCallback will cause this to halt at the first step such that the condition is satisfied. For example, we could use:condition(t,u,integrator) = u[2]>0\naffect!(integrator) = terminate!(integrator)\ncb = DiscreteCallback(condition,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: discrete_terminate)However, in many cases we wish to halt exactly at the point of time that the condition is satisfied. To do that, we use a continuous callback. The condition must thus be a function which is zero at the point we want to halt. Thus we use the following:condition(t,u,integrator) = u[2]\naffect!(integrator) = terminate!(integrator)\ncb = ContinuousCallback(condition,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: simple_terminate)Note that this uses rootfinding to approximate the \"exact\" moment of the crossing. Analytically we know the value is pi, and here the integration terminates atsol.t[end] # 3.1415902502224307Using a more accurate integration increases the accuracy of this prediction:sol = solve(prob,Vern8(),callback=cb,reltol=1e-12,abstol=1e-12)\nsol.t[end] # 3.1415926535896035\n#π = 3.141592653589703...Now say we wish to find the when the first period is over, i.e. we want to ignore the upcrossing and only stop on the downcrossing. We do this by ignoring the affect! and only passing an affect! for the second:condition(t,u,integrator) = u[2]\naffect!(integrator) = terminate!(integrator)\ncb = ContinuousCallback(condition,nothing,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: downcrossing_terminate)Notice that passing only one affect! is the same as ContinuousCallback(condition,affect!,affect!), i.e. both upcrossings and downcrossings will activate the event. Using ContinuousCallback(condition,affect!,nothing) will thus be the same as above because the first event is an upcrossing."
+},
+
+{
+    "location": "features/callback_functions.html#Example-3:-Growing-Cell-Population-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 3: Growing Cell Population",
     "category": "section",
     "text": "Another interesting issue is with models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(t,u,integrator) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as when condition==0, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the cell splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:affect! = function (integrator)\n  u = integrator.u\n  resize!(integrator,length(u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\n  nothing\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:callback = ContinuousCallback(condition,affect!)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
 },
