@@ -199,7 +199,7 @@ A `NoiseProcess` is a type defined as
 ```julia
 NoiseProcess(t0,W0,Z0,dist,bridge;
              iip=DiffEqBase.isinplace(dist,3),
-             rswm = RSWM())
+             rswm = RSWM(),save_everystep=true,timeseries_steps=1)
 ```
 
 - `t0` is the first timepoint
@@ -209,6 +209,8 @@ NoiseProcess(t0,W0,Z0,dist,bridge;
 - `dist` the distribution for the steps over time.
 - `bridge` the bridging distribution. Optional, but required for adaptivity and interpolating
   at new values.
+- `save_everystep` whether to save every step of the Brownian timeseries.
+- `timeseries_steps` number of points to skip between each timeseries save.
 
 The signature for the `dist` is
 
@@ -302,8 +304,8 @@ end
 These functions are then placed in a noise process:
 
 ```julia
-NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
-NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
+NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE;kwargs)
+NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE;kwargs)
 ```
 
 Notice that we can optionally provide an alternative adaptive algorithm for the
@@ -313,8 +315,8 @@ timestepping rejections. `RSWM()` defaults to the Rejection Sampling with Memory
 Note that the standard constructors are simply:
 
 ```julia
-WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())
-WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())
+WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE;kwargs)
+WienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE;kwargs)
 ```
 
 These will generate a Wiener process, which can be stepped with `step!(W,dt)`, and interpolated as `W(t)`.
