@@ -195,7 +195,7 @@ is [detailed at the solver algorithm page](../solvers/ode_solve.html). If `dense
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
-For details on more handling the output, see [the solution handling page](../basics/solution.html).
+For details on more handling the output, see [the solution handling page](../../basics/solution.html).
 
 #### Plotting Solutions
 
