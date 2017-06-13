@@ -254,7 +254,7 @@ multiplication.
 
 ## Example 4: Colored Noise
 
-Colored noise can be defined [using the Noise Process interface](../features/noise_process.html).
+Colored noise can be defined [using the Noise Process interface](../../features/noise_process.html).
 In that portion of the docs, it is shown how to define your own noise process
 `my_noise`, which can be passed to the SDEProblem
 
