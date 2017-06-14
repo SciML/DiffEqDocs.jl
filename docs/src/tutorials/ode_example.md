@@ -73,7 +73,7 @@ sol = solve(prob)
 ```
 
 The solvers can be controlled using the available options are described on the
-[Common Solver Options manual page](../basics/common_solver_opts.html). For example,
+[Common Solver Options manual page](../../basics/common_solver_opts.html). For example,
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
@@ -144,7 +144,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `CVODE_BDF()` for stiff equations on `Vector{Float64}`.
 
 For a comprehensive list of the available algorithms and detailed recommendations,
-[Please see the solver documentation](../solvers/ode_solve.html). Every problem
+[Please see the solver documentation](../../solvers/ode_solve.html). Every problem
 type has an associated page detailing all of the solvers associated with the problem.
 
 ### Step 3: Analyzing the Solution
@@ -191,7 +191,7 @@ step, while `(t)` is an interpolation at time `t`!
 If in the solver `dense=true` (this is the default unless `saveat` is used), then
 this interpolation is a high order interpolation and thus usually matches the
 error of the solution time points. The interpolations associated with each solver
-is [detailed at the solver algorithm page](../solvers/ode_solve.html). If `dense=false`
+is [detailed at the solver algorithm page](../../solvers/ode_solve.html). If `dense=false`
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
@@ -220,7 +220,7 @@ gui()
 ```
 
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
-Additional DiffEq-specific controls are documented [at the plotting page](../basics/plot.html).
+Additional DiffEq-specific controls are documented [at the plotting page](../../basics/plot.html).
 
 For example, from the Plots.jl attribute page we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
@@ -463,11 +463,11 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Monte Carlo experiments](../features/monte_carlo.html)
-- [Saving the output to tabular formats like DataFrames and CSVs](../features/io.html)
-- [Event handling](../features/callback_functions.html)
-- [Parameter estimation (inverse problems)](../analysis/parameter_estimation.html)
-- [Quantification of numerical uncertainty and error](../analysis/uncertainty_quantification.html)
+- [Handling, parallelizing, and analyzing large Monte Carlo experiments](../../features/monte_carlo.html)
+- [Saving the output to tabular formats like DataFrames and CSVs](../../features/io.html)
+- [Event handling](../../features/callback_functions.html)
+- [Parameter estimation (inverse problems)](../../analysis/parameter_estimation.html)
+- [Quantification of numerical uncertainty and error](../../analysis/uncertainty_quantification.html)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types
