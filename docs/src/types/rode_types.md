@@ -27,7 +27,7 @@ Defines the RODE with the specified functions. The default noise is `WHITE_NOISE
 * `tspan`: The timespan for the problem.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../features/noise_process.html)
+  see [the noise process documentation page](../../features/noise_process.html)
 * `noise_prototype`: A prototype type instance for the noise vector. It defaults
   to `nothing`, which means the problem should be interpreted as having a noise
   vector whose size matches `u0`.

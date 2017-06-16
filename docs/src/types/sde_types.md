@@ -38,7 +38,7 @@ Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`
 * `tspan`: The timespan for the problem.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../features/noise_process.html)
+  see [the noise process documentation page](../../features/noise_process.html)
 * `noise_rate_prototype`: A prototype type instance for the noise rates, that
   is the output `g`. It can be any type which overloads `A_mul_B!` with itself
   being the middle argument. Commonly, this is a matrix or sparse matrix. If

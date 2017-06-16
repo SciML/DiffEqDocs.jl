@@ -108,7 +108,7 @@ constructor:
 monte_prob = MonteCarloProblem(prob)
 ```
 
-The solver commands are defined [at the Monte Carlo page](../features/monte_carlo.html).
+The solver commands are defined [at the Monte Carlo page](../../features/monte_carlo.html).
 For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
@@ -254,7 +254,7 @@ multiplication.
 
 ## Example 4: Colored Noise
 
-Colored noise can be defined [using the Noise Process interface](../features/noise_process.html).
+Colored noise can be defined [using the Noise Process interface](../../features/noise_process.html).
 In that portion of the docs, it is shown how to define your own noise process
 `my_noise`, which can be passed to the SDEProblem
 
@@ -307,4 +307,4 @@ SDEProblem(f,g,u0,tspan,noise=heston_noise)
 Of course, to fully define this problem we need to define our constants. Constructors
 for making common models like this easier to define can be found in the modeling
 toolkits. For example, the `HestonProblem` is pre-defined as part of the
-[financial modeling tools](../models/financial.html).
+[financial modeling tools](../../models/financial.html).
