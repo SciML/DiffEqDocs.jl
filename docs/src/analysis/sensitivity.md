@@ -78,7 +78,7 @@ Therefore, the solution to the ODE are the first `n` components of the solution.
 This means we can grab the matrix of solution values like:
 
 ```julia
-x = vecvec_to_mat([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])
+x = vecarr_to_arr([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])
 ```
 
 Since each sensitivity is a vector of derivatives for each function, the sensitivities
@@ -97,11 +97,11 @@ is available in this case, including interpolations and plot recipes (the recipe
 will plot the expanded system).
 
 Since the closure returns a vector of vectors, it can be helpful to use
-`vecvec_to_mat` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
+`vecarr_to_arr` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
 in order to plot the solution.
 
 ```julia
-plot(sol.t,vecvec_to_mat(da),lw=3)
+plot(sol.t,vecarr_to_arr(da),lw=3)
 ```
 
 ![Sensitivity Solution](../assets/sensitivityplot.png)

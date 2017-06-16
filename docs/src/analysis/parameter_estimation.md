@@ -132,10 +132,10 @@ sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
 randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
 using RecursiveArrayTools
-data = vecvec_to_mat(randomized)
+data = vecarr_to_arr(randomized)
 ```
 
-Here we used `vecvec_to_mat` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
+Here we used `vecarr_to_arr` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
 to turn the result of an ODE into a matrix.
 
 If we plot the solution with the parameter at `a=1.42`, we get the following:
@@ -253,7 +253,7 @@ sol = solve(prob,Tsit5())
 
 t = collect(linspace(0,10,200))
 randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
-data = vecvec_to_mat(randomized)
+data = vecarr_to_arr(randomized)
 
 obj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
 ```
