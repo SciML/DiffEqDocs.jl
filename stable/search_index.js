@@ -13,7 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "DifferentialEquations.jl Documentation",
     "category": "section",
-    "text": "DifferentialEquations.jl is a package for numerically solving differential equations using the various components of JuliaDiffEq. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include discrete equations (function maps, discrete stochastic simulations like Gillespie/Markov models), ordinary differential equations (ODEs), stochastic ordinary differential equations (SODEs or SDEs), stochastic partial differential equations (SPDEs), partial differential equations (with both finite difference and finite element methods), differential algebraic equations (DAEs), and differential delay equations (DDEs). The well-optimized DifferentialEquations solvers benchmark as the fastest Julia implementations, using classic algorithms and ones from recent research, and include algorithms optimized for high-precision and HPC applications.  It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
+    "text": "This is a suite for numerically solving differential equations in Julia. The purpose of this package is to supply efficient Julia implementations of solvers for various differential equations. Equations within the realm of this package include:Discrete equations (function maps, discrete stochastic (Gillespie/Markov) simulations)\nOrdinary differential equations (ODEs)\nSplit and Partitioned ODEs (Symplectic integrators, IMEX Methods)\nStochastic ordinary differential equations (SODEs or SDEs)\nRandom differential equations (RODEs or RDEs)\nAlgebraic differential equations (DAEs)\nDelay differential equations (DDEs)\nMixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)\n(Stochastic) partial differential equations ((S)PDEs) (with both finite difference and finite element methods)The well-optimized DifferentialEquations solvers benchmark as the some of the fastest   implementations, using classic algorithms and ones from recent research which routinely outperform the \"standard\" C/Fortran methods, and include algorithms optimized for high-precision and HPC applications. It integrates with the Julia package sphere, for example using Juno's progress meter, automatic plotting, built-in interpolations, and wraps other differential equation solvers so that many different methods for solving the equations can be accessed by simply switching a keyword argument. It utilizes Julia's generality to be able to solve problems specified with arbitrary number types (types with units like Unitful, and arbitrary precision numbers like BigFloats and ArbFloats), arbitrary sized arrays (ODEs on matrices), and more. This gives a powerful mixture of speed and productivity features to help you solve and analyze your differential equations faster.If you have any questions, or just want to chat about solvers/using the package, please feel free to use the Gitter channel. For bug reports, feature requests, etc., please submit an issue. If you're interested in contributing, please see the Developer Documentation."
 },
 
 {
@@ -25,19 +25,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Using-the-Package-1",
+    "location": "index.html#Getting-Started:-Installation-And-First-Steps-1",
     "page": "Home",
-    "title": "Using the Package",
+    "title": "Getting Started: Installation And First Steps",
     "category": "section",
-    "text": "To install the package, use the following command inside the Julia REPL:Pkg.add(\"DifferentialEquations\")To load the package, use the command:using DifferentialEquationsThe command Pkg.add(\"DifferentialEquations\") will add solvers and dependencies for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of DifferentialEquations.jl or simply want a more lightweight version, see the Low Dependency Usage page.To understand the package in more detail, check out the following tutorials in this manual. Example IJulia notebooks can also be found in DiffEqTutorials.jl. If you find any example where there seems to be an error, please open an issue.For the most up to date information on using the package, please join the Gitter channel.Using the bleeding edge for the latest features and development is only recommended for power users. Information on how to get to the bleeding edge is found in the developer documentation."
-},
-
-{
-    "location": "index.html#Supported-Equations-1",
-    "page": "Home",
-    "title": "Supported Equations",
-    "category": "section",
-    "text": "For PDEs, one can optionally specify a noise equation. The solvers currently have stochastic variants for handling Gaussian Space-time white noise SPDEs.Discrete Equations (function maps, discrete stochastic (Gillespie/Markov) simulations)\nOrdinary Differential Equations (ODEs)\nSplit and Partitioned ODEs (Symplectic integrators, IMEX Methods)\nStochastic Differential Equations (SDEs)\nRandom Differential Equations (RDEs)\nAlgebraic Differential Equations (DAEs)\nDelay Differential Equations (DDEs)\n(Stochastic) Partial Differential Equations ((S)PDEs):\nLinear Poisson Equation\nSemi-linear Poisson Equation\nLinear Heat Equation\nSemi-linear Heat Equation (aka Reaction-Diffusion Equation)\nStationary Stokes EquationFor help with choosing a solver algorithm, please see the solver options pages."
+    "text": "To install the package, use the following command inside the Julia REPL:Pkg.add(\"DifferentialEquations\")To load the package, use the command:using DifferentialEquationsThe command Pkg.add(\"DifferentialEquations\") will add solvers and dependencies for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of DifferentialEquations.jl or simply want a more lightweight version, see the Low Dependency Usage page.To understand the package in more detail, check out the following tutorials in this manual. It is highly recommended that new users start with the ODE tutorial. Example IJulia notebooks can also be found in DiffEqTutorials.jl. If you find any example where there seems to be an error, please open an issue.For the most up to date information on using the package, please join the Gitter channel.Using the bleeding edge for the latest features and development is only recommended for power users. Information on how to get to the bleeding edge is found in the developer documentation."
 },
 
 {
@@ -65,9 +57,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#Equation-Types-1",
+    "location": "index.html#Problem-Types-1",
     "page": "Home",
-    "title": "Equation Types",
+    "title": "Problem Types",
     "category": "section",
     "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
@@ -85,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -117,31 +109,79 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Ordinary Differential Equations",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out DiffEqTutorials.jl.In this example we will solve the equationfracdudt = f(tu)on the time interval tin01 where f(tu)=u. We know via Calculus that the solution to this equation is u(t)=uexp(t). To solve this numerically, we define a problem type by giving it the equation, the initial condition, and the timespan to solve over:using DifferentialEquations\nα=1\nu0=1/2\nf(t,u) = α*u\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)Note that DifferentialEquations.jl will choose the types for the problem based on the types used to define the problem type. For our example, notice that u0 is a Float64, and therefore this will solve with the dependent variables being Float64. Since tspan = (0.0,1.0) is a tuple of Float64's, the independent variabes will be solved using Float64's (note that the start time and end time must match types). You can use this to choose to solve with arbitrary precision numbers, unitful numbers, etc. Please see the tutorials for more details.After defining a problem, you solve it using solve.sol = solve(prob)DifferentialEquations.jl has a method for choosing the default solver algorithm and the (adaptive) stepsizes dt, and so this will find an efficient method to solve your problem. You can also explicitly choose an algorithm and pass in some parameters.sol = solve(prob,Euler(),dt=1/2^4)In this case I chose to use the classic Euler method, and gave it a stepsize dt=1/2^4. Normally dt is the starting stepsize but since the Euler method is not adaptive this is the stepsize for the calculation. The available options are described on the Common Solver Options manual page.The result of solve is a solution object. We can access the 5th value of the solution withsol[5] #.637or get the time of the 8th timestep bysol.t[8]\n#.438Convenience features are also included. We can build an array using a comprehension over the solution tuples via[t+u for (t,u) in tuples(sol)]or more generally[t+2u for (t,u) in zip(sol.t,sol.u)]allows one to use more parts of the solution type. The object that is returned by default acts as a continuous solution via an interpolation. We can access the interpolated values by treating sol as a function, for example:sol(0.45) # The value of the solution at t=0.45For details on more finely controlling the output, see the Output Specification manual pagePlotting commands are provided via a recipe to Plots.jl. To plot the solution object, simply call plot:#Pkg.add(\"Plots\") # You need to install Plots.jl before your first time using it!\nusing Plots\n#gr() # You can optionally choose a plotting backend\nplot(sol)If you are in Juno, this will plot to the plot pane. To open an interactive GUI (dependent on the backend), use the gui command:gui()The plot function can be formatted using the attributes available in Plots.jl. For more of an introduction to plotting solutions, see the IJulia notebook."
+    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out DiffEqTutorials.jl."
 },
 
 {
-    "location": "tutorials/ode_example.html#Other-Algorithms-1",
+    "location": "tutorials/ode_example.html#Example-1-:-Solving-Scalar-Equations-1",
     "page": "Ordinary Differential Equations",
-    "title": "Other Algorithms",
+    "title": "Example 1 : Solving Scalar Equations",
     "category": "section",
-    "text": "DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms (which are also available). For example, we can choose a 7th order Verner Efficient method:sol = solve(prob,Vern7())\nplot(sol,title=\"Solving using the Vern7 Method\")(Image: Better ODE Solution)Because these advanced algorithms may not be known to most users, DifferentialEquations.jl offers an advanced method for choosing algorithm defaults. This algorithm utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem but don't know the best stiff algorithm for this problem, we can usesol = solve(prob,alg_hints=[:stiff])Please see the solver documentation for details on the algorithms and recommendations."
+    "text": "In this example we will solve the equationfracdudt = f(tu)on the time interval tin01 where f(tu)=u. We know by Calculus that the solution to this equation is u(t)=uexp(t).The general workflow is to define a problem, solve the problem, and then analyze the solution. The full code for solving this problem is:using DifferentialEquations\nf(t,u) = 1.01*u\nu0=1/2\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)\nusing Plots\nplot(sol,linewidth=5,title=\"Solution to the linear ODE with a thick line\",\n     xaxis=\"Time (t)\",yaxis=\"u(t) (in μm)\",label=\"My Thick Line!\") # legend=false\nplot!(sol.t, t->0.5*exp(1.01t),lw=3,ls=:dash,label=\"True Solution!\")where the pieces are described below."
 },
 
 {
-    "location": "tutorials/ode_example.html#Systems-of-Equations-1",
+    "location": "tutorials/ode_example.html#Step-1:-Defining-a-Problem-1",
     "page": "Ordinary Differential Equations",
-    "title": "Systems of Equations",
+    "title": "Step 1: Defining a Problem",
     "category": "section",
-    "text": "We can also solve systems of equations. DifferentialEquations.jl can handle many different dependent variable types (generally, anything with a linear index should work!). So instead of solving a vector equation, let's let u be a matrix! To do this, we simply need to have u₀ be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A = [1. 0 0 -5\n     4 -2 4 -3\n     -4 0 0 1\n     5 -2 2 3]\nu0 = rand(4,2)\ntspan = (0.0,1.0)\nf(t,u) = A*u\nprob = ODEProblem(f,u0,tspan)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob)\nplot(sol)(Image: ODE System Solution)Note that the analysis tools generalize over to systems of equations as well.sol[4]still returns the solution at the fourth timestep. It also indexes into the array as well. The last value is the timestep, and the beginning values are for the component. This meanssol[5,3]is the value of the 5th component (by linear indexing) at the 3rd timepoint, orsol[2,1,:]is the timeseries for the component which is the 2nd row and 1 column."
+    "text": "To solve this numerically, we define a problem type by giving it the equation, the initial condition, and the timespan to solve over:using DifferentialEquations\nf(t,u) = 1.01*u\nu0=1/2\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)Note that DifferentialEquations.jl will choose the types for the problem based on the types used to define the problem type. For our example, notice that u0 is a Float64, and therefore this will solve with the dependent variables being Float64. Since tspan = (0.0,1.0) is a tuple of Float64's, the independent variables will be solved using Float64's (note that the start time and end time must match types). You can use this to choose to solve with arbitrary precision numbers, unitful numbers, etc. Please see the notebook tutorials for more examples.The problem types include many other features, including the ability to define mass matrices and hold callbacks for events. Each problem type has a page which details its constructor and the available fields. For ODEs, the appropriate page is here. In addition, a user can specify additional functions to be associated with the function in order to speed up the solvers. These are detailed at the performance overloads page."
 },
 
 {
-    "location": "tutorials/ode_example.html#In-Place-Updates-1",
+    "location": "tutorials/ode_example.html#Step-2:-Solving-a-Problem-1",
     "page": "Ordinary Differential Equations",
-    "title": "In-Place Updates",
+    "title": "Step 2: Solving a Problem",
     "category": "section",
-    "text": "Defining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl's solver packages are able to reduce the amount of array allocations and achieve better performance.For our example we will use the Lorenz system. What we do is simply write the output to the 3rd input of the function. For example:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)(Image: Lorenz System)"
+    "text": ""
+},
+
+{
+    "location": "tutorials/ode_example.html#Controlling-the-Solvers-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Controlling the Solvers",
+    "category": "section",
+    "text": "After defining a problem, you solve it using solve.sol = solve(prob)The solvers can be controlled using the available options are described on the Common Solver Options manual page. For example, we can lower the relative tolerance (in order to get a more correct result, at the cost of more timesteps) by using the command reltol:sol = solve(prob,reltol=1e-6)There are many controls for handling outputs. For example, we can choose to have the solver save every 0.1 time points by setting saveat=0.1. Chaining this with the tolerance choice looks like:sol = solve(prob,reltol=1e-6,saveat=0.1)More generally, saveat can be any collection of time points to save at. Note that this uses interpolations to keep the timestep unconstrained to speed up the solution. In addition, if we only care about the endpoint, we can turn off intermediate saving in general:sol = solve(prob,reltol=1e-6,save_everystep=false)which will only save the final time point."
+},
+
+{
+    "location": "tutorials/ode_example.html#Choosing-a-Solver-Algorithm-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Choosing a Solver Algorithm",
+    "category": "section",
+    "text": "DifferentialEquations.jl has a method for choosing the default solver algorithm which will find an efficient method to solve your problem. To help users receive the right algorithm, DifferentialEquations.jl offers a method for choosing algorithms through hints. This default chooser utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem where we need high accuracy, but don't know the best stiff algorithm for this problem, we can use:sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)You can also explicitly choose the algorithm to use. DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms. For example, we can choose a 5th order Tsitouras method:sol = solve(prob,Tsit5())Note that the solver controls can be combined with the algorithm choice. Thus we can for example solve the problem using Tsit5() with a lower tolerance via:sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)In DifferentialEquations.jl, some good \"go-to\" choices for ODEs are:BS3() for fast low accuracy non-stiff.\nTsit5() for standard non-stiff. This is the first algorithm to try in most cases.\nVern7() for high accuracy non-stiff.\nRosenbrock23() for stiff equations with Julia-defined types, events, etc.\nCVODE_BDF() for stiff equations on Vector{Float64}.For a comprehensive list of the available algorithms and detailed recommendations, Please see the solver documentation. Every problem type has an associated page detailing all of the solvers associated with the problem."
+},
+
+{
+    "location": "tutorials/ode_example.html#Step-3:-Analyzing-the-Solution-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Step 3: Analyzing the Solution",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "tutorials/ode_example.html#Handling-the-Solution-Type-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Handling the Solution Type",
+    "category": "section",
+    "text": "The result of solve is a solution object. We can access the 5th value of the solution with:sol[5] #.637or get the time of the 8th timestep by:sol.t[8] #.438Convenience features are also included. We can build an array using a comprehension over the solution tuples via:[t+u for (t,u) in tuples(sol)]or more generally[t+2u for (t,u) in zip(sol.t,sol.u)]allows one to use more parts of the solution type. The object that is returned by default acts as a continuous solution via an interpolation. We can access the interpolated values by treating sol as a function, for example:sol(0.45) # The value of the solution at t=0.45Note the difference between these: indexing with [i] is the value at the ith step, while (t) is an interpolation at time t!If in the solver dense=true (this is the default unless saveat is used), then this interpolation is a high order interpolation and thus usually matches the error of the solution time points. The interpolations associated with each solver is detailed at the solver algorithm page. If dense=false (unless specifically set, this only occurs when save_everystep=false or saveat is used) then this defaults to giving a linear interpolation.For details on more handling the output, see the solution handling page."
+},
+
+{
+    "location": "tutorials/ode_example.html#Plotting-Solutions-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Plotting Solutions",
+    "category": "section",
+    "text": "While one can directly plot solution time points using the tools given above, convenience commands are defined by recipes for Plots.jl. To plot the solution object, simply call plot:#Pkg.add(\"Plots\") # You need to install Plots.jl before your first time using it!\nusing Plots\n#plotly() # You can optionally choose a plotting backend\nplot(sol)(Image: ode_tutorial_linear_plot)If you are in Juno, this will plot to the plot pane. To open an interactive GUI (dependent on the backend), use the gui command:gui()The plot function can be formatted using the attributes available in Plots.jl. Additional DiffEq-specific controls are documented at the plotting page.For example, from the Plots.jl attribute page we see that the line width can be set via the argument linewidth. Additionally, a title can be set with title. Thus we add these to our plot command to get the correct output, fix up some axis labels, and change the legend (note we can disable the legend with legend=false) to get a nice looking plot:plot(sol,linewidth=5,title=\"Solution to the linear ODE with a thick line\",\n     xaxis=\"Time (t)\",yaxis=\"u(t) (in μm)\",label=\"My Thick Line!\") # legend=falseWe can then add to the plot using the plot! command:plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label=\"True Solution!\")(Image: ode_tutorial_thick_linear)"
+},
+
+{
+    "location": "tutorials/ode_example.html#Example-2:-Solving-Systems-of-Equations-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Example 2: Solving Systems of Equations",
+    "category": "section",
+    "text": "In this example we will solve the Lorenz equations:beginalign\nfracdxdt = (y-x) \nfracdydt = x(-z) - y \nfracdzdt = xy - z \nendalignDefining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, you write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl's solver packages are able to reduce the amount of array allocations and achieve better performance.The way we do this is we simply write the output to the 3rd input of the function. For example, our Lorenz equation problem would be defined by the function:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,100.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)Using the plot recipe tools defined on the plotting page, we can choose to do a 3D phase space plot between the different variables:plot(sol,vars=(1,2,3))(Image: Lorenz System)Note that the default plot for multi-dimensional systems is an overlay of each timeseries. We can plot the timeseries of just the second component using the variable choices interface once more:plot(sol,vars=(0,2))(Image: Lorenz Timeseries)Note that here \"variable 0\" corresponds to the dependent variable (\"time\")."
 },
 
 {
@@ -149,7 +189,39 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Defining Systems of Equations Using ParameterizedFunctions.jl",
     "category": "section",
-    "text": "To simplify your life, ParameterizedFunctions.jl provides the @ode_def macro for \"defining your ODE in pseudocode\" and getting a function which is efficient and runnable.To use the macro, you write out your system of equations with the left-hand side being d_ and those variables will be parsed as the dependent variables. The independent variable is t, and the other variables are parameters which you pass at the end. For example, we can write the Lorenz system as:using ParameterizedFunctions\ng = @ode_def LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)DifferentialEquations.jl will automatically translate this to be exactly the same as f. The result is more legible code with no performance loss. The result is that g is a function which you can now use to define the Lorenz problem.u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(g,u0,tspan)Since we used =>, σ and ρ are kept as mutable parameters. For example we can do:g.σ = 11.0to change the value of σ to 11.0. β is not able to be changed since we defined it using =. We can create a new instance with new parameters via the name used in the @ode_def command:h = LorenzExample(σ=11.0,ρ=25.0)Note that the values will default to the values given to the @ode_def command.One last item to note is that you probably received a warning when defining this:WARNING: Hessian could not invertThis is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl does \"behind-the-scenes\" symbolic calculations to pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up calculations. Thus not only will this lead to legible ODE definitions, but \"unfairly fast\" code! We can turn off some of the calculations by using a more specific macro. Here, we can turn off the Hessian calculations via @ode_def_nohes. See ParameterizedFunctions.jl for more details.Since the parameters exist within the function, functions defined in this manner can also be used for sensitivity analysis, parameter estimation routines, and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution for differential equation analysis which also achieves high performance."
+    "text": "To simplify your life, the @ode_def macro allows for \"defining your ODE in pseudocode\" and getting a function which is efficient and runnable.To use the macro, you write out your system of equations with the left-hand side being d_ and those variables will be parsed as the dependent variables. The independent variable is t, and the other variables are parameters which you pass at the end. For example, we can write the Lorenz system as:g = @ode_def LorenzExample begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10.0 ρ=>28.0 β=(8/3)DifferentialEquations.jl will automatically translate this to be exactly the same as f. The result is more legible code with no performance loss. The result is that g is a function which you can now use to define the Lorenz problem.u0 = [1.0;0.0;0.0]\ntspan = (0.0,1.0)\nprob = ODEProblem(g,u0,tspan)Since we used =>, σ and ρ are kept as mutable parameters. For example we can do:g.σ = 11.0to change the value of σ to 11.0. β is not able to be changed since we defined it using =. We can create a new instance with new parameters via the name used in the @ode_def command:h = LorenzExample(σ=11.0,ρ=25.0)Note that the values will default to the values given to the @ode_def command.One last item to note is that you probably received a warning when defining this:WARNING: Hessian could not invertThis is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl does \"behind-the-scenes\" symbolic calculations to pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up calculations. Thus not only will this lead to legible ODE definitions, but \"unfairly fast\" code! We can turn off some of the calculations by using a more specific macro. Here, we can turn off the Hessian calculations via @ode_def_nohes. See ParameterizedFunctions.jl for more details.Since the parameters exist within the function, functions defined in this manner can also be used for sensitivity analysis, parameter estimation routines, and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution for differential equation analysis which also achieves high performance."
+},
+
+{
+    "location": "tutorials/ode_example.html#Example-3:-Using-Other-Types-for-Systems-of-Equations-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Example 3: Using Other Types for Systems of Equations",
+    "category": "section",
+    "text": "DifferentialEquations.jl can handle many different dependent variable types (generally, anything with a linear index should work!). So instead of solving a vector equation, let's let u be a matrix! To do this, we simply need to have u0 be a matrix, and define f such that it takes in a matrix and outputs a matrix. We can define a matrix of linear ODEs as follows:A  = [1. 0  0 -5\n      4 -2  4 -3\n     -4  0  0  1\n      5 -2  2  3]\nu0 = rand(4,2)\ntspan = (0.0,1.0)\nf(t,u) = A*u\nprob = ODEProblem(f,u0,tspan)Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by multiplication by A. To solve the ODE, we do the same steps as before.sol = solve(prob)\nplot(sol)(Image: ODE System Solution)We can instead use the in-place form by using Julia's in-place matrix multiplication function A_mul_B!:f(t,u,du) = A_mul_B!(du,A,u)Additionally, we can use non-traditional array types as well. For example, StaticArrays.jl offers immutable arrays which are stack-allocated, meaning that their usage does not require any (slow) heap-allocations that arrays normally have. This means that they can be used to solve the same problem as above, with the only change being the type for the initial condition and constants:using StaticArrays, DifferentialEquations\nA  = @SMatrix [ 1.0  0.0 0.0 -5.0\n                4.0 -2.0 4.0 -3.0\n               -4.0  0.0 0.0  1.0\n                5.0 -2.0 2.0  3.0]\nu0 = @SMatrix rand(4,2)\ntspan = (0.0,1.0)\nf(t,u) = A*u\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob)\nusing Plots; plot(sol)Note that the analysis tools generalize over to systems of equations as well.sol[4]still returns the solution at the fourth timestep. It also indexes into the array as well. The last value is the timestep, and the beginning values are for the component. This meanssol[5,3]is the value of the 5th component (by linear indexing) at the 3rd timepoint, orsol[2,1,:]is the timeseries for the component which is the 2nd row and 1 column."
+},
+
+{
+    "location": "tutorials/ode_example.html#Going-Beyond-ODEs:-How-to-Use-the-Documentation-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Going Beyond ODEs: How to Use the Documentation",
+    "category": "section",
+    "text": "Not everything can be covered in the tutorials. Instead, this tutorial will end by pointing you in the directions for the next steps."
+},
+
+{
+    "location": "tutorials/ode_example.html#Common-API-for-Defining,-Solving,-and-Plotting-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Common API for Defining, Solving, and Plotting",
+    "category": "section",
+    "text": "One feature of DifferentialEquations.jl is that this pattern for solving equations is conserved across the different types of differential equations. Every equation has a problem type, a solution type, and the same solution handling (+ plotting) setup. Thus the solver and plotting commands in the Basics section applies to all sorts of equations, like stochastic differential equations and delay differential equations. Each of these different problem types are defined in the Problem Types section of the docs. Every associated solver algorithm is detailed in the Solver Algorithms section, sorted by problem type. The same steps for ODEs can then be used for the analysis of the solution."
+},
+
+{
+    "location": "tutorials/ode_example.html#Additional-Features-and-Analysis-Tools-1",
+    "page": "Ordinary Differential Equations",
+    "title": "Additional Features and Analysis Tools",
+    "category": "section",
+    "text": "In many cases, the common workflow only starts with solving the differential equation. Many common setups have built-in solutions in DifferentialEquations.jl. For example, check out the features for:Handling, parallelizing, and analyzing large Monte Carlo experiments\nSaving the output to tabular formats like DataFrames and CSVs\nEvent handling\nParameter estimation (inverse problems)\nQuantification of numerical uncertainty and errorMany more are defined in the relevant sections of the docs. Please explore the rest of the documentation, including tutorials for getting started with other types of equations. In addition, to get help, please either file an issue at the main repository or come have an informal discussion at our Gitter chatroom."
 },
 
 {
@@ -169,27 +241,59 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/sde_example.html#Basics-1",
+    "location": "tutorials/sde_example.html#Example-1:-Scalar-SDEs-1",
     "page": "Stochastic Differential Equations",
-    "title": "Basics",
+    "title": "Example 1: Scalar SDEs",
     "category": "section",
-    "text": "In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation is u(tW)=uexp((-frac^22)t+W). To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4)\ntspan = (0.0,1.0)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))The solve interface is then the same as with ODEs. Here we will use the classic Euler-Maruyama algorithm EM and plot the solution:sol = solve(prob,EM(),dt=dt)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)(Image: Basic Solution)"
+    "text": "In this example we will solve the equationdu = f(tu)dt + g(tu)dWwhere f(tu)=u and g(tu)=u. We know via Stochastic Calculus that the solution to this equation isu(tW)=uexp((-frac^22)t+W)To solve this numerically, we define a problem type by giving it the equation and the initial condition:using DifferentialEquations\nα=1\nβ=1\nu₀=1/2\nf(t,u) = α*u\ng(t,u) = β*u\ndt = 1//2^(4)\ntspan = (0.0,1.0)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))The solve interface is then the same as with ODEs. Here we will use the classic Euler-Maruyama algorithm EM and plot the solution:sol = solve(prob,EM(),dt=dt)\nusing Plots; plotly() # Using the Plotly backend\nplot(sol)(Image: Basic Solution)"
 },
 
 {
-    "location": "tutorials/sde_example.html#Higher-Order-Methods-1",
+    "location": "tutorials/sde_example.html#Using-Higher-Order-Methods-1",
     "page": "Stochastic Differential Equations",
-    "title": "Higher Order Methods",
+    "title": "Using Higher Order Methods",
     "category": "section",
-    "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:analytic(t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDETestProblem(f,g,u₀,analytic)and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM(),dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1(),dt=dt,adaptive=false)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)By default, the higher order methods have adaptivity. Thus one can usesol =solve(prob,SRIW1())\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)Here we allowed the solver to automatically determine a starting dt. This estimate at the beginning is conservative (small) to ensure accuracy. We can instead start the method with a larger dt by passing in a value for the starting dt:sol =solve(prob,SRIW1(),dt=dt)\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)"
+    "text": "One unique feature of DifferentialEquations.jl is that higher-order methods for stochastic differential equations are included. For reference, let's also give the SDEProblem the analytical solution. We can do this by making a test problem. This can be a good way to judge how accurate the algorithms are, or is used to test convergence of the algorithms for methods developers. Thus we define the problem object with:f(::Type{Val{:analytic}},t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)\nprob = SDEProblem(f,g,u₀,(0.0,1.0))and then we pass this information to the solver and plot:#We can plot using the classic Euler-Maruyama algorithm as follows:\nsol =solve(prob,EM(),dt=dt)\nplot(sol,plot_analytic=true)(Image: SDE Solution)We can choose a higher-order solver for a more accurate result:sol =solve(prob,SRIW1(),dt=dt,adaptive=false)\nplot(sol,plot_analytic=true)(Image: Better SDE Solution)By default, the higher order methods have adaptivity. Thus one can usesol =solve(prob,SRIW1())\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)Here we allowed the solver to automatically determine a starting dt. This estimate at the beginning is conservative (small) to ensure accuracy. We can instead start the method with a larger dt by passing in a value for the starting dt:sol =solve(prob,SRIW1(),dt=dt)\nplot(sol,plot_analytic=true)(Image: Better Automatic Solution)"
 },
 
 {
-    "location": "tutorials/sde_example.html#Non-Diagonal-Noise-1",
+    "location": "tutorials/sde_example.html#Monte-Carlo-Simulations-1",
     "page": "Stochastic Differential Equations",
-    "title": "Non-Diagonal Noise",
+    "title": "Monte Carlo Simulations",
     "category": "section",
-    "text": "All of the previous examples had diagonal noise, that is a vector of random numbers dW whose size matches the output of g, and the noise is applied element-wise. However, a more general type of noise allows for the terms to linearly mixed.Let's define a problem with four Wiener processes and two dependent random variables. In this case, we will want the output of g to be a 2x4 matrix, such that the solution is g(t,u)*dW, the matrix multiplication. For example, we can do the following:f = (t,u,du) -> du.=1.01u\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,2] = 0.6u[1]\n  du[1,3] = 0.9u[1]\n  du[1,4] = 0.12u[2]\n  du[2,1] = 1.2u[1]\n  du[2,2] = 0.2u[2]\n  du[2,3] = 0.3u[2]\n  du[2,4] = 1.8u[2]\nend\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))In our g we define the functions for computing the values of the matrix. The matrix itself is determined by the keyword argument noise_rate_prototype in the SDEProblem constructor. This is a prototype for the type that du will be in g. This can be any AbstractMatrix type. Thus for example, we can define the problem as\n# Define a sparse matrix by making a dense matrix and setting some values as not zero\nA = zeros(2,4)\nA[1,1] = 1\nA[1,4] = 1\nA[2,4] = 1\nsparse(A)\n\n# Make `g` write the sparse matrix values\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,4] = 0.12u[2]\n  du[2,4] = 1.8u[2]\nend\n\n# Make `g` use the sparse matrix\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)and now g(t,u) writes into a sparse matrix, and g(t,u)*dW is sparse matrix multiplication."
+    "text": "Instead of solving single trajectories, we can turn our problem into a MonteCarloProblem to solve many trajectories all at once. This is done by the MonteCarloProblem constructor:monte_prob = MonteCarloProblem(prob)The solver commands are defined at the Monte Carlo page. For example we can choose to have 1000 trajectories via num_monte=1000. In addition, this will automatically parallelize using Julia native parallelism if extra processes are added via addprocs(), but we can change this to use multithreading via parallel_type=:threads. Together, this looks like:sol = solve(monte_prob,num_monte=1000,paralle_type=:threads)Many more controls are defined at the Monte Carlo page, including analysis tools. A very simple analysis can be done with the MonteCarloSummary, which builds mean/var statistics and has an associated plot recipe. For example, we can get the statistics at every 0.01 timesteps and plot the average + error using:summ = MonteCarloSummary(sol,0:0.01:1)\nplot(summ)(Image: sde_tutorial_monte)Additionally we can easily calculate the correlation between the values at t=0.2 and t=0.7 viatimepoint_meancor(sim,0.2,0.7) # Gives both means and then the correlation coefficient"
+},
+
+{
+    "location": "tutorials/sde_example.html#Example-2:-Systems-of-SDEs-with-Diagonal-Noise-1",
+    "page": "Stochastic Differential Equations",
+    "title": "Example 2: Systems of SDEs with Diagonal Noise",
+    "category": "section",
+    "text": "Generalizing to systems of equations is done in the same way as ODEs. In this case, we can define both f and g as in-place functions. Without any other input, the problem is assumed to have diagonal noise, meaning that each component of the system has a unique Wiener process. Thus f(t,u,du) gives a vector of du which is the deterministic change, and g(t,u,du2) gives a vector du2 for which du2.*W is the stochastic portion of the equation.For example, the Lorenz equation with additive noise has the same deterministic portion as the Lorenz equations, but adds an additive noise, which is simply 3*N(0,dt) where N is the normal distribution dt is the time step, to each step of the equation. This is done via:function lorenz(t,u,du)\n du[1] = 10.0(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nend\n\nfunction σ_lorenz(t,u,du)\n du[1] = 3.0\n du[2] = 3.0\n du[3] = 3.0\nend\n\nprob_sde_lorenz = SDEProblem(lorenz,σ_lorenz,[1.0,0.0,0.0],(0.0,10.0))\nsol = solve(prob_sde_lorenz)\nplot(sol,vars=(1,2,3))(Image: stochastic_3d_lorenz)Note that it's okay for the noise function to mix terms. For examplefunction σ_lorenz(t,u,du)\n du[1] = sin(u[3])*3.0\n du[2] = u[2]*u[1]*3.0\n du[3] = 3.0\nendis a valid noise function, which will once again give diagonal noise by du2.*W. Note also that in this format, it is fine to use ParameterizedFunctions. For example, the Lorenz equation could have been defined as:f = @ode_def_nohes LorenzSDE begin\n  dx = σ*(y-x)\n  dy = x*(ρ-z) - y\n  dz = x*y - β*z\nend σ=>10. ρ=>28. β=>2.66\n\ng = @ode_def_nohes LorenzSDENoise begin\n  dx = α\n  dy = α\n  dz = α\nend α=>3.0"
+},
+
+{
+    "location": "tutorials/sde_example.html#Example-3:-Systems-of-SDEs-with-Non-Diagonal-Noise-1",
+    "page": "Stochastic Differential Equations",
+    "title": "Example 3: Systems of SDEs with Non-Diagonal Noise",
+    "category": "section",
+    "text": "In the previous example we had diagonal noise, that is a vector of random numbers dW whose size matches the output of g, and the noise is applied element-wise. However, a more general type of noise allows for the terms to linearly mixed.Let's define a problem with four Wiener processes and two dependent random variables. In this case, we will want the output of g to be a 2x4 matrix, such that the solution is g(t,u)*dW, the matrix multiplication. For example, we can do the following:f = (t,u,du) -> du.=1.01u\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,2] = 0.6u[1]\n  du[1,3] = 0.9u[1]\n  du[1,4] = 0.12u[2]\n  du[2,1] = 1.2u[1]\n  du[2,2] = 0.2u[2]\n  du[2,3] = 0.3u[2]\n  du[2,4] = 1.8u[2]\nend\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))In our g we define the functions for computing the values of the matrix. The matrix itself is determined by the keyword argument noise_rate_prototype in the SDEProblem constructor. This is a prototype for the type that du will be in g. This can be any AbstractMatrix type. Thus for example, we can define the problem as\n# Define a sparse matrix by making a dense matrix and setting some values as not zero\nA = zeros(2,4)\nA[1,1] = 1\nA[1,4] = 1\nA[2,4] = 1\nsparse(A)\n\n# Make `g` write the sparse matrix values\ng = function (t,u,du)\n  du[1,1] = 0.3u[1]\n  du[1,4] = 0.12u[2]\n  du[2,4] = 1.8u[2]\nend\n\n# Make `g` use the sparse matrix\nprob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)and now g(t,u) writes into a sparse matrix, and g(t,u)*dW is sparse matrix multiplication."
+},
+
+{
+    "location": "tutorials/sde_example.html#Example-4:-Colored-Noise-1",
+    "page": "Stochastic Differential Equations",
+    "title": "Example 4: Colored Noise",
+    "category": "section",
+    "text": "Colored noise can be defined using the Noise Process interface. In that portion of the docs, it is shown how to define your own noise process my_noise, which can be passed to the SDEProblemSDEProblem(f,g,u0,tspan,noise=my_noise)"
+},
+
+{
+    "location": "tutorials/sde_example.html#Example:-Spatially-Colored-Noise-in-the-Heston-Model-1",
+    "page": "Stochastic Differential Equations",
+    "title": "Example: Spatially-Colored Noise in the Heston Model",
+    "category": "section",
+    "text": "Let's define the Heston equation from financial mathematics:dS = Sdt + sqrtvSdW_1 \ndv = (-v)dt + sqrtvdW_2 \ndW_1 dW_2 =  dtIn this problem, we have a diagonal noise problem given by:f = function (t,u,du)\n  du[1] = μ*u[1]\n  du[2] = κ*(Θ-u[2])\nend\ng = function (t,u,du)\n  du[1] = √u[2]*u[1]\n  du[2] = Θ*√u[2]\nendHowever, our noise has a correlation matrix for some constant ρ. Choosing ρ=0.2:Γ = [1 ρ;ρ 1]To solve this, we can define a CorrelatedWienerProcess which starts at zero (W(0)=0) via:heston_noise = CorrelatedWienerProcess!(Γ,tspan[1],zeros(2),zeros(2))This is then used to build the SDE:SDEProblem(f,g,u0,tspan,noise=heston_noise)Of course, to fully define this problem we need to define our constants. Constructors for making common models like this easier to define can be found in the modeling toolkits. For example, the HestonProblem is pre-defined as part of the financial modeling tools."
 },
 
 {
@@ -209,17 +313,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/rode_example.html#Basics-1",
+    "location": "tutorials/rode_example.html#Example-1:-Scalar-RODEs-1",
     "page": "Random Ordinary Differential Equations",
-    "title": "Basics",
+    "title": "Example 1: Scalar RODEs",
     "category": "section",
     "text": "In this example we will solve the equationdu = f(tuy)dtwhere f(tuW)=2usin(W) and W(t) is a Wiener process (Gaussian process).using DifferentialEquations\nfunction f(t,u,W)\n  2u*sin(W)\nend\nu0 = 1.00\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: intro_rode)The random process defaults to a Gaussian/Wiener process, so there is nothing else required here! See the documentation on NoiseProcesses for details on how to define other noise proceses."
 },
 
 {
-    "location": "tutorials/rode_example.html#System-of-RODEs-1",
+    "location": "tutorials/rode_example.html#Example-2:-Systems-of-RODEs-1",
     "page": "Random Ordinary Differential Equations",
-    "title": "System of RODEs",
+    "title": "Example 2: Systems of RODEs",
     "category": "section",
     "text": "As with the other problem types, there is an in-place version which is more efficient for systems. The signature is f(t,u,W,du). For example,using DifferentialEquations\nfunction f(t,u,W,du)\n  du[1] = 2u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan)\nsol = solve(prob,RandomEM(),dt=1/100)(Image: rode_system)By default, the size of the noise process matches the size of u0. However, you can use the rand_prototype keyword to explicitly set the size of the random process:f = function (t,u,W,du)\n  du[1] = -2W[3]*u[1]*sin(W[1] - W[2])\n  du[2] = -2u[2]*cos(W[1] + W[2])\nend\nu0 = [1.00;1.00]\ntspan = (0.0,5.0)\nprob = RODEProblem(f,u0,tspan,rand_prototype=zeros(3))\nsol = solve(prob,RandomEM(),dt=1/100)(Image: noise_choice)"
 },
@@ -517,7 +621,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Default Algorithm Hinting",
     "category": "section",
-    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided to solve. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff - Denotes the equation as nonstiff.\n:stiff - Denotes the equation as stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
+    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided to solve. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff vs :stiff - Denotes the equation as nonstiff/stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
+},
+
+{
+    "location": "basics/common_solver_opts.html#SDE-Specific-1",
+    "page": "Common Solver Options",
+    "title": "SDE Specific",
+    "category": "section",
+    "text": ":additive - Denotes that the underlying SDE has additive noise.\n:stratonovich - Denotes that the solution should adhere to the Stratonovich interpretation."
 },
 
 {
@@ -525,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Output Control",
     "category": "section",
-    "text": "These arguments control the output behavior of the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. All of these options can be mixed and matched. For example, the combination:sol = solve(prob; saveat=[0.2, 0.5], dense = true)will only save the solution (sol.u) at the timepoints tspan[1], 0.2, 0.5, tspan[end].  It will also enable dense output to the sol object, enabling you to do something like sol(0.345) which interpolates the solution to the time equal to 0.345. The following options are all related to output control. See the \"Examples\" section at the end of this page for some example usage.dense: Denotes whether to save the extra pieces required for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output.\nsaveat: Denotes specific times to save the solution at, during the solving phase. The solver will save at each of the timepoints in this array in the most efficient manner (always including the points of tspan).  Note that this can be used even if dense=false. In fact, if only saveat is given, then the  arguments save_everystep and dense are becoming false by default and must be explicitly given as true if desired. If saveat is given a number, then it will automatically expand to tspan[1]:saveat:tspan[2].  For methods where interpolation is not possible, saveat may be equivalent to tstops. Default is []. \nsave_idxs: Denotes the indices for the components of the equation to save. Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE,  and given save_idxs = [1, 3], only the first and third components of the solution will be outputted.  Notice that of course in this case the outputed solution will be two-dimensional.\ntstops: Denotes extra times that the timestepping algorithm must step to. This should be used to help the solver deal with discontinuities and singularities, since stepping exactly at the time of the discontinuity will improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods), then tstops will use an interpolation, matching the behavior of saveat. If a method cannot change timesteps and also cannot interpolate, then tstops must be a multiple of dt or else an error will be thrown. Default is [].\nd_discontinuities: Denotes locations of discontinuities in low order derivatives. This will force FSAL algorithms which assume derivative continuity to re-evaluate the derivatives at the point of discontinuity. The default is [].\nsave_everystep: Saves the result at every timeseries_steps iteration.     Default is true if isempty(saveat).\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. These \"steps\" are the steps that the solver stops internally (the ones you get by save_everystep = true), not the ones that are  instructed by the user (all solvers work in a step-like manner). Defaults to 1.\nsave_start: Denotes whether the initial condition should be included in the solution type as the first timepoint. Defaults to true."
+    "text": "These arguments control the output behavior of the solvers. It defaults to maximum output to give the best interactive user experience, but can be reduced all the way to only saving the solution at the final timepoint. All of these options can be mixed and matched. For example, the combination:sol = solve(prob; saveat=[0.2, 0.5], dense = true)will only save the solution (sol.u) at the timepoints tspan[1], 0.2, 0.5, tspan[end]. It will also enable dense output to the sol object, enabling you to do something like sol(0.345) which interpolates the solution to the time equal to 0.345.The following options are all related to output control. See the \"Examples\" section at the end of this page for some example usage.dense: Denotes whether to save the extra pieces required for dense (continuous) output. Default is true for algorithms which have the ability to produce dense output. If dense is false, the solution still acts like a function, and sol(t) is a linear interpolation between the saved time points.\nsaveat: Denotes specific times to save the solution at, during the solving phase. The solver will save at each of the timepoints in this array in the most efficient manner (always including the points of tspan). Note that this can be used even if dense=false. In fact, if only saveat is given, then the arguments save_everystep and dense are becoming false by default and must be explicitly given as true if desired.   If saveat is given a number, then it will automatically expand to tspan[1]:saveat:tspan[2]. For methods where interpolation is not possible, saveat may be equivalent to tstops. Default is [].\nsave_idxs: Denotes the indices for the components of the equation to save. Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE, and given save_idxs = [1, 3], only the first and third components of the solution will be outputted. Notice that of course in this case the outputed solution will be two-dimensional.\ntstops: Denotes extra times that the timestepping algorithm must step to. This should be used to help the solver deal with discontinuities and singularities, since stepping exactly at the time of the discontinuity will improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods), then tstops will use an interpolation, matching the behavior of saveat. If a method cannot change timesteps and also cannot interpolate, then tstops must be a multiple of dt or else an error will be thrown. Default is [].\nd_discontinuities: Denotes locations of discontinuities in low order derivatives. This will force FSAL algorithms which assume derivative continuity to re-evaluate the derivatives at the point of discontinuity. The default is [].\nsave_everystep: Saves the result at every timeseries_steps iteration.     Default is true if isempty(saveat).\ntimeseries_steps: Denotes how many steps between saving a value for the timeseries. These \"steps\" are the steps that the solver stops internally (the ones you get by save_everystep = true), not the ones that are instructed by the user (all solvers work in a step-like manner). Defaults to 1.\nsave_start: Denotes whether the initial condition should be included in the solution type as the first timepoint. Defaults to true."
 },
 
 {
@@ -533,7 +645,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Stepsize Control",
     "category": "section",
-    "text": "These arguments control the timestepping routines.adaptive: Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.\nreltol: Relative tolerance in adaptive timestepping. Defaults to 1e-3.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ninternalnorm: The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma: The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\ndtmax: Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin: Minimum dt for adaptive timestepping. Defaults are package-dependent.\nbeta1: The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2: The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqoldinit: The initial qold in stabilization stepping. Defaults are algorithm-dependent."
+    "text": "These arguments control the timestepping routines."
+},
+
+{
+    "location": "basics/common_solver_opts.html#Basic-Stepsize-Control-1",
+    "page": "Common Solver Options",
+    "title": "Basic Stepsize Control",
+    "category": "section",
+    "text": "These are the standard options for controlling stepping behavior.adaptive: Turns on adaptive timestepping for appropriate methods. Default is true.\nabstol: Absolute tolerance in adaptive timestepping. Defaults to 1e-6. In addition, tolerances can be specified element-wise by passing a vector whose size matches u0.\nreltol: Relative tolerance in adaptive timestepping. Defaults to 1e-3. In addition, tolerances can be specified element-wise by passing a vector whose size matches u0.\ndt: Sets the initial stepsize. This is also the stepsize for fixed timestep methods. Defaults to an automatic choice.\ndtmax: Maximum dt for adaptive timestepping. Defaults are package-dependent.\ndtmin: Minimum dt for adaptive timestepping. Defaults are package-dependent.\nforce_dtmin: Declares whether to continue, forcing the minimum dt usage. Default is false, which has the solver throw a warning and exit early when encountering the minimum dt. Setting this true allows the solver to continue, never letting dt go below dtmin (and ignoring error tolerances in those cases). Note that true is not compatible with most interop packages."
 },
 
 {
@@ -545,11 +665,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/common_solver_opts.html#Advanced-Adaptive-Stepsize-Control-1",
+    "page": "Common Solver Options",
+    "title": "Advanced Adaptive Stepsize Control",
+    "category": "section",
+    "text": "These arguments control more advanced parts of the internals of adaptive timestepping and are mostly used to make it more efficient on specific problems.internalnorm: The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma: The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\nbeta1: The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2: The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqoldinit: The initial qold in stabilization stepping. Defaults are algorithm-dependent."
+},
+
+{
     "location": "basics/common_solver_opts.html#Miscellaneous-1",
     "page": "Common Solver Options",
     "title": "Miscellaneous",
     "category": "section",
-    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(t,u) where, when it returns false, it will reject the timestep. Defaults to always false.\nunstable_check: Specifies a function unstable_check(dt,t,u) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defualts to true.\ncalck: Turns on and off the internal ability for intermediate     interpolations (also known as intermediate density). Not the same as dense, which is post-solution interpolation. This defaults to dense || !isempty(saveat) ||  \"no custom callback is given\".  This can be used to turn off interpolations (to save memory) if one isn't using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used nowhere else.  Note that this is only required if the algorithm doesn't have a free or lazy interpolation (DP8()). If calck = false, saveat cannot be used. The rare keyword calck can be useful in event handling."
+    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(t,u) where, when it returns false, it will reject the timestep. Defaults to always false.\nunstable_check: Specifies a function unstable_check(dt,t,u) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defualts to true.\ncalck: Turns on and off the internal ability for intermediate     interpolations (also known as intermediate density). Not the same as dense, which is post-solution interpolation. This defaults to dense || !isempty(saveat) ||  \"no custom callback is given\". This can be used to turn off interpolations (to save memory) if one isn't using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used nowhere else. Note that this is only required if the algorithm doesn't have a free or lazy interpolation (DP8()). If calck = false, saveat cannot be used. The rare keyword calck can be useful in event handling."
 },
 
 {
@@ -581,7 +709,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Examples",
     "category": "section",
-    "text": "The following lines are examples of how one could use the configuration of solve(). For these examples a 3-dimensional ODE problem is assumed, however the extention to other types is straightforward. solve(prob, AlgorithmName()) : The \"default\" setting, with a user-specified algorithm (given by AlgorithmName()). All parameters get their default values.    This means that the solution is saved at the steps the Algorithm stops internally and dense output is enabled if the    chosen algorithm allows for it.    All other integration parameters (e.g. stepsize) are chosen automatically.solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9) : Standard setting for accurate output at specified (and equidistant) time intervals, used for e.g. Fourier Transform. The solution is given every 0.01 time units,    starting from tspan[1]. The solver used is Tsit5() since no keyword alg_hits is given.solve(prob, maxiters = 1e7, progress = true, save_idxs = [1]) : Using longer maximum number of solver iterations can be useful when a given tspan is very long. This example only saves the first of the variables of the system,    either to save size or because the user does not care about the others. Finally, with progress = true you are enabling   the progress bar, provided you are using the Atom+Juno IDE set-up for your Julia."
+    "text": "The following lines are examples of how one could use the configuration of solve(). For these examples a 3-dimensional ODE problem is assumed, however the extention to other types is straightforward.solve(prob, AlgorithmName()) : The \"default\" setting, with a user-specifiedalgorithm (given by AlgorithmName()).All parameters get their default values.   This means that the solution is saved at the steps the Algorithm stops internally   and dense output is enabled if the chosen algorithm allows for it.   All other integration parameters (e.g. stepsize) are chosen automatically.solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9) : Standard settingfor accurate output at specified (and equidistant) time intervals, used for   e.g. Fourier Transform. The solution is given every 0.01 time units,   starting from tspan[1]. The solver used is Tsit5() since no keyword   alg_hits is given.solve(prob, maxiters = 1e7, progress = true, save_idxs = [1]) : Using longermaximum number of solver iterations can be useful when a given tspan is very   long. This example only saves the first of the variables of the system, either   to save size or because the user does not care about the others. Finally, with   progress = true you are enabling the progress bar, provided you are using   the Atom+Juno IDE set-up for your Julia."
 },
 
 {
@@ -693,7 +821,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Plot Functions",
     "title": "Choosing Variables",
     "category": "section",
-    "text": "In the plot command, one can choose the variables to be plotted in each plot. The master form is:vars = [(f1,0,1), (f2,1,3), (f3,4,5)]where this would mean plot f1(variable 1, variable 2), f2(variable 1, variable 3), f3(variable 4, variable 5) all on the same graph. (0 is considered to be time, or the independent variable). The function f1 should take in scalars and return a tuple. If no function is given, for example,vars = [(0,1), (1,3), (4,5)]where this would mean plot variable 0 vs 1, 1 vs 3, and 4 vs 5 all on the same graph. While this can be used for everything, the following conveniences are provided:Everywhere in a tuple position where we only find an integer, this variable is plotted as a function of time.  For example, the list above is equivalent to:vars = [1, (1,3), (4,5)]andvars = [1, 3, 4]is the most concise way to plot the variables 1, 3, and 4 as a function of time.It is possible to omit the list if only one plot is wanted: (2,3) and 4 are respectively equivalent to [(2,3)] and [(0,4)].\nA tuple containing one or several lists will be expanded by associating corresponding elements of the lists with each other:vars = ([1,2,3], [4,5,6])is equivalent tovars = [(1,4), (2,5), (3,6)]andvars = (1, [2,3,4])is equivalent tovars = [(1,2), (1,3), (1,4)]Instead of using integers, one can use the symbols from a ParameterizedFunction. For example, vars=(:x,:y) will replace the symbols with the integer values for components :x and :y.\nn-dimensional groupings are allowed. For example, (1,2,3,4,5) would be a 5-dimensional plot between the associated variables."
+    "text": "In the plot command, one can choose the variables to be plotted in each plot. The master form is:vars = [(f1,0,1), (f2,1,3), (f3,4,5)]which could be used to plot f1(var₀, var₁), f2(var₁, var₃), and f3(var₄, var₅), all on the same graph. (0 is considered to be time, or the independent variable). Functions f1, f2 and f3 should take in scalars and return a tuple. If no function is given, for example,vars = [(0,1), (1,3), (4,5)]this would mean \"plot var₁(t) vs t (time), var₃(var₁) vs var₁, and var₅(var₄) vs var₄ all on the same graph, putting the independent variables (t, var₁ and var₄) on the x-axis.\" While this can be used for everything, the following conveniences are provided:Everywhere in a tuple position where we only find an integer, this variable is plotted as a function of time.  For example, the list above is equivalent to:vars = [1, (1,3), (4,5)]andvars = [1, 3, 4]is the most concise way to plot the variables 1, 3, and 4 as a function of time.It is possible to omit the list if only one plot is wanted: (2,3) and 4 are respectively equivalent to [(2,3)] and [(0,4)].\nA tuple containing one or several lists will be expanded by associating corresponding elements of the lists with each other:vars = ([1,2,3], [4,5,6])is equivalent tovars = [(1,4), (2,5), (3,6)]andvars = (1, [2,3,4])is equivalent tovars = [(1,2), (1,3), (1,4)]Instead of using integers, one can use the symbols from a ParameterizedFunction. For example, vars=(:x,:y) will replace the symbols with the integer values for components :x and :y.\nn-dimensional groupings are allowed. For example, (1,2,3,4,5) would be a 5-dimensional plot between the associated variables."
 },
 
 {
@@ -709,7 +837,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Plot Functions",
     "title": "Example",
     "category": "section",
-    "text": "using DifferentialEquations, Plots\nlorenz = @ode_def Lorenz begin\n  dx = σ*(y-x)\n  dy = ρ*x-y-x*z\n  dz = x*y-β*z\nend σ = 10. β = 8./3. ρ => 28.\n\nu0 = [1., 5., 10.]\ntspan = (0., 100.)\nprob = ODEProblem(lorenz, u0, tspan)\nsol = solve(prob)\n\nxyzt = plot(sol, plotdensity=10000,lw=1.5)\nxy = plot(sol, plotdensity=10000, vars=(:x,:y))\nxz = plot(sol, plotdensity=10000, vars=(:x,:z))\nyz = plot(sol, plotdensity=10000, vars=(:y,:z))\nxyz = plot(sol, plotdensity=10000, vars=(:x,:y,:z))\nplot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))(Image: lorenz_plot)An example using the functions:f(x,y,z) = (sqrt(x^2+y^2+z^2),x)\nplot(sol,vars=(f,:x,:y,:z))(Image: norm_plot)"
+    "text": "using DifferentialEquations, Plots\nlorenz = @ode_def Lorenz begin\n  dx = σ*(y-x)\n  dy = ρ*x-y-x*z\n  dz = x*y-β*z\nend σ = 10.0 β = 8.0/3.0 ρ => 28.0\n\nu0 = [1., 5., 10.]\ntspan = (0., 100.)\nprob = ODEProblem(lorenz, u0, tspan)\nsol = solve(prob)\n\nxyzt = plot(sol, plotdensity=10000,lw=1.5)\nxy = plot(sol, plotdensity=10000, vars=(:x,:y))\nxz = plot(sol, plotdensity=10000, vars=(:x,:z))\nyz = plot(sol, plotdensity=10000, vars=(:y,:z))\nxyz = plot(sol, plotdensity=10000, vars=(:x,:y,:z))\nplot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))(Image: lorenz_plot)An example using the functions:f(x,y,z) = (sqrt(x^2+y^2+z^2),x)\nplot(sol,vars=(f,:x,:y,:z))(Image: norm_plot)"
 },
 
 {
@@ -741,7 +869,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Initialization and Stepping",
     "category": "section",
-    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve. The type which is returned is the integrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. This type also implements an integrator interface, so one can step n times (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the integrator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (t,u) in tuples(integrator)\n  @show t,u\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,t,u) in intervals(integrator)\n  @show tprev,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: push!(integrator.opts.tstops,new_t)."
+    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve. The type which is returned is the integrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. This type also implements an integrator interface, so one can step n times (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the integrator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (t,u) in tuples(integrator)\n  @show t,u\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,t,u) in intervals(integrator)\n  @show tprev,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: add_tstop!(integrator,new_t)."
 },
 
 {
@@ -797,7 +925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Stepping Controls",
     "category": "section",
-    "text": "u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity. By default, this is assumed to be true if a callback is used. This will result in the re-calculation of the derivative at t+dt, which is not necessary if the algorithm is FSAL and u does not experience a discontinuous change at the end of the interval. Thus if u is unmodified in a callback, a single call to the derivative calculation  can be eliminated by u_modified!(integrator,false).\nget_proposed_dt(integrator,factor):  Gets the proposed dt for the next timestep.\nset_proposed_dt!(integrator,factor):  Sets the proposed dt for the next timestep.\nproposed_dt(integrator): Returns the dt of the proposed step.\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner."
+    "text": "u_modified!(integrator,bool): Bool which states whether a change to u occurred, allowing the solver to handle the discontinuity. By default, this is assumed to be true if a callback is used. This will result in the re-calculation of the derivative at t+dt, which is not necessary if the algorithm is FSAL and u does not experience a discontinuous change at the end of the interval. Thus if u is unmodified in a callback, a single call to the derivative calculation can be eliminated by u_modified!(integrator,false).\nget_proposed_dt(integrator,factor):  Gets the proposed dt for the next timestep.\nset_proposed_dt!(integrator,factor):  Sets the proposed dt for the next timestep.\nproposed_dt(integrator): Returns the dt of the proposed step.\nterminate!(integrator): Terminates the integrator by emptying tstops. This can be used in events and callbacks to immediately end the solution process.\nchange_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false}): This option lets one modify the current t and changes all of the corresponding values using the local interpolation. If the current solution has already been saved, one can provide the optional value modify_save_endpoint to also modify the endpoint of sol in the same manner."
 },
 
 {
@@ -837,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\nprob = prob_ode_linear\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
+    "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\n\n# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
 },
 
 {
@@ -853,7 +981,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solver Compatibility Chart",
     "title": "Solver Compatibility Chart",
     "category": "section",
-    "text": "This chart is for documenting the compatibility of the component solver packages to the common interface. An x means that the option is implemented or the add-on functionality will work with the given solver. A blank means that the option has not been implemented or that a given add-on has not been tested with a given package. If there are any errors in this chart, please file an issue or submit a pull-request.Option OrdinaryDiffEq.jl Sundials.jl ODE.jl ODEInterface.jl LSODA.jl StochasticDiffEq.jl DelayDiffEq.jl DASKR.jl DASSL.jl ODEIterators.jl\nDense (continuous) output x  x   x x   \nTolerance control x x x x x x x x x x\nAdvanced stepsize control x   x  x x   \ninternalnorm x  x   x x   \nInitial dt x  x x  x x   \nsave_everystep x x x  x x x x  \ntimeseries_steps x     x x   \nsaveat x x x  x x x x  \ntstops x     x x   \nd_discontinuities x     x x   \nisoutofdomain x  x   x x   \nAllows reverse time direction x x x x x x x   \nUnitful numbers x      x   \nArbitrary dimension arrays x x x x x x x x x x\nComplex numbers p     x p   \nArbitrary precision x  x   x x  x \nApproxFun types x      x   \nProgress monitoring x     x x   \nIntegrator interface x     x x   \nResizability x     x x   \nCache iterator x     x x   \nCan choose linear solvers x s    x x  x \nCan choose nonlinear solvers         x x\nCan use out of place x  x   x x  x x\nCan use inplace x x  x x x x x x x\nCompatible with DiffEqDevTools x x x x x x x x  \nCompatible with ParameterizedFunctions x x x x x x x x  \nContinuous Callbacks x     x x  x x\nDiscrete Callbacks x     x x   x\nMonte Carlo Simulations x x x x x x x x  x\nParameter Estimation x n n n n  x  x x\nParameter Sensitivity Analysis x x x x x  x   \nPlotting and solution handling x x x x x x x x  p: partial compatibility, only in nonstiff methods unless the Jacobian is provided.\nn: general compatibility, but not compatible with routines which. require being able to autodifferentiate through the entire solver.\ns: Special, Sundials has its own linear solver choices."
+    "text": "This chart is for documenting the compatibility of the component solver packages to the common interface. An x means that the option is implemented or the add-on functionality will work with the given solver. A blank means that the option has not been implemented or that a given add-on has not been tested with a given package. If there are any errors in this chart, please file an issue or submit a pull-request.Option OrdinaryDiffEq.jl Sundials.jl ODE.jl ODEInterface.jl LSODA.jl StochasticDiffEq.jl DelayDiffEq.jl DASKR.jl DASSL.jl\nNonlinear Dense (continuous) output x x    x x x \nTolerance control x x x x x x x x x\nAdvanced stepsize control x   x  x x  \nMass Matrices^ x   x  x x  \nAnalytical Jacobians^† x   x  x x  \nGeneral Performance Overloads^† x     x x  \ninternalnorm x  x   x x  \nInitial dt x  x x  x x  \nsave_everystep x x x  x x x x \ntimeseries_steps x     x x  \nsaveat x x x  x x x x \ntstops x     x x  \nd_discontinuities x     x x  \nisoutofdomain x  x   x x  \nAllows reverse time direction x x x x x x x  \nUnitful numbers x      x  \nArbitrary dimension arrays x x x x x x x x x\nComplex numbers p     x p  \nArbitrary precision x  x   x x  x\nApproxFun types x      x  \nProgress monitoring x     x x  \nIntegrator interface x     x x  \nResizability x     x x  \nCache iterator x     x x  \nCan choose linear solvers x s    x x  x\nCan choose nonlinear solvers x     x x  x\nCan use out of place natively x  x   x x  x\nCan use inplace natively x x  x x x x x \nCompatible with DiffEqDevTools x x x x x x x x \nCompatible with ParameterizedFunctions x x x x x x x x \nContinuous Callbacks x     x x  x\nDiscrete Callbacks x     x x  \nMonte Carlo Simulations x x x x x x x x \nParameter Estimation x n n n n x x n x\nParameter Sensitivity Analysis x x x x x  x  \nPlotting and solution handling x x x x x x x x xp: partial compatibility, only in nonstiff methods unless the Jacobian is provided.\nn: general compatibility, but not compatible with routines which. require being able to autodifferentiate through the entire solver.\ns: Special, Sundials has its own linear solver choices.\n^: Only stiff (implicit) methods.\n†: For packages with compatibility, no warning is given when a specific algorithm does not need to use this feature."
 },
 
 {
@@ -866,23 +994,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#",
-    "page": "Discrete Types",
-    "title": "Discrete Types",
+    "page": "Discrete Problems",
+    "title": "Discrete Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/discrete_types.html#Discrete-Types-1",
-    "page": "Discrete Types",
-    "title": "Discrete Types",
+    "location": "types/discrete_types.html#Discrete-Problems-1",
+    "page": "Discrete Problems",
+    "title": "Discrete Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/discrete_types.html#Mathematical-Specification-of-a-Discrete-Problem-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Mathematical Specification of a Discrete Problem",
     "category": "section",
     "text": "To define an Discrete Problem, you simply need to give the function f and the initial condition u which define a function map:u_n+1 = f(tu_n)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that if the discrete solver is set to have scale_by_time=true, then the problem is interpreted as the map:u_n+1 = u_n + dtf(tu_n)"
@@ -890,7 +1018,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Problem-Type-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -898,7 +1026,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Constructors-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
     "text": "DiscreteProblem(f,u0,tspan) : Defines the discrete problem with the specified functions."
@@ -906,7 +1034,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Fields-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the map.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
@@ -914,47 +1042,31 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/discrete_types.html#Note-About-Timing-1",
-    "page": "Discrete Types",
+    "page": "Discrete Problems",
     "title": "Note About Timing",
     "category": "section",
     "text": "Note that if no dt and not tstops is given, it's assumed that dt=1 and thus tspan=(0,n) will solve for n iterations. If in the solver dt is given, then the number of iterations will change. And if tstops is not empty, the solver will revert to the standard behavior of fixed timestep methods, which is \"step to each tstop\"."
 },
 
 {
-    "location": "types/discrete_types.html#Special-Solver-Options-1",
-    "page": "Discrete Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/discrete_types.html#Special-Solution-Fields-1",
-    "page": "Discrete Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. The Discrete type is as basic as it gets."
-},
-
-{
     "location": "types/ode_types.html#",
-    "page": "ODE Types",
-    "title": "ODE Types",
+    "page": "ODE Problems",
+    "title": "ODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/ode_types.html#ODE-Types-1",
-    "page": "ODE Types",
-    "title": "ODE Types",
+    "location": "types/ode_types.html#ODE-Problems-1",
+    "page": "ODE Problems",
+    "title": "ODE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/ode_types.html#Mathematical-Specification-of-an-ODE-Problem-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Mathematical Specification of an ODE Problem",
     "category": "section",
     "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:fracdudt = f(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -962,7 +1074,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Problem-Type-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -970,7 +1082,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Constructors-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
@@ -978,31 +1090,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Fields-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/ode_types.html#Special-Solver-Options-1",
-    "page": "ODE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/ode_types.html#Special-Solution-Fields-1",
-    "page": "ODE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. The ODE type is as basic as it gets."
-},
-
-{
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_linear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_linear",
     "category": "Constant",
     "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1010,7 +1106,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_2Dlinear",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1018,7 +1114,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_bigfloatlinear",
     "category": "Constant",
     "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
@@ -1026,7 +1122,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
@@ -1034,7 +1130,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_large2Dlinear",
     "category": "Constant",
     "text": "100x100 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
@@ -1042,7 +1138,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
     "category": "Constant",
     "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\non Float64. Purposefully not in-place as a test.\n\n\n\n"
@@ -1050,7 +1146,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_threebody",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_threebody",
     "category": "Constant",
     "text": "The ThreeBody problem as written by Hairer:\n\nbeginalign\ny = y + 2y - fracy+D - fracy-D \ny = y - 2y - fracyD - fracyD \nD = ((y+)^2 + y^2)^32 \nD = ((y-)^2+y^2)^32 \n = 0012277471 \n =1-\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on t₀ = 0.0; T = parse(BigFloat,\"17.0652165601579625588917206249\") Periodic with that setup.\n\n\n\n"
@@ -1058,7 +1154,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_pleides",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_pleides",
     "category": "Constant",
     "text": "Pleides Problem\n\nbeginalign\nx = sum_ji m(x-x)r \ny = sum_ji m(y-y)r\nendalign\n\nwhere\n\nr = ((x-x)^2 + (y-y)^2)^32\n\nand inital condtions are\n\nbeginalign\nx(0)=3  \nx(0)=3  \nx(0)=-1  \nx(0)=-3  \nx(0)=2  \nx(0)=-2  \nx(0)=2  \ny(0)=3  \ny(0)=-3  \ny(0)=2  \ny(0)=0  \ny(0)=0  \ny(0)=-4  \ny(0)=4\nendalign\n\nand with x(0)=y(0)=0 except for\n\nbeginalign\nx(0)=175 \nx(0)=-15 \ny(0)=-125 \ny(0)=1\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 3.\n\n\n\n"
@@ -1066,7 +1162,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_vanderpol",
     "category": "Constant",
     "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10 and u0=0sqrt3\n\nNon-stiff parameters.\n\n\n\n"
@@ -1074,7 +1170,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
     "category": "Constant",
     "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10^6 and u0=0sqrt3\n\nStiff parameters.\n\n\n\n"
@@ -1082,7 +1178,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rober",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_rober",
     "category": "Constant",
     "text": "The Robertson biochemical reactions:\n\nbeginalign\nfracdydt = -ky+kyy  \nfracdydt =  ky-ky^2-kyy \nfracdydt =  ky^2\nendalign\n\nwhere k=004, k=3times10^7, k=10^4. For details, see:\n\nHairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on [0,1e11]\n\n\n\n"
@@ -1090,7 +1186,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rigidbody",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_rigidbody",
     "category": "Constant",
     "text": "Rigid Body Equations\n\nbeginalign\nfracdydt  = Iyy \nfracdydt  = Iyy \nfracdydt  = Iyy\nendalign\n\nwith I=-2, I=125, and I=-12.\n\nThe initial condition is y=100009.\n\nFrom Solving Differential Equations in R by Karline Soetaert\n\nor Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 20.\n\n\n\n"
@@ -1098,7 +1194,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/ode_types.html#Example-Problems-1",
-    "page": "ODE Types",
+    "page": "ODE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
@@ -1106,23 +1202,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#",
-    "page": "Refined ODE Types",
-    "title": "Refined ODE Types",
+    "page": "Refined ODE Problems",
+    "title": "Refined ODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/refined_ode_types.html#Refined-ODE-Types-1",
-    "page": "Refined ODE Types",
-    "title": "Refined ODE Types",
+    "location": "types/refined_ode_types.html#Refined-ODE-Problems-1",
+    "page": "Refined ODE Problems",
+    "title": "Refined ODE Problems",
     "category": "section",
     "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Split ODE Problem",
     "category": "section",
     "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1130,7 +1226,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1138,31 +1234,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/refined_ode_types.html#Special-Solver-Options-1",
-    "page": "Refined ODE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-1",
-    "page": "Refined ODE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. It returns a standard ODE solution."
-},
-
-{
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
     "text": "To define a PartitionedODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
@@ -1170,7 +1250,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1178,31 +1258,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-2",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/refined_ode_types.html#Special-Solver-Options-2",
-    "page": "Refined ODE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-2",
-    "page": "Refined ODE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of an Second Order ODE Problem",
     "category": "section",
     "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
@@ -1210,7 +1274,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Problem-Type-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1218,7 +1282,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1226,31 +1290,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-3",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/refined_ode_types.html#Special-Solver-Options-3",
-    "page": "Refined ODE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Special-Solution-Fields-3",
-    "page": "Refined ODE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Constrained ODE Problem",
     "category": "section",
     "text": "The constrained ODE:fracdudt = f(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
@@ -1258,7 +1306,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-4",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1266,7 +1314,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-4",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1274,7 +1322,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Split Constrained ODE Problem",
     "category": "section",
     "text": "The split constrained ODE:fracdudt = f_1(tuv) + f_2(tuv) +  + f_n(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
@@ -1282,7 +1330,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-5",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1290,7 +1338,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-5",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1298,7 +1346,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Mathematical Specification of a Partitioned Constrained ODE Problem",
     "category": "section",
     "text": "The constrained ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \n\n0 = g(tuv)is a type of refined ODE which specifies a DAE. As with the standard Partitioned problem, the solver may specify a special form which may result in splitting ODEs in some of the systems."
@@ -1306,7 +1354,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Constructors-6",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1314,7 +1362,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_ode_types.html#Fields-6",
-    "page": "Refined ODE Types",
+    "page": "Refined ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1322,23 +1370,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#",
-    "page": "Steady State Types",
-    "title": "Steady State Types",
+    "page": "Steady State Problems",
+    "title": "Steady State Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/steady_state_types.html#Steady-State-Types-1",
-    "page": "Steady State Types",
-    "title": "Steady State Types",
+    "location": "types/steady_state_types.html#Steady-State-Problems-1",
+    "page": "Steady State Problems",
+    "title": "Steady State Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/steady_state_types.html#Mathematical-Specification-of-a-Steady-State-Problem-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Mathematical Specification of a Steady State Problem",
     "category": "section",
     "text": "To define an Steady State Problem, you simply need to give the function f which defines the ODE:fracdudt = f(tu)and an initial guess u of where f(t,u)=0. f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Note that for the steady-state to be defined, we must have that f is autonomous, that is f is independent of t. But the form which matches the standard ODE solver should still be used. The steady state solvers interpret the f by fixing t=0."
@@ -1346,7 +1394,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Problem-Type-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1354,7 +1402,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Constructors-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SteadyStateProblem(f,u0,mass_matrix=I)Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
@@ -1362,23 +1410,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/steady_state_types.html#Fields-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial guess for the steady state.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/steady_state_types.html#Special-Solver-Options-1",
-    "page": "Steady State Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/steady_state_types.html#Special-Solution-Fields-1",
-    "page": "Steady State Types",
+    "page": "Steady State Problems",
     "title": "Special Solution Fields",
     "category": "section",
     "text": "The SteadyStateSolution type is different from the other DiffEq solutions because it does not have temporal information."
@@ -1386,23 +1426,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#",
-    "page": "SDE Types",
-    "title": "SDE Types",
+    "page": "SDE Problems",
+    "title": "SDE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/sde_types.html#SDE-Types-1",
-    "page": "SDE Types",
-    "title": "SDE Types",
+    "location": "types/sde_types.html#SDE-Problems-1",
+    "page": "SDE Problems",
+    "title": "SDE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/sde_types.html#Mathematical-Specification-of-a-SDE-Problem-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Mathematical Specification of a SDE Problem",
     "category": "section",
     "text": "To define an SDE Problem, you simply need to give the forcing function f, the noise function g, and the initial condition u which define an SDE:du = f(tu)dt + g(tu)dWf and g should be specified as f(t,u) and  g(t,u) respectively, and u₀ should be an AbstractArray whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. A vector of gs can also be defined to determine an SDE of higher Ito dimension."
@@ -1410,7 +1450,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Problem-Type-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": "Wraps the data which defines an SDE problemu = f(ut)dt + g(ut)dWwith initial condition u0."
@@ -1418,7 +1458,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Constructors-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE."
@@ -1426,31 +1466,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Fields-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/sde_types.html#Special-Solver-Options-1",
-    "page": "SDE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/sde_types.html#Special-Solution-Fields-1",
-    "page": "SDE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "g: The noise function in the SDE."
-},
-
-{
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_linear",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_linear",
     "category": "Constant",
     "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
@@ -1458,7 +1482,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_2Dlinear",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
     "category": "Constant",
     "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
@@ -1466,7 +1490,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_wave",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_wave",
     "category": "Constant",
     "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(tu0W_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
@@ -1474,7 +1498,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_lorenz",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_lorenz",
     "category": "Constant",
     "text": "Lorenz Attractor with additive noise\n\nbeginalign\ndx = *(y-x)dt + dW_t \ndy = (x*(-z) - y)dt + dW_t \ndz = (x*y - *z)dt + dW_t \nendalign\n\nwith =10, =28, =83, =30 and inital condition u0=111.\n\n\n\n"
@@ -1482,7 +1506,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_cubic",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_cubic",
     "category": "Constant",
     "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(tu0W_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
@@ -1490,7 +1514,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additive",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additive",
     "category": "Constant",
     "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(tu0W_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
@@ -1498,7 +1522,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additivesystem",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additivesystem",
     "category": "Constant",
     "text": "A multiple dimension extension of additiveSDEExample\n\n\n\n"
@@ -1506,7 +1530,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/sde_types.html#Example-Problems-1",
-    "page": "SDE Types",
+    "page": "SDE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_sde_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_sde_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
@@ -1514,23 +1538,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#",
-    "page": "RODE Types",
-    "title": "RODE Types",
+    "page": "RODE Problems",
+    "title": "RODE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/rode_types.html#RODE-Types-1",
-    "page": "RODE Types",
-    "title": "RODE Types",
+    "location": "types/rode_types.html#RODE-Problems-1",
+    "page": "RODE Problems",
+    "title": "RODE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/rode_types.html#Mathematical-Specification-of-a-RODE-Problem-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Mathematical Specification of a RODE Problem",
     "category": "section",
     "text": "To define a RODE Problem, you simply need to give the function f and the initial condition u which define an ODE:fracdudt = f(tuW(t))where W(t) is a random process. f should be specified as f(t,u,W) (or in-place as f(t,u,W,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1538,7 +1562,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#Constructors-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
@@ -1546,7 +1570,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/rode_types.html#Fields-1",
-    "page": "RODE Types",
+    "page": "RODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
@@ -1554,23 +1578,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#",
-    "page": "DDE Types",
-    "title": "DDE Types",
+    "page": "DDE Problems",
+    "title": "DDE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/dde_types.html#DDE-Types-1",
-    "page": "DDE Types",
-    "title": "DDE Types",
+    "location": "types/dde_types.html#DDE-Problems-1",
+    "page": "DDE Problems",
+    "title": "DDE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/dde_types.html#Mathematical-Specification-of-a-DDE-Problem-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Mathematical Specification of a DDE Problem",
     "category": "section",
     "text": "To define a DDE Problem, you simply need to give the function f and the initial condition u0 which define an ODE:du = f(tuh)f should be specified as f(t,u,h) (or in-place as f(t,u,h,du)). h is the history function which is accessed for all delayed values. For example, the ith component delayed by a time tau is denoted by h(t-tau). Note that we are not limited to numbers or vectors for u0; one is allowed to provide u0 as arbitrary matrices / higher dimension tensors as well."
@@ -1578,7 +1602,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Problem-Type-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1586,7 +1610,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Constructors-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)"
@@ -1594,47 +1618,31 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dde_types.html#Fields-1",
-    "page": "DDE Types",
+    "page": "DDE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/dde_types.html#Special-Solver-Options-1",
-    "page": "DDE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/dde_types.html#Special-Solution-Fields-1",
-    "page": "DDE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/dae_types.html#",
-    "page": "DAE Types",
-    "title": "DAE Types",
+    "page": "DAE Problems",
+    "title": "DAE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/dae_types.html#DAE-Types-1",
-    "page": "DAE Types",
-    "title": "DAE Types",
+    "location": "types/dae_types.html#DAE-Problems-1",
+    "page": "DAE Problems",
+    "title": "DAE Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/dae_types.html#Mathematical-Specification-of-an-DAE-Problem-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of an DAE Problem",
     "category": "section",
     "text": "To define a DAE Problem, you simply need to give the function f and the initial condition u which define an ODE:0 = f(tudu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,resid)). Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1642,7 +1650,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Problem-Type-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Problem Type",
     "category": "section",
     "text": ""
@@ -1650,7 +1658,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Constructors-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "DAEProblem(f,u0,du0,tspan) : Defines the ODE with the specified functions."
@@ -1658,31 +1666,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/dae_types.html#Fields-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
-},
-
-{
-    "location": "types/dae_types.html#Special-Solver-Options-1",
-    "page": "DAE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/dae_types.html#Special-Solution-Fields-1",
-    "page": "DAE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "du: The saved derivative values."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
 },
 
 {
     "location": "types/dae_types.html#Example-Problems-1",
-    "page": "DAE Types",
+    "page": "DAE Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
@@ -1690,23 +1682,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#",
-    "page": "Refined DAE Types",
-    "title": "Refined DAE Types",
+    "page": "Refined DAE Problems",
+    "title": "Refined DAE Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/refined_dae_types.html#Refined-DAE-Types-1",
-    "page": "Refined DAE Types",
-    "title": "Refined DAE Types",
+    "location": "types/refined_dae_types.html#Refined-DAE-Problems-1",
+    "page": "Refined DAE Problems",
+    "title": "Refined DAE Problems",
     "category": "section",
     "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
     "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Mathematical Specification of a Split DAE Problem",
     "category": "section",
     "text": "To define a SplitDAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
@@ -1714,7 +1706,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Constructors-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1722,31 +1714,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Fields-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/refined_dae_types.html#Special-Solver-Options-1",
-    "page": "Refined DAE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Special-Solution-Fields-1",
-    "page": "Refined DAE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": "None. It returns a standard DAE solution."
-},
-
-{
     "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
     "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) \nf should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
@@ -1754,7 +1730,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Constructors-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
@@ -1762,47 +1738,31 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/refined_dae_types.html#Fields-2",
-    "page": "Refined DAE Types",
+    "page": "Refined DAE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/refined_dae_types.html#Special-Solver-Options-2",
-    "page": "Refined DAE Types",
-    "title": "Special Solver Options",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Special-Solution-Fields-2",
-    "page": "Refined DAE Types",
-    "title": "Special Solution Fields",
-    "category": "section",
-    "text": ""
-},
-
-{
     "location": "types/jump_types.html#",
-    "page": "Jump Types",
-    "title": "Jump Types",
+    "page": "Jump Problems",
+    "title": "Jump Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/jump_types.html#Jump-Types-1",
-    "page": "Jump Types",
-    "title": "Jump Types",
+    "location": "types/jump_types.html#Jump-Problems-1",
+    "page": "Jump Problems",
+    "title": "Jump Problems",
     "category": "section",
     "text": ""
 },
 
 {
     "location": "types/jump_types.html#Mathematical-Specification-of-an-problem-with-jumps-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Mathematical Specification of an problem with jumps",
     "category": "section",
     "text": "Jumps are defined as a Poisson process which occur according to some rate. When multiple jumps are together, the process is a compound Poisson process. On their own, a jump equation on is continuous-time Markov Chain where the time to the next jump is exponentially distributed as calculated by the rate. This type of process, known in biology as \"Gillespie discrete stochastic simulations\" and modeled by the Chemical Master Equation (CME), is the same thing as adding jumps to a DiscreteProblem. However, any differential equation can be extended by jumps as well. For example, we have an ODE with jumps, denoted byfracdudt = f(tu) +  h_i(tu)N_i(t)where N_i is a Poisson counter of rate lambda_i(tu). Extending a stochastic differential equation to have jumps is commonly known as a Jump Diffusion, and is denoted byfracdudt = f(tu) + g(ut)dW +  h_i(tu)N_i(t)"
@@ -1810,7 +1770,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Variable-and-Constant-Rate-Jumps-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Variable and Constant Rate Jumps",
     "category": "section",
     "text": "We denote a jump as variable rate if its rate function is dependent on values which may change between constant rate jumps. For example, if there are multiple jumps whose rates only change when one of them occur, than that set of jumps is a constant rate jump. If the jump's rate depends on the differential equation, time, or by some value which changes outside of some constant rate jump, then it is denoted as variable."
@@ -1818,7 +1778,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Constant-Rate-Jump-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Constant Rate Jump",
     "category": "section",
     "text": "The constructor for a ConstantRateJump is:ConstantRateJump(rate,affect!;save_positions=(true,true))rate(t,u) is a function which calculates the rate given the time and the state.\naffect!(integrator) is the effect on the equation, using the integrator interface."
@@ -1826,7 +1786,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Variable-Rate-Jump-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Variable Rate Jump",
     "category": "section",
     "text": "The constructor for a VariableRateJump is:VariableRateJump(rate,affect!;\n                   idxs = nothing,\n                   rootfind=true,\n                   save_positions=(true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0)Note that this is the same as defining a ContinuousCallback, except that instead of the condition function, you provide a rate(t,u) function for the rate at a given time and state."
@@ -1834,7 +1794,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Defining-a-Jump-Problem-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Defining a Jump Problem",
     "category": "section",
     "text": "To define a JumpProblem, you must first define the basic problem. This can be a DiscreteProblem if there is no differential equation, or an ODE/SDE/DDE/DAE if you would like to augment a differential equation with jumps. Denote this previously defined problem as prob. Then the constructor for the jump problem is:JumpProblem(prob,aggregator::Direct,jumps::JumpSet;\n            save_positions = typeof(prob) <: AbstractDiscreteProblem ? (false,true) : (true,true))The aggregator is the method for aggregating the constant jumps. These are defined below. jumps is a JumpSet which is just a gathering of jumps. Instead of passing a JumpSet, one may just pass a list of jumps themselves. For example:JumpProblem(prob,aggregator,jump1,jump2)and the internals will automatically build the JumpSet. save_positions is the save_positions argument built by the aggregation of the constant rate jumps."
@@ -1842,7 +1802,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/jump_types.html#Constant-Rate-Jump-Aggregator-1",
-    "page": "Jump Types",
+    "page": "Jump Problems",
     "title": "Constant Rate Jump Aggregator",
     "category": "section",
     "text": "The constant rate jump aggregator is the method by which the constant rate jumps are lumped together. This is required in all algorithms for both speed and accuracy. The current methods are:Direct: the Gillespie SSA Direct method.To pass the aggregator, pass the instantiation of the type. For example:JumpProblem(prob,Direct(),jump1,jump2)will build a problem where the constant rate jumps are solved using Gillespie's Direct SSA method."
@@ -1850,23 +1810,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#",
-    "page": "FEM Types",
-    "title": "FEM Types",
+    "page": "FEM Problems",
+    "title": "FEM Problems",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "types/fem_types.html#FEM-Types-1",
-    "page": "FEM Types",
-    "title": "FEM Types",
+    "location": "types/fem_types.html#FEM-Problems-1",
+    "page": "FEM Problems",
+    "title": "FEM Problems",
     "category": "section",
     "text": "Below are the definitions of the types which specify problems. Some general notes are:(t,x) vs (t,x,y): Mathematically one normally specifies equations in 2D as f(txy). However, in this code we use x as a vector. Thus you can think of x=x[:,1] and y=x[:,2]. Thus input equations are of the form f(x,t) no matter the dimension. If time is not included in the problem (for example, a Poisson equation problem), then we use f(x). An example is the equation u(xy)= sin(2x)cos(2y)(8^2) would be specified as sol(x) = sin(2π.*x[:,1]).*cos(2π.*x[:,2])/(8π*π).\nLinearity: If the equation has a linear term, they are specified with functions f(t,x). If it is nonlinear, it is specified with functions f(t,x,u). The boundary conditions are always (t,x)\nStochastic: By default the equation is deterministic. For each equation, one can specify a σ term which adds a stochastic (txu)dW_t term to the equation (or with (tx)dW_t if linear, must match f). dW_t corresponds to the type of noise which is chosen. By default this is space-time Gaussian white noise."
 },
 
 {
     "location": "types/fem_types.html#Poisson-Equation-Problem-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Poisson Equation Problem",
     "category": "section",
     "text": "Wraps the data that defines a 2D linear Poisson equation problem:-u = fwith bounday conditions gD on the Dirichlet boundary and gN on the Neumann boundary. Linearity is determined by whether the forcing function f is a function of one variable (x) or two (u,x) (with x=[:,1] and y=[:,2]).If the keyword σ is given, then this wraps the data that defines a 2D stochastic heat equation-u = f + dW"
@@ -1874,7 +1834,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Constructors-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Constructors",
     "category": "section",
     "text": "PoissonProblem(f,analytic,Du,mesh): Defines the Dirichlet problem with analytical solution analytic, solution gradient Du = [u_x,u_y], and forcing function fPoissonProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (x), then the program assumes it's linear. Write your functions using the math to program syntax translation: x = x[:,1] and y = x[:,2]. Use f=f(u,x) and σ=σ(u,x) (if specified) for nonlinear problems (with the boundary conditions still (x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
@@ -1882,7 +1842,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Keyword-Arguments-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Keyword Arguments",
     "category": "section",
     "text": "gD = Dirichlet boundary function\ngN = Neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = The number of variables in the Poisson system. Automatically calculated in many cases.\nD = Vector of diffusion coefficients. Defaults is D=ones(1,numvars)."
@@ -1890,7 +1850,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Heat-Equation-Problem-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Heat Equation Problem",
     "category": "section",
     "text": "Wraps the data that defines a 2D heat equation problem:u_t = u + fwith bounday conditions gD on the Dirichlet boundary and gN on the Neumann boundary. Linearity is determined by whether the forcing function f is a function of two variables (t,x) or three (t,x,u) (with x=[:,1] and y=[:,2]).If the keyword σ is given, then this wraps the data that defines a 2D stochastic heat equation.u_t = u + f + dW_t"
@@ -1898,7 +1858,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Constructors-2",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Constructors",
     "category": "section",
     "text": "HeatProblem(analytic,Du,f,mesh): Defines the Dirichlet problem with solution analytic, solution gradient Du = [u_x,u_y], and the forcing function f.\nHeatProblem(u0,f,mesh): Defines the problem with initial value u0 (as a function) and f. If your initial data is a vector, wrap it as u0(x) = vector.Note: If all functions are of (t,x), then the program assumes it's linear. Write your functions using the math to program syntax translation: x = x[:,1] and y = x[:,2]. Use f=f(t,x,u) and σ=σ(t,x,u) (if specified) for nonlinear problems (with the boundary conditions still (t,x)). Systems of equations can be specified with u_i = u[:,i] as the ith variable. See the example problems for more help."
@@ -1906,7 +1866,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Keyword-Arguments-2",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Keyword Arguments",
     "category": "section",
     "text": "gD = Dirichlet boundary function\ngN = Neumann boundary function\nσ = The function which multiplies the noise dW. By default σ=0.\nnoisetype = A string which specifies the type of noise to be generated. By default noisetype=:White for Gaussian Spacetime White Noise.\nnumvars = Number of variables in the system. Automatically calculated from u0 in most cases.\nD = Array which defines the diffusion coefficients. Default is D=ones(1,numvars)."
@@ -1914,7 +1874,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Example-Problems-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Example Problems",
     "category": "section",
     "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, you need to do:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary"
@@ -1922,7 +1882,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=5u-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1930,7 +1890,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_noisywave",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_noisywave",
     "category": "Constant",
     "text": "Problem with deterministic solution: u(xy)= sin(2x)cos(2y)(8^2) and additive noise (xy)=5\n\n\n\n"
@@ -1938,7 +1898,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeathsystem",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2 and f(v)=1-v and initial condition homogenous 1/2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1946,7 +1906,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_wave",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_wave",
     "category": "Constant",
     "text": "Problem defined by the solution: u(xy)= sin(2x)cos(2y)(8^2)\n\n\n\n"
@@ -1954,7 +1914,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_poisson_birthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_poisson_birthdeath",
     "category": "Constant",
     "text": "Nonlinear Poisson equation with f(u)=1-u2. Corresponds to the steady state of a humogenous reaction-diffusion equation with the same f.\n\n\n\n"
@@ -1962,7 +1922,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Poisson-Equation-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Poisson Equation",
     "category": "section",
     "text": "DiffEqProblemLibrary.prob_poisson_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_poisson_noisywave\nDiffEqProblemLibrary.prob_poisson_birthdeathsystem\nDiffEqProblemLibrary.prob_poisson_wave\nDiffEqProblemLibrary.prob_poisson_birthdeath"
@@ -1970,7 +1930,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion which starts at 1/2 and solves the system f(u)=1-u2 and f(v)=1-v\n\n\n\n"
@@ -1978,7 +1938,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion which starts with 1/2 and solves the system f(u)=1-u2 and f(v)=5u-v\n\n\n\n"
@@ -1986,7 +1946,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_diffuse",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_diffuse",
     "category": "Constant",
     "text": "Example problem defined by the solution:\n\nu(xyt)=exp(-10((x-frac12)^2 + (y-frac12)^2 )-t)\n\nThis is a Gaussian centered at (frac12frac12) which diffuses over time.\n\n\n\n"
@@ -1994,7 +1954,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_stochasticbirthdeath",
     "category": "Constant",
     "text": "Homogenous stochastic reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2 with noise (u)=10u^2\n\n\n\n"
@@ -2002,7 +1962,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_moving",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_moving",
     "category": "Constant",
     "text": "Example problem defined by the solution:\n\nu(xyt)=frac110(1-exp(-100(t-frac12)^2))exp(-25((x-t+05)^2 + (y-t+05)^2))\n\nThis will have a mound which moves across the screen. Good animation test.\n\n\n\n"
@@ -2010,7 +1970,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_pure",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_pure",
     "category": "Constant",
     "text": "Example problem which starts with a Dirac δ cenetered at (0.5,0.5) and solves with f=gD=0. This gives the Green's function solution.\n\n\n\n"
@@ -2018,7 +1978,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#DiffEqProblemLibrary.prob_femheat_birthdeath",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "DiffEqProblemLibrary.prob_femheat_birthdeath",
     "category": "Constant",
     "text": "Homogenous reaction-diffusion problem which starts with 0 and solves with f(u)=1-u2\n\n\n\n"
@@ -2026,7 +1986,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "types/fem_types.html#Heat-Equation-1",
-    "page": "FEM Types",
+    "page": "FEM Problems",
     "title": "Heat Equation",
     "category": "section",
     "text": "DiffEqProblemLibrary.prob_femheat_birthdeathsystem\nDiffEqProblemLibrary.prob_femheat_birthdeathinteractingsystem\nDiffEqProblemLibrary.prob_femheat_diffuse\nDiffEqProblemLibrary.prob_femheat_stochasticbirthdeath\nDiffEqProblemLibrary.prob_femheat_moving\nDiffEqProblemLibrary.prob_femheat_pure\nDiffEqProblemLibrary.prob_femheat_birthdeath"
@@ -2057,11 +2017,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/discrete_solve.html#Full-List-of-Methods-1",
+    "page": "Discrete Solvers",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "solvers/discrete_solve.html#Discrete-Algorithm-1",
     "page": "Discrete Solvers",
     "title": "Discrete Algorithm",
     "category": "section",
-    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_nu_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=false,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_nu_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_nu_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant.As a shorthand,FunctionMap(scale_by_time=false)is a Discrete with apply_map=true, and thus corresponds to the function map equationu_n+1 = f(t_nu_n)"
+    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_n+1u_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=false,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant.As a shorthand,FunctionMap(scale_by_time=false)is a Discrete with apply_map=true, and thus corresponds to the function map equationu_n+1 = f(t_nu_n)"
 },
 
 {
@@ -2101,7 +2069,15 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For mildly stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia-defined numbers will work. This method uses ForwardDiff to automatically guess the Jacobian. For faster solving when the Jacobian is known, use radau. For highly stiff problems where Julia-defined numbers need to be used (SIUnits, Arbs), Trapezoid is the current best choice. However, for the most efficient highly stiff solvers, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
+    "text": "For stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia numeric types (such as Unitful, ArbFloats, or DecFP) will work. When the equation is defined via the @ode_def macro, this will be the most efficient. For faster solving when only the Jacobian is known and the macro is not used, use radau. High precision numbers are also compatible with Trapezoid which is a symplectic integrator. However, for the most efficient solvers for highly stiff equations which need high accuracy, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
+},
+
+{
+    "location": "solvers/ode_solve.html#Translations-from-MATLAB/Python/R-1",
+    "page": "ODE Solvers",
+    "title": "Translations from MATLAB/Python/R",
+    "category": "section",
+    "text": "For users familiar with MATLAB/Python/R, good translations of the standard library methods are as follows:ode23 –> BS3()\node45/dopri5 –> DP5(), though in most cases Tsit5() is more efficient\node23s –> Rosenbrock23()\node113 –> CVODE_Adams(), though in many cases Vern7() is more efficient\ndop853 –> DP8(), though in most cases Vern7() is more efficient\node15s/vode –> CVODE_BDF(), though in many cases radau() is more efficient\node23t –> Trapezoid()\nlsoda –> lsoda() (requires Pkg.add(\"LSODA\"); using LSODA)\node15i –> IDA()"
 },
 
 {
@@ -2117,7 +2093,23 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all non-stiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on for non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nSSPRK22 - The two-stage, second order strong stability preserving method of Shu and Osher.\nSSPRK33 - The three-stage, third order strong stability preserving method of Shu and Osher.\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson.\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.Example usage:alg = Tsit5()\nsolve(prob,alg)  The following methods allow for specification of linsolve: the linear solver which is used:Rosenbrock23\nRosenbrock32For more information on specifying the linear solver, see the manual page on solver specificationAdditionally, there is the tableau method:ExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableausare specified via the keyword argument tab=tableau. The default tableau is   for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.Example usage:alg = ExplicitRK(tableau=constructDormandPrince())\nsolve(prob,alg)"
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all non-stiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nSSPRK22 - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK33 - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK432 - A  3/2 adaptive strong stability preserving (SSP) method with five stages. (free 2nd order SSP interpolant)\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson. (free 3rd order Hermite interpolant)\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.Example usage:alg = Tsit5()\nsolve(prob,alg)  "
+},
+
+{
+    "location": "solvers/ode_solve.html#Extra-Options-1",
+    "page": "ODE Solvers",
+    "title": "Extra Options",
+    "category": "section",
+    "text": "The following methods allow for specification of linsolve: the linear solver which is used:Rosenbrock23\nRosenbrock32For more information on specifying the linear solver, see the manual page on solver specification.The following methods allow for specification of nlsolve: the nonlinear solver which is used:ImplicitEuler\nTrapezoidNote that performance overload information (Jacobians etc.) are not used in this mode. For more information on specifying the nonlinear solver, see the manual page on solver specification.Additionally, the following methods have extra differentiation controls:Rosenbrock23\nRosenbrock32\nImplicitEuler\nTrapezoidIn each of these, autodiff can be set to turn on/off autodifferentiation, and chunk_size can be used to set the chunksize of the Dual numbers (see the documentation for ForwardDiff.jl for details). In addition, Rosenbrock23 and Rosenbrock32 can set diff_type, which is the type of numerical differentiation that is used (when autodifferentiation is disabled). The choices are :central or :forward.Examples:sol = solve(prob,Rosenbrock23()) # Standard, uses autodiff\nsol = solve(prob,Rosenbrock23(chunk_size=10)) # Autodiff with chunksize of 10\nsol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with central differencing\nsol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing"
+},
+
+{
+    "location": "solvers/ode_solve.html#Tableau-Method-1",
+    "page": "ODE Solvers",
+    "title": "Tableau Method",
+    "category": "section",
+    "text": "Additionally, there is the tableau method:ExplicitRK - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableausare specified via the keyword argument tab=tableau. The default tableau is   for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.Example usage:alg = ExplicitRK(tableau=constructDormandPrince())\nsolve(prob,alg)"
 },
 
 {
@@ -2133,7 +2125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Sundials.jl",
     "category": "section",
-    "text": "The Sundials suite is built around multistep methods. These methods are more efficient than other methods when the cost of the function calculations is really high, but for less costly functions the cost of nurturing the timestep overweighs the benefits. However, the BDF method is a classic method for stiff equations and \"generally works\".CVODE_BDF - CVode Backward Differentiation Formula (BDF) solver.\nCVODE_Adams - CVode Adams-Moulton solver.Note that the constructors for the Sundials algorithms take two arguments:method - This is the method for solving the implicit equation. For BDF this defaults to :Newton while for Adams this defaults to :Functional. These choices match the recommended pairing in the Sundials.jl manual. However, note that using the :Newton method may take less iterations but requires more memory than the :Function iteration approach.\nlinearsolver - This is the linear solver which is used in the :Newton method.The choices for the linear solver are::Dense - A dense linear solver.\n:Band - A solver specialized for banded Jacobians. If used, you must set the position of the upper and lower non-zero diagonals via jac_upper and jac_lower.\n:Diagonal - This method is specialized for diagonal Jacobians.\nBCG - A Biconjugate gradient method.\nTFQMR - A TFQMR method.Example:CVODE_BDF() # BDF method using Newton + Dense solver\nCVODE_BDF(method=:Functional) # BDF method using Functional iterations\nCVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nCVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   "
+    "text": "The Sundials suite is built around multistep methods. These methods are more efficient than other methods when the cost of the function calculations is really high, but for less costly functions the cost of nurturing the timestep overweighs the benefits. However, the BDF method is a classic method for stiff equations and \"generally works\".CVODE_BDF - CVode Backward Differentiation Formula (BDF) solver.\nCVODE_Adams - CVode Adams-Moulton solver.The Sundials algorithms all come with a 3rd order Hermite polynomial interpolation. Note that the constructors for the Sundials algorithms take two main arguments:method - This is the method for solving the implicit equation. For BDF this defaults to :Newton while for Adams this defaults to :Functional. These choices match the recommended pairing in the Sundials.jl manual. However, note that using the :Newton method may take less iterations but requires more memory than the :Function iteration approach.\nlinearsolver - This is the linear solver which is used in the :Newton method.The choices for the linear solver are::Dense - A dense linear solver.\n:Band - A solver specialized for banded Jacobians. If used, you must set the position of the upper and lower non-zero diagonals via jac_upper and jac_lower.\n:Diagonal - This method is specialized for diagonal Jacobians.\n:BCG - A Biconjugate gradient method.\n:TFQMR - A TFQMR method.Example:CVODE_BDF() # BDF method using Newton + Dense solver\nCVODE_BDF(method=:Functional) # BDF method using Functional iterations\nCVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nCVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   All of the additional options are available. The full constructor is:CVODE_BDF(;method=:Newton,linear_solver=:Dense,\n          jac_upper=0,jac_lower=0,non_zero=0,krylov_dim=0,\n          stability_limit_detect=false,\n          max_hnil_warns = 10,\n          max_order = 5,\n          max_error_test_failures = 7,\n          max_nonlinear_iters = 3,\n          max_convergence_failures = 10)\n\nCVODE_Adams(;method=:Functional,linear_solver=:None,\n            jac_upper=0,jac_lower=0,krylov_dim=0,\n            stability_limit_detect=false,\n            max_hnil_warns = 10,\n            max_order = 12,\n            max_error_test_failures = 7,\n            max_nonlinear_iters = 3,\n            max_convergence_failures = 10)See the Sundials manual for details on the additional options."
 },
 
 {
@@ -2141,7 +2133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "ODE.jl",
     "category": "section",
-    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method\node4s - A 4th order Rosenbrock method due to Shampine"
+    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2149,7 +2141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "ODEInterface.jl",
     "category": "section",
-    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the non-stiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince.\nodex - GBS extrapolation-algorithm based on the midpoint rule.\nseulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
+    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the non-stiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquations.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince.\nodex - GBS extrapolation-algorithm based on the midpoint rule.\nseulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
 },
 
 {
@@ -2301,7 +2293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Solvers",
     "title": "SteadyStateDiffEq.jl",
     "category": "section",
-    "text": "SSRootfind : Using a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument."
+    "text": "SSRootfind : Using a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.Example usage:sol = solve(prob,SSRootfind())"
 },
 
 {
@@ -2337,9 +2329,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/sde_solve.html#Implemented-Solvers-1",
+    "location": "solvers/sde_solve.html#Full-List-of-Methods-1",
     "page": "SDE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Full List of Methods",
     "category": "section",
     "text": ""
 },
@@ -2349,7 +2341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.\nSRA1 - An optimized version of SRIA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.†\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†\nSRA1 - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†Example usage:sol = solve(prob,SRIW1())For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2358,14 +2350,6 @@ var documenterSearchIndex = {"docs": [
     "title": "StochasticCompositeAlgorithm",
     "category": "section",
     "text": "One unique feature of StochasticDiffEq.jl is the StochasticCompositeAlgorithm, which allows you to, with very minimal overhead, design a multimethod which switches between chosen algorithms as needed. The syntax is StochasticCompositeAlgorithm(algtup,choice_function) where algtup is a tuple of StochasticDiffEq.jl algorithms, and choice_function is a function which declares which method to use in the following step. For example, we can design a multimethod which uses EM() but switches to RKMil() whenever dt is too small:choice_function(integrator) = (Int(integrator.dt<0.001) + 1)\nalg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)The choice_function takes in an integrator and thus all of the features available in the Integrator Interface can be used in the choice function."
-},
-
-{
-    "location": "solvers/sde_solve.html#Adaptive-Type:-RSWM-1",
-    "page": "SDE Solvers",
-    "title": "Adaptive Type: RSWM",
-    "category": "section",
-    "text": "Algorithms which allow for adaptive timestepping (all except EM and RKMil) can take in an RSWM type which specifies the rejection sampling with memory algorithm used. The constructor is:RSWM(;discard_length=1e-15,\n     adaptivealg::Symbol=:RSwM3)discard_length - Size at which to discard future information in adaptive. Default is 1e-15.\nadaptivealg: The adaptive timestepping algorithm. Default is :RSwm3.For more details, see the publication."
 },
 
 {
@@ -2393,17 +2377,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/rode_solve.html#Special-Keyword-Arguments-1",
+    "location": "solvers/rode_solve.html#Full-List-of-Methods-1",
     "page": "RODE Solvers",
-    "title": "Special Keyword Arguments",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "solvers/rode_solve.html#Implemented-Solvers-1",
-    "page": "RODE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Full List of Methods",
     "category": "section",
     "text": ""
 },
@@ -2413,7 +2389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.RandomEM- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.RandomEM- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity.Example usage:sol = solve(prob,RandomEM())"
 },
 
 {
@@ -2465,17 +2441,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/dae_solve.html#Special-Keyword-Arguments-1",
+    "location": "solvers/dae_solve.html#Full-List-of-Methods-1",
     "page": "DAE Solvers",
-    "title": "Special Keyword Arguments",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "solvers/dae_solve.html#Implemented-Solvers-1",
-    "page": "DAE Solvers",
-    "title": "Implemented Solvers",
+    "title": "Full List of Methods",
     "category": "section",
     "text": ""
 },
@@ -2485,7 +2453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Sundials.jl",
     "category": "section",
-    "text": "IDA - This is the IDA method from the Sundials.jl package.Note that the constructors for the Sundials algorithms take an argument:linearsolver - This is the linear solver which is used in the Newton iterations. The choices are:\n:Dense - A dense linear solver\n:Band - A solver specialized for banded Jacobians. If used, you must set the position of the upper and lower non-zero diagonals via jac_upper and jac_lower.\n:Diagonal - This method is specialized for diagonal Jacobians.\nBCG - A Biconjugate gradient method.\nTFQMR - A TFQMR method.Example:IDA() # Newton + Dense solver\nIDA(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nIDA(linear_solver=:BCG) # Biconjugate gradient method                                   "
+    "text": "IDA - This is the IDA method from the Sundials.jl package.Note that the constructors for the Sundials algorithms take a main argument:linearsolver - This is the linear solver which is used in the Newton iterations. The choices are:\n:Dense - A dense linear solver\n:Band - A solver specialized for banded Jacobians. If used, you must set the position of the upper and lower non-zero diagonals via jac_upper and jac_lower.\n:Diagonal - This method is specialized for diagonal Jacobians.\nBCG - A Biconjugate gradient method.\nTFQMR - A TFQMR method.Example:IDA() # Newton + Dense solver\nIDA(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down\nIDA(linear_solver=:BCG) # Biconjugate gradient method                                   All of the additional options are available. The constructor is:IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,\n    max_order = 5,\n    max_error_test_failures = 7,\n    max_nonlinear_iters = 3,\n    nonlinear_convergence_coefficient = 0.33,\n    nonlinear_convergence_coefficient_ic = 0.0033,\n    max_num_steps_ic = 5,\n    max_num_jacs_ic = 4,\n    max_num_iters_ic = 10,\n    max_num_backs_ic = 100,\n    use_linesearch_ic = true,\n    max_convergence_failures = 10)See the Sundials manual for details on the additional options."
 },
 
 {
@@ -2529,9 +2497,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/fempoisson_solve.html#List-of-Methods-1",
+    "location": "solvers/fempoisson_solve.html#Full-List-of-Methods-1",
     "page": "FEM Poisson Solvers",
-    "title": "List of Methods",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/fempoisson_solve.html#FiniteElementDiffEq.jl-1",
+    "page": "FEM Poisson Solvers",
+    "title": "FiniteElementDiffEq.jl",
     "category": "section",
     "text": "Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqPoisson(),solver=:CG)"
 },
@@ -2561,9 +2537,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/femheat_solve.html#Avaliable-Methods-1",
+    "location": "solvers/femheat_solve.html#Full-List-of-Methods-1",
     "page": "FEM Heat Solvers",
-    "title": "Avaliable Methods",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/femheat_solve.html#FiniteElementDiffEq.jl-1",
+    "page": "FEM Heat Solvers",
+    "title": "FiniteElementDiffEq.jl",
     "category": "section",
     "text": "FEMDiffEqHeatEuler\nFEMDiffEqHeatImplicitEuler\nFEMDiffEqHeatCrankNicholson\nFEMDiffEqHeatSemiImplicitEuler\nFEMDiffEqHeatSemiImplicitCrankNicholsonAdditionally, for linear solves, one can choose the method by which the linear solve takes place via the method keyword argument.Factorizations (:LU, :Cholesky, :QR, :SVD)\nConjugate-Gradient (:CG)\n:GMRESExample:sol = solve(prob,FEMDiffEqHeatCrankNicholson(),solver=:CG)"
 },
@@ -2621,7 +2605,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEq-Specific Array Types",
     "title": "DiffEq-Specific Array Types",
     "category": "section",
-    "text": "In many cases, a standard array may not be enough to fully hold the data for a model. Many of the solvers in DifferentialEquations.jl allow you to solve problems on AbstractArray types which allow you to extend the meaning of an array. This page describes some of the AbstractArray types which can be helpful for modeling differential equations problems."
+    "text": "In many cases, a standard array may not be enough to fully hold the data for a model. Many of the solvers in DifferentialEquations.jl (only the native Julia methods) allow you to solve problems on AbstractArray types which allow you to extend the meaning of an array. This page describes some of the AbstractArray types which can be helpful for modeling differential equations problems."
 },
 
 {
@@ -2661,7 +2645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEq-Specific Array Types",
     "title": "DEDataArrays",
     "category": "section",
-    "text": "The DEDataArray{T} type allows one to add other \"non-continuous\" variables to an array, which can be useful in many modeling situations involving lots of events. To define an DEDataArray, make a type which subtypes DEDataArray{T} with a field x for the \"array of continuous variables\" for which you would like the differential equation to treat directly. For example:type MyDataArray{T} <: DEDataArray{T}\n    x::Array{T,1}\n    a::T\n    b::Symbol\nendIn this example, our resultant array is a SimType, and its data which is presented to the differential equation solver will be the array x. Any array which the differential equation solver can use is allowed to be made as the field x, including other DEDataArrays. Other than that, you can add whatever fields you please, and let them be whatever type you please. These extra fields are carried along in the differential equation solver that the user can use in their f equation and modify via callbacks."
+    "text": "The DEDataArray{T} type allows one to add other \"non-continuous\" variables to an array, which can be useful in many modeling situations involving lots of events. To define an DEDataArray, make a type which subtypes DEDataArray{T} with a field x for the \"array of continuous variables\" for which you would like the differential equation to treat directly. The other fields are treated as \"discrete variables\". For example:type MyDataArray{T} <: DEDataArray{T}\n    x::Array{T,1}\n    a::T\n    b::Symbol\nendIn this example, our resultant array is a SimType, and its data which is presented to the differential equation solver will be the array x. Any array which the differential equation solver can use is allowed to be made as the field x, including other DEDataArrays. Other than that, you can add whatever fields you please, and let them be whatever type you please.These extra fields are carried along in the differential equation solver that the user can use in their f equation and modify via callbacks. For example, inside of a an update function, it is safe to do:function f(t,u,du)\n  u.a = t\nendto update the discrete variables (unless the algorithm notes that it does not step to the endpoint, in which case a callback must be used to update appropriately.)"
 },
 
 {
@@ -2693,15 +2677,63 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Noise Processes",
     "category": "section",
-    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM())t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
+    "text": "Noise processes are essential in continuous stochastic modeling. The NoiseProcess types are distributionally-exact, meaning they are not solutions of stochastic differential equations and instead are directly generated according to their analytical distributions. These processes are used as the noise term in the SDE and RODE solvers. Additionally, the noise processes themselves can be simulated and solved using the DiffEq common interface (including the Monte Carlo interface).This page first describes how to use noise processes in SDEs, and analyze/simulate them directly noise processes. Then it describes the standard noise processes which are available. Processes like WienerProcess, CorrelatedWienerProcess, GeometricBrownianMotionProcess, BrownianBridgeProcess and OrnsteinUhlenbeckProcess are pre-defined. Then it is shown how one can define the distributions for a new NoiseProcess.In addition to the NoiseProcess type, more general AbstractNoiseProcesses are defined. The NoiseGrid allows you to define a noise process from a set of pre-calculated points (the \"normal\" way). The NoiseApproximation allows you to define a new noise process as the solution to some stochastic differential equation. While these methods are only approximate, they are more general and allow the user to easily define their own colored noise to use in simulations.The NoiseWrapper allows one to wrap a NoiseProcess from a previous simulation to re-use it in a new simulation in a way that follows the same stochastic trajectory (even if different points are hit, for example solving with a smaller dt) in a distributionally-exact manner. It is demonstrated how the NoiseWrapper can be used to wrap the NoiseProcess of one SDE/RODE solution in order to re-use the same noise process in another simulation.Lastly, the NoiseFunction allows you to use any function of time as the noise process. Together, this functionality allows you to define any colored noise process and use this efficiently and accurately in your simulations."
 },
 
 {
-    "location": "features/noise_process.html#White-Noise-1",
+    "location": "features/noise_process.html#Using-Noise-Processes-1",
     "page": "Noise Processes",
-    "title": "White Noise",
+    "title": "Using Noise Processes",
     "category": "section",
-    "text": "The default noise is WHITE_NOISE. This is the noise process which uses randn!. A special dispatch is added for complex numbers for (randn()+im*randn())/sqrt(2). This function is DiffEqBase.wiener_randn (or with ! respectively). Thus its noise function is essentially:function WHITE_NOISE_DIST(W,dt)\n  if typeof(W.dW) <: AbstractArray\n    return sqrt(abs(dt))*wiener_randn(size(W.dW))\n  else\n    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))\n  end\nend\nfunction WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)\n  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*(Wh-W0)+W0\nendfor the out of place versions, and for the inplace versionsfunction INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)\n  wiener_randn!(rand_vec)\n  rand_vec .*= sqrt(abs(dt))\nend\nfunction INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)\n  wiener_randn!(rand_vec)\n  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*(Wh.-W0).+W0\nendNotice these functions correspond to the distributions for the Wiener process, that is the first one is simply that Brownian steps are distributed N(0,dt), while the second function is the distribution of the Brownian Bridge N(q(Wh-W0)+W0,(1-q)qh). These functions are then placed in a noise process:NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nNoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())For convenience, the following constructors are predefined:WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE,rswm=RSWM())\nWienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE,rswm=RSWM())These will generate a Wiener process, which can be stepped with step!(W,dt), and interpolated as W(t)."
+    "text": ""
+},
+
+{
+    "location": "features/noise_process.html#Passing-a-Noise-Process-to-a-Problem-Type-1",
+    "page": "Noise Processes",
+    "title": "Passing a Noise Process to a Problem Type",
+    "category": "section",
+    "text": "AbstractNoiseProcesses can be passed directly to the problem types to replace the standard Wiener process (Brownian motion) with your choice of noise. To do this, simply construct the noise and pass it to the noise keyword argument:μ = 1.0\nσ = 2.0\nW = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)\n# ...\n# Define f,g,u0,tspan for a SDEProblem\n# ...\nprob = SDEProblem(f,g,u0,tspan,noise=W)"
+},
+
+{
+    "location": "features/noise_process.html#Basic-Interface-1",
+    "page": "Noise Processes",
+    "title": "Basic Interface",
+    "category": "section",
+    "text": "The NoiseProcess acts like a DiffEq solution. For some noise process W, you can get its ith timepoint like W[i] and the associated time W.t[i]. If the NoiseProcess has a bridging distribution defined, it can be interpolated to arbitrary time points using W(t). Note that every interpolated value is saved to the NoiseProcess so that way it can stay distributionally correct. A plot recipe is provided which plots the timeseries."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Simulation-of-the-Noise-Process-1",
+    "page": "Noise Processes",
+    "title": "Direct Simulation of the Noise Process",
+    "category": "section",
+    "text": "Since the NoiseProcess types are distribution-exact and do not require the stochastic differential equation solvers, many times one would like to directly simulate trajectories from these proecesses. The NoiseProcess has a NoiseProcessProblem type:NoiseProblem(noise,tspan)for which solve works. For example, we can simulate a distributionally-exact Geometric Brownian Motion solution by:μ = 1.0\nσ = 2.0\nW = GeometricBrownianMotionProcess(μ,σ,0.0,1.0,1.0)\nprob = NoiseProblem(W,(0.0,1.0))\nsol = solve(prob;dt=0.1)solve requires the dt is given, the solution it returns is a NoiseProcess which has stepped through the timespan. Because this follows the common interface, all of the normal functionality works. For example, we can use the Monte Carlo functionality as follows:monte_prob = MonteCarloProblem(prob)\nsol = solve(monte_prob;dt=0.1,num_monte=100)simulates 100 Geometric Brownian Motions."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Interface-1",
+    "page": "Noise Processes",
+    "title": "Direct Interface",
+    "category": "section",
+    "text": "Most of the time, a NoiseProcess is received from the solution of a stochastic or random differential equation, in which case sol.W gives the NoiseProcess and it is already defined along some timeseries. In other cases, NoiseProcess types are directly simulated (see below). However, NoiseProcess types can also be directly acted on. The basic functionality is given by calculate_step! to calculate a future time point, and accept_step! to accept the step. If steps are rejected, the Rejection Sampling with Memory algorithm is applied to keep the solution distributionally exact. This kind of stepping is done via:W = WienerProcess(0.0,1.0,1.0)\ndt = 0.1\nW.dt = dt\nsetup_next_step!(W)\nfor i in 1:10\n  accept_step!(W,dt)\nend"
+},
+
+{
+    "location": "features/noise_process.html#Noise-Process-Types-1",
+    "page": "Noise Processes",
+    "title": "Noise Process Types",
+    "category": "section",
+    "text": "This section describes the available NoiseProcess types."
+},
+
+{
+    "location": "features/noise_process.html#Wiener-Process-(White-Noise)-1",
+    "page": "Noise Processes",
+    "title": "Wiener Process (White Noise)",
+    "category": "section",
+    "text": "The WienerProcess, also known as Gaussian white noise, Brownian motion, or the noise in the Langevin equation, is the stationary process with distribution N(0,t). The constructor is:WienerProcess(t0,W0,Z0=nothing)\nWienerProcess!(t0,W0,Z0=nothing)"
 },
 
 {
@@ -2713,27 +2745,131 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/noise_process.html#Geometric-Brownian-Motion-1",
+    "page": "Noise Processes",
+    "title": "Geometric Brownian Motion",
+    "category": "section",
+    "text": "A GeometricBrownianMotion process is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = mu X_t dt + sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)"
+},
+
+{
+    "location": "features/noise_process.html#Brownian-Bridge-1",
+    "page": "Noise Processes",
+    "title": "Brownian Bridge",
+    "category": "section",
+    "text": "A BrownianBridge process is a Wiener process with a pre-defined start and end value. This process is distribution exact and back be back interpolated exactly as well. The constructor is:BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)\nBrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)where W(t0)=W₀, W(tend)=Wend, and likewise for the Z process if defined."
+},
+
+{
+    "location": "features/noise_process.html#Ornstein-Uhlenbeck-1",
+    "page": "Noise Processes",
+    "title": "Ornstein-Uhlenbeck",
+    "category": "section",
+    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = theta (mu - X_t) dt + sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)"
+},
+
+{
+    "location": "features/noise_process.html#Direct-Construction-of-a-NoiseProcess-1",
+    "page": "Noise Processes",
+    "title": "Direct Construction of a NoiseProcess",
+    "category": "section",
+    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM(),save_everystep=true,timeseries_steps=1)t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.\nsave_everystep whether to save every step of the Brownian timeseries.\ntimeseries_steps number of points to skip between each timeseries save.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
+},
+
+{
+    "location": "features/noise_process.html#Direct-Construction-Example-1",
+    "page": "Noise Processes",
+    "title": "Direct Construction Example",
+    "category": "section",
+    "text": "The easiest way to show how to directly construct a NoiseProcess is by example. Here we will show how to directly construct a NoiseProcess which generates Gaussian white noise.This is the noise process which uses randn!. A special dispatch is added for complex numbers for (randn()+im*randn())/sqrt(2). This function is DiffEqBase.wiener_randn (or with ! respectively).The first function that must be defined is the noise distribution. This is how to generate W(t+dt) given that we know W(x) for xtt. For Gaussian white noise, we know thatW(dt)  N(0dt)for W(0)=0 which defines the stepping distribution. Thus its noise distribution function is:function WHITE_NOISE_DIST(W,dt)\n  if typeof(W.dW) <: AbstractArray\n    return sqrt(abs(dt))*wiener_randn(size(W.dW))\n  else\n    return sqrt(abs(dt))*wiener_randn(typeof(W.dW))\n  end\nendfor the out of place versions, and for the inplace versionsfunction INPLACE_WHITE_NOISE_DIST(rand_vec,W,dt)\n  wiener_randn!(rand_vec)\n  rand_vec .*= sqrt(abs(dt))\nendOptionally, we can provide a bridging distribution. This is the distribution of W(qh) for q01 given that we know W(0)=0 and W(h)=W. For Brownian motion, this is known as the Brownian Bridge, and is well known to have the distribution:W(qh)  N(qW(1-q)qh)Thus we have the out-of-place and in-place versions as:function WHITE_NOISE_BRIDGE(W,W0,Wh,q,h)\n  sqrt((1-q)*q*abs(h))*wiener_randn(typeof(W.dW))+q*Wh\nend\nfunction INPLACE_WHITE_NOISE_BRIDGE(rand_vec,W,W0,Wh,q,h)\n  wiener_randn!(rand_vec)\n  rand_vec .= sqrt((1.-q).*q.*abs(h)).*rand_vec.+q.*Wh\nendThese functions are then placed in a noise process:NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE;kwargs)\nNoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE;kwargs)Notice that we can optionally provide an alternative adaptive algorithm for the timestepping rejections. RSWM() defaults to the Rejection Sampling with Memory 3 algorithm (RSwM3).Note that the standard constructors are simply:WienerProcess(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,WHITE_NOISE_DIST,WHITE_NOISE_BRIDGE;kwargs)\nWienerProcess!(t0,W0,Z0=nothing) = NoiseProcess(t0,W0,Z0,INPLACE_WHITE_NOISE_DIST,INPLACE_WHITE_NOISE_BRIDGE;kwargs)These will generate a Wiener process, which can be stepped with step!(W,dt), and interpolated as W(t)."
+},
+
+{
+    "location": "features/noise_process.html#Non-Standard-Noise-Processes-1",
+    "page": "Noise Processes",
+    "title": "Non-Standard Noise Processes",
+    "category": "section",
+    "text": "In addition to the mathematically-defined noise processes above, there exist more generic functionality for building noise processes from other noise processes, from arbitrary functions, from arrays, and from approximations of stochastic differential equations."
+},
+
+{
     "location": "features/noise_process.html#NoiseWrapper-1",
     "page": "Noise Processes",
     "title": "NoiseWrapper",
     "category": "section",
-    "text": "Another AbstractNoiseProcess is the NoiseWrapper. This produces a new noise process from an old one, which will use its interpolation to generate the noise. This allows you to re-use a previous noise process not just with the same timesteps, but also with new (adaptive) timesteps as well. Thus this is very good for doing Multi-level Monte Carlo schemes and strong convergence testing.To wrap a noise process, simply use:NoiseWrapper(W::NoiseProcess)"
+    "text": "This produces a new noise process from an old one, which will use its interpolation to generate the noise. This allows you to re-use a previous noise process not just with the same timesteps, but also with new (adaptive) timesteps as well. Thus this is very good for doing Multi-level Monte Carlo schemes and strong convergence testing.To wrap a noise process, simply use:NoiseWrapper(W::NoiseProcess)"
 },
 
 {
-    "location": "features/noise_process.html#Example-1",
+    "location": "features/noise_process.html#NoiseFunction-1",
     "page": "Noise Processes",
-    "title": "Example",
+    "title": "NoiseFunction",
     "category": "section",
-    "text": "In this example, we will solve an SDE three times:First to generate a noise process\nSecond with the same timesteps to show the values are the same\nThird with half-sized timstepsFirst we will generate a noise process by solving an SDE:using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess\nf1 = (t,u) -> 1.01u\ng1 = (t,u) -> 1.01u\ndt = 1//2^(4)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))\nsol1 = solve(prob1,EM(),dt=dt)Now we wrap the noise into a NoiseWrapper and solve the same problem:W2 = NoiseWrapper(sol1.W)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W2)\nsol2 = solve(prob1,EM(),dt=dt)We can test@test sol1.u ≈ sol2.uto see that the values are essentially equal. Now we can use the same process to solve the same trajectory with a smaller dt:W3 = NoiseWrapper(sol1.W)\nprob2 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W3)\n\ndt = 1//2^(5)\nsol3 = solve(prob2,EM(),dt=dt)We can plot the results to see what this looks like:using Plots\nplot(sol1)\nplot!(sol2)\nplot!(sol3)(Image: noise_process)In this plot, sol2 covers up sol1 because they hit essentially the same values. You can see that sol3 its similar to the others, because it's using the same underlying noise process just sampled much finer.To double check, we see that:plot(sol1.W)\nplot!(sol2.W)\nplot!(sol3.W)coupled_wienerthe coupled Wiener processes coincide at every other timepoint, and the intermediate timepoints were calculated according to a Brownian bridge."
+    "text": "This allows you to use any arbitrary function W(t) as a NoiseProcess. This will use the function lazily, only caching values required to minimize function calls, but not store the entire noise array. This requires an initial time point t0 in the domain of W. A second function is needed if the desired SDE algorithm requires multiple processes.NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0))Additionally, one can use an in-place function W(out1,out2,t) for more efficient generation of the arrays for multi-dimensional processes. When the in-place version is used without a dispatch for the out-of-place version, the noise_prototype needs to be set."
 },
 
 {
-    "location": "features/noise_process.html#Adaptive-Example-1",
+    "location": "features/noise_process.html#NoiseGrid-1",
     "page": "Noise Processes",
-    "title": "Adaptive Example",
+    "title": "NoiseGrid",
+    "category": "section",
+    "text": "A noise grid builds a noise process from arrays of points. For example, you can generate your desired noise process as an array W with timepoints t, and use the constructor:NoiseGrid(t,W,Z=nothing)to build the associated noise process. This process comes with a linear interpolation of the given points, and thus the grid does not have to match the grid of integration. Thus this can be used for adaptive solutions as well. However, one must make note that the fidelity of the noise process is linked to how fine the noise grid is determined: if the noise grid is sparse on points compared to the integration, then its distributional properties may be slightly perturbed by the linear interpolation. Thus its suggested that the grid size at least approximately match the number of time steps in the integration to ensure accuracy.For a one-dimensional process, W should be an AbstractVector of Numbers. For multi-dimensional processes, W should be an AbstractVector of the noise_prototype."
+},
+
+{
+    "location": "features/noise_process.html#NoiseApproximation-1",
+    "page": "Noise Processes",
+    "title": "NoiseApproximation",
+    "category": "section",
+    "text": "In many cases, one would like to define a noise process directly by a stochastic differential equation which does not have an analytical solution. Of course, this will not be distributionally-exact and how well the properties match depends on how well the differential equation is integrated, but in many cases this can be used as a good approximation when other methods are much more difficult.A NoiseApproximation is defined by a DEIntegrator. The constructor for a NoiseApproximation is:NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing)The DEIntegrator should have a final time point of integration far enough such that it will not halt during the integration. For ease of use, you can use a final time point as Inf. Note that the time points do not have to match the time points of the future integration since the interpolant of the SDE solution will be used. Thus the limiting factor is error tolerance and not hitting specific points."
+},
+
+{
+    "location": "features/noise_process.html#Examples-Using-Non-Standard-Noise-Processes-1",
+    "page": "Noise Processes",
+    "title": "Examples Using Non-Standard Noise Processes",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/noise_process.html#NoiseGrid-2",
+    "page": "Noise Processes",
+    "title": "NoiseGrid",
+    "category": "section",
+    "text": "In this example, we will show you how to define your own version of Brownian motion using an array of pre-calculated points. In normal usage you should use WienerProcess instead since this will have distributionally-exact interpolations while the noise grid uses linear interpolations, but this is a nice example of the workflow.To define a NoiseGrid you need to have a set of time points and a set of values for the process. Let's define a Brownian motion on (0.0,1.0) with a dt=0.001. To do this,dt = 0.001\nt = 0:dt:1\nbrownian_values = cumsum([0;[sqrt(dt)*randn() for i in 1:length(t)-1]])Now we build the NoiseGrid using these values:W = NoiseGrid(t,brownian_values)We can then pass W as the noise argument of an SDEProblem to use it in an SDE."
+},
+
+{
+    "location": "features/noise_process.html#NoiseWrapper-Example-1",
+    "page": "Noise Processes",
+    "title": "NoiseWrapper Example",
+    "category": "section",
+    "text": "In this example, we will solve an SDE three times:First to generate a noise process\nSecond with the same timesteps to show the values are the same\nThird with half-sized timstepsFirst we will generate a noise process by solving an SDE:using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess\nf1 = (t,u) -> 1.01u\ng1 = (t,u) -> 1.01u\ndt = 1//2^(4)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))\nsol1 = solve(prob1,EM(),dt=dt)Now we wrap the noise into a NoiseWrapper and solve the same problem:W2 = NoiseWrapper(sol1.W)\nprob1 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W2)\nsol2 = solve(prob1,EM(),dt=dt)We can test@test sol1.u ≈ sol2.uto see that the values are essentially equal. Now we can use the same process to solve the same trajectory with a smaller dt:W3 = NoiseWrapper(sol1.W)\nprob2 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W3)\n\ndt = 1//2^(5)\nsol3 = solve(prob2,EM(),dt=dt)We can plot the results to see what this looks like:using Plots\nplot(sol1)\nplot!(sol2)\nplot!(sol3)(Image: noise_process)In this plot, sol2 covers up sol1 because they hit essentially the same values. You can see that sol3 its similar to the others, because it's using the same underlying noise process just sampled much finer.To double check, we see that:plot(sol1.W)\nplot!(sol2.W)\nplot!(sol3.W)(Image: coupled_wiener)the coupled Wiener processes coincide at every other time point, and the intermediate timepoints were calculated according to a Brownian bridge."
+},
+
+{
+    "location": "features/noise_process.html#Adaptive-NoiseWrapper-Example-1",
+    "page": "Noise Processes",
+    "title": "Adaptive NoiseWrapper Example",
     "category": "section",
     "text": "Here we will show that the same noise can be used with the adaptive methods using the NoiseWrapper. SRI and SRIW1 use slightly different error estimators, and thus give slightly different stepping behavior. We can see how they solve the same 2D SDE differently by using the noise wrapper:prob = SDEProblem(f1,g1,ones(2),(0.0,1.0))\nsol4 = solve(prob,SRI(),abstol=1e-8)\n\nW2 = NoiseWrapper(sol4.W)\nprob2 = SDEProblem(f1,g1,ones(2),(0.0,1.0),noise=W2)\nsol5 = solve(prob2,SRIW1(),abstol=1e-8)\n\nusing Plots\nplot(sol4)\nplot!(sol5)(Image: SRI_SRIW1_diff)"
+},
+
+{
+    "location": "features/noise_process.html#NoiseApproximation-Example-1",
+    "page": "Noise Processes",
+    "title": "NoiseApproximation Example",
+    "category": "section",
+    "text": "In this example we will show how to use the NoiseApproximation in order to build our own Geometric Brownian Motion from its stochastic differential equation definition. In normal usage, you should use the GeometricBrownianMotionProcess instead since that is more efficient and distributionally-exact.First, let's define the SDEProblem. Here will use a timespan (0.0,Inf) so that way the noise can be used over an indefinite integral.const μ = 1.5\nconst σ = 1.2\nf = (t,u) -> μ*u\ng = (t,u) -> σ*u\nprob = SDEProblem(f,g,1.0,(0.0,Inf))Now we build the noise process by building the integrator and sending that integrator to the NoiseApproximation constructor:integrator = init(prob,SRIW1())\nW = NoiseApproximation(integrator)We can use this noise process like any other noise process. For example, we can now build a geometric Brownian motion whose noise process is colored noise that itself is a geometric Brownian motion:prob = SDEProblem(f,g,1.0,(0.0,Inf),noise=W)The possibilities are endless."
+},
+
+{
+    "location": "features/noise_process.html#NoiseFunction-Example-1",
+    "page": "Noise Processes",
+    "title": "NoiseFunction Example",
+    "category": "section",
+    "text": "The NoiseFunction is pretty simple: pass a function. As a silly example, we can use exp as a noise process by doing:f = (t) -> exp(t)\nW = NoiseFunction(0.0,f)If it's multi-dimensional and an in-place function is used, the noise_prototype must be given. For example:f = (out,t) -> (out.=exp(t))\nW = NoiseFunction(0.0,f,noise_prototype=rand(4))This allows you to put arbitrarily weird noise into SDEs and RODEs. Have fun."
 },
 
 {
@@ -2897,6 +3033,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_functions.html#Example-2:-A-Control-Problem-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 2: A Control Problem",
+    "category": "section",
+    "text": "Another example of a DiscreteCallback is the control problem demonstrated on the DiffEq-specific arrays page."
+},
+
+{
     "location": "features/callback_functions.html#ContinuousCallback-Examples-1",
     "page": "Event Handling and Callback Functions",
     "title": "ContinuousCallback Examples",
@@ -2921,9 +3065,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/callback_functions.html#Example-2:-Growing-Cell-Population-1",
+    "location": "features/callback_functions.html#Example-2:-Terminating-an-Integration-1",
     "page": "Event Handling and Callback Functions",
-    "title": "Example 2: Growing Cell Population",
+    "title": "Example 2: Terminating an Integration",
+    "category": "section",
+    "text": "In many cases you might want to terminate an integration when some condition is satisfied. To terminate an integration, use terminate!(integrator) as the affect! in a callback.In this example we will solve the differential equation:u0 = [1.,0.]\nfunction fun2(t,u,du)\n   du[2] = -u[1]\n   du[1] = u[2]\nend\ntspan = (0.0,10.0)\nprob = ODEProblem(fun2,u0,tspan)which has cosine and -sine as the solutions respectively. We wish to solve until the sine part, u[2] becomes positive. There are two things we may be looking for.A DiscreteCallback will cause this to halt at the first step such that the condition is satisfied. For example, we could use:condition(t,u,integrator) = u[2]>0\naffect!(integrator) = terminate!(integrator)\ncb = DiscreteCallback(condition,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: discrete_terminate)However, in many cases we wish to halt exactly at the point of time that the condition is satisfied. To do that, we use a continuous callback. The condition must thus be a function which is zero at the point we want to halt. Thus we use the following:condition(t,u,integrator) = u[2]\naffect!(integrator) = terminate!(integrator)\ncb = ContinuousCallback(condition,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: simple_terminate)Note that this uses rootfinding to approximate the \"exact\" moment of the crossing. Analytically we know the value is pi, and here the integration terminates atsol.t[end] # 3.1415902502224307Using a more accurate integration increases the accuracy of this prediction:sol = solve(prob,Vern8(),callback=cb,reltol=1e-12,abstol=1e-12)\nsol.t[end] # 3.1415926535896035\n#π = 3.141592653589703...Now say we wish to find the when the first period is over, i.e. we want to ignore the upcrossing and only stop on the downcrossing. We do this by ignoring the affect! and only passing an affect! for the second:condition(t,u,integrator) = u[2]\naffect!(integrator) = terminate!(integrator)\ncb = ContinuousCallback(condition,nothing,affect!)\nsol = solve(prob,Tsit5(),callback=cb)(Image: downcrossing_terminate)Notice that passing only one affect! is the same as ContinuousCallback(condition,affect!,affect!), i.e. both upcrossings and downcrossings will activate the event. Using ContinuousCallback(condition,affect!,nothing)will thus be the same as above because the first event is an upcrossing."
+},
+
+{
+    "location": "features/callback_functions.html#Example-3:-Growing-Cell-Population-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 3: Growing Cell Population",
     "category": "section",
     "text": "Another interesting issue is with models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nf = function (t,u,du)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(t,u,integrator) # Event when event_f(t,u) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as when condition==0, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the cell splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:affect! = function (integrator)\n  u = integrator.u\n  resize!(integrator,length(u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\n  nothing\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:callback = ContinuousCallback(condition,affect!)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let's make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let's check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
 },
@@ -2942,14 +3094,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Callback Library",
     "category": "section",
     "text": "DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which can be used with any component solver which implements the callback interface. It adds the following callbacks which are available to users of DifferentialEquations.jl."
-},
-
-{
-    "location": "features/callback_library.html#Callbacks-1",
-    "page": "Callback Library",
-    "title": "Callbacks",
-    "category": "section",
-    "text": ""
 },
 
 {
@@ -3013,7 +3157,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Building a Problem",
     "category": "section",
-    "text": "To perform a Monte Carlo simulation, define a MonteCarloProblem. The constructor is:MonteCarloProblem(prob::DEProblem;\n                  output_func = (sol,i) -> sol,\n                  prob_func= (prob,i)->prob)prob_func: The function by which the problem is to be modified.\noutput_func: The reduction function.One can specify a function prob_func which changes the problem. For example:function prob_func(prob,i)\n  prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. Note that the parameter i is a unique counter over the simulations. Thus if you have an array of initial conditions u0_arr, you can have the ith simulation use the ith initial condition via:function prob_func(prob,i)\n  prob.u0 = u0_arr[i]\n  prob\nendIf your function is a ParameterizedFunction, you can do similar modifications to prob.f to perform a parameter search. The output_func is a reduction function. It's arguments are the generated solution and the unique index for the run. For example, if we wish to only save the 2nd coordinate at the end of each solution, we can do:output_func(sol,i) = sol[end,2]Thus the Monte Carlo Simulation would return as its data an array which is the end value of the 2nd dependent variable for each of the runs."
+    "text": "To perform a Monte Carlo simulation, define a MonteCarloProblem. The constructor is:MonteCarloProblem(prob::DEProblem;\n                  output_func = (sol,i) -> sol,\n                  prob_func= (prob,i)->prob),\n                  reduction = (u,data,I)->(append!(u,data),false),\n                  u_init = [])prob_func: The function by which the problem is to be modified.\noutput_func: The function determines what is saved from the solution to the output array. Defaults to saving the solution itself.\nreduction: This function determines how to reduce the data in each batch. Defaults to appending the data from the batches. The second part of the output determines whether the simulation has converged. If true, the simulation will exit early. By default, this is always false.One can specify a function prob_func which changes the problem. For example:function prob_func(prob,i)\n  prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). This can be used to perform searches over initial values. Note that the parameter i is a unique counter over the simulations. Thus if you have an array of initial conditions u0_arr, you can have the ith simulation use the ith initial condition via:function prob_func(prob,i)\n  prob.u0 = u0_arr[i]\n  prob\nendIf your function is a ParameterizedFunction, you can do similar modifications to prob.f to perform a parameter search. The output_func is a reduction function. It's arguments are the generated solution and the unique index for the run. For example, if we wish to only save the 2nd coordinate at the end of each solution, we can do:output_func(sol,i) = sol[end,2]Thus the Monte Carlo Simulation would return as its data an array which is the end value of the 2nd dependent variable for each of the runs."
 },
 
 {
@@ -3029,13 +3173,13 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Solving the Problem",
     "category": "section",
-    "text": "sim = solve(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nparallel_type : The type of parallelism to employ.The types of parallelism included are::none - No parallelism\n:threads - This uses multithreading. It's local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\n:pmap - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia's documentation for more details. Recommended for the case when each trajectory calculation isn't \"too quick\" (at least about a millisecond each?).\n:split_threads - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It's recommended you have one process on each node.Additionally, a MonteCarloEstimator can be suppliedsim = solve(prob,estimator,alg,kwargs...)These will be detailed when implemented."
+    "text": "sim = solve(prob,alg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nparallel_type : The type of parallelism to employ. Default is :pmap.\nbatch_size : The size of the batches on which the reductions are applies. Defaults to num_monte.The types of parallelism included are::none - No parallelism\n:threads - This uses multithreading. It's local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\n:pmap - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia's documentation for more details. Recommended for the case when each trajectory calculation isn't \"too quick\" (at least about a millisecond each?).\n:split_threads - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It's recommended you have one process on each node.Additionally, a MonteCarloEstimator can be suppliedsim = solve(prob,estimator,alg,kwargs...)These will be detailed when implemented."
 },
 
 {
-    "location": "features/monte_carlo.html#Solution-1",
+    "location": "features/monte_carlo.html#Solution-Type-1",
     "page": "Parallel Monte Carlo Simulations",
-    "title": "Solution",
+    "title": "Solution Type",
     "category": "section",
     "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well."
 },
@@ -3045,15 +3189,167 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots."
+    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots. An additional argument is idxs which allows you to choose which components of the solution to plot. For example, if the differential equation is a vector of 9 values, idxs=1:2:9 will plot only the Monte Carlo solutions of the odd components."
 },
 
 {
-    "location": "features/monte_carlo.html#Example-1",
+    "location": "features/monte_carlo.html#Analyzing-a-Monte-Carlo-Experiment-1",
     "page": "Parallel Monte Carlo Simulations",
-    "title": "Example",
+    "title": "Analyzing a Monte Carlo Experiment",
     "category": "section",
-    "text": "Let's test the sensitivity of the linear ODE to its initial condition.addprocs(4)\nusing DiffEqMonteCarlo, DiffEqBase, DiffEqProblemLibrary, OrdinaryDiffEq\nprob = prob_ode_linear\nprob_func = function (prob)\n  prob.u0 = rand()*prob.u0\n  prob\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)\n\nusing Plots\nplotly()\nplot(sim,linealpha=0.4)Here we solve the same ODE 100 times on 4 different cores, jiggling the initial condition by rand(). The resulting plot is as follows:(Image: monte_carlo_plot)"
+    "text": "Analysis tools are included for generating summary statistics and summary plots for a MonteCarloSimulation."
+},
+
+{
+    "location": "features/monte_carlo.html#Time-steps-vs-time-points-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Time steps vs time points",
+    "category": "section",
+    "text": "For the summary statistics, there are two types. You can either summarize by time steps or by time points. Summarizing by time steps assumes that the time steps are all the same time point, i.e. the integrator used a fixed dt or the values were saved using saveat. Summarizing by time points requires interpolating the solution."
+},
+
+{
+    "location": "features/monte_carlo.html#Analysis-at-a-time-step-or-time-point-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Analysis at a time step or time point",
+    "category": "section",
+    "text": "get_timestep(sim,i) # Returns an iterator of each simulation at time step i\nget_timepoint(sim,t) # Returns an iterator of each simulation at time point t\ncomponentwise_vectors_timestep(sim,i) # Returns a vector of each simulation at time step i\ncomponentwise_vectors_timepoint(sim,t) # Returns a vector of each simulation at time point t"
+},
+
+{
+    "location": "features/monte_carlo.html#Summary-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Summary Statistics",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Single-Time-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Single Time Statistics",
+    "category": "section",
+    "text": "The available functions for time steps are:timestep_mean(sim,i) # Computes the mean of each component at time step i\ntimestep_median(sim,i) # Computes the median of each component at time step i\ntimestep_quantile(sim,q,i) # Computes the quantile q of each component at time step i\ntimestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i\ntimestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component\ntimestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component\ntimestep_weighted_meancov(sim,W,i,j) # Computes the mean at i and j, and the weighted covariance W, for each componentThe available functions for time points are:timepoint_mean(sim,t) # Computes the mean of each component at time t\ntimepoint_median(sim,t) # Computes the median of each component at time t\ntimepoint_quantile(sim,q,t) # Computes the quantile q of each component at time t\ntimepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t\ntimepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component\ntimepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component\ntimepoint_weighted_meancov(sim,W,t1,t2) # Computes the mean at t1 and t2, the weighted covariance W, for each component"
+},
+
+{
+    "location": "features/monte_carlo.html#Full-Timeseries-Statistics-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Full Timeseries Statistics",
+    "category": "section",
+    "text": "Additionally, the following functions are provided for analyzing the full timeseries. The mean and meanvar versions return a DiffEqArray which can be directly plotted. The meancov and meancor return a matrix of tuples, where the tuples are the (mean_t1,mean_t2,cov or cor).The available functions for the time steps are:timeseries_steps_mean(sim) # Computes the mean at each time step\ntimeseries_steps_median(sim) # Computes the median at each time step\ntimeseries_steps_quantile(sim,q) # Computes the quantile q at each time step\ntimeseries_steps_meanvar(sim) # Computes the mean and variance at each time step\ntimeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step\ntimeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step\ntimeseries_steps_weighted_meancov(sim) # Computes the weighted covariance matrix and means at each time stepThe available functions for the time points are:timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts\ntimeseries_point_median(sim,ts) # Computes the median at each time point in ts\ntimeseries_point_quantile(sim,q,ts) # Computes the quantile q at each time point in ts\ntimeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts\ntimeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts\ntimeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts\ntimeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts"
+},
+
+{
+    "location": "features/monte_carlo.html#MonteCarloSummary-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "MonteCarloSummary",
+    "category": "section",
+    "text": "The MonteCarloSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:MonteCarloSummary(sim;quantile=[0.05,0.95])\nMonteCarloSummary(sim,ts;quantile=[0.05,0.95])The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution. Quantile is used to determine the qlow and qhigh quantiles at each timepoint. It defaults to the 5% and 95% quantiles."
+},
+
+{
+    "location": "features/monte_carlo.html#Plot-Recipe-2",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Plot Recipe",
+    "category": "section",
+    "text": "The MonteCarloSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.\nci_type : Defaults to :quantile which has (qlow,qhigh) quantiles whose limits were determined when constructing the MonteCarloSummary. Gaussian CI 1.96*(standard error of the mean) can be set using ci_type=:SEM.One useful argument is fillalpha which controls the transparency of the ribbon around the mean."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 1: Solving an ODE With Different Initial Conditions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Random-Initial-Conditions-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Random Initial Conditions",
+    "category": "section",
+    "text": "Let's test the sensitivity of the linear ODE to its initial condition. To do this, we would like to solve the linear ODE 100 times and plot what the trajectories look like. Let's start by opening up some extra processes so that way the computation will be parallelized:addprocs()\nusing DifferentialEquationsNow let's define the linear ODE which is our base problem:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))For our Monte Carlo simulation, we would like to change the initial condition around. This is done through the prob_func. This function takes in the base problem and modifies it to create the new problem that the trajectory actually solves. Here we will take the base problem, multiply the initial condition by a rand(), and use that for calculating the trajectory:prob_func = function (prob,i)\n  prob.u0 = rand()*prob.u0\n  prob\nendNow we build and solve the MonteCarloProblem with this base problem and prob_func:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)We can use the plot recipe to plot what the 100 ODEs look like:using Plots\nplotly()\nplot(sim,linealpha=0.4)(Image: monte_carlo_plot)We note that if we wanted to find out what the initial condition was for a given trajectory, we can retrieve it from the solution. sim[i] returns the ith solution object. sim[i].prob is the problem that specific trajectory solved, and sim[i].prob.u0 would then be the initial condition used in the ith trajectory."
+},
+
+{
+    "location": "features/monte_carlo.html#Pre-Determined-Initial-Conditions-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Pre-Determined Initial Conditions",
+    "category": "section",
+    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have num_monte=100, then we have i as some index in 1:100, and it's different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = linspace(0,1,100)\nprob_func = function (prob,i)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
+},
+
+{
+    "location": "features/monte_carlo.html#Example-2:-Solving-an-SDE-with-Different-Parameters-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 2: Solving an SDE with Different Parameters",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/monte_carlo.html#Using-the-Parameterized-Function-Wrappers-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Using the Parameterized Function Wrappers",
+    "category": "section",
+    "text": "Let's solve the same SDE but with varying parameters. Instead of using the macro, we will use the parameterized function wrappers (though either can be used). Let's create a Lotka-Volterra system with multiplicative noise. Our Lotka-Volterra system will have as its drift component:pf_func = function (t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\npf = ParameterizedFunction(pf_func,[1.5,1.0])where pf is the function with the parameters 1.5 and 1.0 associated with it. For our noise function we will use multiplicative noise:pg_func = function (t,u,p,du)\n  du[1] = p[1]*u[1]\n  du[2] = p[2]*u[2]\nend\npg = ParameterizedFunction(pg_func,[0.1,0.1])Now we build the SDE with these functions:prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0))This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using 0.3rand(2) as our parameters. Once again, we do this with a prob_func. In a ParameterizedFunction f, the parameters are accessed at f.params. Thus we will modify those values in the prob_func. Note that in the SDEProblem, the noise function is referred to as g:prob_func = function (prob,i)\n  set_param_values!(prob.g,0.3rand(2))\n  prob\nendNow we solve the problem 10 times and plot all of the trajectories in phase space:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,SRIW1(),num_monte=10)\nusing Plots; plotly()\nusing Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title=\"Phase Space Plot\")\nplot!(sim,linealpha=0.6,color=:red,vars=(0,2),title=\"Phase Space Plot\")(Image: monte_lotka_blue)We can then summarize this information with the mean/variance bounds using a MonteCarloSummary plot. We will take the mean/quantile at every 0.1 time units and directly plot the summary:summ = MonteCarloSummary(sim,0:0.1:10)\npyplot() # Note that plotly does not support ribbon plots\nplot(summ,fillalpha=0.5)(Image: monte_carlo_quantile)Note that here we used the quantile bounds, which default to [0.05,0.95] in the MonteCarloSummary constructor. We can change to standard error of the mean bounds using ci_type=:SEM in the plot recipe."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 3: Using the Reduction to Halt When Estimator is Within Tolerance",
+    "category": "section",
+    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.output_func = function (sol,i)\n  last(sol)\nendOur prob_func wull simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))\n\nprob_func = function (prob,i)\n  prob.u0 = rand()*prob.u0\n  prob\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:reduction = function (u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that's small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:reduction = function (u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
+},
+
+{
+    "location": "features/monte_carlo.html#Example-4:-Using-the-Analysis-Tools-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "Example 4: Using the Analysis Tools",
+    "category": "section",
+    "text": "In this example we will show how to analyze a MonteCarloSolution. First, let's generate a 10 solution Monte Carlo experiment. For our problem we will use a 4x2 system of linear stochastic differential equations:f = (t,u,du) -> begin\n  for i = 1:length(u)\n    du[i] = 1.01*u[i]\n  end\nend\nσ = (t,u,du) -> begin\n  for i in 1:length(u)\n    du[i] = .87*u[i]\n  end\nend\nprob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2DlinearTo solve this 10 times, we use the MonteCarloProblem constructor and solve with num_monte=10. Since we wish to compare values at the timesteps, we need to make sure the steps all hit the same times. Thus we set adaptive=false and explicitly give a dt.prob2 = MonteCarloProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)Note that if you don't do the timeseries_steps calculations, this code is compatible with adaptive timestepping. Using adaptivity is usually more efficient!We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a MonteCarloSummary type.summ = MonteCarloSummary(sim)will summarize at each time step, whilesumm = MonteCarloSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let's only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
+},
+
+{
+    "location": "features/io.html#",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "I/O: Saving and Loading Solution Data",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/io.html#I/O:-Saving-and-Loading-Solution-Data-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "I/O: Saving and Loading Solution Data",
+    "category": "section",
+    "text": "The ability to save and load solutions is important for handling large datasets and analyzing the results over multiple Julia sessions. This page explains the existing functionality for doing so."
+},
+
+{
+    "location": "features/io.html#Note-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "Note",
+    "category": "section",
+    "text": "Note that this currently is not included with DifferentialEquations.jl, and requires that you Pkg.add(\"DiffEqIO\") and using DiffEqIO."
+},
+
+{
+    "location": "features/io.html#Tabular-Data:-IterableTables-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "Tabular Data: IterableTables",
+    "category": "section",
+    "text": "An interface to IterableTables.jl is provided by DiffEqIO.jl. This IterableTables link allows you to use a solution type as the data source to convert to other tabular data formats. For example, let's solve a 4x2 system of ODEs:f_2dlinear = (t,u,du) -> du.=1.01u\nprob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))\nsol1 =solve(prob,Euler();dt=1//2^(4))then we can convert this to a dataframe using DataFrame:using DataFrames\ndf = DataFrame(sol1)\n\n# Result\n17×5 DataFrames.DataFrame\n│ Row │ timestamp │ value 1  │ value 2  │ value 3  │ value 4  │\n├─────┼───────────┼──────────┼──────────┼──────────┼──────────┤\n│ 1   │ 0.0       │ 0.110435 │ 0.569561 │ 0.918336 │ 0.508044 │\n│ 2   │ 0.0625    │ 0.117406 │ 0.605515 │ 0.976306 │ 0.540114 │\n│ 3   │ 0.125     │ 0.124817 │ 0.643738 │ 1.03794  │ 0.574208 │\n│ 4   │ 0.1875    │ 0.132696 │ 0.684374 │ 1.10345  │ 0.610455 │\n│ 5   │ 0.25      │ 0.141073 │ 0.727575 │ 1.17311  │ 0.64899  │\n│ 6   │ 0.3125    │ 0.149978 │ 0.773503 │ 1.24716  │ 0.689958 │\n│ 7   │ 0.375     │ 0.159445 │ 0.822331 │ 1.32589  │ 0.733511 │\n│ 8   │ 0.4375    │ 0.16951  │ 0.87424  │ 1.40959  │ 0.779814 │\n│ 9   │ 0.5       │ 0.18021  │ 0.929427 │ 1.49857  │ 0.82904  │\n│ 10  │ 0.5625    │ 0.191586 │ 0.988097 │ 1.59316  │ 0.881373 │\n│ 11  │ 0.625     │ 0.20368  │ 1.05047  │ 1.69373  │ 0.93701  │\n│ 12  │ 0.6875    │ 0.216537 │ 1.11678  │ 1.80065  │ 0.996159 │\n│ 13  │ 0.75      │ 0.230206 │ 1.18728  │ 1.91432  │ 1.05904  │\n│ 14  │ 0.8125    │ 0.244738 │ 1.26222  │ 2.03516  │ 1.12589  │\n│ 15  │ 0.875     │ 0.260187 │ 1.3419   │ 2.16363  │ 1.19697  │\n│ 16  │ 0.9375    │ 0.276611 │ 1.42661  │ 2.30021  │ 1.27252  │\n│ 17  │ 1.0       │ 0.294072 │ 1.51667  │ 2.44541  │ 1.35285  │If a ParameterizedFunction is used, the output will use the variable names:using ParameterizedFunctions\n\nf = @ode_def LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=3 d=1\n\nprob = ODEProblem(f,[1.0,1.0],(0.0,1.0))\nsol2 =solve(prob,Tsit5())\n\ndf = DataFrame(sol2)\n\n7×3 DataFrames.DataFrame\n│ Row │ timestamp │ x       │ y        │\n├─────┼───────────┼─────────┼──────────┤\n│ 1   │ 0.0       │ 1.0     │ 1.0      │\n│ 2   │ 0.0776085 │ 1.04549 │ 0.857668 │\n│ 3   │ 0.232645  │ 1.17587 │ 0.63946  │\n│ 4   │ 0.429118  │ 1.41968 │ 0.456996 │\n│ 5   │ 0.679082  │ 1.87672 │ 0.324733 │\n│ 6   │ 0.944406  │ 2.58825 │ 0.263362 │\n│ 7   │ 1.0       │ 2.77285 │ 0.25871  │Additionally, this data can be saved to a CSV:using CSV\nCSV.write(\"out.csv\",df)For more information on using the IterableTables interface and other output formats, see IterableTables.jl."
+},
+
+{
+    "location": "features/io.html#JLD-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "JLD",
+    "category": "section",
+    "text": "Julia types can be saved via JLD.jl. However, they cannot save types which have functions, which means that the solution type is currently not compatible with JLD.using JLD\nJLD.save(\"out.jld\",\"sol\",sol)"
 },
 
 {
@@ -3085,7 +3381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low Dependency Usage",
     "title": "Generalizing the Idea",
     "category": "section",
-    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nf = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecvec_to_mat(randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing DiffEqBase, OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
+    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nf = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecarr_to_arr(randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing DiffEqBase, OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
 },
 
 {
@@ -3273,11 +3569,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameterized_functions.html#Transforming-User-Defined-Functions-to-ParameterizedFunctions-1",
+    "location": "analysis/parameterized_functions.html#The-AbstractParameterizedFunction-Interface-1",
     "page": "ParameterizedFunctions",
-    "title": "Transforming User-Defined Functions to ParameterizedFunctions",
+    "title": "The AbstractParameterizedFunction Interface",
     "category": "section",
-    "text": ""
+    "text": "AbstractParameterizedFunctions are ways for functions to hold parameters in ways that the solvers can directly solve the function, yet parameter estimation routines can access and change these values as needed. The interface has the following functions:param_values(pf::AbstractParameterizedFunction) = # Get the values of the parameters\nnum_params(pf::AbstractParameterizedFunction) = # Get the number of the parameters\nset_param_values!(pf::AbstractParameterizedFunction,params) = # Set the parameter values using an AbstractArrayAbstractParameterizedFunctions can be constructed in the two ways below."
 },
 
 {
@@ -3289,9 +3585,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameterized_functions.html#Examples-1",
+    "location": "analysis/parameterized_functions.html#Examples-using-the-Constructor-1",
     "page": "ParameterizedFunctions",
-    "title": "Examples",
+    "title": "Examples using the Constructor",
     "category": "section",
     "text": "pf_func = function (t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\n\npf = ParameterizedFunction(pf_func,[1.5,1.0])And now pf can be used in the differential equation solvers and the ecosystem functionality which requires explicit parameters (parameter estimation, etc.).Note that the not in-place version works the same:pf_func2 = function (t,u,p)\n  [p[1] * u[1] - p[2] * u[1]*u[2];-3 * u[2] + u[1]*u[2]]\nend\n\npf2 = ParameterizedFunction(pf_func2,[1.5,1.0])"
 },
@@ -3365,7 +3661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "The Loss Function",
     "category": "section",
-    "text": "loss_func(sol)is a function which reduces the problem's solution. While this is very flexible, a convenience routine is included for fitting to data:CostVData(t,data;loss_func = L2DistLoss)where t is the set of timepoints which the data is found at, and data which are the values that are known. Optionally, one can choose a loss function from LossFunctions.jl or use the default of an L2 loss."
+    "text": "loss_func(sol)is a function which reduces the problem's solution. While this is very flexible, a two convenience routines is included for fitting to data:L2DistLoss(t,data)\nCostVData(t,data;loss_func = L2DistLoss)where t is the set of timepoints which the data is found at, and data which are the values that are known. L2DistLoss is an optimized version of the L2-distance. In CostVData, one can choose any loss function from LossFunctions.jl or use the default of an L2 loss."
 },
 
 {
@@ -3397,7 +3693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Local Optimization Examples",
     "category": "section",
-    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecvec_to_mat(randomized)Here we used vecvec_to_mat from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective funtion:cost_function = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)Note that we set maxiters so that way the differential equation solvers would error more quickly when in bad regions of the parameter space, speeding up the process. Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl.Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let's use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1.0 c=>3.0 d=>1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f2,u0,tspan)To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob,Tsit5(),CostVData(t,data))The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),\n                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x'| < 1.0e-15: true\n * |f(x) - f(x')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters."
+    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecarr_to_arr(randomized)Here we used vecarr_to_arr from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective funtion:cost_function = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)Note that we set maxiters so that way the differential equation solvers would error more quickly when in bad regions of the parameter space, speeding up the process. Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl.Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let's use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1.0 c=>3.0 d=>1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f2,u0,tspan)To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob,Tsit5(),L2DistLoss(t,data))The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),\n                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x'| < 1.0e-15: true\n * |f(x) - f(x')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters."
 },
 
 {
@@ -3405,7 +3701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "More Algorithms (Global Optimization) via MathProgBase Solvers",
     "category": "section",
-    "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\n\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecvec_to_mat(randomized)\n\nobj = build_loss_objective(prob,Tsit5(),CostVData(t,data),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
+    "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\n\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecarr_to_arr(randomized)\n\nobj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. The fastest result comes from the following:using NLopt\nopt = Opt(:LN_BOBYQA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
 },
 
 {
@@ -3421,7 +3717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Bifurcation Analysis",
     "title": "Bifurcation Analysis",
     "category": "section",
-    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.Note that this functionality is very rudimentary and still in development."
+    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install PyDSTool.jl:Pkg.add(\"PyDSTool\")\nusing PyDSTool"
 },
 
 {
@@ -3469,7 +3765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Sensitivity Analysis",
     "title": "Defining a Sensitivity Problem",
     "category": "section",
-    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecvec_to_mat([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecvec_to_mat from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecvec_to_mat(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
+    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecarr_to_arr([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecarr_to_arr from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecarr_to_arr(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
 },
 
 {
