@@ -18,21 +18,13 @@ implements what is known in other problem solving environments as an Event. A
 ### ContinuousCallbacks
 
 ```julia
-ContinuousCallback(condition,affect!;
+ContinuousCallback(condition,affect!,affect_neg!=affect!;
                    rootfind = true,
                    initialize = (c,t,u,integrator) -> nothing,
                    save_positions = (true,true),
                    interp_points=10,
                    abstol=1e-12,reltol=0
                    idxs=nothing)
-
-ContinuousCallback(condition,affect!,affect_neg!;
-                  rootfind = true,
-                  initialize = (c,t,u,integrator) -> nothing,
-                  save_positions = (true,true),
-                  interp_points=10,
-                  abstol=1e-12,reltol=0,
-                  idxs=nothing)
 ```
 
 The arguments are defined as follows:
@@ -41,9 +33,18 @@ The arguments are defined as follows:
   the callback should be used. A callback is initiated if the condition hits
   `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
+  modify the current state of the integrator. If you do not pass an `affect_neg!`
+  function, it is called when `condition` is found to be `0` (at a root) and
+  the cross is either an upcrossing (from negative to positive) or a downcrossing
+  (from positive to negative). You need to explicitly pass `nothing` as the
+  `affect_neg!` argument if it should only be called at upcrossings, e.g.
+  `ContinuousCallback(condition, affect!, nothing)`. For more information on what can
+  be done, see the [Integrator Interface](@ref) manual page. Modifications to
+  `u` are safe in this function.
+* `affect_neg!`: This is the function `affect_neg!(integrator)` where one is allowed to
   modify the current state of the integrator. This is called when `condition` is
-  found to be `0` (at a root) and the cross is an upcrossing (from negative to
-  positive). For more information on what can
+  found to be `0` (at a root) and the cross is an downcrossing (from positive to
+  negative). For more information on what can
   be done, see the [Integrator Interface](@ref) manual page. Modifications to
   `u` are safe in this function.
 * `rootfind`: This is a boolean for whether to rootfind the event location. If
@@ -56,12 +57,6 @@ The arguments are defined as follows:
   robust when the solution is oscillatory, and thus it's recommended that one use
   some interpolation points (they're cheap to compute!).
   `0` within the time interval.
-* `affect_neg!`: This is the function `affect_neg!(integrator)` where one is allowed to
-  modify the current state of the integrator. This is called when `condition` is
-  found to be `0` (at a root) and the cross is an downcrossing (from positive to
-  negative). For more information on what can
-  be done, see the [Integrator Interface](@ref) manual page. Modifications to
-  `u` are safe in this function.
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
   The first save will always occcur (if true), and the second will only occur when
   an event is detected.  For discontinuous changes like a modification to `u` to be
