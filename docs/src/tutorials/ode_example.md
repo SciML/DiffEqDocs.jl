@@ -27,6 +27,7 @@ sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
 using Plots
 plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
      xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
+plot!(sol.t, t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 ```
 
 where the pieces are described below.
@@ -231,6 +232,12 @@ axis labels, and change the legend (note we can disable the legend with
 ```julia
 plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
      xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
+```
+
+We can then add to the plot using the `plot!` command:
+
+```julia
+plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 ```
 
 ![ode_tutorial_thick_linear](../assets/ode_tutorial_thick_linear.png)
