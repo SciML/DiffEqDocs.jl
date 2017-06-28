@@ -75,6 +75,8 @@ mean of the variable in time, and `var(sol,2)` is the variance. Other statistica
 functions and packages which work on `AbstractArray` types will work on the
 solution type.
 
+At anytime, a true `Array` can be created using `convert(Array,sol)`.
+
 ## Interpolations
 
 If the solver allows for dense output and `dense=true` was set for the solving
