@@ -745,6 +745,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/solution.html#Using-the-AbstractArray-Interface-1",
+    "page": "Solution Handling",
+    "title": "Using the AbstractArray Interface",
+    "category": "section",
+    "text": "The AbstractArray interface can be directly used. For example, for a vector system of variables sol[i,j] is a matrix with rows being the variables and columns being the timepoints. Operations like sol' will transpose the solution type. Functionality written for AbstractArrays can directly use this. For example, the Base cov function computes correlations amongst columns, and thus:cov(sol)computes the correlation of the system state in time, whereascov(sol,2)computes the correlation between the variables. Similarly, mean(sol,2) is the mean of the variable in time, and var(sol,2) is the variance. Other statistical functions and packages which work on AbstractArray types will work on the solution type."
+},
+
+{
     "location": "basics/solution.html#Interpolations-1",
     "page": "Solution Handling",
     "title": "Interpolations",
@@ -801,9 +809,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "basics/plot.html#Standard-Plots-1",
+    "location": "basics/plot.html#Standard-Plots-Using-the-Plot-Recipe-1",
     "page": "Plot Functions",
-    "title": "Standard Plots",
+    "title": "Standard Plots Using the Plot Recipe",
     "category": "section",
     "text": "Plotting functionality is provided by recipes to Plots.jl. To use plot solutions, simply call the plot(type) after importing Plots.jl and the plotter will generate appropriate plots.#Pkg.add(\"Plots\") # You need to install Plots.jl before your first time using it!\nusing Plots\nplot(sol) # Plots the solutionMany of the types defined in the DiffEq universe, such as ODESolution, ConvergenceSimulation WorkPrecision, etc. have plot recipes to handle the default plotting behavior. Plots can be customized using all of the keyword arguments provided by Plots.jl. For example, we can change the plotting backend to the GR package and put a title on the plot by doing:gr()\nplot(sol,title=\"I Love DiffEqs!\")"
 },
@@ -846,6 +854,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Animations",
     "category": "section",
     "text": "Using the iterator interface over the solutions, animations can also be generated via the animate(sol) command. One can choose the filename to save to via animate(sol,filename), while the frames per second fps and the density of steps to show every can be specified via keyword arguments. The rest of the arguments will be directly passed to the plot recipe to be handled as normal. For example, we can animate our solution with a larger line-width which saves every 4th frame via:#Pkg.add(\"ImageMagick\") # You may need to install ImageMagick.jl before your first time using it!\n#using ImageMagick # Some installations require using ImageMagick for good animations\nanimate(sol,lw=3,every=4)Please see Plots.jl's documentation for more information on the available attributes."
+},
+
+{
+    "location": "basics/plot.html#Plotting-Without-the-Plot-Recipe-1",
+    "page": "Plot Functions",
+    "title": "Plotting Without the Plot Recipe",
+    "category": "section",
+    "text": "What if you don't want to use Plots.jl? Odd choice, but that's okay! If differential equation was described by a vector of values, then the solution object acts as an AbstractMatrix sol[i,j] for the ith variable at timepoint j. You can use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can do the following to plot the timeseries:plot(sol.t,sol')since these plot along the columns, and sol' has the timeseries along the column. Phase plots can be done similarly, for example:plot(sol[i,:],sol[j,:],sol[k,:])is a 3d phase plot between variables i, j, and k.Notice that this does not use the interpolation. When not using the plot recipe, the interpolation must be done manually. For example:dt = 0.001 #spacing in time\nts = linspace(0,1,dt)\nplot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))is the phase space using values 0.001 apart in time."
 },
 
 {
