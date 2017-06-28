@@ -78,30 +78,26 @@ Therefore, the solution to the ODE are the first `n` components of the solution.
 This means we can grab the matrix of solution values like:
 
 ```julia
-x = vecarr_to_arr([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])
+x = sol[1:sol.prob.indvars,:]
 ```
 
 Since each sensitivity is a vector of derivatives for each function, the sensitivities
-are each of size `sol.prob.numvars`. We can pull out the parameter sensitivities from
+are each of size `sol.prob.indvars`. We can pull out the parameter sensitivities from
 the solution as follows:
 
 ```julia
-da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]
-db=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]
-dc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]
+da = sol[sol.prob.indvars+1:sol.prob.indvars*2,:]
+db = sol[sol.prob.indvars*2+1:sol.prob.indvars*3,:]
+dc = sol[sol.prob.indvars*3+1:sol.prob.indvars*4,:]
 ```
 
-This means that `da[i][1]` is the derivative of the `x(t)` by the parameter `a`
+This means that `da[1,i]` is the derivative of the `x(t)` by the parameter `a`
 at time `sol.t[i]`. Note that all of the functionality available to ODE solutions
 is available in this case, including interpolations and plot recipes (the recipes
 will plot the expanded system).
 
-Since the closure returns a vector of vectors, it can be helpful to use
-`vecarr_to_arr` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
-in order to plot the solution.
-
 ```julia
-plot(sol.t,vecarr_to_arr(da),lw=3)
+plot(sol.t,da',lw=3)
 ```
 
 ![Sensitivity Solution](../assets/sensitivityplot.png)

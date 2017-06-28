@@ -51,9 +51,9 @@ tspan = (0.0,10.0)
 prob = ODEProblem(f,u0,tspan)
 sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
-randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
+randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 using RecursiveArrayTools
-data = vecarr_to_arr(randomized)
+data = convert(Array,randomized)
 cost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
 ```
 

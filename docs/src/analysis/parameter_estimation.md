@@ -130,12 +130,12 @@ We create data using the numerical result with `a=1.5`:
 ```julia
 sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
-randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
-using RecursiveArrayTools
-data = vecarr_to_arr(randomized)
+using RecursiveArrayTools # for VectorOfArray
+randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
+data = convert(Array,randomized)
 ```
 
-Here we used `vecarr_to_arr` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
+Here we used `VectorOfArray` from [RecursiveArrayTools.jl](https://github.com/ChrisRackauckas/RecursiveArrayTools.jl)
 to turn the result of an ODE into a matrix.
 
 If we plot the solution with the parameter at `a=1.42`, we get the following:
@@ -252,8 +252,8 @@ prob = ODEProblem(f,u0,tspan)
 sol = solve(prob,Tsit5())
 
 t = collect(linspace(0,10,200))
-randomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]
-data = vecarr_to_arr(randomized)
+randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
+data = convert(Array,randomized)
 
 obj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
 ```
