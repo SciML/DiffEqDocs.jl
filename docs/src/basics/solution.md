@@ -51,6 +51,30 @@ sol[j,:]
 
 gives the timeseries for the `j`th component.
 
+## Using the AbstractArray Interface
+
+The `AbstractArray` interface can be directly used. For example, for a vector
+system of variables `sol[i,j]` is a matrix with rows being the variables and
+columns being the timepoints. Operations like `sol'` will
+transpose the solution type. Functionality written for `AbstractArray`s can
+directly use this. For example, the Base `cov` function computes correlations
+amongst columns, and thus:
+
+```julia
+cov(sol)
+```
+
+computes the correlation of the system state in time, whereas
+
+```julia
+cov(sol,2)
+```
+
+computes the correlation between the variables. Similarly, `mean(sol,2)` is the
+mean of the variable in time, and `var(sol,2)` is the variance. Other statistical
+functions and packages which work on `AbstractArray` types will work on the
+solution type.
+
 ## Interpolations
 
 If the solver allows for dense output and `dense=true` was set for the solving

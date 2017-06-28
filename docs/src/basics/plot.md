@@ -1,6 +1,6 @@
 # Plot Functions
 
-## Standard Plots
+## Standard Plots Using the Plot Recipe
 
 Plotting functionality is provided by recipes to Plots.jl. To
 use plot solutions, simply call the `plot(type)` after importing Plots.jl
@@ -177,3 +177,35 @@ animate(sol,lw=3,every=4)
 
 Please see [Plots.jl's documentation](https://juliaplots.github.io/) for more information
 on the available attributes.
+
+## Plotting Without the Plot Recipe
+
+What if you don't want to use Plots.jl? Odd choice, but that's okay! If differential
+equation was described by a vector of values, then the solution object acts as
+an `AbstractMatrix` `sol[i,j]` for the `i`th variable at timepoint `j`. You can
+use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can
+do the following to plot the timeseries:
+
+```julia
+plot(sol.t,sol')
+```
+
+since these plot along the columns, and `sol'` has the timeseries along the column.
+Phase plots can be done similarly, for example:
+
+```julia
+plot(sol[i,:],sol[j,:],sol[k,:])
+```
+
+is a 3d phase plot between variables `i`, `j`, and `k`.
+
+Notice that this does not use the interpolation. When not using the plot recipe,
+the interpolation must be done manually. For example:
+
+```julia
+dt = 0.001 #spacing in time
+ts = linspace(0,1,dt)
+plot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))
+```
+
+is the phase space using values `0.001` apart in time.
