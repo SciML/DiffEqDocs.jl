@@ -1,6 +1,6 @@
 # Refined ODE Solvers
 
-`solve(prob::ODEProblem,alg;kwargs)`
+`solve(prob::AbstractODEProblem,alg;kwargs)`
 
 Solves the Refined ODE problems defined by `prob` using the algorithm `alg`.
 If no algorithm is given, a default algorithm will be chosen.
@@ -31,10 +31,10 @@ to achieve the suggested accuracy.
 ## Note About OrdinaryDiffEq.jl
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
-3rd order Hermite polynomial interpolation. The algorithms denoted as having a "free"
-interpolation means that no extra steps are required for the interpolation. For
-the non-free higher order interpolating functions, the extra steps are computed
-lazily (i.e. not during the solve).
+3rd order Hermite polynomial interpolation. The algorithms denoted as having a
+"free" interpolation means that no extra steps are required for the
+interpolation. For the non-free higher order interpolating functions, the extra
+steps are computed lazily (i.e. not during the solve).
 
 # Functional Forms
 
@@ -48,9 +48,9 @@ These algorithms require a Partitioned ODE of the form:
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(t,u,v,dx)` and `f2(t,u,v,dx)` (in the inplace form), where `f1`
-is independent of `x` and `f2` is independent of `v`. This includes discretizations
-arising from `SecondOrderODEProblem`s where the velocity is not used in the acceleration
-function.
+is independent of `x` and `f2` is independent of `v`. This includes
+discretizations arising from `SecondOrderODEProblem`s where the velocity is not
+used in the acceleration function.
 
 The appropriate algorithms for this form are:
 
@@ -61,7 +61,7 @@ The appropriate algorithms for this form are:
 
 ## Implicit-Explicit (IMEX) ODE
 
-The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:
+The Implicit-Explicit (IMEX) ODE is a split `ODEProblem` with two functions:
 
 ```math
 \frac{du}{dt} =  f_1(t,u) + f_2(t,u)
@@ -74,7 +74,8 @@ The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
-- `SplitEuler`: 1st order fully explicit method. Used for testing accuracy of splits.
+- `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
+  of splits.
 
 ### Sundials.jl
 
@@ -82,14 +83,14 @@ The appropriate algorithms for this form are:
 
 ## Linear-Nonlinear (LNL) ODE
 
-The Linear-Nonlinear (LNL) ODE is a SplitODEProblem with two functions:
+The Linear-Nonlinear (LNL) ODE is a split `ODEProblem` with two functions:
 
 ```math
 \frac{du}{dt} =  f_1(t,u) + f_2(t,u)
 ```
 
-where the first function is a linear operator and the second function is the non-stiff
-part (implicit integration on `f1`, explicit integration on `f2`).
+where the first function is a `DiffEqOperator` and the second function is the
+non-stiff part (implicit integration on `f1`, explicit integration on `f2`).
 
 The appropriate algorithms for this form are:
 
