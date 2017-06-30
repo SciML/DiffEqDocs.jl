@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Problem Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
 
 {
@@ -1113,6 +1113,54 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/ode_types.html#Refined-ODE-Problems-1",
+    "page": "ODE Problems",
+    "title": "Refined ODE Problems",
+    "category": "section",
+    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of a Split ODE Problem",
+    "category": "section",
+    "text": "To define a ODEProblem in split form, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of a Partitioned ODE Problem",
+    "category": "section",
+    "text": "To define a Partitioned ODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of an Second Order ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
+},
+
+{
+    "location": "types/ode_types.html#Constructors-2",
+    "page": "ODE Problems",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/ode_types.html#Fields-2",
+    "page": "ODE Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_linear",
     "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_linear",
@@ -1214,102 +1262,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
-},
-
-{
-    "location": "types/refined_ode_types.html#",
-    "page": "Refined ODE Problems",
-    "title": "Refined ODE Problems",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Refined-ODE-Problems-1",
-    "page": "Refined ODE Problems",
-    "title": "Refined ODE Problems",
-    "category": "section",
-    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Split ODE Problem",
-    "category": "section",
-    "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-1",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-1",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Partitioned ODE Problem",
-    "category": "section",
-    "text": "To define a PartitionedODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-2",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-2",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of an Second Order ODE Problem",
-    "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
-},
-
-{
-    "location": "types/refined_ode_types.html#Problem-Type-1",
-    "page": "Refined ODE Problems",
-    "title": "Problem Type",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-3",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-3",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1617,75 +1569,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/dae_types.html#Example-Problems-1",
+    "location": "types/dae_types.html#Refined-DAE-Problems-1",
     "page": "DAE Problems",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
-},
-
-{
-    "location": "types/refined_dae_types.html#",
-    "page": "Refined DAE Problems",
-    "title": "Refined DAE Problems",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Refined-DAE-Problems-1",
-    "page": "Refined DAE Problems",
     "title": "Refined DAE Problems",
     "category": "section",
     "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
-    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
-    "page": "Refined DAE Problems",
+    "location": "types/dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of a Split DAE Problem",
     "category": "section",
-    "text": "To define a SplitDAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
+    "text": "To define a split DAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
 },
 
 {
-    "location": "types/refined_dae_types.html#Constructors-1",
-    "page": "Refined DAE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_dae_types.html#Fields-1",
-    "page": "Refined DAE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined DAE Problems",
+    "location": "types/dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
-    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) \nf should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) f should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose  geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
 },
 
 {
-    "location": "types/refined_dae_types.html#Constructors-2",
-    "page": "Refined DAE Problems",
-    "title": "Constructors",
+    "location": "types/dae_types.html#Example-Problems-1",
+    "page": "DAE Problems",
+    "title": "Example Problems",
     "category": "section",
-    "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_dae_types.html#Fields-2",
-    "page": "Refined DAE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
 },
 
 {
@@ -2117,7 +2029,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Refined ODE Solvers",
     "category": "section",
-    "text": "solve(prob::ODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen.This area is still under major development."
+    "text": "solve(prob::AbstractODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen.This area is still under major development."
 },
 
 {
@@ -2165,7 +2077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Implicit-Explicit (IMEX) ODE",
     "category": "section",
-    "text": "The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Implicit-Explicit (IMEX) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
@@ -2189,7 +2101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Linear-Nonlinear (LNL) ODE",
     "category": "section",
-    "text": "The Linear-Nonlinear (LNL) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a linear operator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Linear-Nonlinear (LNL) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a DiffEqOperator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
