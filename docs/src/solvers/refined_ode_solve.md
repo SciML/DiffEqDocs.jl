@@ -5,8 +5,6 @@
 Solves the Refined ODE problems defined by `prob` using the algorithm `alg`.
 If no algorithm is given, a default algorithm will be chosen.
 
-**This area is still under major development.**
-
 ## Special Forms
 
 Many of the integrators in this category require special forms. For example,
@@ -19,13 +17,12 @@ For example, one type of special form is the dynamical ODE:
 ```math
 \frac{du}{dt} = f_1(t,v) \\
 \frac{dv}{dt} = f_2(t,u) \\
-...
 ```
 
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(t,x,v,dx)` and `f2(t,x,v,dx)` (in the inplace form). However,
 this specification states that `f1` would be independent of `x`, and `f2` should
-be independent of `v`. Followed the requirements for the integrator is required
+be independent of `v`. Following the requirements for the integrator is required
 to achieve the suggested accuracy.
 
 ## Note About OrdinaryDiffEq.jl
@@ -43,21 +40,57 @@ steps are computed lazily (i.e. not during the solve).
 These algorithms require a Partitioned ODE of the form:
 
 ```math
-\frac{du}{dt} = f_1(t,v) \\
+\frac{du}{dt} = f_1(v) \\
 \frac{dv}{dt} = f_2(t,u) \\
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
-specified as `f1(t,u,v,dx)` and `f2(t,u,v,dx)` (in the inplace form), where `f1`
-is independent of `x` and `f2` is independent of `v`. This includes
+specified as `f1(t,u,v,dx)` and `f2(t,u,v,dv)` (in the inplace form), where `f1`
+is independent of `t` and `u`, and `f2` is independent of `v`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not
-used in the acceleration function.
+used in the acceleration function, and Hamiltonians where the potential is (or
+can be) time-dependent but the kinetic energy is only dependent on `v`.
+
+Note that some methods assume that the integral of `f1` is a quadratic form. That
+means that `f1=v'*M*v`, i.e. ``\int f1 = 1/2 m v^2``, giving `du = v`. This is
+equivalent to saying that the kinetic energy is related to ``v^2``. The methods
+which require this assumption will lose accuracy if this assumption is violated.
+Methods listed below make note of this requirement with "Requires quadratic
+kinetic energy".
 
 The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
 - `SymplecticEuler`: First order explicit symplectic integrator
-- `VelocityVerlet`: 2nd order explicit symplectic integrator. Not yet implemented.
+- `VelocityVerlet`: 2nd order explicit symplectic integrator.
+- `VerletLeapfrog`: 2nd order explicit symplectic integrator.
+- `PseudoVerletLeapfrog`: 2nd order explicit symplectic integrator.
+- `McAte2`: Optimized efficiency 2nd order explicit symplectic integrator.
+- `Ruth3`: 3rd order explicit symplectic integrator.
+- `McAte3`: Optimized efficiency 3rd order explicit symplectic integrator.
+- `CandyRoz4`: 4th order explicit symplectic integrator.
+- `McAte4`: 4th order explicit symplectic integrator. Requires quadratic
+  kinetic energy.
+- `CalvoSanz4`: Optimized efficiency 4th order explicit symplectic integrator.
+- `McAte42`: 4th order explicit symplectic integrator.
+- `McAte5`: Optimized efficiency 5th order explicit symplectic integrator.
+  Requires quadratic kinetic energy
+- `Yoshida6`: 6th order explicit symplectic integrator.
+- `KahanLi6`: Optimized efficiency 6th order explicit symplectic integrator.
+- `McAte8`: 8th order explicit symplectic integrator.
+- `KahanLi8`: Optimized efficiency 8th order explicit symplectic integrator.
+- `SofSpa10`: 10th order explicit symplectic integrator.
+
+### Recommendations
+
+Higher order algorithms are the most efficient when higher accuracy is needed,
+and when less accuracy is needed lower order methods do better. Optimized efficiency
+methods take more steps and thus have more force calculations for the same order,
+but have smaller error. Thus the "optimized efficiency" algorithms are recommended
+if your force calculation is not too sufficiency large, while the other methods are
+recommend when force calculations are really large (for example, like in MD simulations
+`VelocityVerlet` is very popular since it only requires one force calculation
+per timestep).
 
 ## Implicit-Explicit (IMEX) ODE
 

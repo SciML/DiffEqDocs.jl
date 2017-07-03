@@ -16,18 +16,22 @@ or you may just be curious. This guide is to help you choose the right algorithm
 For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly
 more efficient than the other choices. For most non-stiff
 problems, we recommend `Tsit5`. When more robust error control is required,
-`BS5` is a good choice. For fast solving at lower tolerances, we recommend
-`BS3`. For tolerances which are at about the truncation error of Float64 (1e-16),
+`BS5` is a good choice. For fast solving at higher tolerances, we recommend
+`BS3`. For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
 we recommend `Vern6`, `Vern7`, or `Vern8` as efficient choices.
 
-For high accuracy non-stiff solving (BigFloat and tolerances like `<1e-20`),
-we recommend the `Feagin12` or `Feagin14` methods. These are more robust than
-Adams-Bashforth methods to discontinuities and achieve very high precision,
-and are much more efficient than the extrapolation methods. Note that the Feagin
-methods are the only high-order optimized methods which do not include a high-order
-interpolant (they do include a 3rd order Hermite interpolation if needed).
-If a high-order method is needed with a high order interpolant, then you
-should choose `Vern9` which is Order 9 with an Order 9 interpolant.
+For high accuracy non-stiff solving (`BigFloat` and tolerances like `<1e-12`),
+we recommend the `Vern9` method. If a high-order method is needed with a high
+order interpolant, then you should choose `Vern9` which is Order 9 with an
+Order 9 interpolant. If you need extremely high accuracy (`<1e-30`?) and do
+not need an interpolant, try the `Feagin12` or `Feagin14` methods. Note that the
+Feagin methods are the only high-order optimized methods which do not include a
+high-order interpolant (they do include a 3rd order Hermite interpolation if
+needed).Note that these high order RK methods are more robust than the high order
+Adams-Bashforth methods to discontinuities and achieve very high precision, and
+are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
+method can be a good choice for high accuracy when the system of equations is
+very large (`>10,000` ODEs?) or the function calculation is very expensive.
 
 ### Stiff Problems
 
