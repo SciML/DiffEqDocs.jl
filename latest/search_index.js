@@ -1917,7 +1917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Non-Stiff Problems",
     "category": "section",
-    "text": "For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly more efficient than the other choices. For most non-stiff problems, we recommend Tsit5. When more robust error control is required, BS5 is a good choice. For fast solving at lower tolerances, we recommend BS3. For tolerances which are at about the truncation error of Float64 (1e-16), we recommend Vern6, Vern7, or Vern8 as efficient choices.For high accuracy non-stiff solving (BigFloat and tolerances like <1e-20), we recommend the Feagin12 or Feagin14 methods. These are more robust than Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed). If a high-order method is needed with a high order interpolant, then you should choose Vern9 which is Order 9 with an Order 9 interpolant."
+    "text": "For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly more efficient than the other choices. For most non-stiff problems, we recommend Tsit5. When more robust error control is required, BS5 is a good choice. For fast solving at higher tolerances, we recommend BS3. For high accuracy but with the range of Float64 (~1e-8-1e-12), we recommend Vern6, Vern7, or Vern8 as efficient choices.For high accuracy non-stiff solving (BigFloat and tolerances like <1e-12), we recommend the Vern9 method. If a high-order method is needed with a high order interpolant, then you should choose Vern9 which is Order 9 with an Order 9 interpolant. If you need extremely high accuracy (<1e-30?) and do not need an interpolant, try the Feagin12 or Feagin14 methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed).Note that these high order RK methods are more robust than the high order Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. However, the CVODE_Adams method can be a good choice for high accuracy when the system of equations is very large (>10,000 ODEs?) or the function calculation is very expensive."
 },
 
 {
@@ -2029,7 +2029,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Refined ODE Solvers",
     "category": "section",
-    "text": "solve(prob::AbstractODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen.This area is still under major development."
+    "text": "solve(prob::AbstractODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
 },
 
 {
@@ -2037,7 +2037,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Special Forms",
     "category": "section",
-    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Followed the requirements for the integrator is required to achieve the suggested accuracy."
+    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Following the requirements for the integrator is required to achieve the suggested accuracy."
 },
 
 {
@@ -2061,7 +2061,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Dynamical ODE",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f1 = 12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\".The appropriate algorithms for this form are:"
 },
 
 {
@@ -2069,7 +2069,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator. Not yet implemented."
+    "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator.\nVerletLeapfrog: 2nd order explicit symplectic integrator.\nPseudoVerletLeapfrog: 2nd order explicit symplectic integrator.\nMcAte2: Optimized efficiency 2nd order explicit symplectic integrator.\nRuth3: 3rd order explicit symplectic integrator.\nMcAte3: Optimized efficiency 3rd order explicit symplectic integrator.\nCandyRoz4: 4th order explicit symplectic integrator.\nMcAte4: 4th order explicit symplectic integrator. Requires quadratic kinetic energy.\nCalvoSanz4: Optimized efficiency 4th order explicit symplectic integrator.\nMcAte42: 4th order explicit symplectic integrator.\nMcAte5: Optimized efficiency 5th order explicit symplectic integrator. Requires quadratic kinetic energy\nYoshida6: 6th order explicit symplectic integrator.\nKahanLi6: Optimized efficiency 6th order explicit symplectic integrator.\nMcAte8: 8th order explicit symplectic integrator.\nKahanLi8: Optimized efficiency 8th order explicit symplectic integrator.\nSofSpa10: 10th order explicit symplectic integrator."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Recommendations-1",
+    "page": "Refined ODE Solvers",
+    "title": "Recommendations",
+    "category": "section",
+    "text": "Higher order algorithms are the most efficient when higher accuracy is needed, and when less accuracy is needed lower order methods do better. Optimized efficiency methods take more steps and thus have more force calculations for the same order, but have smaller error. Thus the \"optimized efficiency\" algorithms are recommended if your force calculation is not too sufficiency large, while the other methods are recommend when force calculations are really large (for example, like in MD simulations VelocityVerlet is very popular since it only requires one force calculation per timestep)."
 },
 
 {
