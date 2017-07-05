@@ -36,13 +36,15 @@ very large (`>10,000` ODEs?) or the function calculation is very expensive.
 ### Stiff Problems
 
 For stiff problems at low tolerances it is recommended that you use `Rosenbrock23`
-As a native DifferentialEquations.jl solver, many Julia numeric types (such as [Unitful](https://github.com/ajkeller34/Unitful.jl), [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is defined via the `@ode_def`
-macro, this will be the most efficient. For faster solving when only the Jacobian
-is known and the macro is not used, use `radau`. High precision numbers are also
-compatible with `Trapezoid` which is a symplectic integrator. However, for the
-most efficient solvers for highly stiff equations which need high accuracy,
-use `radau` or `CVODE_BDF` provided by wrappers to the ODEInterface and Sundials packages
-respectively ([see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html)).
+As a native DifferentialEquations.jl solver, many Julia numeric types (such as
+BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
+defined via the `@ode_def` macro, this will be the most efficient. For faster
+solving when only the Jacobian is known and the macro is not used, use `radau`.
+High precision numbers are also compatible with `Trapezoid` which is a symplectic
+integrator. However, for the most efficient solvers for highly stiff equations
+which need high accuracy, use `radau` or `CVODE_BDF` provided by wrappers to the
+ODEInterface and Sundials packages respectively (
+[see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html)).
 These algorithms require that the number types are Float64.
 
 ## Translations from MATLAB/Python/R
@@ -81,12 +83,10 @@ arrays of Float64, they are recommended. However, the stiff methods from Ordinar
 are able to handle a larger generality of number types (arbitrary precision, etc.)
 and thus are recommended for stiff problems on non-Float64 numbers.
 
+### Runge-Kutta Methods for Non-Stiff Equations
+
   - `Euler`- The canonical forward Euler method.
   - `Midpoint` - The second order midpoint method.
-  - `SSPRK22` - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)
-  - `SSPRK33` - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)
-  - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with five stages. (free 2nd order SSP interpolant)
-  - `SSPRK104` - The ten-stage, fourth order strong stability preserving method of Ketcheson. (free 3rd order Hermite interpolant)
   - `RK4` - The canonical Runge-Kutta Order 4 method.
   - `BS3` - Bogacki-Shampine 3/2 method.
   - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
@@ -103,26 +103,60 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
   - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
   - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
-  - `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
-  - `Trapezoid` - A second order unconditionally stable implicit solver. Good for highly stiff.
-  - `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.
-  - `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances.
-    Note that this method is prone to instability in the presence of oscillations, so use with caution.
 
-Example usage:
+  Example usage:
 
-```julia
-alg = Tsit5()
-solve(prob,alg)  
-```
+  ```julia
+  alg = Tsit5()
+  solve(prob,alg)  
+  ```
 
-### Extra Options
+### Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+
+- `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
+  method of Shu and Osher. (free 2nd order SSP interpolant)
+- `SSPRK33` - The three-stage, third order strong stability preserving (SSP)
+  method of Shu and Osher. (free 2nd order SSP interpolant)
+- `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
+  five stages. (free 2nd order SSP interpolant)
+- `SSPRK104` - The ten-stage, fourth order strong stability preserving method
+  of Ketcheson. (free 3rd order Hermite interpolant)
+
+### Methods for Stiff Equations
+
+- `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
+- `Trapezoid` - A second order unconditionally stable symplectic implicit solver.
+  Good for highly stiff.
+- `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy
+  stiff equations with oscillations at low tolerances.
+- `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations
+ without oscillations at low tolerances. Note that this method is prone to instability in the
+ presence of oscillations, so use with caution.
+- `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method.
+  Keeps high accuracy on discretizations of nonlinear parabolic PDEs.
+- `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
+- `RosShamp4`- An A-stable 4th order Rosenbrock method.
+- `Veldd4` - A 4th order D-stable Rosenbrock method.
+- `Velds4` - A 4th order A-stable Rosenbrock method.
+- `GRK4T` - An efficient 4th order Rosenbrock method.
+- `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable" but efficient.
+- `Ros4LStab` - A 4th order L-stable Rosenbrock method.
+
+#### Extra Options
 
 The following methods allow for specification of `linsolve`: the linear
 solver which is used:
 
 - `Rosenbrock23`
 - `Rosenbrock32`
+- `ROS3P`
+- `Rodas3`
+- `RosShamp4`
+- `Veldd4`
+- `Velds4`
+- `GRK4T`
+- `GRK4A`
+- `Ros4LStab`
 
 For more information on specifying the linear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
@@ -141,6 +175,14 @@ Additionally, the following methods have extra differentiation controls:
 
 - `Rosenbrock23`
 - `Rosenbrock32`
+- `ROS3P`
+- `Rodas3`
+- `RosShamp4`
+- `Veldd4`
+- `Velds4`
+- `GRK4T`
+- `GRK4A`
+- `Ros4LStab`
 - `ImplicitEuler`
 - `Trapezoid`
 
