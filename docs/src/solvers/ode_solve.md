@@ -63,7 +63,8 @@ library methods are as follows:
   are more efficient
 - `ode23t` --> `Trapezoid()`
 - `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
-- `ode15i` --> `IDA()`
+- `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
+  significantly more efficient
 
 # Full List of Methods
 
