@@ -141,8 +141,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
   most cases.
 - `Vern7()` for high accuracy non-stiff.
-- `Rosenbrock23()` for stiff equations with Julia-defined types, events, etc.
-- `CVODE_BDF()` for stiff equations on `Vector{Float64}`.
+- `Rodas4()` for stiff equations with Julia-defined types, events, etc.
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](../../solvers/ode_solve.html). Every problem
