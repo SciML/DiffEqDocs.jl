@@ -164,6 +164,9 @@ solver which is used:
 - `GRK4T`
 - `GRK4A`
 - `Ros4LStab`
+- `Rodas4`
+- `Rodas42`
+- `Rodas4P`
 
 For more information on specifying the linear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
@@ -190,13 +193,16 @@ Additionally, the following methods have extra differentiation controls:
 - `GRK4T`
 - `GRK4A`
 - `Ros4LStab`
+- `Rodas4`
+- `Rodas42`
+- `Rodas4P`
 - `ImplicitEuler`
 - `Trapezoid`
 
 In each of these, `autodiff` can be set to turn on/off autodifferentiation, and
 `chunk_size` can be used to set the chunksize of the Dual numbers (see the
 [documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/advanced_usage.html#configuring-chunk-size)).
-In addition, `Rosenbrock23` and `Rosenbrock32` can set `diff_type`, which is the
+In addition, the Rosenbrock methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
 disabled). The choices are `:central` or `:forward`.
 
