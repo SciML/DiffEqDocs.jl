@@ -141,6 +141,13 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 - `GRK4T` - An efficient 4th order Rosenbrock method.
 - `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable" but efficient.
 - `Ros4LStab` - A 4th order L-stable Rosenbrock method.
+- `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+  3rd order interpolant
+- `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+  3rd order interpolant
+- `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+  3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
+  on nonlinear parabolic problems (as opposed to lower if not corrected).
 
 #### Extra Options
 
