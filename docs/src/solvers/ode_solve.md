@@ -35,17 +35,19 @@ very large (`>10,000` ODEs?) or the function calculation is very expensive.
 
 ### Stiff Problems
 
-For stiff problems at low tolerances it is recommended that you use `Rosenbrock23`
-As a native DifferentialEquations.jl solver, many Julia numeric types (such as
-BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
+For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
+`Rosenbrock23`. At medium tolerances (`>1e-8`?) it is recommended you use `Rodas4`
+As native DifferentialEquations.jl solvers, many Julia numeric types
+(such as BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
+[DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
 defined via the `@ode_def` macro, this will be the most efficient. For faster
-solving when only the Jacobian is known and the macro is not used, use `radau`.
+solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used, use `radau`.
 High precision numbers are also compatible with `Trapezoid` which is a symplectic
-integrator. However, for the most efficient solvers for highly stiff equations
-which need high accuracy, use `radau` or `CVODE_BDF` provided by wrappers to the
-ODEInterface and Sundials packages respectively (
-[see the conditional dependencies documentation](http://juliadiffeq.github.io/DifferentialEquations.jl/latest/man/conditional_dependencies.html)).
-These algorithms require that the number types are Float64.
+integrator. Notice that `Rodas4` loses accuracy on discretizations of nonlinear
+parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
+situations. For asymtopically large systems of ODEs (`N>10000`?)
+where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
+in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
 
 ## Translations from MATLAB/Python/R
 
@@ -54,10 +56,11 @@ library methods are as follows:
 
 - `ode23` --> `BS3()`
 - `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
-- `ode23s` --> `Rosenbrock23()`
+- `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
 - `ode113` --> `CVODE_Adams()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-- `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `radau()` is more efficient
+- `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `Rodas4()` or `radau()`
+  are more efficient
 - `ode23t` --> `Trapezoid()`
 - `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
 - `ode15i` --> `IDA()`
@@ -148,6 +151,8 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 - `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems (as opposed to lower if not corrected).
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+  3rd order interpolant.
 
 #### Extra Options
 
