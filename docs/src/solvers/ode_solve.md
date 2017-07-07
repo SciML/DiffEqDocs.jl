@@ -90,31 +90,31 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 
 ### Runge-Kutta Methods for Non-Stiff Equations
 
-  - `Euler`- The canonical forward Euler method.
-  - `Midpoint` - The second order midpoint method.
-  - `RK4` - The canonical Runge-Kutta Order 4 method.
-  - `BS3` - Bogacki-Shampine 3/2 method.
-  - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
-  - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)
-  - `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)
-  - `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant)
-  - `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant)
-  - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
-  - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince 8
+- `Euler`- The canonical forward Euler method.
+- `Midpoint` - The second order midpoint method.
+- `RK4` - The canonical Runge-Kutta Order 4 method.
+- `BS3` - Bogacki-Shampine 3/2 method.
+- `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
+- `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)
+- `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)
+- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant)
+- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant)
+- `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
+- `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince 8
     method Runge-Kutta method. (7th order interpolant)
-  - `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
-  - `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
-  - `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
-  - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
-  - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
-  - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
+- `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
+- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
+- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
+- `Feagin10` - Feagin's 10th-order Runge-Kutta method.
+- `Feagin12` - Feagin's 12th-order Runge-Kutta method.
+- `Feagin14` - Feagin's 14th-order Runge-Kutta method.
 
-  Example usage:
+Example usage:
 
-  ```julia
-  alg = Tsit5()
-  solve(prob,alg)  
-  ```
+```julia
+alg = Tsit5()
+solve(prob,alg)  
+```
 
 ### Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
@@ -174,6 +174,7 @@ solver which is used:
 - `Rodas4`
 - `Rodas42`
 - `Rodas4P`
+- `Rodas5`
 
 For more information on specifying the linear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
@@ -203,6 +204,7 @@ Additionally, the following methods have extra differentiation controls:
 - `Rodas4`
 - `Rodas42`
 - `Rodas4P`
+- `Rodas5`
 - `ImplicitEuler`
 - `Trapezoid`
 
