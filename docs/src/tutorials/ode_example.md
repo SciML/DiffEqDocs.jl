@@ -142,6 +142,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
   most cases.
 - `Vern7()` for high accuracy non-stiff.
 - `Rodas4()` for stiff equations with Julia-defined types, events, etc.
+- `radau()` for really high accuracy stiff equations (requires installing ODEInterfaceDiffEq.jl)
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](../../solvers/ode_solve.html). Every problem

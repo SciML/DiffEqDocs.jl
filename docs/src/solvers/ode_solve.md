@@ -37,6 +37,7 @@ very large (`>10,000` ODEs?) or the function calculation is very expensive.
 
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 `Rosenbrock23`. At medium tolerances (`>1e-8`?) it is recommended you use `Rodas4`
+or `Rodas4P` (the former is slightly more efficient but the later is much more reliable).
 As native DifferentialEquations.jl solvers, many Julia numeric types
 (such as BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
 [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
