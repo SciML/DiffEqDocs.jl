@@ -134,9 +134,9 @@ solve(prob,alg)
   Good for highly stiff.
 - `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy
   stiff equations with oscillations at low tolerances.
-- `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations
- without oscillations at low tolerances. Note that this method is prone to instability in the
- presence of oscillations, so use with caution.
+- `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy
+  stiff equations without oscillations at low tolerances. Note that this method
+  is prone to instability in the presence of oscillations, so use with caution.
 - `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method.
   Keeps high accuracy on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
