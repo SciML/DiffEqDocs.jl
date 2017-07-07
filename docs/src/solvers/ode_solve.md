@@ -154,7 +154,7 @@ solve(prob,alg)
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems (as opposed to lower if not corrected).
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant. Work in progress.
+  3rd order interpolant.
 
 #### Extra Options
 
