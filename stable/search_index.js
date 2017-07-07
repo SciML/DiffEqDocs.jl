@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Problem Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/refined_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/refined_dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
 
 {
@@ -149,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Choosing a Solver Algorithm",
     "category": "section",
-    "text": "DifferentialEquations.jl has a method for choosing the default solver algorithm which will find an efficient method to solve your problem. To help users receive the right algorithm, DifferentialEquations.jl offers a method for choosing algorithms through hints. This default chooser utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem where we need high accuracy, but don't know the best stiff algorithm for this problem, we can use:sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)You can also explicitly choose the algorithm to use. DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms. For example, we can choose a 5th order Tsitouras method:sol = solve(prob,Tsit5())Note that the solver controls can be combined with the algorithm choice. Thus we can for example solve the problem using Tsit5() with a lower tolerance via:sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)In DifferentialEquations.jl, some good \"go-to\" choices for ODEs are:BS3() for fast low accuracy non-stiff.\nTsit5() for standard non-stiff. This is the first algorithm to try in most cases.\nVern7() for high accuracy non-stiff.\nRosenbrock23() for stiff equations with Julia-defined types, events, etc.\nCVODE_BDF() for stiff equations on Vector{Float64}.For a comprehensive list of the available algorithms and detailed recommendations, Please see the solver documentation. Every problem type has an associated page detailing all of the solvers associated with the problem."
+    "text": "DifferentialEquations.jl has a method for choosing the default solver algorithm which will find an efficient method to solve your problem. To help users receive the right algorithm, DifferentialEquations.jl offers a method for choosing algorithms through hints. This default chooser utilizes the precisions of the number types and the keyword arguments (such as the tolerances) to select an algorithm. Additionally one can provide alg_hints to help choose good defaults using properties of the problem and necessary features for the solution. For example, if we have a stiff problem where we need high accuracy, but don't know the best stiff algorithm for this problem, we can use:sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)You can also explicitly choose the algorithm to use. DifferentialEquations.jl offers a much wider variety of solver algorithms than traditional differential equations libraries. Many of these algorithms are from recent research and have been shown to be more efficient than the \"standard\" algorithms. For example, we can choose a 5th order Tsitouras method:sol = solve(prob,Tsit5())Note that the solver controls can be combined with the algorithm choice. Thus we can for example solve the problem using Tsit5() with a lower tolerance via:sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)In DifferentialEquations.jl, some good \"go-to\" choices for ODEs are:BS3() for fast low accuracy non-stiff.\nTsit5() for standard non-stiff. This is the first algorithm to try in most cases.\nVern7() for high accuracy non-stiff.\nRodas4() for stiff equations with Julia-defined types, events, etc.\nradau() for really high accuracy stiff equations (requires installing ODEInterfaceDiffEq.jl)For a comprehensive list of the available algorithms and detailed recommendations, Please see the solver documentation. Every problem type has an associated page detailing all of the solvers associated with the problem."
 },
 
 {
@@ -745,6 +745,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/solution.html#Using-the-AbstractArray-Interface-1",
+    "page": "Solution Handling",
+    "title": "Using the AbstractArray Interface",
+    "category": "section",
+    "text": "The AbstractArray interface can be directly used. For example, for a vector system of variables sol[i,j] is a matrix with rows being the variables and columns being the timepoints. Operations like sol' will transpose the solution type. Functionality written for AbstractArrays can directly use this. For example, the Base cov function computes correlations amongst columns, and thus:cov(sol)computes the correlation of the system state in time, whereascov(sol,2)computes the correlation between the variables. Similarly, mean(sol,2) is the mean of the variable in time, and var(sol,2) is the variance. Other statistical functions and packages which work on AbstractArray types will work on the solution type.At anytime, a true Array can be created using convert(Array,sol)."
+},
+
+{
     "location": "basics/solution.html#Interpolations-1",
     "page": "Solution Handling",
     "title": "Interpolations",
@@ -801,9 +809,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "basics/plot.html#Standard-Plots-1",
+    "location": "basics/plot.html#Standard-Plots-Using-the-Plot-Recipe-1",
     "page": "Plot Functions",
-    "title": "Standard Plots",
+    "title": "Standard Plots Using the Plot Recipe",
     "category": "section",
     "text": "Plotting functionality is provided by recipes to Plots.jl. To use plot solutions, simply call the plot(type) after importing Plots.jl and the plotter will generate appropriate plots.#Pkg.add(\"Plots\") # You need to install Plots.jl before your first time using it!\nusing Plots\nplot(sol) # Plots the solutionMany of the types defined in the DiffEq universe, such as ODESolution, ConvergenceSimulation WorkPrecision, etc. have plot recipes to handle the default plotting behavior. Plots can be customized using all of the keyword arguments provided by Plots.jl. For example, we can change the plotting backend to the GR package and put a title on the plot by doing:gr()\nplot(sol,title=\"I Love DiffEqs!\")"
 },
@@ -846,6 +854,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Animations",
     "category": "section",
     "text": "Using the iterator interface over the solutions, animations can also be generated via the animate(sol) command. One can choose the filename to save to via animate(sol,filename), while the frames per second fps and the density of steps to show every can be specified via keyword arguments. The rest of the arguments will be directly passed to the plot recipe to be handled as normal. For example, we can animate our solution with a larger line-width which saves every 4th frame via:#Pkg.add(\"ImageMagick\") # You may need to install ImageMagick.jl before your first time using it!\n#using ImageMagick # Some installations require using ImageMagick for good animations\nanimate(sol,lw=3,every=4)Please see Plots.jl's documentation for more information on the available attributes."
+},
+
+{
+    "location": "basics/plot.html#Plotting-Without-the-Plot-Recipe-1",
+    "page": "Plot Functions",
+    "title": "Plotting Without the Plot Recipe",
+    "category": "section",
+    "text": "What if you don't want to use Plots.jl? Odd choice, but that's okay! If differential equation was described by a vector of values, then the solution object acts as an AbstractMatrix sol[i,j] for the ith variable at timepoint j. You can use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can do the following to plot the timeseries:plot(sol.t,sol')since these plot along the columns, and sol' has the timeseries along the column. Phase plots can be done similarly, for example:plot(sol[i,:],sol[j,:],sol[k,:])is a 3d phase plot between variables i, j, and k.Notice that this does not use the interpolation. When not using the plot recipe, the interpolation must be done manually. For example:dt = 0.001 #spacing in time\nts = linspace(0,1,dt)\nplot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))is the phase space using values 0.001 apart in time."
 },
 
 {
@@ -1097,6 +1113,54 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/ode_types.html#Refined-ODE-Problems-1",
+    "page": "ODE Problems",
+    "title": "Refined ODE Problems",
+    "category": "section",
+    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of a Split ODE Problem",
+    "category": "section",
+    "text": "To define a ODEProblem in split form, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of a Partitioned ODE Problem",
+    "category": "section",
+    "text": "To define a Partitioned ODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
+},
+
+{
+    "location": "types/ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
+    "page": "ODE Problems",
+    "title": "Mathematical Specification of an Second Order ODE Problem",
+    "category": "section",
+    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
+},
+
+{
+    "location": "types/ode_types.html#Constructors-2",
+    "page": "ODE Problems",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+},
+
+{
+    "location": "types/ode_types.html#Fields-2",
+    "page": "ODE Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
     "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_linear",
     "page": "ODE Problems",
     "title": "DiffEqProblemLibrary.prob_ode_linear",
@@ -1198,174 +1262,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Example Problems",
     "category": "section",
     "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
-},
-
-{
-    "location": "types/refined_ode_types.html#",
-    "page": "Refined ODE Problems",
-    "title": "Refined ODE Problems",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Refined-ODE-Problems-1",
-    "page": "Refined ODE Problems",
-    "title": "Refined ODE Problems",
-    "category": "section",
-    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Split ODE Problem",
-    "category": "section",
-    "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-1",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SplitODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-1",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Partitioned ODE Problem",
-    "category": "section",
-    "text": "To define a PartitionedODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nf should be specified as f(t,u,v,...) (or in-place as f(t,u,v,...,du)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nSee the solver's documentation for the form it is expecting."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-2",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "PartitionedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-2",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of an Second Order ODE Problem",
-    "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
-},
-
-{
-    "location": "types/refined_ode_types.html#Problem-Type-1",
-    "page": "Refined ODE Problems",
-    "title": "Problem Type",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-3",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-3",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Constrained ODE Problem",
-    "category": "section",
-    "text": "The constrained ODE:fracdudt = f(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-4",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "ConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-4",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The initial conditions.\nv0: The initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Split-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Split Constrained ODE Problem",
-    "category": "section",
-    "text": "The split constrained ODE:fracdudt = f_1(tuv) + f_2(tuv) +  + f_n(tuv) \n0 = g(tuv)is a type of refined ODE which specifies a DAE."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-5",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SplitConstrainedODEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-5",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_ode_types.html#Mathematical-Specification-of-a-Partitioned-Constrained-ODE-Problem-1",
-    "page": "Refined ODE Problems",
-    "title": "Mathematical Specification of a Partitioned Constrained ODE Problem",
-    "category": "section",
-    "text": "The constrained ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \n\n0 = g(tuv)is a type of refined ODE which specifies a DAE. As with the standard Partitioned problem, the solver may specify a special form which may result in splitting ODEs in some of the systems."
-},
-
-{
-    "location": "types/refined_ode_types.html#Constructors-6",
-    "page": "Refined ODE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "ConstrainedODEProblem(f,u0,v0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_ode_types.html#Fields-6",
-    "page": "Refined ODE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\ng: The constraint equation.\nu0: The tuple of initial conditions.\nv0: The tuple of initial values for the purely-algebraic variables.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1673,75 +1569,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/dae_types.html#Example-Problems-1",
+    "location": "types/dae_types.html#Refined-DAE-Problems-1",
     "page": "DAE Problems",
-    "title": "Example Problems",
-    "category": "section",
-    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
-},
-
-{
-    "location": "types/refined_dae_types.html#",
-    "page": "Refined DAE Problems",
-    "title": "Refined DAE Problems",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "types/refined_dae_types.html#Refined-DAE-Problems-1",
-    "page": "Refined DAE Problems",
     "title": "Refined DAE Problems",
     "category": "section",
     "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
 },
 
 {
-    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
-    "page": "Refined DAE Problems",
+    "location": "types/dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of a Split DAE Problem",
     "category": "section",
-    "text": "To define a SplitDAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
+    "text": "To define a split DAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
 },
 
 {
-    "location": "types/refined_dae_types.html#Constructors-1",
-    "page": "Refined DAE Problems",
-    "title": "Constructors",
-    "category": "section",
-    "text": "SplitDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_dae_types.html#Fields-1",
-    "page": "Refined DAE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
-},
-
-{
-    "location": "types/refined_dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "Refined DAE Problems",
+    "location": "types/dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
+    "page": "DAE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
-    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) \nf should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) f should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose  geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
 },
 
 {
-    "location": "types/refined_dae_types.html#Constructors-2",
-    "page": "Refined DAE Problems",
-    "title": "Constructors",
+    "location": "types/dae_types.html#Example-Problems-1",
+    "page": "DAE Problems",
+    "title": "Example Problems",
     "category": "section",
-    "text": "PartitionedDAEProblem(f,u0,tspan,callback=nothing,mass_matrix=I) : Defines the ODE with the specified functions."
-},
-
-{
-    "location": "types/refined_dae_types.html#Fields-2",
-    "page": "Refined DAE Problems",
-    "title": "Fields",
-    "category": "section",
-    "text": "f: The tuple of functions for the ODE.\nu0: The tuple of initial conditions.\ndu0: The tuple of initial derivatives.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
 },
 
 {
@@ -2061,7 +1917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Non-Stiff Problems",
     "category": "section",
-    "text": "For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly more efficient than the other choices. For most non-stiff problems, we recommend Tsit5. When more robust error control is required, BS5 is a good choice. For fast solving at lower tolerances, we recommend BS3. For tolerances which are at about the truncation error of Float64 (1e-16), we recommend Vern6, Vern7, or Vern8 as efficient choices.For high accuracy non-stiff solving (BigFloat and tolerances like <1e-20), we recommend the Feagin12 or Feagin14 methods. These are more robust than Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed). If a high-order method is needed with a high order interpolant, then you should choose Vern9 which is Order 9 with an Order 9 interpolant."
+    "text": "For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly more efficient than the other choices. For most non-stiff problems, we recommend Tsit5. When more robust error control is required, BS5 is a good choice. For fast solving at higher tolerances, we recommend BS3. For high accuracy but with the range of Float64 (~1e-8-1e-12), we recommend Vern6, Vern7, or Vern8 as efficient choices.For high accuracy non-stiff solving (BigFloat and tolerances like <1e-12), we recommend the Vern9 method. If a high-order method is needed with a high order interpolant, then you should choose Vern9 which is Order 9 with an Order 9 interpolant. If you need extremely high accuracy (<1e-30?) and do not need an interpolant, try the Feagin12 or Feagin14 methods. Note that the Feagin methods are the only high-order optimized methods which do not include a high-order interpolant (they do include a 3rd order Hermite interpolation if needed). Note that these high order RK methods are more robust than the high order Adams-Bashforth methods to discontinuities and achieve very high precision, and are much more efficient than the extrapolation methods. However, the CVODE_Adams method can be a good choice for high accuracy when the system of equations is very large (>10,000 ODEs?) or the function calculation is very expensive."
 },
 
 {
@@ -2069,7 +1925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For stiff problems at low tolerances it is recommended that you use Rosenbrock23 As a native DifferentialEquations.jl solver, many Julia numeric types (such as Unitful, ArbFloats, or DecFP) will work. When the equation is defined via the @ode_def macro, this will be the most efficient. For faster solving when only the Jacobian is known and the macro is not used, use radau. High precision numbers are also compatible with Trapezoid which is a symplectic integrator. However, for the most efficient solvers for highly stiff equations which need high accuracy, use radau or CVODE_BDF provided by wrappers to the ODEInterface and Sundials packages respectively (see the conditional dependencies documentation). These algorithms require that the number types are Float64."
+    "text": "For stiff problems at high tolerances (>1e-2?) it is recommended that you use Rosenbrock23. At medium tolerances (>1e-8?) it is recommended you use Rodas4 or Rodas4P (the former is slightly more efficient but the later is much more reliable). As native DifferentialEquations.jl solvers, many Julia numeric types (such as BigFloats, ArbFloats, or DecFP) will work. When the equation is defined via the @ode_def macro, this will be the most efficient. For faster solving at low tolerances (<1e-9) but when Vector{Float64} is used, use radau. High precision numbers are also compatible with Trapezoid which is a symplectic integrator. Notice that Rodas4 loses accuracy on discretizations of nonlinear parabolic PDEs, and thus it's suggested you replace it with Rodas4P in those situations. For asymtopically large systems of ODEs (N>10000?) where f is very costly and the complex eigenvalues are minimal (low oscillations), in that case CVODE_BDF will be the most efficient but requires Vector{Float64}."
 },
 
 {
@@ -2077,7 +1933,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Translations from MATLAB/Python/R",
     "category": "section",
-    "text": "For users familiar with MATLAB/Python/R, good translations of the standard library methods are as follows:ode23 –> BS3()\node45/dopri5 –> DP5(), though in most cases Tsit5() is more efficient\node23s –> Rosenbrock23()\node113 –> CVODE_Adams(), though in many cases Vern7() is more efficient\ndop853 –> DP8(), though in most cases Vern7() is more efficient\node15s/vode –> CVODE_BDF(), though in many cases radau() is more efficient\node23t –> Trapezoid()\nlsoda –> lsoda() (requires Pkg.add(\"LSODA\"); using LSODA)\node15i –> IDA()"
+    "text": "For users familiar with MATLAB/Python/R, good translations of the standard library methods are as follows:ode23 –> BS3()\node45/dopri5 –> DP5(), though in most cases Tsit5() is more efficient\node23s –> Rosenbrock23(), though in most cases Rodas4() is more efficient\node113 –> CVODE_Adams(), though in many cases Vern7() is more efficient\ndop853 –> DP8(), though in most cases Vern7() is more efficient\node15s/vode –> CVODE_BDF(), though in many cases Rodas4() or radau() are more efficient\node23t –> Trapezoid()\nlsoda –> lsoda() (requires Pkg.add(\"LSODA\"); using LSODA)\node15i –> IDA(), though in many cases Rodas4() can handle the DAE and is significantly more efficient"
 },
 
 {
@@ -2093,7 +1949,31 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all non-stiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on non-Float64 numbers.Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nSSPRK22 - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK33 - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK432 - A  3/2 adaptive strong stability preserving (SSP) method with five stages. (free 2nd order SSP interpolant)\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson. (free 3rd order Hermite interpolant)\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8 method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.\nImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.Example usage:alg = Tsit5()\nsolve(prob,alg)  "
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for all non-stiff problems. For stiff problems, the algorithms are currently not as high of order or as well-optimized as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl are able to handle a larger generality of number types (arbitrary precision, etc.) and thus are recommended for stiff problems on non-Float64 numbers."
+},
+
+{
+    "location": "solvers/ode_solve.html#Runge-Kutta-Methods-for-Non-Stiff-Equations-1",
+    "page": "ODE Solvers",
+    "title": "Runge-Kutta Methods for Non-Stiff Equations",
+    "category": "section",
+    "text": "Euler- The canonical forward Euler method.\nMidpoint - The second order midpoint method.\nRK4 - The canonical Runge-Kutta Order 4 method.\nBS3 - Bogacki-Shampine 3/2 method.\nDP5 - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)\nBS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)\nVern6 - Verner's \"Most Efficient\" 6/5 Runge-Kutta method. (6th order interpolant)\nVern7 - Verner's \"Most Efficient\" 7/6 Runge-Kutta method. (7th order interpolant)\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer's 8/5/3 adaption of the Dormand-Prince 8   method Runge-Kutta method. (7th order interpolant)\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nVern8 - Verner's \"Most Efficient\" 8/7 Runge-Kutta method. (8th order interpolant)\nVern9 - Verner's \"Most Efficient\" 9/8 Runge-Kutta method. (9th order interpolant)\nFeagin10 - Feagin's 10th-order Runge-Kutta method.\nFeagin12 - Feagin's 12th-order Runge-Kutta method.\nFeagin14 - Feagin's 14th-order Runge-Kutta method.Example usage:alg = Tsit5()\nsolve(prob,alg)  "
+},
+
+{
+    "location": "solvers/ode_solve.html#Strong-Stability-Presurving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
+    "page": "ODE Solvers",
+    "title": "Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
+    "category": "section",
+    "text": "SSPRK22 - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK33 - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant)\nSSPRK432 - A  3/2 adaptive strong stability preserving (SSP) method with five stages. (free 2nd order SSP interpolant)\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson. (free 3rd order Hermite interpolant)"
+},
+
+{
+    "location": "solvers/ode_solve.html#Methods-for-Stiff-Equations-1",
+    "page": "ODE Solvers",
+    "title": "Methods for Stiff Equations",
+    "category": "section",
+    "text": "ImplicitEuler - A 1st order implicit solver. Unconditionally stable.\nTrapezoid - A second order unconditionally stable symplectic implicit solver. Good for highly stiff.\nRosenbrock23 - An Order 2/3 L-Stable fast solver which is good for mildy stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable fast solver which is good for mildy stiff equationswithout oscillations at low tolerances. Note that this method is prone to instability in the  presence of oscillations, so use with caution.ROS3P - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRosShamp4- An A-stable 4th order Rosenbrock method.\nVeldd4 - A 4th order D-stable Rosenbrock method.\nVelds4 - A 4th order A-stable Rosenbrock method.\nGRK4T - An efficient 4th order Rosenbrock method.\nGRK4A - An A-stable 4th order Rosenbrock method. Essentially \"anti-L-stable\" but efficient.\nRos4LStab - A 4th order L-stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. Work in progress."
 },
 
 {
@@ -2101,7 +1981,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Extra Options",
     "category": "section",
-    "text": "The following methods allow for specification of linsolve: the linear solver which is used:Rosenbrock23\nRosenbrock32For more information on specifying the linear solver, see the manual page on solver specification.The following methods allow for specification of nlsolve: the nonlinear solver which is used:ImplicitEuler\nTrapezoidNote that performance overload information (Jacobians etc.) are not used in this mode. For more information on specifying the nonlinear solver, see the manual page on solver specification.Additionally, the following methods have extra differentiation controls:Rosenbrock23\nRosenbrock32\nImplicitEuler\nTrapezoidIn each of these, autodiff can be set to turn on/off autodifferentiation, and chunk_size can be used to set the chunksize of the Dual numbers (see the documentation for ForwardDiff.jl for details). In addition, Rosenbrock23 and Rosenbrock32 can set diff_type, which is the type of numerical differentiation that is used (when autodifferentiation is disabled). The choices are :central or :forward.Examples:sol = solve(prob,Rosenbrock23()) # Standard, uses autodiff\nsol = solve(prob,Rosenbrock23(chunk_size=10)) # Autodiff with chunksize of 10\nsol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with central differencing\nsol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing"
+    "text": "The following methods allow for specification of linsolve: the linear solver which is used:Rosenbrock23\nRosenbrock32\nROS3P\nRodas3\nRosShamp4\nVeldd4\nVelds4\nGRK4T\nGRK4A\nRos4LStab\nRodas4\nRodas42\nRodas4P\nRodas5For more information on specifying the linear solver, see the manual page on solver specification.The following methods allow for specification of nlsolve: the nonlinear solver which is used:ImplicitEuler\nTrapezoidNote that performance overload information (Jacobians etc.) are not used in this mode. For more information on specifying the nonlinear solver, see the manual page on solver specification.Additionally, the following methods have extra differentiation controls:Rosenbrock23\nRosenbrock32\nROS3P\nRodas3\nRosShamp4\nVeldd4\nVelds4\nGRK4T\nGRK4A\nRos4LStab\nRodas4\nRodas42\nRodas4P\nRodas5\nImplicitEuler\nTrapezoidIn each of these, autodiff can be set to turn on/off autodifferentiation, and chunk_size can be used to set the chunksize of the Dual numbers (see the documentation for ForwardDiff.jl for details). In addition, the Rosenbrock methods can set diff_type, which is the type of numerical differentiation that is used (when autodifferentiation is disabled). The choices are :central or :forward.Examples:sol = solve(prob,Rosenbrock23()) # Standard, uses autodiff\nsol = solve(prob,Rosenbrock23(chunk_size=10)) # Autodiff with chunksize of 10\nsol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with central differencing\nsol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing"
 },
 
 {
@@ -2173,7 +2053,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Refined ODE Solvers",
     "category": "section",
-    "text": "solve(prob::ODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen.This area is still under major development."
+    "text": "solve(prob::AbstractODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
 },
 
 {
@@ -2181,7 +2061,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Special Forms",
     "category": "section",
-    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) \nThis is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Followed the requirements for the integrator is required to achieve the suggested accuracy."
+    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Following the requirements for the integrator is required to achieve the suggested accuracy."
 },
 
 {
@@ -2205,7 +2085,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Dynamical ODE",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dx) (in the inplace form), where f1 is independent of x and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function.The appropriate algorithms for this form are:"
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f1 = 12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\".The appropriate algorithms for this form are:"
 },
 
 {
@@ -2213,7 +2093,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator. Not yet implemented."
+    "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator.\nVerletLeapfrog: 2nd order explicit symplectic integrator.\nPseudoVerletLeapfrog: 2nd order explicit symplectic integrator.\nMcAte2: Optimized efficiency 2nd order explicit symplectic integrator.\nRuth3: 3rd order explicit symplectic integrator.\nMcAte3: Optimized efficiency 3rd order explicit symplectic integrator.\nCandyRoz4: 4th order explicit symplectic integrator.\nMcAte4: 4th order explicit symplectic integrator. Requires quadratic kinetic energy.\nCalvoSanz4: Optimized efficiency 4th order explicit symplectic integrator.\nMcAte42: 4th order explicit symplectic integrator.\nMcAte5: Optimized efficiency 5th order explicit symplectic integrator. Requires quadratic kinetic energy\nYoshida6: 6th order explicit symplectic integrator.\nKahanLi6: Optimized efficiency 6th order explicit symplectic integrator.\nMcAte8: 8th order explicit symplectic integrator.\nKahanLi8: Optimized efficiency 8th order explicit symplectic integrator.\nSofSpa10: 10th order explicit symplectic integrator."
+},
+
+{
+    "location": "solvers/refined_ode_solve.html#Recommendations-1",
+    "page": "Refined ODE Solvers",
+    "title": "Recommendations",
+    "category": "section",
+    "text": "Higher order algorithms are the most efficient when higher accuracy is needed, and when less accuracy is needed lower order methods do better. Optimized efficiency methods take more steps and thus have more force calculations for the same order, but have smaller error. Thus the \"optimized efficiency\" algorithms are recommended if your force calculation is not too sufficiency large, while the other methods are recommend when force calculations are really large (for example, like in MD simulations VelocityVerlet is very popular since it only requires one force calculation per timestep)."
 },
 
 {
@@ -2221,7 +2109,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Implicit-Explicit (IMEX) ODE",
     "category": "section",
-    "text": "The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Implicit-Explicit (IMEX) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
@@ -2245,7 +2133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Refined ODE Solvers",
     "title": "Linear-Nonlinear (LNL) ODE",
     "category": "section",
-    "text": "The Linear-Nonlinear (LNL) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a linear operator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Linear-Nonlinear (LNL) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a DiffEqOperator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
@@ -2973,7 +2861,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "ContinuousCallbacks",
     "category": "section",
-    "text": "ContinuousCallback(condition,affect!;\n                   rootfind = true,\n                   initialize = (c,t,u,integrator) -> nothing,\n                   save_positions = (true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0\n                   idxs=nothing)\n\nContinuousCallback(condition,affect!,affect_neg!;\n                  rootfind = true,\n                  initialize = (c,t,u,integrator) -> nothing,\n                  save_positions = (true,true),\n                  interp_points=10,\n                  abstol=1e-12,reltol=0,\n                  idxs=nothing)The arguments are defined as follows:condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition hits 0 within the time interval.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. This is called when condition is found to be 0 (at a root) and the cross is an upcrossing (from negative to positive). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\nrootfind: This is a boolean for whether to rootfind the event location. If this is set to true, the solution will be backtracked to the point where condition==0. Otherwise the systems and the affect! will occur at t+dt.\ninterp_points: The number of interpolated points to check the condition. The condition is found by checking whether any interpolation point / endpoint has a different sign. If interp_points=0, then conditions will only be noticed if the sign of condition is different at t than at t+dt. This behavior is not robust when the solution is oscillatory, and thus it's recommended that one use some interpolation points (they're cheap to compute!). 0 within the time interval.\naffect_neg!: This is the function affect_neg!(integrator) where one is allowed to modify the current state of the integrator. This is called when condition is found to be 0 (at a root) and the cross is an downcrossing (from positive to negative). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\nsave_positions: Boolean tuple for whether to save before and after the affect!. The first save will always occcur (if true), and the second will only occur when an event is detected.  For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\nidxs: The components which will be interpolated into the condition. Defaults to nothing which means u will be all components.\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored.Additionally, keyword arguments for abstol and reltol can be used to specify a tolerance from zero for the rootfinder: if the starting condition is less than the tolerance from zero, then no root will be detected. This is to stop repeat events happening just after a previously rootfound event. The default has abstol=1e-14 and reltol=0."
+    "text": "ContinuousCallback(condition,affect!,affect_neg!=affect!;\n                   rootfind = true,\n                   initialize = (c,t,u,integrator) -> nothing,\n                   save_positions = (true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0\n                   idxs=nothing)The arguments are defined as follows:condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition hits 0 within the time interval.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. If you do not pass an affect_neg! function, it is called when condition is found to be 0 (at a root) and the cross is either an upcrossing (from negative to positive) or a downcrossing (from positive to negative). You need to explicitly pass nothing as the affect_neg! argument if it should only be called at upcrossings, e.g. ContinuousCallback(condition, affect!, nothing). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\naffect_neg!: This is the function affect_neg!(integrator) where one is allowed to modify the current state of the integrator. This is called when condition is found to be 0 (at a root) and the cross is an downcrossing (from positive to negative). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\nrootfind: This is a boolean for whether to rootfind the event location. If this is set to true, the solution will be backtracked to the point where condition==0. Otherwise the systems and the affect! will occur at t+dt.\ninterp_points: The number of interpolated points to check the condition. The condition is found by checking whether any interpolation point / endpoint has a different sign. If interp_points=0, then conditions will only be noticed if the sign of condition is different at t than at t+dt. This behavior is not robust when the solution is oscillatory, and thus it's recommended that one use some interpolation points (they're cheap to compute!). 0 within the time interval.\nsave_positions: Boolean tuple for whether to save before and after the affect!. The first save will always occcur (if true), and the second will only occur when an event is detected.  For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\nidxs: The components which will be interpolated into the condition. Defaults to nothing which means u will be all components.\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored.Additionally, keyword arguments for abstol and reltol can be used to specify a tolerance from zero for the rootfinder: if the starting condition is less than the tolerance from zero, then no root will be detected. This is to stop repeat events happening just after a previously rootfound event. The default has abstol=1e-14 and reltol=0."
 },
 
 {
@@ -3381,7 +3269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low Dependency Usage",
     "title": "Generalizing the Idea",
     "category": "section",
-    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nf = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecarr_to_arr(randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing DiffEqBase, OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
+    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nf = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\nusing RecursiveArrayTools\ndata = convert(Array,randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing DiffEqBase, OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
 },
 
 {
@@ -3693,7 +3581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Local Optimization Examples",
     "category": "section",
-    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\nusing RecursiveArrayTools\ndata = vecarr_to_arr(randomized)Here we used vecarr_to_arr from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective funtion:cost_function = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)Note that we set maxiters so that way the differential equation solvers would error more quickly when in bad regions of the parameter space, speeding up the process. Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl.Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let's use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1.0 c=>3.0 d=>1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f2,u0,tspan)To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob,Tsit5(),L2DistLoss(t,data))The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),\n                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x'| < 1.0e-15: true\n * |f(x) - f(x')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters."
+    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParmaeterizedFunction:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)Notice that since we only used => for a, it's the only free parameter. We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nusing RecursiveArrayTools # for VectorOfArray\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)Here we used VectorOfArray from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective funtion:cost_function = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)Note that we set maxiters so that way the differential equation solvers would error more quickly when in bad regions of the parameter space, speeding up the process. Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent's algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl.Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let's use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1.0 c=>3.0 d=>1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f2,u0,tspan)To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob,Tsit5(),L2DistLoss(t,data))The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),\n                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x'| < 1.0e-15: true\n * |f(x) - f(x')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters."
 },
 
 {
@@ -3701,7 +3589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "More Algorithms (Global Optimization) via MathProgBase Solvers",
     "category": "section",
-    "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\n\nt = collect(linspace(0,10,200))\nrandomized = [(sol(t[i]) + .01randn(2)) for i in 1:length(t)]\ndata = vecarr_to_arr(randomized)\n\nobj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. The fastest result comes from the following:using NLopt\nopt = Opt(:LN_BOBYQA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
+    "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=1.0 c=3.0 d=1.0\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5())\n\nt = collect(linspace(0,10,200))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)\n\nobj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. The fastest result comes from the following:using NLopt\nopt = Opt(:LN_BOBYQA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
 },
 
 {
@@ -3765,7 +3653,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Sensitivity Analysis",
     "title": "Defining a Sensitivity Problem",
     "category": "section",
-    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = vecarr_to_arr([sol[i][1:sol.prob.indvars] for i in 1:length(sol)])Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.numvars. We can pull out the parameter sensitivities from the solution as follows:da=[sol[i][sol.prob.numvars+1:sol.prob.numvars*2] for i in 1:length(sol)]\ndb=[sol[i][sol.prob.numvars*2+1:sol.prob.numvars*3] for i in 1:length(sol)]\ndc=[sol[i][sol.prob.numvars*3+1:sol.prob.numvars*4] for i in 1:length(sol)]This means that da[i][1] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).Since the closure returns a vector of vectors, it can be helpful to use vecarr_to_arr from RecursiveArrayTools.jl in order to plot the solution.plot(sol.t,vecarr_to_arr(da),lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
+    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a=>1.5 b=>1 c=>3 d=1\n\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = sol[1:sol.prob.indvars,:]Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.indvars. We can pull out the parameter sensitivities from the solution as follows:da = sol[sol.prob.indvars+1:sol.prob.indvars*2,:]\ndb = sol[sol.prob.indvars*2+1:sol.prob.indvars*3,:]\ndc = sol[sol.prob.indvars*3+1:sol.prob.indvars*4,:]This means that da[1,i] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system).plot(sol.t,da',lw=3)(Image: Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems."
 },
 
 {
