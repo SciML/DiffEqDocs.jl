@@ -132,9 +132,9 @@ solve(prob,alg)
 - `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
 - `Trapezoid` - A second order unconditionally stable symplectic implicit solver.
   Good for highly stiff.
-- `Rosenbrock23` - An Order 2/3 L-Stable fast solver which is good for mildy
+- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for mildy
   stiff equations with oscillations at low tolerances.
-- `Rosenbrock32` - An Order 3/2 A-Stable fast solver which is good for mildy
+- `Rosenbrock32` - An Order 3/2 A-Stable  Rosenbrock-W method w hich is good for mildy
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
 - `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method.
