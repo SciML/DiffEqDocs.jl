@@ -42,6 +42,28 @@ where `t` is the set of timepoints which the data is found at, and
 of the L2-distance. In `CostVData`, one can choose any loss function from
 LossFunctions.jl or use the default of an L2 loss.
 
+#### Note About Loss Functions
+
+For parameter estimation problems, it's not uncommon for the optimizers to hit
+unstable regions of parameter space. This causes warnings that the solver exited
+early, and the built-in loss functions like `L2DistLoss` and `CostVData`
+automatically handle this. However, if using a user-supplied loss function,
+you should make sure it's robust to these issues. One common pattern is to
+apply infinite loss when the integration is not successful. Using the retcodes,
+this can be done via:
+
+```julia
+function my_loss_function(sol)
+   tot_loss = 0.0
+   if any((s.retcode != :Success for s in sol))
+     tot_loss = Inf
+   else
+     # calculation for the loss here
+   end
+   tot_loss
+end
+```
+
 ### The Problem Generator
 
 The argument `prob_generator` allows one to specify a the function for generating
