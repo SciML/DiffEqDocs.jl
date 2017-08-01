@@ -322,23 +322,9 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
 See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
 for details on the additional options.
 
-## ODE.jl
-
-  - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
-  - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
-  - `ode23s` - A modified Rosenbrock order 2/3 method due to Shampine
-  - `ode78` - A Fehlburg order 7/8 Runge-Kutta method
-  - `ode4` - The classic Runge-Kutta order 4 method
-  - `ode4ms` - A fixed-step, fixed order Adams-Bashforth-Moulton method†
-  - `ode4s` - A 4th order Rosenbrock method due to Shampine
-
-
-†: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
-
 ## ODEInterface.jl
 
-The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the
+The ODEInterface algorithms are the classic Fortran algorithms. While the
 non-stiff algorithms are superseded by the more featured and higher performance
 Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as `radau`
 are some of the most efficient methods available (but are restricted for use on
@@ -359,6 +345,8 @@ using ODEInterfaceDiffEq
   - `radau` - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.
   - `radau5` - Implicit Runge-Kutta method (Radau IIA) of order 5.
   - `rodas` - Rosenbrock 4(3) method.
+  - `ddeabm` - Adams-Bashforth-Moulton Predictor-Corrector method (order between 1 and 12)
+  - `ddebdf` - Backward Differentiation Formula (orders between 1 and 5)
 
 ## LSODA.jl
 
@@ -374,6 +362,20 @@ To use the following algorithms, you must install and use LSODA.jl:
 Pkg.add("LSODA")
 using LSODA
 ```
+
+## ODE.jl
+
+  - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
+  - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
+  - `ode23s` - A modified Rosenbrock order 2/3 method due to Shampine
+  - `ode78` - A Fehlburg order 7/8 Runge-Kutta method
+  - `ode4` - The classic Runge-Kutta order 4 method
+  - `ode4ms` - A fixed-step, fixed order Adams-Bashforth-Moulton method†
+  - `ode4s` - A 4th order Rosenbrock method due to Shampine
+
+
+†: Does not step to the interval endpoint. This can cause issues with discontinuity
+detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
 ## List of Supplied Tableaus
 

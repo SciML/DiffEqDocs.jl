@@ -62,12 +62,14 @@ To define a Partitioned `ODEProblem`, you need to give a tuple of functions
 \frac{dv}{dt} = f_2(t,u,v,...) \\
 ...
 ```
-
-`f` should be specified as `f(t,u,v,...)` (or in-place as `f(t,u,v,...,du)`), and
-the initial conditions should be AbstractArrays (or numbers) whose geometry matches
+like e.g. `ODEProblem((f_1, f_2,...), (u0, v0, ...), tspan)`. Each of the `f_i`
+should be specified as `f_1(t,u,v,...)`, or in-place as `f_1(t,u,v,...,du)`.
+The initial conditions should be `AbstractArray`s (or numbers) whose geometry matches
 the desired geometry of `u`. Note that we are not limited to numbers or vectors
 for `u₀`; one is allowed to provide `u₀` as arbitrary matrices / higher dimension
-tensors as well. In some cases, the solvers may specify the functions in a split
+tensors as well. 
+
+In some cases, the solvers may specify the functions in a split
 form, for example:
 
 ```math
@@ -75,8 +77,7 @@ form, for example:
 \frac{dv}{dt} = f_3(t,u,v,...) \\
 ...
 ```
-
-See the solver's documentation for the form it is expecting.
+see the [solver's documentation](solvers/ode_solve) for the form it is expecting.
 
 ## Mathematical Specification of an Second Order ODE Problem
 
