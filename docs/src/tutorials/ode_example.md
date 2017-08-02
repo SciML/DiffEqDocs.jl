@@ -348,18 +348,12 @@ h = LorenzExample(σ=11.0,ρ=25.0)
 
 Note that the values will default to the values given to the `@ode_def` command.
 
-One last item to note is that you probably received a warning when defining this:
-
-```julia
-WARNING: Hessian could not invert
-```
-
-This is because the Hessian of the system was not able to be inverted. ParameterizedFunctions.jl
-does "behind-the-scenes" symbolic calculations to pre-compute things like the Jacobian,
-inverse Jacobian, etc. in order to speed up calculations. Thus not only will this
-lead to legible ODE definitions, but "unfairly fast" code! We can turn off some of
-the calculations by using a more specific macro. Here, we can turn off the Hessian
-calculations via `@ode_def_nohes`. See
+ParameterizedFunctions.jl does "behind-the-scenes" symbolic calculations to
+pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up
+calculations. Thus not only will this lead to legible ODE definitions, but
+"unfairly fast" code! We can turn off some of the calculations by using a more
+specific macro. Here, we can turn off the Jacobian inversion calculations via
+`@ode_def_noinvjac`. See
 [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 for more details.
 
