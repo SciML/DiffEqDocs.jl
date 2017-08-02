@@ -1161,102 +1161,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_linear",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_linear",
-    "category": "Constant",
-    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_bigfloatlinear",
-    "category": "Constant",
-    "text": "Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith BigFloats\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_large2Dlinear",
-    "category": "Constant",
-    "text": "100x100 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\nwith Float64s\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace",
-    "category": "Constant",
-    "text": "4x2 version of the Linear ODE\n\nfracdudt = u\n\nwith initial condition u0=12, =101, and solution\n\nu(t) = u0e^t\n\non Float64. Purposefully not in-place as a test.\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_threebody",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_threebody",
-    "category": "Constant",
-    "text": "The ThreeBody problem as written by Hairer:\n\nbeginalign\ny = y + 2y - fracy+D - fracy-D \ny = y - 2y - fracyD - fracyD \nD = ((y+)^2 + y^2)^32 \nD = ((y-)^2+y^2)^32 \n = 0012277471 \n =1-\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on t₀ = 0.0; T = parse(BigFloat,\"17.0652165601579625588917206249\") Periodic with that setup.\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_pleides",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_pleides",
-    "category": "Constant",
-    "text": "Pleides Problem\n\nbeginalign\nx = sum_ji m(x-x)r \ny = sum_ji m(y-y)r\nendalign\n\nwhere\n\nr = ((x-x)^2 + (y-y)^2)^32\n\nand inital condtions are\n\nbeginalign\nx(0)=3  \nx(0)=3  \nx(0)=-1  \nx(0)=-3  \nx(0)=2  \nx(0)=-2  \nx(0)=2  \ny(0)=3  \ny(0)=-3  \ny(0)=2  \ny(0)=0  \ny(0)=0  \ny(0)=-4  \ny(0)=4\nendalign\n\nand with x(0)=y(0)=0 except for\n\nbeginalign\nx(0)=175 \nx(0)=-15 \ny(0)=-125 \ny(0)=1\nendalign\n\nFrom Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 3.\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_vanderpol",
-    "category": "Constant",
-    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10 and u0=0sqrt3\n\nNon-stiff parameters.\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_vanderpol_stiff",
-    "category": "Constant",
-    "text": "Van der Pol Equations\n\nbeginalign\nfracdxdt = y \nfracdydt = (1-x^2)y -x\nendalign\n\nwith =10^6 and u0=0sqrt3\n\nStiff parameters.\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rober",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_rober",
-    "category": "Constant",
-    "text": "The Robertson biochemical reactions:\n\nbeginalign\nfracdydt = -ky+kyy  \nfracdydt =  ky-ky^2-kyy \nfracdydt =  ky^2\nendalign\n\nwhere k=004, k=3times10^7, k=10^4. For details, see:\n\nHairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 129\n\nUsually solved on [0,1e11]\n\n\n\n"
-},
-
-{
-    "location": "types/ode_types.html#DiffEqProblemLibrary.prob_ode_rigidbody",
-    "page": "ODE Problems",
-    "title": "DiffEqProblemLibrary.prob_ode_rigidbody",
-    "category": "Constant",
-    "text": "Rigid Body Equations\n\nbeginalign\nfracdydt  = Iyy \nfracdydt  = Iyy \nfracdydt  = Iyy\nendalign\n\nwith I=-2, I=125, and I=-12.\n\nThe initial condition is y=100009.\n\nFrom Solving Differential Equations in R by Karline Soetaert\n\nor Hairer Norsett Wanner Solving Ordinary Differential Euations I - Nonstiff Problems Page 244\n\nUsually solved from 0 to 20.\n\n\n\n"
-},
-
-{
     "location": "types/ode_types.html#Example-Problems-1",
     "page": "ODE Problems",
     "title": "Example Problems",
@@ -2009,19 +1913,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#ODE.jl-1",
-    "page": "ODE Solvers",
-    "title": "ODE.jl",
-    "category": "section",
-    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
-},
-
-{
     "location": "solvers/ode_solve.html#ODEInterface.jl-1",
     "page": "ODE Solvers",
     "title": "ODEInterface.jl",
     "category": "section",
-    "text": "The ODEInterface algorithms are the classic Hairer Fortran algorithms. While the non-stiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquations.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince.\nodex - GBS extrapolation-algorithm based on the midpoint rule.\nseulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
+    "text": "The ODEInterface algorithms are the classic Fortran algorithms. While the non-stiff algorithms are superseded by the more featured and higher performance Julia implementations from OrdinaryDiffEq.jl, the stiff solvers such as radau are some of the most efficient methods available (but are restricted for use on arrays of Float64).Note that this setup is not automatically included with DifferentialEquations.jl. To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:Pkg.add(\"ODEInterfaceDiffEq\")\nusing ODEInterfaceDiffEqdopri5 - Hairer's classic implementation of the Dormand-Prince 4/5 method.\ndop853 - Explicit Runge-Kutta 8(5,3) by Dormand-Prince.\nodex - GBS extrapolation-algorithm based on the midpoint rule.\nseulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method.\nddeabm - Adams-Bashforth-Moulton Predictor-Corrector method (order between 1 and 12)\nddebdf - Backward Differentiation Formula (orders between 1 and 5)"
 },
 
 {
@@ -2030,6 +1926,14 @@ var documenterSearchIndex = {"docs": [
     "title": "LSODA.jl",
     "category": "section",
     "text": "This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching to solve both stiff and non-stiff equations.lsoda - The LSODA wrapper algorithm.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use LSODA.jl:Pkg.add(\"LSODA\")\nusing LSODA"
+},
+
+{
+    "location": "solvers/ode_solve.html#ODE.jl-1",
+    "page": "ODE Solvers",
+    "title": "ODE.jl",
+    "category": "section",
+    "text": "ode23 - Bogacki-Shampine's order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2469,7 +2373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Performance Overloads",
     "title": "Other Available Functions",
     "category": "section",
-    "text": "The full interface available to the solvers is as follows:f(t,u,du) # Call the function\nf(Val{:analytic},t,u,du) # The analytical solution. Used in testing\nf(t,u,params,du) # Call the function to calculate with parameters params (vector)\nf(Val{:tgrad},t,u,J) # Call the explicit t-gradient function\nf(Val{:a},t,u,2.0,du) # Call the explicit parameter function with a=2.0\nf(Val{:deriv},Val{:a},t,u,2.0,df) # Call the explicit parameter derivative function with a=2.0\nf(Val{:paramjac},t,u,params,J) # Call the explicit parameter Jacobian function\nf(Val{:jac},t,u,J) # Call the explicit Jacobian function\nf(Val{:expjac},t,u,γ,J) # Call the explicit exponential Jacobian function exp(γJ)\nf(Val{:invjac},t,u,iJ) # Call the explicit Inverse Jacobian function\nf(Val{:invW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)\nf(Val{:invW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)\nf(Val{:hes},t,u,H) # Call the explicit Hessian function\nf(Val{:invhes},t,u,iH) # Call the explicit Inverse Hessian functionOverloads which require parameters should subtype ParameterizedFunction. These are all in-place functions which write into the last variable. See solver documentation specifics to know which optimizations the algorithms can use."
+    "text": "The full interface available to the solvers is as follows:f(t,u,du) # Call the function\nf(Val{:analytic},t,u,du) # The analytical solution. Used in testing\nf(t,u,params,du) # Call the function to calculate with parameters params (vector)\nf(Val{:tgrad},t,u,J) # Call the explicit t-gradient function\nf(Val{:paramjac},t,u,params,J) # Call the explicit parameter Jacobian function\nf(Val{:jac},t,u,J) # Call the explicit Jacobian function\nf(Val{:invjac},t,u,iJ) # Call the explicit Inverse Jacobian function\nf(Val{:invW},t,u,γ,iW) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)\nf(Val{:invW_t},t,u,γ,iW) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)Overloads which require parameters should subtype ParameterizedFunction. These are all in-place functions which write into the last variable. See solver documentation specifics to know which optimizations the algorithms can use."
 },
 
 {
@@ -2861,7 +2765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "ContinuousCallbacks",
     "category": "section",
-    "text": "ContinuousCallback(condition,affect!,affect_neg!=affect!;\n                   rootfind = true,\n                   initialize = (c,t,u,integrator) -> nothing,\n                   save_positions = (true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0\n                   idxs=nothing)The arguments are defined as follows:condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition hits 0 within the time interval.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. If you do not pass an affect_neg! function, it is called when condition is found to be 0 (at a root) and the cross is either an upcrossing (from negative to positive) or a downcrossing (from positive to negative). You need to explicitly pass nothing as the affect_neg! argument if it should only be called at upcrossings, e.g. ContinuousCallback(condition, affect!, nothing). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\naffect_neg!: This is the function affect_neg!(integrator) where one is allowed to modify the current state of the integrator. This is called when condition is found to be 0 (at a root) and the cross is an downcrossing (from positive to negative). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\nrootfind: This is a boolean for whether to rootfind the event location. If this is set to true, the solution will be backtracked to the point where condition==0. Otherwise the systems and the affect! will occur at t+dt.\ninterp_points: The number of interpolated points to check the condition. The condition is found by checking whether any interpolation point / endpoint has a different sign. If interp_points=0, then conditions will only be noticed if the sign of condition is different at t than at t+dt. This behavior is not robust when the solution is oscillatory, and thus it's recommended that one use some interpolation points (they're cheap to compute!). 0 within the time interval.\nsave_positions: Boolean tuple for whether to save before and after the affect!. The first save will always occcur (if true), and the second will only occur when an event is detected.  For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\nidxs: The components which will be interpolated into the condition. Defaults to nothing which means u will be all components.\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored.Additionally, keyword arguments for abstol and reltol can be used to specify a tolerance from zero for the rootfinder: if the starting condition is less than the tolerance from zero, then no root will be detected. This is to stop repeat events happening just after a previously rootfound event. The default has abstol=1e-14 and reltol=0."
+    "text": "ContinuousCallback(condition,affect!,affect_neg!=affect!;\n                   rootfind = true,\n                   initialize = (c,t,u,integrator) -> nothing,\n                   save_positions = (true,true),\n                   interp_points=10,\n                   abstol=1e-12,reltol=0\n                   idxs=nothing)The arguments are defined as follows:condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition hits 0 within the time interval.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. If you do not pass an affect_neg! function, it is called when condition is found to be 0 (at a root) and the cross is either an upcrossing (from negative to positive) or a downcrossing (from positive to negative). You need to explicitly pass nothing as the affect_neg! argument if it should only be called at upcrossings, e.g. ContinuousCallback(condition, affect!, nothing). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\naffect_neg!: This is the function affect_neg!(integrator) where one is allowed to modify the current state of the integrator. This is called when condition is found to be 0 (at a root) and the cross is an downcrossing (from positive to negative). For more information on what can be done, see the Integrator Interface manual page. Modifications to u are safe in this function.\nrootfind: This is a boolean for whether to rootfind the event location. If this is set to true, the solution will be backtracked to the point where condition==0. Otherwise the systems and the affect! will occur at t+dt.\ninterp_points: The number of interpolated points to check the condition. The condition is found by checking whether any interpolation point / endpoint has a different sign. If interp_points=0, then conditions will only be noticed if the sign of condition is different at t than at t+dt. This behavior is not robust when the solution is oscillatory, and thus it's recommended that one use some interpolation points (they're cheap to compute!). 0 within the time interval.\nsave_positions: Boolean tuple for whether to save before and after the affect!. This saving will occur just before and after the event, only at event times, and does not depend on options like saveat, save_everystep, etc. (i.e. if  saveat=[1.0,2.0,3.0], this can still add a save point at 2.1 if true). For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\nidxs: The components which will be interpolated into the condition. Defaults to nothing which means u will be all components.\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored.Additionally, keyword arguments for abstol and reltol can be used to specify a tolerance from zero for the rootfinder: if the starting condition is less than the tolerance from zero, then no root will be detected. This is to stop repeat events happening just after a previously rootfound event. The default has abstol=1e-14 and reltol=0."
 },
 
 {
@@ -2869,7 +2773,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "DiscreteCallback",
     "category": "section",
-    "text": "DiscreteCallback(condition,affect!;\n                 save_positions=(true,true),\n                 initialize = (c,t,u,integrator) -> nothing)condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition evaluates to true.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. For more information on what can be done, see the Integrator Interface manual page.\nsave_positions: Boolean tuple for whether to save before and after the affect!. The first save will always occcur (if true), and the second will only occur when an event is detected.  For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored."
+    "text": "DiscreteCallback(condition,affect!;\n                 save_positions=(true,true),\n                 initialize = (c,t,u,integrator) -> nothing)condition: This is a function condition(t,u,integrator) for declaring when the callback should be used. A callback is initiated if the condition evaluates to true.\naffect!: This is the function affect!(integrator) where one is allowed to modify the current state of the integrator. For more information on what can be done, see the Integrator Interface manual page.\nsave_positions: Boolean tuple for whether to save before and after the affect!. This saving will occur just before and after the event, only at event times, and does not depend on options like saveat, save_everystep, etc. (i.e. if  saveat=[1.0,2.0,3.0], this can still add a save point at 2.1 if true). For discontinuous changes like a modification to u to be handled correctly (without error), one should set save_positions=(true,true).\ninitialize: This is a function (c,t,u,integrator) which can be used to initialize the state of the callback c. It should modify the argument c and the return is ignored."
 },
 
 {
@@ -3345,70 +3249,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_bunny",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_bunny",
-    "category": "Function",
-    "text": "meshExample_bunny() : Returns a 3D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_flowpastcylindermesh",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_flowpastcylindermesh",
-    "category": "Function",
-    "text": "meshExample_flowpastcylindermesh() : Returns a 2D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_lakemesh",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_lakemesh",
-    "category": "Function",
-    "text": "meshExample_lakemesh() : Returns a 2D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_Lshapemesh",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_Lshapemesh",
-    "category": "Function",
-    "text": "meshExample_Lshapemesh() : Returns a 2D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_Lshapeunstructure",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_Lshapeunstructure",
-    "category": "Function",
-    "text": "meshExample_Lshapeunstructure() : Returns a 2D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_oilpump",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_oilpump",
-    "category": "Function",
-    "text": "meshExample_oilpump() : Returns a 3D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_wavymesh",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_wavymesh",
-    "category": "Function",
-    "text": "meshExample_wavymesh() : Returns a 2D SimpleMesh.\n\n\n\n"
-},
-
-{
-    "location": "features/mesh.html#DiffEqProblemLibrary.meshExample_wavyperturbmesh",
-    "page": "Meshes",
-    "title": "DiffEqProblemLibrary.meshExample_wavyperturbmesh",
-    "category": "Function",
-    "text": "meshExample_wavyperturbmesh() : Returns a 3D SimpleMesh.\n\n\n\n"
-},
-
-{
     "location": "features/mesh.html#Example-Meshes-1",
     "page": "Meshes",
     "title": "Example Meshes",
@@ -3550,6 +3390,14 @@ var documenterSearchIndex = {"docs": [
     "title": "The Loss Function",
     "category": "section",
     "text": "loss_func(sol)is a function which reduces the problem's solution. While this is very flexible, a two convenience routines is included for fitting to data:L2DistLoss(t,data)\nCostVData(t,data;loss_func = L2DistLoss)where t is the set of timepoints which the data is found at, and data which are the values that are known. L2DistLoss is an optimized version of the L2-distance. In CostVData, one can choose any loss function from LossFunctions.jl or use the default of an L2 loss."
+},
+
+{
+    "location": "analysis/parameter_estimation.html#Note-About-Loss-Functions-1",
+    "page": "Parameter Estimation",
+    "title": "Note About Loss Functions",
+    "category": "section",
+    "text": "For parameter estimation problems, it's not uncommon for the optimizers to hit unstable regions of parameter space. This causes warnings that the solver exited early, and the built-in loss functions like L2DistLoss and CostVData automatically handle this. However, if using a user-supplied loss function, you should make sure it's robust to these issues. One common pattern is to apply infinite loss when the integration is not successful. Using the retcodes, this can be done via:function my_loss_function(sol)\n   tot_loss = 0.0\n   if any((s.retcode != :Success for s in sol))\n     tot_loss = Inf\n   else\n     # calculation for the loss here\n   end\n   tot_loss\nend"
 },
 
 {
