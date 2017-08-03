@@ -1205,7 +1205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
+    "text": "SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from ODEProblems is provided:SteadyStateProblem(prob::ODEProblem)"
 },
 
 {
