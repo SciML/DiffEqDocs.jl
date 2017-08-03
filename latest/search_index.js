@@ -1045,7 +1045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DiscreteProblem(f,u0,tspan) : Defines the discrete problem with the specified functions."
+    "text": "DiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions."
 },
 
 {
@@ -1101,7 +1101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+    "text": "ODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1133,7 +1133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Mathematical Specification of a Partitioned ODE Problem",
     "category": "section",
-    "text": "To define a Partitioned ODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nlike e.g. ODEProblem((f_1, f_2,...), (u0, v0, ...), tspan). Each of the f_i should be specified as f_1(t,u,v,...), or in-place as f_1(t,u,v,...,du). The initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nsee the solver's documentation for the form it is expecting."
+    "text": "To define a Partitioned ODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nlike e.g. ODEProblem((f_1, f_2,...), (u0, v0, ...), tspan). Each of the f_i should be specified as f_1(t,u,v,...), or in-place as f_1(t,u,v,...,du). The initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nsee the solver's documentation for the form it is expecting."
 },
 
 {
@@ -1205,7 +1205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SteadyStateProblem(f,u0,mass_matrix=I)Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
+    "text": "SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from the ODEProblem is provided:SteadyStateProblem(prob::ODEProblem)"
 },
 
 {
@@ -1261,7 +1261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE."
+    "text": "SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1365,7 +1365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE."
+    "text": "RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1413,7 +1413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)"
+    "text": "ConstantLagDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1461,7 +1461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DAEProblem(f,u0,du0,tspan) : Defines the ODE with the specified functions."
+    "text": "DAEProblem{isinplace}(f,u0,du0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
