@@ -25,10 +25,12 @@ fixing `t=0`.
 ### Constructors
 
 ```julia
-SteadyStateProblem(f,u0,mass_matrix=I)
+SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)
 ```
 
-Additionally, the constructor from the `ODEProblem` is provided:
+`isinplace` optionally sets whether the function is inplace or not. This is
+determined automatically, but not inferred. Additionally, the constructor from
+the `ODEProblem` is provided:
 
 ```julia
 SteadyStateProblem(prob::ODEProblem)

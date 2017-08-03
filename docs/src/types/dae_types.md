@@ -17,7 +17,9 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`DAEProblem(f,u0,du0,tspan)` : Defines the ODE with the specified functions.
+`DAEProblem{isinplace}(f,u0,du0,tspan)` : Defines the DAE with the specified functions.
+`isinplace` optionally sets whether the function is inplace or not. This is
+determined automatically, but not inferred.
 
 ### Fields
 

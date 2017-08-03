@@ -18,7 +18,9 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`ODEProblem(f,u0,tspan,callback=CallbackSet(),mass_matrix=I)` : Defines the ODE with the specified functions.
+`ODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet(),mass_matrix=I)` :
+Defines the ODE with the specified functions. `isinplace` optionally sets whether
+the function is inplace or not. This is determined automatically, but not inferred.
 
 ### Fields
 
@@ -67,7 +69,7 @@ should be specified as `f_1(t,u,v,...)`, or in-place as `f_1(t,u,v,...,du)`.
 The initial conditions should be `AbstractArray`s (or numbers) whose geometry matches
 the desired geometry of `u`. Note that we are not limited to numbers or vectors
 for `u₀`; one is allowed to provide `u₀` as arbitrary matrices / higher dimension
-tensors as well. 
+tensors as well.
 
 In some cases, the solvers may specify the functions in a split
 form, for example:

@@ -20,9 +20,12 @@ provide `u0` as arbitrary matrices / higher dimension tensors as well.
 ### Constructors
 
 ```julia
-ConstantLagDDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
-DDEProblem(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
+ConstantLagDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
+DDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
 ```
+
+`isinplace` optionally sets whether the function is inplace or not. This is
+determined automatically, but not inferred.
 
 ### Fields
 

@@ -25,7 +25,7 @@ u_{n+1} = u_n + dtf(t,u_n)
 
 ### Constructors
 
-`DiscreteProblem(f,u0,tspan)` : Defines the discrete problem with the specified functions.
+`DiscreteProblem{isinplace}(f,u0,tspan)` : Defines the discrete problem with the specified functions.
 
 ### Fields
 

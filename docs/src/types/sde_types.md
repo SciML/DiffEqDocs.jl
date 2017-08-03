@@ -27,8 +27,10 @@ with initial condition ``u0``.
 
 ### Constructors
 
-`SDEProblem(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
+`SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
 Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`.
+`isinplace` optionally sets whether the function is inplace or not. This is
+determined automatically, but not inferred.
 
 ### Fields
 
