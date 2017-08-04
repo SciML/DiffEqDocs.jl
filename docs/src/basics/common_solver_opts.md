@@ -144,6 +144,10 @@ and are mostly used to make it more efficient on specific problems.
   algorithm-dependent.
 * `qmin`: Defines the maximum value possible for the adaptive q. Defaults are
   algorithm-dependent.
+* `qsteady_min`: Defines the minimum for the range around 1 where the timestep
+  is held constant. Defaults are algorithm-dependent.
+* `qsteady_max`: Defines the maximum for the range around 1 where the timestep
+  is held constant. Defaults are algorithm-dependent.
 * `qoldinit`: The initial `qold` in stabilization stepping. Defaults are
   algorithm-dependent.
 
