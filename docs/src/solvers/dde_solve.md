@@ -12,10 +12,10 @@ algorithms. These are constructed from an OrdinaryDiffEq.jl algorithm as follows
 
 ```julia
 MethodOfSteps(alg;constrained=false,
-             picardabstol = nothing,
-             picardreltol = nothing,
-             picardnorm   = nothing,
-             max_picard_iters = 10)
+             fixedpoint_abstol = nothing,
+             fixedpoint_reltol = nothing,
+             fixedpoint_norm   = nothing,
+             max_fixedpoint_iters = 10)
 ```
 
 where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms will work, though
@@ -27,12 +27,13 @@ non-strict error control is needed, choosing `BS3()` can do well (this is simila
 to the MATLAB `dde23`). For algorithms where strict error control is needed, it
 is recommended that one uses `DP8()`.
 
-If the method is having trouble, one may want to adjust the Picard parameters.
-Decreasing the Picard tolerances and increasing the Picard iterations can help
-ensure that the steps are correct. If the problem still is not correctly converging,
-one should lower `dtmax`. In the worst case scenarios, one may need to set
-`constrained=true` which will constrain the method in a manner that forces
-more stability at the cost of smaller timesteps.
+If the method is having trouble, one may want to adjust the parameters of the 
+fixed-point iteration. Decreasing the absolute tolerance `fixedpoint_abstol` and the 
+relative tolerance `fixedpoint_reltol`, and increasing the maximal number of iterations
+`max_fixedpoint_iters` can help ensure that the steps are correct. If the problem still
+is not correctly converging, one should lower `dtmax`. In the worst case scenario, one 
+may need to set `constrained=true` which will constrain timesteps to at most the size
+of the minimal lag and hence forces more stability at the cost of smaller timesteps.
 
 There is currently no recommended algorithm for state-dependent delay problems.
 An algorithm is currently in the works.
