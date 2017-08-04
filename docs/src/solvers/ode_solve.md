@@ -31,24 +31,40 @@ needed). Note that these high order RK methods are more robust than the high ord
 Adams-Bashforth methods to discontinuities and achieve very high precision, and
 are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
 method can be a good choice for high accuracy when the system of equations is
-very large (`>10,000` ODEs?) or the function calculation is very expensive.
+very large (`>10,000` ODEs?), the function calculation is very expensive,
+or the solution is very smooth.
 
 ### Stiff Problems
 
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
-`Rosenbrock23`. At medium tolerances (`>1e-8`?) it is recommended you use `Rodas4`
-or `Rodas4P` (the former is slightly more efficient but the later is much more reliable).
+`Rosenbrock23`. If high robustness to oscillations and massive stiffness is needed,
+`TRBDF2` is a good algorithm.
+
+At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`
+or `Rodas4P` (the former is more efficient but the later is more reliable).
 As native DifferentialEquations.jl solvers, many Julia numeric types
 (such as BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
 [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
-defined via the `@ode_def` macro, this will be the most efficient. For faster
-solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used, use `radau`.
-High precision numbers are also compatible with `Trapezoid` which is a symplectic
-integrator. Notice that `Rodas4` loses accuracy on discretizations of nonlinear
-parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
-situations. For asymtopically large systems of ODEs (`N>10000`?)
+defined via the `@ode_def` macro, these will be the most efficient.
+
+For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
+use `radau`.
+
+For asymtopically large systems of ODEs (`N>10000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
+`CVODE_BDF` will also do surprisingly well if the solution is smooth.
+
+#### Special Properties of Stiff Integrators
+
+`Trapezoid` is a symplectic integrator. `ImplicitEuler` is an extension
+to the common algorithm with adaptive timestepping and efficient quasi-Newton
+Jacobian reusage which is strong-stability presurving (SSP) for hyperbolic PDEs.
+
+Notice that `Rodas4` loses accuracy on discretizations of nonlinear
+parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
+situations which is 3rd order. `ROS3P` is only third order and achieves 3rd order
+on such problems and can thus be more efficient in this case.
 
 ## Translations from MATLAB/Python/R
 
@@ -62,7 +78,8 @@ library methods are as follows:
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
 - `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `Rodas4()` or `radau()`
   are more efficient
-- `ode23t` --> `Trapezoid()`
+- `ode23t` --> `Trapezoid()` for efficiency and `GenericTrapezoid()` for robustness
+- `ode23tb` --> `TRBDF2`
 - `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
 - `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
   significantly more efficient
@@ -101,7 +118,7 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 - `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant)
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince 8
-    method Runge-Kutta method. (7th order interpolant)
+  method Runge-Kutta method. (7th order interpolant)
 - `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
 - `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
 - `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
@@ -129,12 +146,29 @@ solve(prob,alg)
 
 ### Methods for Stiff Equations
 
-- `ImplicitEuler` - A 1st order implicit solver. Unconditionally stable.
-- `Trapezoid` - A second order unconditionally stable symplectic implicit solver.
-  Good for highly stiff.
+- `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
+  timestepping through a divided differences estimate via memory. Strong-stability
+  presurving (SSP).
+- `Trapezoid` - A second order A-stable symplectic implicit solver. Also known
+  as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
+  differences on the memory. Good for highly stiff equations which are non-oscillatory.
+- `TRBDF2` - A second order A-B-L-S-stable one-step method. Includes
+  stiffness-robust error estimates for accurate adaptive timestepping, smoothed
+  derivatives for highly stiff and oscillatory problems.
+- `GenericImplicitEuler` - A 1st order A-B-L-stable implicit solver with adaptive
+  timestepping through a divided differences estimate via memory. Strong-stability
+  presurving (SSP). Uses an external nonlinear solver. Defaults to trust region
+  dogleg with full Newton, making it more robust to numerical instability at
+  the cost of being less efficient.
+- `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
+  as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
+  differences on the memory. Good for highly stiff equations which are non-oscillatory.
+  Uses an external nonlinear solver. Defaults to trust region
+  dogleg with full Newton, making it more robust to numerical instability at
+  the cost of being less efficient.
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for mildy
   stiff equations with oscillations at low tolerances.
-- `Rosenbrock32` - An Order 3/2 A-Stable  Rosenbrock-W method w hich is good for mildy
+- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
 - `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method.
@@ -161,6 +195,9 @@ solve(prob,alg)
 The following methods allow for specification of `linsolve`: the linear
 solver which is used:
 
+- `ImplicitEuler`
+- `Trapezoid`
+- `TRBDF2`
 - `Rosenbrock23`
 - `Rosenbrock32`
 - `ROS3P`
@@ -182,8 +219,8 @@ For more information on specifying the linear solver, see
 The following methods allow for specification of `nlsolve`: the nonlinear
 solver which is used:
 
-- `ImplicitEuler`
-- `Trapezoid`
+- `GenericImplicitEuler`
+- `GenericTrapezoid`
 
 Note that performance overload information (Jacobians etc.) are not used in this
 mode. For more information on specifying the nonlinear solver, see
@@ -191,6 +228,9 @@ mode. For more information on specifying the nonlinear solver, see
 
 Additionally, the following methods have extra differentiation controls:
 
+- `ImplicitEuler`
+- `Trapezoid`
+- `TRBDF2`
 - `Rosenbrock23`
 - `Rosenbrock32`
 - `ROS3P`

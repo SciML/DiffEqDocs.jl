@@ -45,10 +45,11 @@ These algorithms require a Partitioned ODE of the form:
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(t,u,v,dx)` and `f2(t,u,v,dv)` (in the inplace form), where `f1`
-is independent of `t` and `u`, and `f2` is independent of `v`. This includes
-discretizations arising from `SecondOrderODEProblem`s where the velocity is not
-used in the acceleration function, and Hamiltonians where the potential is (or
-can be) time-dependent but the kinetic energy is only dependent on `v`.
+is independent of `t` and `u`, and unless specified by the solver,
+`f2` is independent of `v`. This includes discretizations arising from
+`SecondOrderODEProblem`s where the velocity is not used in the acceleration function,
+and Hamiltonians where the potential is (or can be) time-dependent but the kinetic
+energy is only dependent on `v`.
 
 Note that some methods assume that the integral of `f1` is a quadratic form. That
 means that `f1=v'*M*v`, i.e. ``\int f1 = 1/2 m v^2``, giving `du = v`. This is
@@ -60,6 +61,13 @@ kinetic energy".
 The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
+
+- `Nystrom4`: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration
+  to depend on velocity.
+- `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta Nystrom method.
+- `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta Nystrom method.
+
+#### Symplectic Integrators
 
 - `SymplecticEuler`: First order explicit symplectic integrator
 - `VelocityVerlet`: 2nd order explicit symplectic integrator.
@@ -90,7 +98,8 @@ but have smaller error. Thus the "optimized efficiency" algorithms are recommend
 if your force calculation is not too sufficiency large, while the other methods are
 recommend when force calculations are really large (for example, like in MD simulations
 `VelocityVerlet` is very popular since it only requires one force calculation
-per timestep).
+per timestep). When energy conservation is required, use a symplectic method.
+Otherwise the Runge-Kutta Nystrom methods will be more efficient.
 
 ## Implicit-Explicit (IMEX) ODE
 
