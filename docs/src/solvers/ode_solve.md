@@ -37,8 +37,8 @@ or the solution is very smooth.
 ### Stiff Problems
 
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
-`Rosenbrock23`. If high robustness to oscillations and massive stiffness is needed,
-`TRBDF2` is a good algorithm.
+`Rosenbrock23` or `TRBDF2`. These are robust to oscillations and massive
+stiffness is needed, though are only efficient when low accuracy is needed.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`
 or `Rodas4P` (the former is more efficient but the later is more reliable).
