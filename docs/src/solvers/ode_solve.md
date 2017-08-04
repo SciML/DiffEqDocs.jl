@@ -39,6 +39,9 @@ or the solution is very smooth.
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 `Rosenbrock23` or `TRBDF2`. These are robust to oscillations and massive
 stiffness is needed, though are only efficient when low accuracy is needed.
+`Rosenbrock23` is more efficient for small systems where re-evaluating and
+re-factorizing the Jacobian is not too costly, and for sufficiently large
+systems `TRBDF2` will be more efficient.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`
 or `Rodas4P` (the former is more efficient but the later is more reliable).
@@ -146,6 +149,8 @@ solve(prob,alg)
 
 ### Methods for Stiff Equations
 
+#### SDIRK Methods
+
 - `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
   presurving (SSP).
@@ -166,7 +171,10 @@ solve(prob,alg)
   Uses an external nonlinear solver. Defaults to trust region
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
-- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for mildy
+
+#### Rosenbrock Methods
+
+- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
   stiff equations with oscillations at low tolerances.
 - `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
   stiff equations without oscillations at low tolerances. Note that this method
