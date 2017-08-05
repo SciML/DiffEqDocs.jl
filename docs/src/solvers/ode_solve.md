@@ -231,7 +231,8 @@ solver which is used:
 - `GenericTrapezoid`
 
 Note that performance overload information (Jacobians etc.) are not used in this
-mode. For more information on specifying the nonlinear solver, see
+mode. This can control autodifferentiation of the Jacobian as well.
+For more information on specifying the nonlinear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
 
 Additionally, the following methods have extra differentiation controls:
@@ -253,8 +254,6 @@ Additionally, the following methods have extra differentiation controls:
 - `Rodas42`
 - `Rodas4P`
 - `Rodas5`
-- `ImplicitEuler`
-- `Trapezoid`
 
 In each of these, `autodiff` can be set to turn on/off autodifferentiation, and
 `chunk_size` can be used to set the chunksize of the Dual numbers (see the
