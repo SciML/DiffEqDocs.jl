@@ -74,15 +74,24 @@ schemes.
 ### Solving the Problem
 
 ```julia
-sim = solve(prob,alg,kwargs...)
+sim = solve(prob,alg,collect_result = Val{true},kwargs...)
 ```
+
+This solve command has an extra keyword argument `collect_result` for whether to
+collect the result to a local array. If `Val{true}`, it will return a `Vector`
+of the results of `output_func`. If `Val{false}`, it will run each batch
+independently to form a `DArray`. Notice that `parallel_type` would be a layer
+of parallelism below this.
 
 The keyword arguments take in the arguments for the common solver interface and will
 pass them to the differential equation solver. The special keyword arguments to note are:
 
 * `num_monte`: The number of simulations to run. Default is 10,000.
-* `parallel_type` : The type of parallelism to employ. Default is `:pmap`.
+* `parallel_type` : The type of parallelism to employ. Default is `:pmap` if
+  `collect_result`, otherwise it's `none`.
 * `batch_size` : The size of the batches on which the reductions are applies. Defaults to `num_monte`.
+* `pmap_batch_size`: The size of the `pmap` batches. Default is
+   `batch_size÷100 > 0 ? batch_size÷100 : 1`
 
 The types of parallelism included are:
 
