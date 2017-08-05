@@ -8,15 +8,19 @@ To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The construct
 
 ```julia
 MonteCarloProblem(prob::DEProblem;
-                  output_func = (sol,i) -> sol,
-                  prob_func= (prob,i)->prob),
+                  output_func = (sol,i) -> (sol,false),
+                  prob_func= (prob,i,repeat)->prob),
                   reduction = (u,data,I)->(append!(u,data),false),
                   u_init = [])
 ```
 
-* `prob_func`: The function by which the problem is to be modified.
+* `prob_func`: The function by which the problem is to be modified. `prob`
+  is the problem, `i` is the unique id `1:num_monte` for the problem, and
+  `repeat` is for if it's a repeat (`rerun` was true).
 * `output_func`: The function determines what is saved from the solution to the
-  output array. Defaults to saving the solution itself.
+  output array. Defaults to saving the solution itself. The output is
+  `(out,rerun)` where `out` is the output and `rerun` is a boolean which
+  designates whether to rerun
 * `reduction`: This function determines how to reduce the data in each batch.
   Defaults to appending the data from the batches. The second part of the output
   determines whether the simulation has converged. If `true`, the simulation
@@ -25,7 +29,7 @@ MonteCarloProblem(prob::DEProblem;
 One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
-function prob_func(prob,i)
+function prob_func(prob,i,repeat)
   prob.u0 = randn()*prob.u0
   prob
 end
@@ -38,7 +42,7 @@ counter over the simulations. Thus if you have an array of initial conditions `u
 you can have the `i`th simulation use the `i`th initial condition via:
 
 ```julia
-function prob_func(prob,i)
+function prob_func(prob,i,repeat)
   prob.u0 = u0_arr[i]
   prob
 end
@@ -51,7 +55,7 @@ index for the run. For example, if we wish to only save the 2nd coordinate
 at the end of each solution, we can do:
 
 ```julia
-output_func(sol,i) = sol[end,2]
+output_func(sol,i) = (sol[end,2],false)
 ```
 
 Thus the Monte Carlo Simulation would return as its data an array which is the
@@ -272,7 +276,7 @@ Here we will take the base problem, multiply the initial condition by a `rand()`
 and use that for calculating the trajectory:
 
 ```julia
-prob_func = function (prob,i)
+prob_func = function (prob,i,repeat)
   prob.u0 = rand()*prob.u0
   prob
 end
@@ -313,7 +317,7 @@ we could simply index the `linspace` type:
 
 ```julia
 initial_conditions = linspace(0,1,100)
-prob_func = function (prob,i)
+prob_func = function (prob,i,repeat)
   prob.u0 = initial_conditions[i]
   prob
 end
@@ -362,7 +366,7 @@ parameters are accessed at `f.params`. Thus we will modify those values in the
 `g`:
 
 ```julia
-prob_func = function (prob,i)
+prob_func = function (prob,i,repeat)
   set_param_values!(prob.g,0.3rand(2))
   prob
 end
@@ -415,7 +419,7 @@ Our `prob_func` wull simply randomize the initial condition:
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
 
-prob_func = function (prob,i)
+prob_func = function (prob,i,repeat)
   prob.u0 = rand()*prob.u0
   prob
 end
