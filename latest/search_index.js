@@ -2049,9 +2049,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/dynamical_solve.html#OrdinaryDiffEq.jl-1",
+    "location": "solvers/dynamical_solve.html#Standard-ODE-Integrators-1",
     "page": "Dynamical ODE Solvers",
-    "title": "OrdinaryDiffEq.jl",
+    "title": "Standard ODE Integrators",
+    "category": "section",
+    "text": "The standard ODE integrators will work on Dynamical ODE problems via a transformation to a first-order ODE. See the ODE solvers page for more details."
+},
+
+{
+    "location": "solvers/dynamical_solve.html#Specialized-OrdinaryDiffEq.jl-Integrators-1",
+    "page": "Dynamical ODE Solvers",
+    "title": "Specialized OrdinaryDiffEq.jl Integrators",
     "category": "section",
     "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve)."
 },
