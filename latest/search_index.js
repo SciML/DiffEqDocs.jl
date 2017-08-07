@@ -2026,23 +2026,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dynamical_solve.html#",
-    "page": "Dynamical ODE Solvers",
-    "title": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
+    "title": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/dynamical_solve.html#Dynamical-ODE-Solvers-1",
-    "page": "Dynamical ODE Solvers",
-    "title": "Dynamical ODE Solvers",
+    "location": "solvers/dynamical_solve.html#Dynamical,-Hamiltonian,-and-2nd-Order-ODE-Solvers-1",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
+    "title": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "category": "section",
     "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,u0,du0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdudt = f_1(v) \nfracdvdt = f_2(tu) The functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
     "location": "solvers/dynamical_solve.html#Recommendations-1",
-    "page": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Recommendations",
     "category": "section",
     "text": "When energy conservation is required, use a symplectic method. Otherwise the Runge-Kutta Nystrom methods will be more efficient. Higher order algorithms are the most efficient when higher accuracy is needed, and when less accuracy is needed lower order methods do better. Optimized efficiency methods take more steps and thus have more force calculations for the same order, but have smaller error. Thus the \"optimized efficiency\" algorithms are recommended if your force calculation is not too sufficiency large, while the other methods are recommend when force calculations are really large (for example, like in MD simulations VelocityVerlet is very popular since it only requires one force calculation per timestep)."
@@ -2050,7 +2050,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dynamical_solve.html#Standard-ODE-Integrators-1",
-    "page": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Standard ODE Integrators",
     "category": "section",
     "text": "The standard ODE integrators will work on Dynamical ODE problems via a transformation to a first-order ODE. See the ODE solvers page for more details."
@@ -2058,7 +2058,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dynamical_solve.html#Specialized-OrdinaryDiffEq.jl-Integrators-1",
-    "page": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Specialized OrdinaryDiffEq.jl Integrators",
     "category": "section",
     "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve)."
@@ -2066,7 +2066,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dynamical_solve.html#Runge-Kutta-Nystrom-Integrators-1",
-    "page": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Runge-Kutta Nystrom Integrators",
     "category": "section",
     "text": "Nystrom4: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration to depend on velocity.\nNystrom4VelocityIndependent: 4th order explicit Runge-Kutta Nystrom method.\nNystrom5VelocityIndependent: 5th order explicit Runge-Kutta Nystrom method."
@@ -2074,7 +2074,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/dynamical_solve.html#Symplectic-Integrators-1",
-    "page": "Dynamical ODE Solvers",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Symplectic Integrators",
     "category": "section",
     "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator.\nVerletLeapfrog: 2nd order explicit symplectic integrator.\nPseudoVerletLeapfrog: 2nd order explicit symplectic integrator.\nMcAte2: Optimized efficiency 2nd order explicit symplectic integrator.\nRuth3: 3rd order explicit symplectic integrator.\nMcAte3: Optimized efficiency 3rd order explicit symplectic integrator.\nCandyRoz4: 4th order explicit symplectic integrator.\nMcAte4: 4th order explicit symplectic integrator. Requires quadratic kinetic energy.\nCalvoSanz4: Optimized efficiency 4th order explicit symplectic integrator.\nMcAte42: 4th order explicit symplectic integrator.\nMcAte5: Optimized efficiency 5th order explicit symplectic integrator. Requires quadratic kinetic energy\nYoshida6: 6th order explicit symplectic integrator.\nKahanLi6: Optimized efficiency 6th order explicit symplectic integrator.\nMcAte8: 8th order explicit symplectic integrator.\nKahanLi8: Optimized efficiency 8th order explicit symplectic integrator.\nSofSpa10: 10th order explicit symplectic integrator."
