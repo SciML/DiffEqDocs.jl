@@ -22,7 +22,7 @@ used in the acceleration function, and Hamiltonians where the potential is
 (or can be) time-dependent but the kinetic energy is only dependent on `v`.
 
 Note that some methods assume that the integral of `f1` is a quadratic form. That
-means that `f1=v'*M*v`, i.e. ``\int f1 = 1/2 m v^2``, giving `du = v`. This is
+means that `f1=v'*M*v`, i.e. ``\int f_1 = \frac{1}{2} m v^2``, giving `du = v`. This is
 equivalent to saying that the kinetic energy is related to ``v^2``. The methods
 which require this assumption will lose accuracy if this assumption is violated.
 Methods listed below make note of this requirement with "Requires quadratic
