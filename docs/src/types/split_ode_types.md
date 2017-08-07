@@ -16,7 +16,7 @@ Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 Many splits are at least partially linear. For how to define a function as linear,
-see the documentation for the DiffEqOperators.
+see the documentation for the [DiffEqOperators](../../features/diffeq_operator.html).
 
 ### Constructors
 
