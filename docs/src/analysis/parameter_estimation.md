@@ -1,15 +1,52 @@
 # Parameter Estimation
 
-Parameter estimation for ODE models is provided by the DiffEq suite. The current
-functionality includes `build_loss_objective` and `lm_fit`. Note these require
-that the problem is defined using a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
+Parameter estimation for ODE models is provided by the DiffEq suite. The
+current functionality includes `build_loss_objective` and `lm_fit`. Note these
+require that the problem is defined using a
+[ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
-## build_loss_objective
+## Recommended Methods
+
+The recommended method is to use `build_loss_objective` with the optimizer
+of your choice. This method can thus be paired with global optimizers
+from packages like NLopt.jl which can be much less prone to finding
+local minima that local optimization methods. Also, it allows the user
+to define the cost function in the way they choose as a function
+`loss(sol)`, and thus can fit using any cost function on the solution,
+making it applicable to fitting non-temporal data and other types of
+problems. Also, `build_loss_objective` works for all of the `DEProblem`
+types, allowing it to optimize parameters on ODEs, SDEs, DDEs, DAEs,
+etc.
+
+However, this method requires repeated solution of the differential equation.
+If the data is temporal data, the most efficient method is the
+`two_stage_method` which does not require repeated solutions but is not as
+accurate. Usage of the `two_stage_method` should have a post-processing step
+which refines using a method like `build_loss_objective`.
+
+### two_stage_method
+
+The two-stage method is a collocation method for estimating parameters without
+requiring repeated solving of the differential equation. It does so by
+determining a smoothed estimated trajectory of the data and optimizing
+the derivative function and the data's timepoints to match the derivatives
+of the smoothed trajectory. This method has less accuracy than other methods
+but is much faster, and is a good method to try first to get in the general
+"good parameter" region, to then finish using one of the other methods.
+
+```julia
+function two_stage_method(prob::DEProblem,tpoints,data;kernel= :Epanechnikov,
+                          loss_func = L2DistLoss,mpg_autodiff = false,
+                          verbose = false,verbose_steps = 100)
+```
+
+### build_loss_objective
 
 `build_loss_objective` builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.
 
 ```julia
-function build_loss_objective(prob::DEProblem,alg,loss_func;
+function build_loss_objective(prob::DEProblem,alg,loss_func
+                              regularization=nothing;
                               mpg_autodiff = false,
                               verbose_opt = false,
                               verbose_steps = 100,
@@ -17,13 +54,16 @@ function build_loss_objective(prob::DEProblem,alg,loss_func;
                               kwargs...)
 ```
 
-The first argument is the DEProblem to solve, and next is the `alg` to use.
-One can also choose `verbose_opt` and `verbose_steps`, which, in the optimization routines, will print the steps and the values at the steps every
-`verbose_steps` steps. `mpg_autodiff` uses autodifferentiation to define the
-derivative for the MathProgBase solver. The extra keyword arguments are passed
-to the differential equation solver.
+The first argument is the `DEProblem` to solve, and next is the `alg` to use.
+The `alg` must match the problem type, which can be any `DEProblem`
+(ODEs, SDEs, DAEs, DDEs, etc.). `regularization` defaults to nothing
+which has no regulariztion function. One can also choose `verbose_opt` and
+`verbose_steps`, which, in the optimization routines, will print the steps
+and the values at the steps every `verbose_steps` steps. `mpg_autodiff` uses
+autodifferentiation to define the derivative for the MathProgBase solver.
+The extra keyword arguments are passed to the differential equation solver.
 
-### The Loss Function
+#### The Loss Function
 
 ```julia
 loss_func(sol)
@@ -64,7 +104,26 @@ function my_loss_function(sol)
 end
 ```
 
-### The Problem Generator
+#### The Regularization Function
+
+The regularization can be any function of `p`, the parameter vector:
+
+```julia
+regularization(p)
+```
+
+The `Regularization` helper function builds a regularization using a
+penalty function `penalty` from
+[PenaltyFunctions.jl](https://github.com/JuliaML/PenaltyFunctions.jl):
+
+```julia
+Regularization(λ,penalty=L2Penalty())
+```
+
+The regularization defaults to L2 if no penalty function is specified.
+`λ` is the weight parameter for the addition of the regularization term.
+
+#### The Problem Generator Function
 
 The argument `prob_generator` allows one to specify a the function for generating
 new problems from a given parameter set. By default, this just builds a new
@@ -102,7 +161,7 @@ end
 which simply matches the type for time to `p` (once again, for autodifferentiation)
 and uses `p` as the initial condition in the initial value problem.
 
-## build_lsoptim_objective
+### build_lsoptim_objective
 
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
@@ -112,7 +171,7 @@ build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameter
 
 The arguments are the same as `build_loss_objective`.
 
-## lm_fit
+### lm_fit
 
 `lm_fit` is a function for fitting the parameters of an ODE using the Levenberg-Marquardt
 algorithm. This algorithm is really bad and thus not recommended since, for example,
