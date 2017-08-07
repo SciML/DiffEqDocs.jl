@@ -1,4 +1,4 @@
-# Dynamical ODE Solvers
+# Dynamical, Hamiltonian, and 2nd Order ODE Solvers
 
 These algorithms require an ODE defined in the following ways:
 
