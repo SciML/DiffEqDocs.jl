@@ -142,6 +142,8 @@ for the solvers, and the special features of the different solution types.
 Pages = [
   "types/discrete_types.md",
   "types/ode_types.md",
+  "types/dynamical_types.md",
+  "types/split_ode_types.md",
   "types/steady_state_types.md",
   "types/sde_types.md",
   "types/rode_types.md",
@@ -161,7 +163,8 @@ These pages describe the solvers and available algorithms in detail.
 Pages = [
   "solvers/discrete_solve.md",
   "solvers/ode_solve.md",
-  "solvers/refined_ode_solve.md",
+  "solvers/dynamical_solve.md",
+  "solvers/split_ode_solve.md",
   "solvers/steady_state_solve.md",
   "solvers/sde_solve.md",
   "solvers/rode_solve.md",
@@ -182,6 +185,7 @@ in-depth features.
 Pages = [
     "features/performance_overloads.md",
     "features/diffeq_arrays.md",
+    "features/diffeq_operator.md",
     "features/noise_process.md",
     "features/linear_nonlinear.md",
     "features/callback_functions.md",

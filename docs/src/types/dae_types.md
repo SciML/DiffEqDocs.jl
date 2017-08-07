@@ -34,44 +34,6 @@ determined automatically, but not inferred.
   variable). Defaults to nothing. Some solvers may require this be set if an
   initial condition needs to be determined.
 
-# Refined DAE Problems
-
-The refined DAE types are types that specify the DAE to a much greater degree of
-detail, and thus give the solver more information and make it easier to optimize.
-There are three different kinds of refined problems: split (IMEX) problems,
-partitioned problems, and constrained problems.
-
-## Mathematical Specification of a Split DAE Problem
-
-To define a split `DAEProblem`, you simply need to give a tuple of functions
-``(f_1,f_2,\ldots,f_n)`` and the initial condition ``u₀`` which define an ODE:
-
-```math
-0 = f_1(t,u,u') + f_2(t,u,u') + \ldots + f_n(t,u,u')
-```
-
-`f` should be specified as `f(t,u,du)` (or in-place as `f(t,u,du,res)`), and `u₀`
-should be an AbstractArray (or number) whose geometry matches the desired geometry
-of `u`.
-
-## Mathematical Specification of a Partitioned ODE Problem
-
-To define a `PartitionedDAEProblem`, you need to give a tuple of functions
-``(f_1,f_2,\ldots,f_n)`` and the tuple of initial conditions ``(u₀,v₀,...)``
-(tuple of the same size) which define an ODE:
-
-```math
-\frac{du}{dt} = f_1(t,u,v,...,du,dv,...) \\
-\frac{dv}{dt} = f_2(t,u,v,...,du,dv,...) \\
-```
-
-`f` should be specified as `f(t,u,v,...,du,dv,...)` (or in-place as
-`f(t,u,v,...,du,dv,...,res)`), and the initial conditions should be
-AbstractArrays (or numbers) whose  geometry matches
-the desired geometry of `u`. Note that we are not limited to numbers or vectors
-for `u₀`; one is allowed to provide `u₀` as arbitrary matrices / higher dimension
-tensors as well.
-
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/dae_premade_problems.jl).
