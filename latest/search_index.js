@@ -3537,11 +3537,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/parameter_estimation.html#Recommended-Methods-1",
+    "page": "Parameter Estimation",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "The recommended method is to use build_loss_objective with the optimizer of your choice. This method can thus be paired with global optimizers from packages like NLopt.jl which can be much less prone to finding local minima that local optimization methods. Also, it allows the user to define the cost function in the way they choose as a function loss(sol), and thus can fit using any cost function on the solution, making it applicable to fitting non-temporal data and other types of problems. Also, build_loss_objective works for all of the DEProblem types, allowing it to optimize parameters on ODEs, SDEs, DDEs, DAEs, etc.However, this method requires repeated solution of the differential equation. If the data is temporal data, the most efficient method is the two_stage_method which does not require repeated solutions but is not as accurate. Usage of the two_stage_method should have a post-processing step which refines using a method like build_loss_objective."
+},
+
+{
+    "location": "analysis/parameter_estimation.html#two_stage_method-1",
+    "page": "Parameter Estimation",
+    "title": "two_stage_method",
+    "category": "section",
+    "text": "The two-stage method is a collocation method for estimating parameters without requiring repeated solving of the differential equation. It does so by determining a smoothed estimated trajectory of the data and optimizing the derivative function and the data's timepoints to match the derivatives of the smoothed trajectory. This method has less accuracy than other methods but is much faster, and is a good method to try first to get in the general \"good parameter\" region, to then finish using one of the other methods.function two_stage_method(prob::DEProblem,tpoints,data;kernel= :Epanechnikov,\n                          loss_func = L2DistLoss,mpg_autodiff = false,\n                          verbose = false,verbose_steps = 100)"
+},
+
+{
     "location": "analysis/parameter_estimation.html#build_loss_objective-1",
     "page": "Parameter Estimation",
     "title": "build_loss_objective",
     "category": "section",
-    "text": "build_loss_objective builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.function build_loss_objective(prob::DEProblem,alg,loss_func;\n                              mpg_autodiff = false,\n                              verbose_opt = false,\n                              verbose_steps = 100,\n                              prob_generator = problem_new_parameters,\n                              kwargs...)The first argument is the DEProblem to solve, and next is the alg to use. One can also choose verbose_opt and verbose_steps, which, in the optimization routines, will print the steps and the values at the steps every verbose_steps steps. mpg_autodiff uses autodifferentiation to define the derivative for the MathProgBase solver. The extra keyword arguments are passed to the differential equation solver."
+    "text": "build_loss_objective builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.function build_loss_objective(prob::DEProblem,alg,loss_func\n                              regularization=nothing;\n                              mpg_autodiff = false,\n                              verbose_opt = false,\n                              verbose_steps = 100,\n                              prob_generator = problem_new_parameters,\n                              kwargs...)The first argument is the DEProblem to solve, and next is the alg to use. The alg must match the problem type, which can be any DEProblem (ODEs, SDEs, DAEs, DDEs, etc.). regularization defaults to nothing which has no regulariztion function. One can also choose verbose_opt and verbose_steps, which, in the optimization routines, will print the steps and the values at the steps every verbose_steps steps. mpg_autodiff uses autodifferentiation to define the derivative for the MathProgBase solver. The extra keyword arguments are passed to the differential equation solver."
 },
 
 {
@@ -3561,9 +3577,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameter_estimation.html#The-Problem-Generator-1",
+    "location": "analysis/parameter_estimation.html#The-Regularization-Function-1",
     "page": "Parameter Estimation",
-    "title": "The Problem Generator",
+    "title": "The Regularization Function",
+    "category": "section",
+    "text": "The regularization can be any function of p, the parameter vector:regularization(p)The Regularization helper function builds a regularization using a penalty function penalty from PenaltyFunctions.jl:Regularization(λ,penalty=L2Penalty())The regularization defaults to L2 if no penalty function is specified. λ is the weight parameter for the addition of the regularization term."
+},
+
+{
+    "location": "analysis/parameter_estimation.html#The-Problem-Generator-Function-1",
+    "page": "Parameter Estimation",
+    "title": "The Problem Generator Function",
     "category": "section",
     "text": "The argument prob_generator allows one to specify a the function for generating new problems from a given parameter set. By default, this just builds a new version of f that inserts all of the parameters. For example, for ODEs this is given by the dispatch on DiffEqBase.problem_new_parameters that does the following:function problem_new_parameters(prob::ODEProblem,p)\n  f = (t,u,du) -> prob.f(t,u,p,du)\n  uEltype = eltype(p)\n  u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]\n  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))\n  ODEProblem(f,u0,tspan)\nendf = (t,u,du) -> prob.f(t,u,p,du) creates a new version of f that encloses the new parameters. The element types for u0 and tspan are set to match the parameters. This is required to make autodifferentiation work. Then the new problem with these new values is returned.One can use this to change the meaning of the parameters using this function. For example, if one instead wanted to optimize the initial conditions for a function without parameters, you could change this to:my_problem_new_parameters = function (prob::ODEProblem,p)\n  uEltype = eltype(p)\n  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))\n  ODEProblem(prob.f,p,tspan)\nendwhich simply matches the type for time to p (once again, for autodifferentiation) and uses p as the initial condition in the initial value problem."
 },
