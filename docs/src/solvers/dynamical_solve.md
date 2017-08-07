@@ -41,7 +41,13 @@ when force calculations are really large (for example, like in MD simulations
 `VelocityVerlet` is very popular since it only requires one force calculation
 per timestep).
 
-## OrdinaryDiffEq.jl
+## Standard ODE Integrators
+
+The standard ODE integrators will work on Dynamical ODE problems via a
+transformation to a first-order ODE. See the [ODE solvers](../ode_solve.html)
+page for more details.
+
+## Specialized OrdinaryDiffEq.jl Integrators
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a
