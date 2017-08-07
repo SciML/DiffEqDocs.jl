@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Modeling Tools",
     "category": "section",
-    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/financial.md\",\n    \"models/biological.md\"\n]\nDepth = 2"
+    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/physical.md\",\n    \"models/financial.md\",\n    \"models/biological.md\"\n]\nDepth = 2"
 },
 
 {
@@ -3753,6 +3753,38 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "models/physical.html#",
+    "page": "Physical Models",
+    "title": "Physical Models",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "models/physical.html#Physical-Models-1",
+    "page": "Physical Models",
+    "title": "Physical Models",
+    "category": "section",
+    "text": "The physical modeling functionality is provided by DiffEqPhysics.jl and helps the user build and solve the differential equation based physical models."
+},
+
+{
+    "location": "models/physical.html#Hamiltonian-Problems-1",
+    "page": "Physical Models",
+    "title": "Hamiltonian Problems",
+    "category": "section",
+    "text": "ODEs defined by Hamiltonians is described in the Dynamical ODEs section."
+},
+
+{
+    "location": "models/physical.html#N-Body-Problems-1",
+    "page": "Physical Models",
+    "title": "N-Body Problems",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "models/financial.html#",
     "page": "Financial Models",
     "title": "Financial Models",
@@ -3765,7 +3797,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Financial Models",
     "title": "Financial Models",
     "category": "section",
-    "text": "The financial models functionality is provided by DiffEqFinancial.jl and helps the user build and solve the differential equation based financial models biological models."
+    "text": "The financial models functionality is provided by DiffEqFinancial.jl and helps the user build and solve the differential equation based financial models."
 },
 
 {
