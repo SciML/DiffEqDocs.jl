@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Problem Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/dynamical_types.md\",\n  \"types/split_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/refined_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n]\nDepth = 2"
 },
 
 {
@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/diffeq_operator.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/mesh.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -1113,59 +1113,139 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "types/ode_types.html#Refined-ODE-Problems-1",
+    "location": "types/ode_types.html#Example-Problems-1",
     "page": "ODE Problems",
-    "title": "Refined ODE Problems",
+    "title": "Example Problems",
     "category": "section",
-    "text": "The refined ODE types are types that specify the ODE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
+    "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
 },
 
 {
-    "location": "types/ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
-    "page": "ODE Problems",
-    "title": "Mathematical Specification of a Split ODE Problem",
-    "category": "section",
-    "text": "To define a ODEProblem in split form, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
+    "location": "types/dynamical_types.html#",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "category": "page",
+    "text": ""
 },
 
 {
-    "location": "types/ode_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "ODE Problems",
-    "title": "Mathematical Specification of a Partitioned ODE Problem",
+    "location": "types/dynamical_types.html#Dynamical,-Hamiltonian-and-2nd-Order-ODE-Problems-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "category": "section",
-    "text": "To define a Partitioned ODEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuv) \nfracdvdt = f_2(tuv) \nlike e.g. ODEProblem((f_1, f_2,...), (u0, v0, ...), tspan). Each of the f_i should be specified as f_1(t,u,v,...), or in-place as f_1(t,u,v,...,du). The initial conditions should be AbstractArrays (or numbers) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.In some cases, the solvers may specify the functions in a split form, for example:fracdudt = f_1(tuv) + f_2(tuv) \nfracdvdt = f_3(tuv) \nsee the solver's documentation for the form it is expecting."
+    "text": ""
 },
 
 {
-    "location": "types/ode_types.html#Mathematical-Specification-of-an-Second-Order-ODE-Problem-1",
-    "page": "ODE Problems",
-    "title": "Mathematical Specification of an Second Order ODE Problem",
+    "location": "types/dynamical_types.html#Mathematical-Specification-of-a-Dynamical-ODE-Problem-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Mathematical Specification of a Dynamical ODE Problem",
     "category": "section",
-    "text": "To define an ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a partitioned ODEu = v \nv = f(tuv) is generated."
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
-    "location": "types/ode_types.html#Constructors-2",
-    "page": "ODE Problems",
+    "location": "types/dynamical_types.html#Constructor-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Constructor",
+    "category": "section",
+    "text": "DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+},
+
+{
+    "location": "types/dynamical_types.html#Fields-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "f1 and f2: The functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/dynamical_types.html#Mathematical-Specification-of-a-2nd-Order-ODE-Problem-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Mathematical Specification of a 2nd Order ODE Problem",
+    "category": "section",
+    "text": "To define a 2nd Order ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,ddu)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a dynamical ODE:u = v \nv = f(tuv) is generated."
+},
+
+{
+    "location": "types/dynamical_types.html#Constructors-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SecondOrderODEProblem(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions."
+    "text": "SecondOrderODEProblem{isinplace}(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions."
 },
 
 {
-    "location": "types/ode_types.html#Fields-2",
-    "page": "ODE Problems",
+    "location": "types/dynamical_types.html#Fields-2",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
-    "location": "types/ode_types.html#Example-Problems-1",
-    "page": "ODE Problems",
-    "title": "Example Problems",
+    "location": "types/dynamical_types.html#Hamiltonian-Problems-1",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Hamiltonian Problems",
     "category": "section",
-    "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:# Pkg.add(\"DiffEqProblemLibrary\")\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
+    "text": "HamiltonianProblems are provided by DiffEqPhysics.jl and provide an easy way to define equations of motion from the corresponding Hamiltonian. To define a HamiltonianProblem one only needs to specify the Hamiltonian:H(pq)and autodifferentiation (via ForwardDiff.jl) will create the appropriate equations."
+},
+
+{
+    "location": "types/dynamical_types.html#Constructors-2",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Constructors",
+    "category": "section",
+    "text": "HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)"
+},
+
+{
+    "location": "types/dynamical_types.html#Fields-3",
+    "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "H: The Hamiltonian H(p,q) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+},
+
+{
+    "location": "types/split_ode_types.html#",
+    "page": "Split ODE Problems",
+    "title": "Split ODE Problems",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/split_ode_types.html#Split-ODE-Problems-1",
+    "page": "Split ODE Problems",
+    "title": "Split ODE Problems",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/split_ode_types.html#Mathematical-Specification-of-a-Split-ODE-Problem-1",
+    "page": "Split ODE Problems",
+    "title": "Mathematical Specification of a Split ODE Problem",
+    "category": "section",
+    "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(tu) + f_2(tu) + ldots + f_n(tu)f should be specified as f(t,u) (or in-place as f(t,u,du)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Many splits are at least partially linear. For how to define a function as linear, see the documentation for the DiffEqOperators."
+},
+
+{
+    "location": "types/split_ode_types.html#Constructors-1",
+    "page": "Split ODE Problems",
+    "title": "Constructors",
+    "category": "section",
+    "text": "SplitODEProblem(f1,...,fn,u0,tspan;kwargs...)"
+},
+
+{
+    "location": "types/split_ode_types.html#Fields-1",
+    "page": "Split ODE Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1470,30 +1550,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Fields",
     "category": "section",
     "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
-},
-
-{
-    "location": "types/dae_types.html#Refined-DAE-Problems-1",
-    "page": "DAE Problems",
-    "title": "Refined DAE Problems",
-    "category": "section",
-    "text": "The refined DAE types are types that specify the DAE to a much greater degree of detail, and thus give the solver more information and make it easier to optimize. There are three different kinds of refined problems: split (IMEX) problems, partitioned problems, and constrained problems."
-},
-
-{
-    "location": "types/dae_types.html#Mathematical-Specification-of-a-Split-DAE-Problem-1",
-    "page": "DAE Problems",
-    "title": "Mathematical Specification of a Split DAE Problem",
-    "category": "section",
-    "text": "To define a split DAEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:0 = f_1(tuu) + f_2(tuu) + ldots + f_n(tuu)f should be specified as f(t,u,du) (or in-place as f(t,u,du,res)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u."
-},
-
-{
-    "location": "types/dae_types.html#Mathematical-Specification-of-a-Partitioned-ODE-Problem-1",
-    "page": "DAE Problems",
-    "title": "Mathematical Specification of a Partitioned ODE Problem",
-    "category": "section",
-    "text": "To define a PartitionedDAEProblem, you need to give a tuple of functions (f_1f_2ldotsf_n) and the tuple of initial conditions (uv) (tuple of the same size) which define an ODE:fracdudt = f_1(tuvdudv) \nfracdvdt = f_2(tuvdudv) f should be specified as f(t,u,v,...,du,dv,...) (or in-place as f(t,u,v,...,du,dv,...,res)), and the initial conditions should be AbstractArrays (or numbers) whose  geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well."
 },
 
 {
@@ -1969,112 +2025,104 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#",
-    "page": "Refined ODE Solvers",
-    "title": "Refined ODE Solvers",
+    "location": "solvers/dynamical_solve.html#",
+    "page": "Dynamical ODE Solvers",
+    "title": "Dynamical ODE Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Refined-ODE-Solvers-1",
-    "page": "Refined ODE Solvers",
-    "title": "Refined ODE Solvers",
+    "location": "solvers/dynamical_solve.html#Dynamical-ODE-Solvers-1",
+    "page": "Dynamical ODE Solvers",
+    "title": "Dynamical ODE Solvers",
     "category": "section",
-    "text": "solve(prob::AbstractODEProblem,alg;kwargs)Solves the Refined ODE problems defined by prob using the algorithm alg. If no algorithm is given, a default algorithm will be chosen."
+    "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,u0,du0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdudt = f_1(v) \nfracdvdt = f_2(tu) The functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f1 = 12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Special-Forms-1",
-    "page": "Refined ODE Solvers",
-    "title": "Special Forms",
+    "location": "solvers/dynamical_solve.html#Recommendations-1",
+    "page": "Dynamical ODE Solvers",
+    "title": "Recommendations",
     "category": "section",
-    "text": "Many of the integrators in this category require special forms. For example, sometimes an integrator may require that a certain argument is missing. Instead of changing the function signature, keep the function signature but make sure the function ignores the appropriate argument.For example, one type of special form is the dynamical ODE:fracdudt = f_1(tv) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,x,v,dx) and f2(t,x,v,dx) (in the inplace form). However, this specification states that f1 would be independent of x, and f2 should be independent of v. Following the requirements for the integrator is required to achieve the suggested accuracy."
+    "text": "When energy conservation is required, use a symplectic method. Otherwise the Runge-Kutta Nystrom methods will be more efficient. Higher order algorithms are the most efficient when higher accuracy is needed, and when less accuracy is needed lower order methods do better. Optimized efficiency methods take more steps and thus have more force calculations for the same order, but have smaller error. Thus the \"optimized efficiency\" algorithms are recommended if your force calculation is not too sufficiency large, while the other methods are recommend when force calculations are really large (for example, like in MD simulations VelocityVerlet is very popular since it only requires one force calculation per timestep)."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Note-About-OrdinaryDiffEq.jl-1",
-    "page": "Refined ODE Solvers",
-    "title": "Note About OrdinaryDiffEq.jl",
+    "location": "solvers/dynamical_solve.html#OrdinaryDiffEq.jl-1",
+    "page": "Dynamical ODE Solvers",
+    "title": "OrdinaryDiffEq.jl",
     "category": "section",
     "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve)."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Functional-Forms-1",
-    "page": "Refined ODE Solvers",
-    "title": "Functional Forms",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "solvers/refined_ode_solve.html#Dynamical-ODE-1",
-    "page": "Refined ODE Solvers",
-    "title": "Dynamical ODE",
-    "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(tu) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(t,u,v,dx) and f2(t,u,v,dv) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f1 = 12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\".The appropriate algorithms for this form are:"
-},
-
-{
-    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-1",
-    "page": "Refined ODE Solvers",
-    "title": "OrdinaryDiffEq.jl",
+    "location": "solvers/dynamical_solve.html#Runge-Kutta-Nystrom-Integrators-1",
+    "page": "Dynamical ODE Solvers",
+    "title": "Runge-Kutta Nystrom Integrators",
     "category": "section",
     "text": "Nystrom4: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration to depend on velocity.\nNystrom4VelocityIndependent: 4th order explicit Runge-Kutta Nystrom method.\nNystrom5VelocityIndependent: 5th order explicit Runge-Kutta Nystrom method."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Symplectic-Integrators-1",
-    "page": "Refined ODE Solvers",
+    "location": "solvers/dynamical_solve.html#Symplectic-Integrators-1",
+    "page": "Dynamical ODE Solvers",
     "title": "Symplectic Integrators",
     "category": "section",
     "text": "SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator.\nVerletLeapfrog: 2nd order explicit symplectic integrator.\nPseudoVerletLeapfrog: 2nd order explicit symplectic integrator.\nMcAte2: Optimized efficiency 2nd order explicit symplectic integrator.\nRuth3: 3rd order explicit symplectic integrator.\nMcAte3: Optimized efficiency 3rd order explicit symplectic integrator.\nCandyRoz4: 4th order explicit symplectic integrator.\nMcAte4: 4th order explicit symplectic integrator. Requires quadratic kinetic energy.\nCalvoSanz4: Optimized efficiency 4th order explicit symplectic integrator.\nMcAte42: 4th order explicit symplectic integrator.\nMcAte5: Optimized efficiency 5th order explicit symplectic integrator. Requires quadratic kinetic energy\nYoshida6: 6th order explicit symplectic integrator.\nKahanLi6: Optimized efficiency 6th order explicit symplectic integrator.\nMcAte8: 8th order explicit symplectic integrator.\nKahanLi8: Optimized efficiency 8th order explicit symplectic integrator.\nSofSpa10: 10th order explicit symplectic integrator."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Recommendations-1",
-    "page": "Refined ODE Solvers",
-    "title": "Recommendations",
-    "category": "section",
-    "text": "Higher order algorithms are the most efficient when higher accuracy is needed, and when less accuracy is needed lower order methods do better. Optimized efficiency methods take more steps and thus have more force calculations for the same order, but have smaller error. Thus the \"optimized efficiency\" algorithms are recommended if your force calculation is not too sufficiency large, while the other methods are recommend when force calculations are really large (for example, like in MD simulations VelocityVerlet is very popular since it only requires one force calculation per timestep). When energy conservation is required, use a symplectic method. Otherwise the Runge-Kutta Nystrom methods will be more efficient."
+    "location": "solvers/split_ode_solve.html#",
+    "page": "Split ODE Solvers",
+    "title": "Split ODE Solvers",
+    "category": "page",
+    "text": ""
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Implicit-Explicit-(IMEX)-ODE-1",
-    "page": "Refined ODE Solvers",
+    "location": "solvers/split_ode_solve.html#Split-ODE-Solvers-1",
+    "page": "Split ODE Solvers",
+    "title": "Split ODE Solvers",
+    "category": "section",
+    "text": "The solvers which are available for a SplitODEProblem depend on the input linearity and number of components. Each solver has functional form (or many) that it allows."
+},
+
+{
+    "location": "solvers/split_ode_solve.html#Implicit-Explicit-(IMEX)-ODE-1",
+    "page": "Split ODE Solvers",
     "title": "Implicit-Explicit (IMEX) ODE",
     "category": "section",
     "text": "The Implicit-Explicit (IMEX) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-2",
-    "page": "Refined ODE Solvers",
+    "location": "solvers/split_ode_solve.html#OrdinaryDiffEq.jl-1",
+    "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
     "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Sundials.jl-1",
-    "page": "Refined ODE Solvers",
+    "location": "solvers/split_ode_solve.html#Sundials.jl-1",
+    "page": "Split ODE Solvers",
     "title": "Sundials.jl",
     "category": "section",
     "text": "ARKODE: An additive Runge-Kutta method. Not yet implemented."
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#Linear-Nonlinear-(LNL)-ODE-1",
-    "page": "Refined ODE Solvers",
-    "title": "Linear-Nonlinear (LNL) ODE",
+    "location": "solvers/split_ode_solve.html#Semilinear-ODE-1",
+    "page": "Split ODE Solvers",
+    "title": "Semilinear ODE",
     "category": "section",
-    "text": "The Linear-Nonlinear (LNL) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is a DiffEqOperator and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Semilinear ODE is a split ODEProblem with two functions:fracdudt =  Au + f(tu)where the first function is a AbstractDiffEqOperator and the second part is a (nonlinear) function.The appropriate algorithms for this form are:"
 },
 
 {
-    "location": "solvers/refined_ode_solve.html#OrdinaryDiffEq.jl-3",
-    "page": "Refined ODE Solvers",
+    "location": "solvers/split_ode_solve.html#OrdinaryDiffEq.jl-2",
+    "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
     "text": "IIF1 - First order Implicit Integrating Factor method. Not yet implemented.\nIIF2 - Second order Implicit Integrating Factor method. Not yet implemented.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nExpEuler - First order exponential Euler scheme. Not yet implemented.\nNorsettEuler - First order exponential-RK scheme. Not yet implemented."
@@ -2486,6 +2534,78 @@ var documenterSearchIndex = {"docs": [
     "title": "Data Arrays vs ParameterizedFunctions",
     "category": "section",
     "text": "The reason for using a DEDataArray is because the solution will then save the control parameters. For example, we can see what the control parameter was at every timepoint by checking:[sol[i].f1 for i in 1:length(sol)]A similar solution can be achieved using a ParameterizedFunction. We could have instead created our function as:function f(t,u,param,du)\n    du[1] = -0.5*u[1] + param\n    du[2] = -0.5*u[2]\nend\npf = ParameterizedFunction(f,0.0)\nu0 = SimType([10.0;10.0], 0.0)\nprob = ODEProblem(f,u0,(0.0,10.0))\nconst tstop = [5.;8.]\nsol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)where we now change the callbacks to changing the parameter in the function:function affect!(integrator)\n  integrator.f.params = 1.5\nend\n\nfunction affect2!(integrator)\n  integrator.f.params = -1.5\nendThis will also solve the equation and get a similar result. It will also be slightly faster in some cases. However, if the equation is solved in this manner, there will be no record of what the parameter was at each timepoint. That is the tradeoff between DEDataArrays and ParameterizedFunctions."
+},
+
+{
+    "location": "features/diffeq_operator.html#",
+    "page": "DiffEqOperators",
+    "title": "DiffEqOperators",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "features/diffeq_operator.html#DiffEqOperators-1",
+    "page": "DiffEqOperators",
+    "title": "DiffEqOperators",
+    "category": "section",
+    "text": "The AbstractDiffEqOperator interface is an interface for declaring parts of a differential equation as linear or affine. This then allows the solvers to exploit linearity to achieve maximal performance."
+},
+
+{
+    "location": "features/diffeq_operator.html#Using-DiffEqOperators-1",
+    "page": "DiffEqOperators",
+    "title": "Using DiffEqOperators",
+    "category": "section",
+    "text": "AbstractDiffEqOperators act like functions. When defined, A has function calls A(t,u) and A(t,u,du) that act like A*u. These operators update via a function update_coefficients!(A,t,u)."
+},
+
+{
+    "location": "features/diffeq_operator.html#Constructors-1",
+    "page": "DiffEqOperators",
+    "title": "Constructors",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/diffeq_operator.html#Wrapping-an-Array:-DiffEqArrayOperator-1",
+    "page": "DiffEqOperators",
+    "title": "Wrapping an Array: DiffEqArrayOperator",
+    "category": "section",
+    "text": "DiffEqArrayOperator is for defining an operator directly from an array. The operator is of the formalpha(t)A(tu)for some scalar α and time plus possibly state dependent A. The constructor is:DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,\n                             update_func = DEFAULT_UPDATE_FUNC)A is the operator array. α is the scalar coefficient. If α is a function α(t), then it will update the coefficient as necessary. update_func is the function called by update_coefficients!(A,t,u) (along with α if it's a function). If left as its default, then update_func is trivial which signifies A is a constant."
+},
+
+{
+    "location": "features/diffeq_operator.html#AffineDiffEqOperator-1",
+    "page": "DiffEqOperators",
+    "title": "AffineDiffEqOperator",
+    "category": "section",
+    "text": "For As = (A1,A2,...,An) and Bs = (B1,B2,...,Bn) where each of the Ai and Bi are DiffEqLinearOperators, the following constructor:function AffineDiffEqOperator{T}(As,Bs,u_cache=nothing)builds an operator L = (A1 + A2 + ... An)*u + B1 + B2 + ... + Bn. u_cache is for designating a type of internal cache for non-allocating evaluation of L(t,u,du). If not given, the function L(t,u,du) is not available. Note that in solves which exploit this structure, this function call is not necessary. It's only used as the fallback in ODE solvers which were not developed for this structure."
+},
+
+{
+    "location": "features/diffeq_operator.html#Formal-Properties-of-DiffEqOperators-1",
+    "page": "DiffEqOperators",
+    "title": "Formal Properties of DiffEqOperators",
+    "category": "section",
+    "text": "These are the formal properties that an AbstractDiffEqOperator should obey for it to work in the solvers."
+},
+
+{
+    "location": "features/diffeq_operator.html#AbstractDiffEqOperator-Interface-Description-1",
+    "page": "DiffEqOperators",
+    "title": "AbstractDiffEqOperator Interface Description",
+    "category": "section",
+    "text": "Function call and multiplication: L(t,u,du) for inplace and du = L(t,u) for out-of-place, meaning L*u and A_mul_B!.\nIf the operator is not a constant, update it with (t,u). A mutating form, i.e. update_coefficients!(A,t,u) that changes the internal coefficients, and a out-of-place form B = update_coefficients(A,t,u).\nis_constant(A) trait for whether the operator is constant or not."
+},
+
+{
+    "location": "features/diffeq_operator.html#AbstractDiffEqLinearOpeartor-Interface-Description-1",
+    "page": "DiffEqOperators",
+    "title": "AbstractDiffEqLinearOpeartor Interface Description",
+    "category": "section",
+    "text": "AbstractDiffEqLinearOperator <: AbstractDiffEqOperator\nCan absorb under multiplication by a scalar. In all algorithms things like dt*L show up all the time, so the linear operator must be able to absorb such constants.\nis_constant(A) trait for whether the operator is constant or not.\nOptional: diagonal, symmetric, etc traits from LinearMaps.jl.\nOptional: expm(A). Required for simple exponential integration.\nOptional: expmv(A,t,u) = expm(tA)u and expmv!(v,A::DiffEqOperator,t,u) Required for sparse-saving exponential integration.\nOptional: factorizations. A_ldiv_B, factorize et. al. This is only required for algorithms which use the factorization of the operator (Crank-Nicholson), and only for when the default linear solve is used."
 },
 
 {
