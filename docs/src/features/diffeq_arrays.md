@@ -92,7 +92,7 @@ like the differential equation to treat directly. The other fields are treated
 as "discrete variables". For example:
 
 ```julia
-type MyDataArray{T} <: DEDataArray{T}
+type MyDataArray{T,N} <: DEDataArray{T,N}
     x::Array{T,1}
     a::T
     b::Symbol
@@ -118,19 +118,22 @@ end
 to update the discrete variables (unless the algorithm notes that it does not
 step to the endpoint, in which case a callback must be used to update appropriately.)
 
+Note that the aliases `DEDataVector` and `DEDataMatrix` cover the one and two
+dimensional cases.
+
 ### Example: A Control Problem
 
 In this example we will use a `DEDataArray` to solve a problem where control parameters
 change at various timepoints. First we will build
 
 ```julia
-type SimType{T} <: DEDataArray{T}
+type SimType{T} <: DEDataVector{T}
     x::Array{T,1}
     f1::T
 end
 ```
 
-as our `DEDataArray`. It has an extra field `f1` which we will use as our control
+as our `DEDataVector`. It has an extra field `f1` which we will use as our control
 variable. Our ODE function will use this field as follows:
 
 ```julia
