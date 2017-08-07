@@ -228,6 +228,7 @@ easier. This is provided by the modeling functionality.
 ```@contents
 Pages = [
     "models/multiscale.md",
+    "models/physical.md",
     "models/financial.md",
     "models/biological.md"
 ]

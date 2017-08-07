@@ -77,6 +77,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
          ],
          "Domain Modeling Tools" => Any[
              "models/multiscale.md",
+             "models/physical.md",
              "models/financial.md",
              "models/biological.md"
          ]

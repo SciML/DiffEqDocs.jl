@@ -1,8 +1,7 @@
 # Financial Models
 
 The financial models functionality is provided by DiffEqFinancial.jl and helps
-the user build and solve the differential equation based financial models biological
-models.
+the user build and solve the differential equation based financial models.
 
 ## SDE Model Library
 
