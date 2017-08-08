@@ -36,6 +36,11 @@ method can be a good choice for high accuracy when the system of equations is
 very large (`>10,000` ODEs?), the function calculation is very expensive,
 or the solution is very smooth.
 
+If strict error bounds are needed, then adaptive methods with defect controls
+are required. Defect controls use an error measurement on the interpolating
+polynomial to make the error estimate better capture the error over the full
+interval. For medium accuracy calculations, `RK4` is a good choice.
+
 ### Stiff Problems
 
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
@@ -119,7 +124,8 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   adaptivity.
 - `Ralston` - The optimized second order midpoint method. Uses embedded Euler.
   method for adaptivity.
-- `RK4` - The canonical Runge-Kutta Order 4 method. Fixed timestep only.
+- `RK4` - The canonical Runge-Kutta Order 4 method. Uses a defect control to
+  adaptive step using maximum error over the whole interval.
 - `BS3` - Bogacki-Shampine 3/2 method.
 - `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th order interpolant).
 - `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th order interpolant).
