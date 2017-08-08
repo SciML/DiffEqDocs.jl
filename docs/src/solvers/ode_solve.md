@@ -16,8 +16,10 @@ or you may just be curious. This guide is to help you choose the right algorithm
 For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly
 more efficient than the other choices. For most non-stiff
 problems, we recommend `Tsit5`. When more robust error control is required,
-`BS5` is a good choice. For fast solving at higher tolerances, we recommend
-`BS3`. For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
+`BS5` is a good choice. If at moderate tolerances an the interpolation error
+is very important, consider the `OwrenZen5` method. For fast solving at higher
+tolerances, we recommend `BS3` (or `OwrenZen3` if the interpolation error is
+important). For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
 we recommend `Vern6`, `Vern7`, or `Vern8` as efficient choices.
 
 For high accuracy non-stiff solving (`BigFloat` and tolerances like `<1e-12`),
@@ -115,18 +117,21 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   adaptivity.
 - `Heun` - The second order Heun's method. Uses embedded Euler method for
   adaptivity.
-- `Ralston` - The optimized second order midpoint method. Uses embedded Euler
+- `Ralston` - The optimized second order midpoint method. Uses embedded Euler.
   method for adaptivity.
 - `RK4` - The canonical Runge-Kutta Order 4 method. Fixed timestep only.
 - `BS3` - Bogacki-Shampine 3/2 method.
-- `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
-- `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)
-- `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant)
-- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant)
-- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant)
+- `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th order interpolant).
+- `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th order interpolant).
+- `OwrenZen5` - Owren-Zennaro optimized interpolantion 5/4 method (free 5th order interpolant).
+- `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant).
+- `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).
+- `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant).
+- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant).
+- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant).
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince 8
-  method Runge-Kutta method. (7th order interpolant)
+  method Runge-Kutta method. (7th order interpolant).
 - `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
 - `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
 - `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
