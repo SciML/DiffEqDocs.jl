@@ -110,9 +110,14 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 
 ### Runge-Kutta Methods for Non-Stiff Equations
 
-- `Euler`- The canonical forward Euler method.
-- `Midpoint` - The second order midpoint method.
-- `RK4` - The canonical Runge-Kutta Order 4 method.
+- `Euler`- The canonical forward Euler method. Fixed timestep only.
+- `Midpoint` - The second order midpoint method. Uses embedded Euler method for
+  adaptivity.
+- `Heun` - The second order Heun's method. Uses embedded Euler method for
+  adaptivity.
+- `Ralston` - The optimized second order midpoint method. Uses embedded Euler
+  method for adaptivity.
+- `RK4` - The canonical Runge-Kutta Order 4 method. Fixed timestep only.
 - `BS3` - Bogacki-Shampine 3/2 method.
 - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant)
 - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant)
@@ -139,13 +144,13 @@ solve(prob,alg)
 ### Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
-  method of Shu and Osher. (free 2nd order SSP interpolant)
+  method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.
 - `SSPRK33` - The three-stage, third order strong stability preserving (SSP)
-  method of Shu and Osher. (free 2nd order SSP interpolant)
+  method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
   five stages. (free 2nd order SSP interpolant)
 - `SSPRK104` - The ten-stage, fourth order strong stability preserving method
-  of Ketcheson. (free 3rd order Hermite interpolant)
+  of Ketcheson. (free 3rd order Hermite interpolant). Fixed timestep only.
 
 ### Methods for Stiff Equations
 
@@ -179,14 +184,16 @@ solve(prob,alg)
 - `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
-- `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method.
-  Keeps high accuracy on discretizations of nonlinear parabolic PDEs.
+- `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible)
+  Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic
+  PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
 - `RosShamp4`- An A-stable 4th order Rosenbrock method.
 - `Veldd4` - A 4th order D-stable Rosenbrock method.
 - `Velds4` - A 4th order A-stable Rosenbrock method.
 - `GRK4T` - An efficient 4th order Rosenbrock method.
-- `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable" but efficient.
+- `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable"
+  but efficient.
 - `Ros4LStab` - A 4th order L-stable Rosenbrock method.
 - `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   3rd order interpolant
