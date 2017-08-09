@@ -1,8 +1,8 @@
 # Parameter Estimation
 
-Parameter estimation for ODE models is provided by the DiffEq suite. The
-current functionality includes `build_loss_objective` and `lm_fit`. Note these
-require that the problem is defined using a
+Parameter estimation for ODE models, also known as dynamic data analysis,
+is provided by the DiffEq suite. Note these require that the problem is
+defined using a
 [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
 ## Recommended Methods
