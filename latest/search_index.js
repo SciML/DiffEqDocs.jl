@@ -3533,7 +3533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Parameter Estimation",
     "category": "section",
-    "text": "Parameter estimation for ODE models is provided by the DiffEq suite. The current functionality includes build_loss_objective and lm_fit. Note these require that the problem is defined using a ParameterizedFunction."
+    "text": "Parameter estimation for ODE models, also known as dynamic data analysis, is provided by the DiffEq suite. Note these require that the problem is defined using a ParameterizedFunction."
 },
 
 {
