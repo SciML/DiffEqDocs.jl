@@ -150,6 +150,8 @@ and are mostly used to make it more efficient on specific problems.
   is held constant. Defaults are algorithm-dependent.
 * `qoldinit`: The initial `qold` in stabilization stepping. Defaults are
   algorithm-dependent.
+* `failfactor`: The amount to decrease the timestep by if the Newton iterations
+  of an implicit method fail. Default is 2.
 
 ## Miscellaneous
 
