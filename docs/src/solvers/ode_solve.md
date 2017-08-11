@@ -50,10 +50,11 @@ stiffness is needed, though are only efficient when low accuracy is needed.
 re-factorizing the Jacobian is not too costly, and for sufficiently large
 systems `TRBDF2` will be more efficient.
 
-At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`
-or `Rodas4P` (the former is more efficient but the later is more reliable).
-As native DifferentialEquations.jl solvers, many Julia numeric types
-(such as BigFloats, [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
+At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
+`Rodas4P` (the former is more efficient but the later is more reliable),
+`Kvaerno5`, or `KenCarp4`. As native DifferentialEquations.jl solvers,
+many Julia numeric types (such as BigFloats,
+[ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
 [DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
 defined via the `@ode_def` macro, these will be the most efficient.
 
