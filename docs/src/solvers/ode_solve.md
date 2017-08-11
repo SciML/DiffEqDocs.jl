@@ -152,7 +152,7 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
-### Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+### Explicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
   method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.
@@ -187,6 +187,16 @@ solve(prob,alg)
   Uses an external nonlinear solver. Defaults to trust region
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
+- `SDIRK2` - An A-B-L stable 2nd order SDIRK method
+- `Kvaerno3` - An A-L stable stiffly-accurate 3rd order SDIRK method
+- `KenCarp3` - An A-L stable stiffly-accurate 3rd order SDIRK method with splitting
+- `Cash4` - An A-L stable 4th order SDIRK method
+- `Hairer4` - An A-L stable 4rd order SDIRK method
+- `Hairer42` - An A-L stable 4rd order SDIRK method
+- `Kvaerno4` - An A-L stable stiffly-accurate 4rd order SDIRK method
+- `KenCarp4` - An A-L stable stiffly-accurate 4rd order SDIRK method with splitting
+- `Kvaerno5` - An A-L stable stiffly-accurate 5rd order SDIRK method
+- `KenCarp5` - An A-L stable stiffly-accurate 5rd order SDIRK method with splitting
 
 #### Rosenbrock Methods
 
@@ -216,30 +226,16 @@ solve(prob,alg)
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   3rd order interpolant.
 
+### Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+
+- `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
+  stability presurving (SSP) property.
+
 #### Extra Options
 
-The following methods allow for specification of `linsolve`: the linear
-solver which is used:
-
-- `ImplicitEuler`
-- `Trapezoid`
-- `TRBDF2`
-- `Rosenbrock23`
-- `Rosenbrock32`
-- `ROS3P`
-- `Rodas3`
-- `RosShamp4`
-- `Veldd4`
-- `Velds4`
-- `GRK4T`
-- `GRK4A`
-- `Ros4LStab`
-- `Rodas4`
-- `Rodas42`
-- `Rodas4P`
-- `Rodas5`
-
-For more information on specifying the linear solver, see
+All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
+the linear solver which is used. For more information on specifying the linear
+solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
 
 The following methods allow for specification of `nlsolve`: the nonlinear
@@ -253,30 +249,12 @@ mode. This can control autodifferentiation of the Jacobian as well.
 For more information on specifying the nonlinear solver, see
 [the manual page on solver specification](../features/linear_nonlinear.html).
 
-Additionally, the following methods have extra differentiation controls:
-
-- `ImplicitEuler`
-- `Trapezoid`
-- `TRBDF2`
-- `Rosenbrock23`
-- `Rosenbrock32`
-- `ROS3P`
-- `Rodas3`
-- `RosShamp4`
-- `Veldd4`
-- `Velds4`
-- `GRK4T`
-- `GRK4A`
-- `Ros4LStab`
-- `Rodas4`
-- `Rodas42`
-- `Rodas4P`
-- `Rodas5`
-
-In each of these, `autodiff` can be set to turn on/off autodifferentiation, and
-`chunk_size` can be used to set the chunksize of the Dual numbers (see the
+Additionally, the Rosenbrock and SDIRK methods have differentiation
+controls. In each of these, `autodiff` can be set to turn on/off
+autodifferentiation, and `chunk_size` can be used to set the chunksize of the Dual
+ numbers (see the
 [documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/advanced_usage.html#configuring-chunk-size)).
-In addition, the Rosenbrock methods can set `diff_type`, which is the
+In addition, the Rosenbrock and SDIRK methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
 disabled). The choices are `:central` or `:forward`.
 
