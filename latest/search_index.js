@@ -2349,7 +2349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Rosenbrock Methods",
     "category": "section",
-    "text": "Rodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
+    "text": "ROS3P - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
 },
 
 {
