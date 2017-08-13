@@ -1957,7 +1957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Rosenbrock Methods",
     "category": "section",
-    "text": "Rosenbrock23 - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.\nROS3P - 3rd order A-stable and stiffly stable (Index-1 DAE compatible) Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRosShamp4- An A-stable 4th order Rosenbrock method.\nVeldd4 - A 4th order D-stable Rosenbrock method.\nVelds4 - A 4th order A-stable Rosenbrock method.\nGRK4T - An efficient 4th order Rosenbrock method.\nGRK4A - An A-stable 4th order Rosenbrock method. Essentially \"anti-L-stable\" but efficient.\nRos4LStab - A 4th order L-stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant."
+    "text": "Rosenbrock23 - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.\nROS3P - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRosShamp4- An A-stable 4th order Rosenbrock method.\nVeldd4 - A 4th order D-stable Rosenbrock method.\nVelds4 - A 4th order A-stable Rosenbrock method.\nGRK4T - An efficient 4th order Rosenbrock method.\nGRK4A - An A-stable 4th order Rosenbrock method. Essentially \"anti-L-stable\" but efficient.\nRos4LStab - A 4th order L-stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
 },
 
 {
@@ -2325,7 +2325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "Recomended Methods",
     "category": "section",
-    "text": "The recommended method for performance is IDA from the Sundials.jl package if you are solving problems with Float64. It's a very well-optimized method, and allows you to have a little bit of control over the linear solver to better tailor it to your problem. A similar algorithm is daskr. Which one is more efficient is problem-dependent.If your problem requires special Julia types like arbitrary precision numbers, then dassl is the method of choice."
+    "text": "For medium to low accuracy DAEs in mass matrix form, the Rodas4 and Rodas42 methods are good choices which will get good efficiency. The OrdinaryDiffEq.jl methods are also the only methods which allow for Julia-defined number types. For high accuracy (error <1e-7) on problems of Vector{Float64} defined in mass matrix form, radau is an efficient method.If the problem cannot be defined in mass matrix form, the recommended method for performance is IDA from the Sundials.jl package if you are solving problems with Float64. It's a very well-optimized method, and allows you to have a little bit of control over the linear solver to better tailor it to your problem. A similar algorithm is daskr. Which one is more efficient is problem-dependent."
 },
 
 {
@@ -2334,6 +2334,30 @@ var documenterSearchIndex = {"docs": [
     "title": "Full List of Methods",
     "category": "section",
     "text": ""
+},
+
+{
+    "location": "solvers/dae_solve.html#OrdinaryDiffEq.jl-1",
+    "page": "DAE Solvers",
+    "title": "OrdinaryDiffEq.jl",
+    "category": "section",
+    "text": "These methods require the DAE to be an ODEProblem in mass matrix form. For extra options for the solvers, see the ODE solver page."
+},
+
+{
+    "location": "solvers/dae_solve.html#Rosenbrock-Methods-1",
+    "page": "DAE Solvers",
+    "title": "Rosenbrock Methods",
+    "category": "section",
+    "text": "Rodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
+},
+
+{
+    "location": "solvers/dae_solve.html#SDIRK-Methods-1",
+    "page": "DAE Solvers",
+    "title": "SDIRK Methods",
+    "category": "section",
+    "text": "SDIRK MethodsImplicitEuler - Stage order 1. A-B-L-stable. Adaptive timestepping through a divided differences estimate via memory. Strong-stability presurving (SSP).\nTrapezoid - Stage order 1. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory."
 },
 
 {
@@ -2358,6 +2382,14 @@ var documenterSearchIndex = {"docs": [
     "title": "DASSL.jl",
     "category": "section",
     "text": "dassl - A native Julia implementation of the DASSL algorithm."
+},
+
+{
+    "location": "solvers/dae_solve.html#ODEInterfaceDiffEq.jl-1",
+    "page": "DAE Solvers",
+    "title": "ODEInterfaceDiffEq.jl",
+    "category": "section",
+    "text": "seulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
 },
 
 {
