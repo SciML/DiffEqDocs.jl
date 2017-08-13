@@ -77,7 +77,7 @@ steps are computed lazily (i.e. not during the solve).
 - `McAte4`: 4th order explicit symplectic integrator. Requires quadratic
   kinetic energy.
 - `CalvoSanz4`: Optimized efficiency 4th order explicit symplectic integrator.
-- `McAte42`: 4th order explicit symplectic integrator.
+- `McAte42`: 4th order explicit symplectic integrator. (Broken)
 - `McAte5`: Optimized efficiency 5th order explicit symplectic integrator.
   Requires quadratic kinetic energy
 - `Yoshida6`: 6th order explicit symplectic integrator.
