@@ -174,7 +174,7 @@ solve(prob,alg)
 - `Trapezoid` - A second order A-stable symplectic implicit solver. Also known
   as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
   differences on the memory. Good for highly stiff equations which are non-oscillatory.
-- `TRBDF2` - A second order A-B-L-S-stable one-step method. Includes
+- `TRBDF2` - A second order A-B-L-S-stable one-step ESDIRK method. Includes
   stiffness-robust error estimates for accurate adaptive timestepping, smoothed
   derivatives for highly stiff and oscillatory problems.
 - `GenericImplicitEuler` - A 1st order A-B-L-stable implicit solver with adaptive
@@ -189,15 +189,15 @@ solve(prob,alg)
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
 - `SDIRK2` - An A-B-L stable 2nd order SDIRK method
-- `Kvaerno3` - An A-L stable stiffly-accurate 3rd order SDIRK method
-- `KenCarp3` - An A-L stable stiffly-accurate 3rd order SDIRK method with splitting
+- `Kvaerno3` - An A-L stable stiffly-accurate 3rd order ESDIRK method
+- `KenCarp3` - An A-L stable stiffly-accurate 3rd order ESDIRK method with splitting
 - `Cash4` - An A-L stable 4th order SDIRK method
 - `Hairer4` - An A-L stable 4rd order SDIRK method
 - `Hairer42` - An A-L stable 4rd order SDIRK method
-- `Kvaerno4` - An A-L stable stiffly-accurate 4rd order SDIRK method
-- `KenCarp4` - An A-L stable stiffly-accurate 4rd order SDIRK method with splitting
-- `Kvaerno5` - An A-L stable stiffly-accurate 5rd order SDIRK method
-- `KenCarp5` - An A-L stable stiffly-accurate 5rd order SDIRK method with splitting
+- `Kvaerno4` - An A-L stable stiffly-accurate 4rd order ESDIRK method
+- `KenCarp4` - An A-L stable stiffly-accurate 4rd order ESDIRK method with splitting
+- `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
+- `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
 
 #### Rosenbrock Methods
 
@@ -230,7 +230,7 @@ solve(prob,alg)
 ### Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
-  stability presurving (SSP) property.
+  stability preserving (SSP) property.
 
 #### Extra Options
 
