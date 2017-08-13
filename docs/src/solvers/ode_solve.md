@@ -206,9 +206,8 @@ solve(prob,alg)
 - `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
-- `ROS3P` - 3rd order A-stable and stiffly stable (Index-1 DAE compatible)
-  Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic
-  PDEs.
+- `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy
+  on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
 - `RosShamp4`- An A-stable 4th order Rosenbrock method.
 - `Veldd4` - A 4th order D-stable Rosenbrock method.
@@ -224,8 +223,9 @@ solve(prob,alg)
 - `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems (as opposed to lower if not corrected).
-- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant.
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
+  a Hermite interpolant because its stiff-aware 3rd order interpolant is not
+  yet implemented.
 
 ### Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
