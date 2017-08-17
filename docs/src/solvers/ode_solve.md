@@ -230,7 +230,7 @@ solve(prob,alg)
 ### Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
-  stability preserving (SSP) property.
+  stability preserving (SSP) property. Fixed timestep only.
 
 #### Extra Options
 
