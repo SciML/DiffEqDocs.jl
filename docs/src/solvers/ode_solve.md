@@ -257,7 +257,7 @@ autodifferentiation, and `chunk_size` can be used to set the chunksize of the Du
 [documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/advanced_usage.html#configuring-chunk-size)).
 In addition, the Rosenbrock and SDIRK methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
-disabled). The choices are `:central` or `:forward`.
+disabled). The choices are `Val{:central}`, `Val{:forward}` or `Val{:complex}`.
 
 Examples:
 
@@ -265,7 +265,7 @@ Examples:
 sol = solve(prob,Rosenbrock23()) # Standard, uses autodiff
 sol = solve(prob,Rosenbrock23(chunk_size=10)) # Autodiff with chunksize of 10
 sol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with central differencing
-sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=:forward)) # Numerical differentiation with forward differencing
+sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=Val{:forward})) # Numerical differentiation with forward differencing
 ```
 
 ### Tableau Method
