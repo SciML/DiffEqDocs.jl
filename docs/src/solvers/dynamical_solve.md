@@ -40,7 +40,9 @@ As a go-to method for efficiency, `DPRKN6` is a good choice. `DPRKN12` is a good
 choice when high accuracy, like `tol<1e-10` is necessary. However, `DPRKN6` is
 the only Runge-Kutta Nystrom method with a higher order interpolant (all default
 to order 3 Hermite, whereas `DPRKN6` is order 6th interpolant) and thus in cases
-where interpolation matters (ex: event handling) one should use `DPRKN6`.
+where interpolation matters (ex: event handling) one should use `DPRKN6`. For
+very smooth problems with expensive acceleration function evaluations, `IRKN4`
+can be a good choice as it minimizes the number of evaluations.
 
 For symplectic methods, higher order algorithms are the most efficient when higher
 accuracy is needed, and when less accuracy is needed lower order methods do better.
@@ -69,12 +71,15 @@ steps are computed lazily (i.e. not during the solve).
 ### Runge-Kutta Nystrom Integrators
 
 - `Nystrom4`: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration
-  to depend on velocity.
-- `IRKN3`: 4th order explicit two-step Runge-Kutta Nystrom method.
+  to depend on velocity. Fixed timestep only.
+- `IRKN3`: 4th order explicit two-step Runge-Kutta Nystrom method. Fixed
+  timestep only.
 - `IRKN4`: 4th order explicit two-step Runge-Kutta Nystrom method. Can be more
-  efficient for smooth problems.
+  efficient for smooth problems. Fixed timestep only.
 - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta Nystrom method.
+  Fixed timestep only.
 - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta Nystrom method.
+  Fixed timestep only.
 - `DPRKN6`: 6th order explicit adaptive Runge-Kutta Nystrom method. Free 6th
   order interpolant.
 - `DPRKN8`: 8th order explicit adaptive Runge-Kutta Nystrom method.
