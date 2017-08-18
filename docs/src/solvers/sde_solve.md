@@ -18,7 +18,7 @@ a matrix in the `SDEProblem` type. A special form of non-diagonal noise,
 commutative noise, occurs when the noise satisfies the following condition:
 
 ```math
-\sum_{i=1}^d g_{i,j_1}(t,x) \frac{\partial g_{k,j_2}}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}}{\partial x_i}
+\sum_{i=1}^d g_{i,j_1}(t,u) \frac{\partial g_{k,j_2}}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}}{\partial x_i}
 ```
 
 for every ``j_1,j_2`` and ``k``. Additive noise is when ``g(t,u)=g(t)``,
