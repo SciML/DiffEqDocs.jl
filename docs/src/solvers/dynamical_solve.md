@@ -31,15 +31,26 @@ kinetic energy".
 ## Recommendations
 
 When energy conservation is required, use a symplectic method. Otherwise the
-Runge-Kutta Nystrom methods will be more efficient. Higher order algorithms are
-the most efficient when higher accuracy is needed, and when less accuracy is
-needed lower order methods do better. Optimized efficiency methods take more
-steps and thus have more force calculations for the same order, but have smaller
-error. Thus the "optimized efficiency" algorithms are recommended if your force
-calculation is not too sufficiency large, while the other methods are recommend
-when force calculations are really large (for example, like in MD simulations
-`VelocityVerlet` is very popular since it only requires one force calculation
-per timestep).
+Runge-Kutta Nystrom methods will be more efficient. Energy is mostly conserved
+by Runge-Kutta Nystrom methods, but is not conserved for long time integrations.
+Thus it is suggested that for shorter integrations you use Runge-Kutta Nystrom
+methods as well.
+
+As a go-to method for efficiency, `DPRKN6` is a good choice. `DPRKN12` is a good
+choice when high accuracy, like `tol<1e-10` is necessary. However, `DPRKN6` is
+the only Runge-Kutta Nystrom method with a higher order interpolant (all default
+to order 3 Hermite, whereas `DPRKN6` is order 6th interpolant) and thus in cases
+where interpolation matters (ex: event handling) one should use `DPRKN6`.
+
+For symplectic methods, higher order algorithms are the most efficient when higher
+accuracy is needed, and when less accuracy is needed lower order methods do better.
+Optimized efficiency methods take more steps and thus have more force calculations
+for the same order, but have smaller error. Thus the "optimized efficiency"
+algorithms are recommended if your force calculation is not too sufficiency large,
+while the other methods are recommend when force calculations are really large
+(for example, like in MD simulations `VelocityVerlet` is very popular since it only
+requires one force calculation per timestep). A good go-to method would be `McAte5`,
+and a good high order choice is `KahanLi8`.
 
 ## Standard ODE Integrators
 
@@ -65,10 +76,13 @@ steps are computed lazily (i.e. not during the solve).
 - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta Nystrom method.
 - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta Nystrom method.
 - `DPRKN6`: 6th order explicit adaptive Runge-Kutta Nystrom method. Free 6th
-  order interpolant (not yet implemented).
+  order interpolant.
 - `DPRKN8`: 8th order explicit adaptive Runge-Kutta Nystrom method.
+- `DPRKN12`: 12th order explicit adaptive Runge-Kutta Nystrom method.
 
 ### Symplectic Integrators
+
+Note that all symplectic integrators are fixed timestep only.
 
 - `SymplecticEuler`: First order explicit symplectic integrator
 - `VelocityVerlet`: 2nd order explicit symplectic integrator.
