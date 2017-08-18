@@ -1965,7 +1965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
     "category": "section",
-    "text": "SSPSDIRK2 - A second order A-L stable symplectic SDIRK method with the strong stability preserving (SSP) property."
+    "text": "SSPSDIRK2 - A second order A-L stable symplectic SDIRK method with the strong stability preserving (SSP) property. Fixed timestep only."
 },
 
 {
