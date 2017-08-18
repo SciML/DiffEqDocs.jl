@@ -2077,7 +2077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Runge-Kutta Nystrom Integrators",
     "category": "section",
-    "text": "Nystrom4: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration to depend on velocity.\nIRKN4: 4th order explicit two-step Runge-Kutta Nystrom method. Can be more efficient for smooth problems.\nNystrom4VelocityIndependent: 4th order explicit Runge-Kutta Nystrom method.\nNystrom5VelocityIndependent: 5th order explicit Runge-Kutta Nystrom method."
+    "text": "Nystrom4: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration to depend on velocity.\nIRKN3: 4th order explicit two-step Runge-Kutta Nystrom method.\nIRKN4: 4th order explicit two-step Runge-Kutta Nystrom method. Can be more efficient for smooth problems.\nNystrom4VelocityIndependent: 4th order explicit Runge-Kutta Nystrom method.\nNystrom5VelocityIndependent: 5th order explicit Runge-Kutta Nystrom method.\nDPRKN6: 6th order explicit adaptive Runge-Kutta Nystrom method. Free 6th order interpolant (not yet implemented).\nDPRKN8: 8th order explicit adaptive Runge-Kutta Nystrom method."
 },
 
 {
@@ -2205,7 +2205,15 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Recommended Methods",
     "category": "section",
-    "text": "For most diagonal and scalar noise problems where a good amount of accuracy is required and stiffness may be an issue, the SRIW1Optimized algorithm should do well. If the problem has additive noise, then SRA1Optimized will be the optimal algorithm. For non-commutative noise, EM and EulerHeun will be the most accurate (for Ito and Stratonovich interpretations respectively)."
+    "text": "For most diagonal and scalar noise problems where a good amount of accuracy is required and stiffness may be an issue, the SRIW1Optimized algorithm should do well. If the problem has additive noise, then SRA1Optimized will be the optimal algorithm. For commutative noise, RKMilCommute is a strong order 1.0 method which utilizes the commutivity property to greatly speed up the Wiktorsson approximation. For non-commutative noise, EM and EulerHeun will be the most accurate (for Ito and Stratonovich interpretations respectively)."
+},
+
+{
+    "location": "solvers/sde_solve.html#Special-Noise-Forms-1",
+    "page": "SDE Solvers",
+    "title": "Special Noise Forms",
+    "category": "section",
+    "text": "Some solvers are for specialized forms of noise. Diagonal noise is the default setup. Non-diagonal noise is specified via setting noise_rate_prototype to a matrix in the SDEProblem type. A special form of non-diagonal noise, commutative noise, occurs when the noise satisfies the following condition:sum_i=1^d g_ij_1(tx) fracpartial g_kj_2partial x_i = sum_i=1^d g_ij_2(tx) fracpartial g_kj_1partial x_ifor every j_1j_2 and k. Additive noise is when g(tu)=g(t), i.e. is independent of u. Multiplicative noise is g_i(tu)=a_i u."
 },
 
 {
@@ -2213,7 +2221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
-    "text": "save_noise: Determines whether the values of W are saved whenever the timeseries is saved. Defaults to true.\ndelta: The delta adaptivity parameter for the natural error estimator. For more details, see the publication."
+    "text": "save_noise: Determines whether the values of W are saved whenever the timeseries is saved. Defaults to true.\ndelta: The delta adaptivity parameter for the natural error estimator. Determines the balance between drift and diffusion error. For more details, see the publication."
 },
 
 {
@@ -2229,7 +2237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "StochasticDiffEq.jl",
     "category": "section",
-    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.†\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†\nSRA1 - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†Example usage:sol = solve(prob,SRIW1())For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
+    "text": "Each of the StochasticDiffEq.jl solvers come with a linear interpolation.EM- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†\nEulerHeun - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.\nRKMil - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method.†\nRKMilCommute - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito) Milstein method for commutative noise problems.†\nSRA - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs due to Rossler. Default tableau is for SRA1.\nSRI - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to Rossler. Default tableau is for SRIW1.\nSRIW1 - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar Ito SDEs.†\nSRA1 - An optimized version of SRA1. Strong Order 2.0 for additive Ito and Stratonovich SDEs.†Example usage:sol = solve(prob,SRIW1())For SRA and SRI, the following option is allowed:tableau: The tableau for an :SRA or :SRI algorithm. Defaults to SRIW1 or SRA1.†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
