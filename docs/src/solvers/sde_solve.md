@@ -40,10 +40,13 @@ Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
 - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
-- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0 (Ito)
-  Milstein method.†
+- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
+  Milstein method. Defaults to solving the Ito problem, but
+  `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.†
 - `RKMilCommute` - An explicit Runge-Kutta discretization of the strong Order 1.0
-  (Ito) Milstein method for commutative noise problems.†
+  Milstein method for commutative noise problems. Defaults to solving the Ito
+  problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
+  Stratonovich problem.††
 - `SRA` - The strong Order 2.0 methods for additive Ito and Stratonovich SDEs
   due to Rossler. Default tableau is for SRA1.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to
