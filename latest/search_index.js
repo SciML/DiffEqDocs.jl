@@ -2213,7 +2213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Special Noise Forms",
     "category": "section",
-    "text": "Some solvers are for specialized forms of noise. Diagonal noise is the default setup. Non-diagonal noise is specified via setting noise_rate_prototype to a matrix in the SDEProblem type. A special form of non-diagonal noise, commutative noise, occurs when the noise satisfies the following condition:sum_i=1^d g_ij_1(tx) fracpartial g_kj_2partial x_i = sum_i=1^d g_ij_2(tx) fracpartial g_kj_1partial x_ifor every j_1j_2 and k. Additive noise is when g(tu)=g(t), i.e. is independent of u. Multiplicative noise is g_i(tu)=a_i u."
+    "text": "Some solvers are for specialized forms of noise. Diagonal noise is the default setup. Non-diagonal noise is specified via setting noise_rate_prototype to a matrix in the SDEProblem type. A special form of non-diagonal noise, commutative noise, occurs when the noise satisfies the following condition:sum_i=1^d g_ij_1(tu) fracpartial g_kj_2partial x_i = sum_i=1^d g_ij_2(tx) fracpartial g_kj_1partial x_ifor every j_1j_2 and k. Additive noise is when g(tu)=g(t), i.e. is independent of u. Multiplicative noise is g_i(tu)=a_i u."
 },
 
 {
