@@ -59,10 +59,14 @@ steps are computed lazily (i.e. not during the solve).
 
 - `Nystrom4`: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration
   to depend on velocity.
+- `IRKN3`: 4th order explicit two-step Runge-Kutta Nystrom method.
 - `IRKN4`: 4th order explicit two-step Runge-Kutta Nystrom method. Can be more
   efficient for smooth problems.
 - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta Nystrom method.
 - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta Nystrom method.
+- `DPRKN6`: 6th order explicit adaptive Runge-Kutta Nystrom method. Free 6th
+  order interpolant (not yet implemented).
+- `DPRKN8`: 8th order explicit adaptive Runge-Kutta Nystrom method.
 
 ### Symplectic Integrators
 
