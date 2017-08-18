@@ -72,16 +72,16 @@ prob = ConstantLagDDEProblem(bc_model,h,u0,lags,tspan)
 An efficient way to solve this problem (given the constant lags) is with the
 MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl
 ODE solver method into a method for delay differential equations which is highly
-efficient due to sweet compiler magic. A good choice is the order 5 `Tsit5()`
+efficient due to sweet compiler magic. A good choice is the order 5 `OrwenZen5()`
 method:
 
 ```julia
-alg = MethodOfSteps(Tsit5())
+alg = MethodOfSteps(OrwenZen5())
 ```
 
-For lower tolerance solving, one can use the `BS3()` algorithm to good effect (this
-combination is similar to the MATLAB `dde23`), and
-for high tolerances the `DP8()` algorithm will give an 8th order solution. Note
+For lower tolerance solving, one can use the `OrwenZen3()` algorithm to good effect
+(this combination is similar to the MATLAB `dde23`, but more efficient tableau),
+and for high tolerances the `DP8()` algorithm will give an 8th order solution. Note
 that the Verner methods will not work here due to their lazy interpolation scheme.
 
 To solve the problem with this algorithm, we do the same thing we'd do with other
