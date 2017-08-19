@@ -68,9 +68,11 @@ in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64
 
 #### Special Properties of Stiff Integrators
 
-`Trapezoid` is a symplectic integrator. `ImplicitEuler` is an extension
-to the common algorithm with adaptive timestepping and efficient quasi-Newton
-Jacobian reusage which is strong-stability presurving (SSP) for hyperbolic PDEs.
+`ImplicitMidpoint` is a symmetric and symplectic integrator.
+`Trapezoid` is a symmetric (almost symplectic) integrator with adaptive
+timestepping. `ImplicitEuler` is an extension to the common algorithm with
+adaptive timestepping and efficient quasi-Newton Jacobian reusage which is fully
+strong-stability presurving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
 parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
@@ -171,9 +173,12 @@ solve(prob,alg)
 - `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
   presurving (SSP).
-- `Trapezoid` - A second order A-stable symplectic implicit solver. Also known
-  as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
-  differences on the memory. Good for highly stiff equations which are non-oscillatory.
+- `ImplicitMidpoint` - A second order A-stable symplectic and symmetric implicit
+  solver. Good for highly stiff equations which need symplectic integration.
+- `Trapezoid` - A second order A-L-stable symmetric implicit solver. "Almost
+  symplectic" without numerical dampening. Also known as Crank-Nicholson when
+  applied to PDEs. Adaptive timestepping via divided differences on the memory.
+  Good for highly stiff equations which are non-oscillatory.
 - `TRBDF2` - A second order A-B-L-S-stable one-step ESDIRK method. Includes
   stiffness-robust error estimates for accurate adaptive timestepping, smoothed
   derivatives for highly stiff and oscillatory problems.
