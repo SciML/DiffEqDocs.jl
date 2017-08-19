@@ -1,6 +1,6 @@
 # Callback Library
 
-DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which
+DiffEqCallbacks.jl provides a library of various helpful callbacks which
 can be used with any component solver which implements the callback interface.
 It adds the following callbacks which are available to users of DifferentialEquations.jl.
 
@@ -24,13 +24,16 @@ law without modifying the convergence properties.
 ### Constructor
 
 ```julia
-ManifoldProjection(g;nlsolve=NLSOLVEJL_SETUP(),save=true)
+ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g)==2, nlopts=Dict{Symbol,Any}())
 ```
 
-- `g`: The residual function for the manifold: `g(u,resid)`. This is an inplace function
-  which writes to the residual the difference from the manifold components.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html)
-- `save`: Whether to do the standard saving (applied after the callback)
+- `g`: The residual function for the manifold. This is an inplace function of form
+  `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
+  the manifold components.
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html).
+- `save`: Whether to do the standard saving (applied after the callback).
+- `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
+- `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
 
 ### Example
 
@@ -81,10 +84,107 @@ has the same behavior as the MATLAB implementation, that is the absolute toleran
 starts and at each iteration it is set to the maximum value that the state has thus
 far reached times the relative tolerance. If `init_curmax` is zero, then the initial
 value is determined by the `abstol` of the solver. Otherwise this is the initial
-value for the current maximum abstol.
+value for the current maximum `abstol`.
 
 To generate the callback, use the constructor:
 
 ```julia
 AutoAbstol(save=true;init_curmax=0.0)
 ```
+
+## PositiveDomain
+
+Especially in biology and other natural sciences, a desired property of
+dynamical systems is the positive invariance of the positive cone, i.e.
+non-negativity of variables at time $t_0$ ensures their non-negativity at times
+$t \geq t_0$ for which the solution is defined. However, even if a system
+satisfies this property mathematically it can be difficult for ODE solvers to
+ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html) 
+show.
+
+In order to deal with this problem one can specify `isoutofdomain=(t,u) -> any(x
+-> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html),
+which will reject any step that leads to non-negative values and reduce the next
+time step. However, since this approach only rejects steps and hence
+calculations might be repeated multiple times until a step is accepted, it can
+be computationally expensive.
+
+Another approach is taken by a `PositiveDomain` callback in
+DiffEqCallbacks.jl, which is inspired by
+[Shampine's et al. paper about non-negative ODE solutions](http://www.sciencedirect.com/science/article/pii/S0096300304009683).
+It reduces the next step by a certain scale factor until the extrapolated value
+at the next time point is non-negative with a certain tolerance. Extrapolations
+are cheap to compute but might be inaccurate, so if a time step is changed it
+is additionally reduced by a safety factor of 0.9. Since extrapolated values are
+only non-negative up to a certain tolerance and in addition actual calculations
+might lead to negative values, also any negative values at the current time point
+are set to 0. Hence by this callback non-negative values at any time point are 
+ensured in a computationally cheap way, but the quality of the solution
+depends on how accurately extrapolations approximate next time steps.
+
+Please note that the system should be defined also outside the positive domain,
+since even with these approaches negative variables might occur during the
+calculations. Moreover, one should follow Shampine's et. al. advice and set the
+derivative $x'_i$ of a negative component $x_i$ to $\max \{0, f_i(t, x)\}$, where
+$t$ denotes the current time point with state vector $x$ and $f_i$ is the $i$-th
+component of function $f$ in an ODE system $x' = f(t, x)$.
+
+### Constructor
+
+```julia
+PositiveDomain(u=nothing; save=true, abstol=nothing, scalefactor=nothing)
+```
+
+- `u`: A prototype of the state vector of the integrator. A copy of it is saved and
+  extrapolated values are written to it. If it is not specified
+  every application of the callback allocates a new copy of the state vector.
+- `save`: Whether to do the standard saving (applied after the callback).
+- `abstol`: Tolerance up to which negative extrapolated values are accepted.
+  Element-wise tolerances are allowed. If it is not specified every application
+  of the callback uses the current absolute tolerances of the integrator.
+- `scalefactor`: Factor by which an unaccepted time step is reduced. If it is not
+  specified time steps are halved.
+
+## GeneralDomain
+
+A `GeneralDomain` callback in DiffEqCallbacks.jl generalizes the concept of
+a `PositiveDomain` callback to arbitrary domains. Domains are specified by 
+in-place functions `g(u, resid)` or `g(t, u, resid)` that calculate residuals of a
+state vector `u` at time `t` relative to that domain. As for `PositiveDomain`, steps
+are accepted if residuals of the extrapolated values at the next time step are below
+a certain tolerance. Moreover, this callback is automatically coupled with a 
+`ManifoldProjection` that keeps all calculated state vectors close to the desired
+domain, but in contrast to a `PositiveDomain` callback the nonlinear solver in a 
+`ManifoldProjection` can not guarantee that all state vectors of the solution are
+actually inside the domain. Thus a `PositiveDomain` callback should in general be
+preferred.
+
+### Constructor
+
+```julia
+function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
+                       abstol=nothing, scalefactor=nothing, autonomous=numargs(g)==2,
+                       nlopts=Dict(:ftol => 10*eps()))
+```
+
+- `g`: The residual function for the domain. This is an inplace function of form
+  `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
+  the domain.
+- `u`: A prototype of the state vector of the integrator and the residuals. Two 
+  copies of it are saved, and extrapolated values and residuals are written to them. 
+  If it is not specified every application of the callback allocates two new copies 
+  of the state vector.
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html)
+  which is passed to a `ManifoldProjection`.
+- `save`: Whether to do the standard saving (applied after the callback).
+- `abstol`: Tolerance up to which residuals are accepted. Element-wise tolerances 
+  are allowed. If it is not specified every application of the callback uses the 
+  current absolute tolerances of the integrator.
+- `scalefactor`: Factor by which an unaccepted time step is reduced. If it is not
+  specified time steps are halved.
+- `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
+- `nlopts`: Optional arguments to nonlinear solver of a `ManifoldProjection` which 
+  can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
+  The default value of `ftol = 10*eps()` ensures that convergence is only declared
+  if the infinite norm of residuals is very small and hence the state vector is very 
+  close to the domain.
