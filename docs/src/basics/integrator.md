@@ -150,10 +150,13 @@ The following functions make up the interface:
   and `u` does not experience a discontinuous change at the end of the interval.
   Thus if `u` is unmodified in a callback, a single call to the derivative calculation
   can be eliminated by `u_modified!(integrator,false)`.
-* `get_proposed_dt(integrator,factor)`:  Gets the proposed `dt` for the
+* `get_proposed_dt(integrator)`:  Gets the proposed `dt` for the
   next timestep.
-* `set_proposed_dt!(integrator,factor)`:  Sets the proposed `dt` for the
+* `set_proposed_dt!(integrator,dt)`:  Sets the proposed `dt` for the
   next timestep.
+* `set_proposed_dt!(integrator,integrator2)`:  Sets the timestepping of
+  `integrator` to match that of `integrator2`. Note that due to PI control and
+  step acceleration this is more than matching the factors in most cases.
 * `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
 * `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
   can be used in events and callbacks to immediately end the solution process.
