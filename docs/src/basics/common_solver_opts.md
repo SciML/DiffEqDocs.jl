@@ -53,9 +53,9 @@ The following options are all related to output control. See the "Examples"
 section at the end of this page for some example usage.
 
 * `dense`: Denotes whether to save the extra pieces required for dense (continuous)
-  output. Default is true for algorithms which have the ability to produce dense output.
-  If dense is false, the solution still acts like a function, and `sol(t)` is a
-  linear interpolation between the saved time points.
+  output. Default is true for algorithms which have the ability to produce dense
+  output. If dense is false, the solution still acts like a function, and `sol(t)`
+  is a linear interpolation between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
   most efficient manner (always including the points of `tspan`). Note that this
@@ -67,15 +67,17 @@ section at the end of this page for some example usage.
   Default is `[]`.
 * `save_idxs`: Denotes the indices for the components of the equation to save.
   Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE,
-  and given `save_idxs = [1, 3]`, only the first and third components of the solution will be outputted.
+  and given `save_idxs = [1, 3]`, only the first and third components of the
+  solution will be outputted.
   Notice that of course in this case the outputed solution will be two-dimensional.
 * `tstops`: Denotes *extra* times that the timestepping algorithm must step to.
   This should be used to help the solver deal with discontinuities and
   singularities, since stepping exactly at the time of the discontinuity will
-  improve accuracy. If a method cannot change timesteps (fixed timestep multistep methods),
-  then `tstops` will use an interpolation, matching the behavior of `saveat`.
-  If a method cannot change timesteps and also cannot interpolate,
-  then `tstops` must be a multiple of `dt` or else an error will be thrown. Default is `[]`.
+  improve accuracy. If a method cannot change timesteps (fixed timestep
+  multistep methods), then `tstops` will use an interpolation,
+  matching the behavior of `saveat`. If a method cannot change timesteps and
+  also cannot interpolate, then `tstops` must be a multiple of `dt` or else an
+  error will be thrown. Default is `[]`.
 * `d_discontinuities:` Denotes locations of discontinuities in low order derivatives.
   This will force FSAL algorithms which assume derivative continuity to re-evaluate
   the derivatives at the point of discontinuity. The default is `[]`.
