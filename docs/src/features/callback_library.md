@@ -1,6 +1,6 @@
 # Callback Library
 
-DiffEqCallbackLibrary.jl provides a library of various helpful callbacks which
+DiffEqCallbacks.jl provides a library of various helpful callbacks which
 can be used with any component solver which implements the callback interface.
 It adds the following callbacks which are available to users of DifferentialEquations.jl.
 
@@ -110,7 +110,7 @@ calculations might be repeated multiple times until a step is accepted, it can
 be computationally expensive.
 
 Another approach is taken by a `PositiveDomain` callback in
-DiffEqCallbackLibrary.jl, which is inspired by
+DiffEqCallbacks.jl, which is inspired by
 [Shampine's et al. paper about non-negative ODE solutions](http://www.sciencedirect.com/science/article/pii/S0096300304009683).
 It reduces the next step by a certain scale factor until the extrapolated value
 at the next time point is non-negative with a certain tolerance. Extrapolations
@@ -147,7 +147,7 @@ PositiveDomain(u=nothing; save=true, abstol=nothing, scalefactor=nothing)
 
 ## GeneralDomain
 
-A `GeneralDomain` callback in DiffEqCallbackLibrary.jl generalizes the concept of
+A `GeneralDomain` callback in DiffEqCallbacks.jl generalizes the concept of
 a `PositiveDomain` callback to arbitrary domains. Domains are specified by 
 in-place functions `g(u, resid)` or `g(t, u, resid)` that calculate residuals of a
 state vector `u` at time `t` relative to that domain. As for `PositiveDomain`, steps
