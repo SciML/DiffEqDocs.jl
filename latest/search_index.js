@@ -1957,7 +1957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Rosenbrock Methods",
     "category": "section",
-    "text": "Rosenbrock23 - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances.\nRosenbrock32 - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution.\nROS3P - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRosShamp4- An A-stable 4th order Rosenbrock method.\nVeldd4 - A 4th order D-stable Rosenbrock method.\nVelds4 - A 4th order A-stable Rosenbrock method.\nGRK4T - An efficient 4th order Rosenbrock method.\nGRK4A - An A-stable 4th order Rosenbrock method. Essentially \"anti-L-stable\" but efficient.\nRos4LStab - A 4th order L-stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
+    "text": "Rosenbrock23 - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances. 2nd order stiff-aware interpolation.\nRosenbrock32 - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution. 2nd order stiff-aware interpolation.\nROS3P - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy on discretizations of nonlinear parabolic PDEs.\nRodas3 - 3rd order A-stable and stiffly stable Rosenbrock method.\nRosShamp4- An A-stable 4th order Rosenbrock method.\nVeldd4 - A 4th order D-stable Rosenbrock method.\nVelds4 - A 4th order A-stable Rosenbrock method.\nGRK4T - An efficient 4th order Rosenbrock method.\nGRK4A - An A-stable 4th order Rosenbrock method. Essentially \"anti-L-stable\" but efficient.\nRos4LStab - A 4th order L-stable Rosenbrock method.\nRodas4 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas42 - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant\nRodas4P - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate on nonlinear parabolic problems (as opposed to lower if not corrected).\nRodas5 - A 5th order A-stable stiffly stable Rosenbrock method. Currently has a Hermite interpolant because its stiff-aware 3rd order interpolant is not yet implemented."
 },
 
 {
@@ -2209,6 +2209,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/sde_solve.html#Mass-Matrices-and-Stochastic-DAEs-1",
+    "page": "SDE Solvers",
+    "title": "Mass Matrices and Stochastic DAEs",
+    "category": "section",
+    "text": "The ImplicitRKMil, ImplicitEM, and ImplicitEulerHeun methods can solve stochastic equations with mass matrices (including stochastic DAEs written in mass matrix form) when either symplectic=true or theta=1."
+},
+
+{
     "location": "solvers/sde_solve.html#Special-Noise-Forms-1",
     "page": "SDE Solvers",
     "title": "Special Noise Forms",
@@ -2397,7 +2405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "SDIRK Methods",
     "category": "section",
-    "text": "SDIRK MethodsImplicitEuler - Stage order 1. A-B-L-stable. Adaptive timestepping through a divided differences estimate via memory. Strong-stability presurving (SSP).\nTrapezoid - Stage order 1. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory."
+    "text": "SDIRK MethodsImplicitEuler - Stage order 1. A-B-L-stable. Adaptive timestepping through a divided differences estimate via memory. Strong-stability presurving (SSP).\nImplicitMidpoint - Stage order 1. Symplectic. Good for when symplectic integration is required."
 },
 
 {
