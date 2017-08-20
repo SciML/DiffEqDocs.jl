@@ -23,16 +23,17 @@ extra options for the solvers, see the ODE solver page.
 
 ### Rosenbrock Methods
 
-- `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy
-  on discretizations of nonlinear parabolic PDEs.
+- `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
+  accuracy on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
-- `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant
-- `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant
-- `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
-  on nonlinear parabolic problems (as opposed to lower if not corrected).
+- `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant
+- `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant
+- `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant. 4th order on linear parabolic problems
+  and 3rd order accurate on nonlinear parabolic problems (as opposed to lower
+  if not corrected).
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
