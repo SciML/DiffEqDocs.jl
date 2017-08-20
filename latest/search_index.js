@@ -1245,7 +1245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitODEProblem(f1,...,fn,u0,tspan;kwargs...)"
+    "text": "SplitODEProblem{isinplace}(f1,f2,u0,tspan;kwargs...)"
 },
 
 {
@@ -1253,7 +1253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "Semilinear ODE",
     "category": "section",
-    "text": "The Semilinear ODE is a split ODEProblem with two functions:fracdudt =  Au + f(tu)where the first function is a AbstractDiffEqOperator and the second part is a (nonlinear) function.The appropriate algorithms for this form are:"
+    "text": "The Semilinear ODE is a split ODEProblem with two functions:fracdudt =  Au + f(tu)where the first function is a constant (not time dependent)AbstractDiffEqOperator and the second part is a (nonlinear) function. ../../features/diffeq_operator.html.The appropriate algorithms for this form are:"
 },
 
 {
@@ -2157,7 +2157,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "IIF1 - First order Implicit Integrating Factor method. Not yet implemented.\nIIF2 - Second order Implicit Integrating Factor method. Not yet implemented.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nExpEuler - First order exponential Euler scheme. Not yet implemented.\nNorsettEuler - First order exponential-RK scheme. Not yet implemented."
+    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve."
 },
 
 {
