@@ -345,11 +345,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/dde_example.html#Undeclared-Delays-1",
+    "page": "Delay Differential Equations",
+    "title": "Undeclared Delays",
+    "category": "section",
+    "text": "You might have noticed DifferentialEquations.jl allows you to solve problems with undeclared delays since you can interpolate h at any value. This is a feature, but use it with caution. Undeclared delays can increase the error in the solution. It's recommended that you use a method with a residual control, such as MethodOfSteps(RK4()) whenever there are undeclared delays. With this you can use interpolated derivatives, solve functional differential equations by using quadrature on the interpolant, etc. However, note that residual control solves with a low level of accuracy, so the tolerances should be made very small and the solution should not be trusted for more than 2-3 decimal places.Note: MethodOfSteps(RK4()) with undeclared delays is similar to MATLAB's ddesd."
+},
+
+{
     "location": "tutorials/dde_example.html#State-Dependent-Delays-1",
     "page": "Delay Differential Equations",
     "title": "State-Dependent Delays",
     "category": "section",
-    "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. To do this in DifferentialEquations.jl, one simply writes it in the natural manner h(g(t,u)) where g is the lag function. As before, you must declare the lag functions to the solver. Other than that, everything else is the same, where one instead constructs a DDEProblem type:prob = DDEProblem(f,h,u0,lags,tspan)and solves that using the common interface.However, currently there are no good algorithms for this. The developers are working on a defect control method which will give good quality results and have strict error bounds."
+    "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. To do this in DifferentialEquations.jl, one simply writes it in the natural manner h(g(t,u)) where g is the lag function. As before, you must declare the lag functions to the solver. Other than that, everything else is the same, where one instead constructs a DDEProblem type:prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)and solves that using the common interface. The current method to solve such equations is to use a residual control method like MethodOfSteps(RK4()) with undeclared state-dependent delays."
 },
 
 {
@@ -1481,6 +1489,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/dde_types.html#Declaring-Lags-1",
+    "page": "DDE Problems",
+    "title": "Declaring Lags",
+    "category": "section",
+    "text": "Lags are declared separately from their use. One can use any lag by simply using the interpolant of h at that point. However, one should use caution in order to achieve the best accuracy. When lags are declared, the solvers can more efficiently be more accurate and thus this is recommended."
+},
+
+{
     "location": "types/dde_types.html#Problem-Type-1",
     "page": "DDE Problems",
     "title": "Problem Type",
@@ -1493,7 +1509,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "ConstantLagDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)\nDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DDEProblem{isinplace}(f,h,u0,tspan,constant_lags,dependent_lags=nothing;\n                      callback=nothing,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1501,7 +1517,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\nlags: An array of lags. For constant lag problems this should be numbers. For state-dependent delay problems this is a tuple of functions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions for the state-dependent lags used by the history function h.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -2349,7 +2365,47 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Solvers",
     "title": "Recommended Methods",
     "category": "section",
-    "text": "The recommended method for standard constant lag DDE problems are the MethodOfSteps algorithms. These are constructed from an OrdinaryDiffEq.jl algorithm as follows:MethodOfSteps(alg;constrained=false,\n             fixedpoint_abstol = nothing,\n             fixedpoint_reltol = nothing,\n             fixedpoint_norm   = nothing,\n             max_fixedpoint_iters = 10)where alg is an OrdinaryDiffEq.jl algorithm. Most algorithms will work, though a notable exception are algorithms which use a lazy interpolant (the Verner methods).The standard choice is MethodOfSteps(OrwenZen5()). This is a highly efficient FSAL 5th order algorithm which optimizes its interpolation error and should handle most problems. For fast solving at where non-strict error control is needed, choosing OrwenZen3() can do well. Using BS3 is similar to the MATLAB dde23, but OrwenZen3() will have noticably less error for the same work. For algorithms where strict error control is needed, it is recommended that one uses DP8(). Other high order integrators are not applicable since they use a lazy interpolant.If the method is having trouble, one may want to adjust the parameters of the fixed-point iteration. Decreasing the absolute tolerance fixedpoint_abstol and the relative tolerance fixedpoint_reltol, and increasing the maximal number of iterations max_fixedpoint_iters can help ensure that the steps are correct. If the problem still is not correctly converging, one should lower dtmax. In the worst case scenario, one may need to set constrained=true which will constrain timesteps to at most the size of the minimal lag and hence forces more stability at the cost of smaller timesteps.There is currently no recommended algorithm for state-dependent delay problems. An algorithm is currently in the works."
+    "text": "The recommended method for standard constant lag DDE problems are the MethodOfSteps algorithms. These are constructed from an OrdinaryDiffEq.jl algorithm as follows:MethodOfSteps(alg;constrained=false,\n             fixedpoint_abstol = nothing,\n             fixedpoint_reltol = nothing,\n             fixedpoint_norm   = nothing,\n             max_fixedpoint_iters = 10)where alg is an OrdinaryDiffEq.jl algorithm. Most algorithms will work, though a notable exception are algorithms which use a lazy interpolant (the Verner methods)."
+},
+
+{
+    "location": "solvers/dde_solve.html#Nonstiff-DDEs-1",
+    "page": "DDE Solvers",
+    "title": "Nonstiff DDEs",
+    "category": "section",
+    "text": "The standard choice is MethodOfSteps(OrwenZen5()). This is a highly efficient FSAL 5th order algorithm which optimizes its interpolation error and should handle most problems. For fast solving at where non-strict error control is needed, choosing OrwenZen3() can do well. Using BS3 is similar to the MATLAB dde23, but OrwenZen3() will have noticably less error for the same work. For algorithms where strict error control is needed, it is recommended that one uses DP8(). Other high order integrators are not applicable since they use a lazy interpolant.For state-dependent delays, the current best choice is RK4 since it uses a residual control method to more accurately step. Note that current state-dependent delays are not detected and thus non-residual control methods will be less accurate. Still, residual control is an error-prone method. We recommend setting the tolerances low (1e-10) and only trusting the solution to a 2-3 decimal places of accuracy."
+},
+
+{
+    "location": "solvers/dde_solve.html#Stiff-DDEs-and-Differential-Algebraic-Delay-Equations-(DADEs)-1",
+    "page": "DDE Solvers",
+    "title": "Stiff DDEs and Differential-Algebraic Delay Equations (DADEs)",
+    "category": "section",
+    "text": "For stiff DDEs, the SDIRK and Rosenbrock methods are very efficient as they will reuse the Jacobian in the unconstrained stepping iterations. One should choose from the methods which have stiff-aware interpolants for better stability. MethodOfSteps(Rosenbrock23()) is a good low order method choice. Additionally, the Rodas methods like MethodOfSteps(Rodas4()) are good choices because of their higher order stiff-aware interpolant.Additionally, DADEs can be solved by specifying the problem in mass matrix form. The Rosenbrock methods are good choices in these situations."
+},
+
+{
+    "location": "solvers/dde_solve.html#Undeclared-Lags-1",
+    "page": "DDE Solvers",
+    "title": "Undeclared Lags",
+    "category": "section",
+    "text": "Lags are declared separately from their use. One can use any lag by simply using the interpolant of h at that point. However, one should use caution in order to achieve the best accuracy. When lags are declared, the solvers can more efficiently be more accurate. If there are undeclared lags, one should only use residual control methods like RK4() as these will better detect the discontinuities."
+},
+
+{
+    "location": "solvers/dde_solve.html#Special-Keyword-Arguments-1",
+    "page": "DDE Solvers",
+    "title": "Special Keyword Arguments",
+    "category": "section",
+    "text": "minimal_solution - Allows the algorithm to delete past history when dense and save_everystep are true. Defaults to true. If lags can grow this may need to be set to false."
+},
+
+{
+    "location": "solvers/dde_solve.html#Note-1",
+    "page": "DDE Solvers",
+    "title": "Note",
+    "category": "section",
+    "text": "If the method is having trouble, one may want to adjust the parameters of the fixed-point iteration. Decreasing the absolute tolerance fixedpoint_abstol and the relative tolerance fixedpoint_reltol, and increasing the maximal number of iterations max_fixedpoint_iters can help ensure that the steps are correct. If the problem still is not correctly converging, one should lower dtmax. In the worst case scenario, one may need to set constrained=true which will constrain timesteps to at most the size of the minimal lag and hence forces more stability at the cost of smaller timesteps.There is currently no recommended algorithm for state-dependent delay problems. An algorithm is currently in the works."
 },
 
 {
