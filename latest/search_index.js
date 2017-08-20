@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Problem Types",
     "category": "section",
-    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/dynamical_types.md\",\n  \"types/split_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
+    "text": "These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.Pages = [\n  \"types/discrete_types.md\",\n  \"types/ode_types.md\",\n  \"types/dynamical_types.md\",\n  \"types/split_ode_types.md\",\n  \"types/steady_state_types.md\",\n  \"types/bvp_types.md\",\n  \"types/sde_types.md\",\n  \"types/rode_types.md\",\n  \"types/dde_types.md\",\n  \"types/dae_types.md\",\n  \"types/jump_types.md\",\n  \"types/fem_types.md\",\n]\nDepth = 2"
 },
 
 {
@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/bvp_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/fempoisson_solve.md\",\n  \"solvers/femheat_solve.md\",\n]\nDepth = 2"
 },
 
 {
@@ -1313,6 +1313,54 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/bvp_types.html#",
+    "page": "BVP Problems",
+    "title": "BVP Problems",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "types/bvp_types.html#BVP-Problems-1",
+    "page": "BVP Problems",
+    "title": "BVP Problems",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/bvp_types.html#Mathematical-Specification-of-an-BVP-Problem-1",
+    "page": "BVP Problems",
+    "title": "Mathematical Specification of an BVP Problem",
+    "category": "section",
+    "text": "To define an BVP Problem, you simply need to give the function f and the initial condition u which define an ODE:fracdudt = f(tu)along with an implicit function bc! which defines the residual equation, wherebc(tu) = 0is the manifold on which the solution must live. A common form for this is the two-point BVProblem where the manifold defines the solution at two points:u(t_0) = a\nu(t_f) = b"
+},
+
+{
+    "location": "types/bvp_types.html#Problem-Type-1",
+    "page": "BVP Problems",
+    "title": "Problem Type",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "types/bvp_types.html#Constructors-1",
+    "page": "BVP Problems",
+    "title": "Constructors",
+    "category": "section",
+    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For TwoPointBVProblem, bc! is the inplace function:bc!(residual, ua, ub)where residual computed from the current u_a = u(t_0) and u_b = u(t_f). For BVProblem, bc! is the inplace function:bc!(residual, sol)where u is the current solution to the ODE which is used to compute the residual. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition (for more general problems, use the parameter estimation routines)."
+},
+
+{
+    "location": "types/bvp_types.html#Fields-1",
+    "page": "BVP Problems",
+    "title": "Fields",
+    "category": "section",
+    "text": "f: The function for the ODE.\nbc: The boundary condition function.\nu0: The initial condition. Either the initial condition for the ODE as an initial value problem, or a Vector of values for u(t_i) for collocation methods\ntspan: The timespan for the problem."
+},
+
+{
     "location": "types/sde_types.html#",
     "page": "SDE Problems",
     "title": "SDE Problems",
@@ -2198,6 +2246,46 @@ var documenterSearchIndex = {"docs": [
     "title": "SteadyStateDiffEq.jl",
     "category": "section",
     "text": "SSRootfind : Using a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.Example usage:sol = solve(prob,SSRootfind())"
+},
+
+{
+    "location": "solvers/bvp_solve.html#",
+    "page": "BVP Solvers",
+    "title": "BVP Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/bvp_solve.html#BVP-Solvers-1",
+    "page": "BVP Solvers",
+    "title": "BVP Solvers",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/bvp_solve.html#Recomended-Methods-1",
+    "page": "BVP Solvers",
+    "title": "Recomended Methods",
+    "category": "section",
+    "text": "GeneralMIRK4 is a good well-rounded method when the problem is not too large. It uses highly stable trust region methods to solve a 4th order fully implicit Runge-Kutta scheme. As an alternative on general BVProblems, the Shooting method paired with an appropriate integrator for the IVP, such as Shooting(Tsit5()), is a flexible and efficient option. This will allow one to combine callbacks/event handling with the BVP solver, and the high order interpolations can be used to define complex boundary conditions. However, Shooting methods can in some cases be prone to sensitivity of the boundary condition.When the problem is a large two-point boundary value problem that is sensitive to the boundary conditions, MIRK4 utilizes a sparse Jacobian to greatly improve the efficiency."
+},
+
+{
+    "location": "solvers/bvp_solve.html#Full-List-of-Methods-1",
+    "page": "BVP Solvers",
+    "title": "Full List of Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/bvp_solve.html#BoundaryValueDiffEq.jl-1",
+    "page": "BVP Solvers",
+    "title": "BoundaryValueDiffEq.jl",
+    "category": "section",
+    "text": "Shooting - A wrapper over initial value problem solvers.\nGeneralMIRK4 - A 4th order collocation method using an implicit Runge-Kutta tableau solved using a trust region dogleg method from NLsolve.jl.\nMIRK4 - A 4th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian. Compatible only with two-point boundary value problems."
 },
 
 {
