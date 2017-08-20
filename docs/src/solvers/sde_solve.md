@@ -23,6 +23,12 @@ with a tradeoff of error efficiency in the low noise case. In addition, the
 option `symplectic=true` will turns these methods into an implicit Midpoint
 extension which is symplectic in distribution but has an accuracy tradeoff.
 
+## Mass Matrices and Stochastic DAEs
+
+The `ImplicitRKMil`, `ImplicitEM`, and `ImplicitEulerHeun` methods can solve
+stochastic equations with mass matrices (including stochastic DAEs written
+in mass matrix form) when either `symplectic=true` or `theta=1`.
+
 ## Special Noise Forms
 
 Some solvers are for specialized forms of noise. Diagonal noise is the default
