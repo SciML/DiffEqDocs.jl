@@ -21,12 +21,12 @@ see the documentation for the [DiffEqOperators](../../features/diffeq_operator.h
 ### Constructors
 
 ```julia
-SplitODEProblem(f1,...,fn,u0,tspan;kwargs...)
+SplitODEProblem{isinplace}(f1,f2,u0,tspan;kwargs...)
 ```
 
 ### Fields
 
-* `f`: The functions in the ODE.
+* `f1`, `f2`: The functions in the ODE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
