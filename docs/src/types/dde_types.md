@@ -15,13 +15,20 @@ the `i`th component delayed by a time `tau` is denoted by `h(t-tau)`.
 Note that we are not limited to numbers or vectors for `u0`; one is allowed to
 provide `u0` as arbitrary matrices / higher dimension tensors as well.
 
+## Declaring Lags
+
+Lags are declared separately from their use. One can use any lag by simply using
+the interpolant of `h` at that point. However, one should use caution in order
+to achieve the best accuracy. When lags are declared, the solvers can more
+efficiently be more accurate and thus this is recommended.
+
 ## Problem Type
 
 ### Constructors
 
 ```julia
-ConstantLagDDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
-DDEProblem{isinplace}(f,h,u0,lags,tspan,callback=nothing,mass_matrix=I)
+DDEProblem{isinplace}(f,h,u0,tspan,constant_lags,dependent_lags=nothing;
+                      callback=nothing,mass_matrix=I)
 ```
 
 `isinplace` optionally sets whether the function is inplace or not. This is
@@ -31,9 +38,11 @@ determined automatically, but not inferred.
 
 * `f`: The function in the ODE.
 * `h`: The history function for the ODE before `t0`.
-* `lags`: An array of lags. For constant lag problems this should be numbers.
-  For state-dependent delay problems this is a tuple of functions.
 * `tspan`: The timespan for the problem.
+* `constant_lags`: An array of constant lags. These should be numbers corresponding
+  to times that are used in the history function `h`.
+* `dependent_lags` A tuple of functions for the state-dependent lags used by the
+  history function `h`.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
 * `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.

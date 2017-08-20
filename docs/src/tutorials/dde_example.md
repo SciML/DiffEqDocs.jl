@@ -101,6 +101,21 @@ using Plots; plot(sol)
 
 ![DDE Example Plot](../assets/dde_example_plot.png)
 
+### Undeclared Delays
+
+You might have noticed DifferentialEquations.jl allows you to solve problems
+with undeclared delays since you can interpolate `h` at any value. This is
+a feature, but use it with caution. Undeclared delays can increase the error
+in the solution. It's recommended that you use a method with a residual control,
+such as `MethodOfSteps(RK4())` whenever there are undeclared delays. With this
+you can use interpolated derivatives, solve functional differential equations
+by using quadrature on the interpolant, etc. However, note that residual control
+solves with a low level of accuracy, so the tolerances should be made very small
+and the solution should not be trusted for more than 2-3 decimal places.
+
+Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
+`ddesd`.
+
 ### State-Dependent Delays
 
 State-dependent delays are problems where the delay is allowed to be a function
@@ -110,11 +125,9 @@ you must declare the lag functions to the solver. Other than that, everything
 else is the same, where one instead constructs a `DDEProblem` type:
 
 ```julia
-prob = DDEProblem(f,h,u0,lags,tspan)
+prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
 ```
 
-and solves that using the common interface.
-
-However, currently there are no good algorithms for this. The developers are
-working on a defect control method which will give good quality results
-and have strict error bounds.
+and solves that using the common interface. The current method to solve such
+equations is to use a residual control method like `MethodOfSteps(RK4())`
+with undeclared state-dependent delays.
