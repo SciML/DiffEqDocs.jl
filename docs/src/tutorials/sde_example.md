@@ -125,7 +125,9 @@ the statistics at every `0.01` timesteps and plot the average + error using:
 
 ```julia
 summ = MonteCarloSummary(sol,0:0.01:1)
-plot(summ)
+plot(summ,labels="Middle 95%")
+summ = MonteCarloSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
+plot!(summ,labels="Middle 50%",legend=true)
 ```
 
 ![sde_tutorial_monte](../assets/sde_tutorial_monte.png)
