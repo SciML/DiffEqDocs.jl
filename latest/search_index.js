@@ -789,7 +789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solution Handling",
     "title": "Return Codes (RetCodes)",
     "category": "section",
-    "text": "The solution types have a retcode field which returns a symbol signifying the error state of the solution. The retcodes are as follows::Default: The solver did not set retcodes.\n:Success: The integration completed without erroring.\n:MaxIters: The integration exited early because it reached its maximum number of iterations.\n:DtLessThanMin: The timestep method chose a stepsize which is smaller than the allowed minimum timestep, and exited early.\n:Unstable: The solver detected that the solution was unstable and exited early."
+    "text": "The solution types have a retcode field which returns a symbol signifying the error state of the solution. The retcodes are as follows::Default: The solver did not set retcodes.\n:Success: The integration completed without erroring.\n:MaxIters: The integration exited early because it reached its maximum number of iterations.\n:DtLessThanMin: The timestep method chose a stepsize which is smaller than the allowed minimum timestep, and exited early.\n:Unstable: The solver detected that the solution was unstable and exited early.\n:ConvergenceFailure: The internal implicit solvers failed to converge.\n:Failure: General uncategorized failures or errors."
 },
 
 {
