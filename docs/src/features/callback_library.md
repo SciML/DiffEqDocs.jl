@@ -99,7 +99,7 @@ dynamical systems is the positive invariance of the positive cone, i.e.
 non-negativity of variables at time $t_0$ ensures their non-negativity at times
 $t \geq t_0$ for which the solution is defined. However, even if a system
 satisfies this property mathematically it can be difficult for ODE solvers to
-ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html) 
+ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html)
 show.
 
 In order to deal with this problem one can specify `isoutofdomain=(t,u) -> any(x
@@ -118,16 +118,16 @@ are cheap to compute but might be inaccurate, so if a time step is changed it
 is additionally reduced by a safety factor of 0.9. Since extrapolated values are
 only non-negative up to a certain tolerance and in addition actual calculations
 might lead to negative values, also any negative values at the current time point
-are set to 0. Hence by this callback non-negative values at any time point are 
+are set to 0. Hence by this callback non-negative values at any time point are
 ensured in a computationally cheap way, but the quality of the solution
 depends on how accurately extrapolations approximate next time steps.
 
 Please note that the system should be defined also outside the positive domain,
 since even with these approaches negative variables might occur during the
 calculations. Moreover, one should follow Shampine's et. al. advice and set the
-derivative $x'_i$ of a negative component $x_i$ to $\max \{0, f_i(t, x)\}$, where
-$t$ denotes the current time point with state vector $x$ and $f_i$ is the $i$-th
-component of function $f$ in an ODE system $x' = f(t, x)$.
+derivative ``x'_i`` of a negative component ``x_i`` to ``\max \{0, f_i(t, x)\}``,
+where ``t`` denotes the current time point with state vector ``x`` and ``f_i``
+is the ``i``-th component of function ``f`` in an ODE system ``x' = f(t, x)``.
 
 ### Constructor
 
@@ -148,13 +148,13 @@ PositiveDomain(u=nothing; save=true, abstol=nothing, scalefactor=nothing)
 ## GeneralDomain
 
 A `GeneralDomain` callback in DiffEqCallbacks.jl generalizes the concept of
-a `PositiveDomain` callback to arbitrary domains. Domains are specified by 
+a `PositiveDomain` callback to arbitrary domains. Domains are specified by
 in-place functions `g(u, resid)` or `g(t, u, resid)` that calculate residuals of a
 state vector `u` at time `t` relative to that domain. As for `PositiveDomain`, steps
 are accepted if residuals of the extrapolated values at the next time step are below
-a certain tolerance. Moreover, this callback is automatically coupled with a 
+a certain tolerance. Moreover, this callback is automatically coupled with a
 `ManifoldProjection` that keeps all calculated state vectors close to the desired
-domain, but in contrast to a `PositiveDomain` callback the nonlinear solver in a 
+domain, but in contrast to a `PositiveDomain` callback the nonlinear solver in a
 `ManifoldProjection` can not guarantee that all state vectors of the solution are
 actually inside the domain. Thus a `PositiveDomain` callback should in general be
 preferred.
@@ -170,21 +170,45 @@ function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
 - `g`: The residual function for the domain. This is an inplace function of form
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the domain.
-- `u`: A prototype of the state vector of the integrator and the residuals. Two 
-  copies of it are saved, and extrapolated values and residuals are written to them. 
-  If it is not specified every application of the callback allocates two new copies 
+- `u`: A prototype of the state vector of the integrator and the residuals. Two
+  copies of it are saved, and extrapolated values and residuals are written to them.
+  If it is not specified every application of the callback allocates two new copies
   of the state vector.
 - `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html)
   which is passed to a `ManifoldProjection`.
 - `save`: Whether to do the standard saving (applied after the callback).
-- `abstol`: Tolerance up to which residuals are accepted. Element-wise tolerances 
-  are allowed. If it is not specified every application of the callback uses the 
+- `abstol`: Tolerance up to which residuals are accepted. Element-wise tolerances
+  are allowed. If it is not specified every application of the callback uses the
   current absolute tolerances of the integrator.
 - `scalefactor`: Factor by which an unaccepted time step is reduced. If it is not
   specified time steps are halved.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
-- `nlopts`: Optional arguments to nonlinear solver of a `ManifoldProjection` which 
+- `nlopts`: Optional arguments to nonlinear solver of a `ManifoldProjection` which
   can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
   The default value of `ftol = 10*eps()` ensures that convergence is only declared
-  if the infinite norm of residuals is very small and hence the state vector is very 
+  if the infinite norm of residuals is very small and hence the state vector is very
   close to the domain.
+
+## Stepsize Limiters
+
+In many cases there is a known maximal stepsize for which the computation is
+stable and produces correct results. For example, in hyperbolic PDEs one normally
+needs to ensure that the stepsize stays below some ``\Delta t_{FE}`` determined
+by the CFL condition. For nonlinear hyperbolic PDEs this limit can be a function
+`dtFE(t,u)` which changes throughout the computation. The stepsize limiter lets
+you pass a function which will adaptively limit the stepsizes to match these
+constraints.
+
+### Constructor
+
+```julia
+StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)
+```
+
+- `dtFE`: The function for the maximal timestep. Calculated using the previous `t` and `u`.
+- `safety_factor`: The factor below the true maximum that will be stepped to
+  which defaults to `9//10`.
+- `max_step`: Makes every step equal to `safety_factor*dtFE(t,u)` when the
+  solver is set to `adaptive=false`.
+- `cached_dtcache`: Should be set to match the type for time when not using
+  Float64 values.
