@@ -16,7 +16,9 @@ MonteCarloProblem(prob::DEProblem;
 
 * `prob_func`: The function by which the problem is to be modified. `prob`
   is the problem, `i` is the unique id `1:num_monte` for the problem, and
-  `repeat` is for if it's a repeat (`rerun` was true).
+  `repeat` is for if the iteration of the repeat. At first it's `0`, but if  
+  `rerun` was true this will be `1`, `2`, etc. counting the number of times
+  problem `i` has been repeated.
 * `output_func`: The function determines what is saved from the solution to the
   output array. Defaults to saving the solution itself. The output is
   `(out,rerun)` where `out` is the output and `rerun` is a boolean which
