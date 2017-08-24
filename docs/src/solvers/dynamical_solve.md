@@ -31,14 +31,14 @@ kinetic energy".
 ## Recommendations
 
 When energy conservation is required, use a symplectic method. Otherwise the
-Runge-Kutta Nystrom methods will be more efficient. Energy is mostly conserved
-by Runge-Kutta Nystrom methods, but is not conserved for long time integrations.
-Thus it is suggested that for shorter integrations you use Runge-Kutta Nystrom
+Runge-Kutta-Nyström methods will be more efficient. Energy is mostly conserved
+by Runge-Kutta-Nyström methods, but is not conserved for long time integrations.
+Thus it is suggested that for shorter integrations you use Runge-Kutta-Nyström
 methods as well.
 
 As a go-to method for efficiency, `DPRKN6` is a good choice. `DPRKN12` is a good
 choice when high accuracy, like `tol<1e-10` is necessary. However, `DPRKN6` is
-the only Runge-Kutta Nystrom method with a higher order interpolant (all default
+the only Runge-Kutta-Nyström method with a higher order interpolant (all default
 to order 3 Hermite, whereas `DPRKN6` is order 6th interpolant) and thus in cases
 where interpolation matters (ex: event handling) one should use `DPRKN6`. For
 very smooth problems with expensive acceleration function evaluations, `IRKN4`
@@ -68,22 +68,22 @@ Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
-### Runge-Kutta Nystrom Integrators
+### Runge-Kutta-Nyström Integrators
 
-- `Nystrom4`: 4th order explicit Runge-Kutta Nystrom method. Allows acceleration
+- `Nystrom4`: 4th order explicit Runge-Kutta-Nyström method. Allows acceleration
   to depend on velocity. Fixed timestep only.
-- `IRKN3`: 4th order explicit two-step Runge-Kutta Nystrom method. Fixed
+- `IRKN3`: 4th order explicit two-step Runge-Kutta-Nyström method. Fixed
   timestep only.
-- `IRKN4`: 4th order explicit two-step Runge-Kutta Nystrom method. Can be more
+- `IRKN4`: 4th order explicit two-step Runge-Kutta-Nyström method. Can be more
   efficient for smooth problems. Fixed timestep only.
-- `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta Nystrom method.
+- `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta-Nyström method.
   Fixed timestep only.
-- `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta Nystrom method.
+- `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta-Nyström method.
   Fixed timestep only.
-- `DPRKN6`: 6th order explicit adaptive Runge-Kutta Nystrom method. Free 6th
+- `DPRKN6`: 6th order explicit adaptive Runge-Kutta-Nyström method. Free 6th
   order interpolant.
-- `DPRKN8`: 8th order explicit adaptive Runge-Kutta Nystrom method.
-- `DPRKN12`: 12th order explicit adaptive Runge-Kutta Nystrom method.
+- `DPRKN8`: 8th order explicit adaptive Runge-Kutta-Nyström method.
+- `DPRKN12`: 12th order explicit adaptive Runge-Kutta-Nyström method.
 
 ### Symplectic Integrators
 
