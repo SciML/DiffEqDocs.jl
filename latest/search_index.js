@@ -1993,11 +1993,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Explicit-Strong-Stability-Presurving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
+    "location": "solvers/ode_solve.html#Explicit-Strong-Stability-Preserving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
     "page": "ODE Solvers",
-    "title": "Explicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
+    "title": "Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
     "category": "section",
-    "text": "SSPRK22 - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.\nSSPRK33 - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.\nSSPRK432 - A  3/2 adaptive strong stability preserving (SSP) method with five stages. (free 2nd order SSP interpolant)\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson. (free 3rd order Hermite interpolant). Fixed timestep only."
+    "text": "SSPRK22 - The two-stage, second order strong stability preserving (SSP) method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.\nSSPRK33 - The three-stage, third order strong stability preserving (SSP) method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.\nSSPRK432 - A  3/2 adaptive strong stability preserving (SSP) method with five stages (SSP coefficient 2, free 2nd order SSP interpolant).\nSSPRK932 - A  3/2 adaptive strong stability preserving (SSP) method with nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).\nSSPRK104 - The ten-stage, fourth order strong stability preserving method of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant). Fixed timestep only.The SSP coefficients of the methods can be queried as ssp_coefficient(alg). All explicit SSP methods take two optional arguments SSPXY(stage_limiter!, step_limiter!), where stage_limiter! and step_limiter are functions taking arguments of the form limiter!(u, f, t). Here, u is the new solution value (updated inplace) after an explicit Euler stage / the whole time step , f the time derivative function (semidiscretisation for PDEs), and t the current time. These limiters can be used to enforce physical constraints, e.g. the positivity preserving limiters of Zhang and Shu (Zhang, Xiangxiong, and Chi-Wang Shu. \"Maximum-principle-satisfying and positivity-preserving high-order schemes for conservation laws: survey and new developments.\" Proceedings of the Royal Society of London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 2011.)."
 },
 
 {
@@ -2025,11 +2025,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Implicit-Strong-Stability-Presurving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
+    "location": "solvers/ode_solve.html#Implicit-Strong-Stability-Preserving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
     "page": "ODE Solvers",
-    "title": "Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
+    "title": "Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
     "category": "section",
-    "text": "SSPSDIRK2 - A second order A-L stable symplectic SDIRK method with the strong stability preserving (SSP) property. Fixed timestep only."
+    "text": "SSPSDIRK2 - A second order A-L stable symplectic SDIRK method with the strong stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only."
 },
 
 {
