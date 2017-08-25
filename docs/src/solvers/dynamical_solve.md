@@ -76,6 +76,9 @@ steps are computed lazily (i.e. not during the solve).
   timestep only.
 - `IRKN4`: 4th order explicit two-step Runge-Kutta-Nyström method. Can be more
   efficient for smooth problems. Fixed timestep only.
+- `ERKN4`: 4th order Runge-Kutta-Nyström method which is integrates the periodic
+  properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
+  problems.
 - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta-Nyström method.
   Fixed timestep only.
 - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta-Nyström method.
