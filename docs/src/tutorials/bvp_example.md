@@ -64,15 +64,15 @@ We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but
 ```julia
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-function bc3(residual, u)
-    residual[1] = u(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
-    residual[2] = u(pi/2)[1] - pi/2
+function bc3(residual, sol)
+    residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
+    residual[2] = sol(pi/2)[1] - pi/2
 end
 bvp3 = BVProblem(simplependulum, bc3, u₀, tspan)
 sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
-Note that user has to import OrdinaryDiffEq.jl before using its IVP solvers.
+We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable. 
 
 ``julia
 plot(sol3)
