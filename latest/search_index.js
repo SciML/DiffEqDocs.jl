@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Tutorials",
     "category": "section",
-    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/jump_diffusion.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
+    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/jump_diffusion.md\",\n    \"tutorials/bvp_example.md\",\n    \"tutorials/fempoisson_example.md\",\n    \"tutorials/femheat_example.md\",\n    \"tutorials/femstochastic_example.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -550,6 +550,38 @@ var documenterSearchIndex = {"docs": [
     "title": "Finite Element Stochastic Heat Equation",
     "category": "section",
     "text": "This will solve a nonlinear stochastic heat equation u_t=u+f+gdW with forcing function f(u)=.5-u, noise function g(u)=100u^2 and initial condition u0=0. We would expect this system to rise towards the deterministic steady state u=2 (but stay in mean a bit below it due to 1st order \"Milstein\" effects), gaining more noise as it increases. This is specified as follows:f(t,x,u)  = ones(size(x,1)) - .5u\nu0_func(x) = zeros(size(x,1))\nσ(t,x,u) = 1u.^2\ntspan = (0.0,5.0)\ndx = 1//2^(3)\ndt = 1//2^(11)\nmesh = parabolic_squaremesh([0 1 0 1],dx,dt,tspan,:neumann)\nu0 = u0_func(mesh.node)\nprob = HeatProblem(u0,f,mesh,σ=σ)We use the following code to create an animation of the solution:sol = solve(prob,FEMDiffEqHeatEuler(),save_everystep=true,solver=:LU)\nusing Plots\nanimate(sol;zlim=(0,3),cbar=false)(Image: Stochastic Heat Solution)"
+},
+
+{
+    "location": "tutorials/bvp_example.html#",
+    "page": "Boundary Value Problems",
+    "title": "Boundary Value Problems",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/bvp_example.html#Boundary-Value-Problems-1",
+    "page": "Boundary Value Problems",
+    "title": "Boundary Value Problems",
+    "category": "section",
+    "text": "This tutorial will introduce you to the functionality for solving BVPs. Other introductions can be found by checking out DiffEqTutorials.jl. This tutorial assumes you have read the Ordinary Differential Equations tutorial.In this example we will solve the ODE that satisfies the boundary condition in the form ofbeginalign\nfracddt = f(t u) \ng(u) = vec0\nendalign"
+},
+
+{
+    "location": "tutorials/bvp_example.html#Example-1:-Simple-Pendulum-1",
+    "page": "Boundary Value Problems",
+    "title": "Example 1: Simple Pendulum",
+    "category": "section",
+    "text": "The concrete example that we are solving is the simple pendulum ddotu+fracgLu=0 on the time interval tin0fracpi2. First, we need to define the ODEusing BoundaryValueDiffEq\nconst g = 9.81\nL = 1.0\ntspan = (0.0,pi/2)\nfunction simplependulum(t,u,du)\n    θ  = u[1]\n    dθ = u[2]\n    du[1] = dθ\n    du[2] = -(g/L)*sin(θ)\nend"
+},
+
+{
+    "location": "tutorials/bvp_example.html#Boundary-Condition-1",
+    "page": "Boundary Value Problems",
+    "title": "Boundary Condition",
+    "category": "section",
+    "text": "And here is where the Boundary comes in. We need to write a function that calculate the residual in-place from the problem solution, such that the residual is vec0 when the boundary condition is satisfied.function bc1(residual, u)\n    residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2\n    residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp1 = BVProblem(simplependulum, bc1, [pi/2,pi/2], tspan)\nsol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)\nplot(sol1)(Image: BVP Example Plot1)We need to use GeneralMIRK4 or Shooting methods to solve BVProblem. We have boundary conditions at the beginning and the ending of the time span in common cases. We can use the TwoPointBVProblem problem type for such cases.function bc2(residual, ua, ub) # ua is the beginning of the time span, and ub is the ending\n    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2\n    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)\nsol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem\nplot(sol2)(Image: BVP Example Plot2)We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but we can always use reduce a BVP to an IVP and a root-finding problem, which is the Shooting method. If you can have a good initial guess, shooting method works very well.using OrdinaryDiffEq\nu₀_2 = [-1.6, -1.7] # the initial guess\nfunction bc3(residual, sol)\n    residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods\n    residual[2] = sol(pi/2)[1] - pi/2\nend\nbvp3 = BVProblem(simplependulum, bc3, u₀, tspan)\nsol3 = solve(bvp3, Shooting(Vern7()))We changed u to sol to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the Shooting method (i.e. you can have a boundary condition saying that the maximum over the interval is 1 using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable. julia plot(sol3)`(Image: BVP Example Plot3)"
 },
 
 {
