@@ -64,7 +64,12 @@ We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but
 ```julia
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-sol3 = solve(bvp1, Shooting(Vern7()))
+function bc3(residual, u)
+    residual[1] = u(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
+    residual[2] = u(pi/2)[1] - pi/2
+end
+bvp3 = BVProblem(simplependulum, bc3, u₀, tspan)
+sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
 Note that user has to import OrdinaryDiffEq.jl before using its IVP solvers.
