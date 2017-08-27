@@ -165,6 +165,8 @@ solve(prob,alg)
   five stages (SSP coefficient 2, free 2nd order SSP interpolant).
 - `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
   nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).
+- `SSPRK54` - The five-stage, fourth order strong stability preserving (SSP)
+  method of Spiteri and Ruuth (SSP coefficient 1.508, 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRK104` - The ten-stage, fourth order strong stability preserving method
   of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant). Fixed timestep only.
 
