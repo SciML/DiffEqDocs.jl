@@ -107,6 +107,7 @@ Pages = [
     "tutorials/dae_example.md",
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
+    "tutorials/bvp_example.md",
     "tutorials/fempoisson_example.md",
     "tutorials/femheat_example.md",
     "tutorials/femstochastic_example.md"
