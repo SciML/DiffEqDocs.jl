@@ -161,6 +161,14 @@ solve(prob,alg)
   method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
 - `SSPRK33` - The three-stage, third order strong stability preserving (SSP)
   method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
+- `SSPRK53` - The five-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 2.65, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK63` - The six-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 3.518, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK73` - The seven-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 4.2879, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK83` - The eight-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 5.107, free 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
   five stages (SSP coefficient 2, free 2nd order SSP interpolant).
 - `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
