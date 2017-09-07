@@ -186,7 +186,7 @@ Up to now, there are still some improvements concerning memory consumption posib
 output, interpolations, callbacks etc. However, some basic methods are available.
 
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy 
-  (free 3rd order Hermite interpolant). Fixed timestep only.
+  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
 ### Methods for Stiff Equations
 
