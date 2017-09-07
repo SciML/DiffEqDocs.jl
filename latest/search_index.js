@@ -2033,6 +2033,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#Low-Storage-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Low-Storage Methods",
+    "category": "section",
+    "text": "Up to now, there are still some improvements concerning memory consumption posible, e.g. dropping the dense output, interpolations, callbacks etc. However, some basic methods are available.CarpenterKennedy2N54 - The five-stage, fourth order low-storage method of Carpenter and Kennedy  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties)."
+},
+
+{
     "location": "solvers/ode_solve.html#Methods-for-Stiff-Equations-1",
     "page": "ODE Solvers",
     "title": "Methods for Stiff Equations",
