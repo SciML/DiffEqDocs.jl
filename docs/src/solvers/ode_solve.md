@@ -180,7 +180,7 @@ Zhang and Shu (Zhang, Xiangxiong, and Chi-Wang Shu. "Maximum-principle-satisfyin
 high-order schemes for conservation laws: survey and new developments." Proceedings of the Royal Society of
 London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 2011.).
 
-### Low-Storage Methods for Hyperbolic PDEs (Conservation Laws)
+### Low-Storage Methods (Designed for Hyperbolic PDEs, Conservation Laws)
 
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy 
   (free 3rd order Hermite interpolant). Fixed timestep only.
