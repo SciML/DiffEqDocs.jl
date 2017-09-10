@@ -48,11 +48,16 @@ To use the constant lag model, we have to declare the lags. Here we will use `ta
 lags = [tau]
 ```
 
-Now we build a `ConstantLagDDEProblem`.  The signature is very similar to ODEs,
-where we now have to give the lags and
-an `h`. `h` is the history function, or a function that declares what the values
-were before the time the model starts. Here we will assume that for all time before
-`t0` the values were 1:
+Now we build a `DDEProblem`. The signature
+
+```julia
+prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
+```
+
+is very similar to ODEs, where we now have to give the lags and an `h`. `h` is
+the history function, or a function that declares what the values were before
+the time the model starts. Here we will assume that for all time before `t0` the
+values were 1:
 
 ```julia
 h(t) = ones(3)
@@ -66,7 +71,7 @@ and create the problem type:
 ```julia
 tspan = (0.0,10.0)
 u0 = [1.0,1.0,1.0]
-prob = ConstantLagDDEProblem(bc_model,h,u0,lags,tspan)
+prob = DDEProblem(bc_model,h,u0,tspan,lags)
 ```
 
 An efficient way to solve this problem (given the constant lags) is with the
@@ -79,10 +84,10 @@ method:
 alg = MethodOfSteps(OrwenZen5())
 ```
 
-For lower tolerance solving, one can use the `OrwenZen3()` algorithm to good effect
-(this combination is similar to the MATLAB `dde23`, but more efficient tableau),
-and for high tolerances the `DP8()` algorithm will give an 8th order solution. Note
-that the Verner methods will not work here due to their lazy interpolation scheme.
+For lower tolerance solving, one can use the `OrwenZen3()` algorithm to good
+effect (this combination is similar to the MATLAB `dde23`, but more efficient
+tableau), and for high tolerances the `DP8()` algorithm will give an 8th order
+solution.
 
 To solve the problem with this algorithm, we do the same thing we'd do with other
 methods on the common interface:
@@ -101,6 +106,20 @@ using Plots; plot(sol)
 
 ![DDE Example Plot](../assets/dde_example_plot.png)
 
+### State-Dependent Delays
+
+State-dependent delays are problems where the delay is allowed to be a function
+of the current state. To do this in DifferentialEquations.jl, one simply writes
+it in the natural manner `g(t,u)` where `g` is the lag function. You must
+declare the lag functions as `dependent_lags` in
+
+```julia
+prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
+```
+
+Other than that, everything else is the same, and one solves that problem using
+the common interface.
+
 ### Undeclared Delays
 
 You might have noticed DifferentialEquations.jl allows you to solve problems
@@ -115,19 +134,3 @@ and the solution should not be trusted for more than 2-3 decimal places.
 
 Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
 `ddesd`.
-
-### State-Dependent Delays
-
-State-dependent delays are problems where the delay is allowed to be a function
-of the current state. To do this in DifferentialEquations.jl, one simply writes
-it in the natural manner `h(g(t,u))` where `g` is the lag function. As before,
-you must declare the lag functions to the solver. Other than that, everything
-else is the same, where one instead constructs a `DDEProblem` type:
-
-```julia
-prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
-```
-
-and solves that using the common interface. The current method to solve such
-equations is to use a residual control method like `MethodOfSteps(RK4())`
-with undeclared state-dependent delays.
