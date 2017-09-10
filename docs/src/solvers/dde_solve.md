@@ -30,14 +30,6 @@ needed, choosing `OrwenZen3()` can do well. Using `BS3` is similar to the MATLAB
 For algorithms where strict error control is needed, it is recommended that one
 uses `DP8()`.
 
-If state-dependent delays are declared, the algorithm will detect
-discontinuities arising from these delays and adjust the step size such that
-these discontinuities are included in the mesh, using the principle outlined by
-S. P. Corwin, D. Sarafyan and S. Thompson in "DKLAG6: a code based on
-continuously imbedded sixth-order Runge-Kutta methods for the solution of
-state-dependent functional differential equations", Applied Numerical
-Mathematics, 1997.
-
 ### Stiff DDEs and Differential-Algebraic Delay Equations (DADEs)
 
 For stiff DDEs, the SDIRK and Rosenbrock methods are very efficient as they will
@@ -50,16 +42,23 @@ their higher order stiff-aware interpolant.
 Additionally, DADEs can be solved by specifying the problem in mass matrix form.
 The Rosenbrock methods are good choices in these situations.
 
-### Undeclared Lags
+### Lag Handling 
 
 Lags are declared separately from their use. One can use any lag by simply using
 the interpolant of `h` at that point. However, one should use caution in order
 to achieve the best accuracy. When lags are declared, the solvers can more
-efficiently be more accurate. If there are undeclared lags, one should only use
-residual control methods like `RK4()`, which is the current best choice, as
-these will step more accurately. Still, residual control is an error-prone
-method. We recommend setting the tolerances low (`1e-10`) and only trusting the
-solution to a 2-3 decimal places of accuracy.
+efficiently be more accurate. Constant delays are propogated until the
+order is higher than the order of the integrator. If state-dependent delays are 
+declared, the algorithm will detect discontinuities arising from these delays and 
+adjust the step size such that these discontinuities are included in the mesh.
+This way, all discontinuities are treated exactly.
+
+If there are undeclared lags, the discontinuities due to delays are not tracked.
+In this case, one should only use residual control methods like `RK4()`, 
+which is the current best choice, as these will step more accurately. 
+Still, residual control is an error-prone method. We recommend setting the 
+tolerances low (`1e-10`) and only trusting the solution to a 2-3 decimal 
+places of accuracy.
 
 ## Special Keyword Arguments
 
