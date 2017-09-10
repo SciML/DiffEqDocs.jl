@@ -7,8 +7,8 @@ given, a default algorithm will be chosen.
 
 ## Recommended Methods
 
-The recommended method for standard constant lag DDE problems are the `MethodOfSteps`
-algorithms. These are constructed from an OrdinaryDiffEq.jl algorithm as follows:
+The recommended method for DDE problems are the `MethodOfSteps` algorithms.
+These are constructed from an OrdinaryDiffEq.jl algorithm as follows:
 
 ```julia
 MethodOfSteps(alg;constrained=false,
@@ -18,8 +18,7 @@ MethodOfSteps(alg;constrained=false,
              max_fixedpoint_iters = 10)
 ```
 
-where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms will work, though
-a notable exception are algorithms which use a lazy interpolant (the Verner methods).
+where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
 
 ### Nonstiff DDEs
 
@@ -29,15 +28,7 @@ handle most problems. For fast solving at where non-strict error control is
 needed, choosing `OrwenZen3()` can do well. Using `BS3` is similar to the MATLAB
 `dde23`, but `OrwenZen3()` will have noticably less error for the same work.
 For algorithms where strict error control is needed, it is recommended that one
-uses `DP8()`. Other high order integrators are not applicable since they use
-a lazy interpolant.
-
-For state-dependent delays, the current best choice is `RK4` since it uses a
-residual control method to more accurately step. Note that current state-dependent
-delays are not detected and thus non-residual control methods will be less
-accurate. Still, residual control is an error-prone method. We recommend setting
-the tolerances low (`1e-10`) and only trusting the solution to a 2-3 decimal
-places of accuracy.
+uses `DP8()`.
 
 ### Stiff DDEs and Differential-Algebraic Delay Equations (DADEs)
 
@@ -51,20 +42,43 @@ their higher order stiff-aware interpolant.
 Additionally, DADEs can be solved by specifying the problem in mass matrix form.
 The Rosenbrock methods are good choices in these situations.
 
-### Undeclared Lags
+### Lag Handling 
 
 Lags are declared separately from their use. One can use any lag by simply using
 the interpolant of `h` at that point. However, one should use caution in order
 to achieve the best accuracy. When lags are declared, the solvers can more
-efficiently be more accurate. If there are undeclared lags, one should only
-use residual control methods like `RK4()` as these will better detect the
-discontinuities.
+efficiently be more accurate. Constant delays are propogated until the
+order is higher than the order of the integrator. If state-dependent delays are 
+declared, the algorithm will detect discontinuities arising from these delays and 
+adjust the step size such that these discontinuities are included in the mesh.
+This way, all discontinuities are treated exactly.
+
+If there are undeclared lags, the discontinuities due to delays are not tracked.
+In this case, one should only use residual control methods like `RK4()`, 
+which is the current best choice, as these will step more accurately. 
+Still, residual control is an error-prone method. We recommend setting the 
+tolerances low (`1e-10`) and only trusting the solution to a 2-3 decimal 
+places of accuracy.
 
 ## Special Keyword Arguments
 
 - `minimal_solution` - Allows the algorithm to delete past history when `dense`
-  and `save_everystep` are true. Defaults to true. If lags can grow this may
-  need to be set to false.
+  and `save_everystep` are false, and only constant lags are specified. Defaults
+  to true. If lags can grow or some lags are undeclared this may need to be set
+  to false since it might impact the quality of the solution otherwise.
+
+- `initial_order` - Order of discontinuity at the initial time point. Defaults
+  to 0 if the evaluation of the history function at the initial time point does
+  not equal the initial state, and 1 otherwise.
+
+- `discontinuity_interp_points` - Number of interpolation points used to track
+  discontinuities arising from dependent delays. Defaults to 10. Only relevant
+  if dependent delays are declared.
+
+- `discontinuity_abstol` and `discontinuity_reltol` - These are absolute and
+  relative tolerances used by the check whether the time point at the beginning
+  of the current step is a discontinuity arising from dependent delays. Defaults
+  to 1/10^12 and 0. Only relevant if dependent delays are declared.
 
 ### Note
 
@@ -75,6 +89,3 @@ relative tolerance `fixedpoint_reltol`, and increasing the maximal number of ite
 is not correctly converging, one should lower `dtmax`. In the worst case scenario, one
 may need to set `constrained=true` which will constrain timesteps to at most the size
 of the minimal lag and hence forces more stability at the cost of smaller timesteps.
-
-There is currently no recommended algorithm for state-dependent delay problems.
-An algorithm is currently in the works.
