@@ -151,7 +151,7 @@ example, if one instead wanted to optimize the initial conditions for a function
 without parameters, you could change this to:
 
 ```julia
-my_problem_new_parameters = function (prob::ODEProblem,p)
+function my_problem_new_parameters(prob::ODEProblem,p)
   uEltype = eltype(p)
   tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
   ODEProblem(prob.f,p,tspan)

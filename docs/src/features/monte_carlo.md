@@ -278,7 +278,7 @@ Here we will take the base problem, multiply the initial condition by a `rand()`
 and use that for calculating the trajectory:
 
 ```julia
-prob_func = function (prob,i,repeat)
+function prob_func(prob,i,repeat)
   prob.u0 = rand()*prob.u0
   prob
 end
@@ -319,7 +319,7 @@ we could simply index the `linspace` type:
 
 ```julia
 initial_conditions = linspace(0,1,100)
-prob_func = function (prob,i,repeat)
+function prob_func(prob,i,repeat)
   prob.u0 = initial_conditions[i]
   prob
 end
@@ -335,7 +335,7 @@ we will use [the parameterized function wrappers](../analysis/parameterized_func
 noise. Our Lotka-Volterra system will have as its drift component:
 
 ```julia
-pf_func = function (t,u,p,du)
+function pf_func(t,u,p,du)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
 end
@@ -346,7 +346,7 @@ where `pf` is the function with the parameters `1.5` and `1.0` associated with i
 For our noise function we will use multiplicative noise:
 
 ```julia
-pg_func = function (t,u,p,du)
+function pg_func(t,u,p,du)
   du[1] = p[1]*u[1]
   du[2] = p[2]*u[2]
 end
@@ -368,7 +368,7 @@ parameters are accessed at `f.params`. Thus we will modify those values in the
 `g`:
 
 ```julia
-prob_func = function (prob,i,repeat)
+function prob_func(prob,i,repeat)
   set_param_values!(prob.g,0.3rand(2))
   prob
 end
@@ -410,7 +410,7 @@ the standard error of the mean for the final time point below our tolerance
 to discard the rest of the data.
 
 ```julia
-output_func = function (sol,i)
+function output_func(sol,i)
   last(sol)
 end
 ```
@@ -421,7 +421,7 @@ Our `prob_func` wull simply randomize the initial condition:
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
 
-prob_func = function (prob,i,repeat)
+function prob_func(prob,i,repeat)
   prob.u0 = rand()*prob.u0
   prob
 end
@@ -432,7 +432,7 @@ batch, and declare convergence if the standard error of the mean is calculated
 as sufficiently small:
 
 ```julia
-reduction = function (u,batch,I)
+function reduction(u,batch,I)
   u = append!(u,batch)
   u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false
 end
@@ -457,7 +457,7 @@ again. Instead of saving the solution at the end for each trajectory, we can ins
 save the running summation of the endpoints:
 
 ```julia
-reduction = function (u,batch,I)
+function reduction(u,batch,I)
   u+sum(batch),false
 end
 prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
@@ -475,12 +475,12 @@ generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x
 system of linear stochastic differential equations:
 
 ```julia
-f = (t,u,du) -> begin
+function f(t,u,du)
   for i = 1:length(u)
     du[i] = 1.01*u[i]
   end
 end
-σ = (t,u,du) -> begin
+function σ(t,u,du)
   for i in 1:length(u)
     du[i] = .87*u[i]
   end
