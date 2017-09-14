@@ -41,7 +41,7 @@ Here we solve the harmonic oscillator:
 
 ```julia
 u0 = ones(2)
-f = function (t,u,du)
+function f(t,u,du)
   du[1] = u[2]
   du[2] = -u[1]
 end

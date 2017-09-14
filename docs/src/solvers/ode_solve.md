@@ -193,7 +193,7 @@ London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 20
 Up to now, there are still some improvements concerning memory consumption posible, e.g. dropping the dense
 output, interpolations, callbacks etc. However, some basic methods are available.
 
-- `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy 
+- `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
 ### Methods for Stiff Equations
@@ -324,7 +324,7 @@ solve(prob,alg)
 
 One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
 you to, with very minimal overhead, design a multimethod which switches between
-chosen algorithms as needed. The syntax is `CompositeAlgorthm(algtup,choice_function)`
+chosen algorithms as needed. The syntax is `CompositeAlgorithm(algtup,choice_function)`
 where `algtup` is a tuple of OrdinaryDiffEq.jl algorithms, and `choice_function`
 is a function which declares which method to use in the following step. For example,
 we can design a multimethod which uses `Tsit5()` but switches to `Vern7()` whenever

@@ -48,7 +48,7 @@ and the not in-place syntax is `f(t,u,params,du)`. For DDEs, the in-place syntax
 ### Examples using the Constructor
 
 ```julia
-pf_func = function (t,u,p,du)
+function pf_func(t,u,p,du)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
 end
@@ -62,7 +62,7 @@ functionality which requires explicit parameters (parameter estimation, etc.).
 Note that the not in-place version works the same:
 
 ```julia
-pf_func2 = function (t,u,p)
+function pf_func2(t,u,p)
   [p[1] * u[1] - p[2] * u[1]*u[2];-3 * u[2] + u[1]*u[2]]
 end
 

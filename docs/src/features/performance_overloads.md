@@ -16,8 +16,8 @@ take the LotkaVolterra model:
 
 ```julia
 function f(t,u,du)
-         du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]
-         du[2] = -3 * u[2] + u[1]*u[2]
+  du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]
+  du[2] = -3 * u[2] + u[1]*u[2]
 end
 ```
 

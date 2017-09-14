@@ -55,7 +55,7 @@ you can use the `rand_prototype` keyword to explicitly set the size of the
 random process:
 
 ```julia
-f = function (t,u,W,du)
+function f(t,u,W,du)
   du[1] = -2W[3]*u[1]*sin(W[1] - W[2])
   du[2] = -2u[2]*cos(W[1] + W[2])
 end
