@@ -415,7 +415,7 @@ function output_func(sol,i)
 end
 ```
 
-Our `prob_func` wull simply randomize the initial condition:
+Our `prob_func` will simply randomize the initial condition:
 
 ```julia
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
