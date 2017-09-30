@@ -3401,6 +3401,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_library.html#SavingCallback-1",
+    "page": "Callback Library",
+    "title": "SavingCallback",
+    "category": "section",
+    "text": "The saving callback lets you define a function save_func(t, u, integrator) which returns quantities of interest that shall be saved. "
+},
+
+{
+    "location": "features/callback_library.html#Constructor-5",
+    "page": "Callback Library",
+    "title": "Constructor",
+    "category": "section",
+    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved.\nsaved_values::SavedValues contains vectors t::Vector{tType},  saveval::Vector{savevalType} of the saved quantities. Here,  save_func(t, u, integrator)::savevalType.\nsaveat Mimicks saveat in solve for ODEs.\nsave_everystep Mimicks save_everystep in solve for ODEs.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end]."
+},
+
+{
     "location": "features/monte_carlo.html#",
     "page": "Parallel Monte Carlo Simulations",
     "title": "Parallel Monte Carlo Simulations",
