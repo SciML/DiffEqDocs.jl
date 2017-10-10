@@ -409,6 +409,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/discrete_stochastic_example.html#Using-the-Reaction-Network-DSL-1",
+    "page": "Discrete Stochastic (Gillespie) Equations",
+    "title": "Using the Reaction Network DSL",
+    "category": "section",
+    "text": "Also included as part of DiffEqBiological.jl is the reaction network DSL. We could define the previous problem via:rs = @reaction_network begin\n  1e-4, S + I --> 2I\n  0.01,  I --> R\nend\nprob = DiscreteProblem([999,1,0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),rs)\nsol = solve(jump_prob,Discrete())"
+},
+
+{
     "location": "tutorials/discrete_stochastic_example.html#Defining-the-Jumps-Directly-1",
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining the Jumps Directly",
@@ -4210,23 +4218,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "models/biological.html#",
-    "page": "Biological Models",
-    "title": "Biological Models",
+    "page": "Chemical Reaction Models",
+    "title": "Chemical Reaction Models",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "models/biological.html#Biological-Models-1",
-    "page": "Biological Models",
-    "title": "Biological Models",
+    "location": "models/biological.html#Chemical-Reaction-Models-1",
+    "page": "Chemical Reaction Models",
+    "title": "Chemical Reaction Models",
     "category": "section",
     "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
 },
 
 {
     "location": "models/biological.html#The-Reaction-Type-1",
-    "page": "Biological Models",
+    "page": "Chemical Reaction Models",
     "title": "The Reaction Type",
     "category": "section",
     "text": "The basic type for BiologicalModels.jl is the reaction type. Its constructor is:Reaction(rate_constant,reactants,stoichiometry)rate_constant is the rate constant for the reaction. reactants is a list of reactants for the reaction. For example, reactants=(2,3) means that the reaction rate is rate_constant*u[2]*u[3]. stoichiometry is then the stoichiometry for the result. It is a list of tuples of changes to apply when the reaction takes place. Each tuple (i,j) means \"modify reactiant i by amount j\". For example, the tuple (2,-1) means \"decrease reactant 2 by 1\"."
@@ -4234,7 +4242,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "models/biological.html#Note-About-Rate-Dependency-1",
-    "page": "Biological Models",
+    "page": "Chemical Reaction Models",
     "title": "Note About Rate Dependency",
     "category": "section",
     "text": "Note that currently, the reactions are used to build ConstantRateJumps. This means that the solver requires that the rates are constant between jumps in order to achieve full accuracy. The rates for the ConstantRateJump may depend on each other, but they may not depend on the differential equation themselves."
@@ -4242,7 +4250,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "models/biological.html#Variable-Rate-Reactions-1",
-    "page": "Biological Models",
+    "page": "Chemical Reaction Models",
     "title": "Variable Rate Reactions",
     "category": "section",
     "text": "VariableRateReaction are allowed to have their rates change continuously, depending on time or values related to a differential equation. The constructor is:function VariableRateReaction(rate_constant,reactants,stoichiometry;\n                              idxs = nothing,\n                              rootfind=true,\n                              interp_points=10,\n                              abstol=1e-12,reltol=0)The additional keyword arguments are for controlling the associated ContinuousCallback used to handle VariableRateReactions in simulations."
@@ -4250,7 +4258,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "models/biological.html#Example-Reaction-1",
-    "page": "Biological Models",
+    "page": "Chemical Reaction Models",
     "title": "Example Reaction",
     "category": "section",
     "text": "An example reaction is:r1 = Reaction(1e-4,(1,2),((1,-1),(2,1)))Here, the rate_constant is 1e-4. The reactants are components 1 and 2, meaning the reaction rate is calculated by rate_constant*u[1]*u[2]. The stoichiometry does two things. First, the (1,-1) means that, when the reaction occurs, we decrease u[1] by 1. Secondly, the (2,1) means we increase u[2] by 1. Thus this reaction is a reaction where chemical 1 changes into chemical 2, and it is enhanced by chemical 2 itself."
@@ -4258,10 +4266,34 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "models/biological.html#GillespieProblem-1",
-    "page": "Biological Models",
+    "page": "Chemical Reaction Models",
     "title": "GillespieProblem",
     "category": "section",
     "text": "These reactions can be added to a differential equation (or discrete) problem using the GillespieProblem. This is simply a constructor which interprets the reactions as jumps, and builds the associated JumpProblem. Thus its constructor is the same:GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::AbstractReaction...;kwargs...)This is the exact same constructor as the JumpProblem, except now we pass reactions (or VariableRateReactions, or a ReactionSet) instead of jumps. Thus for more information, see the description of the JumpProblem."
+},
+
+{
+    "location": "models/biological.html#The-Reaction-DSL-1",
+    "page": "Chemical Reaction Models",
+    "title": "The Reaction DSL",
+    "category": "section",
+    "text": "The @reaction_network DSL allows you to define reaction networks in a more scientific format. Each line is given as parameter reactants --> products."
+},
+
+{
+    "location": "models/biological.html#Example:-Birth-Death-Process-1",
+    "page": "Chemical Reaction Models",
+    "title": "Example: Birth-Death Process",
+    "category": "section",
+    "text": "rs = @reaction_network begin\n  2.0, X --> 2X\n  1.0, X --> 0\n  0.5, 0 --> X\nend\nprob = DiscreteProblem([5], (0.0, 4.0))\njump_prob = GillespieProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+},
+
+{
+    "location": "models/biological.html#Example:-Michaelis-Menten-Enzyme-Kinetics-1",
+    "page": "Chemical Reaction Models",
+    "title": "Example: Michaelis-Menten Enzyme Kinetics",
+    "category": "section",
+    "text": "rs = @reaction_network begin\n  0.00166, S + E --> SE\n  0.0001,  SE --> S + E\n  0.1,     SE --> P + E\nend\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0))\njump_prob = GillespieProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 ]}
