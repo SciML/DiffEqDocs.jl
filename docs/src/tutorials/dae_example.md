@@ -40,14 +40,14 @@ output. To makes this into a DAE, we move all of the variables to one side.
 Thus we can define the function:
 
 ```julia
-f = function (t,u,du,out)
+function f(t,u,du,out)
   out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]
   out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]
   out[3] = u[1] + u[2] + u[3] - 1.0
 end
 ```
 
-with initial conditons
+with initial conditions
 
 ```julia
 u₀ = [1.0, 0, 0]

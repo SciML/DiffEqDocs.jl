@@ -59,7 +59,7 @@ The arguments are defined as follows:
   `0` within the time interval.
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
   This saving will occur just before and after the event, only at event times, and
-  does not depend on options like `saveat`, `save_everystep`, etc. (i.e. if 
+  does not depend on options like `saveat`, `save_everystep`, etc. (i.e. if
   `saveat=[1.0,2.0,3.0]`, this can still add a save point at `2.1` if true).
   For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
@@ -91,7 +91,7 @@ DiscreteCallback(condition,affect!;
   be done, see the [Integrator Interface](@ref) manual page.
 * `save_positions`: Boolean tuple for whether to save before and after the `affect!`.
   This saving will occur just before and after the event, only at event times, and
-  does not depend on options like `saveat`, `save_everystep`, etc. (i.e. if 
+  does not depend on options like `saveat`, `save_everystep`, etc. (i.e. if
   `saveat=[1.0,2.0,3.0]`, this can still add a save point at `2.1` if true).
   For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
@@ -522,7 +522,7 @@ to be changing the size of the population, we write the model in the general for
 
 ```julia
 const α = 0.3
-f = function (t,u,du)
+function f(t,u,du)
   for i in 1:length(u)
     du[i] = α*u[i]
   end
@@ -546,7 +546,7 @@ by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
 
 ```julia
-affect! = function (integrator)
+function affect!(integrator)
   u = integrator.u
   resize!(integrator,length(u)+1)
   maxidx = findmax(u)[2]

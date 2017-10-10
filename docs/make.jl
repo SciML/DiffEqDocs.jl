@@ -17,7 +17,8 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "tutorials/jump_diffusion.md",
            "tutorials/fempoisson_example.md",
            "tutorials/femheat_example.md",
-           "tutorials/femstochastic_example.md"
+           "tutorials/femstochastic_example.md",
+           "tutorials/bvp_example.md"
          ],
          "Basics" => Any[
            "basics/overview.md",

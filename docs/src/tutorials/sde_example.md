@@ -63,7 +63,7 @@ and then we pass this information to the solver and plot:
 
 ```julia
 #We can plot using the classic Euler-Maruyama algorithm as follows:
-sol =solve(prob,EM(),dt=dt)
+sol = solve(prob,EM(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
 
@@ -72,7 +72,7 @@ plot(sol,plot_analytic=true)
 We can choose a higher-order solver for a more accurate result:
 
 ```julia
-sol =solve(prob,SRIW1(),dt=dt,adaptive=false)
+sol = solve(prob,SRIW1(),dt=dt,adaptive=false)
 plot(sol,plot_analytic=true)
 ```
 
@@ -81,7 +81,7 @@ plot(sol,plot_analytic=true)
 By default, the higher order methods have adaptivity. Thus one can use
 
 ```julia
-sol =solve(prob,SRIW1())
+sol = solve(prob,SRIW1())
 plot(sol,plot_analytic=true)
 ```
 
@@ -92,7 +92,7 @@ at the beginning is conservative (small) to ensure accuracy. We can instead star
 the method with a larger `dt` by passing in a value for the starting `dt`:
 
 ```julia
-sol =solve(prob,SRIW1(),dt=dt)
+sol = solve(prob,SRIW1(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
 
@@ -155,15 +155,15 @@ step of the equation. This is done via:
 
 ```julia
 function lorenz(t,u,du)
- du[1] = 10.0(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
+  du[1] = 10.0(u[2]-u[1])
+  du[2] = u[1]*(28.0-u[3]) - u[2]
+  du[3] = u[1]*u[2] - (8/3)*u[3]
 end
 
 function σ_lorenz(t,u,du)
- du[1] = 3.0
- du[2] = 3.0
- du[3] = 3.0
+  du[1] = 3.0
+  du[2] = 3.0
+  du[3] = 3.0
 end
 
 prob_sde_lorenz = SDEProblem(lorenz,σ_lorenz,[1.0,0.0,0.0],(0.0,10.0))
@@ -177,9 +177,9 @@ Note that it's okay for the noise function to mix terms. For example
 
 ```julia
 function σ_lorenz(t,u,du)
- du[1] = sin(u[3])*3.0
- du[2] = u[2]*u[1]*3.0
- du[3] = 3.0
+  du[1] = sin(u[3])*3.0
+  du[2] = u[2]*u[1]*3.0
+  du[3] = 3.0
 end
 ```
 
@@ -212,8 +212,8 @@ In this case, we will want the output of `g` to be a 2x4 matrix, such that the s
 is `g(t,u)*dW`, the matrix multiplication. For example, we can do the following:
 
 ```julia
-f = (t,u,du) -> du.=1.01u
-g = function (t,u,du)
+f(t,u,du) = du .= 1.01u
+function g(t,u,du)
   du[1,1] = 0.3u[1]
   du[1,2] = 0.6u[1]
   du[1,3] = 0.9u[1]
@@ -241,7 +241,7 @@ A[2,4] = 1
 sparse(A)
 
 # Make `g` write the sparse matrix values
-g = function (t,u,du)
+function g(t,u,du)
   du[1,1] = 0.3u[1]
   du[1,4] = 0.12u[2]
   du[2,4] = 1.8u[2]
@@ -277,11 +277,11 @@ dW_1 dW_2 = ρ dt
 In this problem, we have a diagonal noise problem given by:
 
 ```julia
-f = function (t,u,du)
+function f(t,u,du)
   du[1] = μ*u[1]
   du[2] = κ*(Θ-u[2])
 end
-g = function (t,u,du)
+function g(t,u,du)
   du[1] = √u[2]*u[1]
   du[2] = Θ*√u[2]
 end

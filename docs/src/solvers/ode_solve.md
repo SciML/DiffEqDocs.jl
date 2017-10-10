@@ -155,16 +155,46 @@ alg = Tsit5()
 solve(prob,alg)  
 ```
 
-### Explicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
-  method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.
+  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
 - `SSPRK33` - The three-stage, third order strong stability preserving (SSP)
-  method of Shu and Osher. (free 2nd order SSP interpolant). Fixed timestep only.
+  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
+- `SSPRK53` - The five-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 2.65, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK63` - The six-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 3.518, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK73` - The seven-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 4.2879, free 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRK83` - The eight-stage, third order strong stability preserving (SSP)
+  method of Ruuth (SSP coefficient 5.107, free 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
-  five stages. (free 2nd order SSP interpolant)
+  five stages (SSP coefficient 2, free 2nd order SSP interpolant).
+- `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
+  nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).
+- `SSPRK54` - The five-stage, fourth order strong stability preserving (SSP)
+  method of Spiteri and Ruuth (SSP coefficient 1.508, 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRK104` - The ten-stage, fourth order strong stability preserving method
-  of Ketcheson. (free 3rd order Hermite interpolant). Fixed timestep only.
+  of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant). Fixed timestep only.
+
+The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
+All explicit SSP methods take two optional arguments `SSPXY(stage_limiter!, step_limiter!)`, where
+`stage_limiter!` and `step_limiter` are functions taking arguments of the form `limiter!(u, f, t)`.
+Here, `u` is the new solution value (updated inplace) after an explicit Euler stage / the whole time
+step , `f` the time derivative function (semidiscretisation for PDEs), and `t` the current time. These
+limiters can be used to enforce physical constraints, e.g. the positivity preserving limiters of
+Zhang and Shu (Zhang, Xiangxiong, and Chi-Wang Shu. "Maximum-principle-satisfying and positivity-preserving
+high-order schemes for conservation laws: survey and new developments." Proceedings of the Royal Society of
+London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 2011.).
+
+### Low-Storage Methods
+
+Up to now, there are still some improvements concerning memory consumption posible, e.g. dropping the dense
+output, interpolations, callbacks etc. However, some basic methods are available.
+
+- `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
+  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
 ### Methods for Stiff Equations
 
@@ -234,10 +264,10 @@ solve(prob,alg)
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
-### Implicit Strong-Stability Presurving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
-  stability preserving (SSP) property. Fixed timestep only.
+  stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only.
 
 #### Extra Options
 
@@ -294,7 +324,7 @@ solve(prob,alg)
 
 One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
 you to, with very minimal overhead, design a multimethod which switches between
-chosen algorithms as needed. The syntax is `CompositeAlgorthm(algtup,choice_function)`
+chosen algorithms as needed. The syntax is `CompositeAlgorithm(algtup,choice_function)`
 where `algtup` is a tuple of OrdinaryDiffEq.jl algorithms, and `choice_function`
 is a function which declares which method to use in the following step. For example,
 we can design a multimethod which uses `Tsit5()` but switches to `Vern7()` whenever

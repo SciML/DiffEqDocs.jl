@@ -447,8 +447,8 @@ First we will generate a noise process by solving an SDE:
 
 ```julia
 using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess
-f1 = (t,u) -> 1.01u
-g1 = (t,u) -> 1.01u
+f1(t,u) = 1.01u
+g1(t,u) = 1.01u
 dt = 1//2^(4)
 prob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))
 sol1 = solve(prob1,EM(),dt=dt)
@@ -544,8 +544,8 @@ that way the noise can be used over an indefinite integral.
 ```julia
 const μ = 1.5
 const σ = 1.2
-f = (t,u) -> μ*u
-g = (t,u) -> σ*u
+f(t,u) = μ*u
+g(t,u) = σ*u
 prob = SDEProblem(f,g,1.0,(0.0,Inf))
 ```
 
@@ -573,7 +573,7 @@ The `NoiseFunction` is pretty simple: pass a function. As a silly example, we
 can use `exp` as a noise process by doing:
 
 ```julia
-f = (t) -> exp(t)
+f(t) = exp(t)
 W = NoiseFunction(0.0,f)
 ```
 
@@ -581,7 +581,7 @@ If it's multi-dimensional and an in-place function is used, the `noise_prototype
 must be given. For example:
 
 ```julia
-f = (out,t) -> (out.=exp(t))
+f(out,t) = (out.=exp(t))
 W = NoiseFunction(0.0,f,noise_prototype=rand(4))
 ```
 

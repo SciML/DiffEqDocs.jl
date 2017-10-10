@@ -69,7 +69,7 @@ page.
 
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
-[ODE tutorial](/tutorials/ode_example.html)**. Example IJulia notebooks
+[ODE tutorial](tutorials/ode_example.html)**. Example IJulia notebooks
 [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
@@ -107,6 +107,7 @@ Pages = [
     "tutorials/dae_example.md",
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
+    "tutorials/bvp_example.md",
     "tutorials/fempoisson_example.md",
     "tutorials/femheat_example.md",
     "tutorials/femstochastic_example.md"

@@ -28,7 +28,7 @@ of rate 2 (which is the mean and variance), where at each jump the current solut
 will be halved. To solve this problem, we first define the `ODEProblem`:
 
 ```julia
-f = function (t,u,du)
+function f(t,u,du)
   du[1] = u[1]
 end
 
@@ -44,7 +44,7 @@ Now we define our `rate` equation for our jump. Since it's just the constant
 value 2, we do:
 
 ```julia
-rate = (t,u) -> 2
+rate(t,u) = 2
 ```
 
 Now we define the `affect!` of the jump. This is the same as an `affect!` from
@@ -52,7 +52,7 @@ a `DiscreteCallback`, and thus acts directly on the integrator. Therefore, to
 make it halve the current value of `u`, we do:
 
 ```julia
-affect! = (integrator) -> (integrator.u[1] = integrator.u[1]/2)
+affect!(integrator) = (integrator.u[1] = integrator.u[1]/2)
 ```
 
 Then we build our jump:
@@ -82,13 +82,13 @@ Now let's define a jump which is coupled to the differential equation. Let's let
 the rate be the current value of the solution, that is:
 
 ```julia
-rate = (t,u) -> u[1]
+rate(t,u) = u[1]
 ```
 
 Using the same `affect!`
 
 ```julia
-affect! = (integrator) -> (integrator.u[1] = integrator.u[1]/2)
+affect!(integrator) = (integrator.u[1] = integrator.u[1]/2)
 ```
 
 we build a `VariableRateJump`:
@@ -126,7 +126,7 @@ as before, except we now start with a `SDEProblem` instead of an `ODEProblem`.
 Using the same drift function `f` as before, we add multiplicative noise via:
 
 ```julia
-g = function (t,u,du)
+function g(t,u,du)
   du[1] = u[1]
 end
 
@@ -150,9 +150,9 @@ plot(sol)
 
 
 ##  Coupling Jump Problems
-In many applications one is interested in coupling two stochastic processes. This has applications in Monte Carlo simulations and sensitivity analysis, for example. Currently, the coupling that is implemented for jump processes is known as the split coupling. The split coupling couples two jump processes by coupling the underlying Poisson processes driving the jump components. 
+In many applications one is interested in coupling two stochastic processes. This has applications in Monte Carlo simulations and sensitivity analysis, for example. Currently, the coupling that is implemented for jump processes is known as the split coupling. The split coupling couples two jump processes by coupling the underlying Poisson processes driving the jump components.
 
-Suppose `prob` and `prob_control` are two problems we wish to couple. Then the coupled problem is obtained by 
+Suppose `prob` and `prob_control` are two problems we wish to couple. Then the coupled problem is obtained by
 
 ```julia
 prob_coupled =  SplitCoupledJumpProblem(jump_prob,jump_prob_control,Direct(),coupling_map)
@@ -162,16 +162,16 @@ Here, `coupling_map` specifies which jumps to couple. If `(j,i)` is in `coupling
 
 As an example, consider a doubly stochastic Poisson process, that is, a Poisson process whose rate is itself a stochastic process. In particular, we will take the rate to randomly switch between zero and `10` at unit rates:
 
-```julia 
-rate = (t,u) -> u[2]*10
-affect! = (integrator) -> integrator.u[1] += 1.
+```julia
+rate(t,u) = u[2]*10
+affect!(integrator) = integrator.u[1] += 1.
 jump1 = ConstantRateJump(rate,affect!)
-rate = (t,u) -> u[2]
-affect! = (integrator) -> (integrator.u[2] -= 1.;integrator.u[3] += 1.)
+rate(t,u) = u[2]
+affect!(integrator) = (integrator.u[2] -= 1.;integrator.u[3] += 1.)
 jump2 = ConstantRateJump(rate,affect!)
 
-rate = (t,u) -> u[3]
-affect! = (integrator) -> (integrator.u[2] += 1.;integrator.u[3] -= 1.)
+rate(t,u) = u[3]
+affect!(integrator) = (integrator.u[2] += 1.;integrator.u[3] -= 1.)
 jump3 = ConstantRateJump(rate,affect!)
 prob = DiscreteProblem(u0,tspan)
 jump_prob = JumpProblem(prob,Direct(),jump1,jump2,jump3)
@@ -179,7 +179,7 @@ jump_prob = JumpProblem(prob,Direct(),jump1,jump2,jump3)
 The doubly stochastic poisson process has two sources of randomness: one due to the Poisson process, and another due to random evolution of the rate. This is typical of many multiscale stochastic processes appearing in applications, and it is often useful to compare such a process to one obtained by removing one source of randomness. In present context, this means looking at an ODE with constant jump rates, where the deterministic evolution between jumps is given by the expected value of the Poisson process:
 
 ```julia
-f = function (t,u,du)
+function f(t,u,du)
   du[1] = u[2]*10
   du[2] = 0.
   du[3] = 0.
@@ -193,10 +193,10 @@ Let's couple the two problems by coupling the jumps corresponding the switching 
 coupling_map = [(2,1),(3,2)]
 prob_coupled =  SplitCoupledJumpProblem(jump_prob,jump_prob_control,Direct(),coupling_map)
 ```
-Now `prob_coupled` will be delt with like any other `JumpProblem`:
+Now `prob_coupled` will be dealt with like any other `JumpProblem`:
 
 ```julia
-sol =  solve(coupled_prob,Tsit5())
+sol = solve(coupled_prob,Tsit5())
 ```
 
 ![jump_diffusion](../assets/splitcoupling.png)

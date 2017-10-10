@@ -158,15 +158,15 @@ where `rate` is a function `rate(t,u)` and `affect!` is a function of the integr
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
-rate = (t,u) -> (0.1/1000.0)*u[1]*u[2]
-affect! = function (integrator)
+rate(t,u) = (0.1/1000.0)*u[1]*u[2]
+function affect!(integrator)
   integrator.u[1] -= 1
   integrator.u[2] += 1
 end
 jump = ConstantRateJump(rate,affect!)
 
-rate = (t,u) -> 0.01u[2]
-affect! = function (integrator)
+rate(t,u) = 0.01u[2]
+function affect!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
@@ -189,7 +189,7 @@ Let's define an ODE problem, where the continuous part only acts on some new
 4th component:
 
 ```julia
-f = function (t,u,du)
+function f(t,u,du)
   du[4] = u[2]*u[3]/100000 - u[1]*u[2]/100000
 end
 
@@ -214,8 +214,8 @@ reaction rates must be constant on the interval between any constant rate jumps.
 Thus in the examples above,
 
 ```julia
-rate = (t,u) -> (0.1/1000.0)*u[1]*u[2]
-rate = (t,u) -> 0.01u[2]
+rate(t,u) = (0.1/1000.0)*u[1]*u[2]
+rate(t,u) = 0.01u[2]
 ```
 
 both must be constant other than changes due to some constant rate jump (the same
@@ -262,7 +262,7 @@ Lastly, we are not restricted to ODEs. For example, we can solve the same jump
 problem except with multiplicative noise on `u[4]` by using an `SDEProblem` instead:
 
 ```julia
-g = function (t,u,du)
+function g(t,u,du)
   du[4] = 0.1u[4]
 end
 
