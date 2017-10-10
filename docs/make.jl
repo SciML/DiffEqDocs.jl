@@ -82,7 +82,8 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
              "models/multiscale.md",
              "models/physical.md",
              "models/financial.md",
-             "models/biological.md"
+             "models/biological.md",
+             "models/eternal_modeling.md"
          ]
          ])
 
