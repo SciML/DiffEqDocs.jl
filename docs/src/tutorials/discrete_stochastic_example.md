@@ -10,7 +10,7 @@ stochastic simulations to differential equation models.
 
 ## Defining a Model using Reactions
 
-For our example, we will build an SIR model which matches the tutorial from 
+For our example, we will build an SIR model which matches the tutorial from
 [Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for susceptible, infected,
 and recovered, and is a model is disease spread. When a susceptible person comes
 in contact with an infected person, the disease has a chance of infecting the
@@ -126,6 +126,21 @@ using Plots; plot(sol)
 ```
 
 ![gillespie_solution](../assets/gillespie_solution.png)
+
+## Using the Reaction Network DSL
+
+Also included as part of DiffEqBiological.jl is the reaction network DSL. We
+could define the previous problem via:
+
+```julia
+rs = @reaction_network begin
+  1e-4, S + I --> 2I
+  0.01,  I --> R
+end
+prob = DiscreteProblem([999,1,0],(0.0,250.0))
+jump_prob = GillespieProblem(prob,Direct(),rs)
+sol = solve(jump_prob,Discrete())
+```
 
 ## Defining the Jumps Directly
 

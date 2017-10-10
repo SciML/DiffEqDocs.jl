@@ -1,4 +1,4 @@
-# Biological Models
+# Chemical Reaction Models
 
 The biological models functionality is provided by DiffEqBiological.jl and helps
 the user build discrete stochastic and differential equation based systems
@@ -73,3 +73,35 @@ GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::AbstractReacti
 This is the exact same constructor as the `JumpProblem`, except now we pass reactions
 (or `VariableRateReaction`s, or a `ReactionSet`) instead of jumps. Thus for more
 information, see the description of the `JumpProblem`.
+
+## The Reaction DSL
+
+The `@reaction_network` DSL allows you to define reaction networks in a more
+scientific format. Each line is given as `parameter reactants --> products`.
+
+### Example: Birth-Death Process
+
+```julia
+rs = @reaction_network begin
+  2.0, X --> 2X
+  1.0, X --> 0
+  0.5, 0 --> X
+end
+prob = DiscreteProblem([5], (0.0, 4.0))
+jump_prob = GillespieProblem(prob, Direct(), rs)
+sol = solve(jump_prob, Discrete())
+```
+
+### Example: Michaelis-Menten Enzyme Kinetics
+
+```julia
+rs = @reaction_network begin
+  0.00166, S + E --> SE
+  0.0001,  SE --> S + E
+  0.1,     SE --> P + E
+end
+# S = 301, E = 100, SE = 0, P = 0
+prob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0))
+jump_prob = GillespieProblem(prob, Direct(), rs)
+sol = solve(jump_prob, Discrete())
+```
