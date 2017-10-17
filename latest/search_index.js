@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Modeling Tools",
     "category": "section",
-    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/physical.md\",\n    \"models/financial.md\",\n    \"models/biological.md\"\n]\nDepth = 2"
+    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/physical.md\",\n    \"models/financial.md\",\n    \"models/biological.md\",\n    \"models/eternal_modeling.md\"\n]\nDepth = 2"
 },
 
 {
@@ -589,7 +589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Boundary Value Problems",
     "title": "Boundary Condition",
     "category": "section",
-    "text": "And here is where the Boundary comes in. We need to write a function that calculate the residual in-place from the problem solution, such that the residual is vec0 when the boundary condition is satisfied.function bc1(residual, u)\n    residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2\n    residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp1 = BVProblem(simplependulum, bc1, [pi/2,pi/2], tspan)\nsol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)\nplot(sol1)(Image: BVP Example Plot1)We need to use GeneralMIRK4 or Shooting methods to solve BVProblem. We have boundary conditions at the beginning and the ending of the time span in common cases. We can use the TwoPointBVProblem problem type for such cases.function bc2(residual, ua, ub) # ua is the beginning of the time span, and ub is the ending\n    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2\n    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)\nsol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem\nplot(sol2)(Image: BVP Example Plot2)We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but we can always use reduce a BVP to an IVP and a root-finding problem, which is the Shooting method. If you can have a good initial guess, shooting method works very well.using OrdinaryDiffEq\nu₀_2 = [-1.6, -1.7] # the initial guess\nfunction bc3(residual, sol)\n    residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods\n    residual[2] = sol(pi/2)[1] - pi/2\nend\nbvp3 = BVProblem(simplependulum, bc3, u₀, tspan)\nsol3 = solve(bvp3, Shooting(Vern7()))We changed u to sol to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the Shooting method (i.e. you can have a boundary condition saying that the maximum over the interval is 1 using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable. plot(sol3)(Image: BVP Example Plot3)"
+    "text": "And here is where the Boundary comes in. We need to write a function that calculate the residual in-place from the problem solution, such that the residual is vec0 when the boundary condition is satisfied.function bc1(residual, u)\n    residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2\n    residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp1 = BVProblem(simplependulum, bc1, [pi/2,pi/2], tspan)\nsol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)\nplot(sol1)(Image: BVP Example Plot1)We need to use GeneralMIRK4 or Shooting methods to solve BVProblem. We have boundary conditions at the beginning and the ending of the time span in common cases. We can use the TwoPointBVProblem problem type for such cases.function bc2(residual, ua, ub) # ua is the beginning of the time span, and ub is the ending\n    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2\n    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)\nsol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem\nplot(sol2)(Image: BVP Example Plot2)We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but we can always use reduce a BVP to an IVP and a root-finding problem, which is the Shooting method. If you can have a good initial guess, shooting method works very well.using OrdinaryDiffEq\nu₀_2 = [-1.6, -1.7] # the initial guess\nfunction bc3(residual, sol)\n    residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods\n    residual[2] = sol(pi/2)[1] - pi/2\nend\nbvp3 = BVProblem(simplependulum, bc3, u₀_2, tspan)\nsol3 = solve(bvp3, Shooting(Vern7()))We changed u to sol to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the Shooting method (i.e. you can have a boundary condition saying that the maximum over the interval is 1 using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable. plot(sol3)(Image: BVP Example Plot3)"
 },
 
 {
@@ -886,6 +886,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Complex Numbers and High Dimensional Plots",
     "category": "section",
     "text": "The recipe library DimensionalPlotRecipes.jl is provided for extra functionality on high dimensional numbers (complex numbers) and other high dimensional plots. See the README for more details on the extra controls that exist."
+},
+
+{
+    "location": "basics/plot.html#Timespan-1",
+    "page": "Plot Functions",
+    "title": "Timespan",
+    "category": "section",
+    "text": "A plotting timespan can be chosen by the tspan argument in plot. For example:plot(sol,tspan=(0.0,40.0))only plots between t=0.0 and t=40.0. If denseplot=true these bounds will be respected exactly. Otherwise the first point inside and last point inside the interval will be plotted, i.e. no points outside the interval will be plotted."
 },
 
 {
@@ -3413,7 +3421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "SavingCallback",
     "category": "section",
-    "text": "The saving callback lets you define a function save_func(t, u, integrator) which returns quantities of interest that shall be saved. "
+    "text": "The saving callback lets you define a function save_func(t, u, integrator) which returns quantities of interest that shall be saved."
 },
 
 {
@@ -3421,7 +3429,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Constructor",
     "category": "section",
-    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved.\nsaved_values::SavedValues contains vectors t::Vector{tType},  saveval::Vector{savevalType} of the saved quantities. Here,  save_func(t, u, integrator)::savevalType.\nsaveat Mimicks saveat in solve for ODEs.\nsave_everystep Mimicks save_everystep in solve for ODEs.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end]."
+    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved.\nsaved_values::SavedValues contains vectors t::Vector{tType}, saveval::Vector{savevalType} of the saved quantities. Here, save_func(t, u, integrator)::savevalType.\nsaveat Mimicks saveat in solve for ODEs.\nsave_everystep Mimicks save_everystep in solve for ODEs.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end]."
+},
+
+{
+    "location": "features/callback_library.html#PeriodicCallback-1",
+    "page": "Callback Library",
+    "title": "PeriodicCallback",
+    "category": "section",
+    "text": "PeriodicCallback can be used when a function should be called periodically in terms of integration time (as opposed to wall time), i.e. at t = tspan[1], t = tspan[1] + Δt, t = tspan[1] + 2Δt, and so on. This callback can, for example, be used to model a digital controller for an analog system, running at a fixed rate."
+},
+
+{
+    "location": "features/callback_library.html#Constructor-6",
+    "page": "Callback Library",
+    "title": "Constructor",
+    "category": "section",
+    "text": "PeriodicCallback(f, Δt::Number; kwargs...)where f is the function to be called periodically, Δt is the period, and kwargs are keyword arguments accepted by the DiscreteCallback constructor (see the DiscreteCallback section)."
 },
 
 {
@@ -4294,6 +4318,62 @@ var documenterSearchIndex = {"docs": [
     "title": "Example: Michaelis-Menten Enzyme Kinetics",
     "category": "section",
     "text": "rs = @reaction_network begin\n  0.00166, S + E --> SE\n  0.0001,  SE --> S + E\n  0.1,     SE --> P + E\nend\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0))\njump_prob = GillespieProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+},
+
+{
+    "location": "models/external_modeling.html#",
+    "page": "External Modeling Packages",
+    "title": "External Modeling Packages",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "models/external_modeling.html#External-Modeling-Packages-1",
+    "page": "External Modeling Packages",
+    "title": "External Modeling Packages",
+    "category": "section",
+    "text": "This is a list of modeling packages built upon the JuliaDiffEq ecosystem."
+},
+
+{
+    "location": "models/external_modeling.html#DynamicalSystems.jl-1",
+    "page": "External Modeling Packages",
+    "title": "DynamicalSystems.jl",
+    "category": "section",
+    "text": "DynamicalSystems.jl is a package for the exploration of continuous and discrete dynamical systems. It uses DifferentialEquations.jl for the continuous systems and enables the computation of things like Lyopunov exponents."
+},
+
+{
+    "location": "models/external_modeling.html#BioEnergeticFoodWebs.jl-1",
+    "page": "External Modeling Packages",
+    "title": "BioEnergeticFoodWebs.jl",
+    "category": "section",
+    "text": "BioEnergeticFoodWebs.jl is a package for simulations of biomass flows in food webs."
+},
+
+{
+    "location": "models/external_modeling.html#SwitchTimeOpt.jl-1",
+    "page": "External Modeling Packages",
+    "title": "SwitchTimeOpt.jl",
+    "category": "section",
+    "text": "SwitchTimeOpt.jl is a Julia package to easily define and efficiently solve switching time optimization (STO) problems for linear and nonlinear systems."
+},
+
+{
+    "location": "models/external_modeling.html#VehicleModels.jl-1",
+    "page": "External Modeling Packages",
+    "title": "VehicleModels.jl",
+    "category": "section",
+    "text": "VehicleModels.jl is a package for simulating vehicle models."
+},
+
+{
+    "location": "models/external_modeling.html#MADS.jl-1",
+    "page": "External Modeling Packages",
+    "title": "MADS.jl",
+    "category": "section",
+    "text": "MADS.jl is a package data and model analysis. It adds many sensitivity analysis, uncertainty quantification, and model selection routines."
 },
 
 ]}
