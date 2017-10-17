@@ -125,6 +125,18 @@ on high dimensional numbers (complex numbers) and other high dimensional plots.
 See [the README](https://github.com/JuliaDiffEq/DimensionalPlotRecipes.jl) for
 more details on the extra controls that exist.
 
+### Timespan
+
+A plotting timespan can be chosen by the `tspan` argument in `plot`. For example:
+
+```julia
+plot(sol,tspan=(0.0,40.0))
+```
+
+only plots between `t=0.0` and `t=40.0`. If `denseplot=true` these bounds will be respected
+exactly. Otherwise the first point inside and last point inside the interval will be plotted,
+i.e. no points outside the interval will be plotted.
+
 ### Example
 
 ```julia
