@@ -68,7 +68,7 @@ function bc3(residual, sol)
     residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi/2)[1] - pi/2
 end
-bvp3 = BVProblem(simplependulum, bc3, u₀, tspan)
+bvp3 = BVProblem(simplependulum, bc3, u₀_2, tspan)
 sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
