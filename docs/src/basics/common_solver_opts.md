@@ -88,7 +88,11 @@ section at the end of this page for some example usage.
   (the ones you get by `save_everystep = true`), not the ones that are
   instructed by the user (all solvers work in a step-like manner). Defaults to 1.
 * `save_start`: Denotes whether the initial condition should be included in
-  the solution type as the first timepoint. Defaults to true.
+  the solution type as the first timepoint. Defaults to `true`.
+* `save_end`: Denotes whether the final timepoint is forced to be saved,
+  regardless of the other saving settings. Defaults to `true`.
+* `initialize_save`: Denotes whether to save after the callback initialization
+  phase (when `u_modified=true`). Defaults to `true`.
 
 ## Stepsize Control
 
