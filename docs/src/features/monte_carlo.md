@@ -32,20 +32,29 @@ One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.u0 = randn()*prob.u0
+  prob.u0 .= randn()*prob.u0
   prob
 end
 ```
 
 modifies the initial condition for all of the problems by a standard normal
-random number (a different random number per simulation). This can be used
-to perform searches over initial values. Note that the parameter `i` is a unique
-counter over the simulations. Thus if you have an array of initial conditions `u0_arr`,
-you can have the `i`th simulation use the `i`th initial condition via:
+random number (a different random number per simulation). Notice that since
+problem types are immutable, it uses `.=`. Otherwise, one can just create
+a new problem type:
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.u0 = u0_arr[i]
+  ODEProblem(prob.f,randn()*prob.u0,prob.tspan)
+end
+```
+
+This can be used to perform searches over initial values. Note that the parameter `i` is 
+a unique counter over the simulations. Thus if you have an array of initial conditions 
+`u0_arr`, you can have the `i`th simulation use the `i`th initial condition via:
+
+```julia
+function prob_func(prob,i,repeat)
+  prob.u0 .= u0_arr[i]
   prob
 end
 ```
