@@ -3,7 +3,7 @@
 ## Standard Plots Using the Plot Recipe
 
 Plotting functionality is provided by recipes to Plots.jl. To
-use plot solutions, simply call the `plot(type)` after importing Plots.jl
+plot solutions, simply call the `plot(type)` after importing Plots.jl
 and the plotter will generate appropriate plots.
 
 ```julia
@@ -15,7 +15,7 @@ plot(sol) # Plots the solution
 Many of the types defined in the DiffEq universe, such as
 `ODESolution`, `ConvergenceSimulation` `WorkPrecision`, etc. have plot recipes
 to handle the default plotting behavior. Plots can be customized using
-[all of the keyword arguments provided by Plots.jl](https://juliaplots.github.io/supported/).
+[all of the keyword arguments provided by Plots.jl](http://docs.juliaplots.org/latest/supported/).
 For example, we can change the plotting backend to the GR package and put a title
 on the plot by doing:
 
@@ -192,7 +192,7 @@ on the available attributes.
 
 ## Plotting Without the Plot Recipe
 
-What if you don't want to use Plots.jl? Odd choice, but that's okay! If differential
+What if you don't want to use Plots.jl? Odd choice, but that's okay! If the differential
 equation was described by a vector of values, then the solution object acts as
 an `AbstractMatrix` `sol[i,j]` for the `i`th variable at timepoint `j`. You can
 use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can
