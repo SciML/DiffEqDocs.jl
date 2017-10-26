@@ -73,14 +73,18 @@ is a function which reduces the problem's solution. While this is very
 flexible, a two convenience routines is included for fitting to data:
 
 ```julia
-L2DistLoss(t,data)
-CostVData(t,data;loss_func = L2DistLoss)
+L2DistLoss(t,data;weight=nothing)
+CostVData(t,data;loss_func = L2DistLoss,weight=nothing)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
 `data` which are the values that are known. `L2DistLoss` is an optimized version
 of the L2-distance. In `CostVData`, one can choose any loss function from
-LossFunctions.jl or use the default of an L2 loss.
+LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
+of weights for the loss function which must match the size of the data.
+
+Note that minimization of a weighted `L2DistLoss` is equivalent to maximum
+likelihood estimation of a heteroskedastic Normally distributed likelihood.
 
 #### Note About Loss Functions
 

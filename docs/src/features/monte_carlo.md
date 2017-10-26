@@ -32,7 +32,7 @@ One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.u0 = randn()*prob.u0
+  @. prob.u0 = randn()*prob.u0
   prob
 end
 ```
@@ -45,7 +45,7 @@ you can have the `i`th simulation use the `i`th initial condition via:
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.u0 = u0_arr[i]
+  @. prob.u0 = u0_arr[i]
   prob
 end
 ```
@@ -279,8 +279,7 @@ and use that for calculating the trajectory:
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.u0 = rand()*prob.u0
-  prob
+  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
 end
 ```
 
@@ -422,8 +421,7 @@ Our `prob_func` will simply randomize the initial condition:
 prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
 
 function prob_func(prob,i,repeat)
-  prob.u0 = rand()*prob.u0
-  prob
+  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
 end
 ```
 
