@@ -1245,7 +1245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Hamiltonian Problems",
     "category": "section",
-    "text": "HamiltonianProblems are provided by DiffEqPhysics.jl and provide an easy way to define equations of motion from the corresponding Hamiltonian. To define a HamiltonianProblem one only needs to specify the Hamiltonian:H(pq)and autodifferentiation (via ForwardDiff.jl) will create the appropriate equations."
+    "text": "HamiltonianProblems are provided by DiffEqPhysics.jl and provide an easy way to define equations of motion from the corresponding Hamiltonian. To define a HamiltonianProblem one only needs to specify the Hamiltonian:H(qp)and autodifferentiation (via ForwardDiff.jl) will create the appropriate equations."
 },
 
 {
@@ -1261,7 +1261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "H: The Hamiltonian H(p,q) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "H: The Hamiltonian H(q,p) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
