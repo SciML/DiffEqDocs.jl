@@ -3665,11 +3665,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/io.html#JLD2-1",
+    "page": "I/O: Saving and Loading Solution Data",
+    "title": "JLD2",
+    "category": "section",
+    "text": "JLD2 will work with the full solution type if you bring the required functions back into scope before loading. For eaxmple, if we save the solution:using OrdinaryDiffEq, JLD, JLD2\nf(t,u) = 1.01*u\nu0=1/2\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)\nJLD2.@save \"out.jld2\" solthen we can get the full solution type back, interpolations and all, if we load the dependent functions first:using JLD2\nusing OrdinaryDiffEq\nf(t,u) = 1.01*u\nJLD2.@load \"out.jld2\" solIf you load it without the DE function then for some algorithms the interpolation may not work, and for all algorithms you'll need at least a solver package or DiffEqBase.jl in scope in order for the solution interface (plot recipes, array indexing, etc.) to work."
+},
+
+{
     "location": "features/io.html#JLD-1",
     "page": "I/O: Saving and Loading Solution Data",
     "title": "JLD",
     "category": "section",
-    "text": "Julia types can be saved via JLD.jl. However, they cannot save types which have functions, which means that the solution type is currently not compatible with JLD.using JLD\nJLD.save(\"out.jld\",\"sol\",sol)"
+    "text": "Don't use JLD. It's dead. Julia types can be saved via JLD.jl.  However, they cannot save types which have functions, which means that  the solution type is currently not compatible with JLD.using JLD\nJLD.save(\"out.jld\",\"sol\",sol)"
 },
 
 {
