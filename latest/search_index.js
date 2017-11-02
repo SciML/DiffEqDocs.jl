@@ -345,19 +345,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/dde_example.html#State-Dependent-Delays-1",
+    "location": "tutorials/dde_example.html#Undeclared-Delays-and-State-Dependent-Delays-via-Residual-Control-1",
     "page": "Delay Differential Equations",
-    "title": "State-Dependent Delays",
+    "title": "Undeclared Delays and State-Dependent Delays via Residual Control",
     "category": "section",
-    "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. To do this in DifferentialEquations.jl, one simply writes it in the natural manner g(t,u) where g is the lag function. You must declare the lag functions as dependent_lags inprob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)Other than that, everything else is the same, and one solves that problem using the common interface."
+    "text": "You might have noticed DifferentialEquations.jl allows you to solve problems with undeclared delays since you can interpolate h at any value. This is a feature, but use it with caution. Undeclared delays can increase the error in the solution. It's recommended that you use a method with a residual control, such as MethodOfSteps(RK4()) whenever there are undeclared delays. With this you can use interpolated derivatives, solve functional differential equations by using quadrature on the interpolant, etc. However, note that residual control solves with a low level of accuracy, so the tolerances should be made very small and the solution should not be trusted for more than 2-3 decimal places.Note: MethodOfSteps(RK4()) with undeclared delays is similar to MATLAB's ddesd. Thus, for example, the following is similar to solving the example from above with residual control:prob = DDEProblem(bc_model,h,u0,tspan)\nalg = MethodOfSteps(RK4())\nsol = solve(prob,alg)Note that this method can solve problems with state-dependent delays."
 },
 
 {
-    "location": "tutorials/dde_example.html#Undeclared-Delays-1",
+    "location": "tutorials/dde_example.html#State-Dependent-Delay-Discontinuity-Tracking-1",
     "page": "Delay Differential Equations",
-    "title": "Undeclared Delays",
+    "title": "State-Dependent Delay Discontinuity Tracking",
     "category": "section",
-    "text": "You might have noticed DifferentialEquations.jl allows you to solve problems with undeclared delays since you can interpolate h at any value. This is a feature, but use it with caution. Undeclared delays can increase the error in the solution. It's recommended that you use a method with a residual control, such as MethodOfSteps(RK4()) whenever there are undeclared delays. With this you can use interpolated derivatives, solve functional differential equations by using quadrature on the interpolant, etc. However, note that residual control solves with a low level of accuracy, so the tolerances should be made very small and the solution should not be trusted for more than 2-3 decimal places.Note: MethodOfSteps(RK4()) with undeclared delays is similar to MATLAB's ddesd."
+    "text": "State-dependent delays are problems where the delay is allowed to be a function of the current state. They can be more efficiently solved with discontinuity tracking. To do this in DifferentialEquations.jl, needs to pass in the functions for the delays to the DDEProblem definition. These are declared as g(t,u) where g is the lag function. The signature for the DDEProblem is:prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)Other than that, everything else is the same, and one solves that problem using the common interface.We can solve the above problem with dependent delay tracking by declaring the dependent lags and solving with a MethodOfSteps algorithm:dependent_lags = ((t,u)->tau,)\nprob = DDEProblem(bc_model,h,u0,tspan,nothing,dependent_lags)\nalg = MethodOfSteps(Tsit5())\nsol = solve(prob,alg)Here we treated the single lag t-tau as a state-dependent delay and skipped over the constant lags with nothing. Of course, you can then replace that tuple of functions with whatever functions match your lags."
 },
 
 {
