@@ -8,9 +8,9 @@ due to JuliaDiffEq's modular package structure.
 
 ## Common Example: Using only OrdinaryDiffEq.jl
 
-One common example is using only the ODE solvers OrdinaryDiffEq.jl. In this case
-you will need a dependency on both DiffEqBase.jl (which holds the problem and
-solution types) and OrdinaryDiffEq.jl. Thus replacing
+One common example is using only the ODE solvers OrdinaryDiffEq.jl. The solvers all
+reexport DiffEqBase.jl (which holds the problem and solution types) and so
+OrdinaryDiffEq.jl is all that's needed. Thus replacing
 
 ```julia
 using DifferentialEquations
@@ -19,7 +19,7 @@ using DifferentialEquations
 with
 
 ```julia
-using OrdinaryDiffEq, DiffEqBase
+using OrdinaryDiffEq
 ```
 
 will work if these are the only features you are using.
@@ -27,7 +27,8 @@ will work if these are the only features you are using.
 ## Generalizing the Idea
 
 In general, you will always need DiffEqBase.jl, since it defines all of the
-fundamental types. For solvers, you typically only need that solver package.
+fundamental types, but the solvers will automatically reexport it. 
+For solvers, you typically only need that solver package.
 So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface
 with that specific solver setup. DiffEqBase.jl is a very lightweight dependency,
 so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase
@@ -69,7 +70,7 @@ This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could h
 done
 
 ```julia
-using DiffEqBase, OrdinaryDiffEq, DiffEqParamEstim
+using OrdinaryDiffEq, DiffEqParamEstim
 ```
 
 instead of the full `using DifferentialEquations`. Note that due to the way

@@ -297,7 +297,7 @@ back at the correct time. Thus one does not have to worry about the adaptive tim
 will save the value(s) at the discontinuity.
 
 
-#### Tweaking the Defaults to Specialized Event Detection To Your Problem
+#### Tweaking the Defaults to Specialize Event Detection To Your Problem
 
 Event detection is by nature a difficult issue due to floating point problems.
 The defaults given by DifferentialEquations.jl works pretty well for most

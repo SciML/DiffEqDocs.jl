@@ -57,8 +57,8 @@ If there are undeclared lags, the discontinuities due to delays are not tracked.
 In this case, one should only use residual control methods like `RK4()`,
 which is the current best choice, as these will step more accurately.
 Still, residual control is an error-prone method. We recommend setting the
-tolerances low (`1e-10`) and only trusting the solution to a 2-3 decimal
-places of accuracy.
+tolerances lower in order to get accurate results, though this may be costly
+since it will use a rejection-based approach to adapt to the delay discontinuities.
 
 ## Special Keyword Arguments
 

@@ -91,7 +91,7 @@ to define equations of motion from the corresponding Hamiltonian. To define a
 `HamiltonianProblem` one only needs to specify the Hamiltonian:
 
 ```math
-H(p,q)
+H(q,p)
 ```
 
 and autodifferentiation (via ForwardDiff.jl) will create the appropriate
@@ -105,7 +105,7 @@ HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)
 
 ### Fields
 
-* `H`: The Hamiltonian `H(p,q)` which returns a scalar.
+* `H`: The Hamiltonian `H(q,p)` which returns a scalar.
 * `q0`: The initial positions.
 * `p0`: The initial momentums.
 * `tspan`: The timespan for the problem.
