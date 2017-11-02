@@ -27,7 +27,7 @@ efficiently be more accurate and thus this is recommended.
 ### Constructors
 
 ```julia
-DDEProblem{isinplace}(f,h,u0,tspan,constant_lags,dependent_lags=nothing;
+DDEProblem{isinplace}(f,h,u0,tspan,constant_lags=nothing,dependent_lags=nothing;
                       callback=nothing,mass_matrix=I)
 ```
 

@@ -22,13 +22,13 @@ where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
 
 ### Nonstiff DDEs
 
-The standard choice is `MethodOfSteps(OrwenZen5())`. This is a highly efficient
-FSAL 5th order algorithm which optimizes its interpolation error and should
+The standard choice is `MethodOfSteps(Tsit5())`. This is a highly efficient
+FSAL 5th order algorithm with free interpolants which should
 handle most problems. For fast solving at where non-strict error control is
-needed, choosing `OrwenZen3()` can do well. Using `BS3` is similar to the MATLAB
-`dde23`, but `OrwenZen3()` will have noticably less error for the same work.
-For algorithms where strict error control is needed, it is recommended that one
-uses `DP8()`.
+needed, choosing `BS3()` can do well. Using `BS3` is similar to the MATLAB
+`dde23`. For algorithms where strict error control is needed, it is recommended
+that one uses `Vern6()`. Benchmarks show that going to higher order methods like
+`DP8()` may not be beneficial.
 
 ### Stiff DDEs and Differential-Algebraic Delay Equations (DADEs)
 
