@@ -106,21 +106,7 @@ using Plots; plot(sol)
 
 ![DDE Example Plot](../assets/dde_example_plot.png)
 
-### State-Dependent Delays
-
-State-dependent delays are problems where the delay is allowed to be a function
-of the current state. To do this in DifferentialEquations.jl, one simply writes
-it in the natural manner `g(t,u)` where `g` is the lag function. You must
-declare the lag functions as `dependent_lags` in
-
-```julia
-prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
-```
-
-Other than that, everything else is the same, and one solves that problem using
-the common interface.
-
-### Undeclared Delays
+### Undeclared Delays and State-Dependent Delays via Residual Control
 
 You might have noticed DifferentialEquations.jl allows you to solve problems
 with undeclared delays since you can interpolate `h` at any value. This is
@@ -133,4 +119,42 @@ solves with a low level of accuracy, so the tolerances should be made very small
 and the solution should not be trusted for more than 2-3 decimal places.
 
 Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
-`ddesd`.
+`ddesd`. Thus, for example, the following is similar to solving the example
+from above with residual control:
+
+```julia
+prob = DDEProblem(bc_model,h,u0,tspan)
+alg = MethodOfSteps(RK4())
+sol = solve(prob,alg)
+```
+
+Note that this method can solve problems with state-dependent delays.
+
+### State-Dependent Delay Discontinuity Tracking
+
+State-dependent delays are problems where the delay is allowed to be a function
+of the current state. They can be more efficiently solved with discontinuity
+tracking. To do this in DifferentialEquations.jl, needs to pass in the functions
+for the delays to the `DDEProblem` definition. These are declared as `g(t,u)`
+where `g` is the lag function. The signature for the `DDEProblem` is:
+
+```julia
+prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
+```
+
+Other than that, everything else is the same, and one solves that problem using
+the common interface.
+
+We can solve the above problem with dependent delay tracking by declaring the
+dependent lags and solving with a `MethodOfSteps` algorithm:
+
+```julia
+dependent_lags = ((t,u)->tau,)
+prob = DDEProblem(bc_model,h,u0,tspan,nothing,dependent_lags)
+alg = MethodOfSteps(Tsit5())
+sol = solve(prob,alg)
+```
+
+Here we treated the single lag `t-tau` as a state-dependent delay and skipped
+over the constant lags with `nothing`. Of course, you can then replace that tuple
+of functions with whatever functions match your lags.
