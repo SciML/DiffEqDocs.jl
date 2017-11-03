@@ -108,6 +108,19 @@ For `SRA` and `SRI`, the following option is allowed:
   `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
 
+#### Note about mass matrices
+
+These methods interpret the mass matrix equation as:
+
+```math
+Mu' = f(t,u)dt + Mg(t,u)dW_t
+```
+
+i.e. with no mass matrix inversion applied to the `g` term. Thus these methods
+apply noise per dependent variable instead of on the combinations of the
+dependent variables and this is designed for phenomenological noise on the
+dependent variables (like multiplicative or additive noise)
+
 ## StochasticCompositeAlgorithm
 
 One unique feature of StochasticDiffEq.jl is the `StochasticCompositeAlgorithm`, which allows
