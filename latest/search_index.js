@@ -2433,6 +2433,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/sde_solve.html#Note-about-mass-matrices-1",
+    "page": "SDE Solvers",
+    "title": "Note about mass matrices",
+    "category": "section",
+    "text": "These methods interpret the mass matrix equation as:Mu = f(tu)dt + Mg(tu)dW_ti.e. with no mass matrix inversion applied to the g term. Thus these methods apply noise per dependent variable instead of on the combinations of the dependent variables and this is designed for phenomenological noise on the dependent variables (like multiplicative or additive noise)"
+},
+
+{
     "location": "solvers/sde_solve.html#StochasticCompositeAlgorithm-1",
     "page": "SDE Solvers",
     "title": "StochasticCompositeAlgorithm",
