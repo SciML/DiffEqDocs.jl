@@ -222,6 +222,7 @@ prob = SDEProblem(f,g,u0,(0.0,1.0),noise=W)
 sol = solve(prob,SRIW1())
 ```
 
+![Scalar Noise](../assets/matrix_sde_scalar_noise.png)
 
 ## Example 4: Systems of SDEs with Non-Diagonal Noise
 
