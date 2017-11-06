@@ -4365,7 +4365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "External Modeling Packages",
     "title": "DynamicalSystems.jl",
     "category": "section",
-    "text": "DynamicalSystems.jl is a package for the exploration of continuous and discrete dynamical systems. It uses DifferentialEquations.jl for the continuous systems and enables the computation of things like Lyopunov exponents."
+    "text": "DynamicalSystems.jl is a package for the exploration of continuous and discrete dynamical systems, with focus on nonlinear dynamics and chaos.It uses DifferentialEquations.jl for all evolution regarding continuous systems while still retaining unified interface for discrete systems.A quick summary of features: Lyapunov exponents, generalized entropies (Renyi entropy),  generalized & fractal dimensions, delay coordinates embedding (reconstruction), chaos detection, Lyapunov exponents of a numerical timeseries, finding periodic orbits of any order for maps."
 },
 
 {
