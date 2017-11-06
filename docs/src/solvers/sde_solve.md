@@ -61,26 +61,26 @@ Orders are given in terms of strong order.
 ### Nonstiff Methods
 
 - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Can handle
-  all forms of noise, including non-diagonal noise and colored noise.†
+  all forms of noise, including non-diagonal, scalar, and colored noise.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
-  Can handle all forms of noise, including non-diagonal noise and colored noise.†
+  Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
 - `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
-  Only handles diagonal noise.†
+  Only handles scalar and diagonal noise.†
 - `RKMilCommute` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem.†
 - `SRA` - The strong Order 1.5 methods for additive Ito and Stratonovich SDEs
-  due to Rossler. Default tableau is for SRA1. Can handle non-diagonal additive
-  noise.
+  due to Rossler. Default tableau is for SRA1. Can handle non-diagonal and
+  scalar additive noise.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to
   Rossler. Default tableau is for SRIW1.
 - `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
   Ito SDEs.†
 - `SRA1` - An optimized version of SRA1. Strong Order 1.5 for additive Ito and
-  Stratonovich SDEs. Can handle non-diagonal additive noise.†
+  Stratonovich SDEs. Can handle non-diagonal and scalar additive noise.†
 
 Example usage:
 
@@ -100,19 +100,20 @@ For `SRA` and `SRI`, the following option is allowed:
   defaults to `theta=1/2` or the Trapezoid method on the drift term. This method
   defaults to `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
-  Can handle all forms of noise, including non-diagonal and colored noise.
+  Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
 - `ImplicitEulerHeun` - An order 0.5 Stratonovich implicit method. This is a
   theta method which defaults to `theta=1/2` or the Trapezoid method on the
   drift term. This method defaults to `symplectic=false`, but when true and
   `theta=1/2` this is the implicit Midpoint method on the drift term and is
   symplectic in distribution. Can handle all forms of noise, including
-  non-diagonal and colored noise.
+  non-diagonal, scalar, and colored noise.
 - `ImplicitRKMil` - An order 1.0 implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. Defaults
   to solving the Ito problem, but `ImplicitRKMil(interpretation=:Stratonovich)`
-  makes it solve theStratonovich problem. This method defaults to
+  makes it solve the Stratonovich problem. This method defaults to
   `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
+  Handles diagonal and scalar noise.
 
 #### Note about mass matrices
 
