@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Stochastic Differential Equations",
     "title": "Example 3: Systems of SDEs with Scalar Noise",
     "category": "section",
-    "text": "In this example we'll solve a system of SDEs with scalar noise. This means that the same noise process is applied to all SDEs. First we need to define a scalar noise process  using the Noise Process interface. Since we want a WienerProcess that starts at 0.0 at time 0.0, we use the command W = WienerProcess(0.0,0.0,0.0) to define the Brownian motion we want, and then give this to the noise option in the SDEProblem. For a full example, let's solve a linear SDE with scalar noise using a high order algorithm:f(t,u,du) = (du .= u)\ng(t,u,du) = (du .= u)\nu0 = rand(4,2)\n\nW = WienerProcess(0.0,0.0,0.0)\nprob = SDEProblem(f,g,u0,(0.0,1.0),noise=W)\nsol = solve(prob,SRIW1())"
+    "text": "In this example we'll solve a system of SDEs with scalar noise. This means that the same noise process is applied to all SDEs. First we need to define a scalar noise process  using the Noise Process interface. Since we want a WienerProcess that starts at 0.0 at time 0.0, we use the command W = WienerProcess(0.0,0.0,0.0) to define the Brownian motion we want, and then give this to the noise option in the SDEProblem. For a full example, let's solve a linear SDE with scalar noise using a high order algorithm:f(t,u,du) = (du .= u)\ng(t,u,du) = (du .= u)\nu0 = rand(4,2)\n\nW = WienerProcess(0.0,0.0,0.0)\nprob = SDEProblem(f,g,u0,(0.0,1.0),noise=W)\nsol = solve(prob,SRIW1())(Image: Scalar Noise)"
 },
 
 {
