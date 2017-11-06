@@ -4,10 +4,17 @@ This is a list of modeling packages built upon the JuliaDiffEq ecosystem.
 
 ## DynamicalSystems.jl
 
-[DynamicalSystems.jl](https://github.com/JuliaDynamics/DynamicalSystems.jl)
-is a package for the exploration of continuous and discrete dynamical systems.
-It uses DifferentialEquations.jl for the continuous systems and enables the
-computation of things like Lyopunov exponents.
+[DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/stable/)
+is a package for the exploration of continuous and discrete dynamical systems,
+with focus on nonlinear dynamics and chaos.
+
+It uses DifferentialEquations.jl for all evolution regarding continuous systems
+while still retaining unified interface for discrete systems.
+
+A quick summary of features: Lyapunov exponents, generalized entropies (Renyi entropy), 
+generalized & fractal
+dimensions, delay coordinates embedding (reconstruction), chaos detection, Lyapunov
+exponents of a numerical timeseries, finding periodic orbits of any order for maps.
 
 ## BioEnergeticFoodWebs.jl
 
