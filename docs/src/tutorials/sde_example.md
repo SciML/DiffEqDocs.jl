@@ -201,11 +201,37 @@ g = @ode_def_nohes LorenzSDENoise begin
 end α=>3.0
 ```
 
-## Example 3: Systems of SDEs with Non-Diagonal Noise
+## Example 3: Systems of SDEs with Scalar Noise
 
-In the previous example we had diagonal noise, that is a vector of random numbers
-`dW` whose size matches the output of `g`, and the noise is applied element-wise.
-However, a more general type of noise allows for the terms to linearly mixed.
+In this example we'll solve a system of SDEs with scalar noise. This means that
+the same noise process is applied to all SDEs. First we need to define a
+scalar noise process 
+[using the Noise Process interface](../../features/noise_process.html).
+Since we want a `WienerProcess` that starts at `0.0` at time `0.0`, we use the
+command `W = WienerProcess(0.0,0.0,0.0)` to define the Brownian motion we want,
+and then give this to the `noise` option in the `SDEProblem`. For a full example,
+let's solve a linear SDE with scalar noise using a high order algorithm:
+
+```julia
+f(t,u,du) = (du .= u)
+g(t,u,du) = (du .= u)
+u0 = rand(4,2)
+
+W = WienerProcess(0.0,0.0,0.0)
+prob = SDEProblem(f,g,u0,(0.0,1.0),noise=W)
+sol = solve(prob,SRIW1())
+```
+
+
+## Example 4: Systems of SDEs with Non-Diagonal Noise
+
+In the previous examples we had diagonal noise, that is a vector of random numbers
+`dW` whose size matches the output of `g` where the noise is applied element-wise,
+and scalar noise where a single random variable is applied to all dependent variables.
+However, a more general type of noise allows for the terms to linearly mixed (note
+that nonlinear mixings are not SDEs but fall under the more general class of
+random ordinary differential equations (RODEs) which have a
+[separate set of solvers](../rode_example.html).
 
 Let's define a problem with four Wiener processes and two dependent random variables.
 In this case, we will want the output of `g` to be a 2x4 matrix, such that the solution
