@@ -112,8 +112,8 @@ end a=>1.5 b=>1.0 c=>3.0 d=1.0
 
 ### Limitations
 
-The macro is a DSL and thus has different internal semantics than standard
-Julia functions. In particular:
+The macro is a Domain-Specific Language (DSL) and thus has different internal 
+semantics than standard Julia functions. In particular:
 
 1) Control sequences and conditionals (while, for, if) will not work in the macro.
 2) Intermediate calculations (likes that don't start with `d_`) are incompatible
