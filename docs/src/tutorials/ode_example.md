@@ -322,6 +322,8 @@ end σ=>10.0 ρ=>28.0 β=(8/3)
 
 DifferentialEquations.jl will automatically translate this to be exactly the
 same as `f`. The result is more legible code with no performance loss.
+For more information on the macro DSL and its limitations, please see
+[the parameterized function page](../../analysis/parameterized_functions.html)
 The result is that `g` is a function which you can now use to define the Lorenz
 problem.
 
