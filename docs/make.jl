@@ -84,6 +84,9 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
              "models/financial.md",
              "models/biological.md",
              "models/external_modeling.md"
+         ],
+         "Extra Details" => Any[
+             "extras/timestepping.md",
          ]
          ])
 
