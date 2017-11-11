@@ -97,6 +97,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Extra-Details-1",
+    "page": "Home",
+    "title": "Extra Details",
+    "category": "section",
+    "text": "These are just assorted extra explanations for the curious.Pages = [\n    \"extras/timestepping.md\"\n]\nDepth = 2"
+},
+
+{
     "location": "tutorials/ode_example.html#",
     "page": "Ordinary Differential Equations",
     "title": "Ordinary Differential Equations",
@@ -4406,6 +4414,54 @@ var documenterSearchIndex = {"docs": [
     "title": "MADS.jl",
     "category": "section",
     "text": "MADS.jl is a package data and model analysis. It adds many sensitivity analysis, uncertainty quantification, and model selection routines."
+},
+
+{
+    "location": "extras/timestepping.html#",
+    "page": "Timestepping Method Descriptions",
+    "title": "Timestepping Method Descriptions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "extras/timestepping.html#Timestepping-Method-Descriptions-1",
+    "page": "Timestepping Method Descriptions",
+    "title": "Timestepping Method Descriptions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "extras/timestepping.html#Common-Setup-1",
+    "page": "Timestepping Method Descriptions",
+    "title": "Common Setup",
+    "category": "section",
+    "text": "All methods start by calculating a scaled error estimate:err_scaled = norm(err(abstol + max(uprevu)*reltol))On this scaled error estimate, we calculate the norm. This norm is usually the Hairer semi-norm:norm(x) = sqrt(sum(x^2)length(x))This norm works well because it does not change if we add new pieces to the differential equation: it scales our error by the number of equations so that independent equations will not step differently than a single solve.In all cases, the step is rejected if err_scaled1 since that means the error is larger than the tolerances, and the step is accepted if err_scaled1."
+},
+
+{
+    "location": "extras/timestepping.html#Proportional-Control-(Standard-Control)-1",
+    "page": "Timestepping Method Descriptions",
+    "title": "Proportional Control (Standard Control)",
+    "category": "section",
+    "text": "The proportional control algorithm is the \"standard algorithm\" for adaptive timestepping. Note that it is not the default in DifferentialEquations.jl because it is usually awful for performance, but it is explained first because it is the most widely taught algorithm and others build off of its techniques.The control simply changes dt proportional to the error. There is an exponentiation based on the order of the algorithm which goes back to a result by Cechino for the optimal stepsize to reduce the error. The algorithm is:qtmp = integrator.EEst^(1/(alg_adaptive_order(integrator.alg)+1))/integrator.opts.gamma\n@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qtmp))\nintegrator.dtnew = integrator.dt/qThus q is the scaling factor for dt, and it must be between qmin and qmax. gamma is the safety factor, 0.9, for how much dt is decreased below the theoretical \"optimal\" value.Since proportional control is \"jagged\", i.e. can cause large changes between one step to the next, it can effect the stability of explicit methods. Thus it's only applied by default to low order implicit solvers."
+},
+
+{
+    "location": "extras/timestepping.html#Proportional-Integral-Control-(PI-Control)-1",
+    "page": "Timestepping Method Descriptions",
+    "title": "Proportional-Integral Control (PI-Control)",
+    "category": "section",
+    "text": "The proportional-integral control algorithm is a standard control algorithm from control theory. It mixes proportional control with memory in order to make the timesteps more stable, which actually increases the adaptive stability region of the algorithm. This stability property means that it's well-suited for explicit solvers, and it's applied by default to the Rosenbrock methods as well. The form for the updates is:EEst,beta1,q11,qold,beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,integrator.qold,integrator.opts.beta2\n@fastmath q11 = EEst^beta1\n@fastmath q = q11/(qold^beta2)\nintegrator.q11 = q11\n@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),q/integrator.opts.gamma))\nif q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min\n  q = one(q)\nend\nqbeta1 is the gain on the proportional part, and beta2 is the gain for the history portion. qoldinit is the initialized value for the gain history."
+},
+
+{
+    "location": "extras/timestepping.html#Gustafsson-Acceleration-1",
+    "page": "Timestepping Method Descriptions",
+    "title": "Gustafsson Acceleration",
+    "category": "section",
+    "text": "The Gustafsson acceleration algorithm accelerates changes so that way algorithms can more swiftly change to handle quick transients. This algorithm is thus well-suited for stiff solvers where this can be expected, and is the default for algorithms like the (E)SDIRK methods.gamma = integrator.opts.gamma\nniters = integrator.cache.newton_iters\nfac = min(gamma,(1+2*integrator.alg.max_newton_iter)*gamma/(niters+2*integrator.alg.max_newton_iter))\nexpo = 1/(alg_order(integrator.alg)+1)\nqtmp = (integrator.EEst^expo)/fac\n@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qtmp))\nif q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min\n  q = one(q)\nend\nintegrator.qold = q\nqIn this case, niters is the number of Newton iterations which was required in the most recent step of the algorithm. Note that these values are used differently depending on acceptance and rejectance. When the step is accepted, the following logic is applied:if integrator.success_iter > 0\n  expo = 1/(alg_adaptive_order(integrator.alg)+1)\n  qgus=(integrator.dtacc/integrator.dt)*(((integrator.EEst^2)/integrator.erracc)^expo)\n  qgus = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qgus/integrator.opts.gamma))\n  qacc=max(q,qgus)\nelse\n  qacc = q\nend\nintegrator.dtacc = integrator.dt\nintegrator.erracc = max(1e-2,integrator.EEst)\nintegrator.dt/qaccWhen it rejects, its the same as the proportional control:if integrator.success_iter == 0\n  integrator.dt *= 0.1\nelse\n  integrator.dt = integrator.dt/integrator.qold\nend"
 },
 
 ]}
