@@ -144,7 +144,9 @@ Note that if a method does not have adaptivity, the following rules apply:
 #### Advanced Adaptive Stepsize Control
 
 These arguments control more advanced parts of the internals of adaptive timestepping
-and are mostly used to make it more efficient on specific problems.
+and are mostly used to make it more efficient on specific problems. For detained
+explanations of the timestepping algorithms, see the
+[timestepping descriptions](../../extras/timestepping.html)
 
 * `internalnorm`: The norm function `internalnorm(u)` which error estimates
   are calculated. Defaults are package-dependent.
