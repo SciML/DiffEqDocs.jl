@@ -73,24 +73,24 @@ is a function which reduces the problem's solution. While this is very
 flexible, a two convenience routines is included for fitting to data:
 
 ```julia
-L2DistLoss(t,data;weight=nothing)
-CostVData(t,data;loss_func = L2DistLoss,weight=nothing)
+L2Loss(t,data;weight=nothing)
+CostVData(t,data;loss_func = L2Loss,weight=nothing)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
-`data` which are the values that are known. `L2DistLoss` is an optimized version
+`data` which are the values that are known. `L2Loss` is an optimized version
 of the L2-distance. In `CostVData`, one can choose any loss function from
 LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
 of weights for the loss function which must match the size of the data.
 
-Note that minimization of a weighted `L2DistLoss` is equivalent to maximum
+Note that minimization of a weighted `L2Loss` is equivalent to maximum
 likelihood estimation of a heteroskedastic Normally distributed likelihood.
 
 #### Note About Loss Functions
 
 For parameter estimation problems, it's not uncommon for the optimizers to hit
 unstable regions of parameter space. This causes warnings that the solver exited
-early, and the built-in loss functions like `L2DistLoss` and `CostVData`
+early, and the built-in loss functions like `L2Loss` and `CostVData`
 automatically handle this. However, if using a user-supplied loss function,
 you should make sure it's robust to these issues. One common pattern is to
 apply infinite loss when the integration is not successful. Using the retcodes,
@@ -234,7 +234,7 @@ To build the objective function for Optim.jl, we simply call the `build_loss_obj
 funtion:
 
 ```julia
-cost_function = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
+cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),maxiters=10000)
 ```
 
 Note that we set `maxiters` so that way the differential equation solvers would
@@ -283,7 +283,7 @@ prob = ODEProblem(f2,u0,tspan)
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
 ```julia
-cost_function = build_lsoptim_objective(prob,Tsit5(),L2DistLoss(t,data))
+cost_function = build_lsoptim_objective(prob,Tsit5(),L2Loss(t,data))
 ```
 
 The result is a cost function which can be used with LeastSquaresOptim. For more
@@ -340,7 +340,7 @@ t = collect(linspace(0,10,200))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 data = convert(Array,randomized)
 
-obj = build_loss_objective(prob,Tsit5(),L2DistLoss(t,data),maxiters=10000)
+obj = build_loss_objective(prob,Tsit5(),L2Loss(t,data),maxiters=10000)
 ```
 
 We can now use this `obj` as the objective function with MathProgBase solvers.
