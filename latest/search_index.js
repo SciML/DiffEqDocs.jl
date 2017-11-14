@@ -3973,7 +3973,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "The Loss Function",
     "category": "section",
-    "text": "loss_func(sol)is a function which reduces the problem's solution. While this is very flexible, a two convenience routines is included for fitting to data:L2Loss(t,data;weight=nothing)\nCostVData(t,data;loss_func = L2Loss,weight=nothing)where t is the set of timepoints which the data is found at, and data which are the values that are known. L2Loss is an optimized version of the L2-distance. In CostVData, one can choose any loss function from LossFunctions.jl or use the default of an L2 loss. The weight is a vector of weights for the loss function which must match the size of the data.Note that minimization of a weighted L2Loss is equivalent to maximum likelihood estimation of a heteroskedastic Normally distributed likelihood."
+    "text": "loss_func(sol)is a function which reduces the problem's solution to a scalar which the optimizer will try to minimize. While this is very flexible, a two convenience routines is included for fitting to data:L2Loss(t,data;weight=nothing)\nCostVData(t,data;loss_func = L2Loss,weight=nothing)where t is the set of timepoints which the data is found at, and data which are the values that are known. L2Loss is an optimized version of the L2-distance. In CostVData, one can choose any loss function from LossFunctions.jl or use the default of an L2 loss. The weight is a vector of weights for the loss function which must match the size of the data.Note that minimization of a weighted L2Loss is equivalent to maximum likelihood estimation of a heteroskedastic Normally distributed likelihood."
 },
 
 {
