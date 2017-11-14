@@ -69,7 +69,8 @@ The extra keyword arguments are passed to the differential equation solver.
 loss_func(sol)
 ```
 
-is a function which reduces the problem's solution. While this is very
+is a function which reduces the problem's solution to a scalar which the
+optimizer will try to minimize. While this is very
 flexible, a two convenience routines is included for fitting to data:
 
 ```julia
