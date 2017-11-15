@@ -59,8 +59,14 @@ and make the DAEProblem:
 
 ```julia
 using DifferentialEquations
-prob = DAEProblem(f,u₀,du₀,tspan)
+differential_vars = [true,true,true]
+prob = DAEProblem(f,u₀,du₀,tspan,differential_vars=differential_vars)
 ```
+
+`differential_vars` is an option which states which of the variables are differential,
+i.e. not purely algebraic (which means that their derivative shows up in the residual
+equations). This is required for the algorithm to be able to find consistant initial
+conditions.
 
 As with the other DifferentialEquations problems, the commands are then to solve
 and plot. Here we will use the IDA solver from Sundials:
