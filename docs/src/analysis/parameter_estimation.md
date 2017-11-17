@@ -10,7 +10,7 @@ defined using a
 The recommended method is to use `build_loss_objective` with the optimizer
 of your choice. This method can thus be paired with global optimizers
 from packages like NLopt.jl which can be much less prone to finding
-local minima that local optimization methods. Also, it allows the user
+local minima than local optimization methods. Also, it allows the user
 to define the cost function in the way they choose as a function
 `loss(sol)`, and thus can fit using any cost function on the solution,
 making it applicable to fitting non-temporal data and other types of
@@ -71,7 +71,7 @@ loss_func(sol)
 
 is a function which reduces the problem's solution to a scalar which the
 optimizer will try to minimize. While this is very
-flexible, a two convenience routines is included for fitting to data:
+flexible, two convenience routines are included for fitting to data:
 
 ```julia
 L2Loss(t,data;weight=nothing)
@@ -79,7 +79,7 @@ CostVData(t,data;loss_func = L2Loss,weight=nothing)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
-`data` which are the values that are known. `L2Loss` is an optimized version
+`data` are the values that are known. `L2Loss` is an optimized version
 of the L2-distance. In `CostVData`, one can choose any loss function from
 LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
 of weights for the loss function which must match the size of the data.
@@ -130,10 +130,10 @@ The regularization defaults to L2 if no penalty function is specified.
 
 #### The Problem Generator Function
 
-The argument `prob_generator` allows one to specify a the function for generating
+The argument `prob_generator` allows one to specify a function for generating
 new problems from a given parameter set. By default, this just builds a new
 version of `f` that inserts all of the parameters. For example, for ODEs this
-is given by the dispatch on `DiffEqBase.problem_new_parameters` that does the
+is given by the dispatch on `DiffEqBase.problem_new_parameters` which does the
 following:
 
 ```julia
@@ -232,13 +232,13 @@ Notice that after one period this solution begins to drift very far off: this
 problem is sensitive to the choice of `a`.
 
 To build the objective function for Optim.jl, we simply call the `build_loss_objective`
-funtion:
+function:
 
 ```julia
 cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),maxiters=10000)
 ```
 
-Note that we set `maxiters` so that way the differential equation solvers would
+Note that we set `maxiters` in a way that causes the differential equation solvers to
 error more quickly when in bad regions of the parameter space, speeding up the
 process. Now this cost function can be used with Optim.jl in order to get the parameters.
 For example, we can use Brent's algorithm to search for the best solution on
