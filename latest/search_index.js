@@ -3457,6 +3457,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_library.html#IterativeCallback-1",
+    "page": "Callback Library",
+    "title": "IterativeCallback",
+    "category": "section",
+    "text": "IterativeCallback is a callback to be used to iteratively apply some affect. For example, if given the first effect at t₁, you can define t₂ to apply the next effect.A IterativeCallback is constructed as follows:function IterativeCallback(time_choice, user_affect!,tType = Float64;\n                           initialize = DiffEqBase.INITIALIZE_DEFAULT,\n                           initial_affect = false, kwargs...)where time_choice(integrator) determines the time of the next callback and user_affect! is the effect applied to the integrator at the stopping points."
+},
+
+{
     "location": "features/callback_library.html#PeriodicCallback-1",
     "page": "Callback Library",
     "title": "PeriodicCallback",
