@@ -165,6 +165,8 @@ The following functions make up the interface:
   values using the local interpolation. If the current solution has already
   been saved, one can provide the optional value `modify_save_endpoint` to also
   modify the endpoint of `sol` in the same manner.
+* `add_tstop!(integrator,t)`: Adds a `tstop` at time `t`.
+* `add_saveat!(integrator,t)`: Adds a `saveat` time point at `t`.
 
 ### Resizing
 
