@@ -119,6 +119,12 @@ function daskr(;linear_solver=:Dense,
                   exclude_algebraic_errors = false)
 ```
 
+Choices for the linear solver are:
+
+- `:Dense`
+- `:Banded`
+- `:SPIGMR`, a Krylov method
+
 ## DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
