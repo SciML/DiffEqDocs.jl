@@ -105,11 +105,28 @@ using DASKR
 
 - `daskr` - This is a wrapper for the well-known DASKR algorithm.
 
+All additional options are available. The constructor is:
+
+```julia
+function daskr(;linear_solver=:Dense,
+                  jac_upper=0,jac_lower=0,max_order = 5,
+                  non_negativity_enforcement = 0,
+                  non_negativity_enforcement_array = nothing,
+                  max_krylov_iters = nothing,
+                  num_krylov_vectors = nothing,
+                  max_number_krylov_restarts = 5,
+                  krylov_convergence_test_constant = 0.05,
+                  exclude_algebraic_errors = false)
+```
+
 ## DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
 
 ## ODEInterfaceDiffEq.jl
+
+These methods require the DAE to be an `ODEProblem` in mass matrix form. For
+extra options for the solvers, see the ODE solver page.
 
 - `seulex` - Extrapolation-algorithm based on the linear implicit Euler method.
 - `radau` - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.
