@@ -169,6 +169,7 @@ error state of the solution. The retcodes are as follows:
 - `:DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
   allowed minimum timestep, and exited early.
 - `:Unstable`: The solver detected that the solution was unstable and exited early.
+- `:InitialFailure`: The DAE solver could not find consistent initial conditions.
 - `:ConvergenceFailure`: The internal implicit solvers failed to converge.
 - `:Failure`: General uncategorized failures or errors.
 
