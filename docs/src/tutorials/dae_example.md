@@ -26,7 +26,7 @@ equation. The Roberts model can be written in the form:
 \begin{align}
 dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
-1 &=  y_{1}  y_{2} + y_{3} \\
+1 &=  y_{1} + y_{2} + y_{3} \\
 \end{align}
 ```
 
@@ -59,8 +59,16 @@ and make the DAEProblem:
 
 ```julia
 using DifferentialEquations
-prob = DAEProblem(f,u₀,du₀,tspan)
+differential_vars = [true,true,false]
+prob = DAEProblem(f,u₀,du₀,tspan,differential_vars=differential_vars)
 ```
+
+`differential_vars` is an option which states which of the variables are differential,
+i.e. not purely algebraic (which means that their derivative shows up in the residual
+equations). This is required for the algorithm to be able to find consistant initial
+conditions. Notice that the first two variables are determined by their changes, but
+the last is simply determined by the conservation equation. Thus we use 
+`differential_vars = [true,true,false]`.
 
 As with the other DifferentialEquations problems, the commands are then to solve
 and plot. Here we will use the IDA solver from Sundials:
