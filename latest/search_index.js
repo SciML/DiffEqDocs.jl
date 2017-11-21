@@ -2645,7 +2645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "DASKR.jl",
     "category": "section",
-    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRdaskr - This is a wrapper for the well-known DASKR algorithm."
+    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRdaskr - This is a wrapper for the well-known DASKR algorithm.All additional options are available. The constructor is:function daskr(;linear_solver=:Dense,\n                  jac_upper=0,jac_lower=0,max_order = 5,\n                  non_negativity_enforcement = 0,\n                  non_negativity_enforcement_array = nothing,\n                  max_krylov_iters = nothing,\n                  num_krylov_vectors = nothing,\n                  max_number_krylov_restarts = 5,\n                  krylov_convergence_test_constant = 0.05,\n                  exclude_algebraic_errors = false)"
 },
 
 {
@@ -2661,7 +2661,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "ODEInterfaceDiffEq.jl",
     "category": "section",
-    "text": "seulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
+    "text": "These methods require the DAE to be an ODEProblem in mass matrix form. For extra options for the solvers, see the ODE solver page.seulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
 },
 
 {
