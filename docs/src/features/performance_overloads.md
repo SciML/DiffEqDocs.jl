@@ -36,6 +36,43 @@ end
 Note that this can also be done by generating a call-overloaded type. Indeed, this
 is what ParameterizedFunctions.jl does, so see [its README](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
 
+## Declaring Explicit Jacobians for DAEs
+
+For fully implicit ODEs (`DAEProblem`s), a slightly different Jacobian function
+is necessary. For the DAE
+
+```math
+G(t,u,du) = res
+```
+
+The Jacobian should be given in the form `dG/du + gamma*dG/d(du)` where `gamma`
+is given by the solver. This means that the signature is:
+
+```julia
+f(::Type{Val{:jac}},t,u,du,gamma,J)
+```
+
+For example, for the equation
+
+```julia
+function testjac(t,u,du,res)
+  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]
+  res[2] = du[2] -3 * u[2] - u[1]*u[2]
+end
+```
+
+we would define the Jacobian as:
+
+```julia
+function testjac(::Type{Val{:jac}},t,u,du,gamma,J)
+  J[1,1] = gamma - 2.0 + 1.2 * u[2]
+  J[1,2] = 1.2 * u[1]
+  J[2,1] = - 1 * u[2]
+  J[2,2] = gamma - 3 - u[1]
+  nothing
+end
+```
+
 ## Other Available Functions
 
 The full interface available to the solvers is as follows:
