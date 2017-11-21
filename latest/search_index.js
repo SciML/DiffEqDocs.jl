@@ -2645,7 +2645,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Solvers",
     "title": "DASKR.jl",
     "category": "section",
-    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRdaskr - This is a wrapper for the well-known DASKR algorithm.All additional options are available. The constructor is:function daskr(;linear_solver=:Dense,\n                  jac_upper=0,jac_lower=0,max_order = 5,\n                  non_negativity_enforcement = 0,\n                  non_negativity_enforcement_array = nothing,\n                  max_krylov_iters = nothing,\n                  num_krylov_vectors = nothing,\n                  max_number_krylov_restarts = 5,\n                  krylov_convergence_test_constant = 0.05,\n                  exclude_algebraic_errors = false)"
+    "text": "DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:Pkg.add(\"DASKR\")\nusing DASKRdaskr - This is a wrapper for the well-known DASKR algorithm.All additional options are available. The constructor is:function daskr(;linear_solver=:Dense,\n                  jac_upper=0,jac_lower=0,max_order = 5,\n                  non_negativity_enforcement = 0,\n                  non_negativity_enforcement_array = nothing,\n                  max_krylov_iters = nothing,\n                  num_krylov_vectors = nothing,\n                  max_number_krylov_restarts = 5,\n                  krylov_convergence_test_constant = 0.05,\n                  exclude_algebraic_errors = false)Choices for the linear solver are::Dense\n:Banded\n:SPIGMR, a Krylov method"
 },
 
 {
