@@ -53,7 +53,7 @@ For more general problems, use the
 
 ```julia
 bc!(residual, sol, p)
-f(t, u, p)
+f(t, u, p) resp. f(t, u, p, du)
 ```
 
 where `p`is the `Vector` of free parameters.
@@ -66,4 +66,3 @@ where `p`is the `Vector` of free parameters.
   initial value problem, or a `Vector` of values for ``u(t_i)`` for collocation
   methods
 * `tspan`: The timespan for the problem.
-* `p`: `Vector` of free parameters for parameter estimation
