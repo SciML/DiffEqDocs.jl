@@ -47,9 +47,16 @@ bc!(residual, sol)
 
 where `u` is the current solution to the ODE which is used to compute the `residual`.
 Note that all features of the `ODESolution` are present in this form.
-In both cases, the size of the residual matches the size of the initial condition
-(for more general problems, use the
-[parameter estimation routines](../../analysis/parameter_estimation.html)).
+In both cases, the size of the residual matches the size of the initial condition.
+For more general problems, use the
+[parameter estimation routines](../../analysis/parameter_estimation.html) and change the signature of `bc!` and `f` to
+
+```julia
+bc!(residual, sol, p)
+f(t, u, p)
+```
+
+where `p`is the `Vector` of free parameters.
 
 ### Fields
 
@@ -59,3 +66,4 @@ In both cases, the size of the residual matches the size of the initial conditio
   initial value problem, or a `Vector` of values for ``u(t_i)`` for collocation
   methods
 * `tspan`: The timespan for the problem.
+* `p`: `Vector` of free parameters for parameter estimation
