@@ -53,7 +53,7 @@ For more general problems, use the
 
 ```julia
 bc!(residual, sol, p)
-f(t, u, p) resp. f(t, u, p, du)
+f(t, u, p) # or inplace as f(t, u, p, du)
 ```
 
 where `p`is the `Vector` of free parameters.
