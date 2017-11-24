@@ -1025,6 +1025,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/integrator.html#Reinit-1",
+    "page": "Integrator Interface",
+    "title": "Reinit",
+    "category": "section",
+    "text": "The reinit function lets you restart the integration at a new value. The full function is of the form:reinit!(integrator::ODEIntegrator,u0 = integrator.sol.prob.u0;\n  t0 = integrator.sol.prob.tspan[1], tf = integrator.sol.prob.tspan[2],\n  erase_sol = true,\n  tstops = integrator.opts.tstops_cache,\n  saveat = integrator.opts.saveat_cache,\n  d_discontinuities = integrator.opts.d_discontinuities_cache,\n  reset_dt = (integrator.dtcache == zero(integrator.dt)) && integrator.opts.adaptive,\n  reinit_callbacks = true, initialize_save = true,\n  reinit_cache = true)u0 is the value to start at. The starting time point and end point can be changed via t0 and tf. erase_sol allows one to start with no other values in the solution, or keep the previous solution. tstops, d_discontinuities, and saveat are reset as well, but can be ignored. reset_dt is a boolean for whether to reset the current value of dt using the automatic dt determination algorithm. reinit_callbacks is whether to run the callback initializations again (and initialize_save is for that). reinit_cache is whether to re-run the cache initialization function (i.e. resetting FSAL, not allocating vectors) which should usually be true for correctness.Additionally, once can access auto_dt_reset!(integrator::ODEIntegrator) which will run the auto dt initialization algorithm. "
+},
+
+{
     "location": "basics/integrator.html#Misc-1",
     "page": "Integrator Interface",
     "title": "Misc",
