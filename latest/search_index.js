@@ -2161,6 +2161,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#MATLABDiffEq.jl-1",
+    "page": "ODE Solvers",
+    "title": "MATLABDiffEq.jl",
+    "category": "section",
+    "text": "These algorithms require that the problem was defined using a ParameterizedFunction via the @ode_def macro. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use MATLABDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/MATLABDiffEq.jl\")\nusing MATLABDiffEqThis requires a licensed MATLAB installation. The available methods are:ode23\node45\node113\node23s\node23t\node23tb\node15s\node15iFor more information on these algorithms, see the MATLAB documentation."
+},
+
+{
+    "location": "solvers/ode_solve.html#GeometricIntegrators.jl-1",
+    "page": "ODE Solvers",
+    "title": "GeometricIntegrators.jl",
+    "category": "section",
+    "text": "GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use GeometricIntegratorsDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl\")\nusing GeometricIntegratorsDiffEqGIEuler - 1st order Euler method\nGIMidpoint - 2nd order explicit midpoint method\nGIHeun - 2nd order Heun's method\nGIKutta - 3rd order Kutta's method\nGIERK4 - standard 4th order Runge-Kutta\nGIERK438 - 4th order Runge-Kutta, 3/8's rule\nGIImplicitEuler - 1st order implicit Euler method\nGIImplicitMidpoint - 2nd order implicit midpoint method\nGIRadIIA2 - 2-stage order 3 Radau-IIA\nGIRadIIA3 - 3-stage order 5 Radau-IIA\nGISRK3 - 3-stage order 4 symmetric Runge-Kutta method\nGIGLRK(s) - Gauss-Legendre Runge-Kutta method of order 2sNote that all of these methods require the user supplies dt."
+},
+
+{
     "location": "solvers/ode_solve.html#List-of-Supplied-Tableaus-1",
     "page": "ODE Solvers",
     "title": "List of Supplied Tableaus",
@@ -2222,6 +2238,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Symplectic Integrators",
     "category": "section",
     "text": "Note that all symplectic integrators are fixed timestep only.SymplecticEuler: First order explicit symplectic integrator\nVelocityVerlet: 2nd order explicit symplectic integrator.\nVerletLeapfrog: 2nd order explicit symplectic integrator.\nPseudoVerletLeapfrog: 2nd order explicit symplectic integrator.\nMcAte2: Optimized efficiency 2nd order explicit symplectic integrator.\nRuth3: 3rd order explicit symplectic integrator.\nMcAte3: Optimized efficiency 3rd order explicit symplectic integrator.\nCandyRoz4: 4th order explicit symplectic integrator.\nMcAte4: 4th order explicit symplectic integrator. Requires quadratic kinetic energy.\nCalvoSanz4: Optimized efficiency 4th order explicit symplectic integrator.\nMcAte42: 4th order explicit symplectic integrator. (Broken)\nMcAte5: Optimized efficiency 5th order explicit symplectic integrator. Requires quadratic kinetic energy\nYoshida6: 6th order explicit symplectic integrator.\nKahanLi6: Optimized efficiency 6th order explicit symplectic integrator.\nMcAte8: 8th order explicit symplectic integrator.\nKahanLi8: Optimized efficiency 8th order explicit symplectic integrator.\nSofSpa10: 10th order explicit symplectic integrator."
+},
+
+{
+    "location": "solvers/dynamical_solve.html#GeometricIntegrators.jl-1",
+    "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
+    "title": "GeometricIntegrators.jl",
+    "category": "section",
+    "text": "GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use GeometricIntegratorsDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl\")\nusing GeometricIntegratorsDiffEqGISymplecticEulerA - First order explicit symplectic Euler A\nGISymplecticEulerB - First order explicit symplectic Euler B\nGILobattoIIIAIIIB2 - Second order Gauss-Labatto-IIIA-IIIB\nGILobattoIIIBIIIA2 - Second order Gauss-Labatto-IIIB-IIIA"
 },
 
 {
