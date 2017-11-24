@@ -458,6 +458,59 @@ using LSODA
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
+## MATLABDiffEq.jl
+
+These algorithms require that the problem was defined using a `ParameterizedFunction`
+via the `@ode_def` macro. Note that this setup is not automatically included
+with DifferentialEquaitons.jl. To use the following algorithms, you must install
+and use MATLABDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/MATLABDiffEq.jl")
+using MATLABDiffEq
+```
+
+This requires a licensed MATLAB installation. The available methods are:
+
+  - `ode23`
+  - `ode45`
+  - `ode113`
+  - `ode23s`
+  - `ode23t`
+  - `ode23tb`
+  - `ode15s`
+  - `ode15i`
+
+For more information on these algorithms, see
+[the MATLAB documentation](https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html).
+
+## GeometricIntegrators.jl
+
+GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use
+GeometricIntegratorsDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl")
+using GeometricIntegratorsDiffEq
+```
+
+- `GIEuler` - 1st order Euler method
+- `GIMidpoint` - 2nd order explicit midpoint method
+- `GIHeun` - 2nd order Heun's method
+- `GIKutta` - 3rd order Kutta's method
+- `GIERK4` - standard 4th order Runge-Kutta
+- `GIERK438` - 4th order Runge-Kutta, 3/8's rule
+- `GIImplicitEuler` - 1st order implicit Euler method
+- `GIImplicitMidpoint` - 2nd order implicit midpoint method
+- `GIRadIIA2` - 2-stage order 3 Radau-IIA
+- `GIRadIIA3` - 3-stage order 5 Radau-IIA
+- `GISRK3` - 3-stage order 4 symmetric Runge-Kutta method
+- `GIGLRK(s)` - Gauss-Legendre Runge-Kutta method of order 2s
+
+Note that all of these methods require the user supplies `dt`.
+
 ## List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
