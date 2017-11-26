@@ -265,7 +265,7 @@ result = optimize(cost_function, [1.42], BFGS())
 ```
 
 Note that some of the algorithms may be sensitive to the initial condition. For more
-details on using Optim.jl, see the [documentation for Optim.jl](http://www.juliaopt.org/Optim.jl/latest/).
+details on using Optim.jl, see the [documentation for Optim.jl](http://julianlsolvers.github.io/Optim.jl/latest/).
 
 Lastly, we can use the same tools to estimate multiple parameters simultaneously.
 Let's use the Lotka-Volterra equation with all parameters free:
