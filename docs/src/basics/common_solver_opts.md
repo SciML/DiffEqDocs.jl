@@ -9,7 +9,7 @@ from. Not all of the interface is provided by every algorithm.
 For more detailed information on the defaults and the available options
 for specific algorithms / packages, see the manual pages for the solvers of specific
 problems. To see whether a specific package is compaible with the use of a
-given option, see the [compatibility chart](compatibility_chart.html)
+given option, see the [Solver Compatibility Chart](@ref)
 
 ## Default Algorithm Hinting
 
