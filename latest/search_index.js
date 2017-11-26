@@ -3029,7 +3029,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Noise Process Types",
     "category": "section",
-    "text": "This section describes the available NoiseProcess types."
+    "text": "This section describes the available NoiseProcess types. Note that all keyword arguments are splatted into the NoiseProcess constructor, and thus options like reset are available on the pre-built processes."
 },
 
 {
@@ -3037,7 +3037,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Wiener Process (White Noise)",
     "category": "section",
-    "text": "The WienerProcess, also known as Gaussian white noise, Brownian motion, or the noise in the Langevin equation, is the stationary process with distribution N(0,t). The constructor is:WienerProcess(t0,W0,Z0=nothing)\nWienerProcess!(t0,W0,Z0=nothing)"
+    "text": "The WienerProcess, also known as Gaussian white noise, Brownian motion, or the noise in the Langevin equation, is the stationary process with distribution N(0,t). The constructor is:WienerProcess(t0,W0,Z0=nothing;kwargs...)\nWienerProcess!(t0,W0,Z0=nothing;kwargs...)"
 },
 
 {
@@ -3045,7 +3045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Correlated Noise",
     "category": "section",
-    "text": "One can define a CorrelatedWienerProcess which is a Wiener process with correlations between the Wiener processes. The constructor is:CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing)\nCorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing)where Γ is the constant covariance matrix."
+    "text": "One can define a CorrelatedWienerProcess which is a Wiener process with correlations between the Wiener processes. The constructor is:CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing;kwargs...)\nCorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing;kwargs...)where Γ is the constant covariance matrix."
 },
 
 {
@@ -3053,7 +3053,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Geometric Brownian Motion",
     "category": "section",
-    "text": "A GeometricBrownianMotion process is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = mu X_t dt + sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)"
+    "text": "A GeometricBrownianMotion process is a Wiener process with constant drift μ and constant diffusion σ. I.e. this is the solution of the stochastic differential equationdX_t = mu X_t dt + sigma X_t dW_tThe GeometricBrownianMotionProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). It can be back interpolated exactly as well. The constructor is:GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing;kwargs...)\nGeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing;kwargs...)"
 },
 
 {
@@ -3061,7 +3061,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Brownian Bridge",
     "category": "section",
-    "text": "A BrownianBridge process is a Wiener process with a pre-defined start and end value. This process is distribution exact and back be back interpolated exactly as well. The constructor is:BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)\nBrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)where W(t0)=W₀, W(tend)=Wend, and likewise for the Z process if defined."
+    "text": "A BrownianBridge process is a Wiener process with a pre-defined start and end value. This process is distribution exact and back be back interpolated exactly as well. The constructor is:BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing;kwargs...)\nBrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing;kwargs...)where W(t0)=W₀, W(tend)=Wend, and likewise for the Z process if defined."
 },
 
 {
@@ -3069,7 +3069,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Ornstein-Uhlenbeck",
     "category": "section",
-    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = theta (mu - X_t) dt + sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)"
+    "text": "One can define a Ornstein-Uhlenbeck process which is a Wiener process defined by the stochastic differential equationdX_t = theta (mu - X_t) dt + sigma X_t dW_tThe OrnsteinUhlenbeckProcess is distribution exact (meaning, not a numerical solution of the stochastic differential equation, and instead follows the exact distribution properties). The constructor is:OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing;kwargs...)\nOrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing;kwargs...)"
 },
 
 {
@@ -3077,7 +3077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Direct Construction of a NoiseProcess",
     "category": "section",
-    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM(),save_everystep=true,timeseries_steps=1)t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.\nsave_everystep whether to save every step of the Brownian timeseries.\ntimeseries_steps number of points to skip between each timeseries save.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
+    "text": "A NoiseProcess is a type defined asNoiseProcess(t0,W0,Z0,dist,bridge;\n             iip=DiffEqBase.isinplace(dist,3),\n             rswm = RSWM(),save_everystep=true,timeseries_steps=1,\n             reset = true, reseed = true)t0 is the first timepoint\nW0 is the first value of the process.\nZ0 is the first value of the psudo-process. This is necessary for higher order algorithms. If it's not needed, set to nothing.\ndist the distribution for the steps over time.\nbridge the bridging distribution. Optional, but required for adaptivity and interpolating at new values.\nsave_everystep whether to save every step of the Brownian timeseries.\ntimeseries_steps number of points to skip between each timeseries save.\nreset whether to reset the process with each solve.\nreseed whether to reseed the process with each solve.The signature for the dist isdist!(rand_vec,W,dt)for inplace functions, andrand_vec = dist(W,dt)otherwise. The signature for bridge isbridge!(rand_vec,W,W0,Wh,q,h)and the out of place syntax isrand_vec = bridge!(W,W0,Wh,q,h)Here, W is the noise process, W0 is the left side of the current interval, Wh is the right side of the current interval, h is the interval length, and q is the proportion from the left where the interpolation is occuring."
 },
 
 {
@@ -3101,7 +3101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "NoiseWrapper",
     "category": "section",
-    "text": "This produces a new noise process from an old one, which will use its interpolation to generate the noise. This allows you to re-use a previous noise process not just with the same timesteps, but also with new (adaptive) timesteps as well. Thus this is very good for doing Multi-level Monte Carlo schemes and strong convergence testing.To wrap a noise process, simply use:NoiseWrapper(W::NoiseProcess)"
+    "text": "This produces a new noise process from an old one, which will use its interpolation to generate the noise. This allows you to re-use a previous noise process not just with the same timesteps, but also with new (adaptive) timesteps as well. Thus this is very good for doing Multi-level Monte Carlo schemes and strong convergence testing.To wrap a noise process, simply use:NoiseWrapper(W::NoiseProcess;reset=true)"
 },
 
 {
@@ -3109,7 +3109,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "NoiseFunction",
     "category": "section",
-    "text": "This allows you to use any arbitrary function W(t) as a NoiseProcess. This will use the function lazily, only caching values required to minimize function calls, but not store the entire noise array. This requires an initial time point t0 in the domain of W. A second function is needed if the desired SDE algorithm requires multiple processes.NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0))Additionally, one can use an in-place function W(out1,out2,t) for more efficient generation of the arrays for multi-dimensional processes. When the in-place version is used without a dispatch for the out-of-place version, the noise_prototype needs to be set."
+    "text": "This allows you to use any arbitrary function W(t) as a NoiseProcess. This will use the function lazily, only caching values required to minimize function calls, but not store the entire noise array. This requires an initial time point t0 in the domain of W. A second function is needed if the desired SDE algorithm requires multiple processes.NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0),reset=true)Additionally, one can use an in-place function W(out1,out2,t) for more efficient generation of the arrays for multi-dimensional processes. When the in-place version is used without a dispatch for the out-of-place version, the noise_prototype needs to be set."
 },
 
 {
@@ -3117,7 +3117,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "NoiseGrid",
     "category": "section",
-    "text": "A noise grid builds a noise process from arrays of points. For example, you can generate your desired noise process as an array W with timepoints t, and use the constructor:NoiseGrid(t,W,Z=nothing)to build the associated noise process. This process comes with a linear interpolation of the given points, and thus the grid does not have to match the grid of integration. Thus this can be used for adaptive solutions as well. However, one must make note that the fidelity of the noise process is linked to how fine the noise grid is determined: if the noise grid is sparse on points compared to the integration, then its distributional properties may be slightly perturbed by the linear interpolation. Thus its suggested that the grid size at least approximately match the number of time steps in the integration to ensure accuracy.For a one-dimensional process, W should be an AbstractVector of Numbers. For multi-dimensional processes, W should be an AbstractVector of the noise_prototype."
+    "text": "A noise grid builds a noise process from arrays of points. For example, you can generate your desired noise process as an array W with timepoints t, and use the constructor:NoiseGrid(t,W,Z=nothing;reset=true)to build the associated noise process. This process comes with a linear interpolation of the given points, and thus the grid does not have to match the grid of integration. Thus this can be used for adaptive solutions as well. However, one must make note that the fidelity of the noise process is linked to how fine the noise grid is determined: if the noise grid is sparse on points compared to the integration, then its distributional properties may be slightly perturbed by the linear interpolation. Thus its suggested that the grid size at least approximately match the number of time steps in the integration to ensure accuracy.For a one-dimensional process, W should be an AbstractVector of Numbers. For multi-dimensional processes, W should be an AbstractVector of the noise_prototype."
 },
 
 {
@@ -3125,7 +3125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "NoiseApproximation",
     "category": "section",
-    "text": "In many cases, one would like to define a noise process directly by a stochastic differential equation which does not have an analytical solution. Of course, this will not be distributionally-exact and how well the properties match depends on how well the differential equation is integrated, but in many cases this can be used as a good approximation when other methods are much more difficult.A NoiseApproximation is defined by a DEIntegrator. The constructor for a NoiseApproximation is:NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing)The DEIntegrator should have a final time point of integration far enough such that it will not halt during the integration. For ease of use, you can use a final time point as Inf. Note that the time points do not have to match the time points of the future integration since the interpolant of the SDE solution will be used. Thus the limiting factor is error tolerance and not hitting specific points."
+    "text": "In many cases, one would like to define a noise process directly by a stochastic differential equation which does not have an analytical solution. Of course, this will not be distributionally-exact and how well the properties match depends on how well the differential equation is integrated, but in many cases this can be used as a good approximation when other methods are much more difficult.A NoiseApproximation is defined by a DEIntegrator. The constructor for a NoiseApproximation is:NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing;reset=true)The DEIntegrator should have a final time point of integration far enough such that it will not halt during the integration. For ease of use, you can use a final time point as Inf. Note that the time points do not have to match the time points of the future integration since the interpolant of the SDE solution will be used. Thus the limiting factor is error tolerance and not hitting specific points."
 },
 
 {
