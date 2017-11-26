@@ -174,7 +174,7 @@ explanations of the timestepping algorithms, see the
 * `maxiters`: Maximum number of iterations before stopping. Defaults to 1e5.
 * `callback`: Specifies a callback. Defaults to a callback function which
   performs the saving routine. For more information, see the
-  [Event Handling and Callback Functions manual page](https://juliadiffeq.github.io/DiffEqDocs.jl/latest/man/callback_functions.html).
+  [Event Handling and Callback Functions manual page](../../features/callback_functions.html).
 * `isoutofdomain`: Specifies a function `isoutofdomain(t,u)` where, when it
   returns false, it will reject the timestep. Defaults to always false.
 * `unstable_check`: Specifies a function `unstable_check(dt,t,u)` where, when
