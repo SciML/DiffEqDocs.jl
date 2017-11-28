@@ -328,7 +328,7 @@ These will generate a Wiener process, which can be stepped with `step!(W,dt)`, a
 
 ## Non-Standard Noise Processes
 
-In addition to the mathematically-defined noise processes above, there exist
+In addition to the mathematically-defined noise processes above, there exists
 more generic functionality for building noise processes from other noise processes,
 from arbitrary functions, from arrays, and from approximations of stochastic
 differential equations.
