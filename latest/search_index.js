@@ -3093,7 +3093,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Non-Standard Noise Processes",
     "category": "section",
-    "text": "In addition to the mathematically-defined noise processes above, there exists more generic functionality for building noise processes from other noise processes, from arbitrary functions, from arrays, and from approximations of stochastic differential equations."
+    "text": "In addition to the mathematically-defined noise processes above, there exist more generic functionality for building noise processes from other noise processes, from arbitrary functions, from arrays, and from approximations of stochastic differential equations."
 },
 
 {
