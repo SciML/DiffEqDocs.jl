@@ -2509,7 +2509,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "BridgeDiffEq.jl",
     "category": "section",
-    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/BridgeDiffEq.jl\")\nusing BridgeDiffEqBridgeEuler - Strong order 0.5 Euler-Maruyama method for Ito equations.\nBridgeHeun - Strong order 0.5 Euler-Heun method for Stratonovich equations.\nBridgeSRK - Strong order 1.0 derivative-free stochastic Runge-Kutta method for scalar (<:Number) Ito equations."
+    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/BridgeDiffEq.jl\")\nusing BridgeDiffEqBridgeEuler - Strong order 0.5 Euler-Maruyama method for Ito equations.†\nBridgeHeun - Strong order 0.5 Euler-Heun method for Stratonovich equations.†\nBridgeSRK - Strong order 1.0 derivative-free stochastic Runge-Kutta method for scalar (<:Number) Ito equations.†"
 },
 
 {
