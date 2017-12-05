@@ -2185,6 +2185,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#BridgeDiffEq.jl-1",
+    "page": "ODE Solvers",
+    "title": "BridgeDiffEq.jl",
+    "category": "section",
+    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/BridgeDiffEq.jl\")\nusing BridgeDiffEqBridgeR3 - 3rd order Ralston method\nBridgeBS3 - 3rd order Bogacki-Shampine method"
+},
+
+{
     "location": "solvers/ode_solve.html#List-of-Supplied-Tableaus-1",
     "page": "ODE Solvers",
     "title": "List of Supplied Tableaus",
@@ -2494,6 +2502,14 @@ var documenterSearchIndex = {"docs": [
     "title": "StochasticCompositeAlgorithm",
     "category": "section",
     "text": "One unique feature of StochasticDiffEq.jl is the StochasticCompositeAlgorithm, which allows you to, with very minimal overhead, design a multimethod which switches between chosen algorithms as needed. The syntax is StochasticCompositeAlgorithm(algtup,choice_function) where algtup is a tuple of StochasticDiffEq.jl algorithms, and choice_function is a function which declares which method to use in the following step. For example, we can design a multimethod which uses EM() but switches to RKMil() whenever dt is too small:choice_function(integrator) = (Int(integrator.dt<0.001) + 1)\nalg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)The choice_function takes in an integrator and thus all of the features available in the Integrator Interface can be used in the choice function."
+},
+
+{
+    "location": "solvers/sde_solve.html#BridgeDiffEq.jl-1",
+    "page": "SDE Solvers",
+    "title": "BridgeDiffEq.jl",
+    "category": "section",
+    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/BridgeDiffEq.jl\")\nusing BridgeDiffEqBridgeEuler - Strong order 0.5 Euler-Maruyama method for Ito equations.\nBridgeHeun - Strong order 0.5 Euler-Heun method for Stratonovich equations.\nBridgeSRK - Strong order 1.0 derivative-free stochastic Runge-Kutta method for scalar (<:Number) Ito equations."
 },
 
 {
@@ -3093,7 +3109,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "Non-Standard Noise Processes",
     "category": "section",
-    "text": "In addition to the mathematically-defined noise processes above, there exist more generic functionality for building noise processes from other noise processes, from arbitrary functions, from arrays, and from approximations of stochastic differential equations."
+    "text": "In addition to the mathematically-defined noise processes above, there exists more generic functionality for building noise processes from other noise processes, from arbitrary functions, from arrays, and from approximations of stochastic differential equations."
 },
 
 {
