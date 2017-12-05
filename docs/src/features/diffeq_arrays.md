@@ -17,7 +17,7 @@ using RecursiveArrayTools
 A = ArrayPartition(x::AbstractArray...)
 ```
 
-where is a list of arrays. The resulting `A` will act like a single array, and its
+where is `x` a list of arrays. The resulting `A` will act like a single array, and its
 broadcast will be type stable, allowing for it to be used inside of the native Julia
 DiffEq solvers in an efficient way. This is a good way to generate an array which
 has different units for different parts, or different amounts of precision.
@@ -146,7 +146,7 @@ end
 Now we will setup our control mechanism. It will be a simple setup which uses
 set timepoints at which we will change `f1`. At `t=5.0` we will want to increase
 the value of `f1`, and at `t=8.0` we will want to decrease the value of `f1`. Using
-the [`DiscreteCallback` interface](callback_functions.html), we code these conditions
+the [`DiscreteCallback` interface](../callback_functions.html), we code these conditions
 as follows:
 
 ```julia
@@ -163,9 +163,9 @@ function condition2(t,u,integrator)
 end
 ```
 
-Now we have to apply an affect when these conditions are reached. When `condition`
+Now we have to apply an effect when these conditions are reached. When `condition`
 is hit (at `t=5.0`), we will increase `f1` to 1.5. When `condition2` is reached,
-we will decrease `f1` to `-1.5`. This is done via the affects:
+we will decrease `f1` to `-1.5`. This is done via the functions:
 
 ```julia
 function affect!(integrator)
