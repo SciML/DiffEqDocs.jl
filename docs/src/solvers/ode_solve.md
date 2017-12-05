@@ -511,6 +511,22 @@ using GeometricIntegratorsDiffEq
 
 Note that all of these methods require the user supplies `dt`.
 
+## BridgeDiffEq.jl
+
+Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
+are made and optimized for out-of-place functions on immutable (static vector)
+types. Note that this setup is not automatically included with
+DifferentialEquaitons.jl. To use the following algorithms, you must install and
+use BridgeDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
+using BridgeDiffEq
+```
+
+- `BridgeR3` - 3rd order Ralston method
+- `BridgeBS3` - 3rd order Bogacki-Shampine method
+
 ## List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
