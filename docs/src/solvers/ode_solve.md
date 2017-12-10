@@ -33,7 +33,7 @@ needed). Note that these high order RK methods are more robust than the high ord
 Adams-Bashforth methods to discontinuities and achieve very high precision, and
 are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
 method can be a good choice for high accuracy when the system of equations is
-very large (`>10,000` ODEs?), the function calculation is very expensive,
+very large (`>1,000` ODEs?), the function calculation is very expensive,
 or the solution is very smooth.
 
 If strict error bounds are needed, then adaptive methods with defect controls
@@ -61,10 +61,12 @@ defined via the `@ode_def` macro, these will be the most efficient.
 For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
 use `radau`.
 
-For asymtopically large systems of ODEs (`N>10000`?)
+For asymtopically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
-`CVODE_BDF` will also do surprisingly well if the solution is smooth.
+`CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
+this method can be less stiff than other methods and stuff may fail at low
+accuracy situations.
 
 #### Special Properties of Stiff Integrators
 
