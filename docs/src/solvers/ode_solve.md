@@ -431,6 +431,10 @@ using ODEInterfaceDiffEq
   - `ddeabm` - Adams-Bashforth-Moulton Predictor-Corrector method (order between 1 and 12)
   - `ddebdf` - Backward Differentiation Formula (orders between 1 and 5)
 
+Note that while the output only has a linear interpolation, a higher order
+interpolation is used for intermediate dense output for `saveat` and for
+event handling.
+
 ## LSODA.jl
 
 This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching

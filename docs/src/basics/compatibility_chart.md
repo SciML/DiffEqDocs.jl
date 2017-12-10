@@ -14,13 +14,13 @@ issue or submit a pull-request.
 | Advanced stepsize control              | x                 | 0           |        | x               | 0        | x                   | x              | 0        |          
 | Mass Matrices^                         | x                 | 0           |        | x               | 0        | x                   | x              | 0        |     
 | Analytical Jacobians^†                 | x                 | x           |        | x               |          | x                   | x              | x        |     
-| General Performance Overloads^†        | x                 | 0           |        |                 | 0        | x                   | x              | 0        |  
-| internalnorm                           | x                 | 0           | x      |                 | 0        | x                   | x              | 0        |          
+| General Performance Overloads^†        | x                 | 0           |        | 0               | 0        | x                   | x              | 0        |  
+| internalnorm                           | x                 | 0           | x      | 0               | 0        | x                   | x              | 0        |          
 | Initial dt                             | x                 | x           | x      | x               |          | x                   | x              | x        |          
-| save_everystep                         | x                 | x           | x      |                 | x        | x                   | x              | x        |          
+| save_everystep                         | x                 | x           | x      | x               | x        | x                   | x              | x        |          
 | timeseries_steps                       | x                 |             |        |                 |          | x                   | x              |          |          
-| saveat                                 | x                 | x           | x      |                 | x        | x                   | x              | x        |          
-| tstops                                 | x                 | x           |        |                 |          | x                   | x              | x        |          
+| saveat                                 | x                 | x           | x      | x               | x        | x                   | x              | x        |          
+| tstops                                 | x                 | x           |        | 0               |          | x                   | x              | x        |          
 | d_discontinuities                      | x                 |             |        |                 |          | x                   | x              |          |          
 | isoutofdomain                          | x                 |             | x      |                 |          | x                   | x              |          |          
 | Allows reverse time direction          | x                 | x           | x      | x               | x        | x                   | x              |          |          
@@ -30,7 +30,7 @@ issue or submit a pull-request.
 | Arbitrary precision                    | x                 | 0           | x      | 0               | 0        | x                   | x              | 0        | x        
 | ApproxFun types                        | x                 | 0           |        | 0               | 0        |                     | x              | 0        |          
 | Progress monitoring                    | x                 |             |        |                 |          | x                   | x              |          |          
-| Integrator interface                   | x                 | x           |        |                 |          | x                   | x              |          |          
+| Integrator interface                   | x                 | x           |        | 0               |          | x                   | x              |          |          
 | Resizability                           | x                 | 0           |        | 0               | 0        | x                   | x              | 0        |          
 | Cache iterator                         | x                 | 0           |        | 0               | 0        | x                   | x              | 0        |          
 | Can choose linear solvers              | x                 | s           |        |                 |          | x                   | x              | s        | x        
@@ -39,13 +39,14 @@ issue or submit a pull-request.
 | Can use inplace natively               | x                 | x           |        | x               | x        | x                   | x              | x        |         
 | Compatible with DiffEqDevTools         | x                 | x           | x      | x               | x        | x                   | x              | x        |          
 | Compatible with ParameterizedFunctions | x                 | x           | x      | x               | x        | x                   | x              | x        |          
-| Continuous Callbacks                   | x                 | x           |        |                 |          | x                   | x              |          | x        
-| Discrete Callbacks                     | x                 | x           |        |                 |          | x                   | x              |          |          
+| Continuous Callbacks                   | x                 | x           |        | x               |          | x                   | x              |          | x        
+| Discrete Callbacks                     | x                 | x           |        | x               |          | x                   | x              |          |          
 | Monte Carlo Simulations                | x                 | x           | x      | x               | x        | x                   | x              | x        |          
 | Parameter Estimation                   | x                 | n           | n      | n               | n        | x                   | x              | n        | x        
 | Parameter Sensitivity Analysis         | x                 | x           | x      | x               | x        |                     | x              |          |          
 | Plotting and solution handling         | x                 | x           | x      | x               | x        | x                   | x              | x        | x          
 
+* x: Full compatibility
 * p: Partial compatibility, only in nonstiff methods unless the Jacobian is provided.
 * n: General compatibility, but not compatible with routines which.
   require being able to autodifferentiate through the entire solver.
