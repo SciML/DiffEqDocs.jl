@@ -160,10 +160,10 @@ Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
 using BridgeDiffEq
 ```
 
-- `BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.
-- `BridgeHeun` - Strong order 0.5 Euler-Heun method for Stratonovich equations.
+- `BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.†
+- `BridgeHeun` - Strong order 0.5 Euler-Heun method for Stratonovich equations.†
 - `BridgeSRK` - Strong order 1.0 derivative-free stochastic Runge-Kutta method
-  for scalar (`<:Number`) Ito equations.
+  for scalar (`<:Number`) Ito equations.†
 
 #### Notes
 

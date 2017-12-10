@@ -196,7 +196,7 @@ function (which is used for the LM solver). This returns the fitted parameters.
 ## Local Optimization Examples
 
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
-by defining the function as a [ParmaeterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
+by defining the function as a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
 
 
 ```julia
