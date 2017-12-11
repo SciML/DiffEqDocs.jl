@@ -21,7 +21,7 @@ issue or submit a pull-request.
 | timeseries_steps                       | x                 |             |        |                 |          | x                   | x              |          |          
 | saveat                                 | x                 | x           | x      | x               | x        | x                   | x              | x        |          
 | tstops                                 | x                 | x           |        | 0               |          | x                   | x              | x        |          
-| d_discontinuities                      | x                 |             |        |                 |          | x                   | x              |          |          
+| d_discontinuities                      | x                 |             |        | 0               |          | x                   | x              |          |          
 | isoutofdomain                          | x                 |             | x      |                 |          | x                   | x              |          |          
 | Allows reverse time direction          | x                 | x           | x      | x               | x        | x                   | x              |          |          
 | Unitful numbers                        | x                 | 0           |        | 0               | 0        |                     | x              | 0        |          
