@@ -302,12 +302,47 @@ plot(sol,vars=(0,2))
 
 Note that here "variable 0" corresponds to the dependent variable ("time").
 
-#### Defining Systems of Equations Using ParameterizedFunctions.jl
+#### Defining Parameterized Functions
 
-To simplify your life, the `@ode_def` macro allows for "defining your ODE in
-pseudocode" and getting a function which is efficient and runnable.
+In many cases you may want to explicitly have parameters associated with your
+differential equations. This can be used by things like 
+[parameter estimation routines](../../analysis/parameter_estimation.html).
+In this case, you define a `ParameterizedFunction` via the syntax:
 
-To use the macro, you write out your system of equations with the left-hand side
+```julia
+function parameterized_lorenz(t,u,p,du)
+ du[1] = p[1]*(u[2]-u[1])
+ du[2] = u[1]*(p[2]-u[3]) - u[2]
+ du[3] = u[1]*u[2] - p[3]*u[3]
+end
+```
+
+and then we can enclose parameters using the constructor:
+
+```julia
+p = [10.0,28.0,8/3]
+pf = ParameterizedFunction(parameterized_lorenz,p)
+```
+
+and build the `ODEProblem` from this `ParameterizedFunction`:
+
+```julia
+u0 = [1.0;0.0;0.0]
+tspan = (0.0,1.0)
+prob = ODEProblem(pf,u0,tspan)
+```
+
+Note that the type for the parameters `p` can be anything: you can use arrays, 
+static arrays, named tuples, etc. to enclose your parameters in a way that is
+sensible for your problem.
+
+On the [ParameterizedFunction page](../../analysis/parameterized_functions.html)
+a form of `ParameterizedFunction` is explained for each type of differential
+equation, so this method extends throughout the DiffEq-ecosystem.
+
+Additionally, there exists a `@ode_def` macro allows for "defining your ODE in
+pseudocode" and getting a function which is efficient and runnable. To use the macro, 
+you write out your system of equations with the left-hand side
 being `d_` and those variables will be parsed as the dependent variables. The
 independent variable is `t`, and the other variables are parameters which you pass
 at the end. For example, we can write the Lorenz system as:
@@ -351,7 +386,7 @@ h = LorenzExample(σ=11.0,ρ=25.0)
 
 Note that the values will default to the values given to the `@ode_def` command.
 
-ParameterizedFunctions.jl does "behind-the-scenes" symbolic calculations to
+The macro does "behind-the-scenes" symbolic calculations to
 pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up
 calculations. Thus not only will this lead to legible ODE definitions, but
 "unfairly fast" code! We can turn off some of the calculations by using a more
