@@ -302,7 +302,7 @@ plot(sol,vars=(0,2))
 
 Note that here "variable 0" corresponds to the dependent variable ("time").
 
-#### Defining Parameterized Functions
+### Defining Parameterized Functions
 
 In many cases you may want to explicitly have parameters associated with your
 differential equations. This can be used by things like 
