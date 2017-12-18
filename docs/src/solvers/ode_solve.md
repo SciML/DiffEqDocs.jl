@@ -533,6 +533,22 @@ using BridgeDiffEq
 - `BridgeR3` - 3rd order Ralston method
 - `BridgeBS3` - 3rd order Bogacki-Shampine method
 
+## TaylorIntegration.jl
+
+TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor
+series method for high accuracy integration of ODEs. These methods are optimized
+when the absolute tolerance is required to be very low. 
+Note that this setup is not automatically included with DifferentialEquaitons.jl. 
+To use the following algorithms, you must install and
+use TaylorIntegration.jl:
+
+```julia
+Pkg.add("TaylorIntegration")
+using TaylorIntegration
+```
+
+- `TaylorMethod(order)` - Taylor integration method with maximal `order` (required)
+
 ## List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
