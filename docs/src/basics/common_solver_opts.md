@@ -116,10 +116,16 @@ be specified element-wise by passing a vector whose size matches `u0`.
 
 * `adaptive`: Turns on adaptive timestepping for appropriate methods. Default
   is true.
-* `abstol`: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.
-* `reltol`: Relative tolerance in adaptive timestepping. Defaults to 1e-3.
+* `abstol`: Absolute tolerance in adaptive timestepping. This is the tolerance
+  on local error estimatoes, not necessarily the global error (though these quantities
+  are related). Defaults to `1e-6` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
+  on stochastic equations (SDEs/RODEs).
+* `reltol`: Relative tolerance in adaptive timestepping.  This is the tolerance
+  on local error estimatoes, not necessarily the global error (though these quantities
+  are related). Defaults to `1e-3` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
+  on stochastic equations (SDEs/RODEs).
 * `dt`: Sets the initial stepsize. This is also the stepsize for fixed
-  timestep methods. Defaults to an automatic choice.
+  timestep methods. Defaults to an automatic choice if the method is adaptive.
 * `dtmax`: Maximum dt for adaptive timestepping. Defaults are
   package-dependent.
 * `dtmin`: Minimum dt for adaptive timestepping. Defaults are
