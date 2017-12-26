@@ -4173,7 +4173,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Uncertainty Quantification",
     "title": "Uncertainty Quantification",
     "category": "section",
-    "text": "Uncertainty quantification allows a user to identify the uncertainty associated with the numerical approximation given by DifferentialEquations.jl. This page describes the different methods available for quantifying such uncertainties."
+    "text": "Uncertainty quantification allows a user to identify the uncertainty associated with the numerical approximation given by DifferentialEquations.jl. This page describes the different methods available for quantifying such uncertainties. Note that this requires one of the native Julia solvers like OrdinaryDiffEq.jl, StochasticDiffEq.jl, or DelayDiffEq.jl."
 },
 
 {
