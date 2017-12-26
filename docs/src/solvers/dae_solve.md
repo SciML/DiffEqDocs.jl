@@ -61,7 +61,6 @@ Note that the constructors for the Sundials algorithms take a main argument:
   - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
     position of the upper and lower non-zero diagonals via `jac_upper` and
     `jac_lower`.
-  - `:Diagonal` - This method is specialized for diagonal Jacobians.
   - `BCG` - A Biconjugate gradient method.
   - `TFQMR` - A TFQMR method.
 
