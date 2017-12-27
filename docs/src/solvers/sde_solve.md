@@ -4,12 +4,13 @@
 
 For most Ito diagonal and scalar noise problems where a good amount of accuracy is
 required and mild stiffness may be an issue, the `SRIW1` algorithm should
-do well. If the problem has additive noise, then `SRA1` will be the
-optimal algorithm. For commutative noise, `RKMilCommute` is a strong order 1.0
-method which utilizes the commutivity property to greatly speed up the Wiktorsson
-approximation and can choose between Ito and Stratonovich. For non-commutative noise,
-`EM` and `EulerHeun` are the choices (for Ito and Stratonovich interpretations
-respectively).
+do well. If the problem has additive noise, then `SOSRA` will be the
+optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
+though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
+is a strong order 1.0 method which utilizes the commutivity property to greatly
+speed up the Wiktorsson approximation and can choose between Ito and Stratonovich.
+For non-commutative noise, `EM` and `EulerHeun` are the choices (for Ito and
+Stratonovich interpretations respectively).
 
 For stiff problems with diagonal noise, `ImplicitRKMil` is the most efficient
 method and can choose between Ito and Stratonovich. If the noise is non-diagonal,
@@ -50,6 +51,8 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 * `delta`: The `delta` adaptivity parameter for the natural error estimator.
   Determines the balance between drift and diffusion error. For more details, see
   [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
+* `seed`: Sets the seed for the random number generator. This overrides any seed
+  set in the `SDEProblem`.
 
 # Full List of Methods
 
@@ -77,10 +80,19 @@ Orders are given in terms of strong order.
   scalar additive noise.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to
   Rossler. Default tableau is for SRIW1.
-- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
-  Ito SDEs.†
-- `SRA1` - An optimized version of SRA1. Strong Order 1.5 for additive Ito and
-  Stratonovich SDEs. Can handle non-diagonal and scalar additive noise.†
+- `SRIW1` - Strong Order 1.5 for diagonal/scalar Ito SDEs.†
+- `SRA1` - Strong Order 1.5 for additive Ito and Stratonovich SDEs with weak
+  order 2. Can handle non-diagonal and scalar additive noise.†
+- `SRA2` - Strong Order 1.5 for additive Ito and Stratonovich SDEs with weak
+  order 2. Can handle non-diagonal and scalar additive noise.†
+- `SRA3` - Strong Order 1.5 for additive Ito and Stratonovich SDEs with weak
+  order 3. Can handle non-diagonal and scalar additive noise.†
+- `SOSRA` - A stability-optimized SRA. Strong Order 1.5 for additive Ito and
+  Stratonovich SDEs with weak order 2. Can handle non-diagonal and scalar
+  additive noise. Stable and high tolerances and robust to stiffness.†
+- `SOSRA2` - A stability-optimized SRA. Strong Order 1.5 for additive Ito and
+  Stratonovich SDEs with weak order 2. Can handle non-diagonal and scalar
+  additive noise. Stable and high tolerances and robust to stiffness.†
 
 Example usage:
 
