@@ -3,7 +3,7 @@
 ## Recommended Methods
 
 For most Ito diagonal and scalar noise problems where a good amount of accuracy is
-required and mild stiffness may be an issue, the `SRIW1` algorithm should
+required and mild stiffness may be an issue, the `SOSRI` algorithm should
 do well. If the problem has additive noise, then `SOSRA` will be the
 optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
 though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
@@ -80,7 +80,12 @@ Orders are given in terms of strong order.
   scalar additive noise.
 - `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to
   Rossler. Default tableau is for SRIW1.
-- `SRIW1` - Strong Order 1.5 for diagonal/scalar Ito SDEs.†
+- `SRIW1` - Strong Order 1.5 and weak order 2.0 for diagonal/scalar Ito SDEs.†
+- `SRIW2` - Strong Order 1.5 and weak order 3.0 for diagonal/scalar Ito SDEs.†
+- `SOSRI` - Stability-optimized strong Order 1.5 and weak order 2.0 for
+  diagonal/scalar Ito SDEs.†
+- `SOSRI2` - Stability-optimized strong Order 1.5 and weak order 2.0 for
+  diagonal/scalar Ito SDEs.†
 - `SRA1` - Strong Order 1.5 for additive Ito and Stratonovich SDEs with weak
   order 2. Can handle non-diagonal and scalar additive noise.†
 - `SRA2` - Strong Order 1.5 for additive Ito and Stratonovich SDEs with weak
