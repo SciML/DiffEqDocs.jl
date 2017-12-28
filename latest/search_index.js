@@ -1037,7 +1037,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Misc",
     "category": "section",
-    "text": "get_du(integrator): Returns the derivative at t."
+    "text": "get_du(integrator): Returns the derivative at t.\nget_du!(out,integrator): Write the current derivative at t into out."
 },
 
 {
