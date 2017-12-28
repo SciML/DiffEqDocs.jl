@@ -224,6 +224,7 @@ will run the auto `dt` initialization algorithm.
 ### Misc
 
 * `get_du(integrator)`: Returns the derivative at `t`.
+* `get_du!(out,integrator)`: Write the current derivative at `t` into `out`.
 
 #### Note
 
