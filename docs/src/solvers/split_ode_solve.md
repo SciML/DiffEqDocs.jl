@@ -6,7 +6,7 @@ linearity and number of components. Each solver has functional form
 
 ## Implicit-Explicit (IMEX) ODE
 
-The Implicit-Explicit (IMEX) ODE is a split `ODEProblem` with two functions:
+The Implicit-Explicit (IMEX) ODE is a `SplitODEProblem` with two functions:
 
 ```math
 \frac{du}{dt} =  f_1(t,u) + f_2(t,u)
