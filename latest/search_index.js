@@ -2285,7 +2285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "Implicit-Explicit (IMEX) ODE",
     "category": "section",
-    "text": "The Implicit-Explicit (IMEX) ODE is a split ODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
+    "text": "The Implicit-Explicit (IMEX) ODE is a SplitODEProblem with two functions:fracdudt =  f_1(tu) + f_2(tu)where the first function is the stiff part and the second function is the non-stiff part (implicit integration on f1, explicit integration on f2).The appropriate algorithms for this form are:"
 },
 
 {
@@ -2293,7 +2293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits."
+    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method"
 },
 
 {
@@ -2309,7 +2309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "Semilinear ODE",
     "category": "section",
-    "text": "The Semilinear ODE is a split ODEProblem with two functions:fracdudt =  Au + f(tu)where the first function is a constant (not time dependent)AbstractDiffEqOperator and the second part is a (nonlinear) function. ../../features/diffeq_operator.html.The appropriate algorithms for this form are:"
+    "text": "The Semilinear ODE is a split ODEProblem with one linear operator and one function:fracdudt =  Au + f(tu)where the first function is a constant (not time dependent)AbstractDiffEqOperator and the second part is a (nonlinear) function. ../../features/diffeq_operator.html.The appropriate algorithms for this form are:"
 },
 
 {
