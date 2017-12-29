@@ -21,6 +21,9 @@ The appropriate algorithms for this form are:
 
 - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
   of splits.
+- `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method
+- `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method
+- `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method
 
 ### Sundials.jl
 
@@ -28,7 +31,7 @@ The appropriate algorithms for this form are:
 
 ## Semilinear ODE
 
-The Semilinear ODE is a split `ODEProblem` with two functions:
+The Semilinear ODE is a split `ODEProblem` with one linear operator and one function:
 
 ```math
 \frac{du}{dt} =  Au + f(t,u)
