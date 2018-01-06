@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Stochastic Differential Equations",
     "title": "Example 4: Colored Noise",
     "category": "section",
-    "text": "Colored noise can be defined using the Noise Process interface. In that portion of the docs, it is shown how to define your own noise process my_noise, which can be passed to the SDEProblemSDEProblem(f,g,u0,tspan,noise=my_noise)"
+    "text": "Colored noise can be defined using the Noise Process interface. In that portion of the docs, it is shown how to define your own noise process my_noise, which can be passed to the SDEProblemSDEProblem(f,g,u0,tspan,noise=my_noise)This problem can be solved my SDE methods which are compatible with non-diagonal noise. This is discussed in the SDE solvers page."
 },
 
 {
@@ -2193,6 +2193,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#TaylorIntegration.jl-1",
+    "page": "ODE Solvers",
+    "title": "TaylorIntegration.jl",
+    "category": "section",
+    "text": "TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor series method for high accuracy integration of ODEs. These methods are optimized when the absolute tolerance is required to be very low.  Note that this setup is not automatically included with DifferentialEquaitons.jl.  To use the following algorithms, you must install and use TaylorIntegration.jl:Pkg.add(\"TaylorIntegration\")\nusing TaylorIntegrationTaylorMethod(order) - Taylor integration method with maximal order (required)"
+},
+
+{
     "location": "solvers/ode_solve.html#List-of-Supplied-Tableaus-1",
     "page": "ODE Solvers",
     "title": "List of Supplied Tableaus",
@@ -2813,7 +2821,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Performance Overloads",
     "title": "Declaring Explicit Jacobians",
     "category": "section",
-    "text": "The most standard case, declaring a function for a Jacobian is done by overloading the function f(t,u,du) with an in-place updating function for the Jacobian: f(Val{:jac},t,u,J) where the value type is used for dispatch. For example, take the LotkaVolterra model:function f(t,u,du)\n  du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendTo declare the Jacobian we simply add the dispatch:function f(::Type{Val{:jac}},t,u,J)\n  J[1,1] = p.a - p.b * u[2]\n  J[1,2] = -(p.b) * u[1]\n  J[2,1] = 1 * u[2]\n  J[2,2] = -3 + u[1]\n  nothing\nendNote that this can also be done by generating a call-overloaded type. Indeed, this is what ParameterizedFunctions.jl does, so see its README."
+    "text": "The most standard case, declaring a function for a Jacobian is done by overloading the function f(t,u,du) with an in-place updating function for the Jacobian: f(Val{:jac},t,u,J) where the value type is used for dispatch. For example, take the LotkaVolterra model:function f(t,u,du)\n  du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendTo declare the Jacobian we simply add the dispatch:function f(::Type{Val{:jac}},t,u,J)\n  J[1,1] = 2.0 - 1.2 * u[2]\n  J[1,2] = -1.2 * u[1]\n  J[2,1] = 1 * u[2]\n  J[2,2] = -3 + u[1]\n  nothing\nendNote that this can also be done by generating a call-overloaded type. Indeed, this is what ParameterizedFunctions.jl does, so see its README."
 },
 
 {
