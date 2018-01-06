@@ -291,6 +291,9 @@ In that portion of the docs, it is shown how to define your own noise process
 SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
+This problem can be solved my SDE methods which are compatible with non-diagonal noise. This is discussed
+[in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
+
 ### Example: Spatially-Colored Noise in the Heston Model
 
 Let's define the Heston equation from financial mathematics:
