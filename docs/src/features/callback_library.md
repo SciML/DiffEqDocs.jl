@@ -73,6 +73,16 @@ sol = solve(prob,Vern7(),callback=cb)
 
 ![manifold_projection](../assets/manifold_projection.png)
 
+#### Saveat Warning
+
+Note that the `ManifoldProjection` callback modifies the endpoints of the integration intervals
+and thus breaks assumptions of internal interpolations. Because of this, the values for given by
+saveat will not be order-matching. However, the interpolation error can be proportional to the
+change by the projection, so if the projection is making small changes then one is still safe.
+However, if there are large changes from each projection, you should consider only saving at
+stopping/projection times. To do this, set `tstops` to the same values as `saveat`. There is a
+performance hit by doing so because now the integrator is forced to stop at every saving point,
+but this is guerenteed to match the order of the integrator even with the ManifoldProjection.
 
 ## AutoAbstol
 
