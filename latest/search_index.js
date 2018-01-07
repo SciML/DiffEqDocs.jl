@@ -1617,6 +1617,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/dde_types.html#Functional-Forms-for-h-1",
+    "page": "DDE Problems",
+    "title": "Functional Forms for h",
+    "category": "section",
+    "text": "h, the history function, can be called the following ways:h(t): out-of-place\nh(out,t) : in-place\nh(t,deriv) and h(out,t,deriv) where deriv=Val{i} is the in/out of place ith derivative calculation\nh(t,deriv,idxs) and h(out,t,deriv,idxs) where idxs is an integer for which index of the history to return.Note that a dispatch for the supplied history function of matching form is required  for whichever function forms are used in the user derivative function f. "
+},
+
+{
     "location": "types/dde_types.html#Declaring-Lags-1",
     "page": "DDE Problems",
     "title": "Declaring Lags",
