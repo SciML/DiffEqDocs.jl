@@ -9,7 +9,7 @@ This tutorial assumes you have read the [Ordinary Differential Equations tutoria
 In this example we will solve the equation
 
 ```math
-du = f(t,u)dt + Σgᵢ(t,u)dWⁱ
+du = f(t,u)dt + g(t,u)dW
 ```
 
 where ``f(t,u)=αu`` and ``g(t,u)=βu``. We know via Stochastic Calculus that the
@@ -141,12 +141,19 @@ timepoint_meancor(sim,0.2,0.7) # Gives both means and then the correlation coeff
 
 ## Example 2: Systems of SDEs with Diagonal Noise
 
-Generalizing to systems of equations is done in the same way as ODEs. In this case,
-we can define both `f` and `g` as in-place functions. Without any other input,
-the problem is assumed to have diagonal noise, meaning that each component of the
-system has a unique Wiener process. Thus `f(t,u,du)` gives a vector of `du` which
-is the deterministic change, and `g(t,u,du2)` gives a vector `du2` for which
-`du2.*W` is the stochastic portion of the equation.
+More generally, an SDE
+
+```math
+du = f(t,u)dt + g(t,u)dW
+```
+
+generalizes to systems of equations is done in the same way as ODEs. Here, `g`
+is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
+is diagonal noise where `g` is a diagonal matrix. This means that every function in
+the system gets a different random number. Instead of handling matrices in this case,
+we simply define both `f` and `g` as in-place functions. Thus `f(t,u,du)` gives a 
+vector of `du` which is the deterministic change, and `g(t,u,du2)` gives a vector 
+`du2` for which `du2.*W` is the stochastic portion of the equation.
 
 For example, the Lorenz equation with additive noise has the same deterministic
 portion as the Lorenz equations, but adds an additive noise, which is simply
@@ -229,8 +236,10 @@ sol = solve(prob,SRIW1())
 In the previous examples we had diagonal noise, that is a vector of random numbers
 `dW` whose size matches the output of `g` where the noise is applied element-wise,
 and scalar noise where a single random variable is applied to all dependent variables.
-However, a more general type of noise allows for the terms to linearly mixed (note
-that nonlinear mixings are not SDEs but fall under the more general class of
+However, a more general type of noise allows for the terms to linearly mixed via `g`
+being a matrix.
+
+(Note that nonlinear mixings are not SDEs but fall under the more general class of
 random ordinary differential equations (RODEs) which have a
 [separate set of solvers](../rode_example.html).
 
@@ -252,9 +261,18 @@ function g(t,u,du)
 end
 prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))
 ```
+In our `g` we define the functions for computing the values of the matrix.
+We can now think of the SDE that this solves as the system of equations
 
-In our `g` we define the functions for computing the values of the matrix. The matrix
-itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
+```math
+du_1 = f_1(t,u)dt + g_{11}(t,u)*dW_1 + g_{12}(t,u)*dW_2 + g_{13}(t,u)*dW_3 + g_{14}(t,u)*dW_4
+du_2 = f_2(t,u)dt + g_{21}(t,u)*dW_1 + g_{22}(t,u)*dW_2 + g_{23}(t,u)*dW_3 + g_{24}(t,u)*dW_4
+```
+
+meaning that for example `du[1,1]` and `du[2,1]` correspond to stochastic changes with
+the same random number in the first and second SDEs.
+
+The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
 constructor. This is a prototype for the type that `du` will be in `g`. This can
 be any `AbstractMatrix` type. Thus for example, we can define the problem as
 
