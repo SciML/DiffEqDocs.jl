@@ -265,8 +265,8 @@ In our `g` we define the functions for computing the values of the matrix.
 We can now think of the SDE that this solves as the system of equations
 
 ```math
-du_1 = f_1(t,u)dt + g_{11}(t,u)*dW_1 + g_{12}(t,u)*dW_2 + g_{13}(t,u)*dW_3 + g_{14}(t,u)*dW_4 \\
-du_2 = f_2(t,u)dt + g_{21}(t,u)*dW_1 + g_{22}(t,u)*dW_2 + g_{23}(t,u)*dW_3 + g_{24}(t,u)*dW_4
+du_1 = f_1(t,u)dt + g_{11}(t,u)dW_1 + g_{12}(t,u)dW_2 + g_{13}(t,u)dW_3 + g_{14}(t,u)dW_4 \\
+du_2 = f_2(t,u)dt + g_{21}(t,u)dW_1 + g_{22}(t,u)dW_2 + g_{23}(t,u)dW_3 + g_{24}(t,u)dW_4
 ```
 
 meaning that for example `du[1,1]` and `du[2,1]` correspond to stochastic changes with
