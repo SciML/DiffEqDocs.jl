@@ -63,7 +63,7 @@ function g(t,u,du)
   du[2,3] = 0.3u[2]
   du[2,4] = 1.8u[2]
 end
-prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))</code></pre><p>In our <code>g</code> we define the functions for computing the values of the matrix. We can now think of the SDE that this solves as the system of equations</p><div>\[du_1 = f_1(t,u)dt + g_{11}(t,u)*dW_1 + g_{12}(t,u)*dW_2 + g_{13}(t,u)*dW_3 + g_{14}(t,u)*dW_4
+prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=zeros(2,4))</code></pre><p>In our <code>g</code> we define the functions for computing the values of the matrix. We can now think of the SDE that this solves as the system of equations</p><div>\[du_1 = f_1(t,u)dt + g_{11}(t,u)*dW_1 + g_{12}(t,u)*dW_2 + g_{13}(t,u)*dW_3 + g_{14}(t,u)*dW_4 \\
 du_2 = f_2(t,u)dt + g_{21}(t,u)*dW_1 + g_{22}(t,u)*dW_2 + g_{23}(t,u)*dW_3 + g_{24}(t,u)*dW_4\]</div><p>meaning that for example <code>du[1,1]</code> and <code>du[2,1]</code> correspond to stochastic changes with the same random number in the first and second SDEs.</p><p>The matrix itself is determined by the keyword argument <code>noise_rate_prototype</code> in the <code>SDEProblem</code> constructor. This is a prototype for the type that <code>du</code> will be in <code>g</code>. This can be any <code>AbstractMatrix</code> type. Thus for example, we can define the problem as</p><pre><code class="language-julia">
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
 A = zeros(2,4)
