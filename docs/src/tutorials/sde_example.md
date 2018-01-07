@@ -272,6 +272,10 @@ du_2 = f_2(t,u)dt + g_{21}(t,u)dW_1 + g_{22}(t,u)dW_2 + g_{23}(t,u)dW_3 + g_{24}
 meaning that for example `du[1,1]` and `du[2,1]` correspond to stochastic changes with
 the same random number in the first and second SDEs.
 
+
+Note that this problem can only be solved my SDE methods which are compatible with non-diagonal 
+noise. This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
+
 The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
 constructor. This is a prototype for the type that `du` will be in `g`. This can
 be any `AbstractMatrix` type. Thus for example, we can define the problem as
@@ -297,7 +301,7 @@ prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)
 ```
 
 and now `g(t,u)` writes into a sparse matrix, and `g(t,u)*dW` is sparse matrix
-multiplication.
+multiplication. 
 
 ## Example 4: Colored Noise
 
@@ -309,8 +313,8 @@ In that portion of the docs, it is shown how to define your own noise process
 SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
-This problem can be solved my SDE methods which are compatible with non-diagonal noise. This is discussed
-[in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
+Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods. 
+This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
 
 ### Example: Spatially-Colored Noise in the Heston Model
 
