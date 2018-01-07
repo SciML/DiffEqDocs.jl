@@ -15,6 +15,20 @@ the `i`th component delayed by a time `tau` is denoted by `h(t-tau)`.
 Note that we are not limited to numbers or vectors for `u0`; one is allowed to
 provide `u0` as arbitrary matrices / higher dimension tensors as well.
 
+### Functional Forms for `h`
+
+`h`, the history function, can be called the following ways:
+
+- `h(t)`: out-of-place
+- `h(out,t)` : in-place
+- `h(t,deriv)` and `h(out,t,deriv)` where `deriv=Val{i}` is the in/out of place
+  `i`th derivative calculation
+- `h(t,deriv,idxs)` and `h(out,t,deriv,idxs)` where `idxs` is an integer for which
+  index of the history to return.
+  
+Note that a dispatch for the supplied history function of matching form is required 
+for whichever function forms are used in the user derivative function `f`. 
+
 ## Declaring Lags
 
 Lags are declared separately from their use. One can use any lag by simply using
