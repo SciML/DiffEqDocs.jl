@@ -60,12 +60,12 @@ the time the model starts. Here we will assume that for all time before `t0` the
 values were 1:
 
 ```julia
-h(t) = ones(3)
+h(out,t) = (out.=1.0)
 ```
 
-We have `h` output a 3x1 vector since our differential equation is given by
-a system of the same size. Next, we choose to solve on the timespan `(0.0,10.0)`
-and create the problem type:
+We have `h` as an in-place function which determines the values for the initial
+conditions before `t0` all as `1.0`. Next, we choose to solve on the timespan 
+`(0.0,10.0)` and create the problem type:
 
 
 ```julia
