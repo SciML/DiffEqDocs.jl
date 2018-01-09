@@ -237,11 +237,13 @@ SavingCallback(save_func, saved_values::SavedValues;
                tdir=1)
 ```
 - `save_func(t, u, integrator)` returns the quantities which shall be saved.
-- `saved_values::SavedValues` contains vectors `t::Vector{tType}`,
-  `saveval::Vector{savevalType}` of the saved quantities. Here,
-  `save_func(t, u, integrator)::savevalType`.
-- `saveat` Mimicks `saveat` in `solve` for ODEs.
-- `save_everystep` Mimicks `save_everystep` in `solve` for ODEs.
+  Note that this should allocate the output and not overwrite internal caches.
+- `saved_values::SavedValues` is the types that `save_func` will return, i.e.
+  `save_func(t, u, integrator)::savevalType`. It's specified via
+  `SavedValues(typeof(t),savevalType)`, i.e. give the type for time and the
+  type that `save_func` will output (or higher compatible type).
+- `saveat` Mimicks `saveat` in `solve` from `solve`.
+- `save_everystep` Mimicks `save_everystep` from `solve`.
 - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should
   be adapted if `tspan[1] > tspan[end]`.
   
