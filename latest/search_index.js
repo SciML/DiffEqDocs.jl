@@ -1017,11 +1017,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "basics/integrator.html#Cache-Iterators-1",
+    "location": "basics/integrator.html#Caches-1",
     "page": "Integrator Interface",
-    "title": "Cache Iterators",
+    "title": "Caches",
     "category": "section",
-    "text": "user_cache(integrator): Returns an iterator over the user-facing cache arrays.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed."
+    "text": "get_tmp_cache(integrator): Returns a tuple of internal cache vectors which are safe to use as temporary arrays. This should be used for integrator interface and callbacks which need arrays to write into in order to be non-allocating. The length of the tuple is dependent on the method.\nuser_cache(integrator): Returns an iterator over the user-facing cache arrays.\nu_cache(integrator):  Returns an iterator over the cache arrays for u in the method. This can be used to change internal values as needed.\ndu_cache(integrator):  Returns an iterator over the cache arrays for rate quantities the method. This can be used to change internal values as needed.\nfull_cache(integrator):  Returns an iterator over the cache arrays of the method. This can be used to change internal values as needed."
 },
 
 {
@@ -3629,7 +3629,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Constructor",
     "category": "section",
-    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved.\nsaved_values::SavedValues contains vectors t::Vector{tType}, saveval::Vector{savevalType} of the saved quantities. Here, save_func(t, u, integrator)::savevalType.\nsaveat Mimicks saveat in solve for ODEs.\nsave_everystep Mimicks save_everystep in solve for ODEs.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end]."
+    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved. Note that this should allocate the output (not as a view to u).\nsaved_values::SavedValues is the types that save_func will return, i.e. save_func(t, u, integrator)::savevalType. It's specified via SavedValues(typeof(t),savevalType), i.e. give the type for time and the type that save_func will output (or higher compatible type).\nsaveat Mimicks saveat in solve from solve.\nsave_everystep Mimicks save_everystep from solve.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end]."
 },
 
 {
