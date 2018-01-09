@@ -246,7 +246,9 @@ SavingCallback(save_func, saved_values::SavedValues;
 - `save_everystep` Mimicks `save_everystep` from `solve`.
 - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should
   be adapted if `tspan[1] > tspan[end]`.
-  
+
+The outputted values are saved into `saved_values`.
+
 ## IterativeCallback
 
 `IterativeCallback` is a callback to be used to iteratively apply some affect.
