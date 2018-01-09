@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Modeling Tools",
     "category": "section",
-    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/physical.md\",\n    \"models/financial.md\",\n    \"models/biological.md\",\n    \"models/eternal_modeling.md\"\n]\nDepth = 2"
+    "text": "While DifferentialEquations.jl can be used to directly build any differential or difference equation (/ discrete stochastic) model, in many cases it can be helpful to have a tailored-built API for making certain types of common models easier. This is provided by the modeling functionality.Pages = [\n    \"models/multiscale.md\",\n    \"models/physical.md\",\n    \"models/financial.md\",\n    \"models/biological.md\",\n    \"models/external_modeling.md\"\n]\nDepth = 2"
 },
 
 {
@@ -102,6 +102,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Extra Details",
     "category": "section",
     "text": "These are just assorted extra explanations for the curious.Pages = [\n    \"extras/timestepping.md\"\n]\nDepth = 2"
+},
+
+{
+    "location": "index.html#Acknowledgements-1",
+    "page": "Home",
+    "title": "Acknowledgements",
+    "category": "section",
+    "text": "JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:Chris Rackauckas (@ChrisRackauckas) (lead developer)\nYingbo Ma (@YingboMa)\nDavid Widmann (@devmotion)\nHendrik Ranocha (@ranocha)\nShivin Srivastava (@shivin9)\nAyush Pandey (@Ayush-iitkgp)\nEthan Levien (@elevien)\nTom Short (@tshort)\n@dextorious"
 },
 
 {
