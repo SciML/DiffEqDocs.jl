@@ -236,7 +236,7 @@ Pages = [
     "models/physical.md",
     "models/financial.md",
     "models/biological.md",
-    "models/eternal_modeling.md"
+    "models/external_modeling.md"
 ]
 Depth = 2
 ```
@@ -251,3 +251,18 @@ Pages = [
 ]
 Depth = 2
 ```
+
+## Acknowledgements
+
+JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many
+individuals. Significant contributions have been made by the following individuals:
+
+- Chris Rackauckas (@ChrisRackauckas) (lead developer)
+- Yingbo Ma (@YingboMa)
+- David Widmann (@devmotion)
+- Hendrik Ranocha (@ranocha)
+- Shivin Srivastava (@shivin9)
+- Ayush Pandey (@Ayush-iitkgp)
+- Ethan Levien (@elevien)
+- Tom Short (@tshort)
+- @dextorious
