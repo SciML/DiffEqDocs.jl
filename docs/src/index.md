@@ -129,6 +129,7 @@ Pages = [
     "basics/solution.md",
     "basics/plot.md",
     "basics/integrator.md",
+    "basics/faq.md",
     "basics/compatibility_chart.md"
     ]
 Depth = 2
