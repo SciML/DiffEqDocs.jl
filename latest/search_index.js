@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Basics",
     "category": "section",
-    "text": "These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.Pages = [\n    \"basics/overview.md\",\n    \"basics/common_solver_opts.md\",\n    \"basics/solution.md\",\n    \"basics/plot.md\",\n    \"basics/integrator.md\",\n    \"basics/compatibility_chart.md\"\n    ]\nDepth = 2"
+    "text": "These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.Pages = [\n    \"basics/overview.md\",\n    \"basics/common_solver_opts.md\",\n    \"basics/solution.md\",\n    \"basics/plot.md\",\n    \"basics/integrator.md\",\n    \"basics/faq.md\",\n    \"basics/compatibility_chart.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -1070,6 +1070,86 @@ var documenterSearchIndex = {"docs": [
     "title": "Plot Recipe",
     "category": "section",
     "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\n\n# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
+},
+
+{
+    "location": "basics/faq.html#",
+    "page": "Frequently Asked Questions",
+    "title": "Frequently Asked Questions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/faq.html#Frequently-Asked-Questions-1",
+    "page": "Frequently Asked Questions",
+    "title": "Frequently Asked Questions",
+    "category": "section",
+    "text": "This page is a compilation of frequently asked questions and answers."
+},
+
+{
+    "location": "basics/faq.html#Complicated-Models-1",
+    "page": "Frequently Asked Questions",
+    "title": "Complicated Models",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "basics/faq.html#Can-I-switch-my-ODE-function-in-the-middle-of-integration?-1",
+    "page": "Frequently Asked Questions",
+    "title": "Can I switch my ODE function in the middle of integration?",
+    "category": "section",
+    "text": "There are a few ways to do this. The simplest way is to just have a parameter to switch between the two. For example:function pf_func(t,u,p,du)\n  if p == 0\n    du[1] = 2u[1]\n  else\n    du[1] = -2u[1]\n  end\n  du[2] = -u[2]\nend\npf = ParameterizedFunction(pf_func,0)Then in a callback you can make the affect! function modify integrator.prob.f.params. For example, we can make it change when u[2]<0.5 via:condition(t,u,integrator) = u[2] - 0.5\naffect!(integrator) = integrator.prob.f.params = 1Then it will change betweeen the two ODE choices for du1 at that moment. Another way to do this is to make the ODE functions all be the same type via FunctionWrappers.jl, but that is unnecessary. With the way that modern processors work, there exists branch prediction and thus execution of a conditional is free if it's predictable which branch will be taken. In this case, almost every call to f takes the p==0 route until the callback, at which point it is almost always the else route. Therefore the processor will effectively get rid of the computational cost associated with this, so you're likely over-optimizing if you're going further (unless this change happens every step, but even then this is probably the cheapest part of the computation...)."
+},
+
+{
+    "location": "basics/faq.html#Numerical-Error-1",
+    "page": "Frequently Asked Questions",
+    "title": "Numerical Error",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "basics/faq.html#The-solver-doesn't-obey-physical-law-X-(e.g.-conservation-of-energy)-1",
+    "page": "Frequently Asked Questions",
+    "title": "The solver doesn't obey physical law X (e.g. conservation of energy)",
+    "category": "section",
+    "text": "Yes, this is because the numerical solution of the ODE is not the exact solution. There are a few ways that you can handle this problem. One way is to get a more exact solution. Thus instead ofsol = solve(prob,alg)usesol = solve(prob,alg,abstol=1e-10,reltol=1e-10)Of course, there's always a tradeoff between accuracy and efficiency, so play around to find out what's right for your problem.Another thing you can do is use a callback. There are some premade callbacks in the callback library which handle these sorts of things like projecting to manifolds and preserving positivity."
+},
+
+{
+    "location": "basics/faq.html#The-symplectic-integrator-doesn't-conserve-energy?-1",
+    "page": "Frequently Asked Questions",
+    "title": "The symplectic integrator doesn't conserve energy?",
+    "category": "section",
+    "text": "Yes, symplectic integrators do not exactly conserve energy. It is a common misconception that they do. What symplectic integrators actually do is solve for a trajectory which rests on a symplectic manifold that is perturbed from the true solution's manifold by the truncation error. This means that symplectic integrators do not experience (very much) long time drift, but their orbit is not exactly the same as the true solution in phase space and thus you will see differences in energy that tend to look periodic. There is a small drift which grows linearly and is related to floating point error, but this drift is much less than standard methods. This is why symplectic methods are recommended for long time integration.For conserving energy, there are a few things you can do. First of all, the energy error is related to the integration error, so simply solving with higher accuracy will reduce the error. The results in the DiffEqBenchmarks show that using a DPRKN method with low tolerance can be a great choice. Another thing you can do is use the ManifoldProjection callback from the callback library."
+},
+
+{
+    "location": "basics/faq.html#Autodifferentiation-and-Dual-Numbers-1",
+    "page": "Frequently Asked Questions",
+    "title": "Autodifferentiation and Dual Numbers",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "basics/faq.html#Are-the-native-Julia-solvers-compatible-with-autodifferentiation?-1",
+    "page": "Frequently Asked Questions",
+    "title": "Are the native Julia solvers compatible with autodifferentiation?",
+    "category": "section",
+    "text": "Yes! If the algorithm does not use adaptive time stepping, then you simply need to make the initial condition have elements of Dual numbers. If the algorithm uses Dual numbers, you need to make sure that time is also given by Dual numbers. A quick explanation of this is because changing the value of the initial condition will change the error in the steps, thus causing different steps to be taken changing the time values.To show this in action, let's say we want to find the Jacobian of solution of the Lotka-Volterra equation at t=10 with respect to the parameters.function pf_func(t,u,p,du)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\nfunction f(p)\n  pf = ParameterizedFunction(pf_func,p)\n  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)))\n  solve(prob,Tsit5(),save_everystep=false)[end]\nendThis function takes in new parameters and spits out the solution at the end. We make the inital condition eltype(p).([1.0,1.0]) so that way it's typed to be Dual numbers whenever p is an array of Dual numbers, and we do the same for the timespan. Then we can take the Jacobian via ForwardDiff.jl:using ForwardDiff\nForwardDiff.jacobian(f,[1.5,1.0])\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188and compare it to Calculus.jl:Calculus.jacobian(f,[1.5,1.0],:central)\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188"
+},
+
+{
+    "location": "basics/faq.html#I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1",
+    "page": "Frequently Asked Questions",
+    "title": "I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?",
+    "category": "section",
+    "text": "This is because you're using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:const tmp = zeros(4)\nconst A = rand(4,4)\nfunction f(t,u,du)\n  A_mul_B!(tmp,A,u)\n  du .= tmp .+ u\nendHere we use a cached temporary array in order to avoid the allocations of matrix multiplication. When autodifferentiation occurs, the element type of u is Dual numbers, so A*u produces Dual numbers, so the error arises when it tries to write into tmp. There are two ways to avoid this. The first way, the easy way, is to just turn off autodifferentiation with the autodiff=false option in the solver. Every solver which uses autodifferentiation has this option. Thus we'd solve this with:prob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23(autodiff=false))and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.** Warning: Advanced **The more difficult way is to create a Dual cache which dispatches for the cache choice based on the element type of u. This is done by the following:using ForwardDiff\nstruct MyTag end\nimmutable DiffCache{T<:AbstractArray, S<:AbstractArray}\n    du::T\n    dual_du::S\nend\n\nfunction DiffCache{chunk_size}(T, size, ::Type{Val{chunk_size}})\n    DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))\nend\n\nDiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})\n\nget_tmp{T<:ForwardDiff.Dual}(dc::DiffCache, ::Type{T}) = dc.dual_du\nget_tmp(dc::DiffCache, T) = dc.duNow we can get a cache that by dispatch either gives a cache array of Dual numbers or just floating point numbers:const dual_cache = DiffCache(rand(4)) # Build the cache, this must match your IC\ndu = get_tmp(dual_cache,typeof(rand(4))) # Gives a Array{Float64}\ndual_du = get_tmp(dual_cache,typeof(ForwardDiff.Dual(0.2,3.0))) # Gives Array{Dual}Note that you have to make sure that your chunk size matches the choice in the ODE solver (by default, it uses ForwardDiff.pickchunksize(length(u)) as well, so you only need to change this if you explicitly set chunksize = ...). Now we can setup and solve our ODE using this cache:function f(t,u,du)\n  # Get du from cache\n  tmp = get_tmp(dual_cache,eltype(u))\n  # Fix tag\n  _tmp = reinterpret(eltype(u),tmp)\n  A_mul_B!(_tmp,A,u)\n  du .= _tmp .+ u\nend\nprob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23())Small explanation is in order. tmp = get_tmp(dual_cache,eltype(u)) makes tmp match u in terms of Dual or not, but it doesn't necessarily match the tag. So now we reinterpret our Dual array to put the right tag on there. Note that this simply changes type information and thus does not create any temporary arrays. Once we do that, our cached array is now typed correctly to hold the result of A_mul_B!."
 },
 
 {
