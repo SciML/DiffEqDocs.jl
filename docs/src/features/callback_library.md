@@ -247,7 +247,8 @@ SavingCallback(save_func, saved_values::SavedValues;
 - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should
   be adapted if `tspan[1] > tspan[end]`.
 
-The outputted values are saved into `saved_values`.
+The outputted values are saved into `saved_values`. Time points are found 
+via `saved_values.t` and the values are `saved_values.saveval`.
 
 ## IterativeCallback
 
