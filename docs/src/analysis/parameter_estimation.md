@@ -266,6 +266,16 @@ result = optimize(cost_function, [1.42], BFGS())
 
 Note that some of the algorithms may be sensitive to the initial condition. For more
 details on using Optim.jl, see the [documentation for Optim.jl](http://julianlsolvers.github.io/Optim.jl/latest/).
+We can improve our solution by noting that the Lotka-Volterra equation requires that
+the parameters are positive. Thus [following the Optim.jl documentation](http://julianlsolvers.github.io/Optim.jl/latest/user/minimization/#box-minimization)
+we can add box constraints to ensure the optimizer only checks between 0.0 and 3.0
+which improves the efficiency of our algorithm:
+
+```julia
+lower = [0.0]
+upper = [3.0]
+result = optimize(obj, [1.42], lower, upper, Fminbox{BFGS}())
+```
 
 Lastly, we can use the same tools to estimate multiple parameters simultaneously.
 Let's use the Lotka-Volterra equation with all parameters free:
