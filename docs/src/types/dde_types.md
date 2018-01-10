@@ -22,7 +22,8 @@ provide `u0` as arbitrary matrices / higher dimension tensors as well.
 - `h(t)`: out-of-place
 - `h(out,t)` : in-place
 - `h(t,deriv)` and `h(out,t,deriv)` where `deriv=Val{i}` is the in/out of place
-  `i`th derivative calculation
+  `i`th derivative calculation. To set this up, use `deriv::Type{Val{i}}` in the function
+  signature.
 - `h(t,deriv,idxs)` and `h(out,t,deriv,idxs)` where `idxs` is an integer for which
   index of the history to return.
   
