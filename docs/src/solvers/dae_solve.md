@@ -57,12 +57,14 @@ Note that the constructors for the Sundials algorithms take a main argument:
 - `linearsolver` - This is the linear solver which is used in the Newton iterations.
   The choices are:
 
-  - `:Dense` - A dense linear solver
+  - `:Dense` - A dense linear solver.
   - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
     position of the upper and lower non-zero diagonals via `jac_upper` and
     `jac_lower`.
-  - `BCG` - A Biconjugate gradient method.
-  - `TFQMR` - A TFQMR method.
+  - `:GMRES` - A GMRES method. Recommended first choice Krylov method
+  - `:BCG` - A Biconjugate gradient method.
+  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
+  - `:TFQMR` - A TFQMR method.
 
 Example:
 
