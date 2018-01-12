@@ -366,9 +366,11 @@ Note that the constructors for the Sundials algorithms take two main arguments:
   - `:Dense` - A dense linear solver.
   - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
     position of the upper and lower non-zero diagonals via `jac_upper` and
-    `jac_lower`.
+    `jac_lower`. T
   - `:Diagonal` - This method is specialized for diagonal Jacobians.
+  - `:GMRES` - A GMRES method. Recommended first choice Krylov method
   - `:BCG` - A Biconjugate gradient method.
+  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
   - `:TFQMR` - A TFQMR method.
 
 Example:
@@ -384,7 +386,9 @@ All of the additional options are available. The full constructor is:
 
 ```julia
 CVODE_BDF(;method=:Newton,linear_solver=:Dense,
-          jac_upper=0,jac_lower=0,non_zero=0,krylov_dim=0,
+          jac_upper=0,jac_lower=0,
+          stored_upper = jac_upper + jac_lower,
+          non_zero=0,krylov_dim=0,
           stability_limit_detect=false,
           max_hnil_warns = 10,
           max_order = 5,
@@ -393,7 +397,9 @@ CVODE_BDF(;method=:Newton,linear_solver=:Dense,
           max_convergence_failures = 10)
 
 CVODE_Adams(;method=:Functional,linear_solver=:None,
-            jac_upper=0,jac_lower=0,krylov_dim=0,
+            jac_upper=0,jac_lower=0,
+            stored_upper = jac_upper + jac_lower,
+            krylov_dim=0,
             stability_limit_detect=false,
             max_hnil_warns = 10,
             max_order = 12,
