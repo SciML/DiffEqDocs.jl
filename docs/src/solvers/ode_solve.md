@@ -393,6 +393,52 @@ ARKODE(Sundials.Implicit(),order = 3) # Solve with explicit tableau of order 3
 ```
 
 The order choices for explicit are 2 through 8 and for implicit 3 through 5.
+Specific methods can also be set through the `etable` and `itable` options
+for explicit and implicit tableaus respectively. The available tableaus are:
+
+`etable`:
+
+- `HEUN_EULER_2_1_2`: 2nd order Heun's method
+- `BOGACKI_SHAMPINE_4_2_3`:
+- `ARK324L2SA_ERK_4_2_3`: explicit portion of Kennedy and Carpenter's 3rd
+  order method
+- `ZONNEVELD_5_3_4`: 4th order explicit method
+- `ARK436L2SA_ERK_6_3_4`: explicit portion of Kennedy and Carpenter's 4th
+  order method
+- `SAYFY_ABURUB_6_3_4`: 4th order explicit method
+- `CASH_KARP_6_4_5`: 5th order explicit method
+- `FEHLBERG_6_4_5`: Fehlberg's classic 5th order method
+- `DORMAND_PRINCE_7_4_5`: the classic 5th order Dormand-Prince method
+- `ARK548L2SA_ERK_8_4_5`: explicit portion of Kennedy and Carpenter's 5th
+  order method
+- `VERNER_8_5_6`: Verner's classic 5th order method
+- `FEHLBERG_13_7_8`: Fehlberg's 8th order method
+
+`itable`:
+
+- `SDIRK_2_1_2`: An A-B-stable 2nd order SDIRK method
+- `BILLINGTON_3_3_2`: A second order method with a 3rd order error predictor
+  of less stability
+- `TRBDF2_3_3_2`: The classic TR-BDF2 method
+- `KVAERNO_4_2_3`: an L-stable 3rd order ESDIRK method
+- `ARK324L2SA_DIRK_4_2_3`: implicit portion of Kennedy and Carpenter's 3th
+  order method
+- `CASH_5_2_4`: Cash's 4th order L-stable SDIRK method
+- `CASH_5_3_4`: Cash's 2nd 4th order L-stable SDIRK method
+- `SDIRK_5_3_4`: Hairer's 4th order SDIRK method
+- `KVAERNO_5_3_4`: Kvaerno's 4th order ESDIRK method
+- `ARK436L2SA_DIRK_6_3_4`: implicit portion of Kennedy and Carpenter's 4th
+  order method
+- `KVAERNO_7_4_5`: Kvaerno's 5th order ESDIRK method
+- `ARK548L2SA_DIRK_8_4_5`: implicit portion of Kennedy and Carpenter's 5th
+  order method
+
+These can be set for example via:
+
+```julia
+ARKODE(Sundials.Explicit(),etable = Sundials.DORMAND_PRINCE_7_4_5)
+ARKODE(Sundials.Implicit(),itable = Sundials.KVAERNO_4_2_3)
+```
 
 All of the additional options are available. The full constructor is:
 
@@ -419,8 +465,10 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
             max_nonlinear_iters = 3,
             max_convergence_failures = 10)
 
-ARKODE(stiffness=Sundials.Implicit();method=:Newton,linear_solver=:Dense,
-      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower, non_zero=0,krylov_dim=0,
+ARKODE(stiffness=Sundials.Implicit();
+      method=:Newton,linear_solver=:Dense,
+      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower,
+      non_zero=0,krylov_dim=0,
       max_hnil_warns = 10,
       max_error_test_failures = 7,
       max_nonlinear_iters = 3,
