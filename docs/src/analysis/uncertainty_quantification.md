@@ -167,7 +167,8 @@ using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 
 ![uncertainty_chaos](../assets/uncertainty_chaos.png)
 
-Here we see that by `t` about 22 we start to receive junk. We can increase
+Here we see that by `t` about 22 we start to receive strong deviations from the "true" solution.
+We can increase
 the amount of time before error explosion by using a higher order method
 with stricter tolerances:
 
@@ -182,4 +183,12 @@ using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 
 ![uncertainty_high_order](../assets/uncertainty_high_order.png)
 
-we see that we can extend the amount of time until we recieve junk.
+we see that we can extend the amount of time until we deviate strongly from the "true" solution.
+Of course, for a chaotic system like the Lorenz one presented here, it is impossible to follow the true solution
+for long times, due to the fact that the system is chaotic and unavoidable deviations due to the numerical precision of a cumputer get amplified exponentially.
+
+However, not all hope is lost. The [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) is a strong statement for having confidence in numerical evolution of chaotic systems:
+
+> Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.
+
+For more info on the shadowing theorem, please see the book *Chaos in Dynamical Systems* by E. Ott.
