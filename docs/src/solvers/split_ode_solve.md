@@ -15,7 +15,13 @@ The Implicit-Explicit (IMEX) ODE is a `SplitODEProblem` with two functions:
 where the first function is the stiff part and the second function is the non-stiff
 part (implicit integration on `f1`, explicit integration on `f2`).
 
-The appropriate algorithms for this form are:
+### Recommended Methods
+
+The recommended method in most cases is `KenCarp4`. In cases of extreme stiffness
+or for high tolerances, `KenCarp3` can be a good choice. The `ARKODE` methods
+are generally inefficient and diverge unless the options are tweaked to match
+the problem, though for large enough PDEs the `ARKODE` method with
+`linear_solver=:GMRES` is a good choice.
 
 ### OrdinaryDiffEq.jl
 
@@ -27,7 +33,9 @@ The appropriate algorithms for this form are:
 
 ### Sundials.jl
 
-- `ARKODE`: An additive Runge-Kutta method. Not yet implemented.
+- `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
+  of available options, please see
+  [its ODE solver page](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Sundials.jl-1)
 
 ## Semilinear ODE
 

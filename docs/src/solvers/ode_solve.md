@@ -350,6 +350,8 @@ However, the BDF method is a classic method for stiff equations and "generally w
 
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver.
+  - `ARKODE` - Explicit and ESDIRK Runge-Kutta methods of orders 2-8 depending
+    on choice of options.
 
 The Sundials algorithms all come with a 3rd order Hermite polynomial interpolation.
 Note that the constructors for the Sundials algorithms take two main arguments:
@@ -380,6 +382,16 @@ CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonz
 CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   
 ```
 
+The main options for `ARKODE` are the choice between explicit and implicit and
+the method order, given via:
+
+```julia
+ARKODE(Sundials.Explicit()) # Solve with explicit tableau of default order 4
+ARKODE(Sundials.Implicit(),order = 3) # Solve with explicit tableau of order 3
+```
+
+The order choices for explicit are 2 through 8 and for implicit 3 through 5.
+
 All of the additional options are available. The full constructor is:
 
 ```julia
@@ -400,9 +412,28 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
             max_error_test_failures = 7,
             max_nonlinear_iters = 3,
             max_convergence_failures = 10)
+
+ARKODE(stiffness=Sundials.Implicit();method=:Newton,linear_solver=:Dense,
+      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower, non_zero=0,krylov_dim=0,
+      max_hnil_warns = 10,
+      max_error_test_failures = 7,
+      max_nonlinear_iters = 3,
+      max_convergence_failures = 10,
+      predictor_method = 0,
+      nonlinear_convergence_coefficient = 0.1,
+      dense_order = 3,
+      order = 4,
+      set_optimal_params = false,
+      crdown = 0.3,
+      dgmax = 0.2,
+      rdiv = 2.3,
+      msbp = 20,
+      adaptivity_method = 0
+      )
 ```
 
-See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
+See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
+and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
 for details on the additional options.
 
 ## ODEInterface.jl
@@ -537,8 +568,8 @@ using BridgeDiffEq
 
 TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor
 series method for high accuracy integration of ODEs. These methods are optimized
-when the absolute tolerance is required to be very low. 
-Note that this setup is not automatically included with DifferentialEquaitons.jl. 
+when the absolute tolerance is required to be very low.
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
 To use the following algorithms, you must install and
 use TaylorIntegration.jl:
 
