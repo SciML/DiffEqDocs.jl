@@ -9,7 +9,8 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)</code></pre><
 CVODE_BDF(method=:Functional) # BDF method using Functional iterations
 CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down
 CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   </code></pre><p>The main options for <code>ARKODE</code> are the choice between explicit and implicit and the method order, given via:</p><pre><code class="language-julia">ARKODE(Sundials.Explicit()) # Solve with explicit tableau of default order 4
-ARKODE(Sundials.Implicit(),order = 3) # Solve with explicit tableau of order 3</code></pre><p>The order choices for explicit are 2 through 8 and for implicit 3 through 5.</p><p>All of the additional options are available. The full constructor is:</p><pre><code class="language-julia">CVODE_BDF(;method=:Newton,linear_solver=:Dense,
+ARKODE(Sundials.Implicit(),order = 3) # Solve with explicit tableau of order 3</code></pre><p>The order choices for explicit are 2 through 8 and for implicit 3 through 5. Specific methods can also be set through the <code>etable</code> and <code>itable</code> options for explicit and implicit tableaus respectively. The available tableaus are:</p><p><code>etable</code>:</p><ul><li><p><code>HEUN_EULER_2_1_2</code>: 2nd order Heun&#39;s method</p></li><li><p><code>BOGACKI_SHAMPINE_4_2_3</code>:</p></li><li><p><code>ARK324L2SA_ERK_4_2_3</code>: explicit portion of Kennedy and Carpenter&#39;s 3rd order method</p></li><li><p><code>ZONNEVELD_5_3_4</code>: 4th order explicit method</p></li><li><p><code>ARK436L2SA_ERK_6_3_4</code>: explicit portion of Kennedy and Carpenter&#39;s 4th order method</p></li><li><p><code>SAYFY_ABURUB_6_3_4</code>: 4th order explicit method</p></li><li><p><code>CASH_KARP_6_4_5</code>: 5th order explicit method</p></li><li><p><code>FEHLBERG_6_4_5</code>: Fehlberg&#39;s classic 5th order method</p></li><li><p><code>DORMAND_PRINCE_7_4_5</code>: the classic 5th order Dormand-Prince method</p></li><li><p><code>ARK548L2SA_ERK_8_4_5</code>: explicit portion of Kennedy and Carpenter&#39;s 5th order method</p></li><li><p><code>VERNER_8_5_6</code>: Verner&#39;s classic 5th order method</p></li><li><p><code>FEHLBERG_13_7_8</code>: Fehlberg&#39;s 8th order method</p></li></ul><p><code>itable</code>:</p><ul><li><p><code>SDIRK_2_1_2</code>: An A-B-stable 2nd order SDIRK method</p></li><li><p><code>BILLINGTON_3_3_2</code>: A second order method with a 3rd order error predictor of less stability</p></li><li><p><code>TRBDF2_3_3_2</code>: The classic TR-BDF2 method</p></li><li><p><code>KVAERNO_4_2_3</code>: an L-stable 3rd order ESDIRK method</p></li><li><p><code>ARK324L2SA_DIRK_4_2_3</code>: implicit portion of Kennedy and Carpenter&#39;s 3th order method</p></li><li><p><code>CASH_5_2_4</code>: Cash&#39;s 4th order L-stable SDIRK method</p></li><li><p><code>CASH_5_3_4</code>: Cash&#39;s 2nd 4th order L-stable SDIRK method</p></li><li><p><code>SDIRK_5_3_4</code>: Hairer&#39;s 4th order SDIRK method</p></li><li><p><code>KVAERNO_5_3_4</code>: Kvaerno&#39;s 4th order ESDIRK method</p></li><li><p><code>ARK436L2SA_DIRK_6_3_4</code>: implicit portion of Kennedy and Carpenter&#39;s 4th order method</p></li><li><p><code>KVAERNO_7_4_5</code>: Kvaerno&#39;s 5th order ESDIRK method</p></li><li><p><code>ARK548L2SA_DIRK_8_4_5</code>: implicit portion of Kennedy and Carpenter&#39;s 5th order method</p></li></ul><p>These can be set for example via:</p><pre><code class="language-julia">ARKODE(Sundials.Explicit(),etable = Sundials.DORMAND_PRINCE_7_4_5)
+ARKODE(Sundials.Implicit(),itable = Sundials.KVAERNO_4_2_3)</code></pre><p>All of the additional options are available. The full constructor is:</p><pre><code class="language-julia">CVODE_BDF(;method=:Newton,linear_solver=:Dense,
           jac_upper=0,jac_lower=0,
           stored_upper = jac_upper + jac_lower,
           non_zero=0,krylov_dim=0,
@@ -31,8 +32,10 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
             max_nonlinear_iters = 3,
             max_convergence_failures = 10)
 
-ARKODE(stiffness=Sundials.Implicit();method=:Newton,linear_solver=:Dense,
-      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower, non_zero=0,krylov_dim=0,
+ARKODE(stiffness=Sundials.Implicit();
+      method=:Newton,linear_solver=:Dense,
+      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower,
+      non_zero=0,krylov_dim=0,
       max_hnil_warns = 10,
       max_error_test_failures = 7,
       max_nonlinear_iters = 3,
