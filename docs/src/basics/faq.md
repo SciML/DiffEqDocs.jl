@@ -2,6 +2,125 @@
 
 This page is a compilation of frequently asked questions and answers.
 
+## Performance
+
+#### Do you support GPUs? Multithreading? Distributed computation?
+
+Yes. The `*`DiffEq.jl libraries (OrdinaryDiffEq.jl, StochasticDiffEq.jl, and
+DelayDiffEq.jl) are all written to be generic to the array and number types.
+This means they will adopt the implementation that is given by the array type.
+The in-place algorithms internally utilize Julia's broadcast (with some exceptions
+due to a Julia bug for now, see [this issue](https://github.com/JuliaDiffEq/OrdinaryDiffEq.jl/issues/106))
+and Julia's `A_mul_B!` in-place matrix multiplication function. The out-of-place
+algorithms utilize standard arithmetical functions. Both additionally utilize
+the user's norm specified via the common interface options and, if a stiff
+solver, ForwardDiff/DiffEqDiffTools for the Jacobian calculation, and Base linear
+factorizations for the linear solve. For your type, you may likely need to give
+a [better form of the norm](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html#Advanced-Adaptive-Stepsize-Control-1),
+[Jacobian](http://docs.juliadiffeq.org/latest/features/performance_overloads.html),
+or [linear solve calculations](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html)
+to fully utilize parallelism.
+
+GPUArrays.jl, ArrayFire.jl, DistributedArrays.jl have been tested and work in
+various forms, where the last one is still not recommended for common use
+yet.
+
+The next question is whether it matters. Generally, your system has to be large
+for parallelism to matter. Using a multithreaded array for broadcast we find
+helpful around `N>1000`, though the Sundials manual says `N>100,000`. For high
+order Runge-Kutta methods it's likely lower than the Sundials estimate because
+of more operations packed into each internal step, but as always that will need
+more benchmarks to be precise and will depend on the problem being solved. GPUs
+generally require some intensive parallel operation in the user's `f` function
+to be viable, for example a matrix multiplication for a stencil computation
+in a PDE. If you're simply solving some ODE element-wise on a big array it likely
+won't do much or it will slow things down just due to how GPUs work.
+DistributedArrays require parallel linear solves to really matter, and thus are
+only recommended when you have a problem that cannot fit into memory or are using
+a stiff solver with a Krylov method for the linear solves.
+
+#### My ODE is solving really slow... what do I do?
+
+First, check for bugs. These solvers go through a ton of convergence tests and
+so if there's a solver issue, it's either just something to do with how numerical
+methods work or it's a user-error (generally the latter, though check the later
+part of the FAQ on normal numerical errors). User-errors in the `f` function
+causing a divergence of the solution is the most common reason for reported
+slow codes.
+
+If you have no bugs, great! The standard tricks for optimizing Julia code then
+apply. What you want to do first is make sure your function does not allocate.
+If your system is small (`<16` ODEs/SDEs/DDEs/DAEs?), then you should set your
+system up to use [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl).
+This is demonstrated
+[http://docs.juliadiffeq.org/latest/tutorials/ode_example.html#Example-3:-Using-Other-Types-for-Systems-of-Equations-1](in the ODE tutorial)
+with static matrices. Static vectors/arrays are stack-allocated, and thus creating
+new arrays is free and the compiler doesn't have to heap-allocate any of the
+temporaries (that's the expensive part!). These have specialized super fast
+dispatches for arithmetic operations and extra things like QR-factorizations,
+and thus they are preferred when possible. However, they lose efficiency if they
+grow too large.
+
+For anything larger, you should use the `in-place` syntax `f(t,u,du)` and make
+sure that your function doesn't allocate. Assuming you know of a `u0`, you
+should be able to do:
+
+```julia
+du = similar(u0)
+@time f(t,u0,du)
+```
+
+and see close to zero allocations and close to zero memory allocated. If you see
+more, then you might have a type-instability or have temporary arrays. To find
+type-instabilities, you should do:
+
+```julia
+@code_warntype f(t,u,du)
+```
+
+and read the printout to see if there's any types that aren't inferred by the
+compiler, and fix them. If you have any global variables, you should make them
+`const`. As for allocations, some common things that allocate
+are:
+
+- Array slicing, like `u[1:5]`. Instead, use `@view u[1:5]`
+- Matrix multiplication with `*`. Instead of `A*b`, use `A_mul_B!(c,A,b)` for some
+  pre-allocated cache vector `c`.
+- Non-broadcasted expressions. Every expression on arrays should `.=` into another
+  array, or it should be re-written to loop and do computations with scalar (or
+  static array) values.
+
+For an example of optimizing a function resulting from a PDE discretization, see
+[this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
+
+#### The stiff solver takes forever to take steps for my PDE discretization! Why?
+
+The solvers for stiff solvers require solving a nonlinear equation each step.
+In order to do so, they have to do a few Newton steps. By default, these methods
+assume that the Jacobian is dense, automatically calculate the Jacobian for you,
+and do a dense factorization. However, in many cases you may want to use alternatives
+that are more tuned for your problem.
+
+First of all, when available, it's recommended that you pass a function for computing
+your Jacobian. This is discussed in the [performance overloads](http://docs.juliadiffeq.org/latest/features/performance_overloads.html#Declaring-Explicit-Jacobians-1)
+section. Jacobians are especially helpful for Rosenbrock methods.
+
+Secondly, if your Jacobian isn't dense, you shouldn't use a dense Jacobian! In
+the Sundials algorithm you can set `linear_solver=:Band` for banded Jacobians
+for example. More support is coming for this soon.
+
+But lastly, you shouldn't use a dense factorization for large sparse matrices.
+Instead, if you're using  a `*DiffEq` library you should
+[specify a linear solver](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html).
+For Sundials.jl, you should change the `linear_solver` option. See
+[the ODE solve Sundials portion](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Sundials.jl-1)
+for details on that. Right now, Sundials.jl is the recommended method for stiff
+problems with large sparse Jacobians. `linear_solver=:Band` should be used
+if your Jacobian is banded and you can specify the band sizes. If you only
+know the Jacobian is sparse, `linear_solver=:GMRES` is a good option. Once
+again, a good reference for how to handle PDE discretizations can be found
+[at this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
+
 ## Complicated Models
 
 #### Can I switch my ODE function in the middle of integration?
@@ -85,6 +204,12 @@ will reduce the error. The results in the
 that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
 [the ManifoldProjection callback from the callback library](http://docs.juliadiffeq.org/latest/features/callback_library.html).
+
+#### How do I get to zero error?
+
+You can't. For floating point numbers, you shouldn't use below `abstol=1e-14`
+and `reltol=1e-14`. If you need lower than that, use arbitrary precision numbers
+like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 ## Autodifferentiation and Dual Numbers
 
