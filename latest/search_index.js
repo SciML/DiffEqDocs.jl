@@ -3665,43 +3665,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/callback_library.html#SavingCallback-1",
+    "location": "features/callback_library.html#FunctionCallingCallback-1",
     "page": "Callback Library",
-    "title": "SavingCallback",
+    "title": "FunctionCallingCallback",
     "category": "section",
-    "text": "The saving callback lets you define a function save_func(t, u, integrator) which returns quantities of interest that shall be saved."
-},
-
-{
-    "location": "features/callback_library.html#Constructor-5",
-    "page": "Callback Library",
-    "title": "Constructor",
-    "category": "section",
-    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved. Note that this should allocate the output (not as a view to u).\nsaved_values::SavedValues is the types that save_func will return, i.e. save_func(t, u, integrator)::savevalType. It's specified via SavedValues(typeof(t),savevalType), i.e. give the type for time and the type that save_func will output (or higher compatible type).\nsaveat Mimicks saveat in solve from solve.\nsave_everystep Mimicks save_everystep from solve.\nsave_start Mimicks save_start from solve.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end].The outputted values are saved into saved_values. Time points are found  via saved_values.t and the values are saved_values.saveval."
-},
-
-{
-    "location": "features/callback_library.html#IterativeCallback-1",
-    "page": "Callback Library",
-    "title": "IterativeCallback",
-    "category": "section",
-    "text": "IterativeCallback is a callback to be used to iteratively apply some affect. For example, if given the first effect at t₁, you can define t₂ to apply the next effect.A IterativeCallback is constructed as follows:function IterativeCallback(time_choice, user_affect!,tType = Float64;\n                           initialize = DiffEqBase.INITIALIZE_DEFAULT,\n                           initial_affect = false, kwargs...)where time_choice(integrator) determines the time of the next callback and user_affect! is the effect applied to the integrator at the stopping points."
-},
-
-{
-    "location": "features/callback_library.html#PeriodicCallback-1",
-    "page": "Callback Library",
-    "title": "PeriodicCallback",
-    "category": "section",
-    "text": "PeriodicCallback can be used when a function should be called periodically in terms of integration time (as opposed to wall time), i.e. at t = tspan[1], t = tspan[1] + Δt, t = tspan[1] + 2Δt, and so on. This callback can, for example, be used to model a digital controller for an analog system, running at a fixed rate."
-},
-
-{
-    "location": "features/callback_library.html#Constructor-6",
-    "page": "Callback Library",
-    "title": "Constructor",
-    "category": "section",
-    "text": "PeriodicCallback(f, Δt::Number; kwargs...)where f is the function to be called periodically, Δt is the period, and kwargs are keyword arguments accepted by the DiscreteCallback constructor (see the DiscreteCallback section)."
+    "text": "The function calling callback lets you define a function func(t,u,integrator)   which gets calls at the time points of interest. The constructor is:  FunctionCallingCallback(func;\n                 funcat=Vector{Float64}(),\n                 func_everystep=isempty(funcat),\n                 func_start = true,\n                 tdir=1)\n  ```\n  - `func(t, u, integrator)` is the function to be called.\n  - `funcat` values that the function is sure to be evaluated at.\n  - `func_everystep` whether to call the function after each integrator step.\n  - `func_start` whether the function is called the initial condition.\n  - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should\n    be adapted if `tspan[1] > tspan[end]`.\n\n## SavingCallback\n\nThe saving callback lets you define a function `save_func(t, u, integrator)` which\nreturns quantities of interest that shall be saved.\n\n### Constructor\njulia SavingCallback(save_func, saved_values::SavedValues;                saveat=Vector{eltype(saved_values.t)}(),                save_everystep=isempty(saveat),                tdir=1)- `save_func(t, u, integrator)` returns the quantities which shall be saved.\n  Note that this should allocate the output (not as a view to `u`).\n- `saved_values::SavedValues` is the types that `save_func` will return, i.e.\n  `save_func(t, u, integrator)::savevalType`. It's specified via\n  `SavedValues(typeof(t),savevalType)`, i.e. give the type for time and the\n  type that `save_func` will output (or higher compatible type).\n- `saveat` Mimicks `saveat` in `solve` from `solve`.\n- `save_everystep` Mimicks `save_everystep` from `solve`.\n- `save_start` Mimicks `save_start` from `solve`.\n- `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should\n  be adapted if `tspan[1] > tspan[end]`.\n\nThe outputted values are saved into `saved_values`. Time points are found\nvia `saved_values.t` and the values are `saved_values.saveval`.\n\n## IterativeCallback\n\n`IterativeCallback` is a callback to be used to iteratively apply some affect.\nFor example, if given the first effect at `t₁`, you can define `t₂` to apply\nthe next effect.\n\nA `IterativeCallback` is constructed as follows:\njulia function IterativeCallback(time_choice, user_affect!,tType = Float64;                            initialize = DiffEqBase.INITIALIZE_DEFAULT,                            initial_affect = false, kwargs...)\nwhere `time_choice(integrator)` determines the time of the next callback and\n`user_affect!` is the effect applied to the integrator at the stopping points.\n\n## PeriodicCallback\n\n`PeriodicCallback` can be used when a function should be called periodically in terms of integration time (as opposed to wall time), i.e. at `t = tspan[1]`, `t = tspan[1] + Δt`, `t = tspan[1] + 2Δt`, and so on. This callback can, for example, be used to model a digital controller for an analog system, running at a fixed rate.\n\n### Constructor\njulia PeriodicCallback(f, Δt::Number; kwargs...) ```where f is the function to be called periodically, Δt is the period, and kwargs are keyword arguments accepted by the DiscreteCallback constructor (see the DiscreteCallback section)."
 },
 
 {
