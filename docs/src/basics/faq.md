@@ -215,7 +215,13 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 #### Are the native Julia solvers compatible with autodifferentiation?
 
-Yes! If the algorithm does not use adaptive time stepping, then you simply
+Yes! However, you should first look into
+[sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity.html)
+as a possibly more efficient method for calculating derivatives of the solution
+and functionals of the solution.
+
+But if you still want to do it the naive way, here's how you do it.
+If the algorithm does not use adaptive time stepping, then you simply
 need to make the initial condition have elements of Dual numbers. If the
 algorithm uses Dual numbers, you need to make sure that time is also
 given by Dual numbers. A quick explanation of this is because changing
