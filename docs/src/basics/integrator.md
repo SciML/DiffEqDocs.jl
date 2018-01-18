@@ -5,8 +5,6 @@ the numerical solving of a differential equation. Through this interface,
 one can easily monitor results, modify the problem during a run, and dynamically
 continue solving as one sees fit.
 
-Note: this is currently only offered by OrdinaryDiffEq.jl, DelayDiffEq.jl, and StochasticDiffEq.jl. Solvers from other packages will support this in the near future.
-
 ## Initialization and Stepping
 
 To initialize an integrator, use the syntax:
