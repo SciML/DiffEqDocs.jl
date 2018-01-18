@@ -17,6 +17,11 @@ it can be expensive for large models. Instead, adjoint sensitivity analysis solv
 directly for the gradient of some functional of the solution, such as a cost
 function or energy functional, in a much cheaper manner.
 
+#### Note
+
+Currently there are more performance optimizations needed to be done on the
+adjoint sensitivity method.
+
 ## Local Sensitivity Analysis
 
 The local sensitivity of the solution to a parameter is defined by how much the
@@ -139,7 +144,7 @@ fd_res = ForwardDiff.jacobian(test_f,p)
 calc_res = Calculus.finite_difference_jacobian(test_f,p)
 ```
 
-Here we just checked the derivative at the end point. 
+Here we just checked the derivative at the end point.
 
 #### Internal representation
 

@@ -217,8 +217,8 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 Yes! However, you should first look into
 [sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity.html)
-as a possibly more efficient method for calculating derivatives of the solution
-and functionals of the solution.
+as a (possibly in the future) more efficient method for calculating derivatives
+of the solution and functionals of the solution.
 
 But if you still want to do it the naive way, here's how you do it.
 If the algorithm does not use adaptive time stepping, then you simply
