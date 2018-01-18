@@ -38,16 +38,7 @@ and is under active development.
 
 These arguments control the output behavior of the solvers. It defaults to maximum
 output to give the best interactive user experience, but can be reduced all the
-way to only saving the solution at the final timepoint. All of these options
-can be mixed and matched. For example, the combination:
-
-```julia
-sol = solve(prob; saveat=[0.2, 0.5], dense = true)
-```
-
-will only save the solution (`sol.u`) at the timepoints `tspan[1], 0.2, 0.5, tspan[end]`.
-It will also enable dense output to the `sol` object, enabling you to do something
-like `sol(0.345)` which interpolates the solution to the time equal to 0.345.
+way to only saving the solution at the final timepoint.
 
 The following options are all related to output control. See the "Examples"
 section at the end of this page for some example usage.
@@ -93,6 +84,10 @@ section at the end of this page for some example usage.
   regardless of the other saving settings. Defaults to `true`.
 * `initialize_save`: Denotes whether to save after the callback initialization
   phase (when `u_modified=true`). Defaults to `true`.
+
+Note that `dense` requires `save_everystep=true` and `saveat=false`. If you need
+additional saving while keeping dense output, see
+[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/latest/features/callback_library.html).
 
 ## Stepsize Control
 
