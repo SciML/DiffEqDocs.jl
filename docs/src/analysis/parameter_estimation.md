@@ -9,8 +9,8 @@ defined using a
 
 The recommended method is to use `build_loss_objective` with the optimizer
 of your choice. This method can thus be paired with global optimizers
-from packages like NLopt.jl which can be much less prone to finding
-local minima than local optimization methods. Also, it allows the user
+from packages like BlackBoxOptim.jl or NLopt.jl which can be much less prone to
+finding local minima than local optimization methods. Also, it allows the user
 to define the cost function in the way they choose as a function
 `loss(sol)`, and thus can fit using any cost function on the solution,
 making it applicable to fitting non-temporal data and other types of
@@ -71,11 +71,13 @@ loss_func(sol)
 
 is a function which reduces the problem's solution to a scalar which the
 optimizer will try to minimize. While this is very
-flexible, two convenience routines are included for fitting to data:
+flexible, two convenience routines are included for fitting to data with standard
+cost functions:
 
 ```julia
 L2Loss(t,data;weight=nothing)
 CostVData(t,data;loss_func = L2Loss,weight=nothing)
+
 ```
 
 where `t` is the set of timepoints which the data is found at, and
@@ -83,9 +85,27 @@ where `t` is the set of timepoints which the data is found at, and
 of the L2-distance. In `CostVData`, one can choose any loss function from
 LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
 of weights for the loss function which must match the size of the data.
-
 Note that minimization of a weighted `L2Loss` is equivalent to maximum
 likelihood estimation of a heteroskedastic Normally distributed likelihood.
+
+Additionally, we include a more flexible log-likelihood approach:
+
+```julia
+LogLikeLoss(t,distributions;loss_func = L2Loss,weight=nothing)
+```
+
+In this case, there are two forms. The simple case is where `distributions[i,j]`
+is the likelihood distributions from a `UnivariateDistribution` from
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/), where it
+corresponds to the likelihood at `t[i]` for component `j`. The second case is
+where `distributions[i]` is a `MultivariateDistribution` which corresponds to
+the likelihood at `t[i]` over the vector of components. This likelihood function
+then calculates the negative of the total loglikelihood over time as its objective
+value (negative since optimizers generally find minimimums, and thus this corresponds
+to maximum likelihood estimation).
+
+Note that these distributions can be generated via `fit_mle` on some dataset
+against some chosen distribution type.
 
 #### Note About Loss Functions
 
@@ -198,9 +218,8 @@ function (which is used for the LM solver). This returns the fitted parameters.
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
 by defining the function as a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
 
-
 ```julia
-f = @ode_def_nohes LotkaVolterraTest begin
+f = @ode_def LotkaVolterraTest begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
 end a=>1.5 b=1.0 c=3.0 d=1.0
@@ -235,12 +254,36 @@ To build the objective function for Optim.jl, we simply call the `build_loss_obj
 function:
 
 ```julia
-cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),maxiters=10000)
+cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),
+                                     maxiters=10000,verbose=false)
 ```
 
+This objective function internally is calling the ODE solver to get solutions
+to test against the data. The keyword arguments are passed directly to the solver.
 Note that we set `maxiters` in a way that causes the differential equation solvers to
 error more quickly when in bad regions of the parameter space, speeding up the
-process. Now this cost function can be used with Optim.jl in order to get the parameters.
+process. If the integrator stops early (due to divergence), then those parameters
+are given an infinite loss, and thus this is a quick way to avoid bad parameters.
+We set `verbose=false` because this divergence can get noisy.
+
+Before optimizing, let's visualize our cost function by plotting it for a range
+of parameter values:
+
+```julia
+range = 0.0:0.1:10.0
+using Plots; plotly()
+plot(range,[cost_function(i) for i in range],yscale=:log10,
+     xaxis = "Parameter", yaxis = "Cost", title = "1-Parameter Cost Function",
+     lw = 3)
+```
+
+![1 Parmaeter Likelihood](../assets/1paramcost.png)
+
+Here we see that there is a very well-defined minimum in our cost function at
+the real parameter (because this is where the solution almost exactly fits the
+dataset).
+
+Now this cost function can be used with Optim.jl in order to get the parameters.
 For example, we can use Brent's algorithm to search for the best solution on
 the interval `[0,10]` by:
 
@@ -370,7 +413,7 @@ can use:
 
 ```julia
 opt = Opt(:GN_ESCH, 1)
-min_objective!(opt, obj.cost_function2)
+min_objective!(opt, obj)
 lower_bounds!(opt,[0.0])
 upper_bounds!(opt,[5.0])
 xtol_rel!(opt,1e-3)
@@ -403,3 +446,139 @@ min_objective!(opt, obj)
 
 For more information, see the NLopt documentation for more details. And give IPOPT
 or MOSEK a try!
+
+## Generalized Likelihood Example
+
+In this example we will demo the likelihood-based approach to parameter fitting.
+First let's generate a dataset to fit. We will re-use the Lotka-Volterra equation
+but in this case fit just two parameters. Note that the parameter estimation
+tools do not require the use of the `@ode_def` macro, so let's demonstrate
+what the macro-less version looks like:
+
+```julia
+pf_func = function (t,u,p,du)
+  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
+  du[2] = -3.0 * u[2] + u[1]*u[2]
+end
+f1 = ParameterizedFunction(pf_func,[1.5,1.0])
+u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+prob1 = ODEProblem(f1,u0,tspan)
+sol = solve(prob1,Tsit5())
+```
+
+This is a function with two parameters, `[1.5,1.0]` which generates the same
+ODE solution as before. This time, let's generate 100 datasets where at each point
+adds a little bit of randomness:
+
+```julia
+using RecursiveArrayTools # for VectorOfArray
+t = collect(linspace(0,10,200))
+function generate_data(sol,t)
+  randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
+  data = convert(Array,randomized)
+end
+aggregate_data = convert(Array,VectorOfArray([generate_data(sol,t) for i in 1:100]))
+```
+
+here with `t` we measure the solution at 200 evenly spaced points. Thus `aggregate_data`
+is a 2x200x100 matrix where `aggregate_data[i,j,k]` is the `i`th component at time
+`j` of the `k`th dataset. What we first want to do is get a matrix of distributions
+where `distributions[i,j]` is the likelihood of component `i` at take `j`. We
+can do this via `fit_mle` on a chosen distributional form. For simplicity we
+choose the `Normal` distribution. `aggregate_data[i,j,:]` is the array of points
+at the given component and time, and thus we find the distribution parameters
+which fits best at each time point via:
+
+```julia
+distributions = [fit_mle(Normal,aggregate_data[i,j,:]) for i in 1:2, j in 1:200]
+```
+
+Notice for example that we have:
+
+```julia
+julia> distributions[1,1]
+Distributions.Normal{Float64}(μ=1.0022440583676806, σ=0.009851964521952437)
+```
+
+that is, it fit the distribution to have its mean just about where our original
+solution was and the variance is about how much noise we added to the dataset.
+This this is a good check to see that the distributions we are trying to fit
+our parameters to makes sense.
+
+Note that in this case the `Normal` distribution was a good choice, and in many
+cases it's a nice go-to choice, but one should experiment with other choices
+of distributions as well. For example, a `TDist` can be an interesting way to
+incorporate robustness to outliers since low degrees of free T-distributions
+act like Normal distributions but with longer tails (though `fit_mle` does not
+work with a T-distribution, you can get the means/variances and build appropriate
+distribution objects yourself).
+
+Once we have the matrix of distributions, we can build the objective function
+corresponding to that distribution fit:
+
+```julia
+using DiffEqParamEstim
+obj = build_loss_objective(prob1,Tsit5(),LogLikeLoss(t,distributions),
+                                     maxiters=10000,verbose=false)
+```
+
+First let's use the objective function to plot the likelihood landscape:
+
+```julia
+using Plots; plotly()
+range = 0.5:0.1:5.0
+heatmap(range,range,[obj([j,i]) for i in range, j in range],
+        yscale=:log10,xlabel="Parameter 1",ylabel="Prameter 2",
+        title="Likelihood Landscape")
+```
+
+![2 Parameter Likelihood](../assets/2paramlike.png)
+
+Recall that this is the negative loglikelihood and thus the minimum is the
+maximum of the likelihood. There is a clear valley where the second parameter
+is 1.5, while the first parameter's likelihood is more muddled. By taking a
+one-dimensional slice:
+
+```julia
+plot(range,[obj([i,1.0]) for i in range],lw=3,
+     title="Parameter 1 Likelihood (Parameter 2 = 1.5)",
+     xlabel = "Parameter 1", ylabel = "Objective Function Value")
+```
+
+![1 Parmaeter Likelihood](../assets/1paramlike.png)
+
+we can see that there's still a clear minimum at the true value. Thus we will
+use the global optimizers from BlackBoxOptim.jl to find the values. We set our
+search range to be from `0.5` to `5.0` for both of the parameters and let it
+optimize:
+
+```julia
+using BlackBoxOptim
+bound1 = Tuple{Float64, Float64}[(0.5, 5),(0.5, 5)]
+result = bboptimize(obj;SearchRange = bound1, MaxSteps = 11e3)
+
+Starting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},B
+lackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound
+{BlackBoxOptim.RangePerDimSearchSpace}}
+0.00 secs, 0 evals, 0 steps
+0.50 secs, 1972 evals, 1865 steps, improv/step: 0.266 (last = 0.2665), fitness=-737.311433781
+1.00 secs, 3859 evals, 3753 steps, improv/step: 0.279 (last = 0.2913), fitness=-739.658421879
+1.50 secs, 5904 evals, 5799 steps, improv/step: 0.280 (last = 0.2830), fitness=-739.658433715
+2.00 secs, 7916 evals, 7811 steps, improv/step: 0.225 (last = 0.0646), fitness=-739.658433715
+2.50 secs, 9966 evals, 9861 steps, improv/step: 0.183 (last = 0.0220), fitness=-739.658433715
+
+Optimization stopped after 11001 steps and 2.7839999198913574 seconds
+Termination reason: Max number of steps (11000) reached
+Steps per second = 3951.50873439296
+Function evals per second = 3989.2242527195904
+Improvements/step = 0.165
+Total function evaluations = 11106
+
+
+Best candidate found: [1.50001, 1.00001]
+
+Fitness: -739.658433715
+```
+
+This shows that it found the true parameters as the best fit to the likelihood.
