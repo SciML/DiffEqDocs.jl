@@ -115,7 +115,7 @@ are added via `addprocs()`, but we can change this to use multithreading via
 `parallel_type=:threads`. Together, this looks like:
 
 ```julia
-sol = solve(monte_prob,num_monte=1000,paralle_type=:threads)
+sol = solve(monte_prob,num_monte=1000,parallel_type=:threads)
 ```
 
 Many more controls are defined at the Monte Carlo page, including analysis tools.
