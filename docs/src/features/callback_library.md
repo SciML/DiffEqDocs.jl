@@ -271,6 +271,46 @@ SavingCallback(save_func, saved_values::SavedValues;
 The outputted values are saved into `saved_values`. Time points are found
 via `saved_values.t` and the values are `saved_values.saveval`.
 
+### Example
+
+In this example we will solve a matrix equation and at each step save a tuple
+of values which contains the current trace and the norm of the matrix. We build
+the `SavedValues` cache to use `Float64` for time and `Tuple{Float64,Float64}` 
+for the saved values, and then call the solver with the callback.
+
+```julia
+using DiffEqCallbacks, OrdinaryDiffEq
+prob = ODEProblem((t,u,du)->du.=u,rand(4,4),(0.0,1.0))
+saved_values = SavedValues(Float64, Tuple{Float64,Float64})
+cb = SavingCallback((t,u,integrator)->(trace(u),norm(u)), saved_values)
+sol = solve(prob, Tsit5(), callback=cb)
+
+print(saved_values.saveval)
+#=
+Tuple{Float64,Float64}[(2.86723, 2.27932), (3.16894, 2.51918), (4.0612, 3.22848), (5.67802, 4.51378)
+, (7.79393, 6.19584)]
+=#
+```
+
+Note that the values are retreived from the cache as `.saveval`, and the time points are found as
+`.t`. If we want to control the saved times, we use `saveat` in the callback. The save controls like
+`saveat` act analygously to how they act in the `solve` function.
+
+```julia
+saved_values = SavedValues(Float64, Tuple{Float64,Float64})
+cb = SavingCallback((t,u,integrator)->(trace(u),norm(u)), saved_values, saveat=0.0:0.1:1.0)
+sol = solve(prob, Tsit5(), callback=cb)
+print(saved_values.saveval)
+print(saved_values.t)
+
+#=
+Tuple{Float64,Float64}[(2.86723, 2.27932), (3.16877, 2.51904), (3.50204, 2.78397), (3.87035, 3.07677
+), (4.2774, 3.40035), (4.72725, 3.75797), (5.22442, 4.1532), (5.77388, 4.58999), (6.38113, 5.07273),
+ (7.05223, 5.60623), (7.79393, 6.19584)]
+[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+=#
+```
+
 ## IterativeCallback
 
 `IterativeCallback` is a callback to be used to iteratively apply some affect.
