@@ -21,14 +21,14 @@ choose to step via the `step!` command:
 step!(integrator)
 ```
 
-which will take one successful step. This type also implements an integrator interface,
+which will take one successful step. This type also implements an iterator interface,
 so one can step `n` times (or to the last `tstop`) using the `take` iterator:
 
 ```julia
 for i in take(integrator,n) end
 ```
 
-One can loop to the end by using `solve!(integrator)` or using the integrator interface:
+One can loop to the end by using `solve!(integrator)` or using the iterator interface:
 
 ```julia
 for i in integrator end
