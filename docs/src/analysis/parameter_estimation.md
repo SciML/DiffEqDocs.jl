@@ -491,6 +491,7 @@ at the given component and time, and thus we find the distribution parameters
 which fits best at each time point via:
 
 ```julia
+using Distributions
 distributions = [fit_mle(Normal,aggregate_data[i,j,:]) for i in 1:2, j in 1:200]
 ```
 
@@ -529,7 +530,7 @@ First let's use the objective function to plot the likelihood landscape:
 using Plots; plotly()
 range = 0.5:0.1:5.0
 heatmap(range,range,[obj([j,i]) for i in range, j in range],
-        yscale=:log10,xlabel="Parameter 1",ylabel="Prameter 2",
+        yscale=:log10,xlabel="Parameter 1",ylabel="Parameter 2",
         title="Likelihood Landscape")
 ```
 
@@ -582,3 +583,92 @@ Fitness: -739.658433715
 ```
 
 This shows that it found the true parameters as the best fit to the likelihood.
+
+## Parameter Estimation for Stochastic Differential Equations and Monte Carlo
+
+We can use any `DEProblem`, which not only includes `DAEProblem` and `DDEProblem`s,
+but also stochastic problems. In this case, let's use the generalized maximum
+likelihood to fit the parameters of an SDE's Monte Carlo evaluation.
+
+Let's use the same Lotka-Volterra equation as before, but this time add noise:
+
+```julia
+pf_func = function (t,u,p,du)
+  du[1] = p[1] * u[1] - 1.0 * u[1]*u[2]
+  du[2] = -3 * u[2] + u[1]*u[2]
+end
+
+pf = ParameterizedFunction(pf_func,[1.5])
+u0 = [1.0;1.0]
+pg_func = function (t,u,p,du)
+  du[1] = p[1]*u[1]
+  du[2] = 1e-2u[2]
+end
+pg = ParameterizedFunction(pg_func,[1e-2])
+tspan = (0.0,10.0)
+prob = SDEProblem(pf,pg,u0,tspan)
+```
+
+The parameter vector from this combination is the concatenation of the two.
+Now lets generate a dataset from 10,000 solutions of the SDE
+
+```julia
+using RecursiveArrayTools # for VectorOfArray
+t = collect(linspace(0,10,200))
+function generate_data(t)
+  sol = solve(prob,SRIW1())
+  randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
+  data = convert(Array,randomized)
+end
+aggregate_data = convert(Array,VectorOfArray([generate_data(t) for i in 1:10000]))
+```
+
+Instead of using `UnivariateDistribution`s like in the previous example, lets fit
+our data to `MultivariateNormal` distributions.
+
+```julia
+using Distributions
+distributions = [fit_mle(MultivariateNormal,aggregate_data[:,j,:]) for j in 1:200]
+```
+
+Now let's estimate the parameters. Instead of using single runs from the SDE, we
+will use a `MonteCarloProblem`. This means that it will solve the SDE `N` times
+to come up with an approximate probability distribution at each time point and
+use that in the likelihood estimate.
+
+```julia
+monte_prob = MonteCarloProblem(prob)
+obj = build_loss_objective(monte_prob,SOSRI(),LogLikeLoss(t,distributions),
+                                     maxiters=10000,verbose=false,num_monte = 1000,
+                                     parallel_type = :threads)
+```
+
+To speed things up I enabled multithreading. Just as before, we hand this over
+to BlackBoxOptim.jl:
+
+```julia
+using BlackBoxOptim
+bound1 = Tuple{Float64, Float64}[(0.5, 3),(1e-3, 1e-1)]
+result = bboptimize(obj;SearchRange = bound1, MaxSteps = 400)
+
+Optimization stopped after 201 steps and 2713
+.5920000076294 seconds
+Termination reason: Max number of steps (200)
+ reached
+Steps per second = 0.07407156271076672
+Function evals per second = 0.106869418836429
+59
+Improvements/step = 0.42
+Total function evaluations = 290
+
+
+Best candidate found: [1.52075, 0.0216393]
+
+Fitness: 1544423.794270536
+```
+
+
+Here we see that we successfully recovered the drift parameter, and got close to
+the original noise parameter after searching a two orders of magnitude range.
+It would require a larger `num_monte` to accurately get samples of the the
+variance and receive a better estimate there.
