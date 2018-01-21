@@ -24,6 +24,8 @@ If the data is temporal data, the most efficient method is the
 accurate. Usage of the `two_stage_method` should have a post-processing step
 which refines using a method like `build_loss_objective`.
 
+## Optimization-Based Methods
+
 ### two_stage_method
 
 The two-stage method is a collocation method for estimating parameters without
@@ -81,7 +83,8 @@ CostVData(t,data;loss_func = L2Loss,weight=nothing)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
-`data` are the values that are known. `L2Loss` is an optimized version
+`data` are the values that are known where each column corresponds to measures
+of the values of the system. `L2Loss` is an optimized version
 of the L2-distance. In `CostVData`, one can choose any loss function from
 LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
 of weights for the loss function which must match the size of the data.
@@ -213,7 +216,62 @@ The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
 
-## Local Optimization Examples
+## Bayesian Methods
+
+The following methods require the DiffEqBayes.jl
+
+```julia
+Pkg.add("DiffEqBayes")
+using DiffEqBayes
+```
+
+### stan_inference
+
+```julia
+stan_inference(prob::ODEProblem,t,data,priors = nothing;alg=:rk45,
+               num_samples=1000, num_warmup=1000, reltol=1e-3,
+               abstol=1e-6, maxiter=Int(1e5),likelihood=Normal,
+               vars=(StanODEData(),InverseGamma(2,3)))
+```
+
+`stan_inference` uses [Stan.jl](http://goedman.github.io/Stan.jl/latest/INTRO.html)
+to perform the Bayesian inference. The
+[Stan installation process](http://goedman.github.io/Stan.jl/latest/INSTALLATION.html)
+is required to use this function. The input requires that the function is defined
+by a `ParameterizedFunction` with the `@ode_def` macro. `t` is the array of time
+and `data` is the array where the first dimension (columns) corresponds to the
+array of system values. `priors` is an array of prior distributions for each
+parameter, specified via a [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+type. `alg` is a choice between `:rk45` and `:bdf`, the two internal integrators
+of Stan. `num_samples` is the number of samples to take per chain, and `num_warmup`
+is the number of MCMC warmup steps. `abstol` and `reltol` are the keyword
+arguments for the internal integrator. `liklihood` is the likelihood distribution
+to use with the arguments from `vars`, and `vars` is a tuple of priors for the
+distributions of the likelihood hyperparameters. The special value `StanODEData()`
+in this tuple denotes the position that the ODE solution takes in the likelihood's
+parameter list.
+
+### turing_inference
+
+```julia
+turing_inference(prob::DEProblem,alg,t,data,priors = nothing;
+                 num_samples=1000, epsilon = 0.02, tau = 4, kwargs...)
+```
+
+`turing_inference` uses [Turing.jl](https://github.com/yebai/Turing.jl) to
+perform its parameter inference. `prob` can be any `DEProblem` with a corresponding
+`alg` choice. `t` is the array of time points and `data[:,i]` is the set of
+observations for the differential equation system at time point `t[i]` (or higher
+dimensional). `priors` is an array of prior distributions for each
+parameter, specified via a
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+type. `num_samples` is the number of samples per MCMC chain. `epsilon` and `tau`
+are the HMC parameters. The extra `kwargs` are given to the internal differential
+equation solver.
+
+## Optimization-Based ODE Inference Examples
+
+### Simple Local Optimization
 
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
 by defining the function as a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
@@ -372,7 +430,7 @@ Results of Optimization Algorithm
 
 and thus this algorithm was able to correctly identify all four parameters.
 
-## More Algorithms (Global Optimization) via MathProgBase Solvers
+### More Algorithms (Global Optimization) via MathProgBase Solvers
 
 The `build_loss_objective` function builds an objective function which is able
 to be used with MathProgBase-associated solvers. This includes packages like
@@ -447,7 +505,7 @@ min_objective!(opt, obj)
 For more information, see the NLopt documentation for more details. And give IPOPT
 or MOSEK a try!
 
-## Generalized Likelihood Example
+### Generalized Likelihood Example
 
 In this example we will demo the likelihood-based approach to parameter fitting.
 First let's generate a dataset to fit. We will re-use the Lotka-Volterra equation
@@ -672,3 +730,135 @@ Here we see that we successfully recovered the drift parameter, and got close to
 the original noise parameter after searching a two orders of magnitude range.
 It would require a larger `num_monte` to accurately get samples of the the
 variance and receive a better estimate there.
+
+## Bayesian Inference Examples
+
+### Stan
+
+Like in the previous examples, we setup the Lotka-Volterra system and generate
+data:
+
+```julia
+f1 = @ode_def_nohes LotkaVolterraTest4 begin
+  dx = a*x - b*x*y
+  dy = -c*y + d*x*y
+end a=>1.5 b=>1.0 c=>3.0 d=>1.0
+u0 = [1.0,1.0]
+tspan = (0.0,10.0)
+prob1 = ODEProblem(f1,u0,tspan)
+sol = solve(prob1,Tsit5())
+t = collect(linspace(1,10,10))
+randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
+data = convert(Array,randomized)
+```
+
+Here we now give Stan an array of prior distributions for our parameters. Since
+the parameters of our differential equation must be positive, we utilize
+truncated Normal distributions to make sure that is satisfied in the result:
+
+```julia
+priors = [Truncated(Normal(1.5,0.1),0,2),Truncated(Normal(1.0,0.1),0,1.5),
+          Truncated(Normal(3.0,0.1),0,4),Truncated(Normal(1.0,0.1),0,2)]
+```
+
+We then give these to the inference function.
+
+```julia
+bayesian_result = stan_inference(prob1,t,data,priors;
+                                 num_samples=100,num_warmup=500,
+                                 vars = (StanODEData(),InverseGamma(4,1)))
+```
+
+`InverseGamma(4,1)` is our starting estimation for the variance hyperparameter
+of the default `Normal` distribution. The result is a
+[Mamba.jl](http://mambajl.readthedocs.io/en/latest/intro.html) chain object.
+We can pull out the parameter values via:
+
+```julia
+theta1 = bayesian_result.chain_results[:,["theta.1"],:]
+theta2 = bayesian_result.chain_results[:,["theta.2"],:]
+theta3 = bayesian_result.chain_results[:,["theta.3"],:]
+theta4 = bayesian_result.chain_results[:,["theta.4"],:]
+```
+
+From these chains we can get our estimate for the parameters via:
+
+```julia
+mean(theta1.value[:,:,1])
+```
+
+We can get more of a description via:
+
+```julia
+Mamba.describe(bayesian_result.chain_results)
+
+# Result
+
+Iterations = 1:100
+Thinning interval = 1
+Chains = 1,2,3,4
+Samples per chain = 100
+
+Empirical Posterior Estimates:
+                  Mean         SD        Naive SE        MCSE         ESS    
+         lp__ -6.15472697 1.657551334 0.08287756670 0.18425029767  80.9314979
+accept_stat__  0.90165904 0.125913744 0.00629568721 0.02781181930  20.4968668
+   stepsize__  0.68014975 0.112183047 0.00560915237 0.06468790087   3.0075188
+  treedepth__  2.68750000 0.524911975 0.02624559875 0.10711170182  24.0159141
+ n_leapfrog__  6.77000000 4.121841086 0.20609205428 0.18645821695 100.0000000
+  divergent__  0.00000000 0.000000000 0.00000000000 0.00000000000         NaN
+     energy__  9.12245750 2.518330231 0.12591651153 0.32894488320  58.6109941
+     sigma1.1  0.57164997 0.128579363 0.00642896816 0.00444242658 100.0000000
+     sigma1.2  0.58981422 0.131346442 0.00656732209 0.00397310122 100.0000000
+       theta1  1.50237077 0.008234095 0.00041170473 0.00025803930 100.0000000
+       theta2  0.99778276 0.009752574 0.00048762870 0.00009717115 100.0000000
+       theta3  3.00087782 0.009619775 0.00048098873 0.00020301023 100.0000000
+       theta4  0.99803569 0.008893244 0.00044466218 0.00040886528 100.0000000
+      theta.1  1.50237077 0.008234095 0.00041170473 0.00025803930 100.0000000
+      theta.2  0.99778276 0.009752574 0.00048762870 0.00009717115 100.0000000
+      theta.3  3.00087782 0.009619775 0.00048098873 0.00020301023 100.0000000
+      theta.4  0.99803569 0.008893244 0.00044466218 0.00040886528 100.0000000
+
+Quantiles:
+                  2.5%        25.0%      50.0%      75.0%       97.5%   
+         lp__ -10.11994750 -7.0569000 -5.8086150 -4.96936500 -3.81514375
+accept_stat__   0.54808912  0.8624483  0.9472840  0.98695850  1.00000000
+   stepsize__   0.57975100  0.5813920  0.6440120  0.74276975  0.85282400
+  treedepth__   2.00000000  2.0000000  3.0000000  3.00000000  3.00000000
+ n_leapfrog__   3.00000000  7.0000000  7.0000000  7.00000000 15.00000000
+  divergent__   0.00000000  0.0000000  0.0000000  0.00000000  0.00000000
+     energy__   5.54070300  7.2602200  8.7707000 10.74517500 14.91849500
+     sigma1.1   0.38135240  0.4740865  0.5533195  0.64092575  0.89713635
+     sigma1.2   0.39674703  0.4982615  0.5613655  0.66973025  0.88361407
+       theta1   1.48728600  1.4967650  1.5022750  1.50805500  1.51931475
+       theta2   0.97685115  0.9914630  0.9971435  1.00394250  1.01765575
+       theta3   2.98354100  2.9937575  3.0001450  3.00819000  3.02065950
+       theta4   0.97934128  0.9918495  0.9977415  1.00430750  1.01442975
+      theta.1   1.48728600  1.4967650  1.5022750  1.50805500  1.51931475
+      theta.2   0.97685115  0.9914630  0.9971435  1.00394250  1.01765575
+      theta.3   2.98354100  2.9937575  3.0001450  3.00819000  3.02065950
+      theta.4   0.97934128  0.9918495  0.9977415  1.00430750  1.01442975
+```
+
+More extensive information about the distributions is given by the plots:
+
+```julia
+plot_chain(bayesian_result)
+```
+
+### Turing
+
+This case we will build off of the Stan example. Note that `turing_inference`
+does not require the use of the `@ode_def` macro like Stan does, but it will
+still work with macro-defined functions. Thus, using the same setup as before,
+we simply give the setup to:
+
+```julia
+bayesian_result = turing_inference(prob,Tsit5(),t,data,priors;num_samples=500)
+```
+
+The chain for the `i`th parameter is then given by:
+
+```julia
+bayesian_result[:theta1]
+```
