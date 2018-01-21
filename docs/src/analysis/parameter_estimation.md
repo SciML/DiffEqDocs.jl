@@ -161,7 +161,7 @@ following:
 
 ```julia
 function problem_new_parameters(prob::ODEProblem,p)
-  f = (t,u,du) -> prob.f(t,u,p,du)
+  f = (t,u,du) -> prob.f(du,u,p,t)
   uEltype = eltype(p)
   u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
   tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
@@ -169,7 +169,7 @@ function problem_new_parameters(prob::ODEProblem,p)
 end
 ```
 
-`f = (t,u,du) -> prob.f(t,u,p,du)` creates a new version of `f` that encloses
+`f = (t,u,du) -> prob.f(du,u,p,t)` creates a new version of `f` that encloses
 the new parameters. The element types for `u0` and `tspan` are set to match the
 parameters. This is required to make autodifferentiation work. Then the new
 problem with these new values is returned.
@@ -278,13 +278,14 @@ by defining the function as a [ParameterizedFunction](https://github.com/JuliaDi
 
 ```julia
 f = @ode_def LotkaVolterraTest begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a=>1.5 b=1.0 c=3.0 d=1.0
+  dx = a*x - x*y
+  dy = -3y + x*y
+end a
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-prob = ODEProblem(f,u0,tspan)
+p = [1.5]
+prob = ODEProblem(f,u0,tspan,p)
 ```
 
 Notice that since we only used `=>` for `a`, it's the only free parameter.
@@ -385,11 +386,12 @@ Let's use the Lotka-Volterra equation with all parameters free:
 f2 = @ode_def_nohes LotkaVolterraAll begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
-end a=>1.5 b=>1.0 c=>3.0 d=>1.0
+end a b c d
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-prob = ODEProblem(f2,u0,tspan)
+p = [1.5,1.0,3.0,1.0]
+prob = ODEProblem(f2,u0,tspan,p)
 ```
 
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
@@ -439,13 +441,14 @@ cost function for the single parameter optimization problem like:
 
 ```julia
 f = @ode_def_nohes LotkaVolterraTest begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a=>1.5 b=1.0 c=3.0 d=1.0
+  dx = a*x - x*y
+  dy = -3y + x*y
+end a
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-prob = ODEProblem(f,u0,tspan)
+p = [1.5]
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5())
 
 t = collect(linspace(0,10,200))
@@ -514,14 +517,14 @@ tools do not require the use of the `@ode_def` macro, so let's demonstrate
 what the macro-less version looks like:
 
 ```julia
-pf_func = function (t,u,p,du)
+f1 = function (du,u,p,t)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3.0 * u[2] + u[1]*u[2]
 end
-f1 = ParameterizedFunction(pf_func,[1.5,1.0])
+p = [1.5,1.0]
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-prob1 = ODEProblem(f1,u0,tspan)
+prob1 = ODEProblem(f1,u0,tspan,p)
 sol = solve(prob1,Tsit5())
 ```
 
@@ -651,23 +654,21 @@ likelihood to fit the parameters of an SDE's Monte Carlo evaluation.
 Let's use the same Lotka-Volterra equation as before, but this time add noise:
 
 ```julia
-pf_func = function (t,u,p,du)
-  du[1] = p[1] * u[1] - 1.0 * u[1]*u[2]
-  du[2] = -3 * u[2] + u[1]*u[2]
+pf = function (du,u,p,t)
+  du[1] = p[1] * u[1] - u[1]*u[2]
+  du[2] = -3u[2] + u[1]*u[2]
 end
 
-pf = ParameterizedFunction(pf_func,[1.5])
 u0 = [1.0;1.0]
-pg_func = function (t,u,p,du)
-  du[1] = p[1]*u[1]
+pg = function (du,u,p,t)
+  du[1] = p[2]*u[1]
   du[2] = 1e-2u[2]
 end
-pg = ParameterizedFunction(pg_func,[1e-2])
+p = [1.5,1e-2]
 tspan = (0.0,10.0)
-prob = SDEProblem(pf,pg,u0,tspan)
+prob = SDEProblem(pf,pg,u0,tspan,p)
 ```
 
-The parameter vector from this combination is the concatenation of the two.
 Now lets generate a dataset from 10,000 solutions of the SDE
 
 ```julia
@@ -739,13 +740,14 @@ Like in the previous examples, we setup the Lotka-Volterra system and generate
 data:
 
 ```julia
-f1 = @ode_def_nohes LotkaVolterraTest4 begin
+f1 = @ode_def LotkaVolterraTest4 begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
-end a=>1.5 b=>1.0 c=>3.0 d=>1.0
+end a b c d
+p = [1.5,1.0,3.0,1.0]
 u0 = [1.0,1.0]
 tspan = (0.0,10.0)
-prob1 = ODEProblem(f1,u0,tspan)
+prob1 = ODEProblem(f1,u0,tspan,p)
 sol = solve(prob1,Tsit5())
 t = collect(linspace(1,10,10))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])

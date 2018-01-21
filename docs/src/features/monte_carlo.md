@@ -62,20 +62,6 @@ output_func(sol,i) = (sol[end,2],false)
 Thus the Monte Carlo Simulation would return as its data an array which is the
 end value of the 2nd dependent variable for each of the runs.
 
-### Parameterizing the Monte Carlo Components
-
-The Monte Carlo components can be parameterized by using the `ConcreteParameterizedFunction`
-constructors.
-
-```julia
-ProbParameterizedFunction(prob_func,params)
-OutputParameterizedFunction(output_func,params)
-```
-
-Here, the signatures are `prob_func(prob,i,params)` and `output_func(sol,params)`.
-These parameters are added to the parameter list for use in the parameter estimation
-schemes.
-
 ### Solving the Problem
 
 ```julia
@@ -267,7 +253,7 @@ Now let's define the linear ODE which is our base problem:
 
 ```julia
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 ```
 
 For our Monte Carlo simulation, we would like to change the initial condition around.
@@ -333,7 +319,7 @@ we will use [the parameterized function wrappers](../analysis/parameterized_func
 noise. Our Lotka-Volterra system will have as its drift component:
 
 ```julia
-function pf_func(t,u,p,du)
+function pf_func(u,p,t,p,du)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
 end
@@ -344,7 +330,7 @@ where `pf` is the function with the parameters `1.5` and `1.0` associated with i
 For our noise function we will use multiplicative noise:
 
 ```julia
-function pg_func(t,u,p,du)
+function pg_func(u,p,t,p,du)
   du[1] = p[1]*u[1]
   du[2] = p[2]*u[2]
 end
@@ -417,7 +403,7 @@ Our `prob_func` will simply randomize the initial condition:
 
 ```julia
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 
 function prob_func(prob,i,repeat)
   ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
@@ -472,12 +458,12 @@ generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x
 system of linear stochastic differential equations:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   for i = 1:length(u)
     du[i] = 1.01*u[i]
   end
 end
-function σ(t,u,du)
+function σ(du,u,p,t)
   for i in 1:length(u)
     du[i] = .87*u[i]
   end

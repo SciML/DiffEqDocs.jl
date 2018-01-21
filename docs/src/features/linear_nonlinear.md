@@ -18,7 +18,7 @@ linsolve!(x,A,b,matrix_updated=false)
 
 This is an in-place function which updates `x` by solving `Ax=b`. The user should
 specify the function `linsolve(Val{:init},f,x)` which returns a `linsolve!` function.
-The setting `matrix_updated` determines whether the matrix `A` has changed from the 
+The setting `matrix_updated` determines whether the matrix `A` has changed from the
 last call. This can be used to smartly cache factorizations.
 
 ### Basic linsolve method: Factorization
@@ -109,9 +109,9 @@ function (p::LinSolveFactorize)(x,A,b,matrix_updated=false)
 end
 ```
 
-is what's used in the solver's internal loop. If `matrix_updated` is true, it 
-will re-compute the factorization. Otherwise it just solves the linear system 
-with the cached factorization. This general idea of using a call-overloaded 
+is what's used in the solver's internal loop. If `matrix_updated` is true, it
+will re-compute the factorization. Otherwise it just solves the linear system
+with the cached factorization. This general idea of using a call-overloaded
 type can be employed to do many other things.
 
 ## Nonlinear Solvers: `nlsolve` Specification

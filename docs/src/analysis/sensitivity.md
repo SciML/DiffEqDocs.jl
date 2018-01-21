@@ -82,9 +82,10 @@ for the Lotka-Volterra equations by:
 f = @ode_def_nohes LotkaVolterraSensitivity begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
-end a=>1.5 b=>1 c=>3 d=1
+end a b c d
 
-prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0))
+p = [1.5,1.0,3.0,1.0]
+prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)
 ```
 
 This generates a problem which the ODE solvers can solve:
@@ -178,7 +179,7 @@ with respect to some functional of the solution. In many cases this is used
 in an optimization problem to return the gradient with respect to some cost
 function.
 
-The adjoint requires the definition of some scalar functional ``g(t,u,p)``
+The adjoint requires the definition of some scalar functional ``g(u,p,t)``
 where ``u`` is the (numerical) solution to the differential equation.
 Adjoint sensitivity analysis finds the gradient of
 
@@ -211,7 +212,7 @@ the adjoint sensitivity of some discontinuous functional of the solution. One
 canonical function is the L2 loss against some data points, that is:
 
 ```math
-L(t,u,p)=\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}
+L(u,p,t)=\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}
 ```
 
 In this case, we can reinterpret our summation as the distribution integral:
@@ -258,13 +259,13 @@ s = adjoint_sensitivities(sol,alg,g,nothing,dg;kwargs...)
 for the cost functional
 
 ```julia
-g(t,u,p)
+g(u,p,t)
 ```
 
 with in-place gradient
 
 ```julia
-dg(out,t,u,p)
+dg(out,u,p,t)
 ```
 
 Currently, the gradient is required. Note that the keyword arguments are passed
@@ -281,10 +282,11 @@ solution:
 ```julia
 f = @ode_def_nohes LotkaVolterra begin
   dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a=>1.5 b=>1.0 c=>3.0 d=1
+  dy = -c*y + x*y
+end a b c
 
-prob = ODEProblem(f,[1.0;1.0],(0.0,10.0))
+p = [1.5,1.0,3.0]
+prob = ODEProblem(f,[1.0;1.0],(0.0,10.0),p)
 sol = solve(prob,Vern9(),abstol=1e-10,reltol=1e-10)
 ```
 
@@ -292,7 +294,7 @@ Now let's calculate the sensitivity of the L2 error against 1 at evenly spaced
 points in time, that is:
 
 ```math
-L(t,u,p)=\sum_{i=1}^{n}\frac{\Vert1-u(t_{i},p)\Vert^{2}}{2}
+L(u,p,t)=\sum_{i=1}^{n}\frac{\Vert1-u(t_{i},p)\Vert^{2}}{2}
 ```
 
 for ``t_i = 0.5i``. This is the assumption that the data is `data[i]=1.0`.
@@ -350,13 +352,13 @@ G(u,p)=\int_{0}^{T}\frac{\sum_{i=1}^{n}u_{i}^{2}(t)}{2}dt
 which is
 
 ```julia
-g(t,u,p) = (sum(u).^2) ./ 2
+g(u,p,t) = (sum(u).^2) ./ 2
 ```
 
 Notice that the gradient of this function with respect to the state `u` is:
 
 ```julia
-function dg(out,t,u,p)
+function dg(out,u,p,t)
   out[1]= u[1] + u[2]
   out[2]= u[1] + u[2]
 end

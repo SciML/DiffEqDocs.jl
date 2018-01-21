@@ -41,7 +41,7 @@ Here we solve the harmonic oscillator:
 
 ```julia
 u0 = ones(2)
-function f(t,u,du)
+function f(du,u,p,t)
   du[1] = u[2]
   du[2] = -u[1]
 end
@@ -52,7 +52,7 @@ However, this problem is supposed to conserve energy, and thus we define our man
 to conserve the sum of squares:
 
 ```julia
-function g(u,resid)
+function g(resid,u,p,t)
   resid[1] = u[2]^2 + u[1]^2 - 2
   resid[2] = 0
 end
@@ -112,7 +112,7 @@ satisfies this property mathematically it can be difficult for ODE solvers to
 ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html)
 show.
 
-In order to deal with this problem one can specify `isoutofdomain=(t,u) -> any(x
+In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
 -> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
@@ -135,9 +135,9 @@ depends on how accurately extrapolations approximate next time steps.
 Please note that the system should be defined also outside the positive domain,
 since even with these approaches negative variables might occur during the
 calculations. Moreover, one should follow Shampine's et. al. advice and set the
-derivative ``x'_i`` of a negative component ``x_i`` to ``\max \{0, f_i(t, x)\}``,
+derivative ``x'_i`` of a negative component ``x_i`` to ``\max \{0, f_i(x, t)\}``,
 where ``t`` denotes the current time point with state vector ``x`` and ``f_i``
-is the ``i``-th component of function ``f`` in an ODE system ``x' = f(t, x)``.
+is the ``i``-th component of function ``f`` in an ODE system ``x' = f(x, t)``.
 
 ### Constructor
 
@@ -178,7 +178,7 @@ function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
 ```
 
 - `g`: The residual function for the domain. This is an inplace function of form
-  `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
+  `g(resid, u, p, t)` which writes to the residual the difference from
   the domain.
 - `u`: A prototype of the state vector of the integrator and the residuals. Two
   copies of it are saved, and extrapolated values and residuals are written to them.
@@ -205,7 +205,7 @@ In many cases there is a known maximal stepsize for which the computation is
 stable and produces correct results. For example, in hyperbolic PDEs one normally
 needs to ensure that the stepsize stays below some ``\Delta t_{FE}`` determined
 by the CFL condition. For nonlinear hyperbolic PDEs this limit can be a function
-`dtFE(t,u)` which changes throughout the computation. The stepsize limiter lets
+`dtFE(u,p,t)` which changes throughout the computation. The stepsize limiter lets
 you pass a function which will adaptively limit the stepsizes to match these
 constraints.
 
@@ -218,14 +218,14 @@ StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)
 - `dtFE`: The function for the maximal timestep. Calculated using the previous `t` and `u`.
 - `safety_factor`: The factor below the true maximum that will be stepped to
   which defaults to `9//10`.
-- `max_step`: Makes every step equal to `safety_factor*dtFE(t,u)` when the
+- `max_step`: Makes every step equal to `safety_factor*dtFE(u,p,t)` when the
   solver is set to `adaptive=false`.
 - `cached_dtcache`: Should be set to match the type for time when not using
   Float64 values.
 
 ## FunctionCallingCallback
 
-The function calling callback lets you define a function `func(t,u,integrator)`
+The function calling callback lets you define a function `func(u,p,t,integrator)`
 which gets calls at the time points of interest. The constructor is:
 
 ```julia
@@ -275,14 +275,14 @@ via `saved_values.t` and the values are `saved_values.saveval`.
 
 In this example we will solve a matrix equation and at each step save a tuple
 of values which contains the current trace and the norm of the matrix. We build
-the `SavedValues` cache to use `Float64` for time and `Tuple{Float64,Float64}` 
+the `SavedValues` cache to use `Float64` for time and `Tuple{Float64,Float64}`
 for the saved values, and then call the solver with the callback.
 
 ```julia
 using DiffEqCallbacks, OrdinaryDiffEq
-prob = ODEProblem((t,u,du)->du.=u,rand(4,4),(0.0,1.0))
+prob = ODEProblem((du,u,p,t)->du.=u,rand(4,4),(0.0,1.0))
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
-cb = SavingCallback((t,u,integrator)->(trace(u),norm(u)), saved_values)
+cb = SavingCallback((u,p,t,integrator)->(trace(u),norm(u)), saved_values)
 sol = solve(prob, Tsit5(), callback=cb)
 
 print(saved_values.saveval)
@@ -298,7 +298,7 @@ Note that the values are retreived from the cache as `.saveval`, and the time po
 
 ```julia
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
-cb = SavingCallback((t,u,integrator)->(trace(u),norm(u)), saved_values, saveat=0.0:0.1:1.0)
+cb = SavingCallback((u,p,t,integrator)->(trace(u),norm(u)), saved_values, saveat=0.0:0.1:1.0)
 sol = solve(prob, Tsit5(), callback=cb)
 print(saved_values.saveval)
 print(saved_values.t)
@@ -330,7 +330,11 @@ where `time_choice(integrator)` determines the time of the next callback and
 
 ## PeriodicCallback
 
-`PeriodicCallback` can be used when a function should be called periodically in terms of integration time (as opposed to wall time), i.e. at `t = tspan[1]`, `t = tspan[1] + Δt`, `t = tspan[1] + 2Δt`, and so on. This callback can, for example, be used to model a digital controller for an analog system, running at a fixed rate.
+`PeriodicCallback` can be used when a function should be called periodically in
+terms of integration time (as opposed to wall time), i.e. at `t = tspan[1]`,
+`t = tspan[1] + Δt`, `t = tspan[1] + 2Δt`, and so on. This callback can, for
+example, be used to model a digital controller for an analog system, running at
+a fixed rate.
 
 ### Constructor
 
@@ -338,4 +342,6 @@ where `time_choice(integrator)` determines the time of the next callback and
 PeriodicCallback(f, Δt::Number; kwargs...)
 ```
 
-where `f` is the function to be called periodically, `Δt` is the period, and `kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor (see the [DiscreteCallback](@ref) section).
+where `f` is the function to be called periodically, `Δt` is the period, and
+`kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor 
+(see the [DiscreteCallback](@ref) section).

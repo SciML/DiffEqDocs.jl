@@ -61,7 +61,7 @@ dispatches for arithmetic operations and extra things like QR-factorizations,
 and thus they are preferred when possible. However, they lose efficiency if they
 grow too large.
 
-For anything larger, you should use the `in-place` syntax `f(t,u,du)` and make
+For anything larger, you should use the `in-place` syntax `f(du,u,p,t)` and make
 sure that your function doesn't allocate. Assuming you know of a `u0`, you
 should be able to do:
 
@@ -75,7 +75,7 @@ more, then you might have a type-instability or have temporary arrays. To find
 type-instabilities, you should do:
 
 ```julia
-@code_warntype f(t,u,du)
+@code_warntype f(du,u,p,t)
 ```
 
 and read the printout to see if there's any types that aren't inferred by the
@@ -129,7 +129,7 @@ There are a few ways to do this. The simplest way is to just have a parameter to
 switch between the two. For example:
 
 ```julia
-function pf_func(t,u,p,du)
+function f(du,u,p,t)
   if p == 0
     du[1] = 2u[1]
   else
@@ -137,7 +137,6 @@ function pf_func(t,u,p,du)
   end
   du[2] = -u[2]
 end
-pf = ParameterizedFunction(pf_func,0)
 ```
 
 Then in a callback you can make the `affect!` function modify `integrator.prob.f.params`.
@@ -232,13 +231,12 @@ To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
 ```julia
-function pf_func(t,u,p,du)
+function func(du,u,p,t)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
 end
 function f(p)
-  pf = ParameterizedFunction(pf_func,p)
-  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)))
+  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
   solve(prob,Tsit5(),save_everystep=false)[end]
 end
 ```
@@ -275,7 +273,7 @@ via ForwardDiff.jl. For example, if we use the ODE function:
 ```julia
 const tmp = zeros(4)
 const A = rand(4,4)
-function f(t,u,du)
+function f(du,u,p,t)
   A_mul_B!(tmp,A,u)
   du .= tmp .+ u
 end
@@ -336,7 +334,7 @@ so you only need to change this if you explicitly set `chunksize = ...`). Now
 we can setup and solve our ODE using this cache:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   # Get du from cache
   tmp = get_tmp(dual_cache,eltype(u))
   # Fix tag

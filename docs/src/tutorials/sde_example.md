@@ -9,10 +9,10 @@ This tutorial assumes you have read the [Ordinary Differential Equations tutoria
 In this example we will solve the equation
 
 ```math
-du = f(t,u)dt + g(t,u)dW
+du = f(u,p,t)dt + g(u,p,t)dW
 ```
 
-where ``f(t,u)=αu`` and ``g(t,u)=βu``. We know via Stochastic Calculus that the
+where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic Calculus that the
 solution to this equation is
 
 ```math
@@ -27,8 +27,8 @@ using DifferentialEquations
 α=1
 β=1
 u₀=1/2
-f(t,u) = α*u
-g(t,u) = β*u
+f(u,p,t) = α*u
+g(u,p,t) = β*u
 dt = 1//2^(4)
 tspan = (0.0,1.0)
 prob = SDEProblem(f,g,u₀,(0.0,1.0))
@@ -55,7 +55,7 @@ test convergence of the algorithms for methods developers. Thus we define the pr
 object with:
 
 ```julia
-f(::Type{Val{:analytic}},t,u₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)
+f(::Type{Val{:analytic}},u,p,t₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)
 prob = SDEProblem(f,g,u₀,(0.0,1.0))
 ```
 
@@ -144,15 +144,15 @@ timepoint_meancor(sim,0.2,0.7) # Gives both means and then the correlation coeff
 More generally, an SDE
 
 ```math
-du = f(t,u)dt + g(t,u)dW
+du = f(u,p,t)dt + g(u,p,t)dW
 ```
 
 generalizes to systems of equations is done in the same way as ODEs. Here, `g`
 is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
 is diagonal noise where `g` is a diagonal matrix. This means that every function in
 the system gets a different random number. Instead of handling matrices in this case,
-we simply define both `f` and `g` as in-place functions. Thus `f(t,u,du)` gives a 
-vector of `du` which is the deterministic change, and `g(t,u,du2)` gives a vector 
+we simply define both `f` and `g` as in-place functions. Thus `f(u,p,t,du)` gives a
+vector of `du` which is the deterministic change, and `g(u,p,t,du2)` gives a vector
 `du2` for which `du2.*W` is the stochastic portion of the equation.
 
 For example, the Lorenz equation with additive noise has the same deterministic
@@ -161,13 +161,13 @@ portion as the Lorenz equations, but adds an additive noise, which is simply
 step of the equation. This is done via:
 
 ```julia
-function lorenz(t,u,du)
+function lorenz(du,u,p,t)
   du[1] = 10.0(u[2]-u[1])
   du[2] = u[1]*(28.0-u[3]) - u[2]
   du[3] = u[1]*u[2] - (8/3)*u[3]
 end
 
-function σ_lorenz(t,u,du)
+function σ_lorenz(du,u,p,t)
   du[1] = 3.0
   du[2] = 3.0
   du[3] = 3.0
@@ -183,7 +183,7 @@ plot(sol,vars=(1,2,3))
 Note that it's okay for the noise function to mix terms. For example
 
 ```julia
-function σ_lorenz(t,u,du)
+function σ_lorenz(du,u,p,t)
   du[1] = sin(u[3])*3.0
   du[2] = u[2]*u[1]*3.0
   du[3] = 3.0
@@ -199,20 +199,20 @@ f = @ode_def_nohes LorenzSDE begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
-end σ=>10. ρ=>28. β=>2.66
+end σ ρ β
 
 g = @ode_def_nohes LorenzSDENoise begin
   dx = α
   dy = α
   dz = α
-end α=>3.0
+end α
 ```
 
 ## Example 3: Systems of SDEs with Scalar Noise
 
 In this example we'll solve a system of SDEs with scalar noise. This means that
 the same noise process is applied to all SDEs. First we need to define a
-scalar noise process 
+scalar noise process
 [using the Noise Process interface](../../features/noise_process.html).
 Since we want a `WienerProcess` that starts at `0.0` at time `0.0`, we use the
 command `W = WienerProcess(0.0,0.0,0.0)` to define the Brownian motion we want,
@@ -220,8 +220,8 @@ and then give this to the `noise` option in the `SDEProblem`. For a full example
 let's solve a linear SDE with scalar noise using a high order algorithm:
 
 ```julia
-f(t,u,du) = (du .= u)
-g(t,u,du) = (du .= u)
+f(u,p,t,du) = (du .= u)
+g(u,p,t,du) = (du .= u)
 u0 = rand(4,2)
 
 W = WienerProcess(0.0,0.0,0.0)
@@ -245,11 +245,11 @@ random ordinary differential equations (RODEs) which have a
 
 Let's define a problem with four Wiener processes and two dependent random variables.
 In this case, we will want the output of `g` to be a 2x4 matrix, such that the solution
-is `g(t,u)*dW`, the matrix multiplication. For example, we can do the following:
+is `g(u,p,t)*dW`, the matrix multiplication. For example, we can do the following:
 
 ```julia
-f(t,u,du) = du .= 1.01u
-function g(t,u,du)
+f(du,u,p,t) = du .= 1.01u
+function g(du,u,p,t)
   du[1,1] = 0.3u[1]
   du[1,2] = 0.6u[1]
   du[1,3] = 0.9u[1]
@@ -265,15 +265,15 @@ In our `g` we define the functions for computing the values of the matrix.
 We can now think of the SDE that this solves as the system of equations
 
 ```math
-du_1 = f_1(t,u)dt + g_{11}(t,u)dW_1 + g_{12}(t,u)dW_2 + g_{13}(t,u)dW_3 + g_{14}(t,u)dW_4 \\
-du_2 = f_2(t,u)dt + g_{21}(t,u)dW_1 + g_{22}(t,u)dW_2 + g_{23}(t,u)dW_3 + g_{24}(t,u)dW_4
+du_1 = f_1(u,p,t)dt + g_{11}(u,p,t)dW_1 + g_{12}(u,p,t)dW_2 + g_{13}(u,p,t)dW_3 + g_{14}(u,p,t)dW_4 \\
+du_2 = f_2(u,p,t)dt + g_{21}(u,p,t)dW_1 + g_{22}(u,p,t)dW_2 + g_{23}(u,p,t)dW_3 + g_{24}(u,p,t)dW_4
 ```
 
 meaning that for example `du[1,1]` and `du[2,1]` correspond to stochastic changes with
 the same random number in the first and second SDEs.
 
 
-Note that this problem can only be solved my SDE methods which are compatible with non-diagonal 
+Note that this problem can only be solved my SDE methods which are compatible with non-diagonal
 noise. This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
 
 The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
@@ -290,7 +290,7 @@ A[2,4] = 1
 sparse(A)
 
 # Make `g` write the sparse matrix values
-function g(t,u,du)
+function g(du,u,p,t)
   du[1,1] = 0.3u[1]
   du[1,4] = 0.12u[2]
   du[2,4] = 1.8u[2]
@@ -300,8 +300,8 @@ end
 prob = SDEProblem(f,g,ones(2),(0.0,1.0),noise_rate_prototype=A)
 ```
 
-and now `g(t,u)` writes into a sparse matrix, and `g(t,u)*dW` is sparse matrix
-multiplication. 
+and now `g(u,p,t)` writes into a sparse matrix, and `g(u,p,t)*dW` is sparse matrix
+multiplication.
 
 ## Example 4: Colored Noise
 
@@ -313,7 +313,7 @@ In that portion of the docs, it is shown how to define your own noise process
 SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
-Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods. 
+Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods.
 This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve.html).
 
 ### Example: Spatially-Colored Noise in the Heston Model
@@ -329,11 +329,11 @@ dW_1 dW_2 = ρ dt
 In this problem, we have a diagonal noise problem given by:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   du[1] = μ*u[1]
   du[2] = κ*(Θ-u[2])
 end
-function g(t,u,du)
+function g(du,u,p,t)
   du[1] = √u[2]*u[1]
   du[2] = Θ*√u[2]
 end

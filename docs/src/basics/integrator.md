@@ -38,15 +38,15 @@ In addition, some helper iterators are provided to help monitor the solution. Fo
 example, the `tuples` iterator lets you view the values:
 
 ```julia
-for (t,u) in tuples(integrator)
-  @show t,u
+for (u,t) in tuples(integrator)
+  @show u,t
 end
 ```
 
 and the `intervals` iterator lets you view the full interval:
 
 ```julia
-for (tprev,uprev,t,u) in intervals(integrator)
+for (tprev,uprev,u,t) in intervals(integrator)
   @show tprev,t
 end
 ```
@@ -221,7 +221,7 @@ the cache initialization function (i.e. resetting FSAL, not allocating vectors)
 which should usually be true for correctness.
 
 Additionally, once can access `auto_dt_reset!(integrator::ODEIntegrator)` which
-will run the auto `dt` initialization algorithm. 
+will run the auto `dt` initialization algorithm.
 
 ### Misc
 
@@ -247,7 +247,7 @@ choose:
 
 ```julia
 integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5],advance_to_tstop=true)
-for (t,u) in tuples(integrator)
+for (u,t) in tuples(integrator)
   @test t ∈ [0.5,1.0]
 end
 ```
@@ -282,7 +282,7 @@ one should try the following:
 using DifferentialEquations, DiffEqProblemLibrary, Plots
 
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 
 using Plots
 integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])

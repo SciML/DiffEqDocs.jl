@@ -41,10 +41,11 @@ model with the `Euler()` method. We define the FitzHugh-Nagumo model using the
 fitz = @ode_def_nohes FitzhughNagumo begin
   dV = c*(V - V^3/3 + R)
   dR = -(1/c)*(V -  a - b*R)
-end a=0.2 b=0.2 c=3.0
+end a b c
 u0 = [-1.0;1.0]
 tspan = (0.0,20.0)
-prob = ODEProblem(fitz,u0,tspan)
+p = [0.2,0.2,3.0]
+prob = ODEProblem(fitz,u0,tspan,p)
 ```
 
 Now we define the `ProbInts` callback. In this case, our method is the `Euler`
@@ -145,10 +146,11 @@ g = @ode_def_bare LorenzExample begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
-end σ=>10.0 ρ=>28.0 β=(8/3)
+end σ ρ β
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,30.0)
-prob = ODEProblem(g,u0,tspan)
+p = [10.0,28.0,8/3]
+prob = ODEProblem(g,u0,tspan,p)
 ```
 
 and then we build the `ProbInts` type. Let's use the order 5 `Tsit5` again.

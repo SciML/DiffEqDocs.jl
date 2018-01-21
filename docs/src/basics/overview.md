@@ -14,7 +14,7 @@ equation. Each problem type has a page explaining their problem type and the spe
 features associated with them. For example, an ordinary differential equation is defined by
 
 ```math
-\frac{du}{dt} = f(t,u)
+\frac{du}{dt} = f(u,p,t)
 ```
 
 over some time interval `tspan` with some initial condition `u0`, and therefore
@@ -22,6 +22,7 @@ the `ODEProblem` is defined by those components:
 
 ```julia
 prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 ```
 
 Note that the number types in the solution will match the types you designate

@@ -7,10 +7,10 @@ functions ``(f_1,f_2,\ldots,f_n)`` and the initial condition ``u₀`` which
 define an ODE:
 
 ```math
-\frac{du}{dt} =  f_1(t,u) + f_2(t,u) + \ldots + f_n(t,u)
+\frac{du}{dt} =  f_1(u,p,t) + f_2(u,p,t) + \ldots + f_n(u,p,t)
 ```
 
-`f` should be specified as `f(t,u)` (or in-place as `f(t,u,du)`), and `u₀` should
+`f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.

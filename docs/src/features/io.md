@@ -17,7 +17,7 @@ type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs:
 
 ```julia
-f_2dlinear = (t,u,du) -> du.=1.01u
+f_2dlinear = (du,u,p,t) -> du.=1.01u
 prob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))
 sol1 =solve(prob,Euler();dt=1//2^(4))
 ```
@@ -58,10 +58,10 @@ using ParameterizedFunctions
 
 f = @ode_def LotkaVolterra begin
   dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a=>1.5 b=>1 c=3 d=1
+  dy = -3y + x*y
+end a b
 
-prob = ODEProblem(f,[1.0,1.0],(0.0,1.0))
+prob = ODEProblem(f,[1.0,1.0],(0.0,1.0),[1.5,1.0])
 sol2 =solve(prob,Tsit5())
 
 df = DataFrame(sol2)
@@ -95,7 +95,7 @@ back into scope before loading. For eaxmple, if we save the solution:
 
 ```julia
 using OrdinaryDiffEq, JLD, JLD2
-f(t,u) = 1.01*u
+f(u,p,t) = 1.01*u
 u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
@@ -109,7 +109,7 @@ if we load the dependent functions first:
 ```julia
 using JLD2
 using OrdinaryDiffEq
-f(t,u) = 1.01*u
+f(u,p,t) = 1.01*u
 JLD2.@load "out.jld2" sol
 ```
 
@@ -123,8 +123,8 @@ will work), but none of the interface will be available.
 
 ## JLD
 
-Don't use JLD. It's dead. Julia types can be saved via JLD.jl. 
-However, they cannot save types which have functions, which means that 
+Don't use JLD. It's dead. Julia types can be saved via JLD.jl.
+However, they cannot save types which have functions, which means that
 the solution type is currently not compatible with JLD.
 
 ```julia

@@ -241,10 +241,10 @@ by `v` the velocity, where the velocity is always changing at `-g` which is the
 gravitational constant. This is the equation:
 
 ```julia
-f = @ode_def_bare BallBounce begin
+f = @ode_def BallBounce begin
   dy =  v
   dv = -g
-end g=9.81
+end g
 ```
 
 All we have to do in order to specify the event is to have a function which
@@ -283,7 +283,8 @@ Then you can solve and plot:
 ```julia
 u0 = [50.0,0.0]
 tspan = (0.0,15.0)
-prob = ODEProblem(f,u0,tspan)
+p = 9.8
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
@@ -310,7 +311,7 @@ if we change the timespan to be very long:
 ```julia
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol,plotdensity=10000)
 ```
@@ -339,7 +340,7 @@ capt it at 10:
 ```julia
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb,dtmax=10)
 plot(sol,plotdensity=10000)
 ```
@@ -367,7 +368,7 @@ the problem without constraining the timestep by:
 cb = ContinuousCallback(condition,affect!,interp_points=100000)
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol,plotdensity=10000)
 ```
@@ -380,7 +381,7 @@ shows another issue that can occur:
 cb = ContinuousCallback(condition,affect!,interp_points=1000)
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol,plotdensity=10000)
 ```
@@ -417,7 +418,7 @@ say that anything below `1e-10` can be considered zero. Thus we modify the callb
 cb = ContinuousCallback(condition,affect!,interp_points=1000,abstol=1e-10)
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(f,u0,tspan)
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol,plotdensity=10000)
 ```
@@ -441,7 +442,7 @@ In this example we will solve the differential equation:
 
 ```julia
 u0 = [1.,0.]
-function fun2(t,u,du)
+function fun2(du,u,p,t)
    du[2] = -u[1]
    du[1] = u[2]
 end
@@ -522,7 +523,7 @@ to be changing the size of the population, we write the model in the general for
 
 ```julia
 const α = 0.3
-function f(t,u,du)
+function f(du,u,p,t)
   for i in 1:length(u)
     du[i] = α*u[i]
   end

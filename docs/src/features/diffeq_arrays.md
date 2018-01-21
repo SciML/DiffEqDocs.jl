@@ -110,7 +110,7 @@ the user can use in their `f` equation and modify via callbacks. For example,
 inside of a an update function, it is safe to do:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   u.a = t
 end
 ```
@@ -137,7 +137,7 @@ as our `DEDataVector`. It has an extra field `f1` which we will use as our contr
 variable. Our ODE function will use this field as follows:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
     du[1] = -0.5*u[1] + u.f1
     du[2] = -0.5*u[2]
 end
@@ -154,11 +154,11 @@ const tstop1 = [5.]
 const tstop2 = [8.]
 
 
-function condition(t,u,integrator)
+function condition(u,p,t,integrator)
   t in tstop1
 end
 
-function condition2(t,u,integrator)
+function condition2(u,p,t,integrator)
   t in tstop2
 end
 ```
@@ -231,13 +231,13 @@ A similar solution can be achieved using a `ParameterizedFunction`.
 We could have instead created our function as:
 
 ```julia
-function f(t,u,param,du)
-    du[1] = -0.5*u[1] + param
+function f(du,u,p,t)
+    du[1] = -0.5*u[1] + p
     du[2] = -0.5*u[2]
 end
-pf = ParameterizedFunction(f,0.0)
 u0 = SimType([10.0;10.0], 0.0)
-prob = ODEProblem(f,u0,(0.0,10.0))
+p = 0.0
+prob = ODEProblem(f,u0,(0.0,10.0),p)
 const tstop = [5.;8.]
 sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
 ```

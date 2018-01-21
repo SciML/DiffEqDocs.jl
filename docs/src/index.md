@@ -109,9 +109,6 @@ Pages = [
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
     "tutorials/bvp_example.md",
-    "tutorials/fempoisson_example.md",
-    "tutorials/femheat_example.md",
-    "tutorials/femstochastic_example.md"
     ]
 Depth = 2
 ```
@@ -154,7 +151,6 @@ Pages = [
   "types/dde_types.md",
   "types/dae_types.md",
   "types/jump_types.md",
-  "types/fem_types.md",
 ]
 Depth = 2
 ```
@@ -175,8 +171,6 @@ Pages = [
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
-  "solvers/fempoisson_solve.md",
-  "solvers/femheat_solve.md",
 ]
 Depth = 2
 ```

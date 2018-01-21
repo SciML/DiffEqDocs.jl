@@ -6,7 +6,7 @@ Jump Diffusion equations are stochastic diffeential equations with discontinuous
 jumps. These can be written as:
 
 ```math
-\frac{du}{dt} = f(t,u) + Σgᵢ(u,t)dWⁱ + Σ h_i(t,u)N_i(t)
+\frac{du}{dt} = f(u,p,t) + Σgᵢ(u,t)dWⁱ + Σ h_i(u,p,t)N_i(t)
 ```
 
 where ``N_i`` is a Poisson-counter which denotes jumps of size ``h_i``. In this
@@ -28,7 +28,7 @@ of rate 2 (which is the mean and variance), where at each jump the current solut
 will be halved. To solve this problem, we first define the `ODEProblem`:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   du[1] = u[1]
 end
 
@@ -44,7 +44,7 @@ Now we define our `rate` equation for our jump. Since it's just the constant
 value 2, we do:
 
 ```julia
-rate(t,u) = 2
+rate(u,p,t) = 2
 ```
 
 Now we define the `affect!` of the jump. This is the same as an `affect!` from
@@ -82,7 +82,7 @@ Now let's define a jump which is coupled to the differential equation. Let's let
 the rate be the current value of the solution, that is:
 
 ```julia
-rate(t,u) = u[1]
+rate(u,p,t) = u[1]
 ```
 
 Using the same `affect!`
@@ -126,7 +126,7 @@ as before, except we now start with a `SDEProblem` instead of an `ODEProblem`.
 Using the same drift function `f` as before, we add multiplicative noise via:
 
 ```julia
-function g(t,u,du)
+function g(du,u,p,t)
   du[1] = u[1]
 end
 
@@ -163,14 +163,14 @@ Here, `coupling_map` specifies which jumps to couple. If `(j,i)` is in `coupling
 As an example, consider a doubly stochastic Poisson process, that is, a Poisson process whose rate is itself a stochastic process. In particular, we will take the rate to randomly switch between zero and `10` at unit rates:
 
 ```julia
-rate(t,u) = u[2]*10
+rate(u,p,t) = u[2]*10
 affect!(integrator) = integrator.u[1] += 1.
 jump1 = ConstantRateJump(rate,affect!)
-rate(t,u) = u[2]
+rate(u,p,t) = u[2]
 affect!(integrator) = (integrator.u[2] -= 1.;integrator.u[3] += 1.)
 jump2 = ConstantRateJump(rate,affect!)
 
-rate(t,u) = u[3]
+rate(u,p,t) = u[3]
 affect!(integrator) = (integrator.u[2] += 1.;integrator.u[3] -= 1.)
 jump3 = ConstantRateJump(rate,affect!)
 prob = DiscreteProblem(u0,tspan)
@@ -179,7 +179,7 @@ jump_prob = JumpProblem(prob,Direct(),jump1,jump2,jump3)
 The doubly stochastic poisson process has two sources of randomness: one due to the Poisson process, and another due to random evolution of the rate. This is typical of many multiscale stochastic processes appearing in applications, and it is often useful to compare such a process to one obtained by removing one source of randomness. In present context, this means looking at an ODE with constant jump rates, where the deterministic evolution between jumps is given by the expected value of the Poisson process:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   du[1] = u[2]*10
   du[2] = 0.
   du[3] = 0.
