@@ -2477,7 +2477,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve."
+    "text": "These methods utilize caching of the exponential operators and are thus are faster than Krylov-based methods but are only suited for smaller systems where expm(dt*A) can fit in memory.GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.Additional Krylov-based methods which allow for lazy calculation of expm(dt*A)*v are in development."
 },
 
 {
