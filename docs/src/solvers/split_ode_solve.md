@@ -53,6 +53,10 @@ The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
+These methods utilize caching of the exponential operators and are thus are faster than
+Krylov-based methods but are only suited for smaller systems where `expm(dt*A)` can fit
+in memory.
+
 - `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only.
 - `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only.
 - `ETD1` - First order Exponential Time Differencing method. Not yet implemented.
@@ -62,3 +66,6 @@ The appropriate algorithms for this form are:
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
+
+Additional Krylov-based methods which allow for lazy calculation of `expm(dt*A)*v` are in
+development.
