@@ -67,7 +67,7 @@ should be able to do:
 
 ```julia
 du = similar(u0)
-@time f(t,u0,du)
+@time f(du,u0,p,t)
 ```
 
 and see close to zero allocations and close to zero memory allocated. If you see
@@ -236,7 +236,7 @@ function func(du,u,p,t)
   du[2] = -3 * u[2] + u[1]*u[2]
 end
 function f(p)
-  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
+  prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
   solve(prob,Tsit5(),save_everystep=false)[end]
 end
 ```
