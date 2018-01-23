@@ -323,7 +323,7 @@ and then we add the parameters to the `ODEProblem`:
 u0 = [1.0,0.0,0.0]
 tspan = (0.0,1.0)
 p = [10.0,28.0,8/3]
-prob = ODEProblem(pf,u0,tspan,p)
+prob = ODEProblem(parameterized_lorenz,u0,tspan,p)
 ```
 
 Note that the type for the parameters `p` can be anything: you can use arrays,
