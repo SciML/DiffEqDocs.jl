@@ -62,7 +62,6 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "features/monte_carlo.md",
            "features/io.md",
            "features/low_dep.md",
-           "features/mesh.md",
            "features/progress_bar.md"
          ],
          "Analysis Tools" => Any[
