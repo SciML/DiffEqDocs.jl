@@ -14,7 +14,7 @@ These correspond to partitioned equations of motion:
 \frac{du}{dt} = f_1(v) \\
 \frac{dv}{dt} = f_2(t,u) \\
 ```
-The functions should be specified as `f1(t,u,v,dx)` and `f2(t,u,v,dv)`
+The functions should be specified as `f1(dx,u,v,p,t)` and `f2(dv,u,v,p,t)`
 (in the inplace form), where `f1` is independent of `t` and `u`, and unless
 specified by the solver, `f2` is independent of `v`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not

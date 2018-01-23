@@ -51,7 +51,7 @@ and the initial condition ``u₀`` which define an ODE:
 u'' = f(u,u',p,t)
 ```
 
-`f` should be specified as `f(du,u,p,t)` (or in-place as `f(ddu,du,u,p,t)`), and `u₀`
+`f` should be specified as `f(u,du,p,t)` (or in-place as `f(ddu,u,du,p,t)`), and `u₀`
 should be an AbstractArray (or number) whose geometry matches the desired
 geometry of `u`. Note that we are not limited to numbers or vectors for `u₀`;
 one is allowed to provide `u₀` as arbitrary matrices / higher dimension tensors
