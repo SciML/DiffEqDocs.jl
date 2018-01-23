@@ -192,7 +192,6 @@ Pages = [
     "features/monte_carlo.md",
     "features/io.md",
     "features/low_dep.md",
-    "features/mesh.md",
     "features/progress_bar.md"
 ]
 Depth = 2
