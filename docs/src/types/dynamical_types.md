@@ -105,7 +105,7 @@ HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)
 
 ### Fields
 
-* `H`: The Hamiltonian `H(q,p)` which returns a scalar.
+* `H`: The Hamiltonian `H(q,p,params)` which returns a scalar.
 * `q0`: The initial positions.
 * `p0`: The initial momentums.
 * `tspan`: The timespan for the problem.
