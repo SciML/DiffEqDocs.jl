@@ -31,7 +31,13 @@ end
 
 ### Boundary Condition
 
-And here is where the `Boundary` comes in. We need to write a function that calculate the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
+There are two problem types available: 
+ - A problem type for general boundary conditions `BVProblem` ( including conditions that may be anywhere/ everywhere on the integration interval ).
+ - A problem type for boundaries that are specified at the beggining and the end of the integration interval `TwoPointBVProblem`
+ 
+#### `BVProblem` 
+
+ The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
 ```julia
 function bc1(residual, u, p)
@@ -45,21 +51,9 @@ plot(sol1)
 
 ![BVP Example Plot1](../assets/bvp_example_plot1.png)
 
-We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. We have boundary conditions at the beginning and the ending of the time span in common cases. We can use the `TwoPointBVProblem` problem type for such cases.
-
-```julia
-function bc2(residual, ua, ub, p) # ua is the beginning of the time span, and ub is the ending
-    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
-    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2
-end
-bvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)
-sol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem
-plot(sol2)
-```
-
-![BVP Example Plot2](../assets/bvp_example_plot2.png)
-
-We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but we can always use reduce a BVP to an IVP and a root-finding problem, which is the `Shooting` method. If you can have a good initial guess, shooting method works very well.
+The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example. <!-- add examples of more general initial conditions --> 
+We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. `GeneralMIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
+If you can have a good initial guess, `Shooting` method works very well.
 
 ```julia
 using OrdinaryDiffEq
@@ -79,3 +73,20 @@ plot(sol3)
 ```
 
 ![BVP Example Plot3](../assets/bvp_example_plot3.png)
+
+#### `TwoPointBVProblem`
+
+Defining a similar problem as `TwoPointBVProblem` is shown in the following example. At the moment `MIRK4` is the only solver for `TwoPointBVProblem`s.
+
+```julia
+function bc2(residual, ua, ub, p) # ua is the beginning of the time span, and ub is the ending
+    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
+    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2
+end
+bvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)
+sol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem
+plot(sol2)
+```
+
+![BVP Example Plot2](../assets/bvp_example_plot2.png)
+
