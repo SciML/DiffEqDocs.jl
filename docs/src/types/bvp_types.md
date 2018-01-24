@@ -48,15 +48,6 @@ bc!(residual, sol, p)
 where `u` is the current solution to the ODE which is used to compute the `residual`.
 Note that all features of the `ODESolution` are present in this form.
 In both cases, the size of the residual matches the size of the initial condition.
-For more general problems, use the
-[parameter estimation routines](../../analysis/parameter_estimation.html) and change the signature of `bc!` and `f` to
-
-```julia
-bc!(residual, sol, p)
-f(t, u, p) # or inplace as f(t, u, p, du)
-```
-
-where `p`is the `Vector` of free parameters.
 
 ### Fields
 

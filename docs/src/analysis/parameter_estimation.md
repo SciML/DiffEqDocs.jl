@@ -394,6 +394,14 @@ p = [1.5,1.0,3.0,1.0]
 prob = ODEProblem(f2,u0,tspan,p)
 ```
 
+We can build an objective function and solve the multiple parameter version just as before:
+
+```julia
+cost_function = build_loss_objective(prob,Tsit5(),CostVData(t,data),
+                                      maxiters=10000,verbose=false)
+result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
+```
+
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
 ```julia

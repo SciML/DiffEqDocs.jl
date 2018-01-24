@@ -81,10 +81,10 @@ for the Lotka-Volterra equations by:
 ```julia
 f = @ode_def_nohes LotkaVolterraSensitivity begin
   dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a b c d
+  dy = -c*y + x*y
+end a b c
 
-p = [1.5,1.0,3.0,1.0]
+p = [1.5,1.0,3.0]
 prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)
 ```
 
@@ -135,8 +135,7 @@ autodifferentiation and numerical differentiation through the ODE solver:
 ```julia
 using ForwardDiff, Calculus
 function test_f(p)
-  pf = ParameterizedFunction(f,p)
-  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)))
+  prob = ODEProblem(f,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
   solve(prob,Vern9(),abstol=1e-14,reltol=1e-14,save_everystep=false)[end]
 end
 

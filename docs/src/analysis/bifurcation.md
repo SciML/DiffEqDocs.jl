@@ -41,7 +41,7 @@ p = [-60,120,0.0,2,4,20,-1.2,18]
 Then we use the following command to build the PyDSTool ODE:
 
 ```julia
-dsargs = build_ode(f,u0,tspan)
+dsargs = build_ode(f,u0,tspan,p)
 ```
 
 Now we need to build the continuation type. Following the setup of PyDSTool's
