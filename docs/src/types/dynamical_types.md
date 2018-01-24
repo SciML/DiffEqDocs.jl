@@ -6,7 +6,7 @@ These algorithms require a Partitioned ODE of the form:
 
 ```math
 \frac{du}{dt} = f_1(v) \\
-\frac{dv}{dt} = f_2(u,p,t) \\
+\frac{dv}{dt} = f_2(u,t) \\
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(du,u,v,p,t)` and `f2(dv,u,v,p,t)` (in the inplace form), where `f1`
