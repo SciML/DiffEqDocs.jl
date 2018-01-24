@@ -1493,7 +1493,7 @@ var documenterSearchIndex = {"docs": [
     "page": "BVP Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For TwoPointBVProblem, bc! is the inplace function:bc!(residual, ua, ub, p)where residual computed from the current u_a = u(t_0) and u_b = u(t_f). For BVProblem, bc! is the inplace function:bc!(residual, sol, p)where u is the current solution to the ODE which is used to compute the residual. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition. For more general problems, use the parameter estimation routines and change the signature of bc! and f tobc!(residual, sol, p)\nf(t, u, p) # or inplace as f(t, u, p, du)where pis the Vector of free parameters."
+    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For TwoPointBVProblem, bc! is the inplace function:bc!(residual, ua, ub, p)where residual computed from the current u_a = u(t_0) and u_b = u(t_f). For BVProblem, bc! is the inplace function:bc!(residual, sol, p)where u is the current solution to the ODE which is used to compute the residual. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition."
 },
 
 {
