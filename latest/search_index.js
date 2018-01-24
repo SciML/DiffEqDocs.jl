@@ -1293,7 +1293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Mathematical Specification of a Dynamical ODE Problem",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(upt) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(du,u,v,p,t) and f2(dv,u,v,p,t) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed make note of this requirement with \"Requires quadratic kinetic energy\"."
+    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(ut) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(du,u,v,p,t) and f2(dv,u,v,p,t) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
@@ -1357,7 +1357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "H: The Hamiltonian H(q,p) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "H: The Hamiltonian H(q,p,params) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1557,7 +1557,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_linear",
     "category": "Constant",
-    "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
+    "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(u0ptW_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
 },
 
 {
@@ -1565,7 +1565,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
     "category": "Constant",
-    "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(tu0W_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
+    "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(u0ptW_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
 },
 
 {
@@ -1573,7 +1573,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_wave",
     "category": "Constant",
-    "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(tu0W_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
+    "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(u0ptW_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
 },
 
 {
@@ -1589,7 +1589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_cubic",
     "category": "Constant",
-    "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(tu0W_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
+    "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(u0ptW_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
 },
 
 {
@@ -1597,7 +1597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additive",
     "category": "Constant",
-    "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(tu0W_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
+    "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(u0ptW_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
 },
 
 {
@@ -1685,7 +1685,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Functional Forms for h",
     "category": "section",
-    "text": "h, the history function, can be called the following ways:h(t): out-of-place\nh(out,t) : in-place\nh(t,deriv) and h(out,t,deriv) where deriv=Val{i} is the in/out of place ith derivative calculation. To set this up, use deriv::Type{Val{i}} in the function signature.\nh(t,deriv,idxs) and h(out,t,deriv,idxs) where idxs is an integer for which index of the history to return.Note that a dispatch for the supplied history function of matching form is required for whichever function forms are used in the user derivative function f."
+    "text": "h, the history function, can be called the following ways:h(t): out-of-place\nh(out,t) : in-place\nh(t,deriv) and h(out,t,deriv) where deriv=Val{i} is the in/out of place ith derivative calculation. To set this up, use deriv::Type{Val{i}} in the function signature.\nh(t,deriv;idxs) and h(out,t,deriv;idxs) where idxs is an integer for which index of the history to return.Note that a dispatch for the supplied history function of matching form is required for whichever function forms are used in the user derivative function f."
 },
 
 {
@@ -1709,7 +1709,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DDEProblem{isinplace}(f,h,u0,tspan,constant_lags=nothing,dependent_lags=nothing;\n                      callback=nothing,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DDEProblem{isinplace}(f,u0,h,tspan,constant_lags=nothing,dependent_lags=nothing;\n                      callback=nothing,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1717,7 +1717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nh: The history function for the ODE before t0.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions for the state-dependent lags used by the history function h.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\nh: The history function for the ODE before t0.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions for the state-dependent lags used by the history function h.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1757,7 +1757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DAEProblem{isinplace}(f,u0,du0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DAEProblem{isinplace}(f,du0,u0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1765,7 +1765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial condition for the derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
+    "text": "f: The function in the ODE.\ndu0: The initial condition for the derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
 },
 
 {
