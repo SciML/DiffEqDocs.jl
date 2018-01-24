@@ -5,8 +5,6 @@ the numerical solving of a differential equation. Through this interface,
 one can easily monitor results, modify the problem during a run, and dynamically
 continue solving as one sees fit.
 
-Note: this is currently only offered by OrdinaryDiffEq.jl, DelayDiffEq.jl, and StochasticDiffEq.jl. Solvers from other packages will support this in the near future.
-
 ## Initialization and Stepping
 
 To initialize an integrator, use the syntax:
@@ -23,14 +21,14 @@ choose to step via the `step!` command:
 step!(integrator)
 ```
 
-which will take one successful step. This type also implements an integrator interface,
+which will take one successful step. This type also implements an iterator interface,
 so one can step `n` times (or to the last `tstop`) using the `take` iterator:
 
 ```julia
 for i in take(integrator,n) end
 ```
 
-One can loop to the end by using `solve!(integrator)` or using the integrator interface:
+One can loop to the end by using `solve!(integrator)` or using the iterator interface:
 
 ```julia
 for i in integrator end
@@ -40,15 +38,15 @@ In addition, some helper iterators are provided to help monitor the solution. Fo
 example, the `tuples` iterator lets you view the values:
 
 ```julia
-for (t,u) in tuples(integrator)
-  @show t,u
+for (u,t) in tuples(integrator)
+  @show u,t
 end
 ```
 
 and the `intervals` iterator lets you view the full interval:
 
 ```julia
-for (tprev,uprev,t,u) in intervals(integrator)
+for (tprev,uprev,u,t) in intervals(integrator)
   @show tprev,t
 end
 ```
@@ -131,8 +129,12 @@ The following functions make up the interface:
 
 * `savevalues!(integrator)`: Adds the current state to the `sol`.
 
-### Cache Iterators
+### Caches
 
+* `get_tmp_cache(integrator)`: Returns a tuple of internal cache vectors which are
+  safe to use as temporary arrays. This should be used for integrator interface
+  and callbacks which need arrays to write into in order to be non-allocating.
+  The length of the tuple is dependent on the method.
 * `user_cache(integrator)`: Returns an iterator over the user-facing cache arrays.
 * `u_cache(integrator)`:  Returns an iterator over the cache arrays for `u` in the method.
   This can be used to change internal values as needed.
@@ -165,6 +167,8 @@ The following functions make up the interface:
   values using the local interpolation. If the current solution has already
   been saved, one can provide the optional value `modify_save_endpoint` to also
   modify the endpoint of `sol` in the same manner.
+* `add_tstop!(integrator,t)`: Adds a `tstop` at time `t`.
+* `add_saveat!(integrator,t)`: Adds a `saveat` time point at `t`.
 
 ### Resizing
 
@@ -189,9 +193,40 @@ The following functions make up the interface:
 * `addat!(integrator,idxs)`: Grows the ODE by adding the `idxs` components.
   Must be contiguous indices.
 
+### Reinit
+
+The reinit function lets you restart the integration at a new value. The full
+function is of the form:
+
+```julia
+reinit!(integrator::ODEIntegrator,u0 = integrator.sol.prob.u0;
+  t0 = integrator.sol.prob.tspan[1], tf = integrator.sol.prob.tspan[2],
+  erase_sol = true,
+  tstops = integrator.opts.tstops_cache,
+  saveat = integrator.opts.saveat_cache,
+  d_discontinuities = integrator.opts.d_discontinuities_cache,
+  reset_dt = (integrator.dtcache == zero(integrator.dt)) && integrator.opts.adaptive,
+  reinit_callbacks = true, initialize_save = true,
+  reinit_cache = true)
+```
+
+`u0` is the value to start at. The starting time point and end point can be changed
+via `t0` and `tf`. `erase_sol` allows one to start with no other values in the
+solution, or keep the previous solution. `tstops`, `d_discontinuities`, and
+`saveat` are reset as well, but can be ignored. `reset_dt` is a boolean for
+whether to reset the current value of `dt` using the automatic `dt` determination
+algorithm. `reinit_callbacks` is whether to run the callback initializations
+again (and `initialize_save` is for that). `reinit_cache` is whether to re-run
+the cache initialization function (i.e. resetting FSAL, not allocating vectors)
+which should usually be true for correctness.
+
+Additionally, once can access `auto_dt_reset!(integrator::ODEIntegrator)` which
+will run the auto `dt` initialization algorithm.
+
 ### Misc
 
 * `get_du(integrator)`: Returns the derivative at `t`.
+* `get_du!(out,integrator)`: Write the current derivative at `t` into `out`.
 
 #### Note
 
@@ -212,7 +247,7 @@ choose:
 
 ```julia
 integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5],advance_to_tstop=true)
-for (t,u) in tuples(integrator)
+for (u,t) in tuples(integrator)
   @test t ∈ [0.5,1.0]
 end
 ```
@@ -247,7 +282,7 @@ one should try the following:
 using DifferentialEquations, DiffEqProblemLibrary, Plots
 
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((t,u)->1.01u,0.5,(0.0,1.0))
+prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 
 using Plots
 integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])

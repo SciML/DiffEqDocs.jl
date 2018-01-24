@@ -24,10 +24,10 @@ and re-create the results using the wrapped functionality.
 We will specify the model using a ParameterizedFunction:
 
 ```julia
-f = @ode_def_bare Calcium begin
+f = @ode_def Calcium begin
   dv = ( i + gl * (vl - v) - gca * 0.5 * (1 + tanh( (v-v1)/v2 )) * (v-vca) )/c
   dw = v-w
-end vl=>-60 vca=>120 i=>0.0 gl=>2 gca=>4 c=>20 v1=>-1.2 v2=>18
+end vl vca i gl gca c v1 v2
 ```
 
 Next to build the ODE we need an initial condition and a starting timepoint.
@@ -35,12 +35,13 @@ Next to build the ODE we need an initial condition and a starting timepoint.
 ```julia
 u0 = [0;0]
 tspan = [0;30]
+p = [-60,120,0.0,2,4,20,-1.2,18]
 ```
 
 Then we use the following command to build the PyDSTool ODE:
 
 ```julia
-dsargs = build_ode(f,u0,tspan)
+dsargs = build_ode(f,u0,tspan,p)
 ```
 
 Now we need to build the continuation type. Following the setup of PyDSTool's

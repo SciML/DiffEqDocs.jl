@@ -12,15 +12,15 @@ to a `DiscreteProblem`. However, any differential equation can be extended by ju
 as well. For example, we have an ODE with jumps, denoted by
 
 ```math
-\frac{du}{dt} = f(t,u) + Σ h_i(t,u)N_i(t)
+\frac{du}{dt} = f(u,p,t) + Σ h_i(u,p,t)N_i(t)
 ```
 
-where ``N_i`` is a Poisson counter of rate ``\lambda_i(t,u)``. Extending a stochastic
+where ``N_i`` is a Poisson counter of rate ``\lambda_i(u,p,t)``. Extending a stochastic
 differential equation to have jumps is commonly known as a Jump Diffusion, and
 is denoted by
 
 ```math
-\frac{du}{dt} = f(t,u) + Σgᵢ(u,t)dWⁱ + Σ h_i(t,u)N_i(t)
+\frac{du}{dt} = f(u,p,t) + Σgᵢ(u,t)dWⁱ + Σ h_i(u,p,t)N_i(t)
 ```
 
 ## Variable and Constant Rate Jumps
@@ -40,7 +40,7 @@ The constructor for a `ConstantRateJump` is:
 ConstantRateJump(rate,affect!;save_positions=(true,true))
 ```
 
-- `rate(t,u)` is a function which calculates the rate given the time and the state.
+- `rate(u,p,t)` is a function which calculates the rate given the time and the state.
 - `affect!(integrator)` is the effect on the equation, using the integrator interface.
 
 #### Defining a Variable Rate Jump
@@ -57,7 +57,7 @@ VariableRateJump(rate,affect!;
 ```
 
 Note that this is the same as defining a `ContinuousCallback`, except that instead
-of the `condition` function, you provide a `rate(t,u)` function for the `rate` at
+of the `condition` function, you provide a `rate(u,p,t)` function for the `rate` at
 a given time and state.
 
 ## Defining a Jump Problem

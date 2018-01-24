@@ -6,11 +6,11 @@ To define a RODE Problem, you simply need to give the function ``f`` and the ini
 condition ``u₀`` which define an ODE:
 
 ```math
-\frac{du}{dt} = f(t,u,W(t))
+\frac{du}{dt} = f(u,p,t,W(t))
 ```
 
-where `W(t)` is a random process. `f` should be specified as `f(t,u,W)`
-(or in-place as `f(t,u,W,du)`), and `u₀` should be an AbstractArray (or number)
+where `W(t)` is a random process. `f` should be specified as `f(u,p,t,W)`
+(or in-place as `f(du,u,p,t,W)`), and `u₀` should be an AbstractArray (or number)
 whose geometry matches the desired geometry of `u`. Note that we are not limited
 to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary matrices
 / higher dimension tensors as well.

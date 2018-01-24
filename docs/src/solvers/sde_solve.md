@@ -147,6 +147,24 @@ The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
 
+## BridgeDiffEq.jl
+
+Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
+are made and optimized for out-of-place functions on immutable (static vector)
+types. Note that this setup is not automatically included with
+DifferentialEquaitons.jl. To use the following algorithms, you must install and
+use BridgeDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
+using BridgeDiffEq
+```
+
+- `BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.†
+- `BridgeHeun` - Strong order 0.5 Euler-Heun method for Stratonovich equations.†
+- `BridgeSRK` - Strong order 1.0 derivative-free stochastic Runge-Kutta method
+  for scalar (`<:Number`) Ito equations.†
+
 #### Notes
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity

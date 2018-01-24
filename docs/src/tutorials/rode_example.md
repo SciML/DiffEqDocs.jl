@@ -8,14 +8,14 @@ introductions can be found by [checking out DiffEqTutorials.jl](https://github.c
 In this example we will solve the equation
 
 ```math
-du = f(t,u,y)dt
+du = f(u,p,t,W)dt
 ```
 
-where ``f(t,u,W)=2u\sin(W)`` and ``W(t)`` is a Wiener process (Gaussian process).
+where ``f(u,p,t,W)=2u\sin(W)`` and ``W(t)`` is a Wiener process (Gaussian process).
 
 ```julia
 using DifferentialEquations
-function f(t,u,W)
+function f(u,p,t,W)
   2u*sin(W)
 end
 u0 = 1.00
@@ -34,11 +34,11 @@ other noise proceses.
 ## Example 2: Systems of RODEs
 
 As with the other problem types, there is an in-place version which is more
-efficient for systems. The signature is `f(t,u,W,du)`. For example,
+efficient for systems. The signature is `f(u,p,t,W,du)`. For example,
 
 ```julia
 using DifferentialEquations
-function f(t,u,W,du)
+function f(du,u,p,t,W)
   du[1] = 2u[1]*sin(W[1] - W[2])
   du[2] = -2u[2]*cos(W[1] + W[2])
 end
@@ -55,7 +55,7 @@ you can use the `rand_prototype` keyword to explicitly set the size of the
 random process:
 
 ```julia
-function f(t,u,W,du)
+function f(du,u,p,t,W)
   du[1] = -2W[3]*u[1]*sin(W[1] - W[2])
   du[2] = -2u[2]*cos(W[1] + W[2])
 end

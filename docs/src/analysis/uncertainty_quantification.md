@@ -3,7 +3,8 @@
 Uncertainty quantification allows a user to identify the uncertainty
 associated with the numerical approximation given by DifferentialEquations.jl.
 This page describes the different methods available for quantifying such
-uncertainties.
+uncertainties. Note that this requires one of the native Julia solvers like
+OrdinaryDiffEq.jl, StochasticDiffEq.jl, or DelayDiffEq.jl.
 
 ## ProbInts
 
@@ -40,10 +41,11 @@ model with the `Euler()` method. We define the FitzHugh-Nagumo model using the
 fitz = @ode_def_nohes FitzhughNagumo begin
   dV = c*(V - V^3/3 + R)
   dR = -(1/c)*(V -  a - b*R)
-end a=0.2 b=0.2 c=3.0
+end a b c
 u0 = [-1.0;1.0]
 tspan = (0.0,20.0)
-prob = ODEProblem(fitz,u0,tspan)
+p = [0.2,0.2,3.0]
+prob = ODEProblem(fitz,u0,tspan,p)
 ```
 
 Now we define the `ProbInts` callback. In this case, our method is the `Euler`
@@ -144,10 +146,11 @@ g = @ode_def_bare LorenzExample begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
-end σ=>10.0 ρ=>28.0 β=(8/3)
+end σ ρ β
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,30.0)
-prob = ODEProblem(g,u0,tspan)
+p = [10.0,28.0,8/3]
+prob = ODEProblem(g,u0,tspan,p)
 ```
 
 and then we build the `ProbInts` type. Let's use the order 5 `Tsit5` again.
@@ -166,7 +169,8 @@ using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 
 ![uncertainty_chaos](../assets/uncertainty_chaos.png)
 
-Here we see that by `t` about 22 we start to receive junk. We can increase
+Here we see that by `t` about 22 we start to receive strong deviations from the "true" solution.
+We can increase
 the amount of time before error explosion by using a higher order method
 with stricter tolerances:
 
@@ -181,4 +185,12 @@ using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 
 ![uncertainty_high_order](../assets/uncertainty_high_order.png)
 
-we see that we can extend the amount of time until we recieve junk.
+we see that we can extend the amount of time until we deviate strongly from the "true" solution.
+Of course, for a chaotic system like the Lorenz one presented here, it is impossible to follow the true solution
+for long times, due to the fact that the system is chaotic and unavoidable deviations due to the numerical precision of a cumputer get amplified exponentially.
+
+However, not all hope is lost. The [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) is a strong statement for having confidence in numerical evolution of chaotic systems:
+
+> Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.
+
+For more info on the shadowing theorem, please see the book *Chaos in Dynamical Systems* by E. Ott.

@@ -11,7 +11,7 @@ include:
 - Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
 - Stochastic ordinary differential equations (SODEs or SDEs)
 - Random differential equations (RODEs or RDEs)
-- Algebraic differential equations (DAEs)
+- Differential algebraic equations (DAEs)
 - Delay differential equations (DDEs)
 - Mixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)
 - (Stochastic) partial differential equations ((S)PDEs) (with both finite
@@ -109,9 +109,6 @@ Pages = [
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
     "tutorials/bvp_example.md",
-    "tutorials/fempoisson_example.md",
-    "tutorials/femheat_example.md",
-    "tutorials/femstochastic_example.md"
     ]
 Depth = 2
 ```
@@ -129,6 +126,7 @@ Pages = [
     "basics/solution.md",
     "basics/plot.md",
     "basics/integrator.md",
+    "basics/faq.md",
     "basics/compatibility_chart.md"
     ]
 Depth = 2
@@ -153,7 +151,6 @@ Pages = [
   "types/dde_types.md",
   "types/dae_types.md",
   "types/jump_types.md",
-  "types/fem_types.md",
 ]
 Depth = 2
 ```
@@ -174,8 +171,6 @@ Pages = [
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
-  "solvers/fempoisson_solve.md",
-  "solvers/femheat_solve.md",
 ]
 Depth = 2
 ```
@@ -197,7 +192,6 @@ Pages = [
     "features/monte_carlo.md",
     "features/io.md",
     "features/low_dep.md",
-    "features/mesh.md",
     "features/progress_bar.md"
 ]
 Depth = 2
@@ -235,7 +229,7 @@ Pages = [
     "models/physical.md",
     "models/financial.md",
     "models/biological.md",
-    "models/eternal_modeling.md"
+    "models/external_modeling.md"
 ]
 Depth = 2
 ```
@@ -250,3 +244,18 @@ Pages = [
 ]
 Depth = 2
 ```
+
+## Acknowledgements
+
+JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many
+individuals. Significant contributions have been made by the following individuals:
+
+- Chris Rackauckas (@ChrisRackauckas) (lead developer)
+- Yingbo Ma (@YingboMa)
+- David Widmann (@devmotion)
+- Hendrik Ranocha (@ranocha)
+- Shivin Srivastava (@shivin9)
+- Ayush Pandey (@Ayush-iitkgp)
+- Ethan Levien (@elevien)
+- Tom Short (@tshort)
+- @dextorious

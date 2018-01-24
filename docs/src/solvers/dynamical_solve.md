@@ -14,7 +14,7 @@ These correspond to partitioned equations of motion:
 \frac{du}{dt} = f_1(v) \\
 \frac{dv}{dt} = f_2(t,u) \\
 ```
-The functions should be specified as `f1(t,u,v,dx)` and `f2(t,u,v,dv)`
+The functions should be specified as `f1(dx,u,v,p,t)` and `f2(dv,u,v,p,t)`
 (in the inplace form), where `f1` is independent of `t` and `u`, and unless
 specified by the solver, `f2` is independent of `v`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not
@@ -114,3 +114,20 @@ Note that all symplectic integrators are fixed timestep only.
 - `McAte8`: 8th order explicit symplectic integrator.
 - `KahanLi8`: Optimized efficiency 8th order explicit symplectic integrator.
 - `SofSpa10`: 10th order explicit symplectic integrator.
+
+### GeometricIntegrators.jl
+
+GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use
+GeometricIntegratorsDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl")
+using GeometricIntegratorsDiffEq
+```
+
+- `GISymplecticEulerA` - First order explicit symplectic Euler A
+- `GISymplecticEulerB` - First order explicit symplectic Euler B
+- `GILobattoIIIAIIIB2` - Second order Gauss-Labatto-IIIA-IIIB
+- `GILobattoIIIBIIIA2` - Second order Gauss-Labatto-IIIB-IIIA

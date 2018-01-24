@@ -117,7 +117,9 @@ end
 
 ## Noise Process Types
 
-This section describes the available `NoiseProcess` types.
+This section describes the available `NoiseProcess` types. Note that all
+keyword arguments are splatted into the `NoiseProcess` constructor, and thus
+options like `reset` are available on the pre-built processes.
 
 ### Wiener Process (White Noise)
 
@@ -126,8 +128,8 @@ the noise in the Langevin equation, is the stationary process with distribution
 `N(0,t)`. The constructor is:
 
 ```julia
-WienerProcess(t0,W0,Z0=nothing)
-WienerProcess!(t0,W0,Z0=nothing)
+WienerProcess(t0,W0,Z0=nothing;kwargs...)
+WienerProcess!(t0,W0,Z0=nothing;kwargs...)
 ```
 
 ### Correlated Noise
@@ -136,8 +138,8 @@ One can define a `CorrelatedWienerProcess` which is a Wiener process with
 correlations between the Wiener processes. The constructor is:
 
 ```julia
-CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing)
-CorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing)
+CorrelatedWienerProcess(Γ,t0,W0,Z0=nothing;kwargs...)
+CorrelatedWienerProcess!(Γ,t0,W0,Z0=nothing;kwargs...)
 ```
 
 where `Γ` is the constant covariance matrix.
@@ -157,8 +159,8 @@ solution of the stochastic differential equation, and instead follows the exact
 distribution properties). It can be back interpolated exactly as well. The constructor is:
 
 ```julia
-GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing)
-GeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing)
+GeometricBrownianMotionProcess(μ,σ,t0,W0,Z0=nothing;kwargs...)
+GeometricBrownianMotionProcess!(μ,σ,t0,W0,Z0=nothing;kwargs...)
 ```
 
 ### Brownian Bridge
@@ -168,8 +170,8 @@ value. This process is distribution exact and back be back interpolated exactly
 as well. The constructor is:
 
 ```julia
-BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)
-BrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing)
+BrownianBridge(t0,tend,W0,Wend,Z0=nothing,Zend=nothing;kwargs...)
+BrownianBridge!(t0,tend,W0,Wend,Z0=nothing,Zend=nothing;kwargs...)
 ```
 
 where `W(t0)=W₀`, `W(tend)=Wend`, and likewise for the `Z` process if defined.
@@ -188,8 +190,8 @@ solution of the stochastic differential equation, and instead follows the exact
 distribution properties). The constructor is:
 
 ```julia
-OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing)
-OrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing)
+OrnsteinUhlenbeckProcess(Θ,μ,σ,t0,W0,Z0=nothing;kwargs...)
+OrnsteinUhlenbeckProcess!(Θ,μ,σ,t0,W0,Z0=nothing;kwargs...)
 ```
 
 ### Direct Construction of a NoiseProcess
@@ -199,7 +201,8 @@ A `NoiseProcess` is a type defined as
 ```julia
 NoiseProcess(t0,W0,Z0,dist,bridge;
              iip=DiffEqBase.isinplace(dist,3),
-             rswm = RSWM(),save_everystep=true,timeseries_steps=1)
+             rswm = RSWM(),save_everystep=true,timeseries_steps=1,
+             reset = true, reseed = true)
 ```
 
 - `t0` is the first timepoint
@@ -211,6 +214,8 @@ NoiseProcess(t0,W0,Z0,dist,bridge;
   at new values.
 - `save_everystep` whether to save every step of the Brownian timeseries.
 - `timeseries_steps` number of points to skip between each timeseries save.
+- `reset` whether to reset the process with each solve.
+- `reseed` whether to reseed the process with each solve.
 
 The signature for the `dist` is
 
@@ -323,7 +328,7 @@ These will generate a Wiener process, which can be stepped with `step!(W,dt)`, a
 
 ## Non-Standard Noise Processes
 
-In addition to the mathematically-defined noise processes above, there exist
+In addition to the mathematically-defined noise processes above, there exists
 more generic functionality for building noise processes from other noise processes,
 from arbitrary functions, from arrays, and from approximations of stochastic
 differential equations.
@@ -339,7 +344,7 @@ convergence testing.
 To wrap a noise process, simply use:
 
 ```julia
-NoiseWrapper(W::NoiseProcess)
+NoiseWrapper(W::NoiseProcess;reset=true)
 ```
 
 ### NoiseFunction
@@ -351,7 +356,7 @@ calls, but not store the entire noise array. This requires an initial time point
 requires multiple processes.
 
 ```julia
-NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0))
+NoiseFunction(t0,W,Z=nothing;noise_prototype=W(t0),reset=true)
 ```
 
 Additionally, one can use an in-place function `W(out1,out2,t)` for more efficient
@@ -366,7 +371,7 @@ can generate your desired noise process as an array `W` with timepoints `t`,
 and use the constructor:
 
 ```julia
-NoiseGrid(t,W,Z=nothing)
+NoiseGrid(t,W,Z=nothing;reset=true)
 ```
 
 to build the associated noise process. This process comes with a linear
@@ -396,7 +401,7 @@ A `NoiseApproximation` is defined by a `DEIntegrator`. The constructor for a
 `NoiseApproximation` is:
 
 ```julia
-NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing)
+NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing;reset=true)
 ```
 
 The `DEIntegrator` should have a final time point of integration far enough such

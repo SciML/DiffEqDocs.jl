@@ -21,7 +21,7 @@ using BoundaryValueDiffEq
 const g = 9.81
 L = 1.0
 tspan = (0.0,pi/2)
-function simplependulum(t,u,du)
+function simplependulum(du,u,p,t)
     θ  = u[1]
     dθ = u[2]
     du[1] = dθ
@@ -34,7 +34,7 @@ end
 And here is where the `Boundary` comes in. We need to write a function that calculate the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
 ```julia
-function bc1(residual, u)
+function bc1(residual, u, p)
     residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
 end
@@ -48,7 +48,7 @@ plot(sol1)
 We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. We have boundary conditions at the beginning and the ending of the time span in common cases. We can use the `TwoPointBVProblem` problem type for such cases.
 
 ```julia
-function bc2(residual, ua, ub) # ua is the beginning of the time span, and ub is the ending
+function bc2(residual, ua, ub, p) # ua is the beginning of the time span, and ub is the ending
     residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
     residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2
 end
@@ -64,7 +64,7 @@ We have used the mono-implicit Runge–Kutta (MIRK) method to solve the BVP, but
 ```julia
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-function bc3(residual, sol)
+function bc3(residual, sol, p)
     residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi/2)[1] - pi/2
 end
@@ -72,7 +72,7 @@ bvp3 = BVProblem(simplependulum, bc3, u₀_2, tspan)
 sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
-We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable. 
+We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
 
 ```julia
 plot(sol3)

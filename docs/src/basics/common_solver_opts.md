@@ -9,7 +9,7 @@ from. Not all of the interface is provided by every algorithm.
 For more detailed information on the defaults and the available options
 for specific algorithms / packages, see the manual pages for the solvers of specific
 problems. To see whether a specific package is compaible with the use of a
-given option, see the [compatibility chart](compatibility_chart.html)
+given option, see the [Solver Compatibility Chart](@ref)
 
 ## Default Algorithm Hinting
 
@@ -38,16 +38,7 @@ and is under active development.
 
 These arguments control the output behavior of the solvers. It defaults to maximum
 output to give the best interactive user experience, but can be reduced all the
-way to only saving the solution at the final timepoint. All of these options
-can be mixed and matched. For example, the combination:
-
-```julia
-sol = solve(prob; saveat=[0.2, 0.5], dense = true)
-```
-
-will only save the solution (`sol.u`) at the timepoints `tspan[1], 0.2, 0.5, tspan[end]`.
-It will also enable dense output to the `sol` object, enabling you to do something
-like `sol(0.345)` which interpolates the solution to the time equal to 0.345.
+way to only saving the solution at the final timepoint.
 
 The following options are all related to output control. See the "Examples"
 section at the end of this page for some example usage.
@@ -94,6 +85,10 @@ section at the end of this page for some example usage.
 * `initialize_save`: Denotes whether to save after the callback initialization
   phase (when `u_modified=true`). Defaults to `true`.
 
+Note that `dense` requires `save_everystep=true` and `saveat=false`. If you need
+additional saving while keeping dense output, see
+[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/latest/features/callback_library.html).
+
 ## Stepsize Control
 
 These arguments control the timestepping routines.
@@ -116,10 +111,16 @@ be specified element-wise by passing a vector whose size matches `u0`.
 
 * `adaptive`: Turns on adaptive timestepping for appropriate methods. Default
   is true.
-* `abstol`: Absolute tolerance in adaptive timestepping. Defaults to 1e-6.
-* `reltol`: Relative tolerance in adaptive timestepping. Defaults to 1e-3.
+* `abstol`: Absolute tolerance in adaptive timestepping. This is the tolerance
+  on local error estimatoes, not necessarily the global error (though these quantities
+  are related). Defaults to `1e-6` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
+  on stochastic equations (SDEs/RODEs).
+* `reltol`: Relative tolerance in adaptive timestepping.  This is the tolerance
+  on local error estimatoes, not necessarily the global error (though these quantities
+  are related). Defaults to `1e-3` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
+  on stochastic equations (SDEs/RODEs).
 * `dt`: Sets the initial stepsize. This is also the stepsize for fixed
-  timestep methods. Defaults to an automatic choice.
+  timestep methods. Defaults to an automatic choice if the method is adaptive.
 * `dtmax`: Maximum dt for adaptive timestepping. Defaults are
   package-dependent.
 * `dtmin`: Minimum dt for adaptive timestepping. Defaults are
@@ -174,7 +175,7 @@ explanations of the timestepping algorithms, see the
 * `maxiters`: Maximum number of iterations before stopping. Defaults to 1e5.
 * `callback`: Specifies a callback. Defaults to a callback function which
   performs the saving routine. For more information, see the
-  [Event Handling and Callback Functions manual page](https://juliadiffeq.github.io/DiffEqDocs.jl/latest/man/callback_functions.html).
+  [Event Handling and Callback Functions manual page](../../features/callback_functions.html).
 * `isoutofdomain`: Specifies a function `isoutofdomain(t,u)` where, when it
   returns false, it will reject the timestep. Defaults to always false.
 * `unstable_check`: Specifies a function `unstable_check(dt,t,u)` where, when

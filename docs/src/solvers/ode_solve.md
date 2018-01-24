@@ -33,7 +33,7 @@ needed). Note that these high order RK methods are more robust than the high ord
 Adams-Bashforth methods to discontinuities and achieve very high precision, and
 are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
 method can be a good choice for high accuracy when the system of equations is
-very large (`>10,000` ODEs?), the function calculation is very expensive,
+very large (`>1,000` ODEs?), the function calculation is very expensive,
 or the solution is very smooth.
 
 If strict error bounds are needed, then adaptive methods with defect controls
@@ -61,10 +61,12 @@ defined via the `@ode_def` macro, these will be the most efficient.
 For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
 use `radau`.
 
-For asymtopically large systems of ODEs (`N>10000`?)
+For asymtopically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
-`CVODE_BDF` will also do surprisingly well if the solution is smooth.
+`CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
+this method can be less stiff than other methods and stuff may fail at low
+accuracy situations.
 
 #### Special Properties of Stiff Integrators
 
@@ -348,6 +350,8 @@ However, the BDF method is a classic method for stiff equations and "generally w
 
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver.
+  - `ARKODE` - Explicit and ESDIRK Runge-Kutta methods of orders 2-8 depending
+    on choice of options.
 
 The Sundials algorithms all come with a 3rd order Hermite polynomial interpolation.
 Note that the constructors for the Sundials algorithms take two main arguments:
@@ -366,7 +370,9 @@ Note that the constructors for the Sundials algorithms take two main arguments:
     position of the upper and lower non-zero diagonals via `jac_upper` and
     `jac_lower`.
   - `:Diagonal` - This method is specialized for diagonal Jacobians.
+  - `:GMRES` - A GMRES method. Recommended first choice Krylov method
   - `:BCG` - A Biconjugate gradient method.
+  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
   - `:TFQMR` - A TFQMR method.
 
 Example:
@@ -378,11 +384,69 @@ CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonz
 CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   
 ```
 
+The main options for `ARKODE` are the choice between explicit and implicit and
+the method order, given via:
+
+```julia
+ARKODE(Sundials.Explicit()) # Solve with explicit tableau of default order 4
+ARKODE(Sundials.Implicit(),order = 3) # Solve with explicit tableau of order 3
+```
+
+The order choices for explicit are 2 through 8 and for implicit 3 through 5.
+Specific methods can also be set through the `etable` and `itable` options
+for explicit and implicit tableaus respectively. The available tableaus are:
+
+`etable`:
+
+- `HEUN_EULER_2_1_2`: 2nd order Heun's method
+- `BOGACKI_SHAMPINE_4_2_3`:
+- `ARK324L2SA_ERK_4_2_3`: explicit portion of Kennedy and Carpenter's 3rd
+  order method
+- `ZONNEVELD_5_3_4`: 4th order explicit method
+- `ARK436L2SA_ERK_6_3_4`: explicit portion of Kennedy and Carpenter's 4th
+  order method
+- `SAYFY_ABURUB_6_3_4`: 4th order explicit method
+- `CASH_KARP_6_4_5`: 5th order explicit method
+- `FEHLBERG_6_4_5`: Fehlberg's classic 5th order method
+- `DORMAND_PRINCE_7_4_5`: the classic 5th order Dormand-Prince method
+- `ARK548L2SA_ERK_8_4_5`: explicit portion of Kennedy and Carpenter's 5th
+  order method
+- `VERNER_8_5_6`: Verner's classic 5th order method
+- `FEHLBERG_13_7_8`: Fehlberg's 8th order method
+
+`itable`:
+
+- `SDIRK_2_1_2`: An A-B-stable 2nd order SDIRK method
+- `BILLINGTON_3_3_2`: A second order method with a 3rd order error predictor
+  of less stability
+- `TRBDF2_3_3_2`: The classic TR-BDF2 method
+- `KVAERNO_4_2_3`: an L-stable 3rd order ESDIRK method
+- `ARK324L2SA_DIRK_4_2_3`: implicit portion of Kennedy and Carpenter's 3th
+  order method
+- `CASH_5_2_4`: Cash's 4th order L-stable SDIRK method
+- `CASH_5_3_4`: Cash's 2nd 4th order L-stable SDIRK method
+- `SDIRK_5_3_4`: Hairer's 4th order SDIRK method
+- `KVAERNO_5_3_4`: Kvaerno's 4th order ESDIRK method
+- `ARK436L2SA_DIRK_6_3_4`: implicit portion of Kennedy and Carpenter's 4th
+  order method
+- `KVAERNO_7_4_5`: Kvaerno's 5th order ESDIRK method
+- `ARK548L2SA_DIRK_8_4_5`: implicit portion of Kennedy and Carpenter's 5th
+  order method
+
+These can be set for example via:
+
+```julia
+ARKODE(Sundials.Explicit(),etable = Sundials.DORMAND_PRINCE_7_4_5)
+ARKODE(Sundials.Implicit(),itable = Sundials.KVAERNO_4_2_3)
+```
+
 All of the additional options are available. The full constructor is:
 
 ```julia
 CVODE_BDF(;method=:Newton,linear_solver=:Dense,
-          jac_upper=0,jac_lower=0,non_zero=0,krylov_dim=0,
+          jac_upper=0,jac_lower=0,
+          stored_upper = jac_upper + jac_lower,
+          non_zero=0,krylov_dim=0,
           stability_limit_detect=false,
           max_hnil_warns = 10,
           max_order = 5,
@@ -391,16 +455,39 @@ CVODE_BDF(;method=:Newton,linear_solver=:Dense,
           max_convergence_failures = 10)
 
 CVODE_Adams(;method=:Functional,linear_solver=:None,
-            jac_upper=0,jac_lower=0,krylov_dim=0,
+            jac_upper=0,jac_lower=0,
+            stored_upper = jac_upper + jac_lower,
+            krylov_dim=0,
             stability_limit_detect=false,
             max_hnil_warns = 10,
             max_order = 12,
             max_error_test_failures = 7,
             max_nonlinear_iters = 3,
             max_convergence_failures = 10)
+
+ARKODE(stiffness=Sundials.Implicit();
+      method=:Newton,linear_solver=:Dense,
+      jac_upper=0,jac_lower=0,stored_upper = jac_upper+jac_lower,
+      non_zero=0,krylov_dim=0,
+      max_hnil_warns = 10,
+      max_error_test_failures = 7,
+      max_nonlinear_iters = 3,
+      max_convergence_failures = 10,
+      predictor_method = 0,
+      nonlinear_convergence_coefficient = 0.1,
+      dense_order = 3,
+      order = 4,
+      set_optimal_params = false,
+      crdown = 0.3,
+      dgmax = 0.2,
+      rdiv = 2.3,
+      msbp = 20,
+      adaptivity_method = 0
+      )
 ```
 
-See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
+See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
+and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
 for details on the additional options.
 
 ## ODEInterface.jl
@@ -428,6 +515,10 @@ using ODEInterfaceDiffEq
   - `rodas` - Rosenbrock 4(3) method.
   - `ddeabm` - Adams-Bashforth-Moulton Predictor-Corrector method (order between 1 and 12)
   - `ddebdf` - Backward Differentiation Formula (orders between 1 and 5)
+
+Note that while the output only has a linear interpolation, a higher order
+interpolation is used for intermediate dense output for `saveat` and for
+event handling.
 
 ## LSODA.jl
 
@@ -457,6 +548,91 @@ using LSODA
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
+
+## MATLABDiffEq.jl
+
+These algorithms require that the problem was defined using a `ParameterizedFunction`
+via the `@ode_def` macro. Note that this setup is not automatically included
+with DifferentialEquaitons.jl. To use the following algorithms, you must install
+and use MATLABDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/MATLABDiffEq.jl")
+using MATLABDiffEq
+```
+
+This requires a licensed MATLAB installation. The available methods are:
+
+  - `ode23`
+  - `ode45`
+  - `ode113`
+  - `ode23s`
+  - `ode23t`
+  - `ode23tb`
+  - `ode15s`
+  - `ode15i`
+
+For more information on these algorithms, see
+[the MATLAB documentation](https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html).
+
+## GeometricIntegrators.jl
+
+GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use
+GeometricIntegratorsDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl")
+using GeometricIntegratorsDiffEq
+```
+
+- `GIEuler` - 1st order Euler method
+- `GIMidpoint` - 2nd order explicit midpoint method
+- `GIHeun` - 2nd order Heun's method
+- `GIKutta` - 3rd order Kutta's method
+- `GIERK4` - standard 4th order Runge-Kutta
+- `GIERK438` - 4th order Runge-Kutta, 3/8's rule
+- `GIImplicitEuler` - 1st order implicit Euler method
+- `GIImplicitMidpoint` - 2nd order implicit midpoint method
+- `GIRadIIA2` - 2-stage order 3 Radau-IIA
+- `GIRadIIA3` - 3-stage order 5 Radau-IIA
+- `GISRK3` - 3-stage order 4 symmetric Runge-Kutta method
+- `GIGLRK(s)` - Gauss-Legendre Runge-Kutta method of order 2s
+
+Note that all of these methods require the user supplies `dt`.
+
+## BridgeDiffEq.jl
+
+Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
+are made and optimized for out-of-place functions on immutable (static vector)
+types. Note that this setup is not automatically included with
+DifferentialEquaitons.jl. To use the following algorithms, you must install and
+use BridgeDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
+using BridgeDiffEq
+```
+
+- `BridgeR3` - 3rd order Ralston method
+- `BridgeBS3` - 3rd order Bogacki-Shampine method
+
+## TaylorIntegration.jl
+
+TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor
+series method for high accuracy integration of ODEs. These methods are optimized
+when the absolute tolerance is required to be very low.
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and
+use TaylorIntegration.jl:
+
+```julia
+Pkg.add("TaylorIntegration")
+using TaylorIntegration
+```
+
+- `TaylorMethod(order)` - Taylor integration method with maximal `order` (required)
 
 ## List of Supplied Tableaus
 

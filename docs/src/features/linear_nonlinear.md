@@ -12,12 +12,14 @@ to the method `linsolve` determines the linear solver which is used. The signatu
 is:
 
 ```julia
+linsolve! = linsolve(Val{:init},f,x)
 linsolve!(x,A,b,matrix_updated=false)
 ```
 
-This is an in-place function which updates `x` by solving `Ax=b`. `matrix_updated`
-determines whether the matrix `A` has changed from the last call. This can be
-used to smartly cache factorizations.
+This is an in-place function which updates `x` by solving `Ax=b`. The user should
+specify the function `linsolve(Val{:init},f,x)` which returns a `linsolve!` function.
+The setting `matrix_updated` determines whether the matrix `A` has changed from the
+last call. This can be used to smartly cache factorizations.
 
 ### Basic linsolve method: Factorization
 
@@ -53,12 +55,16 @@ function is created. For example, for an LU-Factorization, we would like to use
 `lufact!` to do our linear solving. We can directly write this as:
 
 ```julia
-function linsolve!(x,A,b,update_matrix=false)
-  _A = lufact!(A)
-  A_ldiv_B!(x,_A,b)
+function linsolve!(::Type{Val{:init}},f,u0)
+  function _linsolve!(x,A,b,update_matrix=false)
+    _A = lufact!(A)
+    A_ldiv_B!(x,_A,b)
+  end
 end
 ```
 
+This initialization function returns a linear solving function
+that always computes the LU-factorization and then does the solving.
 This method works fine and you can pass it to the methods like
 
 ```julia
@@ -83,13 +89,30 @@ function (p::LinSolveFactorize)(x,A,b,matrix_updated=false)
   end
   A_ldiv_B!(x,p.A,b)
 end
+function (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)
+  LinSolveFactorize(p.factorization,nothing)
+end
 linsolve = LinSolveFactorize(lufact!)
 ```
 
 `LinSolveFactorize` is a type which holds the factorization method and the pre-factorized
-matrix. If `matrix_updated` is true, it will re-compute the factorization. Otherwise
-it just solves the linear system with the cached factorization. This general
-idea of using a call-overloaded type can be employed to do many other things.
+matrix. When `linsolve` is passed to the ODE/SDE/etc. solver, it will use the function
+`linsolve(Val{:init},f,u0_prototype)` to create a `LinSolveFactorize` object which holds
+the factorization method and a cache for holding a factorized matrix. Then
+
+```julia
+function (p::LinSolveFactorize)(x,A,b,matrix_updated=false)
+  if matrix_updated
+    p.A = p.factorization(A)
+  end
+  A_ldiv_B!(x,p.A,b)
+end
+```
+
+is what's used in the solver's internal loop. If `matrix_updated` is true, it
+will re-compute the factorization. Otherwise it just solves the linear system
+with the cached factorization. This general idea of using a call-overloaded
+type can be employed to do many other things.
 
 ## Nonlinear Solvers: `nlsolve` Specification
 

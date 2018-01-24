@@ -6,14 +6,29 @@ To define a DDE Problem, you simply need to give the function ``f`` and the init
 condition ``u0`` which define an ODE:
 
 ```math
-du = f(t,u,h)
+du = f(u,p,t,h)
 ```
 
-`f` should be specified as `f(t,u,h)` (or in-place as `f(t,u,h,du)`).
+`f` should be specified as `f(u,h,p,t)` (or in-place as `f(du,u,h,p,t)`).
 `h` is the history function which is accessed for all delayed values. For example,
 the `i`th component delayed by a time `tau` is denoted by `h(t-tau)`.
 Note that we are not limited to numbers or vectors for `u0`; one is allowed to
 provide `u0` as arbitrary matrices / higher dimension tensors as well.
+
+### Functional Forms for `h`
+
+`h`, the history function, can be called the following ways:
+
+- `h(t)`: out-of-place
+- `h(out,t)` : in-place
+- `h(t,deriv)` and `h(out,t,deriv)` where `deriv=Val{i}` is the in/out of place
+  `i`th derivative calculation. To set this up, use `deriv::Type{Val{i}}` in the function
+  signature.
+- `h(t,deriv,idxs)` and `h(out,t,deriv,idxs)` where `idxs` is an integer for which
+  index of the history to return.
+
+Note that a dispatch for the supplied history function of matching form is required
+for whichever function forms are used in the user derivative function `f`.
 
 ## Declaring Lags
 

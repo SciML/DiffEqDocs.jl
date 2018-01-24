@@ -6,10 +6,10 @@ These algorithms require a Partitioned ODE of the form:
 
 ```math
 \frac{du}{dt} = f_1(v) \\
-\frac{dv}{dt} = f_2(t,u) \\
+\frac{dv}{dt} = f_2(u,p,t) \\
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
-specified as `f1(t,u,v,dx)` and `f2(t,u,v,dv)` (in the inplace form), where `f1`
+specified as `f1(du,u,v,p,t)` and `f2(dv,u,v,p,t)` (in the inplace form), where `f1`
 is independent of `t` and `u`, and unless specified by the solver,
 `f2` is independent of `v`. This includes discretizations arising from
 `SecondOrderODEProblem`s where the velocity is not used in the acceleration function,
@@ -48,10 +48,10 @@ To define a 2nd Order ODE Problem, you simply need to give the function ``f``
 and the initial condition ``u₀`` which define an ODE:
 
 ```math
-u'' = f(t,u,u')
+u'' = f(u,u',p,t)
 ```
 
-`f` should be specified as `f(t,u,du)` (or in-place as `f(t,u,du,ddu)`), and `u₀`
+`f` should be specified as `f(u,du,p,t)` (or in-place as `f(ddu,u,du,p,t)`), and `u₀`
 should be an AbstractArray (or number) whose geometry matches the desired
 geometry of `u`. Note that we are not limited to numbers or vectors for `u₀`;
 one is allowed to provide `u₀` as arbitrary matrices / higher dimension tensors
@@ -61,7 +61,7 @@ From this form, a dynamical ODE:
 
 ```math
 u' = v \\
-v' = f(t,u,v) \\
+v' = f(u,p,t,v) \\
 ```
 
 is generated.

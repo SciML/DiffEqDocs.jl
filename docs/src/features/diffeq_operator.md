@@ -7,8 +7,8 @@ exploit linearity to achieve maximal performance.
 ## Using DiffEqOperators
 
 `AbstractDiffEqOperator`s act like functions. When defined, `A` has function
-calls `A(t,u)` and `A(t,u,du)` that act like `A*u`. These operators update
-via a function `update_coefficients!(A,t,u)`.
+calls `A(t,u)` and `A(du,u,p,t)` that act like `A*u`. These operators update
+via a function `update_coefficients!(A,u,p,t)`.
 
 ## Constructors
 
@@ -31,7 +31,7 @@ DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,
 
 `A` is the operator array. `α` is the scalar coefficient. If `α` is a function
 `α(t)`, then it will update the coefficient as necessary. `update_func` is the
-function called by `update_coefficients!(A,t,u)` (along with `α` if it's a
+function called by `update_coefficients!(A,u,p,t)` (along with `α` if it's a
 function). If left as its default, then `update_func` is trivial which signifies
 `A` is a constant.
 
@@ -46,7 +46,7 @@ function AffineDiffEqOperator{T}(As,Bs,u_cache=nothing)
 
 builds an operator `L = (A1 + A2 + ... An)*u + B1 + B2 + ... + Bn`. `u_cache`
 is for designating a type of internal cache for non-allocating evaluation of
-`L(t,u,du)`. If not given, the function `L(t,u,du)` is not available. Note
+`L(du,u,p,t)`. If not given, the function `L(du,u,p,t)` is not available. Note
 that in solves which exploit this structure, this function call is not necessary.
 It's only used as the fallback in ODE solvers which were not developed for this
 structure.
@@ -58,10 +58,10 @@ for it to work in the solvers.
 
 ### AbstractDiffEqOperator Interface Description
 
-1. Function call and multiplication: L(t,u,du) for inplace and du = L(t,u) for
+1. Function call and multiplication: L(du,u,p,t) for inplace and du = L(t,u) for
    out-of-place, meaning L*u and A_mul_B!.
 2. If the operator is not a constant, update it with (t,u). A mutating form, i.e.
-   update_coefficients!(A,t,u) that changes the internal coefficients, and a
+   update_coefficients!(A,u,p,t) that changes the internal coefficients, and a
    out-of-place form B = update_coefficients(A,t,u).
 3. is_constant(A) trait for whether the operator is constant or not.
 

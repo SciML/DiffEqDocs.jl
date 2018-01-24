@@ -27,7 +27,7 @@ will work if these are the only features you are using.
 ## Generalizing the Idea
 
 In general, you will always need DiffEqBase.jl, since it defines all of the
-fundamental types, but the solvers will automatically reexport it. 
+fundamental types, but the solvers will automatically reexport it.
 For solvers, you typically only need that solver package.
 So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface
 with that specific solver setup. DiffEqBase.jl is a very lightweight dependency,
@@ -42,14 +42,15 @@ the parameter estimation docs we have:
 
 ```julia
 using DifferentialEquations
-f = @ode_def_nohes LotkaVolterraTest begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a=>1.5 b=1.0 c=3.0 d=1.0
+f = @ode_def LotkaVolterraTest begin
+  dx = a*x - x*y
+  dy = -3y + x*y
+end a
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-prob = ODEProblem(f,u0,tspan)
+p = [1.5]
+prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])

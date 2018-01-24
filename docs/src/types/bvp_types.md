@@ -6,13 +6,13 @@ To define an BVP Problem, you simply need to give the function ``f`` and the ini
 condition ``u₀`` which define an ODE:
 
 ```math
-\frac{du}{dt} = f(t,u)
+\frac{du}{dt} = f(u,p,t)
 ```
 
 along with an implicit function `bc!` which defines the residual equation, where
 
 ```math
-bc(t,u) = 0
+bc(u,p,t) = 0
 ```
 
 is the manifold on which the solution must live. A common form for this is the
@@ -35,28 +35,19 @@ BVProblem{isinplace}(f,bc!,u0,tspan)
 For `TwoPointBVProblem`, `bc!` is the inplace function:
 
 ```julia
-bc!(residual, ua, ub)
+bc!(residual, ua, ub, p)
 ```
 
 where `residual` computed from the current ``u_a = u(t_0)`` and ``u_b = u(t_f)``.
 For `BVProblem`, `bc!` is the inplace function:
 
 ```julia
-bc!(residual, sol)
+bc!(residual, sol, p)
 ```
 
 where `u` is the current solution to the ODE which is used to compute the `residual`.
 Note that all features of the `ODESolution` are present in this form.
 In both cases, the size of the residual matches the size of the initial condition.
-For more general problems, use the
-[parameter estimation routines](../../analysis/parameter_estimation.html) and change the signature of `bc!` and `f` to
-
-```julia
-bc!(residual, sol, p)
-f(t, u, p) # or inplace as f(t, u, p, du)
-```
-
-where `p`is the `Vector` of free parameters.
 
 ### Fields
 

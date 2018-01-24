@@ -57,13 +57,14 @@ Note that the constructors for the Sundials algorithms take a main argument:
 - `linearsolver` - This is the linear solver which is used in the Newton iterations.
   The choices are:
 
-  - `:Dense` - A dense linear solver
+  - `:Dense` - A dense linear solver.
   - `:Band` - A solver specialized for banded Jacobians. If used, you must set the
     position of the upper and lower non-zero diagonals via `jac_upper` and
     `jac_lower`.
-  - `:Diagonal` - This method is specialized for diagonal Jacobians.
-  - `BCG` - A Biconjugate gradient method.
-  - `TFQMR` - A TFQMR method.
+  - `:GMRES` - A GMRES method. Recommended first choice Krylov method
+  - `:BCG` - A Biconjugate gradient method.
+  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
+  - `:TFQMR` - A TFQMR method.
 
 Example:
 
@@ -105,11 +106,34 @@ using DASKR
 
 - `daskr` - This is a wrapper for the well-known DASKR algorithm.
 
+All additional options are available. The constructor is:
+
+```julia
+function daskr(;linear_solver=:Dense,
+                  jac_upper=0,jac_lower=0,max_order = 5,
+                  non_negativity_enforcement = 0,
+                  non_negativity_enforcement_array = nothing,
+                  max_krylov_iters = nothing,
+                  num_krylov_vectors = nothing,
+                  max_number_krylov_restarts = 5,
+                  krylov_convergence_test_constant = 0.05,
+                  exclude_algebraic_errors = false)
+```
+
+Choices for the linear solver are:
+
+- `:Dense`
+- `:Banded`
+- `:SPIGMR`, a Krylov method
+
 ## DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
 
 ## ODEInterfaceDiffEq.jl
+
+These methods require the DAE to be an `ODEProblem` in mass matrix form. For
+extra options for the solvers, see the ODE solver page.
 
 - `seulex` - Extrapolation-algorithm based on the linear implicit Euler method.
 - `radau` - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.

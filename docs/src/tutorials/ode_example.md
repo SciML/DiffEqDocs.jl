@@ -8,10 +8,10 @@ introductions can be found by [checking out DiffEqTutorials.jl](https://github.c
 In this example we will solve the equation
 
 ```math
-\frac{du}{dt} = f(t,u)
+\frac{du}{dt} = f(u,p,t)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(t,u)=αu``. We know by Calculus
+on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by Calculus
 that the solution to this equation is ``u(t)=u₀\exp(αt)``.
 
 The general workflow is to define a problem, solve the problem, and then analyze
@@ -19,7 +19,7 @@ the solution. The full code for solving this problem is:
 
 ```julia
 using DifferentialEquations
-f(t,u) = 1.01*u
+f(u,p,t) = 1.01*u
 u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
@@ -39,7 +39,7 @@ the initial condition, and the timespan to solve over:
 
 ```julia
 using DifferentialEquations
-f(t,u) = 1.01*u
+f(u,p,t) = 1.01*u
 u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
@@ -169,13 +169,13 @@ Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
 ```julia
-[t+u for (t,u) in tuples(sol)]
+[t+u for (u,p,t) in tuples(sol)]
 ```
 
 or more generally
 
 ```julia
-[t+2u for (t,u) in zip(sol.t,sol.u)]
+[t+2u for (u,p,t) in zip(sol.u,sol.t)]
 ```
 
 allows one to use more parts of the solution type. The object that is returned by
@@ -264,7 +264,7 @@ The way we do this is we simply write the output to the 3rd input of the functio
 For example, our Lorenz equation problem would be defined by the function:
 
 ```julia
-function lorenz(t,u,du)
+function lorenz(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
  du[3] = u[1]*u[2] - (8/3)*u[3]
@@ -302,12 +302,37 @@ plot(sol,vars=(0,2))
 
 Note that here "variable 0" corresponds to the dependent variable ("time").
 
-#### Defining Systems of Equations Using ParameterizedFunctions.jl
+## Defining Parameterized Functions
 
-To simplify your life, the `@ode_def` macro allows for "defining your ODE in
-pseudocode" and getting a function which is efficient and runnable.
+In many cases you may want to explicitly have parameters associated with your
+differential equations. This can be used by things like
+[parameter estimation routines](../../analysis/parameter_estimation.html).
+In this case, you use the `p` values via the syntax:
 
-To use the macro, you write out your system of equations with the left-hand side
+```julia
+function parameterized_lorenz(du,u,p,t)
+ du[1] = p[1]*(u[2]-u[1])
+ du[2] = u[1]*(p[2]-u[3]) - u[2]
+ du[3] = u[1]*u[2] - p[3]*u[3]
+end
+```
+
+and then we add the parameters to the `ODEProblem`:
+
+```julia
+u0 = [1.0,0.0,0.0]
+tspan = (0.0,1.0)
+p = [10.0,28.0,8/3]
+prob = ODEProblem(parameterized_lorenz,u0,tspan,p)
+```
+
+Note that the type for the parameters `p` can be anything: you can use arrays,
+static arrays, named tuples, etc. to enclose your parameters in a way that is
+sensible for your problem.
+
+Additionally, there exists a `@ode_def` macro allows for "defining your ODE in
+pseudocode" and getting a function which is efficient and runnable. To use the macro,
+you write out your system of equations with the left-hand side
 being `d_` and those variables will be parsed as the dependent variables. The
 independent variable is `t`, and the other variables are parameters which you pass
 at the end. For example, we can write the Lorenz system as:
@@ -317,7 +342,7 @@ g = @ode_def LorenzExample begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
-end σ=>10.0 ρ=>28.0 β=(8/3)
+end σ ρ β
 ```
 
 DifferentialEquations.jl will automatically translate this to be exactly the
@@ -331,27 +356,10 @@ problem.
 ```julia
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,1.0)
-prob = ODEProblem(g,u0,tspan)
+prob = ODEProblem(g,u0,tspan,p)
 ```
 
-Since we used `=>`, `σ` and `ρ` are kept as mutable parameters.
-For example we can do:
-
-```julia
-g.σ = 11.0
-```
-
-to change the value of `σ` to 11.0. `β` is not able to be changed since we defined
-it using `=`. We can create a new instance with new parameters via the name used in
-the `@ode_def` command:
-
-```julia
-h = LorenzExample(σ=11.0,ρ=25.0)
-```
-
-Note that the values will default to the values given to the `@ode_def` command.
-
-ParameterizedFunctions.jl does "behind-the-scenes" symbolic calculations to
+The macro does "behind-the-scenes" symbolic calculations to
 pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up
 calculations. Thus not only will this lead to legible ODE definitions, but
 "unfairly fast" code! We can turn off some of the calculations by using a more
@@ -380,7 +388,7 @@ A  = [1. 0  0 -5
       5 -2  2  3]
 u0 = rand(4,2)
 tspan = (0.0,1.0)
-f(t,u) = A*u
+f(u,p,t) = A*u
 prob = ODEProblem(f,u0,tspan)
 ```
 
@@ -399,7 +407,7 @@ We can instead use the in-place form by using Julia's in-place matrix multiplica
 function `A_mul_B!`:
 
 ```julia
-f(t,u,du) = A_mul_B!(du,A,u)
+f(u,p,t,du) = A_mul_B!(du,A,u)
 ```
 
 Additionally, we can use non-traditional array types as well. For example,
@@ -416,7 +424,7 @@ A  = @SMatrix [ 1.0  0.0 0.0 -5.0
                 5.0 -2.0 2.0  3.0]
 u0 = @SMatrix rand(4,2)
 tspan = (0.0,1.0)
-f(t,u) = A*u
+f(u,p,t) = A*u
 prob = ODEProblem(f,u0,tspan)
 sol = solve(prob)
 using Plots; plot(sol)

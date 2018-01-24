@@ -17,7 +17,7 @@ using RecursiveArrayTools
 A = ArrayPartition(x::AbstractArray...)
 ```
 
-where is a list of arrays. The resulting `A` will act like a single array, and its
+where is `x` a list of arrays. The resulting `A` will act like a single array, and its
 broadcast will be type stable, allowing for it to be used inside of the native Julia
 DiffEq solvers in an efficient way. This is a good way to generate an array which
 has different units for different parts, or different amounts of precision.
@@ -110,7 +110,7 @@ the user can use in their `f` equation and modify via callbacks. For example,
 inside of a an update function, it is safe to do:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
   u.a = t
 end
 ```
@@ -137,7 +137,7 @@ as our `DEDataVector`. It has an extra field `f1` which we will use as our contr
 variable. Our ODE function will use this field as follows:
 
 ```julia
-function f(t,u,du)
+function f(du,u,p,t)
     du[1] = -0.5*u[1] + u.f1
     du[2] = -0.5*u[2]
 end
@@ -146,7 +146,7 @@ end
 Now we will setup our control mechanism. It will be a simple setup which uses
 set timepoints at which we will change `f1`. At `t=5.0` we will want to increase
 the value of `f1`, and at `t=8.0` we will want to decrease the value of `f1`. Using
-the [`DiscreteCallback` interface](callback_functions.html), we code these conditions
+the [`DiscreteCallback` interface](../callback_functions.html), we code these conditions
 as follows:
 
 ```julia
@@ -154,18 +154,18 @@ const tstop1 = [5.]
 const tstop2 = [8.]
 
 
-function condition(t,u,integrator)
+function condition(u,p,t,integrator)
   t in tstop1
 end
 
-function condition2(t,u,integrator)
+function condition2(u,p,t,integrator)
   t in tstop2
 end
 ```
 
-Now we have to apply an affect when these conditions are reached. When `condition`
+Now we have to apply an effect when these conditions are reached. When `condition`
 is hit (at `t=5.0`), we will increase `f1` to 1.5. When `condition2` is reached,
-we will decrease `f1` to `-1.5`. This is done via the affects:
+we will decrease `f1` to `-1.5`. This is done via the functions:
 
 ```julia
 function affect!(integrator)
@@ -231,13 +231,13 @@ A similar solution can be achieved using a `ParameterizedFunction`.
 We could have instead created our function as:
 
 ```julia
-function f(t,u,param,du)
-    du[1] = -0.5*u[1] + param
+function f(du,u,p,t)
+    du[1] = -0.5*u[1] + p
     du[2] = -0.5*u[2]
 end
-pf = ParameterizedFunction(f,0.0)
 u0 = SimType([10.0;10.0], 0.0)
-prob = ODEProblem(f,u0,(0.0,10.0))
+p = 0.0
+prob = ODEProblem(f,u0,(0.0,10.0),p)
 const tstop = [5.;8.]
 sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
 ```

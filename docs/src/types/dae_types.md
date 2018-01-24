@@ -6,10 +6,10 @@ To define a DAE Problem, you simply need to give the function ``f`` and the init
 condition ``u₀`` which define an ODE:
 
 ```math
-0 = f(t,u,du)
+0 = f(du,u,p,t)
 ```
 
-`f` should be specified as `f(t,u,du)` (or in-place as `f(t,u,du,resid)`).
+`f` should be specified as `f(du,u,p,t)` (or in-place as `f(resid,u,p,t,du)`).
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 

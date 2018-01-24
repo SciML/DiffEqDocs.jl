@@ -15,9 +15,6 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "tutorials/dae_example.md",
            "tutorials/discrete_stochastic_example.md",
            "tutorials/jump_diffusion.md",
-           "tutorials/fempoisson_example.md",
-           "tutorials/femheat_example.md",
-           "tutorials/femstochastic_example.md",
            "tutorials/bvp_example.md"
          ],
          "Basics" => Any[
@@ -26,6 +23,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "basics/solution.md",
            "basics/plot.md",
            "basics/integrator.md",
+           "basics/faq.md",
            "basics/compatibility_chart.md"
          ],
          "Problem Types" => Any[
@@ -40,7 +38,6 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "types/dde_types.md",
            "types/dae_types.md",
            "types/jump_types.md",
-           "types/fem_types.md",
          ],
          "Solver Algorithms" => Any[
            "solvers/discrete_solve.md",
@@ -53,8 +50,6 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "solvers/rode_solve.md",
            "solvers/dde_solve.md",
            "solvers/dae_solve.md",
-           "solvers/fempoisson_solve.md",
-           "solvers/femheat_solve.md"
          ],
          "Additional Features" => Any[
            "features/performance_overloads.md",
@@ -67,7 +62,6 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "features/monte_carlo.md",
            "features/io.md",
            "features/low_dep.md",
-           "features/mesh.md",
            "features/progress_bar.md"
          ],
          "Analysis Tools" => Any[
