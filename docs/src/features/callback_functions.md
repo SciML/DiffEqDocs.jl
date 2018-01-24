@@ -20,7 +20,7 @@ implements what is known in other problem solving environments as an Event. A
 ```julia
 ContinuousCallback(condition,affect!,affect_neg!=affect!;
                    rootfind = true,
-                   initialize = (c,t,u,integrator) -> nothing,
+                   initialize = (c,u,t,integrator) -> nothing,
                    save_positions = (true,true),
                    interp_points=10,
                    abstol=1e-12,reltol=0
@@ -29,7 +29,7 @@ ContinuousCallback(condition,affect!,affect_neg!=affect!;
 
 The arguments are defined as follows:
 
-* `condition`: This is a function `condition(t,u,integrator)` for declaring when
+* `condition`: This is a function `condition(u,t,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition hits
   `0` within the time interval.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
@@ -65,7 +65,7 @@ The arguments are defined as follows:
   handled correctly (without error), one should set `save_positions=(true,true)`.
 * `idxs`: The components which will be interpolated into the condition. Defaults
   to `nothing` which means `u` will be all components.
-* `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
+* `initialize`: This is a function (c,u,t,integrator) which can be used to initialize
   the state of the callback `c`. It should modify the argument `c` and the return is
   ignored.
 
@@ -80,10 +80,10 @@ events happening just after a previously rootfound event. The default has
 ```julia
 DiscreteCallback(condition,affect!;
                  save_positions=(true,true),
-                 initialize = (c,t,u,integrator) -> nothing)
+                 initialize = (c,u,t,integrator) -> nothing)
 ```
 
-* `condition`: This is a function `condition(t,u,integrator)` for declaring when
+* `condition`: This is a function `condition(u,t,integrator)` for declaring when
   the callback should be used. A callback is initiated if the condition evaluates
   to `true`.
 * `affect!`: This is the function `affect!(integrator)` where one is allowed to
@@ -95,7 +95,7 @@ DiscreteCallback(condition,affect!;
   `saveat=[1.0,2.0,3.0]`, this can still add a save point at `2.1` if true).
   For discontinuous changes like a modification to `u` to be
   handled correctly (without error), one should set `save_positions=(true,true)`.
-* `initialize`: This is a function (c,t,u,integrator) which can be used to initialize
+* `initialize`: This is a function (c,u,t,integrator) which can be used to initialize
   the state of the callback `c`. It should modify the argument `c` and the return is
   ignored.
 
@@ -165,7 +165,7 @@ implement in `affect!`.
 Since the effect is supposed to occur every timestep, we use the trivial condition:
 
 ```julia
-condition = function (t,u,integrator)
+condition = function (u,t,integrator)
     true
 end
 ```
@@ -194,7 +194,7 @@ Lastly, we can wrap it in a nice little constructor:
 ```julia
 function AutoAbstol(save=true;init_curmax=1e-6)
   affect! = AutoAbstolAffect(init_curmax)
-  condtion = (t,u,integrator) -> true
+  condtion = (u,t,integrator) -> true
   save_positions = (save,false)
   DiscreteCallback(condtion,affect!,save_positions=save_positions)
 end
@@ -254,13 +254,13 @@ this (but it needs to be "root-findable"). For here it's clear that we just
 want to check if the ball's height ever hits zero:
 
 ```julia
-function condition(t,u,integrator) # Event when event_f(t,u) == 0
+function condition(u,t,integrator) # Event when event_f(u,t) == 0
   u[1]
 end
 ```
 
 Notice that here we used the values `u` instead of the value from the `integrator`.
-This is because the values `t,u` will be appropriately modified at the interpolation
+This is because the values `u,t` will be appropriately modified at the interpolation
 points, allowing for the rootfinding behavior to occur.
 
 Now we have to say what to do when the event occurs. In this case we just
@@ -457,7 +457,7 @@ A `DiscreteCallback` will cause this to halt at the first step such that the con
 is satisfied. For example, we could use:
 
 ```julia
-condition(t,u,integrator) = u[2]>0
+condition(u,t,integrator) = u[2]>0
 affect!(integrator) = terminate!(integrator)
 cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
@@ -471,7 +471,7 @@ must thus be a function which is zero at the point we want to halt. Thus we
 use the following:
 
 ```julia
-condition(t,u,integrator) = u[2]
+condition(u,t,integrator) = u[2]
 affect!(integrator) = terminate!(integrator)
 cb = ContinuousCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
@@ -499,7 +499,7 @@ the upcrossing and only stop on the downcrossing. We do this by ignoring the
 `affect!` and only passing an `affect!` for the second:
 
 ```julia
-condition(t,u,integrator) = u[2]
+condition(u,t,integrator) = u[2]
 affect!(integrator) = terminate!(integrator)
 cb = ContinuousCallback(condition,nothing,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
@@ -534,7 +534,7 @@ Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
 ```julia
-function condition(t,u,integrator) # Event when event_f(t,u) == 0
+function condition(u,t,integrator) # Event when event_f(u,t) == 0
   1-maximum(u)
 end
 ```

@@ -343,5 +343,5 @@ PeriodicCallback(f, Δt::Number; kwargs...)
 ```
 
 where `f` is the function to be called periodically, `Δt` is the period, and
-`kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor 
+`kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor
 (see the [DiscreteCallback](@ref) section).
