@@ -16,17 +16,16 @@
 \frac{\partial y_{k}}{\partial p_{j}}
 \end{array}\right)\]</div><p>is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system.</p><h3><a class="nav-anchor" id="Example-solving-an-ODELocalSensitivityProblem-1" href="#Example-solving-an-ODELocalSensitivityProblem-1">Example solving an ODELocalSensitivityProblem</a></h3><p>To define a sensitivity problem, simply use the <code>ODELocalSensitivityProblem</code> type instead of an ODE type. Note that this requires a <a href="https://github.com/JuliaDiffEq/ParameterizedFunctions.jl">ParameterizedFunction</a> with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:</p><pre><code class="language-julia">f = @ode_def_nohes LotkaVolterraSensitivity begin
   dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a b c d
+  dy = -c*y + x*y
+end a b c
 
-p = [1.5,1.0,3.0,1.0]
+p = [1.5,1.0,3.0]
 prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)</code></pre><p>This generates a problem which the ODE solvers can solve:</p><pre><code class="language-julia">sol = solve(prob,DP8())</code></pre><p>Note that the solution is the standard ODE system and the sensitivity system combined. We can use the following helper functions to extract the sensitivity information:</p><pre><code class="language-julia">x,dp = extract_local_sensitivities(sol)
 x,dp = extract_local_sensitivities(sol,i)
 x,dp = extract_local_sensitivities(sol,t)</code></pre><p>In each case, <code>x</code> is the ODE values and <code>dp</code> is the matrix of sensitivities where <code>dp[i]</code> is the gradient of component <code>i</code> by the parameters. The first gives the full timeseries of values. The second returns the <code>i</code>th values, while the third interpolates to calculate the sensitivities at time <code>t</code>. For example, if we do:</p><pre><code class="language-julia">x,dp = extract_local_sensitivities(sol)
 da = dp[1]</code></pre><p>then <code>da</code> is the timeseries for <span>$\frac{\partial u(t)}{\partial p}$</span>. We can plot this</p><pre><code class="language-julia">plot(sol.t,da&#39;,lw=3)</code></pre><p>transposing so that the rows (the timeseries) is plotted.</p><p><img src="../assets/sensitivityplot.png" alt="Local Sensitivity Solution"/></p><p>Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems.</p><p>We can also quickly see that these values are equivalent to those given by autodifferentiation and numerical differentiation through the ODE solver:</p><pre><code class="language-julia">using ForwardDiff, Calculus
 function test_f(p)
-  pf = ParameterizedFunction(f,p)
-  prob = ODEProblem(pf,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)))
+  prob = ODEProblem(f,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
   solve(prob,Vern9(),abstol=1e-14,reltol=1e-14,save_everystep=false)[end]
 end
 
