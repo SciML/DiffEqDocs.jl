@@ -1293,7 +1293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Mathematical Specification of a Dynamical ODE Problem",
     "category": "section",
-    "text": "These algorithms require a Partitioned ODE of the form:fracdudt = f_1(v) \nfracdvdt = f_2(ut) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(du,u,v,p,t) and f2(dv,u,v,p,t) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed make note of this requirement with \"Requires quadratic kinetic energy\"."
+    "text": "These algorithms require a Partitioned ODE of the form:fracdvdt = f_1(ut) \nfracdudt = f_2(v) This is a Partitioned ODE partitioned into two groups, so the functions should be specified as f1(du,u,v,p,t) and f2(dv,u,v,p,t) (in the inplace form), where f1 is independent of v (unless specified by the solver), and f2 is independent of u and t. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
@@ -1301,7 +1301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructor",
     "category": "section",
-    "text": "DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1309,7 +1309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1 and f2: The functions in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f1 and f2: The functions in the ODE.\nv0 and u0: The initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1317,7 +1317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Mathematical Specification of a 2nd Order ODE Problem",
     "category": "section",
-    "text": "To define a 2nd Order ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(uupt)f should be specified as f(u,du,p,t) (or in-place as f(ddu,u,du,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a dynamical ODE:u = v \nv = f(uptv) is generated."
+    "text": "To define a 2nd Order ODE Problem, you simply need to give the function f and the initial condition u which define an ODE:u = f(uupt)f should be specified as f(du,u,p,t) (or in-place as f(ddu,du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.From this form, a dynamical ODE:v = f(vupt) \nu = v is generated."
 },
 
 {
@@ -1325,7 +1325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SecondOrderODEProblem{isinplace}(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions."
+    "text": "SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions."
 },
 
 {
@@ -1333,7 +1333,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ndu0: The initial derivative.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function for the second derivative.\ndu0: The initial derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -1341,7 +1341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Hamiltonian Problems",
     "category": "section",
-    "text": "HamiltonianProblems are provided by DiffEqPhysics.jl and provide an easy way to define equations of motion from the corresponding Hamiltonian. To define a HamiltonianProblem one only needs to specify the Hamiltonian:H(qp)and autodifferentiation (via ForwardDiff.jl) will create the appropriate equations."
+    "text": "HamiltonianProblems are provided by DiffEqPhysics.jl and provide an easy way to define equations of motion from the corresponding Hamiltonian. To define a HamiltonianProblem one only needs to specify the Hamiltonian:H(pq)and autodifferentiation (via ForwardDiff.jl) will create the appropriate equations."
 },
 
 {
@@ -1349,7 +1349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)"
+    "text": "HamiltonianProblem{T}(H,p0,q0,tspan;kwargs...)"
 },
 
 {
@@ -1357,7 +1357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "H: The Hamiltonian H(q,p,params) which returns a scalar.\nq0: The initial positions.\np0: The initial momentums.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "H: The Hamiltonian H(p,q,params) which returns a scalar.\np0: The initial momentums.\nq0: The initial positions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -2117,7 +2117,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "category": "section",
-    "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,u0,du0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdudt = f_1(v) \nfracdvdt = f_2(tu) The functions should be specified as f1(dx,u,v,p,t) and f2(dv,u,v,p,t) (in the inplace form), where f1 is independent of t and u, and unless specified by the solver, f2 is independent of v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f1 is a quadratic form. That means that f1=v'*M*v, i.e. int f_1 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
+    "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,u0,du0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdvdt = f_1(tu) \nfracdudt = f_2(v) The functions should be specified as f1(dv,v,u,p,t) and f2(du,v,u,p,t) (in the inplace form), where f1 is independent of v (unless specified by the solver), and f2 is independent of t and v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f2 is a quadratic form. That means that f2=v'*M*v, i.e. int f_2 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
