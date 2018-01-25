@@ -32,20 +32,16 @@ TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)
 BVProblem{isinplace}(f,bc!,u0,tspan)
 ```
 
-For `TwoPointBVProblem`, `bc!` is the inplace function:
+For any BVP problem type, `bc!` is the inplace function:
 
 ```julia
-bc!(residual, ua, ub, p)
+bc!(residual, u, p, t)
 ```
 
-where `residual` computed from the current ``u_a = u(t_0)`` and ``u_b = u(t_f)``.
-For `BVProblem`, `bc!` is the inplace function:
-
-```julia
-bc!(residual, sol, p)
-```
-
-where `u` is the current solution to the ODE which is used to compute the `residual`.
+where `residual` computed from the current `u`. `u` is an array of solution values
+where `u[i]` is at time `t[i]`, while `p` are the parameters. For a `TwoPointBVProblem`,
+`t = tspan`. For the more general `BVProblem`, `u` can be all of the internal
+time points, and for shooting type methods `u=sol` the ODE solution.
 Note that all features of the `ODESolution` are present in this form.
 In both cases, the size of the residual matches the size of the initial condition.
 
