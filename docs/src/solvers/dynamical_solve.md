@@ -11,18 +11,18 @@ HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)
 These correspond to partitioned equations of motion:
 
 ```math
-\frac{du}{dt} = f_1(v) \\
-\frac{dv}{dt} = f_2(t,u) \\
+\frac{dv}{dt} = f_1(t,u) \\
+\frac{du}{dt} = f_2(v) \\
 ```
-The functions should be specified as `f1(dx,u,v,p,t)` and `f2(dv,u,v,p,t)`
-(in the inplace form), where `f1` is independent of `t` and `u`, and unless
-specified by the solver, `f2` is independent of `v`. This includes
+The functions should be specified as `f1(dv,v,u,p,t)` and `f2(du,v,u,p,t)`
+(in the inplace form), where `f1` is independent of `v` (unless
+specified by the solver), and `f2` is independent of `t` and `v`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not
 used in the acceleration function, and Hamiltonians where the potential is
 (or can be) time-dependent but the kinetic energy is only dependent on `v`.
 
-Note that some methods assume that the integral of `f1` is a quadratic form. That
-means that `f1=v'*M*v`, i.e. ``\int f_1 = \frac{1}{2} m v^2``, giving `du = v`. This is
+Note that some methods assume that the integral of `f2` is a quadratic form. That
+means that `f2=v'*M*v`, i.e. ``\int f_2 = \frac{1}{2} m v^2``, giving `du = v`. This is
 equivalent to saying that the kinetic energy is related to ``v^2``. The methods
 which require this assumption will lose accuracy if this assumption is violated.
 Methods listed below make note of this requirement with "Requires quadratic

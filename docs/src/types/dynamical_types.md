@@ -5,13 +5,13 @@
 These algorithms require a Partitioned ODE of the form:
 
 ```math
-\frac{du}{dt} = f_1(v) \\
-\frac{dv}{dt} = f_2(u,t) \\
+\frac{dv}{dt} = f_1(u,t) \\
+\frac{du}{dt} = f_2(v) \\
 ```
 This is a Partitioned ODE partitioned into two groups, so the functions should be
 specified as `f1(du,u,v,p,t)` and `f2(dv,u,v,p,t)` (in the inplace form), where `f1`
-is independent of `t` and `u`, and unless specified by the solver,
-`f2` is independent of `v`. This includes discretizations arising from
+is independent of `v` (unless specified by the solver), and `f2` is independent
+of `u` and `t`. This includes discretizations arising from
 `SecondOrderODEProblem`s where the velocity is not used in the acceleration function,
 and Hamiltonians where the potential is (or can be) time-dependent but the kinetic
 energy is only dependent on `v`.
@@ -26,7 +26,7 @@ quadratic kinetic energy".
 ### Constructor
 
 ```julia
-DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan,callback=CallbackSet(),mass_matrix=I)
+DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet(),mass_matrix=I)
 ```
 
 Defines the ODE with the specified functions. `isinplace` optionally sets whether
@@ -35,8 +35,7 @@ the function is inplace or not. This is determined automatically, but not inferr
 ### Fields
 
 * `f1` and `f2`: The functions in the ODE.
-* `u0`: The initial condition.
-* `du0`: The initial derivative.
+* `v0` and `u0`: The initial conditions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
@@ -48,10 +47,10 @@ To define a 2nd Order ODE Problem, you simply need to give the function ``f``
 and the initial condition ``u₀`` which define an ODE:
 
 ```math
-u'' = f(u,u',p,t)
+u'' = f(u',u,p,t)
 ```
 
-`f` should be specified as `f(u,du,p,t)` (or in-place as `f(ddu,u,du,p,t)`), and `u₀`
+`f` should be specified as `f(du,u,p,t)` (or in-place as `f(ddu,du,u,p,t)`), and `u₀`
 should be an AbstractArray (or number) whose geometry matches the desired
 geometry of `u`. Note that we are not limited to numbers or vectors for `u₀`;
 one is allowed to provide `u₀` as arbitrary matrices / higher dimension tensors
@@ -60,8 +59,8 @@ as well.
 From this form, a dynamical ODE:
 
 ```math
+v' = f(v,u,p,t) \\
 u' = v \\
-v' = f(u,p,t,v) \\
 ```
 
 is generated.
@@ -69,16 +68,16 @@ is generated.
 ### Constructors
 
 ```julia
-SecondOrderODEProblem{isinplace}(f,u0,du0,tspan,callback=CallbackSet(),mass_matrix=I)
+SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet(),mass_matrix=I)
 ```
 
 Defines the ODE with the specified functions.
 
 ### Fields
 
-* `f`: The function in the ODE.
-* `u0`: The initial condition.
+* `f`: The function for the second derivative.
 * `du0`: The initial derivative.
+* `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
@@ -91,7 +90,7 @@ to define equations of motion from the corresponding Hamiltonian. To define a
 `HamiltonianProblem` one only needs to specify the Hamiltonian:
 
 ```math
-H(q,p)
+H(p,q)
 ```
 
 and autodifferentiation (via ForwardDiff.jl) will create the appropriate
@@ -100,14 +99,14 @@ equations.
 ### Constructors
 
 ```julia
-HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)
+HamiltonianProblem{T}(H,p0,q0,tspan;kwargs...)
 ```
 
 ### Fields
 
-* `H`: The Hamiltonian `H(q,p,params)` which returns a scalar.
-* `q0`: The initial positions.
+* `H`: The Hamiltonian `H(p,q,params)` which returns a scalar.
 * `p0`: The initial momentums.
+* `q0`: The initial positions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
