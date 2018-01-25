@@ -1381,7 +1381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Mathematical Specification of a Split ODE Problem",
     "category": "section",
-    "text": "To define a SplitODEProblem, you simply need to give a tuple of functions (f_1f_2ldotsf_n) and the initial condition u which define an ODE:fracdudt =  f_1(upt) + f_2(upt) + ldots + f_n(upt)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Many splits are at least partially linear. For how to define a function as linear, see the documentation for the DiffEqOperators."
+    "text": "To define a SplitODEProblem, you simply need to give a two functions functions f_1 and f_2 along with an initial condition u which define an ODE:fracdudt =  f_1(upt) + f_2(upt)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Many splits are at least partially linear. That is the equation:fracdudt =  f_1(upt) + f_2(upt)For how to define a function as linear, see the documentation for the DiffEqOperators."
 },
 
 {
@@ -1493,7 +1493,7 @@ var documenterSearchIndex = {"docs": [
     "page": "BVP Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For TwoPointBVProblem, bc! is the inplace function:bc!(residual, ua, ub, p)where residual computed from the current u_a = u(t_0) and u_b = u(t_f). For BVProblem, bc! is the inplace function:bc!(residual, sol, p)where u is the current solution to the ODE which is used to compute the residual. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition."
+    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For any BVP problem type, bc! is the inplace function:bc!(residual, u, p, t)where residual computed from the current u. u is an array of solution values where u[i] is at time t[i], while p are the parameters. For a TwoPointBVProblem, t = tspan. For the more general BVProblem, u can be all of the internal time points, and for shooting type methods u=sol the ODE solution. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition."
 },
 
 {
