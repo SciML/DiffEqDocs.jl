@@ -11,7 +11,7 @@ ODEs defined by Hamiltonians is described in the
 ## N-Body Problems
 
 ```julia
-nprob = NBodyProblem(f, mass, pos, vel, tspan)
+nprob = NBodyProblem(f, mass, vel, pos, tspan)
 ```
 
 where `f` is the potential function, `mass` is the mass matrix, `pos` and `vel`
@@ -42,7 +42,7 @@ tspan = (0.,200_000)
 
 const ∑ = sum
 const N = 6
-potential(t, x, y, z, M) = -G*∑(i->∑(j->(M[i]*M[j])/sqrt((x[i]-x[j])^2 + (y[i]-y[j])^2 + (z[i]-z[j])^2), 1:i-1), 2:N)
-nprob = NBodyProblem(potential, M, pos, vel, tspan)
+potential(p, t, x, y, z, M) = -G*∑(i->∑(j->(M[i]*M[j])/sqrt((x[i]-x[j])^2 + (y[i]-y[j])^2 + (z[i]-z[j])^2), 1:i-1), 2:N)
+nprob = NBodyProblem(potential, M, vel, pos, tspan)
 sol = solve(nprob,Yoshida6(), dt=100)
 ```
