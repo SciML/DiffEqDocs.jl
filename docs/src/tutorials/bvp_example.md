@@ -33,14 +33,14 @@ end
 
 There are two problem types available: 
  - A problem type for general boundary conditions `BVProblem` ( including conditions that may be anywhere/ everywhere on the integration interval ).
- - A problem type for boundaries that are specified at the beggining and the end of the integration interval `TwoPointBVProblem`
+ - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`
  
 #### `BVProblem` 
 
  The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
 ```julia
-function bc1!(residual, u, p)
+function bc1!(residual, u, p, t)
     residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
 end
@@ -79,7 +79,7 @@ plot(sol3)
 Defining a similar problem as `TwoPointBVProblem` is shown in the following example. At the moment `MIRK4` is the only solver for `TwoPointBVProblem`s.
 
 ```julia
-function bc2!(residual, u, p, t) # ua is the beginning of the time span, and ub is the ending
+function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending
     residual[1] = u[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
     residual[2] = u[end] - pi/2 # the solution at the end of the time span should be pi/2
 end
