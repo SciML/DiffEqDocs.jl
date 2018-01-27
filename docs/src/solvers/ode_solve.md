@@ -129,8 +129,8 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   adaptivity.
 - `Ralston` - The optimized second order midpoint method. Uses embedded Euler.
   method for adaptivity.
-- `RK4` - The canonical Runge-Kutta Order 4 method. Uses a defect control to
-  adaptive step using maximum error over the whole interval.
+- `RK4` - The canonical Runge-Kutta Order 4 method. Uses a defect control for
+  adaptive stepping using maximum error over the whole interval.
 - `BS3` - Bogacki-Shampine 3/2 method.
 - `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th order interpolant).
 - `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th order interpolant).
