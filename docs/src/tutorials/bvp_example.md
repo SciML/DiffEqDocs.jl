@@ -21,7 +21,7 @@ using BoundaryValueDiffEq
 const g = 9.81
 L = 1.0
 tspan = (0.0,pi/2)
-function simplependulum(du,u,p,t)
+function simplependulum!(du,u,p,t)
     θ  = u[1]
     dθ = u[2]
     du[1] = dθ
@@ -40,11 +40,11 @@ There are two problem types available:
  The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
 ```julia
-function bc1(residual, u, p)
+function bc1!(residual, u, p)
     residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
 end
-bvp1 = BVProblem(simplependulum, bc1, [pi/2,pi/2], tspan)
+bvp1 = BVProblem(simplependulum!, bc1!, [pi/2,pi/2], tspan)
 sol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)
 plot(sol1)
 ```
@@ -58,14 +58,14 @@ If you can have a good initial guess, `Shooting` method works very well.
 ```julia
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-function bc3(residual, sol, p)
+function bc3!(residual, sol, p)
     residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi/2)[1] - pi/2
 end
-bvp3 = BVProblem(simplependulum, bc3, u₀_2, tspan)
+bvp3 = BVProblem(simplependulum!, bc3!, u₀_2, tspan)
 sol3 = solve(bvp3, Shooting(Vern7()))
 ```
-
+The initial guess can also be supplied via a function of `t` or a previous solution type, this is espacially handy for parameter analysis.
 We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
 
 ```julia
@@ -79,14 +79,15 @@ plot(sol3)
 Defining a similar problem as `TwoPointBVProblem` is shown in the following example. At the moment `MIRK4` is the only solver for `TwoPointBVProblem`s.
 
 ```julia
-function bc2(residual, ua, ub, p) # ua is the beginning of the time span, and ub is the ending
-    residual[1] = ua[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
-    residual[2] = ub[1] - pi/2 # the solution at the end of the time span should be pi/2
+function bc2!(residual, u, p, t) # ua is the beginning of the time span, and ub is the ending
+    residual[1] = u[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
+    residual[2] = u[end] - pi/2 # the solution at the end of the time span should be pi/2
 end
-bvp2 = TwoPointBVProblem(simplependulum, bc2, [pi/2,pi/2], tspan)
+bvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi/2,pi/2], tspan)
 sol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem
 plot(sol2)
 ```
+Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )` and `p` holds the parameters of the given problem.
 
 ![BVP Example Plot2](../assets/bvp_example_plot2.png)
 
