@@ -48,7 +48,7 @@ f1(t,u) = 1.01u
 g1(t,u) = 1.01u
 dt = 1//2^(4)
 prob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))
-sol1 = solve(prob1,EM(),dt=dt)</code></pre><p>Now we wrap the noise into a NoiseWrapper and solve the same problem:</p><pre><code class="language-julia">W2 = NoiseWrapper(sol1.W)
+sol1 = solve(prob1,EM(),dt=dt,save_noise = true)</code></pre><p>Now we wrap the noise into a NoiseWrapper and solve the same problem:</p><pre><code class="language-julia">W2 = NoiseWrapper(sol1.W)
 prob1 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W2)
 sol2 = solve(prob1,EM(),dt=dt)</code></pre><p>We can test</p><pre><code class="language-julia">@test sol1.u ≈ sol2.u</code></pre><p>to see that the values are essentially equal. Now we can use the same process to solve the same trajectory with a smaller <code>dt</code>:</p><pre><code class="language-julia">W3 = NoiseWrapper(sol1.W)
 prob2 = SDEProblem(f1,g1,1.0,(0.0,1.0),noise=W3)
@@ -60,7 +60,7 @@ plot!(sol2)
 plot!(sol3)</code></pre><p><img src="../assets/noise_process.png" alt="noise_process"/></p><p>In this plot, <code>sol2</code> covers up <code>sol1</code> because they hit essentially the same values. You can see that <code>sol3</code> its similar to the others, because it&#39;s using the same underlying noise process just sampled much finer.</p><p>To double check, we see that:</p><pre><code class="language-julia">plot(sol1.W)
 plot!(sol2.W)
 plot!(sol3.W)</code></pre><p><img src="../assets/coupled_wiener.png" alt="coupled_wiener"/></p><p>the coupled Wiener processes coincide at every other time point, and the intermediate timepoints were calculated according to a Brownian bridge.</p><h3><a class="nav-anchor" id="Adaptive-NoiseWrapper-Example-1" href="#Adaptive-NoiseWrapper-Example-1">Adaptive NoiseWrapper Example</a></h3><p>Here we will show that the same noise can be used with the adaptive methods using the <code>NoiseWrapper</code>. <code>SRI</code> and <code>SRIW1</code> use slightly different error estimators, and thus give slightly different stepping behavior. We can see how they solve the same 2D SDE differently by using the noise wrapper:</p><pre><code class="language-julia">prob = SDEProblem(f1,g1,ones(2),(0.0,1.0))
-sol4 = solve(prob,SRI(),abstol=1e-8)
+sol4 = solve(prob,SRI(),abstol=1e-8, save_noise = true)
 
 W2 = NoiseWrapper(sol4.W)
 prob2 = SDEProblem(f1,g1,ones(2),(0.0,1.0),noise=W2)
