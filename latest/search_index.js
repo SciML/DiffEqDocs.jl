@@ -141,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Note",
     "category": "section",
-    "text": "If that code errors, it is most likely due to versioning issues.Pkg.status(\"DifferentialEquations\")should return a version higher than v4.0.0. If not, Pkg.update() to get the latest versions. If that does not work, then there is some other package upper bounding the allowed version of DifferentialEqautions.jl.  The changes are described at length here:http://juliadiffeq.org/2018/01/24/Parameters.html"
+    "text": "If that code errors, it is most likely due to versioning issues.Pkg.status(\"DifferentialEquations\")should return a version higher than v4.0.0. If not, Pkg.update() to get the latest versions. If that does not work, then there is some other package upper bounding the allowed version of DifferentialEqautions.jl.  The changes are described at length here:http://juliadiffeq.org/2018/01/24/Parameters.htmlIf you don't wish to update right now, simply doPkg.pin(\"DifferentialEquations\",v\"3.1.0\")and use the sidebar to change the documentation to v3.2.0."
 },
 
 {
