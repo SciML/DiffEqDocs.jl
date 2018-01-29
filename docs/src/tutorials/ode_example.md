@@ -47,6 +47,14 @@ The changes are described at length here:
 
 http://juliadiffeq.org/2018/01/24/Parameters.html
 
+If you don't wish to update right now, simply do
+
+```julia
+Pkg.pin("DifferentialEquations",v"3.1.0")
+```
+
+and use the sidebar to change the documentation to v3.2.0.
+
 ### Step 1: Defining a Problem
 
 To solve this numerically, we define a problem type by giving it the equation,
