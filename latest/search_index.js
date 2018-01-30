@@ -2677,7 +2677,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Performance Overloads",
     "title": "Declaring Explicit Jacobians for DAEs",
     "category": "section",
-    "text": "For fully implicit ODEs (DAEProblems), a slightly different Jacobian function is necessary. For the DAEG(duupt) = resThe Jacobian should be given in the form dG/du + gamma*dG/d(du) where gamma is given by the solver. This means that the signature is:f(::Type{Val{:jac}},J,du,u,p,gamma,t)For example, for the equationfunction testjac(res,du,u,p,t)\n  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]\n  res[2] = du[2] -3 * u[2] - u[1]*u[2]\nendwe would define the Jacobian as:function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)\n  J[1,1] = gamma - 2.0 + 1.2 * u[2]\n  J[1,2] = 1.2 * u[1]\n  J[2,1] = - 1 * u[2]\n  J[2,2] = gamma - 3 - u[1]\n  nothing\nend"
+    "text": "For fully implicit ODEs (DAEProblems), a slightly different Jacobian function is necessary. For the DAEG(duupt) = resThe Jacobian should be given in the form dG/d(du) + gamma*dG/du where gamma is given by the solver. This means that the signature is:f(::Type{Val{:jac}},J,du,u,p,gamma,t)For example, for the equationfunction testjac(res,du,u,p,t)\n  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]\n  res[2] = du[2] -3 * u[2] - u[1]*u[2]\nendwe would define the Jacobian as:function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)\n  J[1,1] = gamma - 2.0 + 1.2 * u[2]\n  J[1,2] = 1.2 * u[1]\n  J[2,1] = - 1 * u[2]\n  J[2,2] = gamma - 3 - u[1]\n  nothing\nend"
 },
 
 {
