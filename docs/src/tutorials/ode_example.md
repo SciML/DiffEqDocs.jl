@@ -192,13 +192,13 @@ Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
 ```julia
-[t+u for (u,p,t) in tuples(sol)]
+[t+u for (u,t) in tuples(sol)]
 ```
 
 or more generally
 
 ```julia
-[t+2u for (u,p,t) in zip(sol.u,sol.t)]
+[t+2u for (u,t) in zip(sol.u,sol.t)]
 ```
 
 allows one to use more parts of the solution type. The object that is returned by
