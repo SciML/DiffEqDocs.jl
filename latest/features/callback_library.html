@@ -18,9 +18,9 @@ end</code></pre><p>To build the callback, we just call</p><pre><code class="lang
                saveat=Vector{eltype(saved_values.t)}(),
                save_everystep=isempty(saveat),
                tdir=1)</code></pre><ul><li><p><code>save_func(t, u, integrator)</code> returns the quantities which shall be saved. Note that this should allocate the output (not as a view to <code>u</code>).</p></li><li><p><code>saved_values::SavedValues</code> is the types that <code>save_func</code> will return, i.e. <code>save_func(t, u, integrator)::savevalType</code>. It&#39;s specified via <code>SavedValues(typeof(t),savevalType)</code>, i.e. give the type for time and the type that <code>save_func</code> will output (or higher compatible type).</p></li><li><p><code>saveat</code> Mimicks <code>saveat</code> in <code>solve</code> from <code>solve</code>.</p></li><li><p><code>save_everystep</code> Mimicks <code>save_everystep</code> from <code>solve</code>.</p></li><li><p><code>save_start</code> Mimicks <code>save_start</code> from <code>solve</code>.</p></li><li><p><code>tdir</code> should be <code>sign(tspan[end]-tspan[1])</code>. It defaults to <code>1</code> and should be adapted if <code>tspan[1] &gt; tspan[end]</code>.</p></li></ul><p>The outputted values are saved into <code>saved_values</code>. Time points are found via <code>saved_values.t</code> and the values are <code>saved_values.saveval</code>.</p><h3><a class="nav-anchor" id="Example-2" href="#Example-2">Example</a></h3><p>In this example we will solve a matrix equation and at each step save a tuple of values which contains the current trace and the norm of the matrix. We build the <code>SavedValues</code> cache to use <code>Float64</code> for time and <code>Tuple{Float64,Float64}</code> for the saved values, and then call the solver with the callback.</p><pre><code class="language-julia">using DiffEqCallbacks, OrdinaryDiffEq
-prob = ODEProblem((du,u,p,t)-&gt;du.=u,rand(4,4),(0.0,1.0))
+prob = ODEProblem((du,u,t)-&gt;du.=u,rand(4,4),(0.0,1.0))
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
-cb = SavingCallback((u,p,t,integrator)-&gt;(trace(u),norm(u)), saved_values)
+cb = SavingCallback((u,t,integrator)-&gt;(trace(u),norm(u)), saved_values)
 sol = solve(prob, Tsit5(), callback=cb)
 
 print(saved_values.saveval)
