@@ -112,7 +112,7 @@ satisfies this property mathematically it can be difficult for ODE solvers to
 ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html)
 show.
 
-In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
+In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> !any(x
 -> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
