@@ -17,15 +17,15 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-`DAEProblem{isinplace}(f,u0,du0,tspan)` : Defines the DAE with the specified functions.
+`DAEProblem{isinplace}(f,du0,u0,tspan)` : Defines the DAE with the specified functions.
 `isinplace` optionally sets whether the function is inplace or not. This is
 determined automatically, but not inferred.
 
 ### Fields
 
 * `f`: The function in the ODE.
-* `u0`: The initial condition.
 * `du0`: The initial condition for the derivative.
+* `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to a black CallbackSet, which will have no effect.

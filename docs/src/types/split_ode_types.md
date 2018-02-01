@@ -2,12 +2,12 @@
 
 ## Mathematical Specification of a Split ODE Problem
 
-To define a `SplitODEProblem`, you simply need to give a tuple of
-functions ``(f_1,f_2,\ldots,f_n)`` and the initial condition ``u₀`` which
+To define a `SplitODEProblem`, you simply need to give a two functions
+functions ``f_1`` and ``f_2`` along with an initial condition ``u₀`` which
 define an ODE:
 
 ```math
-\frac{du}{dt} =  f_1(u,p,t) + f_2(u,p,t) + \ldots + f_n(u,p,t)
+\frac{du}{dt} =  f_1(u,p,t) + f_2(u,p,t)
 ```
 
 `f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
@@ -15,8 +15,13 @@ be an AbstractArray (or number) whose geometry matches the desired geometry of `
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
-Many splits are at least partially linear. For how to define a function as linear,
-see the documentation for the [DiffEqOperators](../../features/diffeq_operator.html).
+Many splits are at least partially linear. That is the equation:
+
+```math
+\frac{du}{dt} =  f_1(u,p,t) + f_2(u,p,t)
+```
+
+For how to define a function as linear, see the documentation for the [DiffEqOperators](../../features/diffeq_operator.html).
 
 ### Constructors
 

@@ -24,7 +24,7 @@ provide `u0` as arbitrary matrices / higher dimension tensors as well.
 - `h(t,deriv)` and `h(out,t,deriv)` where `deriv=Val{i}` is the in/out of place
   `i`th derivative calculation. To set this up, use `deriv::Type{Val{i}}` in the function
   signature.
-- `h(t,deriv,idxs)` and `h(out,t,deriv,idxs)` where `idxs` is an integer for which
+- `h(t,deriv;idxs)` and `h(out,t,deriv;idxs)` where `idxs` is an integer for which
   index of the history to return.
 
 Note that a dispatch for the supplied history function of matching form is required
@@ -42,7 +42,7 @@ efficiently be more accurate and thus this is recommended.
 ### Constructors
 
 ```julia
-DDEProblem{isinplace}(f,h,u0,tspan,constant_lags=nothing,dependent_lags=nothing;
+DDEProblem{isinplace}(f,u0,h,tspan,constant_lags=nothing,dependent_lags=nothing;
                       callback=nothing,mass_matrix=I)
 ```
 
@@ -52,6 +52,7 @@ determined automatically, but not inferred.
 ### Fields
 
 * `f`: The function in the ODE.
+* `u0`: The initial condition.
 * `h`: The history function for the ODE before `t0`.
 * `tspan`: The timespan for the problem.
 * `constant_lags`: An array of constant lags. These should be numbers corresponding

@@ -456,7 +456,7 @@ f1(t,u) = 1.01u
 g1(t,u) = 1.01u
 dt = 1//2^(4)
 prob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))
-sol1 = solve(prob1,EM(),dt=dt)
+sol1 = solve(prob1,EM(),dt=dt,save_noise = true)
 ```
 
 Now we wrap the noise into a NoiseWrapper and solve the same problem:
@@ -523,7 +523,7 @@ wrapper:
 
 ```julia
 prob = SDEProblem(f1,g1,ones(2),(0.0,1.0))
-sol4 = solve(prob,SRI(),abstol=1e-8)
+sol4 = solve(prob,SRI(),abstol=1e-8, save_noise = true)
 
 W2 = NoiseWrapper(sol4.W)
 prob2 = SDEProblem(f1,g1,ones(2),(0.0,1.0),noise=W2)
