@@ -177,7 +177,7 @@ explanations of the timestepping algorithms, see the
   performs the saving routine. For more information, see the
   [Event Handling and Callback Functions manual page](../../features/callback_functions.html).
 * `isoutofdomain`: Specifies a function `isoutofdomain(u,p,t)` where, when it
-  returns false, it will reject the timestep. Disabled by default.
+  returns true, it will reject the timestep. Disabled by default.
 * `unstable_check`: Specifies a function `unstable_check(dt,u,p,t)` where, when
   it returns true, it will cause the solver to exit and throw a warning. Defaults
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
