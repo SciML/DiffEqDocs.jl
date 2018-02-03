@@ -45,7 +45,7 @@ is necessary. For the DAE
 G(du,u,p,t) = res
 ```
 
-The Jacobian should be given in the form `dG/du + gamma*dG/d(du)` where `gamma`
+The Jacobian should be given in the form `dG/d(du) + gamma*dG/du` where `gamma`
 is given by the solver. This means that the signature is:
 
 ```julia
