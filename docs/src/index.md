@@ -172,6 +172,7 @@ Pages = [
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
+  "solvers/benchmarks.md"
 ]
 Depth = 2
 ```

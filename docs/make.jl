@@ -51,6 +51,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "solvers/rode_solve.md",
            "solvers/dde_solve.md",
            "solvers/dae_solve.md",
+           "solvers/benchmarks.md"
          ],
          "Additional Features" => Any[
            "features/performance_overloads.md",
