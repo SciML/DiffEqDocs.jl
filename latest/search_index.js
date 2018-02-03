@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Tutorials",
     "category": "section",
-    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/jump_diffusion.md\",\n    \"tutorials/bvp_example.md\",\n    ]\nDepth = 2"
+    "text": "The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by checking out the IJulia notebooks in the examples folder.Pages = [\n    \"tutorials/ode_example.md\",\n    \"tutorials/sde_example.md\",\n    \"tutorials/dde_example.md\",\n    \"tutorials/dae_example.md\",\n    \"tutorials/discrete_stochastic_example.md\",\n    \"tutorials/jump_diffusion.md\",\n    \"tutorials/bvp_example.md\",\n    \"tutorials/additional.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -582,6 +582,22 @@ var documenterSearchIndex = {"docs": [
     "title": "TwoPointBVProblem",
     "category": "section",
     "text": "Defining a similar problem as TwoPointBVProblem is shown in the following example. At the moment MIRK4 is the only solver for TwoPointBVProblems.function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending\n    residual[1] = u[1] + pi/2 # the solution at the beginning of the time span should be -pi/2\n    residual[2] = u[end] - pi/2 # the solution at the end of the time span should be pi/2\nend\nbvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi/2,pi/2], tspan)\nsol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem\nplot(sol2)Note that u is a tuple of ( u[1], u[end] ) just like t is ( t[1], t[end] ) and p holds the parameters of the given problem.(Image: BVP Example Plot2)"
+},
+
+{
+    "location": "tutorials/additional.html#",
+    "page": "Additional Tutorials",
+    "title": "Additional Tutorials",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/additional.html#Additional-Tutorials-1",
+    "page": "Additional Tutorials",
+    "title": "Additional Tutorials",
+    "category": "section",
+    "text": "Additional tutorials can be found at DiffEqTutorials.jl. These include interactive introductions, optimizing code, modeling examples, and deeper examples for extra features."
 },
 
 {
