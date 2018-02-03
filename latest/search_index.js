@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/bvp_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/bvp_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/benchmarks.md\"\n]\nDepth = 2"
 },
 
 {
@@ -2662,6 +2662,22 @@ var documenterSearchIndex = {"docs": [
     "title": "ODEInterfaceDiffEq.jl",
     "category": "section",
     "text": "These methods require the DAE to be an ODEProblem in mass matrix form. For extra options for the solvers, see the ODE solver page.seulex - Extrapolation-algorithm based on the linear implicit Euler method.\nradau - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.\nradau5 - Implicit Runge-Kutta method (Radau IIA) of order 5.\nrodas - Rosenbrock 4(3) method."
+},
+
+{
+    "location": "solvers/benchmarks.html#",
+    "page": "Solver Benchmarks",
+    "title": "Solver Benchmarks",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/benchmarks.html#Solver-Benchmarks-1",
+    "page": "Solver Benchmarks",
+    "title": "Solver Benchmarks",
+    "category": "section",
+    "text": "Benchmarks for the solvers can be found at DiffEqBenchmarks.jl. Many different problems are tested. However, if you would like additional problems to be benchmarked, please open an issue or PR at the DiffEqBenchmarks.jl repository with the code that defines the DEProblem."
 },
 
 {
