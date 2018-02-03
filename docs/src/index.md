@@ -109,6 +109,7 @@ Pages = [
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
     "tutorials/bvp_example.md",
+    "tutorials/additional.md"
     ]
 Depth = 2
 ```

@@ -15,7 +15,8 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "tutorials/dae_example.md",
            "tutorials/discrete_stochastic_example.md",
            "tutorials/jump_diffusion.md",
-           "tutorials/bvp_example.md"
+           "tutorials/bvp_example.md",
+           "tutorials/additional.md"
          ],
          "Basics" => Any[
            "basics/overview.md",
