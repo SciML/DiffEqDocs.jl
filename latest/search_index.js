@@ -3641,14 +3641,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/io.html#Note-1",
-    "page": "I/O: Saving and Loading Solution Data",
-    "title": "Note",
-    "category": "section",
-    "text": "Note that this currently is not included with DifferentialEquations.jl, and requires that you Pkg.add(\"DiffEqIO\") and using DiffEqIO."
-},
-
-{
     "location": "features/io.html#Tabular-Data:-IterableTables-1",
     "page": "I/O: Saving and Loading Solution Data",
     "title": "Tabular Data: IterableTables",
