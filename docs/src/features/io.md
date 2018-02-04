@@ -4,11 +4,6 @@ The ability to save and load solutions is important for handling large datasets
 and analyzing the results over multiple Julia sessions. This page explains the
 existing functionality for doing so.
 
-#### Note
-
-Note that this currently is not included with DifferentialEquations.jl, and requires
-that you `Pkg.add("DiffEqIO")` and `using DiffEqIO`.
-
 ## Tabular Data: IterableTables
 
 An interface to [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl)
