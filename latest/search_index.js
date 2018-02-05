@@ -445,7 +445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Building and Solving the Problem",
     "category": "section",
-    "text": "First, we have to define some kind of differential equation. Since we do not want any continuous changes, we will build a DiscreteProblem. We do this by giving the constructor u0, the initial condition, and tspan, the timespan. Here, we will start with 999 susceptible people, 1 infected person, and 0 recovered people, and solve the problem from t=0.0 to t=250.0. Thus we build the problem via:prob = DiscreteProblem([999,1,0],(0.0,250.0))Now we have to add the reactions/jumps to the problem. We do this using a GillespieProblem. This takes in a differential equation problem prob (which we just defined), a ConstantJumpAggregator, and the reactions. The ConstantJumpAggregator is the method by which the constant jumps are aggregated together and solved. In this case we will use the classic Direct method due to Gillespie, also known as GillespieSSA. This aggregator is denoted by Direct(). Thus we build the jumps into the problem via:jump_prob = GillespieProblem(prob,Direct(),r1,r2)This is now a problem that can be solved using the differential equations solvers. Since our problem is discrete, we will use the Discrete() method.sol = solve(jump_prob,Discrete())This solve command takes the standard commands of the common interface, and the solution object acts just like any other differential equation solution. Thus there exists a plot recipe, which we can plot with:using Plots; plot(sol)(Image: gillespie_solution)"
+    "text": "First, we have to define some kind of differential equation. Since we do not want any continuous changes, we will build a DiscreteProblem. We do this by giving the constructor u0, the initial condition, and tspan, the timespan. Here, we will start with 999 susceptible people, 1 infected person, and 0 recovered people, and solve the problem from t=0.0 to t=250.0. Thus we build the problem via:prob = DiscreteProblem([999,1,0],(0.0,250.0))Now we have to add the reactions/jumps to the problem. We do this using a GillespieProblem. This takes in a differential equation problem prob (which we just defined), a ConstantJumpAggregator, and the reactions. The ConstantJumpAggregator is the method by which the constant jumps are aggregated together and solved. In this case we will use the classic Direct method due to Gillespie, also known as GillespieSSA. This aggregator is denoted by Direct(). Thus we build the jumps into the problem via:jump_prob = GillespieProblem(prob,Direct(),r1,r2)This is now a problem that can be solved using the differential equations solvers. Since our problem is discrete, we will use the Discrete() method.sol = solve(jump_prob,FunctionMap())This solve command takes the standard commands of the common interface, and the solution object acts just like any other differential equation solution. Thus there exists a plot recipe, which we can plot with:using Plots; plot(sol)(Image: gillespie_solution)"
 },
 
 {
@@ -453,7 +453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Using the Reaction Network DSL",
     "category": "section",
-    "text": "Also included as part of DiffEqBiological.jl is the reaction network DSL. We could define the previous problem via:rs = @reaction_network begin\n  1e-4, S + I --> 2I\n  0.01,  I --> R\nend\nprob = DiscreteProblem([999,1,0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),rs)\nsol = solve(jump_prob,Discrete())"
+    "text": "Also included as part of DiffEqBiological.jl is the reaction network DSL. We could define the previous problem via:rs = @reaction_network begin\n  1e-4, S + I --> 2I\n  0.01,  I --> R\nend\nprob = DiscreteProblem([999,1,0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),rs)\nsol = solve(jump_prob,FunctionMap())"
 },
 
 {
@@ -461,7 +461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining the Jumps Directly",
     "category": "section",
-    "text": "Instead of using the biological modeling functionality of Reaction, we can directly define jumps. This allows for more general types of rates, at the cost of some modeling friendliness. The constructor for a ConstantRateJump is:jump = ConstantRateJump(rate,affect!)where rate is a function rate(u,p,t) and affect! is a function of the integrator affect!(integrator) (for details on the integrator, see the integrator interface docs). Thus, to define the jump equivalents to the above reactions, we can use:rate(u,p,t) = (0.1/1000.0)*u[1]*u[2]\nfunction affect!(integrator)\n  integrator.u[1] -= 1\n  integrator.u[2] += 1\nend\njump = ConstantRateJump(rate,affect!)\n\nrate(u,p,t) = 0.01u[2]\nfunction affect!(integrator)\n  integrator.u[2] -= 1\n  integrator.u[3] += 1\nend\njump2 = ConstantRateJump(rate,affect!)We can then use JumpProblem to augment a problem with jumps. To add the jumps to the DiscreteProblem and solve it, we would simply do:jump_prob = JumpProblem(prob,Direct(),jump,jump2)\nsol = solve(jump_prob,Discrete(apply_map=false))"
+    "text": "Instead of using the biological modeling functionality of Reaction, we can directly define jumps. This allows for more general types of rates, at the cost of some modeling friendliness. The constructor for a ConstantRateJump is:jump = ConstantRateJump(rate,affect!)where rate is a function rate(u,p,t) and affect! is a function of the integrator affect!(integrator) (for details on the integrator, see the integrator interface docs). Thus, to define the jump equivalents to the above reactions, we can use:rate(u,p,t) = (0.1/1000.0)*u[1]*u[2]\nfunction affect!(integrator)\n  integrator.u[1] -= 1\n  integrator.u[2] += 1\nend\njump = ConstantRateJump(rate,affect!)\n\nrate(u,p,t) = 0.01u[2]\nfunction affect!(integrator)\n  integrator.u[2] -= 1\n  integrator.u[3] += 1\nend\njump2 = ConstantRateJump(rate,affect!)We can then use JumpProblem to augment a problem with jumps. To add the jumps to the DiscreteProblem and solve it, we would simply do:jump_prob = JumpProblem(prob,Direct(),jump,jump2)\nsol = solve(jump_prob,FunctionMap())"
 },
 
 {
@@ -1237,7 +1237,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions."
+    "text": "DiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(u0,tspan) : Defines the discrete problem with the identity map."
 },
 
 {
@@ -1901,7 +1901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Solvers",
     "title": "Recommended Methods",
     "category": "section",
-    "text": "The implementation for solving discrete equations is the Discrete algorithm in OrdinaryDiffEq.jl. It has zero overhead and uses compilation to build a separate setup that allows you to use the common interface (including events/callbacks) to solve function maps, along with everything else like plot recipes, while completely ignoring the ODE functionality related to continuous equations (except for a tiny bit of initialization)."
+    "text": "The implementation for solving discrete equations is the FunctionMap algorithm in OrdinaryDiffEq.jl. It has zero overhead and uses compilation to build a separate setup that allows you to use the common interface (including events/callbacks) to solve function maps, along with everything else like plot recipes, while completely ignoring the ODE functionality related to continuous equations (except for a tiny bit of initialization)."
 },
 
 {
@@ -1917,7 +1917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Solvers",
     "title": "Discrete Algorithm",
     "category": "section",
-    "text": "OrdinaryDiffEq.jl also contains the Discrete algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_n+1u_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:Discrete(;apply_map=false,scale_by_time=false)If apply_map=false, f is completely ignored. If apply_map=true, then every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant.As a shorthand,FunctionMap(scale_by_time=false)is a Discrete with apply_map=true, and thus corresponds to the function map equationu_n+1 = f(t_nu_n)"
+    "text": "OrdinaryDiffEq.jl also contains the FunctionMap algorithm which lets you solve a problem where f is a map: u_n+1 = f(t_n+1u_n). It has a piecewise constant interpolation and allows for all of the callback/event handling capabilities (of course, with rootfind=false. If a ContinuousCallback is given, it's always assumed rootfind=false).The constructor is:FunctionMap(;scale_by_time=false)Every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
 },
 
 {
