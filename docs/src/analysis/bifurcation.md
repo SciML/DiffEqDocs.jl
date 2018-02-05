@@ -70,7 +70,7 @@ bif = bifurcation_curve(PC,"EP-C",["i"],
 
 This returns a `BifurcationCurve` type. Important fields of this type are:
 
-- `d`: the values along the curve
+- `points`: the values along the curve
 - `special_points`: the values for the bifurcation points
 - `stab`: an array which gives the stability of each point along the curve.
   `"S"` is for stable, `N` is for neutral, and `U` is for unstable.
