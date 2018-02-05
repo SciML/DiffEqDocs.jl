@@ -30,7 +30,7 @@ f = @ode_def Calcium begin
 end vl vca i gl gca c v1 v2
 ```
 
-Next to build the ODE we need an initial condition and a starting timepoint.
+(Note that using PyDSTool requires use of the `@ode_def` macro). Next to build the ODE we need an initial condition and a starting timepoint.
 
 ```julia
 u0 = [0;0]
