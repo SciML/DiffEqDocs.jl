@@ -114,7 +114,7 @@ This is now a problem that can be solved using the differential equations solver
 Since our problem is discrete, we will use the `Discrete()` method.
 
 ```julia
-sol = solve(jump_prob,Discrete())
+sol = solve(jump_prob,FunctionMap())
 ```
 
 This solve command takes the standard commands of the common interface, and the
@@ -139,7 +139,7 @@ rs = @reaction_network begin
 end
 prob = DiscreteProblem([999,1,0],(0.0,250.0))
 jump_prob = GillespieProblem(prob,Direct(),rs)
-sol = solve(jump_prob,Discrete())
+sol = solve(jump_prob,FunctionMap())
 ```
 
 ## Defining the Jumps Directly
@@ -178,7 +178,7 @@ to the `DiscreteProblem` and solve it, we would simply do:
 
 ```julia
 jump_prob = JumpProblem(prob,Direct(),jump,jump2)
-sol = solve(jump_prob,Discrete(apply_map=false))
+sol = solve(jump_prob,FunctionMap())
 ```
 
 ## Adding Jumps to a Differential Equation
