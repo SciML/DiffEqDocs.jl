@@ -3389,7 +3389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Constructor",
     "category": "section",
-    "text": "StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)dtFE: The function for the maximal timestep. Calculated using the previous t and u.\nsafety_factor: The factor below the true maximum that will be stepped to which defaults to 9//10.\nmax_step: Makes every step equal to safety_factor*dtFE(u,p,t) when the solver is set to adaptive=false.\ncached_dtcache: Should be set to match the type for time when not using Float64 values."
+    "text": "StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)dtFE: The function for the maximal timestep, called as dtFE(u,p,t)  using the previous values of u, p, and t.\nsafety_factor: The factor below the true maximum that will be stepped to which defaults to 9//10.\nmax_step: Makes every step equal to safety_factor*dtFE(u,p,t) when the solver is set to adaptive=false.\ncached_dtcache: Should be set to match the type for time when not using Float64 values."
 },
 
 {
@@ -3405,7 +3405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "SavingCallback",
     "category": "section",
-    "text": "The saving callback lets you define a function save_func(t, u, integrator) which returns quantities of interest that shall be saved."
+    "text": "The saving callback lets you define a function save_func(u, t, integrator) which returns quantities of interest that shall be saved."
 },
 
 {
@@ -3413,7 +3413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Constructor",
     "category": "section",
-    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(t, u, integrator) returns the quantities which shall be saved. Note that this should allocate the output (not as a view to u).\nsaved_values::SavedValues is the types that save_func will return, i.e. save_func(t, u, integrator)::savevalType. It's specified via SavedValues(typeof(t),savevalType), i.e. give the type for time and the type that save_func will output (or higher compatible type).\nsaveat Mimicks saveat in solve from solve.\nsave_everystep Mimicks save_everystep from solve.\nsave_start Mimicks save_start from solve.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end].The outputted values are saved into saved_values. Time points are found via saved_values.t and the values are saved_values.saveval."
+    "text": "SavingCallback(save_func, saved_values::SavedValues;\n               saveat=Vector{eltype(saved_values.t)}(),\n               save_everystep=isempty(saveat),\n               tdir=1)save_func(u, t, integrator) returns the quantities which shall be saved. Note that this should allocate the output (not as a view to u).\nsaved_values::SavedValues is the types that save_func will return, i.e. save_func(t, u, integrator)::savevalType. It's specified via SavedValues(typeof(t),savevalType), i.e. give the type for time and the type that save_func will output (or higher compatible type).\nsaveat Mimicks saveat in solve from solve.\nsave_everystep Mimicks save_everystep from solve.\nsave_start Mimicks save_start from solve.\ntdir should be sign(tspan[end]-tspan[1]). It defaults to 1 and should be adapted if tspan[1] > tspan[end].The outputted values are saved into saved_values. Time points are found via saved_values.t and the values are saved_values.saveval."
 },
 
 {
