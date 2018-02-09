@@ -430,7 +430,7 @@ We can instead use the in-place form by using Julia's in-place matrix multiplica
 function `A_mul_B!`:
 
 ```julia
-f(u,p,t,du) = A_mul_B!(du,A,u)
+f(du,u,p,t) = A_mul_B!(du,A,u)
 ```
 
 Additionally, we can use non-traditional array types as well. For example,
