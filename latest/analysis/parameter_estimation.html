@@ -18,7 +18,7 @@ CostVData(t,data;loss_func = L2Loss,weight=nothing)
    end
    tot_loss
 end</code></pre><h4><a class="nav-anchor" id="The-Regularization-Function-1" href="#The-Regularization-Function-1">The Regularization Function</a></h4><p>The regularization can be any function of <code>p</code>, the parameter vector:</p><pre><code class="language-julia">regularization(p)</code></pre><p>The <code>Regularization</code> helper function builds a regularization using a penalty function <code>penalty</code> from <a href="https://github.com/JuliaML/PenaltyFunctions.jl">PenaltyFunctions.jl</a>:</p><pre><code class="language-julia">Regularization(λ,penalty=L2Penalty())</code></pre><p>The regularization defaults to L2 if no penalty function is specified. <code>λ</code> is the weight parameter for the addition of the regularization term.</p><h4><a class="nav-anchor" id="The-Problem-Generator-Function-1" href="#The-Problem-Generator-Function-1">The Problem Generator Function</a></h4><p>The argument <code>prob_generator</code> allows one to specify a function for generating new problems from a given parameter set. By default, this just builds a new version of <code>f</code> that inserts all of the parameters. For example, for ODEs this is given by the dispatch on <code>DiffEqBase.problem_new_parameters</code> which does the following:</p><pre><code class="language-julia">function problem_new_parameters(prob::ODEProblem,p)
-  f = (t,u,du) -&gt; prob.f(du,u,p,t)
+  f = (du,u,p,t) -&gt; prob.f(du,u,p,t)
   uEltype = eltype(p)
   u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
   tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
@@ -40,7 +40,7 @@ end a
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 p = [1.5]
-prob = ODEProblem(f,u0,tspan,p)</code></pre><p>Notice that since we only used <code>=&gt;</code> for <code>a</code>, it&#39;s the only free parameter. We create data using the numerical result with <code>a=1.5</code>:</p><pre><code class="language-julia">sol = solve(prob,Tsit5())
+prob = ODEProblem(f,u0,tspan,p)</code></pre><p>We create data using the numerical result with <code>a=1.5</code>:</p><pre><code class="language-julia">sol = solve(prob,Tsit5())
 t = collect(linspace(0,10,200))
 using RecursiveArrayTools # for VectorOfArray
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
