@@ -21,7 +21,7 @@ Note that if the discrete solver is set to have `scale_by_time=true`, then the p
 is interpreted as the map:
 
 ```math
-u_{n+1} = u_n + dtf(u,p,t_n)
+u_{n+1} = u_n + dt f(u,p,t_n)
 ```
 
 ## Problem Type
