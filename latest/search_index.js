@@ -4029,7 +4029,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Sensitivity Analysis",
     "title": "Syntax",
     "category": "section",
-    "text": "There are two forms. For discrete adjoints, the form is:s = adjoint_sensitivities(sol,alg,dg,t;kwargs...)where alg is the ODE algorithm to solve the adjoint problem, dg is the jump function, and t is the time points for data. dg is given by:dg(out,u,i)which is the in-place gradient of the cost functional g at time point t[i] with u=u(t[i]).For continuous functionals, the form is:s = adjoint_sensitivities(sol,alg,g,nothing,dg;kwargs...)for the cost functionalg(u,p,t)with in-place gradientdg(out,u,p,t)Currently, the gradient is required. Note that the keyword arguments are passed to the internal ODE solver for solving the adjoint problem. Two special keyword arguments are iabstol and ireltol which are the tolerances for the internal quadrature via QuadGK for the resulting functional."
+    "text": "There are two forms. For discrete adjoints, the form is:s = adjoint_sensitivities(sol,alg,dg,ts;kwargs...)where alg is the ODE algorithm to solve the adjoint problem, dg is the jump function, and ts is the time points for data. dg is given by:dg(out,u,p,t,i)which is the in-place gradient of the cost functional g at time point ts[i] with u=u(t).For continuous functionals, the form is:s = adjoint_sensitivities(sol,alg,g,nothing,dg;kwargs...)for the cost functionalg(u,p,t)with in-place gradientdg(out,u,p,t)Currently, the gradient is required. Note that the keyword arguments are passed to the internal ODE solver for solving the adjoint problem. Two special keyword arguments are iabstol and ireltol which are the tolerances for the internal quadrature via QuadGK for the resulting functional."
 },
 
 {
