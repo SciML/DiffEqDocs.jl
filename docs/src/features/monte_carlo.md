@@ -16,7 +16,7 @@ MonteCarloProblem(prob::DEProblem;
 
 * `prob_func`: The function by which the problem is to be modified. `prob`
   is the problem, `i` is the unique id `1:num_monte` for the problem, and
-  `repeat` is for if the iteration of the repeat. At first it's `0`, but if  
+  `repeat` is for if the iteration of the repeat. At first it's `0`, but if
   `rerun` was true this will be `1`, `2`, etc. counting the number of times
   problem `i` has been repeated.
 * `output_func`: The function determines what is saved from the solution to the
@@ -242,11 +242,13 @@ around the mean.
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
 we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
-will be parallelized:
+will be parallelized. This will use `pmap` as default, which means that the required 
+functions must be made available to all processes. This can be achieved with [`@everywhere`
+macro](https://docs.julialang.org/en/stable/stdlib/parallel/#Base.Distributed.@everywhere):
 
 ```julia
 addprocs()
-using DifferentialEquations
+@everywhere using DifferentialEquations
 ```
 
 Now let's define the linear ODE which is our base problem:
@@ -263,7 +265,7 @@ Here we will take the base problem, multiply the initial condition by a `rand()`
 and use that for calculating the trajectory:
 
 ```julia
-function prob_func(prob,i,repeat)
+@everywhere function prob_func(prob,i,repeat)
   ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
 end
 ```
@@ -290,6 +292,27 @@ trajectory, we can retrieve it from the solution. `sim[i]` returns the `i`th
 solution object. `sim[i].prob` is the problem that specific trajectory solved,
 and `sim[i].prob.u0` would then be the initial condition used in the `i`th
 trajectory.
+
+### Using multithreading
+
+The previous Monte Carlo simulation can also be parallelized using a multithreading
+approach, which will make use of the different cores within a single computer.
+Because the memory is shared across the different threads, it is not necessary to
+use the `@everywhere` macro. Instead, the same problem can be implemented simply as:
+
+```julia
+using DifferentialEquations
+prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
+function prob_func(prob,i,repeat)
+  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
+end
+monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
+sim = solve(monte_prob,Tsit5(),num_monte=100, parallel_type = :threads)
+```
+
+The number of threads to be used has to be defined outside of Julia, in
+the environmental variable `JULIA_NUM_THREADS` (see Julia's documentation for details).
+
 
 ### Pre-Determined Initial Conditions
 
