@@ -242,7 +242,7 @@ around the mean.
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
 we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
-will be parallelized. This will use `pmap` as default, which means that the required 
+will be parallelized. This will use `pmap` as default, which means that the required
 functions must be made available to all processes. This can be achieved with [`@everywhere`
 macro](https://docs.julialang.org/en/stable/stdlib/parallel/#Base.Distributed.@everywhere):
 
@@ -311,7 +311,7 @@ sim = solve(monte_prob,Tsit5(),num_monte=100, parallel_type = :threads)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
-the environmental variable `JULIA_NUM_THREADS` (see Julia's documentation for details).
+the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](https://docs.julialang.org/en/stable/manual/environment-variables/#JULIA_NUM_THREADS-1) for details).
 
 
 ### Pre-Determined Initial Conditions
