@@ -6,7 +6,7 @@ biological models. These tools allow one to define the models at a high level
 by specifying reactions and rate constants, and the creation of the actual problems
 is then handled by the modeling package.
 
-##The Reaction DSL
+## The Reaction DSL
 
 The `@reaction_network` DSL allows you to define reaction networks in a more
 scientific format. Its input is a set of chemical reactions and from them it
