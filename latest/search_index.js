@@ -437,7 +437,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining a Model using Reactions",
     "category": "section",
-    "text": "For our example, we will build an SIR model which matches the tutorial from Gillespie.jl. SIR stands for susceptible, infected, and recovered, and is a model is disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since when there are more people there is a greater chance that two come in contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is some constant determined by other factors like the type of the disease.Let's build our model using a vector u, and let u[1] be the number of susceptible persons, u[2] be the number of infected persons, and u[3] be the number of recovered persons. In this case, we can re-write our rate as being:rate_constant*u[1]*u[2]Thus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:u[1] -= 1\nu[2] += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts that are required to build a Reaction. The constructor for a Reaction is as follows:Reaction(rate_constant,reactants,stoichiometry)The first value is the rate constant. We will use 1e-4. Secondly, we pass in the indices for the reactants. In this case, since it uses the susceptible and infected persons, the indices are [1,2]. Lastly, we detail the stoichometric changes. These are tuples (i,j) where i is the reactant and j is the number to change by. Thus (1,-1) means \"decrease the number of susceptible persons by 1\" and (2,1) means \"increase the number of infected persons by 1\".Therefore, in total, our reaction is:r1 = Reaction(1e-4,[1,2],[(1,-1),(2,1)])To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected persons are turning into recovered persons israte_constant*u[2]When this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:r2 = Reaction(0.01,[2],[(2,-1),(3,1)])where we have chosen the rate constant 0.01."
+    "text": "For our example, we will build an SIR model which matches the tutorial from Gillespie.jl. SIR stands for susceptible, infected, and recovered, and is a model is disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since when there are more people there is a greater chance that two come in contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is some constant determined by other factors like the type of the disease. This formulation is known as mass actions laws.Let S be the number of susceptible persons, I be the number of infected persons, and R be the number of recovered persons. In this case, we can re-write our rate as being:rate_constant*S*IThus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:s -= 1\ni += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts the are encoded in the reaction:c1, S + I --> 2IThis means that this \"reaction\" is that a susceptible person and an infected person causes a change to now have two susceptible persons (i.e. the susceptible person was infected). Here, c1 is the reaction constant.To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected persons are turning into recovered persons israte_constant*IWhen this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:c2, I --> RThus our full reaction network is:sir_model = @reaction_network SIR begin\n    c1, S + I --> 2I\n    c2, I --> R\nend c1 c2"
 },
 
 {
@@ -445,15 +445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Building and Solving the Problem",
     "category": "section",
-    "text": "First, we have to define some kind of differential equation. Since we do not want any continuous changes, we will build a DiscreteProblem. We do this by giving the constructor u0, the initial condition, and tspan, the timespan. Here, we will start with 999 susceptible people, 1 infected person, and 0 recovered people, and solve the problem from t=0.0 to t=250.0. Thus we build the problem via:prob = DiscreteProblem([999,1,0],(0.0,250.0))Now we have to add the reactions/jumps to the problem. We do this using a GillespieProblem. This takes in a differential equation problem prob (which we just defined), a ConstantJumpAggregator, and the reactions. The ConstantJumpAggregator is the method by which the constant jumps are aggregated together and solved. In this case we will use the classic Direct method due to Gillespie, also known as GillespieSSA. This aggregator is denoted by Direct(). Thus we build the jumps into the problem via:jump_prob = GillespieProblem(prob,Direct(),r1,r2)This is now a problem that can be solved using the differential equations solvers. Since our problem is discrete, we will use the Discrete() method.sol = solve(jump_prob,FunctionMap())This solve command takes the standard commands of the common interface, and the solution object acts just like any other differential equation solution. Thus there exists a plot recipe, which we can plot with:using Plots; plot(sol)(Image: gillespie_solution)"
-},
-
-{
-    "location": "tutorials/discrete_stochastic_example.html#Using-the-Reaction-Network-DSL-1",
-    "page": "Discrete Stochastic (Gillespie) Equations",
-    "title": "Using the Reaction Network DSL",
-    "category": "section",
-    "text": "Also included as part of DiffEqBiological.jl is the reaction network DSL. We could define the previous problem via:rs = @reaction_network begin\n  1e-4, S + I --> 2I\n  0.01,  I --> R\nend\nprob = DiscreteProblem([999,1,0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),rs)\nsol = solve(jump_prob,FunctionMap())"
+    "text": "First, we have to define some kind of differential equation. Since we do not want any continuous changes, we will build a DiscreteProblem. We do this by giving the constructor u0, the initial condition, and tspan, the timespan. Here, we will start with 999 susceptible people, 1 infected person, and 0 recovered people, and solve the problem from t=0.0 to t=250.0. We use the parameters c1 = 0.1/1000 and c2 = 0.01. Thus we build the problem via:p = (0.1/1000,0.01)\nprob = DiscreteProblem([999,1,0],(0.0,250.0),p)The reaction network can be converted into various differential equations like JumpProblem, ODEProblem, or an SDEProblem. To turn it into a jump problem, we simply do:jump_prob = JumpProblem(prob,Direct(),sir_model)This is now a problem that can be solved using the differential equations solvers. Since our problem is discrete, we will use the FunctionMap() method.sol = solve(jump_prob,FunctionMap())This solve command takes the standard commands of the common interface, and the solution object acts just like any other differential equation solution. Thus there exists a plot recipe, which we can plot with:using Plots; plot(sol)(Image: gillespie_solution)"
 },
 
 {
@@ -4261,55 +4253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Chemical Reaction Models",
     "category": "section",
-    "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
-},
-
-{
-    "location": "models/biological.html#The-Reaction-Type-1",
-    "page": "Chemical Reaction Models",
-    "title": "The Reaction Type",
-    "category": "section",
-    "text": "The basic type for BiologicalModels.jl is the reaction type. Its constructor is:Reaction(rate_constant,reactants,stoichiometry)rate_constant is the rate constant for the reaction. reactants is a list of reactants for the reaction. For example, reactants=(2,3) means that the reaction rate is rate_constant*u[2]*u[3]. stoichiometry is then the stoichiometry for the result. It is a list of tuples of changes to apply when the reaction takes place. Each tuple (i,j) means \"modify reactiant i by amount j\". For example, the tuple (2,-1) means \"decrease reactant 2 by 1\"."
-},
-
-{
-    "location": "models/biological.html#Note-About-Rate-Dependency-1",
-    "page": "Chemical Reaction Models",
-    "title": "Note About Rate Dependency",
-    "category": "section",
-    "text": "Note that currently, the reactions are used to build ConstantRateJumps. This means that the solver requires that the rates are constant between jumps in order to achieve full accuracy. The rates for the ConstantRateJump may depend on each other, but they may not depend on the differential equation themselves."
-},
-
-{
-    "location": "models/biological.html#Variable-Rate-Reactions-1",
-    "page": "Chemical Reaction Models",
-    "title": "Variable Rate Reactions",
-    "category": "section",
-    "text": "VariableRateReaction are allowed to have their rates change continuously, depending on time or values related to a differential equation. The constructor is:function VariableRateReaction(rate_constant,reactants,stoichiometry;\n                              idxs = nothing,\n                              rootfind=true,\n                              interp_points=10,\n                              abstol=1e-12,reltol=0)The additional keyword arguments are for controlling the associated ContinuousCallback used to handle VariableRateReactions in simulations."
-},
-
-{
-    "location": "models/biological.html#Example-Reaction-1",
-    "page": "Chemical Reaction Models",
-    "title": "Example Reaction",
-    "category": "section",
-    "text": "An example reaction is:r1 = Reaction(1e-4,(1,2),((1,-1),(2,1)))Here, the rate_constant is 1e-4. The reactants are components 1 and 2, meaning the reaction rate is calculated by rate_constant*u[1]*u[2]. The stoichiometry does two things. First, the (1,-1) means that, when the reaction occurs, we decrease u[1] by 1. Secondly, the (2,1) means we increase u[2] by 1. Thus this reaction is a reaction where chemical 1 changes into chemical 2, and it is enhanced by chemical 2 itself."
-},
-
-{
-    "location": "models/biological.html#GillespieProblem-1",
-    "page": "Chemical Reaction Models",
-    "title": "GillespieProblem",
-    "category": "section",
-    "text": "These reactions can be added to a differential equation (or discrete) problem using the GillespieProblem. This is simply a constructor which interprets the reactions as jumps, and builds the associated JumpProblem. Thus its constructor is the same:GillespieProblem(prob,aggregator::AbstractAggregatorAlgorithm,rs::AbstractReaction...;kwargs...)This is the exact same constructor as the JumpProblem, except now we pass reactions (or VariableRateReactions, or a ReactionSet) instead of jumps. Thus for more information, see the description of the JumpProblem."
-},
-
-{
-    "location": "models/biological.html#The-Reaction-DSL-1",
-    "page": "Chemical Reaction Models",
-    "title": "The Reaction DSL",
-    "category": "section",
-    "text": "The @reaction_network DSL allows you to define reaction networks in a more scientific format. Each line is given as parameter reactants --> products."
+    "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package.##The Reaction DSLThe @reaction_network DSL allows you to define reaction networks in a more scientific format. Its input is a set of chemical reactions and from them it generates a reaction network object which can be used as input to ODEProblem, SDEProblem and JumpProblem constructors.The basic syntax is:rn = @reaction_network rType begin\n  2.0, X + Y --> XY               \n  1.0, XY --> Z            \nendwhere each line corresponds to a chemical reaction. The input rType designates the type of this instance (all instances will inherit from the abstract type AbstractReactionNetwork).The DSL can handle several types of arrows, in both backwards and forward direction. If a bi-directional arrow is used two reaction rates must be designated. These two reaction networks are identical:rn1 = @reaction_network rType begin\n  2.0, X + Y → XY               \n  1.0, XY > Z       \n  1.0, X + Y ← XY               \n  0.5, XY < Z           \nend\nrn1 = @reaction_network rType begin\n  (2.0,1.0), X + Y ↔ XY               \n  (1.0, 0.5), XY ⟷ Z       \nendThe empty set can be used for production or degradation and is declared using either 0 or ∅. Integers denote the number of each reactant partaking in the reaction.rn1 = @reaction_network rType begin\n  2.0, 2X --> 0        \n  2.0, ∅ --> X  \nendMultiple reactions can be declared in a single line:rn = @reaction_network rType begin\n  2.0, (X,Y) --> 0                   #Identical to reactions [2.0, X --> 0] and [2.0, Y --> 0]\n  (2.0, 1.0), (X,Y) --> 0            #Identical to reactions [2.0, X --> 0] and [1.0, X --> 0]\n  2.0, (X1,Y1) --> (X2,Y2)           #Identical to reactions [2.0, X1 --> X2] and [2.0, Y1 --> Y2]\n  (2.0,1.0), X + Y ↔ XY              #Identical to reactions [2.0, X + Y --> XY] and [1.0, XY --> X + Y].\n  ((2.0,1.0),(1.0,2.0)), (X,Y) ↔ 0   #Identical to reactions [(2.0,1.0), X ↔ 0] and [(1.0,2.0), Y ↔ 0].\nendParameters can be added to the network by declaring them after the reaction network. Parameters can only exist in the reaction rate and not as a part of the reaction.rn = @reaction_network rType begin\n    (kB, kD), X + Y ↔ XY\nend kB, kD\np = [2.0, 1.0]The parameter set p must be passed to the problem constructor. The parameter values can be changed after the reaction network is defined.The reaction rate do not need to be constant, but maybe depend on the concentration of the reactants.rn = @reaction_network rType begin\n    (1.0,2XY), X + Y ↔ XY\nendThe hill function hill(x,v,K,n) = v*(x^n)/(x^n + K^n) can be used, as well as the Michaelis Menten function (the hill function with n = 1).rn = @reaction_network rType begin\n    (1.0,hill(XY,1.5,2.0,2)), X + Y ↔ XY\nendBy using the @reaction_func macro it is possible to define your own functions, which may then be used when creating new reaction networks.@reaction_func hill2(x, v, k) = v*x^2/(k^2+x^2)    \n@reaction_network macro can see.\nrn = @reaction_network rType begin\n  (1.0,hill2(XY,1.5,2.0)), X + Y ↔ XY\nendReaction rates are automatically adjusted according mass kinetics, including taking special account of higher order terms like 2X -->. This can be disabled using any non-filled arrow (⇐, ⟽, ⇒, ⟾, ⇔, ⟺), in which case the reaction rate will be exactly as input. E.g the two reactions inrn = @reaction_network rType begin\n    2.0, X + Y --> XY\n    2.0*X*Y X + Y ⟾ XY\nendwill both have reaction rate equal to 2[X][Y].Once a reaction network has been created it can be passed as input to either one of the ODEProblem, SDEProblem or JumpProblem constructors.  probODE = ODEProblem(rn, args...; kwargs...)      \n  probSDE = SDEProblem(rn, args...; kwargs...)\n  probJump = JumpProblem(prob,aggregator::Direct,rn)the output problems may then be used as normal input to the solvers of the DifferentialEquations package.The noise used by the SDEProblem will correspond to the Chemical Langevin Equations. However it is possible to scale the amount of noise be declaring a noise parameter. This will be done after declaring the type but before the network.rn = @reaction_network BiDir begin\n    2.0, X + Y ↔ XY\nend\np = [0.5]The noise term is then added as an additional parameter to the network (by default the last parameter in the parameter array, unless also declared after the reaction network among the other parameters). By reducing (or increasing) the noise term the amount stochastic fluctuations in the system can be reduced (or increased).It is possible to access expressions corresponding to the functions determining the deterministic and stochastic development of the network using.  f_expr = rn.f_func\n  g_expr = rn.g_funcThis can e.g. be used to generate LaTeX code corresponding to the system."
 },
 
 {
@@ -4317,7 +4261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Birth-Death Process",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  2.0, X --> 2X\n  1.0, X --> 0\n  0.5, 0 --> X\nend\nprob = DiscreteProblem([5], (0.0, 4.0))\njump_prob = GillespieProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {
@@ -4325,7 +4269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Michaelis-Menten Enzyme Kinetics",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  0.00166, S + E --> SE\n  0.0001,  SE --> S + E\n  0.1,     SE --> P + E\nend\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0))\njump_prob = GillespieProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, S + E --> SE\n  c2,  SE --> S + E\n  c3,     SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {
