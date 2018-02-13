@@ -50,7 +50,7 @@ slow codes.
 
 If you have no bugs, great! The standard tricks for optimizing Julia code then
 apply. What you want to do first is make sure your function does not allocate.
-If your system is small (`<16` ODEs/SDEs/DDEs/DAEs?), then you should set your
+If your system is small (`<=100` ODEs/SDEs/DDEs/DAEs?), then you should set your
 system up to use [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl).
 This is demonstrated
 [http://docs.juliadiffeq.org/latest/tutorials/ode_example.html#Example-3:-Using-Other-Types-for-Systems-of-Equations-1](in the ODE tutorial)

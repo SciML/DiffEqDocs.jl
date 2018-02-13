@@ -30,7 +30,7 @@ f = @ode_def Calcium begin
 end vl vca i gl gca c v1 v2
 ```
 
-Next to build the ODE we need an initial condition and a starting timepoint.
+(Note that using PyDSTool requires use of the `@ode_def` macro). Next to build the ODE we need an initial condition and a starting timepoint.
 
 ```julia
 u0 = [0;0]
@@ -70,7 +70,7 @@ bif = bifurcation_curve(PC,"EP-C",["i"],
 
 This returns a `BifurcationCurve` type. Important fields of this type are:
 
-- `d`: the values along the curve
+- `points`: the values along the curve
 - `special_points`: the values for the bifurcation points
 - `stab`: an array which gives the stability of each point along the curve.
   `"S"` is for stable, `N` is for neutral, and `U` is for unstable.
