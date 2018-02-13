@@ -116,7 +116,7 @@ rate will be exactly as input. E.g the two reactions in
 ```julia
 rn = @reaction_network rType begin
     2.0, X + Y --> XY
-    2.0*X*Y X + Y ⟾ XY
+    2.0*X*Y, X + Y ⟾ XY
 end
 ```
 
