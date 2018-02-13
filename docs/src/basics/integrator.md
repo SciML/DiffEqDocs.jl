@@ -162,7 +162,7 @@ The following functions make up the interface:
 * `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
 * `terminate!(integrator)`: Terminates the integrator by emptying `tstops`. This
   can be used in events and callbacks to immediately end the solution process.
-* `change_t_via_interpolation(integrator,t,modify_save_endpoint=Val{false})`: This
+* `change_t_via_interpolation!(integrator,t,modify_save_endpoint=Val{false})`: This
   option lets one modify the current `t` and changes all of the corresponding
   values using the local interpolation. If the current solution has already
   been saved, one can provide the optional value `modify_save_endpoint` to also

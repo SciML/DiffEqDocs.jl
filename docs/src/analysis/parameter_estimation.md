@@ -161,7 +161,7 @@ following:
 
 ```julia
 function problem_new_parameters(prob::ODEProblem,p)
-  f = (t,u,du) -> prob.f(du,u,p,t)
+  f = (du,u,p,t) -> prob.f(du,u,p,t)
   uEltype = eltype(p)
   u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
   tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
@@ -288,7 +288,6 @@ p = [1.5]
 prob = ODEProblem(f,u0,tspan,p)
 ```
 
-Notice that since we only used `=>` for `a`, it's the only free parameter.
 We create data using the numerical result with `a=1.5`:
 
 ```julia

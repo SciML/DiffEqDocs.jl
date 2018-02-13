@@ -4,15 +4,10 @@ The ability to save and load solutions is important for handling large datasets
 and analyzing the results over multiple Julia sessions. This page explains the
 existing functionality for doing so.
 
-#### Note
-
-Note that this currently is not included with DifferentialEquations.jl, and requires
-that you `Pkg.add("DiffEqIO")` and `using DiffEqIO`.
-
 ## Tabular Data: IterableTables
 
 An interface to [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl)
-is provided by DiffEqIO.jl. This IterableTables link allows you to use a solution
+is provided. This IterableTables link allows you to use a solution
 type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs:
 
@@ -25,7 +20,7 @@ sol1 =solve(prob,Euler();dt=1//2^(4))
 then we can convert this to a dataframe using `DataFrame`:
 
 ```julia
-using DataFrames
+using IterableTables, DataFrames
 df = DataFrame(sol1)
 
 # Result

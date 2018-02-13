@@ -236,18 +236,18 @@ applying the jump function ``g_y`` at every data point.
 There are two forms. For discrete adjoints, the form is:
 
 ```julia
-s = adjoint_sensitivities(sol,alg,dg,t;kwargs...)
+s = adjoint_sensitivities(sol,alg,dg,ts;kwargs...)
 ```
 
 where `alg` is the ODE algorithm to solve the adjoint problem, `dg` is the jump
-function, and `t` is the time points for data. `dg` is given by:
+function, and `ts` is the time points for data. `dg` is given by:
 
 ```julia
-dg(out,u,i)
+dg(out,u,p,t,i)
 ```
 
-which is the in-place gradient of the cost functional `g` at time point `t[i]`
-with `u=u(t[i])`.
+which is the in-place gradient of the cost functional `g` at time point `ts[i]`
+with `u=u(t)`.
 
 For continuous functionals, the form is:
 

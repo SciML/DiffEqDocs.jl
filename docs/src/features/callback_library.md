@@ -215,7 +215,8 @@ constraints.
 StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)
 ```
 
-- `dtFE`: The function for the maximal timestep. Calculated using the previous `t` and `u`.
+- `dtFE`: The function for the maximal timestep, called as `dtFE(u,p,t)` 
+  using the previous values of `u`, `p`, and `t`.
 - `safety_factor`: The factor below the true maximum that will be stepped to
   which defaults to `9//10`.
 - `max_step`: Makes every step equal to `safety_factor*dtFE(u,p,t)` when the
@@ -245,7 +246,7 @@ which gets calls at the time points of interest. The constructor is:
 
 ## SavingCallback
 
-The saving callback lets you define a function `save_func(t, u, integrator)` which
+The saving callback lets you define a function `save_func(u, t, integrator)` which
 returns quantities of interest that shall be saved.
 
 ### Constructor
@@ -256,7 +257,7 @@ SavingCallback(save_func, saved_values::SavedValues;
                save_everystep=isempty(saveat),
                tdir=1)
 ```
-- `save_func(t, u, integrator)` returns the quantities which shall be saved.
+- `save_func(u, t, integrator)` returns the quantities which shall be saved.
   Note that this should allocate the output (not as a view to `u`).
 - `saved_values::SavedValues` is the types that `save_func` will return, i.e.
   `save_func(t, u, integrator)::savevalType`. It's specified via

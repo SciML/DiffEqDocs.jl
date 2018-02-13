@@ -15,7 +15,8 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "tutorials/dae_example.md",
            "tutorials/discrete_stochastic_example.md",
            "tutorials/jump_diffusion.md",
-           "tutorials/bvp_example.md"
+           "tutorials/bvp_example.md",
+           "tutorials/additional.md"
          ],
          "Basics" => Any[
            "basics/overview.md",
@@ -50,6 +51,7 @@ makedocs(modules=[DiffEqPDEBase,DiffEqProblemLibrary],
            "solvers/rode_solve.md",
            "solvers/dde_solve.md",
            "solvers/dae_solve.md",
+           "solvers/benchmarks.md"
          ],
          "Additional Features" => Any[
            "features/performance_overloads.md",

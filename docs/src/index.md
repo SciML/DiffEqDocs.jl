@@ -109,6 +109,7 @@ Pages = [
     "tutorials/discrete_stochastic_example.md",
     "tutorials/jump_diffusion.md",
     "tutorials/bvp_example.md",
+    "tutorials/additional.md"
     ]
 Depth = 2
 ```
@@ -171,6 +172,7 @@ Pages = [
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",
   "solvers/dae_solve.md",
+  "solvers/benchmarks.md"
 ]
 Depth = 2
 ```

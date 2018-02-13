@@ -58,24 +58,24 @@ for it to work in the solvers.
 
 ### AbstractDiffEqOperator Interface Description
 
-1. Function call and multiplication: L(du,u,p,t) for inplace and du = L(t,u) for
-   out-of-place, meaning L*u and A_mul_B!.
-2. If the operator is not a constant, update it with (t,u). A mutating form, i.e.
-   update_coefficients!(A,u,p,t) that changes the internal coefficients, and a
-   out-of-place form B = update_coefficients(A,t,u).
-3. is_constant(A) trait for whether the operator is constant or not.
+1. Function call and multiplication: `L(du,u,p,t)` for inplace and `du = L(t,u)` for
+   out-of-place, meaning `L*u` and `A_mul_B!`.
+2. If the operator is not a constant, update it with `(u,t)`. A mutating form, i.e.
+   `update_coefficients!(A,u,p,t)` that changes the internal coefficients, and a
+   out-of-place form `B = update_coefficients(A,t,u)`.
+3. `is_constant(A)` trait for whether the operator is constant or not.
 
 ### AbstractDiffEqLinearOpeartor Interface Description
 
-1. AbstractDiffEqLinearOperator <: AbstractDiffEqOperator
+1. `AbstractDiffEqLinearOperator <: AbstractDiffEqOperator`
 2. Can absorb under multiplication by a scalar. In all algorithms things like
-   dt*L show up all the time, so the linear operator must be able to absorb
+   `dt*L` show up all the time, so the linear operator must be able to absorb
    such constants.
-4. is_constant(A) trait for whether the operator is constant or not.
-5. Optional: diagonal, symmetric, etc traits from LinearMaps.jl.
-6. Optional: expm(A). Required for simple exponential integration.
-7. Optional: expmv(A,t,u) = expm(t*A)*u and expmv!(v,A::DiffEqOperator,t,u)
+4. `is_constant(A)` trait for whether the operator is constant or not.
+5. Optional: `diagonal`, `symmetric`, etc traits from LinearMaps.jl.
+6. Optional: `expm(A)`. Required for simple exponential integration.
+7. Optional: `expmv(A,t,u) = expm(t*A)*u` and `expmv!(v,A::DiffEqOperator,t,u)`
    Required for sparse-saving exponential integration.
-8. Optional: factorizations. A_ldiv_B, factorize et. al. This is only required
+8. Optional: factorizations. `A_ldiv_B`, `factorize` et. al. This is only required
    for algorithms which use the factorization of the operator (Crank-Nicholson),
    and only for when the default linear solve is used.
