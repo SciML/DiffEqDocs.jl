@@ -103,7 +103,6 @@ which may then be used when creating new reaction networks.
 
 ```julia
 @reaction_func hill2(x, v, k) = v*x^2/(k^2+x^2)    
-@reaction_network macro can see.
 rn = @reaction_network rType begin
   (1.0,hill2(XY,1.5,2.0)), X + Y ↔ XY
 end
