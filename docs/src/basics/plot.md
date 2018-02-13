@@ -215,8 +215,8 @@ Notice that this does not use the interpolation. When not using the plot recipe,
 the interpolation must be done manually. For example:
 
 ```julia
-dt = 0.001 #spacing in time
-ts = linspace(0,1,dt)
+n = 100 #number of timepoints
+ts = linspace(0,1,n)
 plot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))
 ```
 
