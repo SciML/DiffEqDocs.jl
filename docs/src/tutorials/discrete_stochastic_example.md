@@ -11,28 +11,28 @@ stochastic simulations to differential equation models.
 ## Defining a Model using Reactions
 
 For our example, we will build an SIR model which matches the tutorial from
-[Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for susceptible, infected,
-and recovered, and is a model is disease spread. When a susceptible person comes
-in contact with an infected person, the disease has a chance of infecting the
-susceptible person. This "chance" is determined by the number of susceptible
-persons and the number of infected persons, since when there are more people
-there is a greater chance that two come in contact. Normally, the rate
-is modeled as the amount
+[Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for
+susceptible, infected, and recovered, and is a model is disease spread. When a
+susceptible person comes in contact with an infected person, the disease has a
+chance of infecting the susceptible person. This "chance" is determined by the
+number of susceptible persons and the number of infected persons, since when
+there are more people there is a greater chance that two come in contact.
+Normally, the rate is modeled as the amount
 
 ```julia
 rate_constant*num_of_susceptible_people*num_of_infected_people
 ```
 
 The `rate_constant` is some constant determined by other factors like the type
-of the disease.
+of the disease. This formulation is known as mass actions laws.
 
 
-Let's build our model using a vector `u`, and let `u[1]` be the number of susceptible
-persons, `u[2]` be the number of infected persons, and `u[3]` be the number of
-recovered persons. In this case, we can re-write our rate as being:
+Let `S` be the number of susceptible persons, `I` be the number of infected
+persons, and `R` be the number of recovered persons. In this case, we can
+re-write our rate as being:
 
 ```julia
-rate_constant*u[1]*u[2]
+rate_constant*S*I
 ```
 
 Thus we have that our "reactants" are components 1 and 2. When this "reaction"
@@ -40,32 +40,22 @@ occurs, the result is that one susceptible person turns into an infected person.
 We can think of this as doing:
 
 ```julia
-u[1] -= 1
-u[2] += 1
+s -= 1
+i += 1
 ```
 
 that is, we decrease the number of susceptible persons by 1 and increase the number
 of infected persons by 1.
 
-These are the facts that are required to build a `Reaction`. The constructor for
-a `Reaction` is as follows:
+These are the facts the are encoded in the reaction:
 
-```julia
-Reaction(rate_constant,reactants,stoichiometry)
+```
+c1, S + I --> 2I
 ```
 
-The first value is the rate constant. We will use `1e-4`. Secondly, we pass in the
-indices for the reactants. In this case, since it uses the susceptible and infected
-persons, the indices are `[1,2]`. Lastly, we detail the stoichometric changes. These
-are tuples `(i,j)` where `i` is the reactant and `j` is the number to change by.
-Thus `(1,-1)` means "decrease the number of susceptible persons by 1" and
-`(2,1)` means "increase the number of infected persons by 1".
-
-Therefore, in total, our reaction is:
-
-```julia
-r1 = Reaction(1e-4,[1,2],[(1,-1),(2,1)])
-```
+This means that this "reaction" is that a susceptible person and an infected
+person causes a change to now have two susceptible persons (i.e. the susceptible
+person was infected). Here, `c1` is the reaction constant.
 
 To finish the model, we define one more reaction. Over time, infected people become
 less infected. The chance that any one person heals during some time unit depends
@@ -73,17 +63,24 @@ on the number of people who are infected. Thus the rate at which infected person
 are turning into recovered persons is
 
 ```julia
-rate_constant*u[2]
+rate_constant*I
 ```
 
 When this happens, we lose one infected person and gain a recovered person. This
 reaction is thus modeled as:
 
 ```julia
-r2 = Reaction(0.01,[2],[(2,-1),(3,1)])
+c2, I --> R
 ```
 
-where we have chosen the rate constant `0.01`.
+Thus our full reaction network is:
+
+```julia
+sir_model = @reaction_network SIR begin
+    c1, S + I --> 2I
+    c2, I --> R
+end c1 c2
+```
 
 ## Building and Solving the Problem
 
@@ -91,27 +88,24 @@ First, we have to define some kind of differential equation. Since we do not wan
 any continuous changes, we will build a `DiscreteProblem`. We do this by giving
 the constructor `u0`, the initial condition, and `tspan`, the timespan. Here, we
 will start with `999` susceptible people, `1` infected person, and `0` recovered
-people, and solve the problem from `t=0.0` to `t=250.0`. Thus we build the problem
-via:
+people, and solve the problem from `t=0.0` to `t=250.0`. We use the parameters
+`c1 = 0.1/1000` and `c2 = 0.01`. Thus we build the problem via:
 
 ```julia
-prob = DiscreteProblem([999,1,0],(0.0,250.0))
+p = (0.1/1000,0.01)
+prob = DiscreteProblem([999,1,0],(0.0,250.0),p)
 ```
 
-Now we have to add the reactions/jumps to the problem. We do this using a `GillespieProblem`.
-This takes in a differential equation problem `prob` (which we just defined),
-a `ConstantJumpAggregator`, and the reactions. The `ConstantJumpAggregator` is
-the method by which the constant jumps are aggregated together and solved. In
-this case we will use the classic Direct method due to Gillespie, also known as
-GillespieSSA. This aggregator is denoted by `Direct()`. Thus we build the
-jumps into the problem via:
+The reaction network can be converted into various differential equations
+like `JumpProblem`, `ODEProblem`, or an `SDEProblem`. To turn it into a
+jump problem, we simply do:
 
 ```julia
-jump_prob = GillespieProblem(prob,Direct(),r1,r2)
+jump_prob = JumpProblem(prob,Direct(),sir_model)
 ```
 
 This is now a problem that can be solved using the differential equations solvers.
-Since our problem is discrete, we will use the `Discrete()` method.
+Since our problem is discrete, we will use the `FunctionMap()` method.
 
 ```julia
 sol = solve(jump_prob,FunctionMap())
@@ -126,21 +120,6 @@ using Plots; plot(sol)
 ```
 
 ![gillespie_solution](../assets/gillespie_solution.png)
-
-## Using the Reaction Network DSL
-
-Also included as part of DiffEqBiological.jl is the reaction network DSL. We
-could define the previous problem via:
-
-```julia
-rs = @reaction_network begin
-  1e-4, S + I --> 2I
-  0.01,  I --> R
-end
-prob = DiscreteProblem([999,1,0],(0.0,250.0))
-jump_prob = GillespieProblem(prob,Direct(),rs)
-sol = solve(jump_prob,FunctionMap())
-```
 
 ## Defining the Jumps Directly
 
