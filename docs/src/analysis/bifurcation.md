@@ -85,3 +85,16 @@ plot(bif,(:i,:v))
 ```
 
 ![bifurcation_plot](../assets/bifplot.png)
+
+### Bifucation Curve Function Definition
+
+```julia
+function bifurcation_curve(PC,bif_type,freepars;max_num_points=450,
+                          max_stepsize=2,min_stepsize=1e-5,
+                          stepsize=2e-2,loc_bif_points="all",
+                          save_eigen=true,name="DefaultName",
+                          print_info=true,calc_stab=true,
+                          var_tol = 1e-6, func_tol = 1e-6,
+                          test_tol = 1e-4,
+                          initpoint=nothing,solver_sequence=[:forward])
+```
