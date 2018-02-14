@@ -3969,6 +3969,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/bifurcation.html#Bifucation-Curve-Function-Definition-1",
+    "page": "Bifurcation Analysis",
+    "title": "Bifucation Curve Function Definition",
+    "category": "section",
+    "text": "function bifurcation_curve(PC,bif_type,freepars;max_num_points=450,\n                          max_stepsize=2,min_stepsize=1e-5,\n                          stepsize=2e-2,loc_bif_points=\"all\",\n                          save_eigen=true,name=\"DefaultName\",\n                          print_info=true,calc_stab=true,\n                          var_tol = 1e-6, func_tol = 1e-6,\n                          test_tol = 1e-4,\n                          initpoint=nothing,solver_sequence=[:forward])"
+},
+
+{
     "location": "analysis/sensitivity.html#",
     "page": "Sensitivity Analysis",
     "title": "Sensitivity Analysis",
