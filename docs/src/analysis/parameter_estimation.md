@@ -888,6 +888,17 @@ The chain for the `i`th parameter is then given by:
 bayesian_result[:theta1]
 ```
 
+Summary statistics can be also be accessed:
+```julia
+Mamba.describe(bayesian_result)
+```
+
+The chain can be analysed by the trace plots and other plots obtained by:
+
+```julia
+plot_chain(bayesian_result)
+```
+
 ### DynamicHMC
 
 We can use [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) as the backend
@@ -907,3 +918,22 @@ The chain for the `i`th parameter is given by:
 ```julia
 bayesian_result_hmc[1][i]
 ```
+For accessing the various summary statistics:
+
+```julia
+DynamicHMC.NUTS_statistics(bayesian_result_dynamic[2])
+```
+Some details about the NUTS sampler can be obtained from:
+
+```julia
+bayesian_result_dynamic[3]
+```
+
+In case of `dynamic_inference` the trace plots for the `i`th parameter can be obtained by:
+
+```julia
+plot(bayesian_result_hmc[1][i])
+```
+
+For a better idea of the summary statistics and plotting you can take a look at the benchmark
+[notebooks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl/tree/master/ParameterEstimation)
