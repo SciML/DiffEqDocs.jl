@@ -3873,6 +3873,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/parameter_estimation.html#dynamichmc_inference-1",
+    "page": "Parameter Estimation",
+    "title": "dynamichmc_inference",
+    "category": "section",
+    "text": "dynamichmc_inference(prob::DEProblem,data,priors,t,transformations;\n                      σ = 0.01,ϵ=0.001,initial=Float64[])dynamichmc_inference uses DynamicHMC.jl to   perform the bayesian parameter estimation. prob can be any DEProblem, data is the set   of observations for our model whihc is to be used in the Bayesian Inference process. priors represent the   choice of prior distributions for the parameters to be determined, passed as an array of Distributions.jl distributions. t is the array of time points. transformations  is an array of Tranformations imposed for constraining the   parameter values to specific domains. initial values for the parameters can be passed, if not passed the means of the  priors are used. ϵ can be used as a kwarg to pass the initial step size for the NUTS algorithm.      "
+},
+
+{
     "location": "analysis/parameter_estimation.html#Optimization-Based-ODE-Inference-Examples-1",
     "page": "Parameter Estimation",
     "title": "Optimization-Based ODE Inference Examples",
@@ -3934,6 +3942,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Turing",
     "category": "section",
     "text": "This case we will build off of the Stan example. Note that turing_inference does not require the use of the @ode_def macro like Stan does, but it will still work with macro-defined functions. Thus, using the same setup as before, we simply give the setup to:bayesian_result = turing_inference(prob,Tsit5(),t,data,priors;num_samples=500)The chain for the ith parameter is then given by:bayesian_result[:theta1]"
+},
+
+{
+    "location": "analysis/parameter_estimation.html#DynamicHMC-1",
+    "page": "Parameter Estimation",
+    "title": "DynamicHMC",
+    "category": "section",
+    "text": "We can use DynamicHMC.jl as the backend for sampling with the dynamic_inference function. It supports any DEProblem,  priors can be passed as an array of Distributions.jl distributions, passing initial values is optional and in case where the user has a firm understanding of the  domain the parameter values will lie in, tranformations can be used to pass an array of constraints for the parameters as an array of Transformations.bayesian_result_hmc = dynamichmc_inference(prob1, data, [Normal(1.5, 1)], t, [bridge(ℝ, ℝ⁺, )])A tuple with summary statistics and the chain values is returned. The chain for the ith parameter is given by:bayesian_result_hmc[1][i]"
 },
 
 {
