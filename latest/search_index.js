@@ -3941,7 +3941,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Turing",
     "category": "section",
-    "text": "This case we will build off of the Stan example. Note that turing_inference does not require the use of the @ode_def macro like Stan does, but it will still work with macro-defined functions. Thus, using the same setup as before, we simply give the setup to:bayesian_result = turing_inference(prob,Tsit5(),t,data,priors;num_samples=500)The chain for the ith parameter is then given by:bayesian_result[:theta1]"
+    "text": "This case we will build off of the Stan example. Note that turing_inference does not require the use of the @ode_def macro like Stan does, but it will still work with macro-defined functions. Thus, using the same setup as before, we simply give the setup to:bayesian_result = turing_inference(prob,Tsit5(),t,data,priors;num_samples=500)The chain for the ith parameter is then given by:bayesian_result[:theta1]Summary statistics can be also be accessed:Mamba.describe(bayesian_result)The chain can be analysed by the trace plots and other plots obtained by:plot_chain(bayesian_result)"
 },
 
 {
@@ -3949,7 +3949,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "DynamicHMC",
     "category": "section",
-    "text": "We can use DynamicHMC.jl as the backend for sampling with the dynamic_inference function. It supports any DEProblem,  priors can be passed as an array of Distributions.jl distributions, passing initial values is optional and in case where the user has a firm understanding of the  domain the parameter values will lie in, tranformations can be used to pass an array of constraints for the parameters as an array of Transformations.bayesian_result_hmc = dynamichmc_inference(prob1, data, [Normal(1.5, 1)], t, [bridge(ℝ, ℝ⁺, )])A tuple with summary statistics and the chain values is returned. The chain for the ith parameter is given by:bayesian_result_hmc[1][i]"
+    "text": "We can use DynamicHMC.jl as the backend for sampling with the dynamic_inference function. It supports any DEProblem,  priors can be passed as an array of Distributions.jl distributions, passing initial values is optional and in case where the user has a firm understanding of the  domain the parameter values will lie in, tranformations can be used to pass an array of constraints for the parameters as an array of Transformations.bayesian_result_hmc = dynamichmc_inference(prob1, data, [Normal(1.5, 1)], t, [bridge(ℝ, ℝ⁺, )])A tuple with summary statistics and the chain values is returned. The chain for the ith parameter is given by:bayesian_result_hmc[1][i]For accessing the various summary statistics:DynamicHMC.NUTS_statistics(bayesian_result_dynamic[2])Some details about the NUTS sampler can be obtained from:bayesian_result_dynamic[3]In case of dynamic_inference the trace plots for the ith parameter can be obtained by:plot(bayesian_result_hmc[1][i])For a better idea of the summary statistics and plotting you can take a look at the benchmark notebooks"
 },
 
 {
