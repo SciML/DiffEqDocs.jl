@@ -269,6 +269,22 @@ type. `num_samples` is the number of samples per MCMC chain. `epsilon` and `tau`
 are the HMC parameters. The extra `kwargs` are given to the internal differential
 equation solver.
 
+### dynamichmc_inference
+
+```julia
+dynamichmc_inference(prob::DEProblem,data,priors,t,transformations;
+                      σ = 0.01,ϵ=0.001,initial=Float64[])
+```
+
+`dynamichmc_inference` uses [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) to 
+ perform the bayesian parameter estimation. `prob` can be any `DEProblem`, `data` is the set 
+ of observations for our model whihc is to be used in the Bayesian Inference process. `priors` represent the 
+ choice of prior distributions for the parameters to be determined, passed as an array of [Distributions.jl]
+ (https://juliastats.github.io/Distributions.jl/latest/) distributions. `t` is the array of time points. `transformations`
+ is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the 
+ parameter values to specific domains. `initial` values for the parameters can be passed, if not passed the means of the
+ `priors` are used. `ϵ` can be used as a kwarg to pass the initial step size for the NUTS algorithm.      
+
 ## Optimization-Based ODE Inference Examples
 
 ### Simple Local Optimization
