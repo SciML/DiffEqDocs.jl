@@ -21,8 +21,17 @@ choose to step via the `step!` command:
 step!(integrator)
 ```
 
-which will take one successful step. This type also implements an iterator interface,
-so one can step `n` times (or to the last `tstop`) using the `take` iterator:
+which will take one successful step. Additonally:
+
+```julia
+step!(integrator,dt[,stop_at_tdt=false])
+```
+
+passing a `dt` will make the integrator keep stepping until `integrator.t+dt`, and
+setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator.t+dt`
+
+This type also implements an iterator interface, so one can step `n` times 
+(or to the last `tstop`) using the `take` iterator:
 
 ```julia
 for i in take(integrator,n) end
