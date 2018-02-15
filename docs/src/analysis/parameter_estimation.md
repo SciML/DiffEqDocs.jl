@@ -887,3 +887,23 @@ The chain for the `i`th parameter is then given by:
 ```julia
 bayesian_result[:theta1]
 ```
+
+### DynamicHMC
+
+We can use [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) as the backend
+for sampling with the `dynamic_inference` function. It supports any `DEProblem`, 
+`priors` can be passed as an array of [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+distributions, passing `initial` values is optional and in case where the user has a firm understanding of the 
+domain the parameter values will lie in, `tranformations` can be used to pass an array of constraints for the parameters
+as an array of [Transformations](https://github.com/tpapp/ContinuousTransformations.jl).
+
+```julia
+bayesian_result_hmc = dynamichmc_inference(prob1, data, [Normal(1.5, 1)], t, [bridge(ℝ, ℝ⁺, )])
+```
+
+A tuple with summary statistics and the chain values is returned.
+The chain for the `i`th parameter is given by:
+
+```julia
+bayesian_result_hmc[1][i]
+```
