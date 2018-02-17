@@ -41,6 +41,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#Video-Tutorial-1",
+    "page": "Home",
+    "title": "Video Tutorial",
+    "category": "section",
+    "text": "(Image: Video Tutorial)"
+},
+
+{
     "location": "index.html#Tutorials-1",
     "page": "Home",
     "title": "Tutorials",
@@ -125,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Ordinary Differential Equations",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out DiffEqTutorials.jl."
+    "text": "This tutorial will introduce you to the functionality for solving ODEs. Other introductions can be found by checking out DiffEqTutorials.jl. Additionally, a video tutorial walks through this material."
 },
 
 {
@@ -141,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Note",
     "category": "section",
-    "text": "If that code errors, it is most likely due to versioning issues.Pkg.status(\"DifferentialEquations\")should return a version higher than v4.0.0. If not, Pkg.update() to get the latest versions. If that does not work, then there is some other package upper bounding the allowed version of DifferentialEqautions.jl.  The changes are described at length here:http://juliadiffeq.org/2018/01/24/Parameters.htmlIf you don't wish to update right now, simply doPkg.pin(\"DifferentialEquations\",v\"3.1.0\")and use the sidebar to change the documentation to v3.2.0."
+    "text": "If that code errors, it is most likely due to versioning issues.Pkg.status(\"DifferentialEquations\")should return a version higher than v4.0.0. If not, Pkg.update() to get the latest versions. If that does not work, then there is some other package upper bounding the allowed version of DifferentialEqautions.jl. The changes are described at length here:http://juliadiffeq.org/2018/01/24/Parameters.htmlIf you don't wish to update right now, simply doPkg.pin(\"DifferentialEquations\",v\"3.1.0\")and use the sidebar to change the documentation to v3.2.0."
 },
 
 {
