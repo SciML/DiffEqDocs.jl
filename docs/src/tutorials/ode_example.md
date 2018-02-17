@@ -2,6 +2,8 @@
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
+this material.
 
 ## Example 1 : Solving Scalar Equations
 
@@ -42,7 +44,7 @@ Pkg.status("DifferentialEquations")
 
 should return a version higher than `v4.0.0`. If not, `Pkg.update()` to
 get the latest versions. If that does not work, then there is some other
-package upper bounding the allowed version of DifferentialEqautions.jl. 
+package upper bounding the allowed version of DifferentialEqautions.jl.
 The changes are described at length here:
 
 http://juliadiffeq.org/2018/01/24/Parameters.html
