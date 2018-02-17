@@ -374,6 +374,9 @@ Note that the constructors for the Sundials algorithms take two main arguments:
   - `:BCG` - A Biconjugate gradient method.
   - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
   - `:TFQMR` - A TFQMR method.
+  - `:KLU` - A sparse factorization method. Requires that the user specifies a
+    Jacobian. The Jacobian must be set as a sparse matrix in the `ODEProblem`
+    type.
 
 Example:
 
