@@ -365,4 +365,4 @@ condition for termination. The default condition is that all derivatives should
 become smaller than `abstol` and the states times `reltol`. The user
 can pass any other function to implement a different termination condition. Such
 function should take four arguments: `integrator` (see [Integrator Interface](@ref)
-for details), `t` (current timepoint), `abstol` and `reltol`.
+for details), `abstol` and `reltol`.
