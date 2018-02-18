@@ -106,6 +106,15 @@ Instead if one wants to introduce discontinuous changes, one should use the
 [Event Handling and Callback Functions](@ref). Modifications within a callback
 `affect!` surrounded by saves provides an error-free handling of the discontinuity.
 
+As low-level alternative to the callbacks, one can use `set_t!`, `set_u!` and
+`set_ut!` to mutate integrator states.  Note that certain integrators may not
+have efficient ways to modify `u` and `t`.  In such case, `set_*!` are as
+inefficient as `reinit!`.
+
+- `set_t!(integrator, t)`: Set current time point of the `integrator` to `t`.
+- `set_u!(integrator, u)`: Set current state of the `integrator` to `u`.
+- `set_ut!(integrator, u, t)`: Set current state of the `integrator` to `u` and `t`.
+
 ### Integrator vs Solution
 
 The integrator and the solution have very different actions because they have
