@@ -420,7 +420,7 @@ result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
 ```julia
-cost_function = build_lsoptim_objective(prob,Tsit5(),L2Loss(t,data))
+cost_function = build_lsoptim_objective(prob1,t,data,Tsit5())
 ```
 
 The result is a cost function which can be used with LeastSquaresOptim. For more
