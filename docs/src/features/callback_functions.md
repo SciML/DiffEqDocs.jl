@@ -23,7 +23,7 @@ ContinuousCallback(condition,affect!,affect_neg!=affect!;
                    initialize = (c,u,t,integrator) -> nothing,
                    save_positions = (true,true),
                    interp_points=10,
-                   abstol=1e-12,reltol=0
+                   abstol=1e-9,reltol=0
                    idxs=nothing)
 ```
 
