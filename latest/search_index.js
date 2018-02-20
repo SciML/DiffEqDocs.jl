@@ -965,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Note about mutating",
     "category": "section",
-    "text": "Be cautious: one should not directly mutate the t and u fields of the integrator. Doing so will destroy the accuracy of the interpolator and can harm certain algorithms. Instead if one wants to introduce discontinuous changes, one should use the Event Handling and Callback Functions. Modifications within a callback affect! surrounded by saves provides an error-free handling of the discontinuity."
+    "text": "Be cautious: one should not directly mutate the t and u fields of the integrator. Doing so will destroy the accuracy of the interpolator and can harm certain algorithms. Instead if one wants to introduce discontinuous changes, one should use the Event Handling and Callback Functions. Modifications within a callback affect! surrounded by saves provides an error-free handling of the discontinuity.As low-level alternative to the callbacks, one can use set_t!, set_u! and set_ut! to mutate integrator states.  Note that certain integrators may not have efficient ways to modify u and t.  In such case, set_*! are as inefficient as reinit!.set_t!(integrator, t): Set current time point of the integrator to t.\nset_u!(integrator, u): Set current state of the integrator to u.\nset_ut!(integrator, u, t): Set current state of the integrator to u and t."
 },
 
 {
