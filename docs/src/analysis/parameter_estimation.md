@@ -351,7 +351,7 @@ plot(range,[cost_function(i) for i in range],yscale=:log10,
      lw = 3)
 ```
 
-![1 Parmaeter Likelihood](../assets/1paramcost.png)
+![1 Parameter Likelihood](../assets/1paramcost.png)
 
 Here we see that there is a very well-defined minimum in our cost function at
 the real parameter (because this is where the solution almost exactly fits the
@@ -430,8 +430,7 @@ details, consult the [documentation for LeastSquaresOptim.jl](https://github.com
 x = [1.3,0.8,2.8,1.2]
 res = optimize!(LeastSquaresProblem(x = x, f! = cost_function,
                 output_length = length(t)*length(prob.u0)),
-                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR(),
-                ftol=1e-14,xtol=1e-15,iterations=100,grtol=1e-14)
+                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR())
 ```
 
 We can see the results are:
