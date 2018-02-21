@@ -1,4 +1,6 @@
-# Immutable `struct` Handling
+# Problem interface
+
+## Modification of problem types
 
 Problem-related types in DifferentialEquations.jl are immutable.  This
 helps, e.g., parallel solvers to efficiently handle problem types.
@@ -15,7 +17,7 @@ prob2 = remake(prob1; tspan=(0.0,2.0))
 A general syntax of `remake` is
 
 ```julia
-modified_struct = remake(original_struct;
+modified_problem = remake(original_problem;
   field_1 = value_1,
   field_2 = value_2,
   ...
