@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Basics",
     "category": "section",
-    "text": "These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.Pages = [\n    \"basics/overview.md\",\n    \"basics/common_solver_opts.md\",\n    \"basics/solution.md\",\n    \"basics/plot.md\",\n    \"basics/integrator.md\",\n    \"basics/faq.md\",\n    \"basics/compatibility_chart.md\"\n    ]\nDepth = 2"
+    "text": "These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.Pages = [\n    \"basics/overview.md\",\n    \"basics/common_solver_opts.md\",\n    \"basics/solution.md\",\n    \"basics/plot.md\",\n    \"basics/integrator.md\",\n    \"basics/problem.md\",\n    \"basics/faq.md\",\n    \"basics/compatibility_chart.md\"\n    ]\nDepth = 2"
 },
 
 {
@@ -1054,6 +1054,30 @@ var documenterSearchIndex = {"docs": [
     "title": "Plot Recipe",
     "category": "section",
     "text": "Like the Solution type, a plot recipe is provided for the Integrator type. Since the Integrator type is a local state type on the current interval, plot(integrator) returns the solution on the current interval. The same options for the plot recipe are provided as for sol, meaning one can choose variables via the vars keyword argument, or change the plotdensity / turn on/off denseplot.Additionally, since the integrator is an integrator, this can be used in the Plots.jl animate command to iteratively build an animation of the solution while solving the differential equation.For an example of manually chaining together the iterator interface and plotting, one should try the following:using DifferentialEquations, DiffEqProblemLibrary, Plots\n\n# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\n\nusing Plots\nintegrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])\npyplot(show=true)\nplot(integrator)\nfor i in integrator\n  display(plot!(integrator,vars=(0,1),legend=false))\nend\nstep!(integrator); plot!(integrator,vars=(0,1),legend=false)\nsavefig(\"iteratorplot.png\")(Image: Iterator Plot)"
+},
+
+{
+    "location": "basics/problem.html#",
+    "page": "Problem interface",
+    "title": "Problem interface",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "basics/problem.html#Problem-interface-1",
+    "page": "Problem interface",
+    "title": "Problem interface",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "basics/problem.html#Modification-of-problem-types-1",
+    "page": "Problem interface",
+    "title": "Modification of problem types",
+    "category": "section",
+    "text": "Problem-related types in DifferentialEquations.jl are immutable.  This helps, e.g., parallel solvers to efficiently handle problem types.However, you may want to modify the problem after it is created.  For example, to simulate it for longer timespan.  It can be done by the remake function:prob1 = ODEProblem((u,p,t) -> u/2, 1.0, (0.0,1.0))\nprob2 = remake(prob1; tspan=(0.0,2.0))A general syntax of remake ismodified_problem = remake(original_problem;\n  field_1 = value_1,\n  field_2 = value_2,\n  ...\n)where field_N and value_N are renamed to appropriate field names and new desired values."
 },
 
 {
