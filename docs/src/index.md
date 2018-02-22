@@ -131,6 +131,7 @@ Pages = [
     "basics/solution.md",
     "basics/plot.md",
     "basics/integrator.md",
+    "basics/problem.md",
     "basics/faq.md",
     "basics/compatibility_chart.md"
     ]
