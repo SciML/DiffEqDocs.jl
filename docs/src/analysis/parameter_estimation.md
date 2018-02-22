@@ -59,7 +59,7 @@ function build_loss_objective(prob::DEProblem,alg,loss_func
 The first argument is the `DEProblem` to solve, and next is the `alg` to use.
 The `alg` must match the problem type, which can be any `DEProblem`
 (ODEs, SDEs, DAEs, DDEs, etc.). `regularization` defaults to nothing
-which has no regulariztion function. One can also choose `verbose_opt` and
+which has no regularization function. One can also choose `verbose_opt` and
 `verbose_steps`, which, in the optimization routines, will print the steps
 and the values at the steps every `verbose_steps` steps. `mpg_autodiff` uses
 autodifferentiation to define the derivative for the MathProgBase solver.
