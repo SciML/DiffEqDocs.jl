@@ -27,12 +27,12 @@ The `rate_constant` is some constant determined by other factors like the type
 of the disease. This formulation is known as mass actions laws.
 
 
-Let `S` be the number of susceptible persons, `I` be the number of infected
-persons, and `R` be the number of recovered persons. In this case, we can
+Let `s` be the number of susceptible persons, `i` be the number of infected
+persons, and `r` be the number of recovered persons. In this case, we can
 re-write our rate as being:
 
 ```julia
-rate_constant*S*I
+rate_constant*s*i
 ```
 
 Thus we have that our "reactants" are components 1 and 2. When this "reaction"
@@ -50,7 +50,7 @@ of infected persons by 1.
 These are the facts the are encoded in the reaction:
 
 ```
-c1, S + I --> 2I
+c1, s + i --> 2i
 ```
 
 This means that this "reaction" is that a susceptible person and an infected
@@ -63,24 +63,27 @@ on the number of people who are infected. Thus the rate at which infected person
 are turning into recovered persons is
 
 ```julia
-rate_constant*I
+rate_constant*i
 ```
 
 When this happens, we lose one infected person and gain a recovered person. This
 reaction is thus modeled as:
 
 ```julia
-c2, I --> R
+c2, i --> r
 ```
 
 Thus our full reaction network is:
 
 ```julia
 sir_model = @reaction_network SIR begin
-    c1, S + I --> 2I
-    c2, I --> R
+    c1, s + i --> 2i
+    c2, i --> r
 end c1 c2
 ```
+
+Notice that the order the variables are introduced in the model is `s`, then `i`,
+then `r`, and thus this is the canonical ordering of the variables.
 
 ## Building and Solving the Problem
 
