@@ -32,7 +32,7 @@ p = [10.0,28.0,8/3]
 prob = ODEProblem(g,u0,tspan,p)</code></pre><p>and then we build the <code>ProbInts</code> type. Let&#39;s use the order 5 <code>Tsit5</code> again.</p><pre><code class="language-julia">cb = AdaptiveProbIntsUncertainty(5)</code></pre><p>Then we solve the <code>MonteCarloProblem</code></p><pre><code class="language-julia">monte_prob = MonteCarloProblem(prob)
 sim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)</code></pre><p><img src="../assets/uncertainty_chaos.png" alt="uncertainty_chaos"/></p><p>Here we see that by <code>t</code> about 22 we start to receive strong deviations from the &quot;true&quot; solution. We can increase the amount of time before error explosion by using a higher order method with stricter tolerances:</p><pre><code class="language-julia">tspan = (0.0,40.0)
-prob = ODEProblem(g,u0,tspan)
+prob = ODEProblem(g,u0,tspan,p)
 cb = AdaptiveProbIntsUncertainty(7)
 monte_prob = MonteCarloProblem(prob)
 sim = solve(monte_prob,Vern7(),num_monte=100,callback=cb,reltol=1e-6)
