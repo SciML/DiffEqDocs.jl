@@ -176,7 +176,7 @@ with stricter tolerances:
 
 ```julia
 tspan = (0.0,40.0)
-prob = ODEProblem(g,u0,tspan)
+prob = ODEProblem(g,u0,tspan,p)
 cb = AdaptiveProbIntsUncertainty(7)
 monte_prob = MonteCarloProblem(prob)
 sim = solve(monte_prob,Vern7(),num_monte=100,callback=cb,reltol=1e-6)
