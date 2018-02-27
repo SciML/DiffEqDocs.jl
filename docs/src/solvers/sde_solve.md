@@ -64,13 +64,6 @@ Orders are given in terms of strong order.
   all forms of noise, including non-diagonal, scalar, and colored noise.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
-- `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
-  sense. Requires the bbprime function, which is defined as
-  ```math
-    \text{bbprime}^k(t,x) = \sum_{i=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
-  ```
-  The default settings for the drift implicitness is `theta=0.5` and 
-  the diffusion implicitness is `eta=0.5`.  
 - `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
@@ -121,6 +114,17 @@ For `SRA` and `SRI`, the following option is allowed:
   `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Handles diagonal and scalar noise.
+
+### Analytic Methods 
+The following methods require analytic derivatives of the diffusion term. 
+
+- `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
+  sense. Requires the bbprime function, which is defined as
+  ```math
+    \text{bbprime}^k(t,x) = \sum_{i=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
+  ```
+  The default settings for the drift implicitness is `theta=0.5` and 
+  the diffusion implicitness is `eta=0.5`.  
 
 #### Note about mass matrices
 
