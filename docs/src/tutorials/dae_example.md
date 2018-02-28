@@ -60,7 +60,7 @@ and make the DAEProblem:
 ```julia
 using DifferentialEquations
 differential_vars = [true,true,false]
-prob = DAEProblem(f,u₀,du₀,tspan,differential_vars=differential_vars)
+prob = DAEProblem(f,du₀,u₀,tspan,differential_vars=differential_vars)
 ```
 
 `differential_vars` is an option which states which of the variables are differential,
