@@ -325,7 +325,7 @@ plot(sol,vars=(0,2))
 
 ![Lorenz Timeseries](../assets/lorenz_timeseries.png)
 
-Note that here "variable 0" corresponds to the dependent variable ("time").
+Note that here "variable 0" corresponds to the independent variable ("time").
 
 ## Defining Parameterized Functions
 
