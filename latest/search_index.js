@@ -213,7 +213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Example 2: Solving Systems of Equations",
     "category": "section",
-    "text": "In this example we will solve the Lorenz equations:beginalign\nfracdxdt = (y-x) \nfracdydt = x(-z) - y \nfracdzdt = xy - z \nendalignDefining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, you write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl\'s solver packages are able to reduce the amount of array allocations and achieve better performance.The way we do this is we simply write the output to the 3rd input of the function. For example, our Lorenz equation problem would be defined by the function:function lorenz(du,u,p,t)\n du[1] = 10.0*(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,100.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)Using the plot recipe tools defined on the plotting page, we can choose to do a 3D phase space plot between the different variables:plot(sol,vars=(1,2,3))(Image: Lorenz System)Note that the default plot for multi-dimensional systems is an overlay of each timeseries. We can plot the timeseries of just the second component using the variable choices interface once more:plot(sol,vars=(0,2))(Image: Lorenz Timeseries)Note that here \"variable 0\" corresponds to the dependent variable (\"time\")."
+    "text": "In this example we will solve the Lorenz equations:beginalign\nfracdxdt = (y-x) \nfracdydt = x(-z) - y \nfracdzdt = xy - z \nendalignDefining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, you write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl\'s solver packages are able to reduce the amount of array allocations and achieve better performance.The way we do this is we simply write the output to the 3rd input of the function. For example, our Lorenz equation problem would be defined by the function:function lorenz(du,u,p,t)\n du[1] = 10.0*(u[2]-u[1])\n du[2] = u[1]*(28.0-u[3]) - u[2]\n du[3] = u[1]*u[2] - (8/3)*u[3]\nendand then we can use this function in a problem:u0 = [1.0;0.0;0.0]\ntspan = (0.0,100.0)\nprob = ODEProblem(lorenz,u0,tspan)\nsol = solve(prob)Using the plot recipe tools defined on the plotting page, we can choose to do a 3D phase space plot between the different variables:plot(sol,vars=(1,2,3))(Image: Lorenz System)Note that the default plot for multi-dimensional systems is an overlay of each timeseries. We can plot the timeseries of just the second component using the variable choices interface once more:plot(sol,vars=(0,2))(Image: Lorenz Timeseries)Note that here \"variable 0\" corresponds to the independent variable (\"time\")."
 },
 
 {
@@ -1620,7 +1620,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_linear",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_linear",
-    "category": "Constant",
+    "category": "constant",
     "text": "du_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2, with solution\n\nu(u0ptW_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
 },
 
@@ -1628,7 +1628,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_2Dlinear",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_2Dlinear",
-    "category": "Constant",
+    "category": "constant",
     "text": "8 linear SDEs (as a 4x2 matrix):\n\ndu_t = udt + udW_t\n\nwhere β=1.01, α=0.87, and initial condtion u0=1/2 with solution\n\nu(u0ptW_t)=u0exp((-frac^22)t+W_t)\n\n\n\n"
 },
 
@@ -1636,7 +1636,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_wave",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_wave",
-    "category": "Constant",
+    "category": "constant",
     "text": "du_t = -frac1100sin(u)cos^3(u)dt + frac110cos^2(u_t) dW_t\n\nand initial condition u0=1.0 with solution\n\nu(u0ptW_t)=arctan(fracW_t10 + tan(u0))\n\n\n\n"
 },
 
@@ -1644,7 +1644,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_lorenz",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_lorenz",
-    "category": "Constant",
+    "category": "constant",
     "text": "Lorenz Attractor with additive noise\n\nbeginalign\ndx = *(y-x)dt + dW_t \ndy = (x*(-z) - y)dt + dW_t \ndz = (x*y - *z)dt + dW_t \nendalign\n\nwith =10, =28, =83, =30 and inital condition u0=111.\n\n\n\n"
 },
 
@@ -1652,7 +1652,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_cubic",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_cubic",
-    "category": "Constant",
+    "category": "constant",
     "text": "du_t = frac14u(1-u^2)dt + frac12(1-u^2)dW_t\n\nand initial condtion u0=1/2, with solution\n\nu(u0ptW_t)=frac(1+u0)exp(W_t)+u0-1(1+u0)exp(W_t)+1-u0\n\n\n\n"
 },
 
@@ -1660,7 +1660,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additive",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additive",
-    "category": "Constant",
+    "category": "constant",
     "text": "Additive noise problem\n\nu_t = (fracsqrt1+t-frac12(1+t)u_t)dt + fracsqrt1+tdW_t\n\nand initial condition u0=1.0 with α=0.1 and β=0.05, with solution\n\nu(u0ptW_t)=fracu0sqrt1+t + frac(t+W_t)sqrt1+t\n\n\n\n"
 },
 
@@ -1668,7 +1668,7 @@ var documenterSearchIndex = {"docs": [
     "location": "types/sde_types.html#DiffEqProblemLibrary.prob_sde_additivesystem",
     "page": "SDE Problems",
     "title": "DiffEqProblemLibrary.prob_sde_additivesystem",
-    "category": "Constant",
+    "category": "constant",
     "text": "A multiple dimension extension of additiveSDEExample\n\n\n\n"
 },
 
