@@ -6,7 +6,7 @@ du &amp;= f(u,p,t) \\
 dy_1 &amp;= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &amp;= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &amp;=  y_{1} + y_{2} + y_{3} \\
-\end{align}\]</div><p>with initial conditions <span>$y_1(0) = 1$</span>, <span>$y_2(0) = 0$</span>, <span>$y_3(0) = 0$</span>, <span>$dy_1 = - 0.04$</span>, <span>$dy_2 = 0.04$</span>, and <span>$dy_3 = 0.0$</span>.</p><p>The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update <code>f(u,p,t,du,out)</code> which uses the values to mutate <code>out</code> as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:</p><pre><code class="language-julia">function f(out,du,u,p,t)
+\end{align}\]</div><p>with initial conditions <span>$y_1(0) = 1$</span>, <span>$y_2(0) = 0$</span>, <span>$y_3(0) = 0$</span>, <span>$dy_1 = - 0.04$</span>, <span>$dy_2 = 0.04$</span>, and <span>$dy_3 = 0.0$</span>.</p><p>The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update <code>f(out,du,u,p,t)</code> which uses the values to mutate <code>out</code> as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:</p><pre><code class="language-julia">function f(out,du,u,p,t)
   out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]
   out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]
   out[3] = u[1] + u[2] + u[3] - 1.0
