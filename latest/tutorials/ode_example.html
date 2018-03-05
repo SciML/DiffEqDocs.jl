@@ -20,7 +20,7 @@ plot(sol)</code></pre><p><img src="../assets/ode_tutorial_linear_plot.png" alt="
 \frac{dx}{dt} &amp;= σ(y-x) \\
 \frac{dy}{dt} &amp;= x(ρ-z) - y \\
 \frac{dz}{dt} &amp;= xy - βz \\
-\end{align}\]</div><p>Defining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, you write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl&#39;s solver packages are able to reduce the amount of array allocations and achieve better performance.</p><p>The way we do this is we simply write the output to the 3rd input of the function. For example, our Lorenz equation problem would be defined by the function:</p><pre><code class="language-julia">function lorenz(du,u,p,t)
+\end{align}\]</div><p>Defining your ODE function to be in-place updating can have performance benefits. What this means is that, instead of writing a function which outputs its solution, you write a function which updates a vector that is designated to hold the solution. By doing this, DifferentialEquations.jl&#39;s solver packages are able to reduce the amount of array allocations and achieve better performance.</p><p>The way we do this is we simply write the output to the 1st input of the function. For example, our Lorenz equation problem would be defined by the function:</p><pre><code class="language-julia">function lorenz(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
  du[3] = u[1]*u[2] - (8/3)*u[3]
