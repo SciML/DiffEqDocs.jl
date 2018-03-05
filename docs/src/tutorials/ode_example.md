@@ -285,7 +285,7 @@ you write a function which updates a vector that is designated to hold the solut
 By doing this, DifferentialEquations.jl's solver packages are able to reduce the
 amount of array allocations and achieve better performance.
 
-The way we do this is we simply write the output to the 3rd input of the function.
+The way we do this is we simply write the output to the 1st input of the function.
 For example, our Lorenz equation problem would be defined by the function:
 
 ```julia
