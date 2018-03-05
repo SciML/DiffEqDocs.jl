@@ -35,7 +35,7 @@ with initial conditions ``y_1(0) = 1``, ``y_2(0) = 0``, ``y_3(0) = 0``,
 
 The workflow for DAEs is the same as for the other types of equations, where all
 you need to know is how to define the problem. A DAEProblem is specified by defining
-an in-place update `f(u,p,t,du,out)` which uses the values to mutate `out` as the
+an in-place update `f(out,du,u,p,t)` which uses the values to mutate `out` as the
 output. To makes this into a DAE, we move all of the variables to one side.
 Thus we can define the function:
 
