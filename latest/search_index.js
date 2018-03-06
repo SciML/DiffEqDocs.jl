@@ -1445,7 +1445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Mathematical Specification of a Split ODE Problem",
     "category": "section",
-    "text": "To define a SplitODEProblem, you simply need to give a two functions functions f_1 and f_2 along with an initial condition u which define an ODE:fracdudt =  f_1(upt) + f_2(upt)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Many splits are at least partially linear. That is the equation:fracdudt =  f_1(upt) + f_2(upt)For how to define a function as linear, see the documentation for the DiffEqOperators."
+    "text": "To define a SplitODEProblem, you simply need to give a two functions functions f_1 and f_2 along with an initial condition u which define an ODE:fracdudt =  f_1(upt) + f_2(upt)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well.Many splits are at least partially linear. That is the equation:fracdudt =  Au + f_2(upt)For how to define a linear function A, see the documentation for the DiffEqOperators."
 },
 
 {
@@ -1453,7 +1453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitODEProblem{isinplace}(f1,f2,u0,tspan;kwargs...)"
+    "text": "SplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)The isinplace parameter can be omitted and will be determined using the signature of f2.  Note that both f1 and f2 should support the in-place style if isinplace is true or they  should both support the out-of-place style if isinplace is false. You cannot mix up the two styles.Under the hood, a SplitODEProblem is just a regular ODEProblem whose f is a SplitFunction.  Therefore you can solve a SplitODEProblem using the same solvers for ODEProblem. For solvers  dedicated to split problems, see Split ODE Solvers."
 },
 
 {
@@ -1461,7 +1461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
 },
 
 {
@@ -2285,7 +2285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "Semilinear ODE",
     "category": "section",
-    "text": "The Semilinear ODE is a split ODEProblem with one linear operator and one function:fracdudt =  Au + f(tu)where the first function is a constant (not time dependent)AbstractDiffEqOperator and the second part is a (nonlinear) function. ../../features/diffeq_operator.html.The appropriate algorithms for this form are:"
+    "text": "The Semilinear ODE is a SplitODEProblem with one linear operator and one nonlinear function:fracdudt =  Au + f(tu)See the documentation page for DiffEqOperator  for details about how to define linear operators from a matrix or finite difference  discretization of derivative operators.The appropriate algorithms for this form are:"
 },
 
 {
@@ -2293,7 +2293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "These methods utilize caching of the exponential operators and are thus are faster than Krylov-based methods but are only suited for smaller systems where expm(dt*A) can fit in memory.GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.Additional Krylov-based methods which allow for lazy calculation of expm(dt*A)*v are in development."
+    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nETD1 - First order Exponential Time Differencing method. Not yet implemented.\nETD2 - Second order Exponential Time Differencing method. Not yet implemented.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.The methods need to compute the exponential of A, which could be expensive. There are  two ways to speed up the integrator:For small systems that can fit expm(dt*A) in memory, use the in-place style, which  enables caching of the exponential operators to save time.\nFor large systems, use Krylov-based versions of the methods which allow for lazy  calculation of expm(dt*A)*v and similar entities. To tell a solver to use Krylov  methods, pass krylov=true to its constructor. You can also manually set the size of the  Krylov subspace by setting the m parameter, which defaults to 30. For example\nLawsonEuler(krylob=true, m=50)\nconstructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that m  only sets an upper bound to the Krylov subspace size. If a convergence criterion is met  (determined by the reltol of the integrator), \"happy breakdown\" will occur and the  Krylov subspace will only be constructed partially.\nCurrently only the LawsonEuler and NorsettEuler methods support Krylov methods."
 },
 
 {
