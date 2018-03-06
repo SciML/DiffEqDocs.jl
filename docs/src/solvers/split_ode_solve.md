@@ -39,23 +39,19 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 ## Semilinear ODE
 
-The Semilinear ODE is a split `ODEProblem` with one linear operator and one function:
+The Semilinear ODE is a `SplitODEProblem` with one linear operator and one nonlinear function:
 
 ```math
 \frac{du}{dt} =  Au + f(t,u)
 ```
 
-where the first function is a constant (not time dependent)`AbstractDiffEqOperator`
-and the second part is a (nonlinear) function.
-[../../features/diffeq_operator.html](See the DiffEqOperator page for details).
+See the documentation page for [DiffEqOperator](../../features/diffeq_operator.html) 
+for details about how to define linear operators from a matrix or finite difference 
+discretization of derivative operators.
 
 The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
-
-These methods utilize caching of the exponential operators and are thus are faster than
-Krylov-based methods but are only suited for smaller systems where `expm(dt*A)` can fit
-in memory.
 
 - `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only.
 - `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only.
@@ -67,5 +63,24 @@ in memory.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 
-Additional Krylov-based methods which allow for lazy calculation of `expm(dt*A)*v` are in
-development.
+The methods need to compute the exponential of `A`, which could be expensive. There are 
+two ways to speed up the integrator:
+
+- For small systems that can fit `expm(dt*A)` in memory, use the in-place style, which 
+  enables caching of the exponential operators to save time.
+
+- For large systems, use Krylov-based versions of the methods which allow for lazy 
+  calculation of `expm(dt*A)*v` and similar entities. To tell a solver to use Krylov 
+  methods, pass `krylov=true` to its constructor. You can also manually set the size of the 
+  Krylov subspace by setting the `m` parameter, which defaults to 30. For example
+  
+  ```julia
+  LawsonEuler(krylob=true, m=50)
+  ```
+  
+  constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m` 
+  only sets an upper bound to the Krylov subspace size. If a convergence criterion is met 
+  (determined by the `reltol` of the integrator), "happy breakdown" will occur and the 
+  Krylov subspace will only be constructed partially.
+  
+  Currently only the `LawsonEuler` and `NorsettEuler` methods support Krylov methods.
