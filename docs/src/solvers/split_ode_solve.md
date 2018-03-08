@@ -75,7 +75,7 @@ two ways to speed up the integrator:
   Krylov subspace by setting the `m` parameter, which defaults to 30. For example
   
   ```julia
-  LawsonEuler(krylob=true, m=50)
+  LawsonEuler(krylov=true, m=50)
   ```
   
   constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m` 
