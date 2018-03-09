@@ -115,7 +115,7 @@ For `SRA` and `SRI`, the following option is allowed:
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Handles diagonal and scalar noise.
 
-### Analytic Methods 
+### Derivative-Based Methods 
 The following methods require analytic derivatives of the diffusion term. 
 
 - `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
