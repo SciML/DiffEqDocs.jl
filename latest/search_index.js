@@ -2413,7 +2413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Special Noise Forms",
     "category": "section",
-    "text": "Some solvers are for specialized forms of noise. Diagonal noise is the default setup. Non-diagonal noise is specified via setting noise_rate_prototype to a matrix in the SDEProblem type. A special form of non-diagonal noise, commutative noise, occurs when the noise satisfies the following condition:sum_i=1^d g_ij_1(tu) fracpartial g_kj_2partial x_i = sum_i=1^d g_ij_2(tx) fracpartial g_kj_1partial x_ifor every j_1j_2 and k. Additive noise is when g(tu)=g(t), i.e. is independent of u. Multiplicative noise is g_i(tu)=a_i u."
+    "text": "Some solvers are for specialized forms of noise. Diagonal noise is the default setup. Non-diagonal noise is specified via setting noise_rate_prototype to a matrix in the SDEProblem type. A special form of non-diagonal noise, commutative noise, occurs when the noise satisfies the following condition:sum_i=1^d g_ij_1(tx) fracpartial g_kj_2(tx)partial x_i = sum_i=1^d g_ij_2(tx) fracpartial g_kj_1(tx)partial x_ifor every j_1j_2 and k. Additive noise is when g(tu)=g(t), i.e. is independent of u. Multiplicative noise is g_i(tu)=a_i u."
 },
 
 {
@@ -2462,6 +2462,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Stiff Methods",
     "category": "section",
     "text": "ImplicitEM - An order 0.5 Ito implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.\nImplicitEulerHeun - An order 0.5 Stratonovich implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.\nImplicitRKMil - An order 1.0 implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. Defaults to solving the Ito problem, but ImplicitRKMil(interpretation=:Stratonovich) makes it solve the Stratonovich problem. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Handles diagonal and scalar noise."
+},
+
+{
+    "location": "solvers/sde_solve.html#Derivative-Based-Methods-1",
+    "page": "SDE Solvers",
+    "title": "Derivative-Based Methods",
+    "category": "section",
+    "text": "The following methods require analytic derivatives of the diffusion term. PCEuler - The predictor corrector euler method. Strong Order 0.5 in the Ito sense. Requires the bbprime function, which is defined as\n  textbbprime^k(tx) = sum_i=1^m sum_i=1^d g_ij(tx) fracpartial g_kj(tx)partial x_i\nThe default settings for the drift implicitness is theta=0.5 and  the diffusion implicitness is eta=0.5.  "
 },
 
 {
