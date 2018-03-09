@@ -12,7 +12,8 @@ IDA(linear_solver=:BCG) # Biconjugate gradient method                           
     max_num_iters_ic = 10,
     max_num_backs_ic = 100,
     use_linesearch_ic = true,
-    max_convergence_failures = 10)</code></pre><p>See <a href="https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf">the Sundials manual</a> for details on the additional options.</p><h2><a class="nav-anchor" id="DASKR.jl-1" href="#DASKR.jl-1">DASKR.jl</a></h2><p>DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:</p><pre><code class="language-julia">Pkg.add(&quot;DASKR&quot;)
+    max_convergence_failures = 10,
+    init_all = false)</code></pre><p>See <a href="https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf">the Sundials manual</a> for details on the additional options. The option <code>init_all</code> controls the initial condition consistancy routine. If the initial conditions are inconsistant (i.e. they do not satisfy the implicit equation), <code>init_all=false</code> means that the algebraic variables and derivatives will be modified in order to satisfy the DAE. If <code>init_all=true</code>, all initial conditions will be modified to satify the DAE.</p><h2><a class="nav-anchor" id="DASKR.jl-1" href="#DASKR.jl-1">DASKR.jl</a></h2><p>DASKR.jl is not automatically included by DifferentialEquations.jl. To use this algorithm, you will need to install and use the package:</p><pre><code class="language-julia">Pkg.add(&quot;DASKR&quot;)
 using DASKR</code></pre><ul><li><p><code>daskr</code> - This is a wrapper for the well-known DASKR algorithm.</p></li></ul><p>All additional options are available. The constructor is:</p><pre><code class="language-julia">function daskr(;linear_solver=:Dense,
                   jac_upper=0,jac_lower=0,max_order = 5,
                   non_negativity_enforcement = 0,
