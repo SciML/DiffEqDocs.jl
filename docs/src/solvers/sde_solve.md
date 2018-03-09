@@ -37,7 +37,7 @@ a matrix in the `SDEProblem` type. A special form of non-diagonal noise,
 commutative noise, occurs when the noise satisfies the following condition:
 
 ```math
-\sum_{i=1}^d g_{i,j_1}(t,u) \frac{\partial g_{k,j_2}}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}}{\partial x_i}
+\sum_{i=1}^d g_{i,j_1}(t,x) \frac{\partial g_{k,j_2}(t,x)}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}(t,x)}{\partial x_i}
 ```
 
 for every ``j_1,j_2`` and ``k``. Additive noise is when ``g(t,u)=g(t)``,
@@ -114,6 +114,17 @@ For `SRA` and `SRI`, the following option is allowed:
   `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Handles diagonal and scalar noise.
+
+### Derivative-Based Methods 
+The following methods require analytic derivatives of the diffusion term. 
+
+- `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
+  sense. Requires the bbprime function, which is defined as
+  ```math
+    \text{bbprime}^k(t,x) = \sum_{i=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
+  ```
+  The default settings for the drift implicitness is `theta=0.5` and 
+  the diffusion implicitness is `eta=0.5`.  
 
 #### Note about mass matrices
 
