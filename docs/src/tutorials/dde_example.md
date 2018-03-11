@@ -14,10 +14,10 @@ In this example we will solve [a model of breast cancer growth kinetics](http://
 
 ```math
 \begin{align}
-dx_{0} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{0}-q_{0}\right)x_{0}(t)-d_{0}x_{0}(t)\\
-dx_{1} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{0}+q_{0}\right)x_{0}(t)\\
-       +& \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{1}-q_{1}\right)x_{1}(t)-d_{1}x_{1}(t)\\
-dx_{2} &= \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q_{1}\right)x_{1}(t)-d_{2}x_{2}(t)
+dx_{0} ={}& \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{0}-q_{0}\right)x_{0}(t)-d_{0}x_{0}(t)\\
+dx_{1} ={}& \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{0}+q_{0}\right)x_{0}(t)\\
+       &+ \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{1}-q_{1}\right)x_{1}(t)-d_{1}x_{1}(t) \notag \\
+dx_{2} ={}& \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q_{1}\right)x_{1}(t)-d_{2}x_{2}(t)
 \end{align}
 ```
 
@@ -51,34 +51,32 @@ lags = [tau]
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
+prob = DDEProblem(f, u0, h, tspan, p=nothing;
+                  constant_lags=[], dependent_lags=[], kwargs...)
 ```
 
-is very similar to ODEs, where we now have to give the lags and an `h`. `h` is
-the history function, or a function that declares what the values were before
-the time the model starts. Here we will assume that for all time before `t0` the
-values were 1:
+is very similar to ODEs, where we now have to give the lags and a function `h`.
+`h` is the history function that declares what the values were before the time
+the model starts. Here we will assume that for all time before `t0` the values were 1
+and define `h` as an out-of-place function:
 
 ```julia
 h(t) = ones(3)
 ```
 
-We have `h` as an out-of-place function which determines the values for the initial
-conditions before `t0` all as `1.0`. Next, we choose to solve on the timespan
-`(0.0,10.0)` and create the problem type:
+Next, we choose to solve on the timespan `(0.0,10.0)` and create the problem type:
 
 
 ```julia
 tspan = (0.0,10.0)
 u0 = [1.0,1.0,1.0]
-prob = DDEProblem(bc_model,h,u0,tspan,lags)
+prob = DDEProblem(bc_model,u0,h,tspan; constant_lags=lags)
 ```
 
 An efficient way to solve this problem (given the constant lags) is with the
 MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl
 ODE solver method into a method for delay differential equations which is highly
-efficient due to sweet compiler magic. A good choice is the order 5 `Tsit5()`
-method:
+efficient due to sweet compiler magic. A good choice is the order 5 method `Tsit5()`:
 
 ```julia
 alg = MethodOfSteps(Tsit5())
@@ -112,7 +110,7 @@ We can speed up the previous problem in two different ways. First of all, if we
 need to interpolate multiple values from a previous time, we can use the in-place
 form for the history function `h(out,t)` which writes the output to `out`. In this
 case, we must supply the history initial conditions as in-place as well. For the
-previous example, that's simply:
+previous example, that's simply
 
 ```julia
 h(out,t) = (out.=1.0)
@@ -133,14 +131,12 @@ end
 
 However, we can do something even slicker in most cases. We only ever needed to
 interpolate past values at index 3. Instead of generating a bunch of arrays,
-we can instead ask specifically for that value by passing `idxs = 3`. This must
-be passed after the derivative. In this case we just want the values so it's the
-zeroth derivative, i.e. `Val{0}`. Thus we can instead interpolate the 0th derivative
-at index 3 via `h(t-tau,Val{0},3)`. The DDE is now:
+we can instead ask specifically for that value by passing the keyword `idxs = 3`.
+The DDE function `bc_model` is now:
 
 ```julia
 function bc_model(du,u,h,p,t)
-  u3_past_sq = h(t-tau,Val{0},3)^2
+  u3_past_sq = h(t-tau; idxs=3)^2
   du[1] = (v0/(1+beta0*(u3_past_sq))) * (p0 - q0)*u[1] - d0*u[1]
   du[2] = (v0/(1+beta0*(u3_past_sq))) * (1 - p0 + q0)*u[1] +
           (v1/(1+beta1*(u3_past_sq))) * (p1 - q1)*u[2] - d1*u[2]
@@ -148,25 +144,27 @@ function bc_model(du,u,h,p,t)
 end
 ```
 
-Note that this requires that we define the historical values:
+Note that this requires that we define the historical values
 
 ```julia
-h(t,deriv,idxs) = 1.0
+h(t;idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
 ```
 
-where `deriv` would be `Val{0}` and `idxs` is an integer for which variable
-in the history to compute, and here for any `idxs` we give back `1.0`. Note that
-if we wanted to use past values of the first derivative then we would define
-a dispatch like:
+where `idxs` can be an integer for which variable in the history to compute,
+and here for any number `idxs` we give back `1.0`. Note that if we wanted to use
+past values of the `i`th derivative then we would call the history function
+`h(t, Val{i})` in our DDE function and would have to define a dispatch like
 
 ```julia
-h(t,::Type{Val{1}},idxs) = 0.0
+h(t,::Type{Val{1}}) = zeros(3)
 ```
 
-to say that derivatives before `t0` are zero for any index.
+to say that derivatives before `t0` are zero for any index. Again, we could
+use an in-place function instead or only compute specific indices by passing
+an `idxs` keyword.
 
-More about the functional forms for the history function are discussed
-[on the DDEProblem page](../types/dde_types.html).
+The functional forms for the history function are discussed also
+[on the DDEProblem page](../../types/dde_types.html).
 
 ### Undeclared Delays and State-Dependent Delays via Residual Control
 
@@ -185,7 +183,7 @@ Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
 from above with residual control:
 
 ```julia
-prob = DDEProblem(bc_model,h,u0,tspan)
+prob = DDEProblem(bc_model,u0,h,tspan)
 alg = MethodOfSteps(RK4())
 sol = solve(prob,alg)
 ```
@@ -196,27 +194,19 @@ Note that this method can solve problems with state-dependent delays.
 
 State-dependent delays are problems where the delay is allowed to be a function
 of the current state. They can be more efficiently solved with discontinuity
-tracking. To do this in DifferentialEquations.jl, needs to pass in the functions
-for the delays to the `DDEProblem` definition. These are declared as `g(u,p,t)`
-where `g` is the lag function. The signature for the `DDEProblem` is:
-
-```julia
-prob = DDEProblem(f,h,u0,tspan,constant_lags,dependent_lags=nothing)
-```
-
-Other than that, everything else is the same, and one solves that problem using
-the common interface.
+tracking. To do this in DifferentialEquations.jl, requires to pass lag functions
+`g(u,p,t)` as keyword `dependent_lags` to the `DDEProblem` definition. Other than
+that, everything else is the same, and one solves that problem using the common
+interface.
 
 We can solve the above problem with dependent delay tracking by declaring the
 dependent lags and solving with a `MethodOfSteps` algorithm:
 
 ```julia
-dependent_lags = ((u,p,t)->tau,)
-prob = DDEProblem(bc_model,h,u0,tspan,nothing,dependent_lags)
+prob = DDEProblem(bc_model,u0,h,tspan; dependent_lags = ((u,p,t) -> tau,))
 alg = MethodOfSteps(Tsit5())
 sol = solve(prob,alg)
 ```
 
-Here we treated the single lag `t-tau` as a state-dependent delay and skipped
-over the constant lags with `nothing`. Of course, you can then replace that tuple
-of functions with whatever functions match your lags.
+Here we treated the single lag `t-tau` as a state-dependent delay. Of course, you
+can then replace that tuple of functions with whatever functions match your lags.
