@@ -1877,7 +1877,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Jump Problems",
     "title": "Defining a Constant Rate Jump",
     "category": "section",
-    "text": "The constructor for a ConstantRateJump is:ConstantRateJump(rate,affect!;save_positions=(true,true))rate(u,p,t) is a function which calculates the rate given the time and the state.\naffect!(integrator) is the effect on the equation, using the integrator interface."
+    "text": "The constructor for a ConstantRateJump is:ConstantRateJump(rate,affect!)rate(u,p,t) is a function which calculates the rate given the time and the state.\naffect!(integrator) is the effect on the equation, using the integrator interface."
 },
 
 {
