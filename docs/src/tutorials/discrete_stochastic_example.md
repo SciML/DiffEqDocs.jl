@@ -124,6 +124,27 @@ using Plots; plot(sol)
 
 ![gillespie_solution](../assets/gillespie_solution.png)
 
+## Controlling Saving Behavior
+
+Note that jumps act via the callback interface which defaults to saving at each event.
+The reason is because this is required in order to accurately resolve every discontinuity
+exactly (and this is what allows for perfectly vertical lines!). However, in many cases
+when using jump problems you may wish to decrease the saving pressure given by large
+numbers of jumps. To do this, you set `save_positions` in the `JumpProblem`. Just like
+for other callbacks, this is a tuple `(bool1,bool2)` which saves whether to save
+before or after a jump. If we do not want to save at every jump, we would thus pass:
+
+```julia
+jump_prob = JumpProblem(prob,Direct(),sir_model,save_positions=(false,false))
+```
+
+Now the saving controls associated with the integrator are the only ones to note.
+Therefore we can for example use `saveat=0.5` to save at an evenly spaced grid:
+
+```julia
+sol = solve(jump_prob,FunctionMap(),saveat=0.5)
+```
+
 ## Defining the Jumps Directly
 
 Instead of using the biological modeling functionality of `Reaction`, we can
