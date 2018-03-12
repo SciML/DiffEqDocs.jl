@@ -37,7 +37,7 @@ as variable.
 The constructor for a `ConstantRateJump` is:
 
 ```julia
-ConstantRateJump(rate,affect!;save_positions=(true,true))
+ConstantRateJump(rate,affect!)
 ```
 
 - `rate(u,p,t)` is a function which calculates the rate given the time and the state.
