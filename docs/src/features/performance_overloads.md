@@ -88,8 +88,8 @@ f(Val{:invW},iW,u,p,γ,t) # Call the explicit inverse Rosenbrock-W function (M -
 f(Val{:invW_t},iW,u,p,γ,t) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
 ```
 
-Overloads which require parameters should subtype `ParameterizedFunction`. These
-are all in-place functions which write into the last variable. See solver documentation
+Overloads which require parameters should subtype `ParameterizedFunction`. Besides the analytical solution, these
+are all in-place functions which write into the first variable. See solver documentation
 specifics to know which optimizations the algorithms can use.
 
 ## Symbolically Calculating the Functions
