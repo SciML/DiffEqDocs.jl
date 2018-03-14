@@ -2426,23 +2426,23 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/jump_solve.html#",
-    "page": "Pure Jump Solvers",
-    "title": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
+    "title": "Jump Problem Solvers",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "solvers/jump_solve.html#Pure-Jump-Solvers-1",
-    "page": "Pure Jump Solvers",
-    "title": "Pure Jump Solvers",
+    "location": "solvers/jump_solve.html#Jump-Problem-Solvers-1",
+    "page": "Jump Problem Solvers",
+    "title": "Jump Problem Solvers",
     "category": "section",
     "text": "solve(prob::JumpProblem,alg;kwargs)"
 },
 
 {
     "location": "solvers/jump_solve.html#Recommended-Methods-1",
-    "page": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
     "title": "Recommended Methods",
     "category": "section",
     "text": "A JumpProblem(prob,aggregator,jumps...) come in two forms. The first major form is if it does not have a RegularJump. In this case, it can be solved with any integrator on  prob. However, in the case of a pure JumpProblem (a JumpProblem over a  DiscreteProblem), there is are special algorithms available.  The SSAStepper() is an efficient streamlined algorithm for running the  aggregator version of the SSA for pure ConstantRateJump problems. However, it is not compatible with event handling. If events are necessary, then FunctionMap does well.If there is a RegularJump, then specific methods must be used. The current recommended method is SimpleTauLeaping."
@@ -2450,7 +2450,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/jump_solve.html#Special-Methods-1",
-    "page": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
     "title": "Special Methods",
     "category": "section",
     "text": ""
@@ -2458,7 +2458,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/jump_solve.html#DiffEqJump.jl-1",
-    "page": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
     "title": "DiffEqJump.jl",
     "category": "section",
     "text": "SSAStepper: a stepping algorithm for pure ConstantRateJump JumpProblems. Does not support event handling, but does support saving controls like saveat."
@@ -2466,7 +2466,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/jump_solve.html#RegularJump-Compatible-Methods-1",
-    "page": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
     "title": "RegularJump Compatible Methods",
     "category": "section",
     "text": ""
@@ -2474,7 +2474,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "solvers/jump_solve.html#DiffEqJump.jl-2",
-    "page": "Pure Jump Solvers",
+    "page": "Jump Problem Solvers",
     "title": "DiffEqJump.jl",
     "category": "section",
     "text": "SimpleTauLeaping: a tau-leaping algorithm for pure RegularJump JumpProblems. Requires a choice of dt.\nRegularSSA: a version of SSA for pure RegularJump JumpProblems."
