@@ -173,6 +173,7 @@ Pages = [
   "solvers/split_ode_solve.md",
   "solvers/steady_state_solve.md",
   "solvers/bvp_solve.md",
+  "solvers/jump_solve.md",
   "solvers/sde_solve.md",
   "solvers/rode_solve.md",
   "solvers/dde_solve.md",

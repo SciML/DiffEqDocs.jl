@@ -124,6 +124,23 @@ using Plots; plot(sol)
 
 ![gillespie_solution](../assets/gillespie_solution.png)
 
+## SSAStepper
+
+Notice here that this uses `FunctionMap()` to perform the integration which is
+a `DiscreteProblem` algorithm in OrdinaryDiffEq.jl. This shows that any common
+interface algorithm can be used to perform the timestepping since this is
+implemented over the callback interface. However, in many cases like this we
+only have a pure-SSA problem. When that's the case (only `ConstantRateJump`s),
+then we could instead use `SSAStepper()`
+
+```julia
+sol = solve(jump_prob,SSAStepper())
+```
+
+Note that `SSAStepper` is a barebones SSA method which doesn't allow defining
+events or integrating simultanious ODEs, but is very efficient for pure SSA
+problems.
+
 ## Controlling Saving Behavior
 
 Note that jumps act via the callback interface which defaults to saving at each event.
@@ -234,14 +251,19 @@ updated in a continuous manner!)
 If your problem must have the rates depend on a continuously changing quantity,
 you need to use the `VariableRateJump` or `VariableRateReaction` instead.
 
-## Adding a VariableRateReaction
+## Adding a VariableRateJump
 
 Now let's consider adding a reaction whose rate changes continuously with the
 differential equation. To continue our example, let's let there be a new reaction
 which has the same effect as `r2`, but now is dependent on the amount of `u[4]`.
 
 ```julia
-r3 = VariableRateReaction(1e-2,[4],[(2,-1),(3,1)])
+rate(u,p,t) = 1e-2u[4]
+function affect!(integrator)
+  integrator.u[2] -= 1
+  integrator.u[3] += 1
+end
+jump3 = VariableRateJump(1e-2,[4],[(2,-1),(3,1)])
 ```
 
 We would expect this reaction to increase the amount of transitions from state
@@ -249,7 +271,7 @@ We would expect this reaction to increase the amount of transitions from state
 
 ```julia
 prob = ODEProblem(f,[999.0,1.0,0.0,1.0],(0.0,250.0))
-jump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)
+jump_prob = JumpProblem(prob,Direct(),jump,jump2,jump3)
 sol = solve(jump_prob,Tsit5())
 ```
 
@@ -270,8 +292,61 @@ function g(du,u,p,t)
 end
 
 prob = SDEProblem(f,g,[999.0,1.0,0.0,1.0],(0.0,250.0))
-jump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)
+jump_prob = JumpProblem(prob,Direct(),jump,jump2,jump3)
 sol = solve(jump_prob,SRIW1())
 ```
 
 ![sde_gillespie](../assets/sde_gillespie.png)
+
+## RegularJumps and Tau-Leaping
+
+The previous parts described how to use `ConstantRateJump` and `VariableRateJump`
+to add jumps to differential equation algorithms over the callback interface.
+However, in many cases you do not need to step to every jump time. Instead,
+regular jumping allows you to pool together jumps and perform larger updates
+in a statistically-correct but more efficient manner.
+
+For `RegularJump`s, we pool together the jumps we wish to perform. Here our
+`rate` is a vector equation which computes the rates of each jump process
+together:
+
+```julia
+function rate(out,u,p,t)
+    out[1] = (0.1/1000.0)*u[1]*u[2]
+    out[2] = 0.01u[2]
+end
+```
+
+and then we compute the total change matrix `c`
+
+```julia
+function c(dc,u,p,t,mark)
+    dc[1,1] = -1
+    dc[2,1] = 1
+    dc[2,2] = -1
+    dc[3,2] = 1
+end
+```
+
+where each column is a different jump process. We then declare the form of `dc`
+and build a `RegularJump`:
+
+```julia
+dc = zeros(3,2)
+rj = RegularJump(regular_rate,regular_c,c_prototype;constant_c=true)
+```
+
+From there we build a `JumpProblem`:
+
+```julia
+prob = DiscreteProblem([999.0,1.0,0.0],(0.0,250.0))
+jump_prob = JumpProblem(prob,Direct(),rj)
+```
+
+Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
+required. This is detailed on [the jump solvers page]().
+One such algorithm is `SimpleTauLeaping`, which we use as follows:
+
+```julia
+sol = solve(jump_prob,SimpleTauLeaping();dt=1.0)
+```
