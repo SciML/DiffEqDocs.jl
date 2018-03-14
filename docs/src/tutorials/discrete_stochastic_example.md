@@ -333,7 +333,7 @@ and build a `RegularJump`:
 
 ```julia
 dc = zeros(3,2)
-rj = RegularJump(regular_rate,regular_c,dc;constant_c=true)
+rj = RegularJump(rate,c,dc;constant_c=true)
 ```
 
 From there we build a `JumpProblem`:
