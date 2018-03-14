@@ -1,4 +1,4 @@
-# Pure Jump Solvers
+# Jump Problem Solvers
 
 `solve(prob::JumpProblem,alg;kwargs)`
 

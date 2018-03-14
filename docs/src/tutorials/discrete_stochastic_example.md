@@ -344,7 +344,8 @@ jump_prob = JumpProblem(prob,Direct(),rj)
 ```
 
 Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
-required. This is detailed on [the jump solvers page]().
+required. This is detailed on
+[the jump solvers page](http://docs.juliadiffeq.org/latest/solvers/jump_solve.html).
 One such algorithm is `SimpleTauLeaping`, which we use as follows:
 
 ```julia
