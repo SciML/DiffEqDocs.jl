@@ -77,7 +77,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Solver Algorithms",
     "category": "section",
-    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/bvp_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/benchmarks.md\"\n]\nDepth = 2"
+    "text": "These pages describe the solvers and available algorithms in detail.Pages = [\n  \"solvers/discrete_solve.md\",\n  \"solvers/ode_solve.md\",\n  \"solvers/dynamical_solve.md\",\n  \"solvers/split_ode_solve.md\",\n  \"solvers/steady_state_solve.md\",\n  \"solvers/bvp_solve.md\",\n  \"solvers/jump_solve.md\",\n  \"solvers/sde_solve.md\",\n  \"solvers/rode_solve.md\",\n  \"solvers/dde_solve.md\",\n  \"solvers/dae_solve.md\",\n  \"solvers/benchmarks.md\"\n]\nDepth = 2"
 },
 
 {
@@ -457,6 +457,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/discrete_stochastic_example.html#SSAStepper-1",
+    "page": "Discrete Stochastic (Gillespie) Equations",
+    "title": "SSAStepper",
+    "category": "section",
+    "text": "Notice here that this uses FunctionMap() to perform the integration which is a DiscreteProblem algorithm in OrdinaryDiffEq.jl. This shows that any common interface algorithm can be used to perform the timestepping since this is implemented over the callback interface. However, in many cases like this we only have a pure-SSA problem. When that\'s the case (only ConstantRateJumps), then we could instead use SSAStepper()sol = solve(jump_prob,SSAStepper())Note that SSAStepper is a barebones SSA method which doesn\'t allow defining events or integrating simultanious ODEs, but is very efficient for pure SSA problems."
+},
+
+{
     "location": "tutorials/discrete_stochastic_example.html#Controlling-Saving-Behavior-1",
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Controlling Saving Behavior",
@@ -489,11 +497,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "tutorials/discrete_stochastic_example.html#Adding-a-VariableRateReaction-1",
+    "location": "tutorials/discrete_stochastic_example.html#Adding-a-VariableRateJump-1",
     "page": "Discrete Stochastic (Gillespie) Equations",
-    "title": "Adding a VariableRateReaction",
+    "title": "Adding a VariableRateJump",
     "category": "section",
-    "text": "Now let\'s consider adding a reaction whose rate changes continuously with the differential equation. To continue our example, let\'s let there be a new reaction which has the same effect as r2, but now is dependent on the amount of u[4].r3 = VariableRateReaction(1e-2,[4],[(2,-1),(3,1)])We would expect this reaction to increase the amount of transitions from state 2 to 3. Solving the equation is exactly the same:prob = ODEProblem(f,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)\nsol = solve(jump_prob,Tsit5())(Image: variable_rate_gillespie)Notice that this increases the amount of 3 at the end, reducing the falloff in the rate (though this model is kind of nonsensical).Note that even if the problem is a DiscreteProblem, VariableRateJumps and VariableRateReactions require a continuous solver, like an ODE/SDE/DDE/DAE solver.Lastly, we are not restricted to ODEs. For example, we can solve the same jump problem except with multiplicative noise on u[4] by using an SDEProblem instead:function g(du,u,p,t)\n  du[4] = 0.1u[4]\nend\n\nprob = SDEProblem(f,g,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = GillespieProblem(prob,Direct(),r1,r2,r3)\nsol = solve(jump_prob,SRIW1())(Image: sde_gillespie)"
+    "text": "Now let\'s consider adding a reaction whose rate changes continuously with the differential equation. To continue our example, let\'s let there be a new reaction which has the same effect as r2, but now is dependent on the amount of u[4].rate(u,p,t) = 1e-2u[4]\nfunction affect!(integrator)\n  integrator.u[2] -= 1\n  integrator.u[3] += 1\nend\njump3 = VariableRateJump(1e-2,[4],[(2,-1),(3,1)])We would expect this reaction to increase the amount of transitions from state 2 to 3. Solving the equation is exactly the same:prob = ODEProblem(f,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = JumpProblem(prob,Direct(),jump,jump2,jump3)\nsol = solve(jump_prob,Tsit5())(Image: variable_rate_gillespie)Notice that this increases the amount of 3 at the end, reducing the falloff in the rate (though this model is kind of nonsensical).Note that even if the problem is a DiscreteProblem, VariableRateJumps and VariableRateReactions require a continuous solver, like an ODE/SDE/DDE/DAE solver.Lastly, we are not restricted to ODEs. For example, we can solve the same jump problem except with multiplicative noise on u[4] by using an SDEProblem instead:function g(du,u,p,t)\n  du[4] = 0.1u[4]\nend\n\nprob = SDEProblem(f,g,[999.0,1.0,0.0,1.0],(0.0,250.0))\njump_prob = JumpProblem(prob,Direct(),jump,jump2,jump3)\nsol = solve(jump_prob,SRIW1())(Image: sde_gillespie)"
+},
+
+{
+    "location": "tutorials/discrete_stochastic_example.html#RegularJumps-and-Tau-Leaping-1",
+    "page": "Discrete Stochastic (Gillespie) Equations",
+    "title": "RegularJumps and Tau-Leaping",
+    "category": "section",
+    "text": "The previous parts described how to use ConstantRateJump and VariableRateJump to add jumps to differential equation algorithms over the callback interface. However, in many cases you do not need to step to every jump time. Instead, regular jumping allows you to pool together jumps and perform larger updates in a statistically-correct but more efficient manner.For RegularJumps, we pool together the jumps we wish to perform. Here our rate is a vector equation which computes the rates of each jump process together:function rate(out,u,p,t)\n    out[1] = (0.1/1000.0)*u[1]*u[2]\n    out[2] = 0.01u[2]\nendand then we compute the total change matrix cfunction c(dc,u,p,t,mark)\n    dc[1,1] = -1\n    dc[2,1] = 1\n    dc[2,2] = -1\n    dc[3,2] = 1\nendwhere each column is a different jump process. We then declare the form of dc and build a RegularJump:dc = zeros(3,2)\nrj = RegularJump(regular_rate,regular_c,c_prototype;constant_c=true)From there we build a JumpProblem:prob = DiscreteProblem([999.0,1.0,0.0],(0.0,250.0))\njump_prob = JumpProblem(prob,Direct(),rj)Note that when a JumpProblem has a RegularJump, special algorithms are required. This is detailed on the jump solvers page. One such algorithm is SimpleTauLeaping, which we use as follows:sol = solve(jump_prob,SimpleTauLeaping();dt=1.0)"
 },
 
 {
@@ -1869,15 +1885,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Jump Problems",
     "title": "Mathematical Specification of an problem with jumps",
     "category": "section",
-    "text": "Jumps are defined as a Poisson process which occur according to some rate. When multiple jumps are together, the process is a compound Poisson process. On their own, a jump equation on is continuous-time Markov Chain where the time to the next jump is exponentially distributed as calculated by the rate. This type of process, known in biology as \"Gillespie discrete stochastic simulations\" and modeled by the Chemical Master Equation (CME), is the same thing as adding jumps to a DiscreteProblem. However, any differential equation can be extended by jumps as well. For example, we have an ODE with jumps, denoted byfracdudt = f(upt) +  h_i(upt)N_i(t)where N_i is a Poisson counter of rate lambda_i(upt). Extending a stochastic differential equation to have jumps is commonly known as a Jump Diffusion, and is denoted byfracdudt = f(upt) + g(ut)dW +  h_i(upt)N_i(t)"
+    "text": "Jumps are defined as a Poisson process which occur according to some rate. When multiple jumps are together, the process is a compound Poisson process. On their own, a jump equation on is continuous-time Markov Chain where the time to the next jump is exponentially distributed as calculated by the rate. This type of process, known in biology as \"Gillespie discrete stochastic simulations\" and modeled by the Chemical Master Equation (CME), is the same thing as adding jumps to a DiscreteProblem. However, any differential equation can be extended by jumps as well. For example, we have an ODE with jumps, denoted byfracdudt = f(upt) +  c_i(upt)dp_iwhere dp_i is a Poisson counter of rate lambda_i(upt). Extending a stochastic differential equation to have jumps is commonly known as a Jump Diffusion, and is denoted byfracdudt = f(upt) + g(ut)dW +  c_i(upt)dp_i"
 },
 
 {
-    "location": "types/jump_types.html#Variable-and-Constant-Rate-Jumps-1",
+    "location": "types/jump_types.html#Regular,-Variable,-and-Constant-Rate-Jumps-1",
     "page": "Jump Problems",
-    "title": "Variable and Constant Rate Jumps",
+    "title": "Regular, Variable, and Constant Rate Jumps",
     "category": "section",
-    "text": "We denote a jump as variable rate if its rate function is dependent on values which may change between constant rate jumps. For example, if there are multiple jumps whose rates only change when one of them occur, than that set of jumps is a constant rate jump. If the jump\'s rate depends on the differential equation, time, or by some value which changes outside of some constant rate jump, then it is denoted as variable."
+    "text": "A RegularJump is a set of jumps that do not do structural changes to the underlying equation. These kinds of jumps only change values of the dependent variable (u) and thus can be treated in an inexact manner. Other jumps, such as those which change the size of u, require exact handling which is also known as time-adaptive jumping and can only be specified as a ConstantRateJump or a VariableRateJump.We denote a jump as variable rate if its rate function is dependent on values which may change between constant rate jumps. For example, if there are multiple jumps whose rates only change when one of them occur, than that set of jumps is a constant rate jump. If the jump\'s rate depends on the differential equation, time, or by some value which changes outside of some constant rate jump, then it is denoted as variable.RegularJumps are optimized for regular jumping algorithms like tau-leaping and hybrid algorithms. ConstantRateJumps are optimized for SSA algorithms. ConstantRateJumps and VariableRateJumps can be added to standard DiffEq algorithms since they are simply callbacks, while RegularJumps require special algorithms."
+},
+
+{
+    "location": "types/jump_types.html#Defining-a-Regular-Jump-1",
+    "page": "Jump Problems",
+    "title": "Defining a Regular Jump",
+    "category": "section",
+    "text": "The constructor for a RegularJump is:RegularJump(rate,c,c_prototype;mark_dist = nothing,constant_c = false)rate(out,u,p,t) is the function which computes the rate for every regular jump process\nc(dc,u,p,t,mark) is the current Stoichiometry matrix for each jump process\ndc is the cache array to be used for dc\nmark_dist is the distribution for the mark\nconstant_c denotes whether the Stoichiometry matrix c is constantdc is an n x m matrix, where n is the number of Poisson processes and m is the number of dependent variables (should match length(u)). rate is a vector equation which should compute the rates in to out which is a length n vector."
 },
 
 {
@@ -1901,7 +1925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Jump Problems",
     "title": "Defining a Jump Problem",
     "category": "section",
-    "text": "To define a JumpProblem, you must first define the basic problem. This can be a DiscreteProblem if there is no differential equation, or an ODE/SDE/DDE/DAE if you would like to augment a differential equation with jumps. Denote this previously defined problem as prob. Then the constructor for the jump problem is:JumpProblem(prob,aggregator::Direct,jumps::JumpSet;\n            save_positions = typeof(prob) <: AbstractDiscreteProblem ? (false,true) : (true,true))The aggregator is the method for aggregating the constant jumps. These are defined below. jumps is a JumpSet which is just a gathering of jumps. Instead of passing a JumpSet, one may just pass a list of jumps themselves. For example:JumpProblem(prob,aggregator,jump1,jump2)and the internals will automatically build the JumpSet. save_positions is the save_positions argument built by the aggregation of the constant rate jumps."
+    "text": "To define a JumpProblem, you must first define the basic problem. This can be a DiscreteProblem if there is no differential equation, or an ODE/SDE/DDE/DAE if you would like to augment a differential equation with jumps. Denote this previously defined problem as prob. Then the constructor for the jump problem is:JumpProblem(prob,aggregator::Direct,jumps::JumpSet;\n            save_positions = typeof(prob) <: AbstractDiscreteProblem ? (false,true) : (true,true))The aggregator is the method for aggregating the constant jumps. These are defined below. jumps is a JumpSet which is just a gathering of jumps. Instead of passing a JumpSet, one may just pass a list of jumps themselves. For example:JumpProblem(prob,aggregator,jump1,jump2)and the internals will automatically build the JumpSet. save_positions is the save_positions argument built by the aggregation of the constant rate jumps.Note that a JumpProblem/JumpSet can only have 1 RegularJump (since a RegularJump itself describes multiple processes together)."
 },
 
 {
@@ -2398,6 +2422,62 @@ var documenterSearchIndex = {"docs": [
     "title": "BoundaryValueDiffEq.jl",
     "category": "section",
     "text": "Shooting - A wrapper over initial value problem solvers.\nGeneralMIRK4 - A 4th order collocation method using an implicit Runge-Kutta tableau solved using a trust region dogleg method from NLsolve.jl.\nMIRK4 - A 4th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian. Compatible only with two-point boundary value problems."
+},
+
+{
+    "location": "solvers/jump_solve.html#",
+    "page": "Pure Jump Solvers",
+    "title": "Pure Jump Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "solvers/jump_solve.html#Pure-Jump-Solvers-1",
+    "page": "Pure Jump Solvers",
+    "title": "Pure Jump Solvers",
+    "category": "section",
+    "text": "solve(prob::JumpProblem,alg;kwargs)"
+},
+
+{
+    "location": "solvers/jump_solve.html#Recommended-Methods-1",
+    "page": "Pure Jump Solvers",
+    "title": "Recommended Methods",
+    "category": "section",
+    "text": "A JumpProblem(prob,aggregator,jumps...) come in two forms. The first major form is if it does not have a RegularJump. In this case, it can be solved with any integrator on  prob. However, in the case of a pure JumpProblem (a JumpProblem over a  DiscreteProblem), there is are special algorithms available.  The SSAStepper() is an efficient streamlined algorithm for running the  aggregator version of the SSA for pure ConstantRateJump problems. However, it is not compatible with event handling. If events are necessary, then FunctionMap does well.If there is a RegularJump, then specific methods must be used. The current recommended method is SimpleTauLeaping."
+},
+
+{
+    "location": "solvers/jump_solve.html#Special-Methods-1",
+    "page": "Pure Jump Solvers",
+    "title": "Special Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/jump_solve.html#DiffEqJump.jl-1",
+    "page": "Pure Jump Solvers",
+    "title": "DiffEqJump.jl",
+    "category": "section",
+    "text": "SSAStepper: a stepping algorithm for pure ConstantRateJump JumpProblems. Does not support event handling, but does support saving controls like saveat."
+},
+
+{
+    "location": "solvers/jump_solve.html#RegularJump-Compatible-Methods-1",
+    "page": "Pure Jump Solvers",
+    "title": "RegularJump Compatible Methods",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/jump_solve.html#DiffEqJump.jl-2",
+    "page": "Pure Jump Solvers",
+    "title": "DiffEqJump.jl",
+    "category": "section",
+    "text": "SimpleTauLeaping: a tau-leaping algorithm for pure RegularJump JumpProblems. Requires a choice of dt.\nRegularSSA: a version of SSA for pure RegularJump JumpProblems."
 },
 
 {
