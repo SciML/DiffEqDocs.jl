@@ -31,11 +31,11 @@ end
 
 ### Boundary Condition
 
-There are two problem types available: 
+There are two problem types available:
  - A problem type for general boundary conditions `BVProblem` ( including conditions that may be anywhere/ everywhere on the integration interval ).
  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`
- 
-#### `BVProblem` 
+
+#### `BVProblem`
 
  The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
@@ -51,7 +51,7 @@ plot(sol1)
 
 ![BVP Example Plot1](../assets/bvp_example_plot1.png)
 
-The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example. <!-- add examples of more general initial conditions --> 
+The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example. <!-- add examples of more general initial conditions -->
 We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. `GeneralMIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
 If you can have a good initial guess, `Shooting` method works very well.
 
@@ -80,8 +80,8 @@ Defining a similar problem as `TwoPointBVProblem` is shown in the following exam
 
 ```julia
 function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending
-    residual[1] = u[1] + pi/2 # the solution at the beginning of the time span should be -pi/2
-    residual[2] = u[end] - pi/2 # the solution at the end of the time span should be pi/2
+    residual[1] = u[1][1] + pi/2 # the solution at the beginning of the time span should be -pi/2
+    residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
 end
 bvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi/2,pi/2], tspan)
 sol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPointBVProblem
@@ -90,4 +90,3 @@ plot(sol2)
 Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )` and `p` holds the parameters of the given problem.
 
 ![BVP Example Plot2](../assets/bvp_example_plot2.png)
-
