@@ -5,7 +5,7 @@
 All methods start by calculating a scaled error estimate on each scalar component of ``u``:
 
 ```math
-err_{scaled} = norm(err/(abstol + max(uprev,u)*reltol))
+err^{scaled}_i = norm(err_i/(abstol_i + max(uprev_i,u_i)reltol_i))
 ```
 
 On this scaled error estimate, we calculate the norm. This norm is usually the
@@ -19,9 +19,9 @@ This norm works well because it does not change if we add new pieces to the
 differential equation: it scales our error by the number of equations so that
 independent equations will not step differently than a single solve.
 
-In all cases, the step is rejected if ``err_{scaled}>1`` since that means the
+In all cases, the step is rejected if ``err^{scaled}>1`` since that means the
 error is larger than the tolerances, and the step is accepted if
-``err_{scaled}<1``.
+``err^{scaled}<1``.
 
 ## Proportional Control (Standard Control)
 
