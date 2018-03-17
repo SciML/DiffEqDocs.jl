@@ -4533,7 +4533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Timestepping Method Descriptions",
     "title": "Common Setup",
     "category": "section",
-    "text": "All methods start by calculating a scaled error estimate:err_scaled = norm(err(abstol + max(uprevu)*reltol))On this scaled error estimate, we calculate the norm. This norm is usually the Hairer semi-norm:norm(x) = sqrt(sum(x^2)length(x))This norm works well because it does not change if we add new pieces to the differential equation: it scales our error by the number of equations so that independent equations will not step differently than a single solve.In all cases, the step is rejected if err_scaled1 since that means the error is larger than the tolerances, and the step is accepted if err_scaled1."
+    "text": "All methods start by calculating a scaled error estimate on each scalar component of u:err_scaled = norm(err(abstol + max(uprevu)*reltol))On this scaled error estimate, we calculate the norm. This norm is usually the Hairer semi-norm:norm(x) = sqrt(sum(x^2)length(x))This norm works well because it does not change if we add new pieces to the differential equation: it scales our error by the number of equations so that independent equations will not step differently than a single solve.In all cases, the step is rejected if err_scaled1 since that means the error is larger than the tolerances, and the step is accepted if err_scaled1."
 },
 
 {
