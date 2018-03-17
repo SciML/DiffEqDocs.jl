@@ -2,7 +2,7 @@
 
 ## Common Setup
 
-All methods start by calculating a scaled error estimate:
+All methods start by calculating a scaled error estimate on each scalar component of ``u``:
 
 ```math
 err_{scaled} = norm(err/(abstol + max(uprev,u)*reltol))
