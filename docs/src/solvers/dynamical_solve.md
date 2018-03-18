@@ -4,7 +4,7 @@ These algorithms require an ODE defined in the following ways:
 
 ```julia
 DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)
-SecondOrderODEProblem{isinplace}(f,u0,du0,tspan;kwargs...)
+SecondOrderODEProblem{isinplace}(f,du0,u0,tspan;kwargs...)
 HamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)
 ```
 

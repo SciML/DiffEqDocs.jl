@@ -23,7 +23,7 @@ This looks just like pseudocode! The macro will expand this to the "standard for
 i.e. the ugly computer form:
 
 ```julia
-f = (t,u,du) -> begin
+function f(du,u,p,t)
   du[1] = -p[1]*u[1] + p[3]*u[2]*u[3]
   du[2] = p[1]*u[1] - p[2]*u[2]^2 - p[3]*u[2]*u[3]
   du[3] = p[2]*u[2]^2

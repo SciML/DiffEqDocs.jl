@@ -151,8 +151,8 @@ generalizes to systems of equations is done in the same way as ODEs. Here, `g`
 is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
 is diagonal noise where `g` is a diagonal matrix. This means that every function in
 the system gets a different random number. Instead of handling matrices in this case,
-we simply define both `f` and `g` as in-place functions. Thus `f(u,p,t,du)` gives a
-vector of `du` which is the deterministic change, and `g(u,p,t,du2)` gives a vector
+we simply define both `f` and `g` as in-place functions. Thus `f(du,u,p,t)` gives a
+vector of `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
 `du2` for which `du2.*W` is the stochastic portion of the equation.
 
 For example, the Lorenz equation with additive noise has the same deterministic
@@ -220,8 +220,8 @@ and then give this to the `noise` option in the `SDEProblem`. For a full example
 let's solve a linear SDE with scalar noise using a high order algorithm:
 
 ```julia
-f(u,p,t,du) = (du .= u)
-g(u,p,t,du) = (du .= u)
+f(du,u,p,t) = (du .= u)
+g(du,u,p,t) = (du .= u)
 u0 = rand(4,2)
 
 W = WienerProcess(0.0,0.0,0.0)
