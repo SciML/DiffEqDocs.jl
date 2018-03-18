@@ -160,18 +160,18 @@ is given by the dispatch on `DiffEqBase.problem_new_parameters` which does the
 following:
 
 ```julia
-function problem_new_parameters(prob::ODEProblem,p)
-  f = (du,u,p,t) -> prob.f(du,u,p,t)
+function problem_new_parameters(prob::ODEProblem,p;kwargs...)
   uEltype = eltype(p)
   u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
   tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
-  ODEProblem(f,u0,tspan)
+  ODEProblem{isinplace(prob)}(prob.f,u0,tspan,p,prob.problem_type;
+  callback = prob.callback, mass_matrix = prob.mass_matrix,
+  kwargs...)
 end
 ```
 
-`f = (t,u,du) -> prob.f(du,u,p,t)` creates a new version of `f` that encloses
-the new parameters. The element types for `u0` and `tspan` are set to match the
-parameters. This is required to make autodifferentiation work. Then the new
+The element types for `u0` and `tspan` are set to match the parameters. 
+This is required to make autodifferentiation work. Then the new
 problem with these new values is returned.
 
 One can use this to change the meaning of the parameters using this function. For
