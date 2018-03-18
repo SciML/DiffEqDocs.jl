@@ -4,7 +4,7 @@ f = @ode_def ROBERExample begin
   dy₁ = -k₁*y₁+k₃*y₂*y₃
   dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
   dy₃ =  k₂*y₂^2
-end k₁ k₂ k₃</code></pre><p>This looks just like pseudocode! The macro will expand this to the &quot;standard form&quot;, i.e. the ugly computer form:</p><pre><code class="language-julia">f = (t,u,du) -&gt; begin
+end k₁ k₂ k₃</code></pre><p>This looks just like pseudocode! The macro will expand this to the &quot;standard form&quot;, i.e. the ugly computer form:</p><pre><code class="language-julia">function f(du,u,p,t)
   du[1] = -p[1]*u[1] + p[3]*u[2]*u[3]
   du[2] = p[1]*u[1] - p[2]*u[2]^2 - p[3]*u[2]*u[3]
   du[3] = p[2]*u[2]^2
