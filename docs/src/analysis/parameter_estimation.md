@@ -155,7 +155,8 @@ The regularization defaults to L2 if no penalty function is specified.
 
 The argument `prob_generator` allows one to specify a function for generating
 new problems from a given parameter set. By default, this just builds a new
-version of `f` that inserts all of the parameters. For example, for ODEs this
+problem which fixes the element types in a way that's autodifferentiation
+compatible and adds the new parameter vector `p`. For example, for ODEs this
 is given by the dispatch on `DiffEqBase.problem_new_parameters` which does the
 following:
 
@@ -169,10 +170,7 @@ function problem_new_parameters(prob::ODEProblem,p;kwargs...)
   kwargs...)
 end
 ```
-
-The element types for `u0` and `tspan` are set to match the parameters. 
-This is required to make autodifferentiation work. Then the new
-problem with these new values is returned.
+Then the new problem with these new values is returned.
 
 One can use this to change the meaning of the parameters using this function. For
 example, if one instead wanted to optimize the initial conditions for a function
