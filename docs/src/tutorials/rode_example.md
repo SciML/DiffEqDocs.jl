@@ -34,7 +34,7 @@ other noise proceses.
 ## Example 2: Systems of RODEs
 
 As with the other problem types, there is an in-place version which is more
-efficient for systems. The signature is `f(u,p,t,W,du)`. For example,
+efficient for systems. The signature is `f(du,u,p,t,W)`. For example,
 
 ```julia
 using DifferentialEquations
