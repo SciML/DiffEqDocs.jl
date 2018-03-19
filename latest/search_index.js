@@ -2573,7 +2573,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Derivative-Based Methods",
     "category": "section",
-    "text": "The following methods require analytic derivatives of the diffusion term. PCEuler - The predictor corrector euler method. Strong Order 0.5 in the Ito sense. Requires the bbprime function, which is defined as\n  textbbprime^k(tx) = sum_i=1^m sum_i=1^d g_ij(tx) fracpartial g_kj(tx)partial x_i\nThe default settings for the drift implicitness is theta=0.5 and  the diffusion implicitness is eta=0.5.  "
+    "text": "The following methods require analytic derivatives of the diffusion term. PCEuler - The predictor corrector euler method. Strong Order 0.5 in the Ito sense. Requires the ggprime function, which is defined as\n  textggprime^k(tx) = sum_j=1^m sum_i=1^d g_ij(tx) fracpartial g_kj(tx)partial x_i\nThis can also be understood more intuitively in vector/matrix form as, \ntextggprime(tx) = sum_j=1^m barmathcalJvec g^(j)(tx) vec g^(j)(tx)\nwhere vec g^(j) is the noise vector for the j\'th noise channel and barmathcalJ is the Jacobian of the j\'th   noise vector. \nThe default settings for the drift implicitness is theta=0.5 and  the diffusion implicitness is eta=0.5.  "
 },
 
 {
