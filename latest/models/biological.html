@@ -22,7 +22,7 @@ end</code></pre><p>Multiple reactions can be declared in a single line:</p><pre>
   ((2.0,1.0),(1.0,2.0)), (X,Y) ↔ 0   #Identical to reactions [(2.0,1.0), X ↔ 0] and [(1.0,2.0), Y ↔ 0].
 end</code></pre><p>Parameters can be added to the network by declaring them after the reaction network. Parameters can only exist in the reaction rate and not as a part of the reaction.</p><pre><code class="language-julia">rn = @reaction_network rType begin
     (kB, kD), X + Y ↔ XY
-end kB, kD
+end kB kD
 p = [2.0, 1.0]</code></pre><p>The parameter set <code>p</code> must be passed to the problem constructor. The parameter values can be changed after the reaction network is defined.</p><p>The reaction rate do not need to be constant, but maybe depend on the concentration of the reactants.</p><pre><code class="language-julia">rn = @reaction_network rType begin
     (1.0,2XY), X + Y ↔ XY
 end</code></pre><p>The hill function <code>hill(x,v,K,n) = v*(x^n)/(x^n + K^n)</code> can be used, as well as the Michaelis Menten function (the hill function with <code>n = 1</code>).</p><pre><code class="language-julia">rn = @reaction_network rType begin
