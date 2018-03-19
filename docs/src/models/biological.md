@@ -73,7 +73,7 @@ reaction.
 ```julia
 rn = @reaction_network rType begin
     (kB, kD), X + Y ↔ XY
-end kB, kD
+end kB kD
 p = [2.0, 1.0]
 ```
 
