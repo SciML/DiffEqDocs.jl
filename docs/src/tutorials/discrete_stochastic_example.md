@@ -263,7 +263,7 @@ function affect!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
-jump3 = VariableRateJump(1e-2,[4],[(2,-1),(3,1)])
+jump3 = VariableRateJump(rate,affect!)
 ```
 
 We would expect this reaction to increase the amount of transitions from state
