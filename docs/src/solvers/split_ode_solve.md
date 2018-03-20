@@ -55,32 +55,27 @@ The appropriate algorithms for this form are:
 
 - `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only.
 - `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only.
-- `ETD1` - First order Exponential Time Differencing method. Not yet implemented.
-- `ETD2` - Second order Exponential Time Differencing method. Not yet implemented.
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
-- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
+- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+- `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 
-The methods need to compute the exponential of `A`, which could be expensive. There are 
-two ways to speed up the integrator:
-
-- For small systems that can fit `expm(dt*A)` in memory, use the in-place style, which 
-  enables caching of the exponential operators to save time.
-
-- For large systems, use Krylov-based versions of the methods which allow for lazy 
-  calculation of `expm(dt*A)*v` and similar entities. To tell a solver to use Krylov 
-  methods, pass `krylov=true` to its constructor. You can also manually set the size of the 
-  Krylov subspace by setting the `m` parameter, which defaults to 30. For example
+By default, the exponential methods cache matrix functions such as `exmp(dt*A)` to accelerate 
+the time stepping for small systems. For large systems, using Krylov-based versions of the 
+methods can allow for lazy calculation of `expm(dt*A)*v` and similar entities, and thus improve 
+performance. To tell a solver to use Krylov methods, pass `krylov=true` to its constructor. You 
+can also manually set the size of the Krylov subspace by setting the `m` parameter, which 
+defaults to 30. For example
   
-  ```julia
-  LawsonEuler(krylov=true, m=50)
-  ```
+```julia
+LawsonEuler(krylov=true, m=50)
+```
   
-  constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m` 
-  only sets an upper bound to the Krylov subspace size. If a convergence criterion is met 
-  (determined by the `reltol` of the integrator), "happy breakdown" will occur and the 
-  Krylov subspace will only be constructed partially.
+constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m` 
+only sets an upper bound to the Krylov subspace size. If a convergence criterion is met 
+(determined by the `reltol` of the integrator), "happy breakdown" will occur and the 
+Krylov subspace will only be constructed partially.
   
-  Currently only the `LawsonEuler` and `NorsettEuler` methods support Krylov methods.
+Currently only the `LawsonEuler` and `NorsettEuler` methods support Krylov methods.
