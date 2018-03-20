@@ -178,19 +178,19 @@ where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the inte
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
-rate(u,p,t) = (0.1/1000.0)*u[1]*u[2]
-function affect!(integrator)
+rate1(u,p,t) = (0.1/1000.0)*u[1]*u[2]
+function affect1!(integrator)
   integrator.u[1] -= 1
   integrator.u[2] += 1
 end
-jump = ConstantRateJump(rate,affect!)
+jump = ConstantRateJump(rate1,affect1!)
 
-rate(u,p,t) = 0.01u[2]
-function affect!(integrator)
+rate2(u,p,t) = 0.01u[2]
+function affect2!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
-jump2 = ConstantRateJump(rate,affect!)
+jump2 = ConstantRateJump(rate2,affect2!)
 ```
 
 We can then use `JumpProblem` to augment a problem with jumps. To add the jumps
@@ -258,12 +258,12 @@ differential equation. To continue our example, let's let there be a new reactio
 which has the same effect as `r2`, but now is dependent on the amount of `u[4]`.
 
 ```julia
-rate(u,p,t) = 1e-2u[4]
-function affect!(integrator)
+rate3(u,p,t) = 1e-2u[4]
+function affect3!(integrator)
   integrator.u[2] -= 1
   integrator.u[3] += 1
 end
-jump3 = VariableRateJump(rate,affect!)
+jump3 = VariableRateJump(rate3,affect3!)
 ```
 
 We would expect this reaction to increase the amount of transitions from state
