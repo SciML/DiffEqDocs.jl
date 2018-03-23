@@ -30,9 +30,9 @@ DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,
 ```
 
 `A` is the operator array. `α` is the scalar coefficient. If `α` is a function
-`α(t)`, then it will update the coefficient as necessary. `update_func` is the
-function called by `update_coefficients!(A,u,p,t)` (along with `α` if it's a
-function). If left as its default, then `update_func` is trivial which signifies
+`α(t)`, then it will update the coefficient as necessary. `update_func(A,u,p,t)` 
+is the function called by `update_coefficients!(A,u,p,t)` (along with `α` if it's 
+a function). If left as its default, then `update_func` is trivial which signifies
 `A` is a constant.
 
 ### AffineDiffEqOperator
