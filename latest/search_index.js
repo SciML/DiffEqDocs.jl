@@ -2953,6 +2953,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/diffeq_operator.html#Note:-this-functionality-is-under-heavy-development.-Interfaces-may-change.-Treat-this-as-experimental-until-the-end-of-Summer-2018.-1",
+    "page": "DiffEqOperators",
+    "title": "Note: this functionality is under heavy development. Interfaces may change. Treat this as experimental until the end of Summer 2018.",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "features/diffeq_operator.html#Using-DiffEqOperators-1",
     "page": "DiffEqOperators",
     "title": "Using DiffEqOperators",
