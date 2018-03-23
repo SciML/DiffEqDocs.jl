@@ -2997,7 +2997,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "AbstractDiffEqOperator Interface Description",
     "category": "section",
-    "text": "Function call and multiplication: L(du,u,p,t) for inplace and du = L(t,u) for out-of-place, meaning L*u and A_mul_B!.\nIf the operator is not a constant, update it with (u,p,t). A mutating form, i.e. update_coefficients!(A,u,p,t) that changes the internal coefficients, and a out-of-place form B = update_coefficients(A,u,p,t).\nis_constant(A) trait for whether the operator is constant or not."
+    "text": "Function call and multiplication: L(du,u,p,t) for inplace and du = L(u,p,t) for out-of-place, meaning L*u and A_mul_B!.\nIf the operator is not a constant, update it with (u,p,t). A mutating form, i.e. update_coefficients!(A,u,p,t) that changes the internal coefficients, and a out-of-place form B = update_coefficients(A,u,p,t).\nis_constant(A) trait for whether the operator is constant or not."
 },
 
 {
