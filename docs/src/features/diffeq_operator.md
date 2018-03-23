@@ -58,7 +58,7 @@ for it to work in the solvers.
 
 ### AbstractDiffEqOperator Interface Description
 
-1. Function call and multiplication: `L(du,u,p,t)` for inplace and `du = L(t,u)` for
+1. Function call and multiplication: `L(du,u,p,t)` for inplace and `du = L(u,p,t)` for
    out-of-place, meaning `L*u` and `A_mul_B!`.
 2. If the operator is not a constant, update it with `(u,p,t)`. A mutating form, i.e.
    `update_coefficients!(A,u,p,t)` that changes the internal coefficients, and a
