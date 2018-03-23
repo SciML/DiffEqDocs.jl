@@ -2973,7 +2973,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "Wrapping an Array: DiffEqArrayOperator",
     "category": "section",
-    "text": "DiffEqArrayOperator is for defining an operator directly from an array. The operator is of the formalpha(t)A(upt)for some scalar α and time plus possibly state dependent A. The constructor is:DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,\n                             update_func = DEFAULT_UPDATE_FUNC)A is the operator array. α is the scalar coefficient. If α is a function α(t), then it will update the coefficient as necessary. update_func is the function called by update_coefficients!(A,u,p,t) (along with α if it\'s a function). If left as its default, then update_func is trivial which signifies A is a constant."
+    "text": "DiffEqArrayOperator is for defining an operator directly from an array. The operator is of the formalpha(t)A(upt)for some scalar α and time plus possibly state dependent A. The constructor is:DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,\n                             update_func = DEFAULT_UPDATE_FUNC)A is the operator array. α is the scalar coefficient. If α is a function α(t), then it will update the coefficient as necessary. update_func(A,u,p,t)  is the function called by update_coefficients!(A,u,p,t) (along with α if it\'s  a function). If left as its default, then update_func is trivial which signifies A is a constant."
 },
 
 {
