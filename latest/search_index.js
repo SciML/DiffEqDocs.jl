@@ -2957,7 +2957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "Using DiffEqOperators",
     "category": "section",
-    "text": "AbstractDiffEqOperators act like functions. When defined, A has function calls A(t,u) and A(du,u,p,t) that act like A*u. These operators update via a function update_coefficients!(A,u,p,t)."
+    "text": "AbstractDiffEqOperators act like functions. When defined, A has function calls A(u,p,t) and A(du,u,p,t) that act like A*u. These operators update via a function update_coefficients!(A,u,p,t)."
 },
 
 {
@@ -2973,7 +2973,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "Wrapping an Array: DiffEqArrayOperator",
     "category": "section",
-    "text": "DiffEqArrayOperator is for defining an operator directly from an array. The operator is of the formalpha(t)A(tu)for some scalar α and time plus possibly state dependent A. The constructor is:DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,\n                             update_func = DEFAULT_UPDATE_FUNC)A is the operator array. α is the scalar coefficient. If α is a function α(t), then it will update the coefficient as necessary. update_func is the function called by update_coefficients!(A,u,p,t) (along with α if it\'s a function). If left as its default, then update_func is trivial which signifies A is a constant."
+    "text": "DiffEqArrayOperator is for defining an operator directly from an array. The operator is of the formalpha(t)A(upt)for some scalar α and time plus possibly state dependent A. The constructor is:DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,\n                             update_func = DEFAULT_UPDATE_FUNC)A is the operator array. α is the scalar coefficient. If α is a function α(t), then it will update the coefficient as necessary. update_func is the function called by update_coefficients!(A,u,p,t) (along with α if it\'s a function). If left as its default, then update_func is trivial which signifies A is a constant."
 },
 
 {
@@ -2997,7 +2997,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "AbstractDiffEqOperator Interface Description",
     "category": "section",
-    "text": "Function call and multiplication: L(du,u,p,t) for inplace and du = L(t,u) for out-of-place, meaning L*u and A_mul_B!.\nIf the operator is not a constant, update it with (u,t). A mutating form, i.e. update_coefficients!(A,u,p,t) that changes the internal coefficients, and a out-of-place form B = update_coefficients(A,t,u).\nis_constant(A) trait for whether the operator is constant or not."
+    "text": "Function call and multiplication: L(du,u,p,t) for inplace and du = L(t,u) for out-of-place, meaning L*u and A_mul_B!.\nIf the operator is not a constant, update it with (u,p,t). A mutating form, i.e. update_coefficients!(A,u,p,t) that changes the internal coefficients, and a out-of-place form B = update_coefficients(A,u,p,t).\nis_constant(A) trait for whether the operator is constant or not."
 },
 
 {
@@ -3005,7 +3005,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqOperators",
     "title": "AbstractDiffEqLinearOpeartor Interface Description",
     "category": "section",
-    "text": "AbstractDiffEqLinearOperator <: AbstractDiffEqOperator\nCan absorb under multiplication by a scalar. In all algorithms things like dt*L show up all the time, so the linear operator must be able to absorb such constants.\nis_constant(A) trait for whether the operator is constant or not.\nOptional: diagonal, symmetric, etc traits from LinearMaps.jl.\nOptional: expm(A). Required for simple exponential integration.\nOptional: expmv(A,t,u) = expm(t*A)*u and expmv!(v,A::DiffEqOperator,t,u) Required for sparse-saving exponential integration.\nOptional: factorizations. A_ldiv_B, factorize et. al. This is only required for algorithms which use the factorization of the operator (Crank-Nicholson), and only for when the default linear solve is used."
+    "text": "AbstractDiffEqLinearOperator <: AbstractDiffEqOperator\nCan absorb under multiplication by a scalar. In all algorithms things like dt*L show up all the time, so the linear operator must be able to absorb such constants.\nis_constant(A) trait for whether the operator is constant or not.\nOptional: diagonal, symmetric, etc traits from LinearMaps.jl.\nOptional: expm(A). Required for simple exponential integration.\nOptional: expmv(A,u,t) = expm(t*A)*u and expmv!(v,A::DiffEqOperator,u,t) Required for sparse-saving exponential integration.\nOptional: factorizations. A_ldiv_B, factorize et. al. This is only required for algorithms which use the factorization of the operator (Crank-Nicholson), and only for when the default linear solve is used."
 },
 
 {
