@@ -289,7 +289,7 @@ options for the plot recipe are provided as for `sol`, meaning one can choose
 variables via the `vars` keyword argument, or change the `plotdensity` / turn
 on/off `denseplot`.
 
-Additionally, since the `integrator` is an integrator, this can be used in the
+Additionally, since the `integrator` is an iterator, this can be used in the
 Plots.jl `animate` command to iteratively build an animation of the solution
 while solving the differential equation.
 
