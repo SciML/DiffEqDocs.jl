@@ -14,7 +14,7 @@ u(t) &= h(t) \qquad &(t < t_0).
 \end{align}
 ```
 
-``f`` should be specified as `f(u,h,p,t)` (or in-place as `f(du,u,h,p,t)`),
+``f`` should be specified as `f(u, h, p, t)` (or in-place as `f(du, u, h, p, t)`),
 ``u_0`` should be an AbstractArray (or number) whose geometry matches the
 desired geometry of `u`, and ``h`` should be specified as described below. The
 history function `h` is accessed for all delayed values. Note that we are not
@@ -25,10 +25,10 @@ as arbitrary matrices / higher dimension tensors as well.
 
 The history function `h` can be called in the following ways:
 
-- `h(t)`: out-of-place calculation
-- `h(out,t)`: in-place calculation
-- `h(t,deriv::Type{Val{i}})`: out-of-place calculation of the `i`th derivative
-- `h(out,t,deriv::Type{Val{i}})`: in-place calculation of the `i`th derivative
+- `h(p, t)`: out-of-place calculation
+- `h(out, p, t)`: in-place calculation
+- `h(p, t, deriv::Type{Val{i}})`: out-of-place calculation of the `i`th derivative
+- `h(out, p, t, deriv::Type{Val{i}})`: in-place calculation of the `i`th derivative
 - `h(args...; idxs)`: calculation of `h(args...)` for indices `idxs`
 
 Note that a dispatch for the supplied history function of matching form is required
@@ -46,7 +46,7 @@ efficiently be more accurate and thus this is recommended.
 ### Constructors
 
 ```julia
-DDEProblem{isinplace}(f,u0,h,tspan,p=nothing;
+DDEProblem{isinplace}(f, u0, h, tspan, p=nothing;
                       constant_lags=[],
                       dependent_lags=[],
                       mass_matrix=I,

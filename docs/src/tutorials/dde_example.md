@@ -5,10 +5,11 @@ equations. This tutorial assumes you have read the [Ordinary Differential Equati
 
 Delay differential equations are equations which have a delayed argument. To allow
 for specifying the delayed argument, the function definition for a delay differential
-equation is expanded to include a history function `h(t)` which uses interpolations
+equation is expanded to include a history function `h(p, t)` which uses interpolations
 throughout the solution's history to form a continuous extension of the solver's
-past. The function signature for a delay differential equation is `f(u,h,p,t)` for
-not in-place computations, and `f(du,u,h,p,t)` for in-place computations.
+past and depends on parameters `p` and time `t`. The function signature for a delay
+differential equation is `f(u, h, p, t)` for not in-place computations, and
+`f(du, u, h, p, t)` for in-place computations.
 
 In this example we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
 
@@ -25,7 +26,7 @@ For this problem we note that ``\tau`` is constant, and thus we can use a method
 which exploits this behavior. We first write out the equation using the appropriate
 function signature. Most of the equation writing is the same, though we use the
 history function by first interpolating and then choosing the components. Thus
-the `i`th component at time `t-tau` is given by `h(t-tau)[i]`. Components with
+the `i`th component at time `t-tau` is given by `h(p, t-tau)[i]`. Components with
 no delays are written as in the ODE.
 
 Thus, the function for this model is given by:
@@ -35,10 +36,10 @@ const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5
 const p1 = 0.2; const q1 = 0.3; const v1 = 1; const d1 = 1
 const d2 = 1; const beta0 = 1; const beta1 = 1; const tau = 1
 function bc_model(du,u,h,p,t)
-  du[1] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
-  du[2] = (v0/(1+beta0*(h(t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +
-          (v1/(1+beta1*(h(t-tau)[3]^2))) * (p1 - q1)*u[2] - d1*u[2]
-  du[3] = (v1/(1+beta1*(h(t-tau)[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
+  du[1] = (v0/(1+beta0*(h(p, t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
+  du[2] = (v0/(1+beta0*(h(p, t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +
+          (v1/(1+beta1*(h(p, t-tau)[3]^2))) * (p1 - q1)*u[2] - d1*u[2]
+  du[3] = (v1/(1+beta1*(h(p, t-tau)[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
 end
 ```
 
@@ -61,7 +62,7 @@ the model starts. Here we will assume that for all time before `t0` the values w
 and define `h` as an out-of-place function:
 
 ```julia
-h(t) = ones(3)
+h(p, t) = ones(3)
 ```
 
 Next, we choose to solve on the timespan `(0.0,10.0)` and create the problem type:
@@ -108,12 +109,12 @@ using Plots; plot(sol)
 
 We can speed up the previous problem in two different ways. First of all, if we
 need to interpolate multiple values from a previous time, we can use the in-place
-form for the history function `h(out,t)` which writes the output to `out`. In this
+form for the history function `h(out, p, t)` which writes the output to `out`. In this
 case, we must supply the history initial conditions as in-place as well. For the
 previous example, that's simply
 
 ```julia
-h(out,t) = (out.=1.0)
+h(out, p, t) = (out.=1.0)
 ```
 
 and then our DDE is:
@@ -121,7 +122,7 @@ and then our DDE is:
 ```julia
 const out = zeros(3) # Define a cache variable
 function bc_model(du,u,h,p,t)
-  h(out,t-tau) # updates out to be the correct history function
+  h(out, p, t-tau) # updates out to be the correct history function
   du[1] = (v0/(1+beta0*(out[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
   du[2] = (v0/(1+beta0*(out[3]^2))) * (1 - p0 + q0)*u[1] +
           (v1/(1+beta1*(out[3]^2))) * (p1 - q1)*u[2] - d1*u[2]
@@ -136,7 +137,7 @@ The DDE function `bc_model` is now:
 
 ```julia
 function bc_model(du,u,h,p,t)
-  u3_past_sq = h(t-tau; idxs=3)^2
+  u3_past_sq = h(p, t-tau; idxs=3)^2
   du[1] = (v0/(1+beta0*(u3_past_sq))) * (p0 - q0)*u[1] - d0*u[1]
   du[2] = (v0/(1+beta0*(u3_past_sq))) * (1 - p0 + q0)*u[1] +
           (v1/(1+beta1*(u3_past_sq))) * (p1 - q1)*u[2] - d1*u[2]
@@ -147,16 +148,16 @@ end
 Note that this requires that we define the historical values
 
 ```julia
-h(t;idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
+h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
 ```
 
 where `idxs` can be an integer for which variable in the history to compute,
 and here for any number `idxs` we give back `1.0`. Note that if we wanted to use
 past values of the `i`th derivative then we would call the history function
-`h(t, Val{i})` in our DDE function and would have to define a dispatch like
+`h(p, t, Val{i})` in our DDE function and would have to define a dispatch like
 
 ```julia
-h(t,::Type{Val{1}}) = zeros(3)
+h(p, t, ::Type{Val{1}}) = zeros(3)
 ```
 
 to say that derivatives before `t0` are zero for any index. Again, we could
