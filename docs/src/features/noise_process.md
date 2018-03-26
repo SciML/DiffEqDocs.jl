@@ -182,7 +182,7 @@ One can define a `Ornstein-Uhlenbeck` process which is a Wiener process defined
 by the stochastic differential equation
 
 ```math
-dX_t = \theta (\mu - X_t) dt + \sigma X_t dW_t
+dX_t = \theta (\mu - X_t) dt + X_t dW_t
 ```
 
 The `OrnsteinUhlenbeckProcess` is distribution exact (meaning, not a numerical
