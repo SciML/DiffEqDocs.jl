@@ -17,7 +17,7 @@ to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary 
 
 ### Constructors
 
-`RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,noise_prototype=nothing,callback=nothing,mass_matrix=I)` :
+`RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I)` :
 Defines the RODE with the specified functions. The default noise is `WHITE_NOISE`.
 `isinplace` optionally sets whether the function is inplace or not. This is
 determined automatically, but not inferred.
@@ -30,7 +30,7 @@ determined automatically, but not inferred.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
   see [the noise process documentation page](../../features/noise_process.html)
-* `noise_prototype`: A prototype type instance for the noise vector. It defaults
+* `rand_prototype`: A prototype type instance for the noise vector. It defaults
   to `nothing`, which means the problem should be interpreted as having a noise
   vector whose size matches `u0`.
 * `callback`: A callback to be applied to every solver which uses the problem.
