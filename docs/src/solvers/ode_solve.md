@@ -198,6 +198,28 @@ output, interpolations, callbacks etc. However, some basic methods are available
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
+### Fixed Time and Order Multistep Methods
+
+Methods using the approximation at more than one previous mesh point to determine
+the approximation at the next point are called multistep methods. These methods
+tend to be more efficient as the size of the system or the cost of `f` increases.
+These methods require a choice of `dt`.
+
+#### Adams-Bashforth Explicit Methods 
+
+  - `AB3` - The 3-step third order multistep method. Ralston's Second Order Method is used to calculate starting values.
+  - `AB4` - The 4-step fourth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  
+  - `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  
+
+#### Predictor-Corrector Methods  
+
+The combination of an explicit method to predict and an implicit to improve the
+prediction is called a predictor-corrector method. 
+
+  - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method is used to calculate starting values.  
+  - `ABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
+  - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
+
 ### Methods for Stiff Equations
 
 #### SDIRK Methods
@@ -340,33 +362,6 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
 The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
-
-### Multistep Methods
-Methods using the approximation at more than one previous mesh point to determine
-the approximation at the next point are called multistep methods.  
-#### Adams-Bashforth Explicit Methods  
-  - `AB3` - It is a 3-steps, third order multistep method.  
-  - `AB4` - It is a 4-steps, fourth order multistep method.  
-  - `AB5` - It is a 5-steps, fifth order multistep method.  
-
-Example usage:
-
-```julia
-solve(prob,AB3(),dt=0.2)             
-```
-
-#### Predictor-Corrector Methods  
-The combination of an explicit method to predict and an implicit to improve the
-prediction is called a predictor-corrector method.  
-  - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method is used to calculate starting values.  
-  - `ABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
-  - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
-
-Example usage:
-
-```julia
-solve(prob,ABM32(),dt=0.2)                        
-```
 
 ## Sundials.jl
 
