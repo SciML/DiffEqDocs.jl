@@ -3,25 +3,30 @@
 ## Recommended Methods
 
 For most Ito diagonal and scalar noise problems where a good amount of accuracy is
-required and mild stiffness may be an issue, the `SRIW1` algorithm should
-do well. If the problem has additive noise, then `SRA1` will be the
-optimal algorithm. For commutative noise, `RKMilCommute` is a strong order 1.0
-method which utilizes the commutivity property to greatly speed up the Wiktorsson
-approximation and can choose between Ito and Stratonovich. For non-commutative noise,
-`EM` and `EulerHeun` are the choices (for Ito and Stratonovich interpretations
-respectively).
+required and mild stiffness may be an issue, the `SOSRI` algorithm should
+do well. If the problem has additive noise, then `SOSRA` will be the
+optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
+though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
+is a strong order 1.0 method which utilizes the commutivity property to greatly
+speed up the Wiktorsson approximation and can choose between Ito and Stratonovich.
+For non-commutative noise, `EM` and `EulerHeun` are the choices (for Ito and
+Stratonovich interpretations respectively).
 
-For stiff problems with diagonal noise, `ImplicitRKMil` is the most efficient
-method and can choose between Ito and Stratonovich. If the noise is non-diagonal,
-`ImplicitEM` and `ImplicitEulerHeun` are for Ito and Stratonovich respectively.
-For each of these methods, the parameter `theta` can be chosen. The default is
-`theta=1/2` which will not dampen numerical oscillations and thus is symmetric
-(and almost symplectic) and will lead to less error when noise is sufficiently
-small. However, `theta=1/2` is not L-stable in the drift term, and thus one
-can receive more stability (L-stability in the drift term) with `theta=1`, but
-with a tradeoff of error efficiency in the low noise case. In addition, the
-option `symplectic=true` will turns these methods into an implicit Midpoint
-extension which is symplectic in distribution but has an accuracy tradeoff.
+For stiff problems with additive noise, the high order adaptive method
+`RackKenCarp` is highly preferred and will solve problems with similar efficiency
+as ODEs. If possible, stiff problems should be converted to make use of this
+additive noise solver. For stiff problems with diagonal noise, `ImplicitRKMil`
+is the most efficient method and can choose between Ito and Stratonovich. If the
+noise is non-diagonal, `ImplicitEM` and `ImplicitEulerHeun` are for Ito and
+Stratonovich respectively. For each of these methods, the parameter `theta` can
+be chosen. The default is `theta=1/2` which will not dampen numerical oscillations
+and thus is symmetric (and almost symplectic) and will lead to less error when
+noise is sufficiently small. However, `theta=1/2` is not L-stable in the drift
+term, and thus one can receive more stability (L-stability in the drift term)
+with `theta=1`, but with a tradeoff of error efficiency in the low noise case.
+In addition, the option `symplectic=true` will turns these methods into an
+implicit Midpoint extension which is symplectic in distribution but has an
+accuracy tradeoff.
 
 ## Mass Matrices and Stochastic DAEs
 
@@ -50,6 +55,8 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 * `delta`: The `delta` adaptivity parameter for the natural error estimator.
   Determines the balance between drift and diffusion error. For more details, see
   [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
+* `seed`: Sets the seed for the random number generator. This overrides any seed
+  set in the `SDEProblem`.
 
 # Full List of Methods
 
@@ -60,37 +67,51 @@ Orders are given in terms of strong order.
 
 ### Nonstiff Methods
 
-- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Can handle
+- `EM`- The Euler-Maruyama method. Strong order 0.5 in the Ito sense. Can handle
   all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
   time step only.†
 - `LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
-  an error estimator based on Lamba and Rackauckas. Strong Order 0.5 in the Ito
+  an error estimator based on Lamba and Rackauckas. Strong order 0.5 in the Ito
   sense. Can handle all forms of noise, including non-diagonal, scalar, and
   colored noise.†
-- `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
+- `EulerHeun` - The Euler-Heun method. Strong order 0.5 in the Stratonovich sense.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Fixed time step only.†
 - `LambaEulerHeun` - A modified Euler-Heun method with adaptive time stepping
-  with an error estimator based on Lamba due to Rackauckas. Strong Order 0.5 in
+  with an error estimator based on Lamba due to Rackauckas. Strong order 0.5 in
   the Stratonovich sense. Can handle all forms of noise, including non-diagonal,
   scalar, and colored noise.†
-- `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
+- `RKMil` - An explicit Runge-Kutta discretization of the strong order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
-  Only handles scalar and diagonal noise. Uses a 1.5/2.0 error estimate for
-  adaptive time stepping.†
-- `RKMilCommute` - An explicit Runge-Kutta discretization of the strong Order 1.0
+  Only handles scalar and diagonal noise.†
+- `RKMilCommute` - An explicit Runge-Kutta discretization of the strong order 1.0
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
-- `SRA` - Adaptive strong Order 1.5 methods for additive Ito and Stratonovich SDEs.
-  Default tableau is for SRA1. Can handle non-diagonal and scalar additive noise.
-- `SRI` - Adaptive strong Order 1.5 methods for diagonal/scalar Ito SDEs.
+- `SRA` - Adaptive strong order 1.5 methods for additive Ito and Stratonovich SDEs.
+  Default tableau is for SRA1. Can handle diagonal, non-diagonal and scalar 
+  additive noise.
+- `SRI` - Adaptive strong order 1.5 methods for diagonal/scalar Ito SDEs.
   Default tableau is for SRIW1.
-- `SRIW1` - Adaptive optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
-  Ito SDEs.†
-- `SRA1` - Adaptive optimized version of SRA1. Strong Order 1.5 for additive Ito and
-  Stratonovich SDEs. Can handle non-diagonal and scalar additive noise.†
+- `SRIW1` - Adaptive strong order 1.5 and weak order 2.0 for diagonal/scalar Ito SDEs.†
+- `SRIW2` - Adaptive strong order 1.5 and weak order 3.0 for diagonal/scalar Ito SDEs.†
+- `SOSRI` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
+  diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
+- `SOSRI2` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
+  diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
+- `SRA1` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+  order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
+- `SRA2` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+  order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
+- `SRA3` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+  order 3. Can handle non-diagonal and scalar additive noise.†
+- `SOSRA` - A stability-optimized adaptive SRA. Strong order 2.0 for additive Ito and
+  Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
+  additive noise. Stable at high tolerances and robust to stiffness.†
+- `SOSRA2` - A stability-optimized adaptive SRA. Strong order 2.0 for additive Ito and
+  Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
+  additive noise. Stable at high tolerances and robust to stiffness.†
 
 Example usage:
 
@@ -127,6 +148,9 @@ For `SRA` and `SRI`, the following option is allowed:
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
   time stepping.
+- `SKenCarp` - Adaptive L-stable strong order 2.0 for additive Ito and
+  Stratonovich SDEs with weak order 3. Can handle diagonal, non-diagonal 
+  and scalar additive noise.†
 
 ### Derivative-Based Methods
 The following methods require analytic derivatives of the diffusion term.
