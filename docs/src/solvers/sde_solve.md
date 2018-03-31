@@ -8,8 +8,11 @@ do well. If the problem has additive noise, then `SRA1` will be the
 optimal algorithm. For commutative noise, `RKMilCommute` is a strong order 1.0
 method which utilizes the commutivity property to greatly speed up the Wiktorsson
 approximation and can choose between Ito and Stratonovich. For non-commutative noise,
-`EM` and `EulerHeun` are the choices (for Ito and Stratonovich interpretations
-respectively).
+difficult problems usually require adaptive time stepping in order to be efficient.
+In this case, `LambaEM` and `LambaEulerHeun` are adaptive and handle general
+non-diagonal problems (for Ito and Stratonovich interpretations respectively).
+If adaptivity isn't necessary, the `EM` and `EulerHeun` are good choices
+(for Ito and Stratonovich interpretations respectively).
 
 For stiff problems with diagonal noise, `ImplicitRKMil` is the most efficient
 method and can choose between Ito and Stratonovich. If the noise is non-diagonal,
