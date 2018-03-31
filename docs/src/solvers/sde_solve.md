@@ -72,11 +72,10 @@ Orders are given in terms of strong order.
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem.†
-- `SRA` - The strong Order 1.5 methods for additive Ito and Stratonovich SDEs
-  due to Rossler. Default tableau is for SRA1. Can handle non-diagonal and
-  scalar additive noise.
-- `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs due to
-  Rossler. Default tableau is for SRIW1.
+- `SRA` - adaptive strong Order 1.5 methods for additive Ito and Stratonovich SDEs.
+  Default tableau is for SRA1. Can handle non-diagonal and scalar additive noise.
+- `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs. 
+  Default tableau is for SRIW1.
 - `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
   Ito SDEs.†
 - `SRA1` - An optimized version of SRA1. Strong Order 1.5 for additive Ito and
@@ -101,19 +100,22 @@ For `SRA` and `SRI`, the following option is allowed:
   defaults to `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
+  Uses a 1.0/1.5 heuristic for adaptive time stepping.
 - `ImplicitEulerHeun` - An order 0.5 Stratonovich implicit method. This is a
   theta method which defaults to `theta=1/2` or the Trapezoid method on the
   drift term. This method defaults to `symplectic=false`, but when true and
   `theta=1/2` this is the implicit Midpoint method on the drift term and is
   symplectic in distribution. Can handle all forms of noise, including
-  non-diagonal, scalar, and colored noise.
+  non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for 
+  adaptive time stepping.
 - `ImplicitRKMil` - An order 1.0 implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. Defaults
   to solving the Ito problem, but `ImplicitRKMil(interpretation=:Stratonovich)`
   makes it solve the Stratonovich problem. This method defaults to
   `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
-  Handles diagonal and scalar noise.
+  Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
+  time stepping.
 
 ### Derivative-Based Methods 
 The following methods require analytic derivatives of the diffusion term. 
