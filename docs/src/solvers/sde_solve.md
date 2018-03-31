@@ -61,24 +61,27 @@ Orders are given in terms of strong order.
 ### Nonstiff Methods
 
 - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Can handle
-  all forms of noise, including non-diagonal, scalar, and colored noise.†
+  all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
+  time step only.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
-  Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
+  Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
+  Fixed time step only.†
 - `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
-  Only handles scalar and diagonal noise.†
+  Only handles scalar and diagonal noise. Uses a 1.5/2.0 error estimate for 
+  adaptive time stepping.†
 - `RKMilCommute` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
-  Stratonovich problem.†
-- `SRA` - adaptive strong Order 1.5 methods for additive Ito and Stratonovich SDEs.
+  Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
+- `SRA` - Adaptive strong Order 1.5 methods for additive Ito and Stratonovich SDEs.
   Default tableau is for SRA1. Can handle non-diagonal and scalar additive noise.
-- `SRI` - The strong Order 1.5 methods for diagonal/scalar Ito SDEs. 
+- `SRI` - Adaptive strong Order 1.5 methods for diagonal/scalar Ito SDEs. 
   Default tableau is for SRIW1.
-- `SRIW1` - An optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
+- `SRIW1` - Adaptive optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
   Ito SDEs.†
-- `SRA1` - An optimized version of SRA1. Strong Order 1.5 for additive Ito and
+- `SRA1` - Adaptive optimized version of SRA1. Strong Order 1.5 for additive Ito and
   Stratonovich SDEs. Can handle non-diagonal and scalar additive noise.†
 
 Example usage:
