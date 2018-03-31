@@ -9,8 +9,12 @@ optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
 though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
 is a strong order 1.0 method which utilizes the commutivity property to greatly
 speed up the Wiktorsson approximation and can choose between Ito and Stratonovich.
-For non-commutative noise, `EM` and `EulerHeun` are the choices (for Ito and
-Stratonovich interpretations respectively).
+For non-commutative noise, difficult problems usually require adaptive time
+stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
+are adaptive and handle general non-diagonal problems (for Ito and Stratonovich
+interpretations respectively). If adaptivity isn't necessary, the `EM` and
+`EulerHeun` are good choices (for Ito and Stratonovich interpretations
+respectively).
 
 For stiff problems with additive noise, the high order adaptive method
 `RackKenCarp` is highly preferred and will solve problems with similar efficiency
@@ -90,7 +94,7 @@ Orders are given in terms of strong order.
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
 - `SRA` - Adaptive strong order 1.5 methods for additive Ito and Stratonovich SDEs.
-  Default tableau is for SRA1. Can handle diagonal, non-diagonal and scalar 
+  Default tableau is for SRA1. Can handle diagonal, non-diagonal and scalar
   additive noise.
 - `SRI` - Adaptive strong order 1.5 methods for diagonal/scalar Ito SDEs.
   Default tableau is for SRIW1.
@@ -149,7 +153,7 @@ For `SRA` and `SRI`, the following option is allowed:
   Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
   time stepping.
 - `SKenCarp` - Adaptive L-stable strong order 2.0 for additive Ito and
-  Stratonovich SDEs with weak order 3. Can handle diagonal, non-diagonal 
+  Stratonovich SDEs with weak order 3. Can handle diagonal, non-diagonal
   and scalar additive noise.†
 
 ### Derivative-Based Methods
