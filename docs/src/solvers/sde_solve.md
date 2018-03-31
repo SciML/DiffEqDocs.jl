@@ -63,13 +63,21 @@ Orders are given in terms of strong order.
 - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Can handle
   all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
   time step only.†
+- `LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
+  an error estimator based on Lamba and Rackauckas. Strong Order 0.5 in the Ito
+  sense. Can handle all forms of noise, including non-diagonal, scalar, and
+  colored noise.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Fixed time step only.†
+- `LambaEulerHeun` - A modified Euler-Heun method with adaptive time stepping
+  with an error estimator based on Lamba due to Rackauckas. Strong Order 0.5 in
+  the Stratonovich sense. Can handle all forms of noise, including non-diagonal,
+  scalar, and colored noise.†
 - `RKMil` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
-  Only handles scalar and diagonal noise. Uses a 1.5/2.0 error estimate for 
+  Only handles scalar and diagonal noise. Uses a 1.5/2.0 error estimate for
   adaptive time stepping.†
 - `RKMilCommute` - An explicit Runge-Kutta discretization of the strong Order 1.0
   Milstein method for commutative noise problems. Defaults to solving the Ito
@@ -77,7 +85,7 @@ Orders are given in terms of strong order.
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
 - `SRA` - Adaptive strong Order 1.5 methods for additive Ito and Stratonovich SDEs.
   Default tableau is for SRA1. Can handle non-diagonal and scalar additive noise.
-- `SRI` - Adaptive strong Order 1.5 methods for diagonal/scalar Ito SDEs. 
+- `SRI` - Adaptive strong Order 1.5 methods for diagonal/scalar Ito SDEs.
   Default tableau is for SRIW1.
 - `SRIW1` - Adaptive optimized version of SRIW1. Strong Order 1.5 for diagonal/scalar
   Ito SDEs.†
@@ -109,7 +117,7 @@ For `SRA` and `SRI`, the following option is allowed:
   drift term. This method defaults to `symplectic=false`, but when true and
   `theta=1/2` this is the implicit Midpoint method on the drift term and is
   symplectic in distribution. Can handle all forms of noise, including
-  non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for 
+  non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for
   adaptive time stepping.
 - `ImplicitRKMil` - An order 1.0 implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. Defaults
@@ -120,21 +128,21 @@ For `SRA` and `SRI`, the following option is allowed:
   Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
   time stepping.
 
-### Derivative-Based Methods 
-The following methods require analytic derivatives of the diffusion term. 
+### Derivative-Based Methods
+The following methods require analytic derivatives of the diffusion term.
 
 - `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
   sense. Requires the ggprime function, which is defined as
   ```math
     \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
   ```
-  This can also be understood more intuitively in vector/matrix form as, 
+  This can also be understood more intuitively in vector/matrix form as,
   ```math
   \text{ggprime}(t,x) = \sum_{j=1}^m \bar{\mathcal{J}}[\vec g^{(j)}(t,x)] \vec g^{(j)}(t,x).
   ```
-  where ``\vec g^{(j)}`` is the noise vector for the j'th noise channel and ``\bar{\mathcal{J}}`` is the Jacobian of the j'th   noise vector. 
-  
-  The default settings for the drift implicitness is `theta=0.5` and 
+  where ``\vec g^{(j)}`` is the noise vector for the j'th noise channel and ``\bar{\mathcal{J}}`` is the Jacobian of the j'th   noise vector.
+
+  The default settings for the drift implicitness is `theta=0.5` and
   the diffusion implicitness is `eta=0.5`.  
 
 #### Note about mass matrices
