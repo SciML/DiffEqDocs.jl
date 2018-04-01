@@ -19,11 +19,15 @@ respectively).
 For stiff problems with additive noise, the high order adaptive method
 `RackKenCarp` is highly preferred and will solve problems with similar efficiency
 as ODEs. If possible, stiff problems should be converted to make use of this
-additive noise solver. For stiff problems with diagonal noise, `ImplicitRKMil`
-is the most efficient method and can choose between Ito and Stratonovich. If the
-noise is non-diagonal, `ImplicitEM` and `ImplicitEulerHeun` are for Ito and
-Stratonovich respectively. For each of these methods, the parameter `theta` can
-be chosen. The default is `theta=1/2` which will not dampen numerical oscillations
+additive noise solver. If the noise term is large/stiff, then the split-step
+methods are required in order for the implicit methods to be stable. For
+Ito in this case, use `ISSEM` and for Stratonovich use `ISSEulerHeun`. These
+two methods can handle any noise form.
+
+If the noise term is not too large, for stiff problems with diagonal noise,
+`ImplicitRKMil` is the most efficient method and can choose between Ito and
+Stratonovich. For each of the theta methods, the parameter `theta` can be chosen.
+The default is `theta=1/2` which will not dampen numerical oscillations
 and thus is symmetric (and almost symplectic) and will lead to less error when
 noise is sufficiently small. However, `theta=1/2` is not L-stable in the drift
 term, and thus one can receive more stability (L-stability in the drift term)
