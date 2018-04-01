@@ -2533,7 +2533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Mass Matrices and Stochastic DAEs",
     "category": "section",
-    "text": "The ImplicitRKMil, ImplicitEM, and ImplicitEulerHeun methods can solve stochastic equations with mass matrices (including stochastic DAEs written in mass matrix form) when either symplectic=true or theta=1."
+    "text": "The stiff methods can solve stochastic equations with mass matrices (including stochastic DAEs written in mass matrix form) when either symplectic=true or theta=1. These methods interpret the mass matrix equation as:Mu = f(tu)dt + Mg(tu)dW_ti.e. with no mass matrix inversion applied to the g term. Thus these methods apply noise per dependent variable instead of on the combinations of the dependent variables and this is designed for phenomenological noise on the dependent variables (like multiplicative or additive noise)"
 },
 
 {
@@ -2589,7 +2589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Solvers",
     "title": "Stiff Methods",
     "category": "section",
-    "text": "ImplicitEM - An order 0.5 Ito implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.\nImplicitEulerHeun - An order 0.5 Stratonovich implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.\nImplicitRKMil - An order 1.0 implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. Defaults to solving the Ito problem, but ImplicitRKMil(interpretation=:Stratonovich) makes it solve the Stratonovich problem. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive time stepping."
+    "text": "ImplicitEM - An order 0.5 Ito implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.\nImplicitEulerHeun - An order 0.5 Stratonovich implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.\nImplicitRKMil - An order 1.0 implicit method. This is a theta method which defaults to theta=1/2 or the Trapezoid method on the drift term. Defaults to solving the Ito problem, but ImplicitRKMil(interpretation=:Stratonovich) makes it solve the Stratonovich problem. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive time stepping.\nISSEM - An order 0.5 split-step Ito implicit method. It is fully implicit, meaning it can handle stiffness in the noise term. This is a theta method which defaults to theta=1 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.\nISSEulerHeun - An order 0.5 split-step Stratonovich implicit method. It is fully implicit, meaning it can handle stiffness in the noise term. This is a theta method which defaults to theta=1 or the Trapezoid method on the drift term. This method defaults to symplectic=false, but when true and theta=1/2 this is the implicit Midpoint method on the drift term and is symplectic in distribution. Can handle all forms of noise, including non-diagonal,Q scalar, and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping."
 },
 
 {
@@ -2598,14 +2598,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Derivative-Based Methods",
     "category": "section",
     "text": "The following methods require analytic derivatives of the diffusion term.PCEuler - The predictor corrector euler method. Strong Order 0.5 in the Ito sense. Requires the ggprime function, which is defined as\n  textggprime^k(tx) = sum_j=1^m sum_i=1^d g_ij(tx) fracpartial g_kj(tx)partial x_i\nThis can also be understood more intuitively in vector/matrix form as,\ntextggprime(tx) = sum_j=1^m barmathcalJvec g^(j)(tx) vec g^(j)(tx)\nwhere vec g^(j) is the noise vector for the j\'th noise channel and barmathcalJ is the Jacobian of the j\'th   noise vector.\nThe default settings for the drift implicitness is theta=0.5 and the diffusion implicitness is eta=0.5.  "
-},
-
-{
-    "location": "solvers/sde_solve.html#Note-about-mass-matrices-1",
-    "page": "SDE Solvers",
-    "title": "Note about mass matrices",
-    "category": "section",
-    "text": "These methods interpret the mass matrix equation as:Mu = f(tu)dt + Mg(tu)dW_ti.e. with no mass matrix inversion applied to the g term. Thus these methods apply noise per dependent variable instead of on the combinations of the dependent variables and this is designed for phenomenological noise on the dependent variables (like multiplicative or additive noise)"
 },
 
 {
