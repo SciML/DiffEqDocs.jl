@@ -73,13 +73,17 @@ Orders are given in terms of strong order.
 
 ### Nonstiff Methods
 
-- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Can handle
+- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an
+  optional argument `split=true` for controlling step splitting. When splitting
+  is enabled, the stability with large diffusion eigenvalues is improved. Can handle
   all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
   time step only.†
 - `LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
-  an error estimator based on Lamba and Rackauckas. Strong Order 0.5 in the Ito
-  sense. Can handle all forms of noise, including non-diagonal, scalar, and
-  colored noise.†
+  an error estimator based on Lamba and Rackauckas. Has an optional argument
+  `split=true` for controlling step splitting. When splitting is enabled, the
+  stability with   large diffusion eigenvalues is improved. Strong Order 0.5 in
+  the Ito sense. Can handle all forms of noise, including non-diagonal, scalar,
+  and colored noise.†
 - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Fixed time step only.†
