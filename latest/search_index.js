@@ -3289,9 +3289,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/linear_nonlinear.html#Basic-nlsolve-mehtod:-NLSOLVEJL_SETUP-1",
+    "location": "features/linear_nonlinear.html#Basic-nlsolve-method:-NLSOLVEJL_SETUP-1",
     "page": "Specifying (Non)Linear Solvers",
-    "title": "Basic nlsolve mehtod: NLSOLVEJL_SETUP",
+    "title": "Basic nlsolve method: NLSOLVEJL_SETUP",
     "category": "section",
     "text": "By default, a basic nonlinear solver setup is given as NLSOLVEJL_SETUP. For example, the default nlsolve in Trapezoid isTrapezoid(nlsolve=NLSOLVEJL_SETUP())This will use NLsolve.jl with autodifferentiation to solve the nonlinear systems. NLSOLVEJL_SETUP has two options:chunk_size : The autodifferentiation chunk size. Integer. Defaults to ForwardDiff.jl\'s auto-detection.\nautodiff : Whether to use autodifferentiation. Defaults to true.For example, to turn off autodifferentiation, useTrapezoid(nlsolve=NLSOLVEJL_SETUP(autodiff=false))"
 },
