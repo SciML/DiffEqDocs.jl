@@ -125,7 +125,7 @@ should have two dispatches:
 - `nlsolve(init_f,u0)` : Solves for the root units the initialized `f` and the initial
   condition `u0`. Returns the zeros of the equation.
 
-### Basic nlsolve mehtod: `NLSOLVEJL_SETUP`
+### Basic nlsolve method: `NLSOLVEJL_SETUP`
 
 By default, a basic nonlinear solver setup is given as `NLSOLVEJL_SETUP`. For example,
 the default `nlsolve` in `Trapezoid` is
