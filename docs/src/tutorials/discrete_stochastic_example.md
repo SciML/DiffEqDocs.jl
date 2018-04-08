@@ -247,7 +247,7 @@ reactant_stoich =
 ]
 net_stoich = 
 [
-  [1 => -1, 2 => 1],         # -1*s and 1*i
+  [1 => -1, 2 => 1],        # -1*s and 1*i
   [2 => -1, 3 => 1]         # -1*i and 1*r
 ]
 mass_act_jump = MassActionJump(rates, reactant_stoich, net_stoich)
@@ -260,7 +260,7 @@ sol = solve(jump_prob, SSAStepper())
 ```
 
 
-## Defining the Jumps Directly: Mixing ConstantJump and MassActionJump
+## Defining the Jumps Directly: Mixing `ConstantRateJump` and `MassActionJump`
 Suppose we now want to add in to the SIR model another jump that can not be
 represented as a mass action reaction. We can create a new `ConstantRateJump`
 and simulate a hybrid system using both the `MassActionJump` for the two
