@@ -1,15 +1,13 @@
 # Discrete Stochastic (Gillespie) Equations
 
 In this tutorial we will describe how to define and simulate continuous-time
-discrete-state jump processes, also known in biological fields as Gillespie-type
-models. The underlying algorithms that sample these processes are Gillespie-type
-methods, also known as stochastic simulation algorithms (SSAs). This tutorial
-assumes you have read the [Ordinary Differential Equations
+jump processes, also known in biological fields as Gillespie-type models. This
+tutorial assumes you have read the [Ordinary Differential Equations
 tutorial](ode_example.html). The discrete stochastic simulations we consider are
 a form of jump equation with a "trivial" (non-existent) differential equation.
 We will first demonstrate how to build these types of models using the
-biological modeling functionality, then describe how to build it directly
-and more generally using jumps, and finally show how to add discrete stochastic
+biological modeling functionality, then describe how to build them directly and
+more generally using jumps, and finally show how to add discrete stochastic
 simulations to differential equation models.
 
 ## Defining a Model using Reactions
@@ -281,20 +279,6 @@ jump_prob = JumpProblem(prob, Direct(), mass_act_jump, birth_jump)
 sol = solve(jump_prob, SSAStepper())
 ```
 ![gillespie_hybrid_jumps](../assets/gillespie_hybrid_jumps.png)
-
-### Caution about `MassActionJump`s
-When using `MassActionJump` the default behavior is to assume rate constants
-correspond to stochastic rate constants in the sense used by Gillespie (J. Comp.
-Phys., 1976, 22 (4)). This means that for a reaction such as
-``2A \overset{k}{\rightarrow} B``, the jump rate function constructed by
-`MassActionJump` would be `k*A*(A-1)/2!`. For a trimolecular reaction like ``3A
-\overset{k}{\rightarrow} B`` the rate function would be `k*A*(A-1)*(A-2)/3!`. To avoiding
-having the reaction rates rescaled (by `1/2` and `1/6` for these two examples),
-one can pass the `MassActionJump` constructor the optional named parameter
-`scale_rates=false`, i.e. use
-```julia
-mass_act_jump = MassActionJump(rates, reactant_stoich, net_stoich; scale_rates = false)
-```
 
 
 ## Adding Jumps to a Differential Equation
