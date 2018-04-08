@@ -2069,7 +2069,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Stiff Problems",
     "category": "section",
-    "text": "For stiff problems at high tolerances (>1e-2?) it is recommended that you use Rosenbrock23 or TRBDF2. These are robust to oscillations and massive stiffness is needed, though are only efficient when low accuracy is needed. Rosenbrock23 is more efficient for small systems where re-evaluating and re-factorizing the Jacobian is not too costly, and for sufficiently large systems TRBDF2 will be more efficient.At medium tolerances (>1e-8?) it is recommended you use Rodas5, Rodas4P (the former is more efficient but the later is more reliable), Kvaerno5, or KenCarp4. As native DifferentialEquations.jl solvers, many Julia numeric types (such as BigFloats, ArbFloats, or DecFP) will work. When the equation is defined via the @ode_def macro, these will be the most efficient.For faster solving at low tolerances (<1e-9) but when Vector{Float64} is used, use radau.For asymtopically large systems of ODEs (N>1000?) where f is very costly and the complex eigenvalues are minimal (low oscillations), in that case CVODE_BDF will be the most efficient but requires Vector{Float64}. CVODE_BDF will also do surprisingly well if the solution is smooth. However, this method can be less stiff than other methods and stuff may fail at low accuracy situations. Another good choice for this regime is lsoda."
+    "text": "For stiff problems at high tolerances (>1e-2?) it is recommended that you use Rosenbrock23 or TRBDF2. These are robust to oscillations and massive stiffness is needed, though are only efficient when low accuracy is needed. Rosenbrock23 is more efficient for small systems where re-evaluating and re-factorizing the Jacobian is not too costly, and for sufficiently large systems TRBDF2 will be more efficient. ABDF2 can be the most efficient the largest systems or most expensive f.At medium tolerances (>1e-8?) it is recommended you use Rodas5, Rodas4P (the former is more efficient but the later is more reliable), Kvaerno5, or KenCarp4. As native DifferentialEquations.jl solvers, many Julia numeric types (such as BigFloats, ArbFloats, or DecFP) will work. When the equation is defined via the @ode_def macro, these will be the most efficient.For faster solving at low tolerances (<1e-9) but when Vector{Float64} is used, use radau.For asymtopically large systems of ODEs (N>1000?) where f is very costly and the complex eigenvalues are minimal (low oscillations), in that case CVODE_BDF will be the most efficient but requires Vector{Float64}. CVODE_BDF will also do surprisingly well if the solution is smooth. However, this method can be less stiff than other methods and stuff may fail at low accuracy situations. Another good choice for this regime is lsoda."
 },
 
 {
@@ -2181,7 +2181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Multistep Methods",
     "category": "section",
-    "text": "ABDF2 - An adaptive order 2 L-stable multistep BDF method.\nABDF3 - An adaptive order 3 multistep BDF method. A(α)-stable to 86°."
+    "text": "ABDF2 - An adaptive order 2 L-stable multistep BDF method."
 },
 
 {
