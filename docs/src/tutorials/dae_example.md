@@ -75,11 +75,17 @@ and plot. Here we will use the IDA solver from Sundials:
 
 ```julia
 sol = solve(prob,IDA())
-using Plots; plotly() # Using the Plotly backend
-plot(sol)
 ```
 
-which, despite how interesting the model looks, produces a relatively simple
-output:
+In order to clearly see all the features of this solution, it should be plotted
+on a logarithmic scale. We'll also plot each on a different subplot to allow
+scaling the y-axis appropriately.
+
+```julia
+using Plots; plotly() # Using the Plotly backend
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
+```
+
+This gives the following plot:
 
 ![IntroDAEPlot](../assets/intro_dae_plot.png)
