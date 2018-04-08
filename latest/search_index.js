@@ -717,13 +717,13 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Default Algorithm Hinting",
     "category": "section",
-    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided to solve. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::nonstiff vs :stiff - Denotes the equation as nonstiff/stiff.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl and is under active development."
+    "text": "To help choose the default algorithm, the keyword argument alg_hints is provided to solve. alg_hints is a Vector{Symbol} which describe the problem at a high level to the solver. The options are::auto vs :nonstiff vs :stiff - Denotes the equation as nonstiff/stiff. :auto allow the default handling algorithm to choose stiffness detection algorithms. The default handling defaults to using :auto.Currently unused options include::interpolant - Denotes that a high-precision interpolation is important.\n:memorybound - Denotes that the solver will be memory bound.This functionality is derived via the benchmarks in DiffEqBenchmarks.jl"
 },
 
 {
-    "location": "basics/common_solver_opts.html#SDE-Specific-1",
+    "location": "basics/common_solver_opts.html#SDE-Specific-Alghints-1",
     "page": "Common Solver Options",
-    "title": "SDE Specific",
+    "title": "SDE Specific Alghints",
     "category": "section",
     "text": ":additive - Denotes that the underlying SDE has additive noise.\n:stratonovich - Denotes that the solution should adhere to the Stratonovich interpretation."
 },
