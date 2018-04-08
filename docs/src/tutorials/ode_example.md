@@ -162,6 +162,8 @@ sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
 
 In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 
+- `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
+  is a good algorithm to use if you know nothing about the equation.
 - `BS3()` for fast low accuracy non-stiff.
 - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
   most cases.
