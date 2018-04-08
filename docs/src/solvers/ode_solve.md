@@ -61,7 +61,8 @@ For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 stiffness is needed, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
-systems `TRBDF2` will be more efficient.
+systems `TRBDF2` will be more efficient. `ABDF2` can be the most efficient
+the largest systems or most expensive `f`.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
 `Rodas4P` (the former is more efficient but the later is more reliable),
@@ -313,7 +314,6 @@ prediction is called a predictor-corrector method.
 #### Multistep Methods
 
 - `ABDF2` - An adaptive order 2 L-stable multistep BDF method.
-- `ABDF3` - An adaptive order 3 multistep BDF method. A(α)-stable to 86°.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
