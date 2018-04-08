@@ -13,11 +13,13 @@ given option, see the [Solver Compatibility Chart](@ref)
 
 ## Default Algorithm Hinting
 
-To help choose the default algorithm, the keyword argument `alg_hints` is provided to `solve`.
-`alg_hints` is a `Vector{Symbol}` which describe the problem at a high level
-to the solver. The options are:
+To help choose the default algorithm, the keyword argument `alg_hints` is
+provided to `solve`. `alg_hints` is a `Vector{Symbol}` which describe the
+problem at a high level to the solver. The options are:
 
-* `:nonstiff` vs `:stiff` - Denotes the equation as nonstiff/stiff.
+* `:auto` vs `:nonstiff` vs `:stiff` - Denotes the equation as nonstiff/stiff.
+  `:auto` allow the default handling algorithm to choose stiffness detection
+  algorithms. The default handling defaults to using `:auto`.
 
 Currently unused options include:
 
@@ -26,9 +28,8 @@ Currently unused options include:
 
 This functionality is derived via the benchmarks in
 [DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl)
-and is under active development.
 
-### SDE Specific
+### SDE Specific Alghints
 
 * `:additive` - Denotes that the underlying SDE has additive noise.
 * `:stratonovich` - Denotes that the solution should adhere to the Stratonovich
