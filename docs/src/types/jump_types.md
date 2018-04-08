@@ -50,10 +50,9 @@ and create a number of `ConstantRateJumps` to handle the non-mass action jumps.
 
 `RegularJump`s are optimized for regular jumping algorithms like tau-leaping and
 hybrid algorithms. `ConstantRateJump`s and `MassActionJump`s are optimized for
-SSA algorithms. `ConstantRateJump`s and `VariableRateJump`s can
-be added to standard DiffEq algorithms since they are simply callbacks, while
-`RegularJump`s require special algorithms. `MassActionJump`s are currently specialized
-for pure discrete SSA simulations. 
+SSA algorithms. `ConstantRateJump`s, `MassActionJump`s and `VariableRateJump`s
+can be added to standard DiffEq algorithms since they are simply callbacks,
+while `RegularJump`s require special algorithms. 
 
 #### Defining a Regular Jump
 
@@ -192,3 +191,15 @@ JumpProblem(prob,Direct(),jump1,jump2)
 
 will build a problem where the constant rate jumps are solved using Gillespie's
 Direct SSA method.
+
+
+## Recommendations for Constant Rate Jumps
+For representing and aggregating constant rate jumps 
+- Use a `MassActionJump` to handle all jumps that can be represented as mass
+  action reactions. This will generally offer the fastest performance and fewest
+  memory allocations. 
+- Use `ConstantRateJump`s for any remaining jumps.
+  - If there are *less* than ~10 `ConstantRateJumps`, the `Direct` aggregator
+    will generally offer the best performance.
+  - If there are *more* than ~10 `ConstantRateJumps`, the `DirectFW` aggregator
+    will generally offer the best performance.
