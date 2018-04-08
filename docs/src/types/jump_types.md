@@ -39,14 +39,14 @@ a constant rate jump. If a jump's rate depends on the differential equation,
 time, or by some value which changes outside of any constant rate jump, then it
 is denoted as variable.
 
-A `MassActionJump` is a specialized representation for a collection of constant rate
-jumps that can each be interpreted as a standard mass action reaction. For systems
-comprised of many mass action reactions, using the `MassActionJump` type
-will offer improved performance, and can also result in fewer memory allocations. Note,
-only one `MassActionJump` should be defined per `JumpProblem`; it is then responsible for
-handling all mass action reaction type jumps. For systems with both mass action jumps and non-mass
-action jumps, one can create one `MassActionJump` to handle the mass action jumps,
-and create a number of `ConstantRateJumps` to handle the non-mass action jumps.
+A `MassActionJump` is a specialized representation for a collection of constant
+rate jumps that can each be interpreted as a standard mass action reaction. For
+systems comprised of many mass action reactions, using the `MassActionJump` type
+will offer improved performance. Note, only one `MassActionJump` should be
+defined per `JumpProblem`; it is then responsible for handling all mass action
+reaction type jumps. For systems with both mass action jumps and non-mass action
+jumps, one can create one `MassActionJump` to handle the mass action jumps, and
+create a number of `ConstantRateJumps` to handle the non-mass action jumps.
 
 `RegularJump`s are optimized for regular jumping algorithms like tau-leaping and
 hybrid algorithms. `ConstantRateJump`s and `MassActionJump`s are optimized for
@@ -196,8 +196,7 @@ Direct SSA method.
 ## Recommendations for Constant Rate Jumps
 For representing and aggregating constant rate jumps 
 - Use a `MassActionJump` to handle all jumps that can be represented as mass
-  action reactions. This will generally offer the fastest performance and fewest
-  memory allocations. 
+  action reactions. This will generally offer the fastest performance. 
 - Use `ConstantRateJump`s for any remaining jumps.
   - If there are *less* than ~10 `ConstantRateJumps`, the `Direct` aggregator
     will generally offer the best performance.
