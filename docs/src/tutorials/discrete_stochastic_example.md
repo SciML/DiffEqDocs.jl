@@ -1,35 +1,42 @@
 # Discrete Stochastic (Gillespie) Equations
 
-In this tutorial we will describe how to define and solve discrete stochastic
-simulations, also known in biological fields as Gillespie-type models. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html). Discrete
-stochastic simulations are a form of jump equation with a "trivial" (non-existent)
-differential equation. We will first demonstrate how to build these types of models
-using the biological modeling functionality, and then describe how to build it
-directly and more generally using jumps, and finally show how to add discrete
-stochastic simulations to differential equation models.
+In this tutorial we will describe how to define and simulate continuous-time
+jump processes, also known in biological fields as Gillespie-type models. This
+tutorial assumes you have read the [Ordinary Differential Equations
+tutorial](ode_example.html). The discrete stochastic simulations we consider are
+a form of jump equation with a "trivial" (non-existent) differential equation.
+We will first demonstrate how to build these types of models using the
+biological modeling functionality, then describe how to build them directly and
+more generally using jumps, and finally show how to add discrete stochastic
+simulations to differential equation models.
 
 ## Defining a Model using Reactions
 
 For our example, we will build an SIR model which matches the tutorial from
 [Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for
-susceptible, infected, and recovered, and is a model is disease spread. When a
+susceptible, infected, and recovered, and is a model of disease spread. When a
 susceptible person comes in contact with an infected person, the disease has a
 chance of infecting the susceptible person. This "chance" is determined by the
-number of susceptible persons and the number of infected persons, since when
-there are more people there is a greater chance that two come in contact.
+number of susceptible persons and the number of infected persons, since in
+larger populations there is a greater chance that two people come into contact.
 Normally, the rate is modeled as the amount
 
 ```julia
 rate_constant*num_of_susceptible_people*num_of_infected_people
 ```
 
-The `rate_constant` is some constant determined by other factors like the type
-of the disease. This formulation is known as mass actions laws.
+The `rate_constant` is determined by factors like the type of the disease.
+It can be interpreted as the probability per time one pair of susceptible and
+infected people encounter each other, with the susceptible person becoming sick.
+The overall rate (i.e. probability per time) that some susceptible person gets
+sick is then given by the rate constant multiplied by the number of possible
+pairs of susceptible and infected people. This formulation is known as the [law
+of mass action](https://en.wikipedia.org/wiki/Law_of_mass_action).
 
 
 Let `s` be the number of susceptible persons, `i` be the number of infected
 persons, and `r` be the number of recovered persons. In this case, we can
-re-write our rate as being:
+re-write our overall rate as:
 
 ```julia
 rate_constant*s*i
@@ -53,14 +60,14 @@ These are the facts the are encoded in the reaction:
 c1, s + i --> 2i
 ```
 
-This means that this "reaction" is that a susceptible person and an infected
-person causes a change to now have two susceptible persons (i.e. the susceptible
-person was infected). Here, `c1` is the reaction constant.
+This "reaction" encodes that a susceptible person and an infected person can
+interact, resulting in two infected persons (i.e. the susceptible person was
+infected). Here, `c1` is the reaction constant.
 
 To finish the model, we define one more reaction. Over time, infected people become
 less infected. The chance that any one person heals during some time unit depends
-on the number of people who are infected. Thus the rate at which infected persons
-are turning into recovered persons is
+on the number of people who are infected. Thus the rate at which infected people
+turn into recovered people is
 
 ```julia
 rate_constant*i
@@ -82,17 +89,19 @@ sir_model = @reaction_network SIR begin
 end c1 c2
 ```
 
-Notice that the order the variables are introduced in the model is `s`, then `i`,
-then `r`, and thus this is the canonical ordering of the variables.
+Notice that the order the variables are introduced in the model is `s`, then
+`i`, then `r`, and thus this is the canonical ordering of the variables.
 
 ## Building and Solving the Problem
 
-First, we have to define some kind of differential equation. Since we do not want
-any continuous changes, we will build a `DiscreteProblem`. We do this by giving
-the constructor `u0`, the initial condition, and `tspan`, the timespan. Here, we
-will start with `999` susceptible people, `1` infected person, and `0` recovered
-people, and solve the problem from `t=0.0` to `t=250.0`. We use the parameters
-`c1 = 0.1/1000` and `c2 = 0.01`. Thus we build the problem via:
+First, we have to define some kind of differential equation that we can "solve"
+to simulate the jump process. Since we do not want any continuous changes in the
+numbers of the different types of people, we will build a `DiscreteProblem`. We
+do this by giving the constructor `u0`, the initial condition, and `tspan`, the
+timespan. Here, we will start with `999` susceptible people, `1` infected
+person, and `0` recovered people, and solve the problem from `t=0.0` to
+`t=250.0`. We use the parameters `c1 = 0.1/1000` and `c2 = 0.01`. Thus we build
+the problem via:
 
 ```julia
 p = (0.1/1000,0.01)
@@ -126,20 +135,20 @@ using Plots; plot(sol)
 
 ## SSAStepper
 
-Notice here that this uses `FunctionMap()` to perform the integration which is
-a `DiscreteProblem` algorithm in OrdinaryDiffEq.jl. This shows that any common
-interface algorithm can be used to perform the timestepping since this is
-implemented over the callback interface. However, in many cases like this we
-only have a pure-SSA problem. When that's the case (only `ConstantRateJump`s),
-then we could instead use `SSAStepper()`
+The previous example used `FunctionMap()` to perform the jump process
+simulation. `FunctionMap` is a `DiscreteProblem` algorithm in OrdinaryDiffEq.jl.
+This shows that any common interface algorithm can be used to perform the
+timestepping since this is implemented over the callback interface. In many
+cases we may have a pure jump system that only involves `ConstantRateJump`s
+and/or `MassActionJump`s. When that's the case, a substantial performance benefit 
+may be gained by using `SSAStepper()`
 
 ```julia
 sol = solve(jump_prob,SSAStepper())
 ```
 
-Note that `SSAStepper` is a barebones SSA method which doesn't allow defining
-events or integrating simultanious ODEs, but is very efficient for pure SSA
-problems.
+`SSAStepper` is a barebones SSA method which doesn't allow defining events or
+integrating simultaneous ODEs, but is very efficient for pure jump/SSA problems.
 
 ## Controlling Saving Behavior
 
@@ -156,15 +165,15 @@ jump_prob = JumpProblem(prob,Direct(),sir_model,save_positions=(false,false))
 ```
 
 Now the saving controls associated with the integrator are the only ones to note.
-Therefore we can for example use `saveat=0.5` to save at an evenly spaced grid:
+For example, we can use `saveat=0.5` to save at an evenly spaced grid:
 
 ```julia
 sol = solve(jump_prob,FunctionMap(),saveat=0.5)
 ```
 
-## Defining the Jumps Directly
+## Defining the Jumps Directly: `ConstantRateJump`
 
-Instead of using the biological modeling functionality of `Reaction`, we can
+Instead of using the biological modeling functionality of `@reaction_network`, we can
 directly define jumps. This allows for more general types of rates, at the cost
 of some modeling friendliness. The constructor for a `ConstantRateJump` is:
 
@@ -200,6 +209,77 @@ to the `DiscreteProblem` and solve it, we would simply do:
 jump_prob = JumpProblem(prob,Direct(),jump,jump2)
 sol = solve(jump_prob,FunctionMap())
 ```
+Note, in systems with more than a few jumps (more than ~10), it can be
+advantageous to use a different internal representation for the jump collection.
+For such systems it is recommended to use `DirectFW()`, which should offer
+better performance than `Direct()`.
+
+## Defining the Jumps Directly: `MassActionJump`
+For systems that can be represented as mass action reactions, a further
+specialization of the jump type is possible that offers improved computational
+performance; `MasssActionJump`. Suppose the system has ``N`` chemical species
+``\{S_1,\dots,S_N\}``. A general mass action reaction has the form
+
+```math
+R_1 S_1 + R_2 S_2 + \dots + R_N S_N \overset{k}{\rightarrow} P_1 S_1 + P_2 S_2 + \dots + P_N S_N
+```
+where the non-negative integers ``(R_1,\dots,R_N)`` denote the *reactant
+stoichiometry* of the reaction, and the non-negative integers
+``(P_1,\dots,P_N)`` the *product stoichiometry*. The *net stoichiometry* is
+the net change in each chemical species from the reaction occurring one time,
+given by ``(P_1-R_1,\dots,P_N-R_N)``.
+
+As an example, consider again the SIR model defined in the `@reaction_network`
+above. The species are then `(s,i,r)`. The first reaction has rate `c1`,
+reactant stoichiometry `(1,1,0)`, product stoichiometry `(0,2,0)`, and net
+stoichiometry `(-1,1,0)`. The second reaction has rate `c2`, reactant
+stoichiometry `(0,1,0)`, product stoichiometry `(0,0,1)`, and net stoichiometry
+`(0,-1,1)`.
+
+We can encode this system as a mass action jump by specifying the rates, reactant
+stoichiometry, and the net stoichiometry as follows:
+```julia
+rates = [0.1/1000, 0.01]    # i.e. [c1,c2]
+reactant_stoich = 
+[
+  [1 => 1, 2 => 1],         # 1*s and 1*i
+  [2 => 1]                  # 1*i
+]
+net_stoich = 
+[
+  [1 => -1, 2 => 1],        # -1*s and 1*i
+  [2 => -1, 3 => 1]         # -1*i and 1*r
+]
+mass_act_jump = MassActionJump(rates, reactant_stoich, net_stoich)
+```
+Just like for `ConstantRateJumps`, to then simulate the system we create
+a `JumpProblem` and call `solve`:
+```julia
+jump_prob = JumpProblem(prob, Direct(), mass_act_jump)
+sol = solve(jump_prob, SSAStepper())
+```
+
+
+## Defining the Jumps Directly: Mixing `ConstantRateJump` and `MassActionJump`
+Suppose we now want to add in to the SIR model another jump that can not be
+represented as a mass action reaction. We can create a new `ConstantRateJump`
+and simulate a hybrid system using both the `MassActionJump` for the two
+previous reactions, and the new `ConstantRateJump`. Let's suppose we want to let
+susceptible people be born with the following jump rate:
+```julia
+birth_rate(u,p,t) = 10.*u[1]/(200. + u[1]) + 10.
+function birth_affect!(integrator)
+  integrator.u[1] += 1
+end
+birth_jump = ConstantRateJump(birth_rate, birth_affect!)
+```
+We can then simulate the hybrid system as
+```julia
+jump_prob = JumpProblem(prob, Direct(), mass_act_jump, birth_jump)
+sol = solve(jump_prob, SSAStepper())
+```
+![gillespie_hybrid_jumps](../assets/gillespie_hybrid_jumps.png)
+
 
 ## Adding Jumps to a Differential Equation
 
@@ -216,12 +296,13 @@ end
 prob = ODEProblem(f,[999.0,1.0,0.0,100.0],(0.0,250.0))
 ```
 
-Notice we gave the 4th component a starting value of 100. The same steps as above
-will thus solve this hybrid equation. For example, we can solve it using the
-`Tsit5()` method via:
+Notice we gave the 4th component a starting value of 100. The same steps as
+above will allow us to solve this hybrid equation when using
+`ConstantRateJumps`. For example, we can solve it using the `Tsit5()` method
+via:
 
 ```julia
-jump_prob = GillespieProblem(prob,Direct(),r1,r2)
+jump_prob = JumpProblem(prob,Direct(),jump,jump2)
 sol = solve(jump_prob,Tsit5())
 ```
 
