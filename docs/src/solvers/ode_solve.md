@@ -414,7 +414,7 @@ when going from non-stiff to stiff and divided when going stiff to non-stiff.
 
 These methods require a `Autoalg(stiffalg)` to be chosen as the method to switch
 to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff
-methods.
+methods and has all of the arguments of the `AutoSwitch` algorithm.
 
 - `AutoTsit5` - `Tsit5` with automated switching.
 - `AutoDP5` - `DP5` with automated switching.
@@ -428,6 +428,8 @@ Example:
 ```julia
 tsidas_alg = AutoTsit5(Rodas5())
 sol = solve(prob,tsidas_alg)
+
+tsidas_alg = AutoTsit5(Rodas5(),nonstifftol = 11/10)
 ```
 
 Is the `Tsit5` method with automatic switching to `Rodas5`.
