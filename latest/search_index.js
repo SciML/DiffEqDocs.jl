@@ -2221,7 +2221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Pre-Built Stiffness Detecting and Auto-Switching Algorithms",
     "category": "section",
-    "text": "These methods require a Autoalg(stiffalg) to be chosen as the method to switch to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff methods.AutoTsit5 - Tsit5 with automated switching.\nAutoDP5 - DP5 with automated switching.\nAutoVern6 - Vern6 with automated switching.\nAutoVern7 - Vern7 with automated switching.\nAutoVern8 - Vern8 with automated switching.\nAutoVern9 - Vern9 with automated switching.Example:tsidas_alg = AutoTsit5(Rodas5())\nsol = solve(prob,tsidas_alg)Is the Tsit5 method with automatic switching to Rodas5."
+    "text": "These methods require a Autoalg(stiffalg) to be chosen as the method to switch to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff methods and has all of the arguments of the AutoSwitch algorithm.AutoTsit5 - Tsit5 with automated switching.\nAutoDP5 - DP5 with automated switching.\nAutoVern6 - Vern6 with automated switching.\nAutoVern7 - Vern7 with automated switching.\nAutoVern8 - Vern8 with automated switching.\nAutoVern9 - Vern9 with automated switching.Example:tsidas_alg = AutoTsit5(Rodas5())\nsol = solve(prob,tsidas_alg)\n\ntsidas_alg = AutoTsit5(Rodas5(),nonstifftol = 11/10)Is the Tsit5 method with automatic switching to Rodas5."
 },
 
 {
