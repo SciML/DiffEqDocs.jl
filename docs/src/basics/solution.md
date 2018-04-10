@@ -122,7 +122,7 @@ Using the `tuples(sol)` function, we can get a tuple for the output at each
 timestep. This allows one to do the following:
 
 ```julia
-[t+2u for (t,u) in tuples(sol)]
+[t+2u for (u,t) in tuples(sol)]
 ```
 
 One can use the extra components of the solution object as well as using `zip`. For
