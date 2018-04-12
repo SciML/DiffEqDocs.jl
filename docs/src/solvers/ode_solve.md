@@ -11,6 +11,19 @@ It is suggested that you try choosing an algorithm using the `alg_hints`
 keyword argument. However, in some cases you may want something specific,
 or you may just be curious. This guide is to help you choose the right algorithm.
 
+### Unknown Stiffness Problems
+
+When the stiffness of the problem is unknown, it is recommended you use a
+stiffness detection and auto-switching algorithm. These methods are multi-paradigm
+and allow for efficient solution of both stiff and non-stiff problems. The cost
+for auto-switching is very minimal but the choices are restrained and so they
+are a good go-to method when applicable.
+
+For default tolerances, `AutoTsit5(Rosenbrock23())` is a good choice. For lower
+tolerances, using `AutoVern7` or `AutoVern9` with `Rodas4`, `KenCarp4`, or
+`Rodas5` can all be good choices depending on the problem. For very large
+systems (`>1000 ODEs?`), consider using `lsoda`.
+
 ### Non-Stiff Problems
 
 For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly
@@ -48,7 +61,8 @@ For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 stiffness is needed, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
-systems `TRBDF2` will be more efficient.
+systems `TRBDF2` will be more efficient. `ABDF2` can be the most efficient
+the largest systems or most expensive `f`.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
 `Rodas4P` (the former is more efficient but the later is more reliable),
@@ -66,7 +80,7 @@ where `f` is very costly and the complex eigenvalues are minimal (low oscillatio
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
 `CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
 this method can be less stiff than other methods and stuff may fail at low
-accuracy situations.
+accuracy situations. Another good choice for this regime is `lsoda`.
 
 #### Special Properties of Stiff Integrators
 
@@ -205,20 +219,29 @@ the approximation at the next point are called multistep methods. These methods
 tend to be more efficient as the size of the system or the cost of `f` increases.
 These methods require a choice of `dt`.
 
-#### Adams-Bashforth Explicit Methods 
+#### Adams-Bashforth Explicit Methods
 
-  - `AB3` - The 3-step third order multistep method. Ralston's Second Order Method is used to calculate starting values.
-  - `AB4` - The 4-step fourth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  
-  - `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  
+- `AB3` - The 3-step third order multistep method. Ralston's Second Order Method
+  is used to calculate starting values.
+- `AB4` - The 4-step fourth order multistep method. Runge-Kutta method of order
+  4 is used to calculate starting values.  
+- `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
+  4 is used to calculate starting values.  
 
 #### Predictor-Corrector Methods  
 
 The combination of an explicit method to predict and an implicit to improve the
-prediction is called a predictor-corrector method. 
+prediction is called a predictor-corrector method.
 
-  - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method is used to calculate starting values.  
-  - `ABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
-  - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  
+- `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
+  Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
+  is used to calculate starting values.  
+- `ABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and
+  Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order
+  4 is used to calculate starting values.  
+- `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
+  Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
+  is used to calculate starting values.  
 
 ### Methods for Stiff Equations
 
@@ -288,7 +311,11 @@ prediction is called a predictor-corrector method.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
-### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+#### Multistep Methods
+
+- `ABDF2` - An adaptive order 2 L-stable multistep BDF method.
+
+#### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
   stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only.
@@ -360,8 +387,52 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
 ```
 
 The `choice_function` takes in an `integrator` and thus all of the features
-available in the [Integrator Interface](@ref)
-can be used in the choice function.
+available in the [Integrator Interface](@ref) can be used in the choice
+function.
+
+A helper algorithm was created for building 2-method automatic switching for
+stiffness detection algorithms. This is the `AutoSwitch` algorithm with the
+following options:
+
+```julia
+AutoSwitch(nonstiffalg::nAlg, stiffalg::sAlg;
+           maxstiffstep=10, maxnonstiffstep=3,
+           nonstifftol::T=9//10, stifftol::T=9//10,
+           dtfac=2.0, stiffalgfirst=false)
+```
+
+The `nonstiffalg` must have an appropriate stiffness estimate built into the
+method. The `stiffalg` can receive its estimate from the Jacobian calculation.
+`maxstiffstep` is the number of stiffness detects before switching to the stiff
+algorithm and `maxnonstiffstep` is vice versa. `nonstifftol` and `stifftol` are
+the tolerances associated with the stiffness comparison against the stability
+region. `dtfac` is the factor that `dt` is changed when switching: multiplied
+when going from non-stiff to stiff and divided when going stiff to non-stiff.
+`stiffalgfirst` denotes whether the first step should use the stiff algorithm.
+
+#### Pre-Built Stiffness Detecting and Auto-Switching Algorithms
+
+These methods require a `Autoalg(stiffalg)` to be chosen as the method to switch
+to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff
+methods and has all of the arguments of the `AutoSwitch` algorithm.
+
+- `AutoTsit5` - `Tsit5` with automated switching.
+- `AutoDP5` - `DP5` with automated switching.
+- `AutoVern6` - `Vern6` with automated switching.
+- `AutoVern7` - `Vern7` with automated switching.
+- `AutoVern8` - `Vern8` with automated switching.
+- `AutoVern9` - `Vern9` with automated switching.
+
+Example:
+
+```julia
+tsidas_alg = AutoTsit5(Rodas5())
+sol = solve(prob,tsidas_alg)
+
+tsidas_alg = AutoTsit5(Rodas5(),nonstifftol = 11/10)
+```
+
+Is the `Tsit5` method with automatic switching to `Rodas5`.
 
 ## Sundials.jl
 
@@ -664,11 +735,12 @@ using TaylorIntegration
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
 The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/internals/tableaus.html).
 For the most useful and common algorithms, a hand-optimized version is supplied
-in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5` instead of `ExplicitRK`
-with `tableau=constructDormandPrince()`). However, these serve as a good method
-for comparing between tableaus and understanding the pros/cons of the methods.
-Implemented are every published tableau (that I know exists). Note that user-defined
-tableaus also are accepted. To see how to define a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
+in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5`
+instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
+serve as a good method for comparing between tableaus and understanding the
+pros/cons of the methods. Implemented are every published tableau (that I know
+exists). Note that user-defined tableaus also are accepted. To see how to define
+a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.

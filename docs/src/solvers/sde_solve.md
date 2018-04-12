@@ -38,9 +38,19 @@ accuracy tradeoff.
 
 ## Mass Matrices and Stochastic DAEs
 
-The `ImplicitRKMil`, `ImplicitEM`, and `ImplicitEulerHeun` methods can solve
-stochastic equations with mass matrices (including stochastic DAEs written
-in mass matrix form) when either `symplectic=true` or `theta=1`.
+The stiff methods can solve stochastic equations with mass matrices
+(including stochastic DAEs written in mass matrix form) when either
+`symplectic=true` or `theta=1`. These methods interpret the mass matrix
+equation as:
+
+```math
+Mu' = f(t,u)dt + Mg(t,u)dW_t
+```
+
+i.e. with no mass matrix inversion applied to the `g` term. Thus these methods
+apply noise per dependent variable instead of on the combinations of the
+dependent variables and this is designed for phenomenological noise on the
+dependent variables (like multiplicative or additive noise)
 
 ## Special Noise Forms
 
@@ -75,14 +85,18 @@ Orders are given in terms of strong order.
 
 ### Nonstiff Methods
 
-- `EM`- The Euler-Maruyama method. Strong order 0.5 in the Ito sense. Can handle
+- `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an
+  optional argument `split=true` for controlling step splitting. When splitting
+  is enabled, the stability with large diffusion eigenvalues is improved. Can handle
   all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
   time step only.†
 - `LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
-  an error estimator based on Lamba and Rackauckas. Strong order 0.5 in the Ito
-  sense. Can handle all forms of noise, including non-diagonal, scalar, and
-  colored noise.†
-- `EulerHeun` - The Euler-Heun method. Strong order 0.5 in the Stratonovich sense.
+  an error estimator based on Lamba and Rackauckas. Has an optional argument
+  `split=true` for controlling step splitting. When splitting is enabled, the
+  stability with   large diffusion eigenvalues is improved. Strong Order 0.5 in
+  the Ito sense. Can handle all forms of noise, including non-diagonal, scalar,
+  and colored noise.†
+- `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Fixed time step only.†
 - `LambaEulerHeun` - A modified Euler-Heun method with adaptive time stepping
@@ -156,11 +170,26 @@ For `SRA` and `SRI`, the following option is allowed:
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
   time stepping.
+- `ISSEM` - An order 0.5 split-step Ito implicit method. It is fully implicit,
+  meaning it can handle stiffness in the noise term. This is a theta method which
+  defaults to `theta=1` or the Trapezoid method on the drift term. This method
+  defaults to `symplectic=false`, but when true and `theta=1/2` this is the
+  implicit Midpoint method on the drift term and is symplectic in distribution.
+  Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
+  Uses a 1.0/1.5 heuristic for adaptive time stepping.
+- `ISSEulerHeun` - An order 0.5 split-step Stratonovich implicit method. It is
+  fully implicit, meaning it can handle stiffness in the noise term. This is a
+  theta method which defaults to `theta=1` or the Trapezoid method on the drift
+  term. This method defaults to `symplectic=false`, but when true and `theta=1/2`
+  this is the implicit Midpoint method on the drift term and is symplectic in
+  distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
+  and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
 - `SKenCarp` - Adaptive L-stable strong order 2.0 for additive Ito and
   Stratonovich SDEs with weak order 3. Can handle diagonal, non-diagonal
   and scalar additive noise.†
 
 ### Derivative-Based Methods
+
 The following methods require analytic derivatives of the diffusion term.
 
 - `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
@@ -176,19 +205,6 @@ The following methods require analytic derivatives of the diffusion term.
 
   The default settings for the drift implicitness is `theta=0.5` and
   the diffusion implicitness is `eta=0.5`.  
-
-#### Note about mass matrices
-
-These methods interpret the mass matrix equation as:
-
-```math
-Mu' = f(t,u)dt + Mg(t,u)dW_t
-```
-
-i.e. with no mass matrix inversion applied to the `g` term. Thus these methods
-apply noise per dependent variable instead of on the combinations of the
-dependent variables and this is designed for phenomenological noise on the
-dependent variables (like multiplicative or additive noise)
 
 ## StochasticCompositeAlgorithm
 
