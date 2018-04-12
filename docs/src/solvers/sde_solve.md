@@ -122,16 +122,16 @@ Orders are given in terms of strong order.
   diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
 - `SOSRI2` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
   diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
-- `SRA1` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+- `SRA1` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
   order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
-- `SRA2` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+- `SRA2` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
   order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
-- `SRA3` - Adaptive strong order 2.0 for additive Ito and Stratonovich SDEs with weak
+- `SRA3` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
   order 3. Can handle non-diagonal and scalar additive noise.†
-- `SOSRA` - A stability-optimized adaptive SRA. Strong order 2.0 for additive Ito and
+- `SOSRA` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
   Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
   additive noise. Stable at high tolerances and robust to stiffness.†
-- `SOSRA2` - A stability-optimized adaptive SRA. Strong order 2.0 for additive Ito and
+- `SOSRA2` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
   Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
   additive noise. Stable at high tolerances and robust to stiffness.†
 
