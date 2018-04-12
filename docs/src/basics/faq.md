@@ -144,7 +144,7 @@ For example, we can make it change when `u[2]<0.5` via:
 
 ```julia
 condition(t,u,integrator) = u[2] - 0.5
-affect!(integrator) = integrator.prob.f.params = 1
+affect!(integrator) = integrator.prob.p = 1
 ```
 
 Then it will change betweeen the two ODE choices for `du1` at that moment.
