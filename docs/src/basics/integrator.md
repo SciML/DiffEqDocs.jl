@@ -249,6 +249,7 @@ will run the auto `dt` initialization algorithm.
 
 * `get_du(integrator)`: Returns the derivative at `t`.
 * `get_du!(out,integrator)`: Write the current derivative at `t` into `out`.
+* `check_error(integrator)`: Checks error conditions and updates the retcode.
 
 #### Note
 
