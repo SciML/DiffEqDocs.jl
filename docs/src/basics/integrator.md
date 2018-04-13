@@ -30,6 +30,10 @@ step!(integrator,dt[,stop_at_tdt=false])
 passing a `dt` will make the integrator keep stepping until `integrator.t+dt`, and
 setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator.t+dt`
 
+To check whether or not the integration step was successful, you can
+call `check_error(integrator)` which returns one of the
+[Return Codes (RetCodes)](@ref).
+
 This type also implements an iterator interface, so one can step `n` times 
 (or to the last `tstop`) using the `take` iterator:
 
@@ -245,6 +249,7 @@ will run the auto `dt` initialization algorithm.
 
 * `get_du(integrator)`: Returns the derivative at `t`.
 * `get_du!(out,integrator)`: Write the current derivative at `t` into `out`.
+* `check_error(integrator)`: Checks error conditions and updates the retcode.
 
 #### Note
 
