@@ -3989,7 +3989,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation",
     "title": "Parameter Estimation",
     "category": "section",
-    "text": "Parameter estimation for ODE models, also known as dynamic data analysis, is provided by the DiffEq suite. Note these require that the problem is defined using a ParameterizedFunction."
+    "text": "Parameter estimation for ODE models, also known as dynamic data analysis, is provided by the DiffEq suite."
 },
 
 {
@@ -4102,6 +4102,14 @@ var documenterSearchIndex = {"docs": [
     "title": "dynamichmc_inference",
     "category": "section",
     "text": "dynamichmc_inference(prob::DEProblem,data,priors,t,transformations;\n                      σ = 0.01,ϵ=0.001,initial=Float64[])dynamichmc_inference uses DynamicHMC.jl to   perform the bayesian parameter estimation. prob can be any DEProblem, data is the set   of observations for our model whihc is to be used in the Bayesian Inference process. priors represent the   choice of prior distributions for the parameters to be determined, passed as an array of Distributions.jl distributions. t is the array of time points. transformations  is an array of Tranformations imposed for constraining the   parameter values to specific domains. initial values for the parameters can be passed, if not passed the means of the  priors are used. ϵ can be used as a kwarg to pass the initial step size for the NUTS algorithm.      "
+},
+
+{
+    "location": "analysis/parameter_estimation.html#abc_inference-1",
+    "page": "Parameter Estimation",
+    "title": "abc_inference",
+    "category": "section",
+    "text": "abc_inference(prob::DEProblem, alg, t, data, priors; ϵ=0.001,\n     distancefunction = euclidean, ABCalgorithm = ABCSMC, progress = false,\n     num_samples = 500, maxiterations = 10^5, kwargs...)abc_inference uses ApproxBayes.jl which uses Approximate Bayesian Computation (ABC) to perform its parameter inference. prob can be any DEProblem with a corresponding alg choice. t is the array of time points and data[:,i] is the set of observations for the differential equation system at time point t[i] (or higher dimensional). priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. num_samples is the number of posterior samples. ϵ is the target distance between the data and simulated data. distancefunction is a distance metric specified from the Distances.jl package, the default is euclidean. ABCalgorithm is the ABC algorithm to use, options are ABCSMC or ABCRejection from ApproxBayes.jl, the default is the former which is more efficient. maxiterations is the maximum number of iterations before the algorithm terminates. The extra kwargs are given to the internal differential equation solver."
 },
 
 {
