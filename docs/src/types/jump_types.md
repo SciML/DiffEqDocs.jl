@@ -140,7 +140,7 @@ MassActionJump(rate_consts, reactant_stoich, net_stoich; scale_rates = true)
   ```julia
   reactant_stoich = [[1 => 2, 3 => 1, 4 => 2], [2 => 2, 3 => 2]]
   ```
-  preferred to
+  is preferred over
   ```julia
   reactant_stoich = [[3 => 1, 1 => 2, 4 = > 2], [3 => 2, 2 => 2]]
   ```
