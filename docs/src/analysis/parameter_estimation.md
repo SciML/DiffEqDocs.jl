@@ -1,9 +1,7 @@
 # Parameter Estimation
 
 Parameter estimation for ODE models, also known as dynamic data analysis,
-is provided by the DiffEq suite. Note these require that the problem is
-defined using a
-[ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
+is provided by the DiffEq suite.
 
 ## Recommended Methods
 
@@ -282,6 +280,29 @@ dynamichmc_inference(prob::DEProblem,data,priors,t,transformations;
  is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the 
  parameter values to specific domains. `initial` values for the parameters can be passed, if not passed the means of the
  `priors` are used. `ϵ` can be used as a kwarg to pass the initial step size for the NUTS algorithm.      
+ 
+### abc_inference
+
+```julia
+abc_inference(prob::DEProblem, alg, t, data, priors; ϵ=0.001,
+     distancefunction = euclidean, ABCalgorithm = ABCSMC, progress = false,
+     num_samples = 500, maxiterations = 10^5, kwargs...)
+```
+
+`abc_inference` uses [ApproxBayes.jl](https://github.com/marcjwilliams1/ApproxBayes.jl) which uses Approximate Bayesian Computation (ABC) to
+perform its parameter inference. `prob` can be any `DEProblem` with a corresponding
+`alg` choice. `t` is the array of time points and `data[:,i]` is the set of
+observations for the differential equation system at time point `t[i]` (or higher
+dimensional). `priors` is an array of prior distributions for each
+parameter, specified via a
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+type. `num_samples` is the number of posterior samples. `ϵ` is the target
+distance between the data and simulated data. `distancefunction` is a distance metric specified from the
+[Distances.jl](https://github.com/JuliaStats/Distances.jl)
+package, the default is `euclidean`. `ABCalgorithm` is the ABC algorithm to use, options are `ABCSMC` or `ABCRejection` from
+[ApproxBayes.jl](https://github.com/marcjwilliams1/ApproxBayes.jl), the default
+is the former which is more efficient. `maxiterations` is the maximum number of iterations before the algorithm terminates. The extra `kwargs` are given to the internal differential
+equation solver.
 
 ## Optimization-Based ODE Inference Examples
 

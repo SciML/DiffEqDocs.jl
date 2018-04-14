@@ -149,20 +149,20 @@ For `SRA` and `SRI`, the following option is allowed:
 
 ### Stiff Methods
 
-- `ImplicitEM` - An order 0.5 Ito implicit method. This is a theta method which
+- `ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. This method
   defaults to `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Uses a 1.0/1.5 heuristic for adaptive time stepping.
-- `ImplicitEulerHeun` - An order 0.5 Stratonovich implicit method. This is a
+- `ImplicitEulerHeun` - An order 0.5 Stratonovich drift-implicit method. This is a
   theta method which defaults to `theta=1/2` or the Trapezoid method on the
   drift term. This method defaults to `symplectic=false`, but when true and
   `theta=1/2` this is the implicit Midpoint method on the drift term and is
   symplectic in distribution. Can handle all forms of noise, including
   non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for
   adaptive time stepping.
-- `ImplicitRKMil` - An order 1.0 implicit method. This is a theta method which
+- `ImplicitRKMil` - An order 1.0 drift-implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. Defaults
   to solving the Ito problem, but `ImplicitRKMil(interpretation=:Stratonovich)`
   makes it solve the Stratonovich problem. This method defaults to
@@ -184,8 +184,8 @@ For `SRA` and `SRI`, the following option is allowed:
   this is the implicit Midpoint method on the drift term and is symplectic in
   distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
   and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
-- `SKenCarp` - Adaptive L-stable strong order 2.0 for additive Ito and
-  Stratonovich SDEs with weak order 3. Can handle diagonal, non-diagonal
+- `SKenCarp` - Adaptive L-stable drfit-implicit strong order 1.5 for additive 
+  Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
   and scalar additive noise.†
 
 ### Derivative-Based Methods
