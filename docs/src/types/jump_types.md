@@ -135,12 +135,12 @@ MassActionJump(rate_consts, reactant_stoich, net_stoich; scale_rates = true)
   net_stoich = [[1 => 1]]
   jump = MassActionJump(k, reactant_stoich, net_stoich)
   ```
-- Species indices in stoichiometry vectors should be ordered
-  from smallest to largest. That is use
+- For performance reasons, it is recommended to order species indices in
+  stoichiometry vectors from smallest to largest. That is 
   ```julia
   reactant_stoich = [[1 => 2, 3 => 1, 4 => 2], [2 => 2, 3 => 2]]
   ```
-  not 
+  preferred to
   ```julia
   reactant_stoich = [[3 => 1, 1 => 2, 4 = > 2], [3 => 2, 2 => 2]]
   ```
