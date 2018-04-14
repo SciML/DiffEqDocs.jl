@@ -30,7 +30,7 @@ step!(integrator,dt[,stop_at_tdt=false])
 passing a `dt` will make the integrator keep stepping until `integrator.t+dt`, and
 setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator.t+dt`
 
-This type also implements an iterator interface, so one can step `n` times 
+This type also implements an iterator interface, so one can step `n` times
 (or to the last `tstop`) using the `take` iterator:
 
 ```julia
@@ -57,6 +57,16 @@ and the `intervals` iterator lets you view the full interval:
 ```julia
 for (tprev,uprev,u,t) in intervals(integrator)
   @show tprev,t
+end
+```
+
+Additionally, you can make the iterator return specific time points via the
+`TimeChoiceIterator`:
+
+```julia
+ts = linspace(0,1,11)
+for (u,t) in TimeChoiceIterator(integrator,ts)
+  @show u,t
 end
 ```
 
