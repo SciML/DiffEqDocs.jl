@@ -2445,7 +2445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Solvers",
     "title": "Recommended Methods",
     "category": "section",
-    "text": "Currently the only method is SSRootfind and so I am pretty sure it\'s the best option right now."
+    "text": "DynamicSS is a good choice if you think you may have multiple steady states or a bad initial guess. SSRootfind can be faster if you have a good initial guess. For DynamicSS, in many cases an adaptive stiff solver, like a Rosenbrock method (Rodas5 or CVODE_BDF), is a good way to allow for very large time steps as the steady state approaches."
 },
 
 {
@@ -2461,7 +2461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Solvers",
     "title": "SteadyStateDiffEq.jl",
     "category": "section",
-    "text": "SSRootfind : Using a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.Example usage:sol = solve(prob,SSRootfind())"
+    "text": "SSRootfind : Uses a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.\nDynamicSS : Uses an ODE solver to find the steady state. Automatically terminates when close to the steady state. DynamicSS(alg,abstol=1e-8,reltol=1e-6) requires that an ODE algorithm is given as the first argument. The absolute and relative tolerances specify the termination conditions on the derivative\'s closeness to zero. This internally uses the TerminateSteadyState callback from the Callback Library.Example usage:sol = solve(prob,SSRootfind())\nsol = solve(prob,DynamicSS(Tsit5()))"
 },
 
 {
