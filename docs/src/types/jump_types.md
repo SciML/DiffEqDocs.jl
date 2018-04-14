@@ -107,19 +107,44 @@ MassActionJump(rate_consts, reactant_stoich, net_stoich; scale_rates = true)
   Gillespie, and hence need to be rescaled. *The default, `scale_rates=true`,
   corresponds to rescaling the passed in rate constants.* See below.
 
-When using `MassActionJump` the default behavior is to assume rate constants
-correspond to stochastic rate constants in the sense used by Gillespie (J. Comp.
-Phys., 1976, 22 (4)). This means that for a reaction such as
-``2A \overset{k}{\rightarrow} B``, the jump rate function constructed by
-`MassActionJump` would be `k*A*(A-1)/2!`. For a trimolecular reaction like ``3A
-\overset{k}{\rightarrow} B`` the rate function would be `k*A*(A-1)*(A-2)/3!`. To *avoid*
-having the reaction rates rescaled (by `1/2` and `1/6` for these two examples),
-one can pass the `MassActionJump` constructor the optional named parameter
-`scale_rates=false`, i.e. use
-```julia
-MassActionJump(rates, reactant_stoich, net_stoich; scale_rates = false)
-```
-
+**Notes for Mass Action Jumps**
+- When using `MassActionJump` the default behavior is to assume rate constants
+  correspond to stochastic rate constants in the sense used by Gillespie (J.
+  Comp. Phys., 1976, 22 (4)). This means that for a reaction such as ``2A
+  \overset{k}{\rightarrow} B``, the jump rate function constructed by
+  `MassActionJump` would be `k*A*(A-1)/2!`. For a trimolecular reaction like
+  ``3A \overset{k}{\rightarrow} B`` the rate function would be
+  `k*A*(A-1)*(A-2)/3!`. To *avoid* having the reaction rates rescaled (by `1/2`
+  and `1/6` for these two examples), one can pass the `MassActionJump`
+  constructor the optional named parameter `scale_rates=false`, i.e. use
+  ```julia
+  MassActionJump(rates, reactant_stoich, net_stoich; scale_rates = false)
+  ```
+- Zero order reactions can be passed as `reactant_stoich`s in one of two ways.
+  Consider the ``\varnothing \overset{k}{\rightarrow} A`` reaction with rate `k=1`:
+  ```julia
+  k = [1.]
+  reactant_stoich = [[0 => 1]]
+  net_stoich = [[1 => 1]]
+  jump = MassActionJump(k, reactant_stoich, net_stoich)
+  ```
+  Alternatively one can create an empty vector of pairs to represent the reaction:
+  ```julia
+  k = [1.]
+  reactant_stoich = [Vector{Pair{Int,Int}}()]
+  net_stoich = [[1 => 1]]
+  jump = MassActionJump(k, reactant_stoich, net_stoich)
+  ```
+- For performance reasons, it is recommended to order species indices in
+  stoichiometry vectors from smallest to largest. That is 
+  ```julia
+  reactant_stoich = [[1 => 2, 3 => 1, 4 => 2], [2 => 2, 3 => 2]]
+  ```
+  is preferred over
+  ```julia
+  reactant_stoich = [[3 => 1, 1 => 2, 4 = > 2], [3 => 2, 2 => 2]]
+  ```
+  
 
 #### Defining a Variable Rate Jump
 
