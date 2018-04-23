@@ -9,7 +9,7 @@ In this example we will solve the implicit ODE equation
 f(du,u,p,t) = 0
 ```
 
-where `f` is the a variant of the Roberts equation. This equations is actually of
+where `f` is the a variant of the Roberts equation. This equation is of
 the form
 
 ```math
