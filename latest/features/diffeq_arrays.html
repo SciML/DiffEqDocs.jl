@@ -28,11 +28,11 @@ end</code></pre><p>Now we will setup our control mechanism. It will be a simple 
 const tstop2 = [8.]
 
 
-function condition(u,p,t,integrator)
+function condition(u,t,integrator)
   t in tstop1
 end
 
-function condition2(u,p,t,integrator)
+function condition2(u,t,integrator)
   t in tstop2
 end</code></pre><p>Now we have to apply an effect when these conditions are reached. When <code>condition</code> is hit (at <code>t=5.0</code>), we will increase <code>f1</code> to 1.5. When <code>condition2</code> is reached, we will decrease <code>f1</code> to <code>-1.5</code>. This is done via the functions:</p><pre><code class="language-julia">function affect!(integrator)
   for c in user_cache(integrator)
