@@ -293,6 +293,9 @@ solution object. `sim[i].prob` is the problem that specific trajectory solved,
 and `sim[i].prob.u0` would then be the initial condition used in the `i`th
 trajectory.
 
+Note: If the problem has callbacks, the functions for the `condition` and
+`affect!` must be named functions (not anonymous functions).
+
 ### Using multithreading
 
 The previous Monte Carlo simulation can also be parallelized using a multithreading
