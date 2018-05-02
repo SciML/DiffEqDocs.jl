@@ -845,7 +845,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solution Handling",
     "title": "Using the AbstractArray Interface",
     "category": "section",
-    "text": "The AbstractArray interface can be directly used. For example, for a vector system of variables sol[i,j] is a matrix with rows being the variables and columns being the timepoints. Operations like sol\' will transpose the solution type. Functionality written for AbstractArrays can directly use this. For example, the Base cov function computes correlations amongst columns, and thus:cov(sol)computes the correlation of the system state in time, whereascov(sol,2)computes the correlation between the variables. Similarly, mean(sol,2) is the mean of the variable in time, and var(sol,2) is the variance. Other statistical functions and packages which work on AbstractArray types will work on the solution type.At anytime, a true Array can be created using convert(Array,sol)."
+    "text": "The AbstractArray interface can be directly used. For example, for a vector system of variables sol[i,j] is a matrix with rows being the variables and columns being the timepoints. Operations like sol\' will transpose the solution type. Functionality written for AbstractArrays can directly use this. For example, the Base cov function computes correlations amongst columns, and thus:cov(sol)computes the correlation of the system state in time, whereascov(sol,2)computes the correlation between the variables. Similarly, mean(sol,2) is the mean of the variable in time, and var(sol,2) is the variance. Other statistical functions and packages which work on AbstractArray types will work on the solution type.At anytime, a true Array can be created using Array(sol)."
 },
 
 {
