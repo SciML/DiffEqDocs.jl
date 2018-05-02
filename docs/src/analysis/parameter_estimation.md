@@ -268,7 +268,7 @@ equation solver.
 ### dynamichmc_inference
 
 ```julia
-dynamichmc_inference(prob::DEProblem,data,priors,t,transformations;
+dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;
                       σ = 0.01,ϵ=0.001,initial=Float64[])
 ```
 
@@ -927,7 +927,7 @@ domain the parameter values will lie in, `tranformations` can be used to pass an
 as an array of [Transformations](https://github.com/tpapp/ContinuousTransformations.jl).
 
 ```julia
-bayesian_result_hmc = dynamichmc_inference(prob1, data, [Normal(1.5, 1)], t, [bridge(ℝ, ℝ⁺, )])
+bayesian_result_hmc = dynamichmc_inference(prob1, Tsit5(), t, data, [Normal(1.5, 1)], [bridge(ℝ, ℝ⁺, )])
 ```
 
 A tuple with summary statistics and the chain values is returned.
