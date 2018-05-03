@@ -410,7 +410,7 @@ which improves the efficiency of our algorithm:
 ```julia
 lower = [0.0]
 upper = [3.0]
-result = optimize(obj, [1.42], lower, upper, Fminbox{BFGS}())
+result = optimize(cost_function, [1.42], lower, upper, Fminbox{BFGS}())
 ```
 
 Lastly, we can use the same tools to estimate multiple parameters simultaneously.
