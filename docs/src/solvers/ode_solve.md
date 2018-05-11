@@ -243,6 +243,11 @@ prediction is called a predictor-corrector method.
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
   is used to calculate starting values.  
 
+#### Adaptive step size Adams explicit Methods
+
+- `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate
+  starting values.  
+
 ### Methods for Stiff Equations
 
 #### SDIRK Methods
