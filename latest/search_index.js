@@ -2153,6 +2153,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#Adaptive-step-size-Adams-explicit-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Adaptive step size Adams explicit Methods",
+    "category": "section",
+    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  "
+},
+
+{
     "location": "solvers/ode_solve.html#Methods-for-Stiff-Equations-1",
     "page": "ODE Solvers",
     "title": "Methods for Stiff Equations",
