@@ -61,7 +61,7 @@ end</code></pre><p>For our noise function we will use multiplicative noise:</p><
   du[1] = p[3]*u[1]
   du[2] = p[4]*u[2]
 end</code></pre><p>Now we build the SDE with these functions:</p><pre><code class="language-julia">p = [1.5,1.0,0.1,0.1]
-prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0),p)</code></pre><p>This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using <code>0.3rand(2)</code> as our parameters. Once again, we do this with a <code>prob_func</code>, and here we modify the parameters in <code>prob.p</code>:</p><pre><code class="language-julia">function prob_func(prob,i,repeat)
+prob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)</code></pre><p>This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using <code>0.3rand(2)</code> as our parameters. Once again, we do this with a <code>prob_func</code>, and here we modify the parameters in <code>prob.p</code>:</p><pre><code class="language-julia">function prob_func(prob,i,repeat)
   prob.p[3:4] = 0.3rand(2)
   prob
 end</code></pre><p>Now we solve the problem 10 times and plot all of the trajectories in phase space:</p><pre><code class="language-julia">monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
