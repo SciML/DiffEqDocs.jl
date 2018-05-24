@@ -212,7 +212,7 @@ output, interpolations, callbacks etc. However, some basic methods are available
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
-### Fixed Time and Order Multistep Methods
+### Fixed Time and Order Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
 the approximation at the next point are called multistep methods. These methods
@@ -227,12 +227,6 @@ These methods require a choice of `dt`.
   4 is used to calculate starting values.  
 - `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
   4 is used to calculate starting values.  
-
-#### Predictor-Corrector Methods  
-
-The combination of an explicit method to predict and an implicit to improve the
-prediction is called a predictor-corrector method.
-
 - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
   Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
   is used to calculate starting values.  
@@ -247,7 +241,17 @@ prediction is called a predictor-corrector method.
 
 - `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate
   starting values.  
-
+- `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate 
+  starting values.  
+- `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate 
+  starting values.
+- `VCABM3` - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used 
+  to calculate starting values.  
+- `VCABM4` - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+  starting values.  
+- `VCABM5` - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+  starting values.
+  
 ### Methods for Stiff Equations
 
 #### SDIRK Methods
