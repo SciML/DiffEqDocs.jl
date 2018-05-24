@@ -363,7 +363,7 @@ Now we build the SDE with these functions:
 
 ```julia
 p = [1.5,1.0,0.1,0.1]
-prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0),p)
+prob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment
