@@ -32,13 +32,13 @@ end
 
 Note that one doesn't need to use numbered variables: DifferentialEquations.jl
 will number the variables for you. For example, the following defines the function
-for the Lotka-Volterra model:
+for the Lotka-Volterra model, with full Unicode support to boot:
 
 ```julia
 f = @ode_def LotkaVolterraExample begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a b c d
+  d🐁  = α*🐁  - β*🐁*🐈
+  d🐈 = -γ*🐈 + δ*🐁*🐈
+end α β γ δ
 ```
 
 ### Limitations
