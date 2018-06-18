@@ -27,9 +27,11 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
   of splits.
-- `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method
-- `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method
-- `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method
+- `CNAB2`: Crank-Nicholson Adams Bashforth Order 2.
+- `CNLF`: Crank-Nicholson Leapfrog of Order 2.
+- `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
+- `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method.
+- `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method.
 
 ### Sundials.jl
 
@@ -45,8 +47,8 @@ The Semilinear ODE is a `SplitODEProblem` with one linear operator and one nonli
 \frac{du}{dt} =  Au + f(t,u)
 ```
 
-See the documentation page for [DiffEqOperator](../../features/diffeq_operator.html) 
-for details about how to define linear operators from a matrix or finite difference 
+See the documentation page for [DiffEqOperator](../../features/diffeq_operator.html)
+for details about how to define linear operators from a matrix or finite difference
 discretization of derivative operators.
 
 The appropriate algorithms for this form are:
@@ -62,20 +64,20 @@ The appropriate algorithms for this form are:
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 
-By default, the exponential methods cache matrix functions such as `exmp(dt*A)` to accelerate 
-the time stepping for small systems. For large systems, using Krylov-based versions of the 
-methods can allow for lazy calculation of `expm(dt*A)*v` and similar entities, and thus improve 
-performance. To tell a solver to use Krylov methods, pass `krylov=true` to its constructor. You 
-can also manually set the size of the Krylov subspace by setting the `m` parameter, which 
+By default, the exponential methods cache matrix functions such as `exmp(dt*A)` to accelerate
+the time stepping for small systems. For large systems, using Krylov-based versions of the
+methods can allow for lazy calculation of `expm(dt*A)*v` and similar entities, and thus improve
+performance. To tell a solver to use Krylov methods, pass `krylov=true` to its constructor. You
+can also manually set the size of the Krylov subspace by setting the `m` parameter, which
 defaults to 30. For example
-  
+
 ```julia
 LawsonEuler(krylov=true, m=50)
 ```
-  
-constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m` 
-only sets an upper bound to the Krylov subspace size. If a convergence criterion is met 
-(determined by the `reltol` of the integrator), "happy breakdown" will occur and the 
+
+constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m`
+only sets an upper bound to the Krylov subspace size. If a convergence criterion is met
+(determined by the `reltol` of the integrator), "happy breakdown" will occur and the
 Krylov subspace will only be constructed partially.
-  
+
 Currently only the `LawsonEuler` and `NorsettEuler` methods support Krylov methods.

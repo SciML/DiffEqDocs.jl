@@ -212,6 +212,34 @@ output, interpolations, callbacks etc. However, some basic methods are available
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
+### Adaptive Multistep Methods
+
+#### Adams-Bashforth Explicit Methods
+
+- `VCAB3` - The 3-step third order multistep method. Ralston's Second Order Method
+  is used to calculate starting values.
+- `VCAB4` - The 4-step fourth order multistep method. Runge-Kutta method of order
+  4 is used to calculate starting values.  
+- `VCAB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
+  4 is used to calculate starting values.  
+
+#### Predictor-Corrector Methods  
+
+The combination of an explicit method to predict and an implicit to improve the
+prediction is called a predictor-corrector method.
+
+- `VCABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
+  Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
+  is used to calculate starting values.  
+- `VCABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and
+  Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order
+  4 is used to calculate starting values.  
+- `VCABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
+  Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
+  is used to calculate starting values.
+- `VCABM` - An adaptive order adaptive time Adams Moulton method. It uses an
+  order adaptivity algorithm derived from Shampine's DDEABM.
+
 ### Fixed Time and Order Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
@@ -241,7 +269,7 @@ prediction is called a predictor-corrector method.
   4 is used to calculate starting values.  
 - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
-  is used to calculate starting values.  
+  is used to calculate starting values.
 
 ### Methods for Stiff Equations
 
