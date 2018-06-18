@@ -19,7 +19,7 @@ bvp1 = BVProblem(simplependulum!, bc1!, [pi/2,pi/2], tspan)
 sol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)
 plot(sol1)</code></pre><p><img src="../assets/bvp_example_plot1.png" alt="BVP Example Plot1"/></p><p>The third argument of <code>BVProblem</code>  is the initial guess of the solution, which is constant in this example. &lt;!– add examples of more general initial conditions –&gt; We need to use <code>GeneralMIRK4</code> or <code>Shooting</code> methods to solve <code>BVProblem</code>. <code>GeneralMIRK4</code> is a collocation method, whereas <code>Shooting</code> treats the problem as an IVP and varies the initial conditions until the boundary conditions are met. If you can have a good initial guess, <code>Shooting</code> method works very well.</p><pre><code class="language-julia">using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-function bc3!(residual, sol, p)
+function bc3!(residual, sol, p, t)
     residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi/2)[1] - pi/2
 end
