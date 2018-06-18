@@ -139,7 +139,7 @@ function f(du,u,p,t)
 end
 ```
 
-Then in a callback you can make the `affect!` function modify `integrator.prob.f.params`.
+Then in a callback you can make the `affect!` function modify `integrator.prob.p`.
 For example, we can make it change when `u[2]<0.5` via:
 
 ```julia

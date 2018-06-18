@@ -154,11 +154,11 @@ const tstop1 = [5.]
 const tstop2 = [8.]
 
 
-function condition(u,p,t,integrator)
+function condition(u,t,integrator)
   t in tstop1
 end
 
-function condition2(u,p,t,integrator)
+function condition2(u,t,integrator)
   t in tstop2
 end
 ```

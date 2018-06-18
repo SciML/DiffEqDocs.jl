@@ -122,7 +122,9 @@ along. A useful argument to use is `linealpha` which will change the transparenc
 of the plots. An additional argument is `idxs` which allows you to choose which
 components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the Monte Carlo solutions
-of the odd components.
+of the odd components. An other additional argument is `zcolors` which allows
+you to pass a `zcolor` for each series. For details about `zcolor` see the 
+[documentation for Plots.jl](http://docs.juliaplots.org/latest/attributes/).
 
 ## Analyzing a Monte Carlo Experiment
 
@@ -293,6 +295,9 @@ solution object. `sim[i].prob` is the problem that specific trajectory solved,
 and `sim[i].prob.u0` would then be the initial condition used in the `i`th
 trajectory.
 
+Note: If the problem has callbacks, the functions for the `condition` and
+`affect!` must be named functions (not anonymous functions).
+
 ### Using multithreading
 
 The previous Monte Carlo simulation can also be parallelized using a multithreading
@@ -358,7 +363,7 @@ Now we build the SDE with these functions:
 
 ```julia
 p = [1.5,1.0,0.1,0.1]
-prob = SDEProblem(pf,pg,[1.0,1.0],(0.0,10.0),p)
+prob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment

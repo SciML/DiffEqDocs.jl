@@ -212,42 +212,15 @@ output, interpolations, callbacks etc. However, some basic methods are available
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
-### Adaptive Multistep Methods
-
-#### Adams-Bashforth Explicit Methods
-
-- `VCAB3` - The 3-step third order multistep method. Ralston's Second Order Method
-  is used to calculate starting values.
-- `VCAB4` - The 4-step fourth order multistep method. Runge-Kutta method of order
-  4 is used to calculate starting values.  
-- `VCAB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
-  4 is used to calculate starting values.  
-
-#### Predictor-Corrector Methods  
-
-The combination of an explicit method to predict and an implicit to improve the
-prediction is called a predictor-corrector method.
-
-- `VCABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
-  Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
-  is used to calculate starting values.  
-- `VCABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and
-  Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order
-  4 is used to calculate starting values.  
-- `VCABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
-  Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
-  is used to calculate starting values.
-- `VCABM` - An adaptive order adaptive time Adams Moulton method. It uses an
-  order adaptivity algorithm derived from Shampine's DDEABM.
-
-### Fixed Time and Order Multistep Methods
+### Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
 the approximation at the next point are called multistep methods. These methods
 tend to be more efficient as the size of the system or the cost of `f` increases.
-These methods require a choice of `dt`.
 
 #### Adams-Bashforth Explicit Methods
+
+These methods require a choice of `dt`.
 
 - `AB3` - The 3-step third order multistep method. Ralston's Second Order Method
   is used to calculate starting values.
@@ -255,12 +228,6 @@ These methods require a choice of `dt`.
   4 is used to calculate starting values.  
 - `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
   4 is used to calculate starting values.  
-
-#### Predictor-Corrector Methods  
-
-The combination of an explicit method to predict and an implicit to improve the
-prediction is called a predictor-corrector method.
-
 - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
   Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
   is used to calculate starting values.  
@@ -270,6 +237,23 @@ prediction is called a predictor-corrector method.
 - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
   is used to calculate starting values.
+
+#### Adaptive step size Adams explicit Methods
+
+- `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate
+  starting values.  
+- `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate 
+  starting values.  
+- `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate 
+  starting values.
+- `VCABM3` - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used 
+  to calculate starting values.  
+- `VCABM4` - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+  starting values.  
+- `VCABM5` - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+  starting values.
+- `VCABM` - An adaptive order adaptive time Adams Moulton method. It uses an
+  order adaptivity algorithm derived from Shampine's DDEABM.
 
 ### Methods for Stiff Equations
 
