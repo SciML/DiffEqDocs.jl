@@ -58,7 +58,7 @@ If you can have a good initial guess, `Shooting` method works very well.
 ```julia
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
-function bc3!(residual, sol, p)
+function bc3!(residual, sol, p, t)
     residual[1] = sol(pi/4)[1] + pi/2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi/2)[1] - pi/2
 end
