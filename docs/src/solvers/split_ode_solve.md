@@ -28,7 +28,7 @@ the problem, though for large enough PDEs the `ARKODE` method with
 - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
   of splits.
 - `CNAB2`: Crank-Nicholson Adams Bashforth Order 2.
-- `CNLF`: Crank-Nicholson Leapfrog of Order 2.
+- `CNLF`: Crank-Nicholson Leapfrog of Order 2. In development.
 - `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
 - `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method.
 - `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method.

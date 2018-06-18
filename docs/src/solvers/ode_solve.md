@@ -242,18 +242,23 @@ These methods require a choice of `dt`.
 
 - `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate
   starting values.  
-- `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate 
+- `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate
   starting values.  
-- `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate 
+- `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate
   starting values.
-- `VCABM3` - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used 
+- `VCABM3` - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used
   to calculate starting values.  
-- `VCABM4` - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+- `VCABM4` - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate
   starting values.  
-- `VCABM5` - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate 
+- `VCABM5` - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate
   starting values.
 - `VCABM` - An adaptive order adaptive time Adams Moulton method. It uses an
-  order adaptivity algorithm derived from Shampine's DDEABM.
+  order adaptivity algorithm is derived from Shampine's DDEABM.
+- `AN5` - An adaptive 5th order fixed-leading coefficient Adams method in
+  Nordsieck form.
+- `JVODE_Adams` - An adaptive time adaptive order fixed-leading coefficient Adams
+  method in Nordsieck form. The order adaptivity algorithm is derived from
+  Sundials' `CVODE_Adams`. In development.
 
 ### Methods for Stiff Equations
 
