@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Adaptive step size Adams explicit Methods",
     "category": "section",
-    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate  starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate  starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used  to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values.\nVCABM - An adaptive order adaptive time Adams Moulton method. It uses an order adaptivity algorithm derived from Shampine\'s DDEABM."
+    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.\nVCABM - An adaptive order adaptive time Adams Moulton method. It uses an order adaptivity algorithm is derived from Shampine\'s DDEABM.\nAN5 - An adaptive 5th order fixed-leading coefficient Adams method in Nordsieck form.\nJVODE_Adams - An adaptive time adaptive order fixed-leading coefficient Adams method in Nordsieck form. The order adaptivity algorithm is derived from Sundials\' CVODE_Adams. In development."
 },
 
 {
@@ -2397,7 +2397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nCNAB2: Crank-Nicholson Adams Bashforth Order 2.\nCNLF: Crank-Nicholson Leapfrog of Order 2.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method.\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method.\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method."
+    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nCNAB2: Crank-Nicholson Adams Bashforth Order 2.\nCNLF: Crank-Nicholson Leapfrog of Order 2. In development.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method.\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method.\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method."
 },
 
 {
