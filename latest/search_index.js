@@ -2129,11 +2129,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Fixed-Time-and-Order-Explicit-Multistep-Methods-1",
+    "location": "solvers/ode_solve.html#Explicit-Multistep-Methods-1",
     "page": "ODE Solvers",
-    "title": "Fixed Time and Order Explicit Multistep Methods",
+    "title": "Explicit Multistep Methods",
     "category": "section",
-    "text": "Methods using the approximation at more than one previous mesh point to determine the approximation at the next point are called multistep methods. These methods tend to be more efficient as the size of the system or the cost of f increases. These methods require a choice of dt."
+    "text": "Methods using the approximation at more than one previous mesh point to determine the approximation at the next point are called multistep methods. These methods tend to be more efficient as the size of the system or the cost of f increases."
 },
 
 {
@@ -2141,7 +2141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Adams-Bashforth Explicit Methods",
     "category": "section",
-    "text": "AB3 - The 3-step third order multistep method. Ralston\'s Second Order Method is used to calculate starting values.\nAB4 - The 4-step fourth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  \nAB5 - The 5-step fifth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  \nABM32 - It is third order method. In ABM32, AB3 works as predictor and Adams Moulton 2-steps method works as Corrector. Ralston\'s Second Order Method is used to calculate starting values.  \nABM43 - It is fourth order method. In ABM43, AB4 works as predictor and Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  \nABM54 - It is fifth order method. In ABM54, AB5 works as predictor and Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  "
+    "text": "These methods require a choice of dt.AB3 - The 3-step third order multistep method. Ralston\'s Second Order Method is used to calculate starting values.\nAB4 - The 4-step fourth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  \nAB5 - The 5-step fifth order multistep method. Runge-Kutta method of order 4 is used to calculate starting values.  \nABM32 - It is third order method. In ABM32, AB3 works as predictor and Adams Moulton 2-steps method works as Corrector. Ralston\'s Second Order Method is used to calculate starting values.  \nABM43 - It is fourth order method. In ABM43, AB4 works as predictor and Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values.  \nABM54 - It is fifth order method. In ABM54, AB5 works as predictor and Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4 is used to calculate starting values."
 },
 
 {
@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Adaptive step size Adams explicit Methods",
     "category": "section",
-    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate  starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate  starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used  to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values."
+    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate  starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate  starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used  to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate  starting values.\nVCABM - An adaptive order adaptive time Adams Moulton method. It uses an order adaptivity algorithm derived from Shampine\'s DDEABM."
 },
 
 {
@@ -2397,7 +2397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method"
+    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nCNAB2: Crank-Nicholson Adams Bashforth Order 2.\nCNLF: Crank-Nicholson Leapfrog of Order 2.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method.\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method.\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method."
 },
 
 {
@@ -2413,7 +2413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "Semilinear ODE",
     "category": "section",
-    "text": "The Semilinear ODE is a SplitODEProblem with one linear operator and one nonlinear function:fracdudt =  Au + f(tu)See the documentation page for DiffEqOperator  for details about how to define linear operators from a matrix or finite difference  discretization of derivative operators.The appropriate algorithms for this form are:"
+    "text": "The Semilinear ODE is a SplitODEProblem with one linear operator and one nonlinear function:fracdudt =  Au + f(tu)See the documentation page for DiffEqOperator for details about how to define linear operators from a matrix or finite difference discretization of derivative operators.The appropriate algorithms for this form are:"
 },
 
 {
@@ -2421,7 +2421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.By default, the exponential methods cache matrix functions such as exmp(dt*A) to accelerate  the time stepping for small systems. For large systems, using Krylov-based versions of the  methods can allow for lazy calculation of expm(dt*A)*v and similar entities, and thus improve  performance. To tell a solver to use Krylov methods, pass krylov=true to its constructor. You  can also manually set the size of the Krylov subspace by setting the m parameter, which  defaults to 30. For exampleLawsonEuler(krylov=true, m=50)constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that m  only sets an upper bound to the Krylov subspace size. If a convergence criterion is met  (determined by the reltol of the integrator), \"happy breakdown\" will occur and the  Krylov subspace will only be constructed partially.Currently only the LawsonEuler and NorsettEuler methods support Krylov methods."
+    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.By default, the exponential methods cache matrix functions such as exmp(dt*A) to accelerate the time stepping for small systems. For large systems, using Krylov-based versions of the methods can allow for lazy calculation of expm(dt*A)*v and similar entities, and thus improve performance. To tell a solver to use Krylov methods, pass krylov=true to its constructor. You can also manually set the size of the Krylov subspace by setting the m parameter, which defaults to 30. For exampleLawsonEuler(krylov=true, m=50)constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that m only sets an upper bound to the Krylov subspace size. If a convergence criterion is met (determined by the reltol of the integrator), \"happy breakdown\" will occur and the Krylov subspace will only be constructed partially.Currently only the LawsonEuler and NorsettEuler methods support Krylov methods."
 },
 
 {
