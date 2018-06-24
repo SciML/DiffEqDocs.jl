@@ -61,6 +61,8 @@ The appropriate algorithms for this form are:
 - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
 - `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
+- `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
+  timestepping only.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 

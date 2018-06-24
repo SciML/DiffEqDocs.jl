@@ -75,7 +75,7 @@ defined via the `@ode_def` macro, these will be the most efficient.
 For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
 use `radau`.
 
-For asymtopically large systems of ODEs (`N>1000`?)
+For asymptotically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
 `CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
@@ -258,7 +258,7 @@ These methods require a choice of `dt`.
   Nordsieck form.
 - `JVODE_Adams` - An adaptive time adaptive order fixed-leading coefficient Adams
   method in Nordsieck form. The order adaptivity algorithm is derived from
-  Sundials' `CVODE_Adams`. In development.
+  Sundials' `CVODE_Adams`.
 
 ### Methods for Stiff Equations
 
