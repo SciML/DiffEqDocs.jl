@@ -27,8 +27,9 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
   of splits.
+- `IMEXEuler` : 1st order explicit Euler mixed with implicit Euler.
 - `CNAB2`: Crank-Nicholson Adams Bashforth Order 2.
-- `CNLF`: Crank-Nicholson Leapfrog of Order 2. In development.
+- `CNLF`: Crank-Nicholson Leapfrog of Order 2.
 - `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
 - `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method.
 - `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method.
@@ -63,6 +64,7 @@ The appropriate algorithms for this form are:
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
+- `Exp4` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 

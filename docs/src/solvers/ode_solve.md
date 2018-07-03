@@ -330,7 +330,14 @@ These methods require a choice of `dt`.
 
 #### Multistep Methods
 
-- `ABDF2` - An adaptive order 2 L-stable multistep BDF method.
+- `QNDF1` - An adaptive order 1 quasi-constant timestep L-stable numerical
+  differentiation function (NDF) method. Optional parameter `kappa` defaults
+  to Shampine's accuracy-optimal `-0.1850`.
+- `QBDF1` - An adaptive order 1 quasi-constant timestep L-stable BDF method.
+  This is equivalent to implicit Euler but using the BDF error estimator with
+  quasi-constant stepping.
+- `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
+  BDF method.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
