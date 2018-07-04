@@ -2177,6 +2177,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#Exponential-Propagation-Iterative-Runge-Kutta-Methods-(EPIRK)-1",
+    "page": "ODE Solvers",
+    "title": "Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)",
+    "category": "section",
+    "text": "Exp4 - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only."
+},
+
+{
     "location": "solvers/ode_solve.html#Multistep-Methods-1",
     "page": "ODE Solvers",
     "title": "Multistep Methods",
@@ -2421,7 +2429,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4. Fixed timestepping only.\nExp4 - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.Note that the generic algorithms allow for a choice of nlsolve.By default, the exponential methods cache matrix functions such as exmp(dt*A) to accelerate the time stepping for small systems. For large systems, using Krylov-based versions of the methods can allow for lazy calculation of expm(dt*A)*v and similar entities, and thus improve performance. To tell a solver to use Krylov methods, pass krylov=true to its constructor. You can also manually set the size of the Krylov subspace by setting the m parameter, which defaults to 30. For exampleLawsonEuler(krylov=true, m=50)constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that m only sets an upper bound to the Krylov subspace size. If a convergence criterion is met (determined by the reltol of the integrator), \"happy breakdown\" will occur and the Krylov subspace will only be constructed partially.Currently only the LawsonEuler and NorsettEuler methods support Krylov methods."
+    "text": "GenericIIF1 - First order Implicit Integrating Factor method. Fixed timestepping only.\nGenericIIF2 - Second order Implicit Integrating Factor method. Fixed timestepping only.\nLawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4. Fixed timestepping only.Note that the generic algorithms allow for a choice of nlsolve.By default, the exponential methods cache matrix functions such as exmp(dt*A) to accelerate the time stepping for small systems. For large systems, using Krylov-based versions of the methods can allow for lazy calculation of expm(dt*A)*v and similar entities, and thus improve performance. To tell a solver to use Krylov methods, pass krylov=true to its constructor. You can also manually set the size of the Krylov subspace by setting the m parameter, which defaults to 30. For exampleLawsonEuler(krylov=true, m=50)constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that m only sets an upper bound to the Krylov subspace size. If a convergence criterion is met (determined by the reltol of the integrator), \"happy breakdown\" will occur and the Krylov subspace will only be constructed partially.Currently only the LawsonEuler and NorsettEuler methods support Krylov methods."
 },
 
 {
