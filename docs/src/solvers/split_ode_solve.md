@@ -64,7 +64,6 @@ The appropriate algorithms for this form are:
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exp4` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
 
 Note that the generic algorithms allow for a choice of `nlsolve`.
 

@@ -328,6 +328,10 @@ These methods require a choice of `dt`.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
+#### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
+
+- `Exp4` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
+
 #### Multistep Methods
 
 - `QNDF1` - An adaptive order 1 quasi-constant timestep L-stable numerical
