@@ -330,7 +330,9 @@ These methods require a choice of `dt`.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
-- `Exp4` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
+- `Exp4` - 4th order EPIRK scheme. Fixed time stepping only.
+- `EPIRK4s3A` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
+- `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
 
 #### Multistep Methods
 
