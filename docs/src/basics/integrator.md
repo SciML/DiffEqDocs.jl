@@ -80,6 +80,9 @@ at the final `tstop` value. However, `step!` will always take a step, and one
 can dynamically add new values of `tstops` by modifiying the variable in the
 options field: `add_tstop!(integrator,new_t)`.
 
+Finally, to solve to the last `tstop`, call `solve!(integrator)`. Doing `init`
+and then `solve!` is equivalent to `solve`.
+
 ## Handing Integrators
 
 The `integrator` type holds all of the information for the intermediate solution
