@@ -2181,7 +2181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)",
     "category": "section",
-    "text": "Exp4 - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only."
+    "text": "Exp4 - 4th order EPIRK scheme. Fixed time stepping only.\nEPIRK4s3A - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.\nEPIRK4s3B - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only."
 },
 
 {
