@@ -328,6 +328,15 @@ These methods require a choice of `dt`.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
+#### Exponential Rosenbrock Methods
+
+- `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
+- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+- `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
+- `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
+- `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
+  timestepping only.
+
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
 - `Exp4` - 4th order EPIRK scheme. Fixed time stepping only.
