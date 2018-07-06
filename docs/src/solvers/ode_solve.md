@@ -146,20 +146,18 @@ and thus are recommended for stiff problems on non-Float64 numbers.
 - `RK4` - The canonical Runge-Kutta Order 4 method. Uses a defect control for
   adaptive stepping using maximum error over the whole interval.
 - `BS3` - Bogacki-Shampine 3/2 method.
-- `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th order interpolant).
-- `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th order interpolant).
-- `OwrenZen5` - Owren-Zennaro optimized interpolantion 5/4 method (free 5th order interpolant).
+- `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th
+  order interpolant).
+- `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th
+  order interpolant).
+- `OwrenZen5` - Owren-Zennaro optimized interpolantion 5/4 method (free 5th
+  order interpolant).
 - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant).
 - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).
-- `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (5th order interpolant).
-- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (6th order interpolant).
-- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (7th order interpolant).
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
-- `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince 8
-  method Runge-Kutta method. (7th order interpolant).
+- `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince Runge-Kutta method.
+  (7th order interpolant).
 - `TsitPap8` - Tsitouras-Papakostas 8/7 Runge-Kutta method.
-- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (8th order interpolant)
-- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (9th order interpolant)
 - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
 - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
 - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
@@ -170,6 +168,29 @@ Example usage:
 alg = Tsit5()
 solve(prob,alg)  
 ```
+
+Additionally, the following algorithms have a lazy interpolant:
+
+- `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (lazy 5th order interpolant).
+- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (lazy 6th order interpolant).
+- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (lazy 7th order interpolant).
+- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (lazy 8th order interpolant)
+- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (lazy 9th order interpolant)
+
+These methods require a few extra steps in order to compute the high order
+interpolation, but these steps are only taken when the interpolation is used.
+These methods when lazy assume that the parameter vector `p` will be unchanged
+between the moment of the interval solving and the interpolation. If `p` is
+changed in a ContinuousCallback, or in a DiscreteCallback and the continuous
+solution is used after the full solution, then set `lazy=false`.
+
+Example:
+
+```julia
+solve(prob,Vern7()) # lazy by default
+solve(prob,Vern7(lazy=false))
+```
+
 
 ### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
