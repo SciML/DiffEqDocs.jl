@@ -90,7 +90,7 @@ of the differential equation. Useful fields are:
 
 * `t` - time of the proposed step
 * `u` - value at the proposed step
-* `userdata` - user-provided data type
+* `p` - user-provided data
 * `opts` - common solver options
 * `alg` - the algorithm associated with the solution
 * `f` - the function being solved
@@ -98,7 +98,7 @@ of the differential equation. Useful fields are:
 * `tprev` - the last timepoint
 * `uprev` - the value at the last timepoint
 
-The `userdata` is the type which is provided by the user as a keyword arg in
+The `p` is the data which is provided by the user as a keyword arg in
 `init`. `opts` holds all of the common solver options, and can be mutated to
 change the solver characteristics. For example, to modify the absolute tolerance
 for the future timesteps, one can do:
