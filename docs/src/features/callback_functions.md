@@ -386,7 +386,7 @@ sol = solve(prob,Tsit5(),callback=cb)
 plot(sol,plotdensity=10000)
 ```
 
-In this case there are many events, and it steps working at around `t=54.2768`:
+In this case there are many events, and it stops working at around `t=54.2768`:
 
 ```julia
 println(sol.t)
