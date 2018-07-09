@@ -115,8 +115,6 @@ library methods are as follows:
 
 # Full List of Methods
 
-Choose one of these methods with the `alg` keyword in `solve`.
-
 ## OrdinaryDiffEq.jl
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
