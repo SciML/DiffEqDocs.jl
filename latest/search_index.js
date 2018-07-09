@@ -2093,7 +2093,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Full List of Methods",
     "category": "section",
-    "text": "Choose one of these methods with the alg keyword in solve."
+    "text": ""
 },
 
 {
