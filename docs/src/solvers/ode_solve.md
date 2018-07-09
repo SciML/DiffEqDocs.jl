@@ -362,8 +362,8 @@ These methods require a choice of `dt`.
 - `Exp4` - 4th order EPIRK scheme. Fixed time stepping only.
 - `EPIRK4s3A` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
 - `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
-- `EPIRK5-P1` - 5th order EPIRK scheme. Fixed time stepping only.
-- `EPIRK5-P2` - 5th order EPIRK scheme. Fixed time stepping only.
+- `EPIRK5P1` - 5th order EPIRK scheme. Fixed time stepping only.
+- `EPIRK5P2` - 5th order EPIRK scheme. Fixed time stepping only.
 - `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5.
   Fixed time stepping only. Broken.
 - `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5. Fixed time stepping only.
