@@ -2077,7 +2077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Special Properties of Stiff Integrators",
     "category": "section",
-    "text": "ImplicitMidpoint is a symmetric and symplectic integrator. Trapezoid is a symmetric (almost symplectic) integrator with adaptive timestepping. ImplicitEuler is an extension to the common algorithm with adaptive timestepping and efficient quasi-Newton Jacobian reusage which is fully strong-stability presurving (SSP) for hyperbolic PDEs.Notice that Rodas4 loses accuracy on discretizations of nonlinear parabolic PDEs, and thus it\'s suggested you replace it with Rodas4P in those situations which is 3rd order. ROS3P is only third order and achieves 3rd order on such problems and can thus be more efficient in this case."
+    "text": "ImplicitMidpoint is a symmetric and symplectic integrator. Trapezoid is a symmetric (almost symplectic) integrator with adaptive timestepping. ImplicitEuler is an extension to the common algorithm with adaptive timestepping and efficient quasi-Newton Jacobian re-usage which is fully strong-stability presurving (SSP) for hyperbolic PDEs.Notice that Rodas4 loses accuracy on discretizations of nonlinear parabolic PDEs, and thus it\'s suggested you replace it with Rodas4P in those situations which is 3rd order. ROS3P is only third order and achieves 3rd order on such problems and can thus be more efficient in this case."
 },
 
 {
@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Adaptive step size Adams explicit Methods",
     "category": "section",
-    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.\nVCABM - An adaptive order adaptive time Adams Moulton method. It uses an order adaptivity algorithm is derived from Shampine\'s DDEABM.\nAN5 - An adaptive 5th order fixed-leading coefficient Adams method in Nordsieck form.\nJVODE_Adams - An adaptive time adaptive order fixed-leading coefficient Adams method in Nordsieck form. The order adaptivity algorithm is derived from Sundials\' CVODE_Adams."
+    "text": "VCAB3 - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCAB4 - The 4th order Adams method. Runge-Kutta 4 is used to calculate starting values.  \nVCAB5 - The 5th order Adams method. Runge-Kutta 4 is used to calculate starting values.\nVCABM3 - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used to calculate starting values.  \nVCABM4 - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.  \nVCABM5 - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate starting values.\nVCABM - An adaptive order adaptive time Adams Moulton method. It uses an order adaptivity algorithm is derived from Shampine\'s DDEABM.\nAN5 - An adaptive 5th order fixed-leading coefficient Adams method in Nordsieck form.\nJVODE_Adams - An adaptive time adaptive order fixed-leading coefficient Adams method in Nordsieck form. The order adaptivity algorithm is derived from Sundials\' CVODE_Adams. In development."
 },
 
 {
@@ -2197,7 +2197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Multistep Methods",
     "category": "section",
-    "text": "QNDF1 - An adaptive order 1 quasi-constant timestep L-stable numerical differentiation function (NDF) method. Optional parameter kappa defaults to Shampine\'s accuracy-optimal -0.1850.\nQBDF1 - An adaptive order 1 quasi-constant timestep L-stable BDF method. This is equivalent to implicit Euler but using the BDF error estimator with quasi-constant stepping.\nABDF2 - An adaptive order 2 L-stable fixed leading coefficient multistep BDF method."
+    "text": "QNDF1 - An adaptive order 1 quasi-constant timestep L-stable numerical differentiation function (NDF) method. Optional parameter kappa defaults to Shampine\'s accuracy-optimal -0.1850.\nQBDF1 - An adaptive order 1 quasi-constant timestep L-stable BDF method. This is equivalent to implicit Euler but using the BDF error estimator with quasi-constant stepping.\nABDF2 - An adaptive order 2 L-stable fixed leading coefficient multistep BDF method.\nQNDF - An adaptive order quasi-fixed time step NDF method. Utilizes Shampine\'s accuracy-optimal kappa values as defaults (has a keyword argument for a tuple of kappa coefficients). In development.\nJVODE_BDF - An adaptive time adaptive order fixed-leading coefficient BDF method in Nordsieck form. The order adaptivity algorithm is derived from Sundials\' CVODE_BDF. In development."
 },
 
 {
