@@ -87,7 +87,7 @@ accuracy situations. Another good choice for this regime is `lsoda`.
 `ImplicitMidpoint` is a symmetric and symplectic integrator.
 `Trapezoid` is a symmetric (almost symplectic) integrator with adaptive
 timestepping. `ImplicitEuler` is an extension to the common algorithm with
-adaptive timestepping and efficient quasi-Newton Jacobian reusage which is fully
+adaptive timestepping and efficient quasi-Newton Jacobian re-usage which is fully
 strong-stability presurving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
@@ -279,7 +279,7 @@ These methods require a choice of `dt`.
   Nordsieck form.
 - `JVODE_Adams` - An adaptive time adaptive order fixed-leading coefficient Adams
   method in Nordsieck form. The order adaptivity algorithm is derived from
-  Sundials' `CVODE_Adams`.
+  Sundials' `CVODE_Adams`. In development.
 
 ### Methods for Stiff Equations
 
@@ -352,7 +352,8 @@ These methods require a choice of `dt`.
 #### Exponential Rosenbrock Methods
 
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
-- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
+  Alias: `ETD1`.
 - `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
@@ -379,6 +380,12 @@ These methods require a choice of `dt`.
   quasi-constant stepping.
 - `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
   BDF method.
+- `QNDF` - An adaptive order quasi-fixed time step NDF method. Utilizes
+  Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
+  for a tuple of `kappa` coefficients). In development.
+- `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
+  method in Nordsieck form. The order adaptivity algorithm is derived from
+  Sundials' `CVODE_BDF`. In development.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
