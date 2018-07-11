@@ -103,7 +103,7 @@ library methods are as follows:
 - `ode23` --> `BS3()`
 - `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
 - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
-- `ode113` --> `CVODE_Adams()`, though in many cases `Vern7()` is more efficient
+- `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
 - `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `Rodas4()` or `radau()`
   are more efficient
@@ -152,6 +152,9 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   order interpolant).
 - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant).
 - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).
+- `Anas5(w)` - 4th order Runge-Kutta method designed for periodic problems.
+  Requires a periodicity estimate `w` which when accurate the method becomes
+  5th order (and is otherwise 4th order with less error for better estimates).
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince Runge-Kutta method.
   (7th order interpolant).
