@@ -44,7 +44,7 @@ Feagin methods are the only high-order optimized methods which do not include a
 high-order interpolant (they do include a 3rd order Hermite interpolation if
 needed). Note that these high order RK methods are more robust than the high order
 Adams-Bashforth methods to discontinuities and achieve very high precision, and
-are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
+are much more efficient than the extrapolation methods. However, the `VCABM`
 method can be a good choice for high accuracy when the system of equations is
 very large (`>1,000` ODEs?), the function calculation is very expensive,
 or the solution is very smooth.
