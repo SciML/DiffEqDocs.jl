@@ -400,8 +400,7 @@ match the behavior of the classic VODE and Sundials CVODE integrator.
   Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
   for a tuple of `kappa` coefficients). In development.
 - `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
-  method in Nordsieck form. The order adaptivity algorithm is derived from
-  Sundials' `CVODE_BDF`. In development.
+  method in Nordsieck form. In development.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
