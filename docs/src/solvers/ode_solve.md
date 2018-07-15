@@ -44,7 +44,7 @@ Feagin methods are the only high-order optimized methods which do not include a
 high-order interpolant (they do include a 3rd order Hermite interpolation if
 needed). Note that these high order RK methods are more robust than the high order
 Adams-Bashforth methods to discontinuities and achieve very high precision, and
-are much more efficient than the extrapolation methods. However, the `CVODE_Adams`
+are much more efficient than the extrapolation methods. However, the `VCABM`
 method can be a good choice for high accuracy when the system of equations is
 very large (`>1,000` ODEs?), the function calculation is very expensive,
 or the solution is very smooth.
@@ -87,7 +87,7 @@ accuracy situations. Another good choice for this regime is `lsoda`.
 `ImplicitMidpoint` is a symmetric and symplectic integrator.
 `Trapezoid` is a symmetric (almost symplectic) integrator with adaptive
 timestepping. `ImplicitEuler` is an extension to the common algorithm with
-adaptive timestepping and efficient quasi-Newton Jacobian reusage which is fully
+adaptive timestepping and efficient quasi-Newton Jacobian re-usage which is fully
 strong-stability presurving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
@@ -103,7 +103,7 @@ library methods are as follows:
 - `ode23` --> `BS3()`
 - `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
 - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
-- `ode113` --> `CVODE_Adams()`, though in many cases `Vern7()` is more efficient
+- `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
 - `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `Rodas4()` or `radau()`
   are more efficient
@@ -114,8 +114,6 @@ library methods are as follows:
   significantly more efficient
 
 # Full List of Methods
-
-Choose one of these methods with the `alg` keyword in `solve`.
 
 ## OrdinaryDiffEq.jl
 
@@ -154,6 +152,9 @@ and thus are recommended for stiff problems on non-Float64 numbers.
   order interpolant).
 - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant).
 - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).
+- `Anas5(w)` - 4th order Runge-Kutta method designed for periodic problems.
+  Requires a periodicity estimate `w` which when accurate the method becomes
+  5th order (and is otherwise 4th order with less error for better estimates).
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince Runge-Kutta method.
   (7th order interpolant).
@@ -279,7 +280,7 @@ These methods require a choice of `dt`.
   Nordsieck form.
 - `JVODE_Adams` - An adaptive time adaptive order fixed-leading coefficient Adams
   method in Nordsieck form. The order adaptivity algorithm is derived from
-  Sundials' `CVODE_Adams`.
+  Sundials' `CVODE_Adams`. In development.
 
 ### Methods for Stiff Equations
 
@@ -358,7 +359,8 @@ These methods require a choice of `dt`.
 #### Exponential Rosenbrock Methods
 
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
-- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
+  Alias: `ETD1`.
 - `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
@@ -369,6 +371,11 @@ These methods require a choice of `dt`.
 - `Exp4` - 4th order EPIRK scheme. Fixed time stepping only.
 - `EPIRK4s3A` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
 - `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
+- `EPIRK5P1` - 5th order EPIRK scheme. Fixed time stepping only.
+- `EPIRK5P2` - 5th order EPIRK scheme. Fixed time stepping only.
+- `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5.
+  Fixed time stepping only. Broken.
+- `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5. Fixed time stepping only.
 
 #### Multistep Methods
 
@@ -389,6 +396,12 @@ match the behavior of the classic VODE and Sundials CVODE integrator.
   differentiation function (NDF) method. Optional parameter `kappa` defaults
   to Shampine's accuracy-optimal `-1/9`.
 - `QBDF2` - An adaptive order 2 quasi-constant timestep L-stable BDF method.
+- `QNDF` - An adaptive order quasi-constant timestep NDF method. Utilizes
+  Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
+  for a tuple of `kappa` coefficients). In development.
+- `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
+  method in Nordsieck form. The order adaptivity algorithm is derived from
+  Sundials' `CVODE_BDF`. In development.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 

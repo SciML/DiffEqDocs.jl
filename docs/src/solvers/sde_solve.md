@@ -17,7 +17,7 @@ interpretations respectively). If adaptivity isn't necessary, the `EM` and
 respectively).
 
 For stiff problems with additive noise, the high order adaptive method
-`RackKenCarp` is highly preferred and will solve problems with similar efficiency
+`SKenCarp` is highly preferred and will solve problems with similar efficiency
 as ODEs. If possible, stiff problems should be converted to make use of this
 additive noise solver. If the noise term is large/stiff, then the split-step
 methods are required in order for the implicit methods to be stable. For
@@ -184,7 +184,7 @@ For `SRA` and `SRI`, the following option is allowed:
   this is the implicit Midpoint method on the drift term and is symplectic in
   distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
   and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
-- `SKenCarp` - Adaptive L-stable drfit-implicit strong order 1.5 for additive 
+- `SKenCarp` - Adaptive L-stable drfit-implicit strong order 1.5 for additive
   Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
   and scalar additive noise.†
 
