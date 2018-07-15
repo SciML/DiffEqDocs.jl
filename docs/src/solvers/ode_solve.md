@@ -287,7 +287,7 @@ These methods require a choice of `dt`.
 
 - `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
-  presurving (SSP).
+  preserving (SSP).
 - `ImplicitMidpoint` - A second order A-stable symplectic and symmetric implicit
   solver. Good for highly stiff equations which need symplectic integration.
 - `Trapezoid` - A second order A-L-stable symmetric ESDIRK method. "Almost
@@ -299,7 +299,7 @@ These methods require a choice of `dt`.
   derivatives for highly stiff and oscillatory problems.
 - `GenericImplicitEuler` - A 1st order A-B-L-stable implicit solver with adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
-  presurving (SSP). Uses an external nonlinear solver. Defaults to trust region
+  preserving (SSP). Uses an external nonlinear solver. Defaults to trust region
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
 - `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
@@ -349,6 +349,12 @@ These methods require a choice of `dt`.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
+#### Stabilized Explicit Methods
+
+- `ROCK2` - Second order stabilized Runge-Kutta method. Exhibits high stability
+  for real eigenvalues and is smoothened to allow for moderate sized complex
+  eigenvalues.
+
 #### Exponential Rosenbrock Methods
 
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
@@ -366,6 +372,11 @@ These methods require a choice of `dt`.
 
 #### Multistep Methods
 
+Quasi-constant stepping is the time stepping strategy which matches the classic
+GEAR and LSODE integrators. The variable-coefficient methods match the ideas
+of the classic EPISODE integrator. The Fixed Leading Coefficient (FLC) methods
+match the behavior of the classic VODE and Sundials CVODE integrator.
+
 - `QNDF1` - An adaptive order 1 quasi-constant timestep L-stable numerical
   differentiation function (NDF) method. Optional parameter `kappa` defaults
   to Shampine's accuracy-optimal `-0.1850`.
@@ -374,6 +385,10 @@ These methods require a choice of `dt`.
   quasi-constant stepping.
 - `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
   BDF method.
+- `QNDF2` - An adaptive order 2 quasi-constant timestep L-stable numerical
+  differentiation function (NDF) method. Optional parameter `kappa` defaults
+  to Shampine's accuracy-optimal `-1/9`.
+- `QBDF2` - An adaptive order 2 quasi-constant timestep L-stable BDF method.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
