@@ -14,8 +14,8 @@ integrator = init(prob,alg;kwargs...)
 ```
 
 The keyword args which are accepted are the same [Common Solver Options](@ref)
-used by `solve`. The type which is returned is an `integrator<:DEIntegrator`. One can manually
-choose to step via the `step!` command:
+used by `solve` and the returned value is an `integrator` which satisfies
+`typeof(integrator)<:DEIntegrator`. One can manually choose to step via the `step!` command:
 
 ```julia
 step!(integrator)
@@ -135,12 +135,13 @@ inefficient as `reinit!`.
 ### Integrator vs Solution
 
 The integrator and the solution have very different actions because they have
-very different meanings. The `Solution` type is a type with history: it stores
+very different meanings. The `typeof(sol) <: DESolution` type is a type with 
+history: it stores
 all of the (requested) timepoints and interpolates/acts using the values closest
-in time. On the other hand, the `integrator<:DEIntegrator` type is a local object. It only knows
-the times of the interval it currently spans, the current caches and values,
-and the current state of the solver (the current options, tolerances, etc.).
-These serve very different purposes:
+in time. On the other hand, the `typeof(integrator)<:DEIntegrator` type is a 
+local object. It only knows the times of the interval it currently spans, 
+the current caches and values, and the current state of the solver 
+(the current options, tolerances, etc.). These serve very different purposes:
 
 * The `integrator`'s interpolation can extrapolate, both forward and backward in
   in time. This is used to estimate events and is internally used for predictions.
