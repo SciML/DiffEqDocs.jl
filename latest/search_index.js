@@ -4549,7 +4549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Birth-Death Process",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network rType begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {
@@ -4557,7 +4557,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Michaelis-Menten Enzyme Kinetics",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network rType begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {

@@ -39,7 +39,7 @@ end</code></pre><p>will both have reaction rate equal to <code>2[X][Y]</code>.</
     2.0, X + Y ↔ XY
 end
 p = [0.5]</code></pre><p>The noise term is then added as an additional parameter to the network (by default the last parameter in the parameter array, unless also declared after the reaction network among the other parameters). By reducing (or increasing) the noise term the amount stochastic fluctuations in the system can be reduced (or increased).</p><p>It is possible to access expressions corresponding to the functions determining the deterministic and stochastic development of the network using.</p><pre><code class="language-julia">  f_expr = rn.f_func
-  g_expr = rn.g_func</code></pre><p>This can e.g. be used to generate LaTeX code corresponding to the system.</p><h3><a class="nav-anchor" id="Example:-Birth-Death-Process-1" href="#Example:-Birth-Death-Process-1">Example: Birth-Death Process</a></h3><pre><code class="language-julia">rs = @reaction_network begin
+  g_expr = rn.g_func</code></pre><p>This can e.g. be used to generate LaTeX code corresponding to the system.</p><h3><a class="nav-anchor" id="Example:-Birth-Death-Process-1" href="#Example:-Birth-Death-Process-1">Example: Birth-Death Process</a></h3><pre><code class="language-julia">rs = @reaction_network rType begin
   c1, X --&gt; 2X
   c2, X --&gt; 0
   c3, 0 --&gt; X
@@ -47,7 +47,7 @@ end c1 c2 c3
 p = (2.0,1.0,0.5)
 prob = DiscreteProblem([5], (0.0, 4.0), p)
 jump_prob = JumpProblem(prob, Direct(), rs)
-sol = solve(jump_prob, Discrete())</code></pre><h3><a class="nav-anchor" id="Example:-Michaelis-Menten-Enzyme-Kinetics-1" href="#Example:-Michaelis-Menten-Enzyme-Kinetics-1">Example: Michaelis-Menten Enzyme Kinetics</a></h3><pre><code class="language-julia">rs = @reaction_network begin
+sol = solve(jump_prob, Discrete())</code></pre><h3><a class="nav-anchor" id="Example:-Michaelis-Menten-Enzyme-Kinetics-1" href="#Example:-Michaelis-Menten-Enzyme-Kinetics-1">Example: Michaelis-Menten Enzyme Kinetics</a></h3><pre><code class="language-julia">rs = @reaction_network rType begin
   c1, S + E --&gt; SE
   c2, SE --&gt; S + E
   c3, SE --&gt; P + E
