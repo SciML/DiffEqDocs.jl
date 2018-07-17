@@ -301,7 +301,7 @@ solve!(integrator)
 
 ## Plot Recipe
 
-Like the `Solution` type, a plot recipe is provided for the `DEIntegrator` type.
+Like the `DESolution` type, a plot recipe is provided for the `DEIntegrator` type.
 Since the `DEIntegrator` type is a local state type on the current interval,
 `plot(integrator)` returns the solution on the current interval. The same
 options for the plot recipe are provided as for `sol`, meaning one can choose
