@@ -2013,7 +2013,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "FunctionMap: A basic function map which implements the full common interface.OrdinaryDiffEq.jl also contains the FunctionMap algorithm which lets you  It has a piecewise constant interpolation and allows for all of the  callback/event handling capabilities (of course, with rootfind=false. If a  ContinuousCallback is given, it\'s always assumed rootfind=false).The constructor is:FunctionMap(;scale_by_time=false)Every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time=true, then every step is the updateu_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
+    "text": "FunctionMap: A basic function map which implements the full common interface.OrdinaryDiffEq.jl also contains the FunctionMap algorithm which lets you  It has a piecewise constant interpolation and allows for all of the  callback/event handling capabilities (of course, with rootfind=false. If a  ContinuousCallback is given, it\'s always assumed rootfind=false).The constructor is:FunctionMap()\nFunctionMap{scale_by_time}()Every step is the updateu_n+1 = f(t_n+1u_n)If in addition scale_by_time is marked true (default is false),  then every step is the update:u_n+1 = u_n + dtf(t_n+1u_n)Notice that this is the same as updates from the Euler method, except in this case we assume that its a discrete change and thus the interpolation is piecewise constant."
 },
 
 {
