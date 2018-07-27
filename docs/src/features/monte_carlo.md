@@ -9,7 +9,7 @@ To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The construct
 ```julia
 MonteCarloProblem(prob::DEProblem;
                   output_func = (sol,i) -> (sol,false),
-                  prob_func= (prob,i,repeat)->prob),
+                  prob_func= (prob,i,repeat)->(prob),
                   reduction = (u,data,I)->(append!(u,data),false),
                   u_init = [])
 ```

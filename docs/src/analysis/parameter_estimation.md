@@ -76,15 +76,12 @@ cost functions:
 
 ```julia
 L2Loss(t,data;weight=nothing)
-CostVData(t,data;loss_func = L2Loss,weight=nothing)
-
 ```
 
 where `t` is the set of timepoints which the data is found at, and
 `data` are the values that are known where each column corresponds to measures
 of the values of the system. `L2Loss` is an optimized version
-of the L2-distance. In `CostVData`, one can choose any loss function from
-LossFunctions.jl or use the default of an L2 loss. The `weight` is a vector
+of the L2-distance. The `weight` is a vector
 of weights for the loss function which must match the size of the data.
 Note that minimization of a weighted `L2Loss` is equivalent to maximum
 likelihood estimation of a heteroskedastic Normally distributed likelihood.
@@ -112,7 +109,7 @@ against some chosen distribution type.
 
 For parameter estimation problems, it's not uncommon for the optimizers to hit
 unstable regions of parameter space. This causes warnings that the solver exited
-early, and the built-in loss functions like `L2Loss` and `CostVData`
+early, and the built-in loss functions like `L2Loss`
 automatically handle this. However, if using a user-supplied loss function,
 you should make sure it's robust to these issues. One common pattern is to
 apply infinite loss when the integration is not successful. Using the retcodes,
@@ -431,7 +428,7 @@ prob = ODEProblem(f2,u0,tspan,p)
 We can build an objective function and solve the multiple parameter version just as before:
 
 ```julia
-cost_function = build_loss_objective(prob,Tsit5(),CostVData(t,data),
+cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),
                                       maxiters=10000,verbose=false)
 result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
 ```

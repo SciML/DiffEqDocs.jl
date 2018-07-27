@@ -160,7 +160,7 @@ This can e.g. be used to generate LaTeX code corresponding to the system.
 ### Example: Birth-Death Process
 
 ```julia
-rs = @reaction_network begin
+rs = @reaction_network rType begin
   c1, X --> 2X
   c2, X --> 0
   c3, 0 --> X
@@ -174,7 +174,7 @@ sol = solve(jump_prob, Discrete())
 ### Example: Michaelis-Menten Enzyme Kinetics
 
 ```julia
-rs = @reaction_network begin
+rs = @reaction_network rType begin
   c1, S + E --> SE
   c2, SE --> S + E
   c3, SE --> P + E

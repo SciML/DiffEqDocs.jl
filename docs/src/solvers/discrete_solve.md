@@ -31,7 +31,8 @@ callback/event handling capabilities (of course, with `rootfind=false`. If a
 The constructor is:
 
 ```julia
-FunctionMap(;scale_by_time=false)
+FunctionMap()
+FunctionMap{scale_by_time}()
 ```
 
 Every step is the update
@@ -40,7 +41,8 @@ Every step is the update
 u_{n+1} = f(t_{n+1},u_n).
 ```
 
-If in addition `scale_by_time=true`, then every step is the update
+If in addition `scale_by_time` is marked `true` (default is false), 
+then every step is the update:
 
 ```math
 u_{n+1} = u_n + dtf(t_{n+1},u_n).
