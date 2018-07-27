@@ -118,19 +118,15 @@ library methods are as follows:
 ## OrdinaryDiffEq.jl
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
-3rd order Hermite polynomial interpolation. The algorithms denoted as having a "free"
-interpolation means that no extra steps are required for the interpolation. For
-the non-free higher order interpolating functions, the extra steps are computed
-lazily (i.e. not during the solve).
+3rd order Hermite polynomial interpolation. The algorithms denoted as having a
+"free" interpolation means that no extra steps are required for the
+interpolation. For the non-free higher order interpolating functions, the extra
+steps are computed lazily (i.e. not during the solve).
 
-The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations
-while being the most generic: accepting the most Julia-based types, allow for
-sophisticated event handling, etc. They are recommended for all non-stiff problems.
-For stiff problems, the algorithms are currently not as high of order or as well-optimized
-as the ODEInterface.jl or Sundials.jl algorithms, and thus if the problem is on
-arrays of Float64, they are recommended. However, the stiff methods from OrdinaryDiffEq.jl
-are able to handle a larger generality of number types (arbitrary precision, etc.)
-and thus are recommended for stiff problems on non-Float64 numbers.
+The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff
+equations while being the most generic: accepting the most Julia-based types,
+allow for sophisticated event handling, etc. They are recommended for most ODE
+problems.
 
 ### Runge-Kutta Methods for Non-Stiff Equations
 
@@ -173,10 +169,14 @@ solve(prob,alg)
 Additionally, the following algorithms have a lazy interpolant:
 
 - `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (lazy 5th order interpolant).
-- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (lazy 6th order interpolant).
-- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (lazy 7th order interpolant).
-- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (lazy 8th order interpolant)
-- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (lazy 9th order interpolant)
+- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (lazy 6th order
+  interpolant).
+- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (lazy 7th order
+  interpolant).
+- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (lazy 8th order
+  interpolant)
+- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (lazy 9th order
+  interpolant)
 
 These methods require a few extra steps in order to compute the high order
 interpolation, but these steps are only taken when the interpolation is used.
@@ -196,35 +196,45 @@ solve(prob,Vern7(lazy=false))
 ### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
-  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
+  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant).
+  Fixed timestep only.
 - `SSPRK33` - The three-stage, third order strong stability preserving (SSP)
-  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant). Fixed timestep only.
+  method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant).
+  Fixed timestep only.
 - `SSPRK53` - The five-stage, third order strong stability preserving (SSP)
-  method of Ruuth (SSP coefficient 2.65, free 3rd order Hermite interpolant). Fixed timestep only.
+  method of Ruuth (SSP coefficient 2.65, free 3rd order Hermite interpolant).
+  Fixed timestep only.
 - `SSPRK63` - The six-stage, third order strong stability preserving (SSP)
-  method of Ruuth (SSP coefficient 3.518, free 3rd order Hermite interpolant). Fixed timestep only.
+  method of Ruuth (SSP coefficient 3.518, free 3rd order Hermite interpolant).
+  Fixed timestep only.
 - `SSPRK73` - The seven-stage, third order strong stability preserving (SSP)
   method of Ruuth (SSP coefficient 4.2879, free 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRK83` - The eight-stage, third order strong stability preserving (SSP)
-  method of Ruuth (SSP coefficient 5.107, free 3rd order Hermite interpolant). Fixed timestep only.
+  method of Ruuth (SSP coefficient 5.107, free 3rd order Hermite interpolant).
+  Fixed timestep only.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
   five stages (SSP coefficient 2, free 2nd order SSP interpolant).
 - `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
   nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).
 - `SSPRK54` - The five-stage, fourth order strong stability preserving (SSP)
-  method of Spiteri and Ruuth (SSP coefficient 1.508, 3rd order Hermite interpolant). Fixed timestep only.
+  method of Spiteri and Ruuth (SSP coefficient 1.508, 3rd order Hermite
+  interpolant). Fixed timestep only.
 - `SSPRK104` - The ten-stage, fourth order strong stability preserving method
-  of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant). Fixed timestep only.
+  of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant).
+  Fixed timestep only.
 
 The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
-All explicit SSP methods take two optional arguments `SSPXY(stage_limiter!, step_limiter!)`, where
-`stage_limiter!` and `step_limiter` are functions taking arguments of the form `limiter!(u, f, t)`.
-Here, `u` is the new solution value (updated inplace) after an explicit Euler stage / the whole time
-step , `f` the time derivative function (semidiscretisation for PDEs), and `t` the current time. These
-limiters can be used to enforce physical constraints, e.g. the positivity preserving limiters of
-Zhang and Shu (Zhang, Xiangxiong, and Chi-Wang Shu. "Maximum-principle-satisfying and positivity-preserving
-high-order schemes for conservation laws: survey and new developments." Proceedings of the Royal Society of
-London A: Mathematical, Physical and Engineering Sciences. The Royal Society, 2011.).
+All explicit SSP methods take two optional arguments
+`SSPXY(stage_limiter!, step_limiter!)`, where `stage_limiter!` and `step_limiter`
+are functions taking arguments of the form `limiter!(u, f, t)`. Here, `u` is the
+new solution value (updated inplace) after an explicit Euler stage / the whole
+time step , `f` the time derivative function (semidiscretisation for PDEs), and
+`t` the current time. These limiters can be used to enforce physical constraints,
+e.g. the positivity preserving limiters of Zhang and Shu (Zhang, Xiangxiong, and
+Chi-Wang Shu. "Maximum-principle-satisfying and positivity-preserving high-order
+schemes for conservation laws: survey and new developments." Proceedings of the
+Royal Society of London A: Mathematical, Physical and Engineering Sciences. The
+Royal Society, 2011.).
 
 ### Low-Storage Methods
 
@@ -262,8 +272,8 @@ These methods require a choice of `dt`.
 
 #### Adaptive step size Adams explicit Methods
 
-- `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to calculate
-  starting values.  
+- `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to
+  calculate starting values.  
 - `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate
   starting values.  
 - `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate
@@ -305,7 +315,8 @@ These methods require a choice of `dt`.
   the cost of being less efficient.
 - `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
   as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
-  differences on the memory. Good for highly stiff equations which are non-oscillatory.
+  differences on the memory. Good for highly stiff equations which are
+  non-oscillatory.
   Uses an external nonlinear solver. Defaults to trust region
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
@@ -329,8 +340,8 @@ These methods require a choice of `dt`.
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
   2nd order stiff-aware interpolation.
-- `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high accuracy
-  on discretizations of nonlinear parabolic PDEs.
+- `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
+  accuracy on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
 - `RosShamp4`- An A-stable 4th order Rosenbrock method.
 - `Veldd4` - A 4th order D-stable Rosenbrock method.
@@ -339,13 +350,14 @@ These methods require a choice of `dt`.
 - `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable"
   but efficient.
 - `Ros4LStab` - A 4th order L-stable Rosenbrock method.
-- `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant
-- `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant
-- `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a stiff-aware
-  3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
-  on nonlinear parabolic problems (as opposed to lower if not corrected).
+- `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant
+- `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant
+- `Rodas4P` - A 4th order A-stable stiffly stable Rosenbrock method with a
+  stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and
+  3rd order accurate on nonlinear parabolic problems (as opposed to lower if not
+  corrected).
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
@@ -380,25 +392,22 @@ These methods require a choice of `dt`.
 #### Multistep Methods
 
 Quasi-constant stepping is the time stepping strategy which matches the classic
-GEAR and LSODE integrators. The variable-coefficient methods match the ideas
-of the classic EPISODE integrator. The Fixed Leading Coefficient (FLC) methods
-match the behavior of the classic VODE and Sundials CVODE integrator.
+GEAR, LSODE,  and `ode15s` integrators. The variable-coefficient methods match
+the ideas of the classic EPISODE integrator and early VODE designs. The Fixed
+Leading Coefficient (FLC) methods match the behavior of the classic VODE and
+Sundials CVODE integrator.
 
 - `QNDF1` - An adaptive order 1 quasi-constant timestep L-stable numerical
   differentiation function (NDF) method. Optional parameter `kappa` defaults
   to Shampine's accuracy-optimal `-0.1850`.
-- `QBDF1` - An adaptive order 1 quasi-constant timestep L-stable BDF method.
-  This is equivalent to implicit Euler but using the BDF error estimator with
-  quasi-constant stepping.
+- `QBDF1` - An adaptive order 1 L-stable BDF method. This is equivalent to
+  implicit Euler but using the BDF error estimator.
 - `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
   BDF method.
-- `QNDF2` - An adaptive order 2 quasi-constant timestep L-stable numerical
-  differentiation function (NDF) method. Optional parameter `kappa` defaults
-  to Shampine's accuracy-optimal `-1/9`.
-- `QBDF2` - An adaptive order 2 quasi-constant timestep L-stable BDF method.
 - `QNDF` - An adaptive order quasi-constant timestep NDF method. Utilizes
   Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
-  for a tuple of `kappa` coefficients). In development.
+  for a tuple of `kappa` coefficients).
+- `QBDF` - An adaptive order quasi-constant timestep BDF method.
 - `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
   method in Nordsieck form. In development.
 
@@ -552,7 +561,8 @@ Note that the constructors for the Sundials algorithms take two main arguments:
   - `:Diagonal` - This method is specialized for diagonal Jacobians.
   - `:GMRES` - A GMRES method. Recommended first choice Krylov method
   - `:BCG` - A Biconjugate gradient method.
-  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric linear systems.
+  - `:PCG` - A preconditioned conjugate gradient method. Only for symmetric
+    linear systems.
   - `:TFQMR` - A TFQMR method.
   - `:KLU` - A sparse factorization method. Requires that the user specifies a
     Jacobian. The Jacobian must be set as a sparse matrix in the `ODEProblem`
@@ -696,7 +706,8 @@ using ODEInterfaceDiffEq
   - `radau` - Implicit Runge-Kutta (Radau IIA) of variable order between 5 and 13.
   - `radau5` - Implicit Runge-Kutta method (Radau IIA) of order 5.
   - `rodas` - Rosenbrock 4(3) method.
-  - `ddeabm` - Adams-Bashforth-Moulton Predictor-Corrector method (order between 1 and 12)
+  - `ddeabm` - Adams-Bashforth-Moulton Predictor-Corrector method (order between
+    1 and 12)
   - `ddebdf` - Backward Differentiation Formula (orders between 1 and 5)
 
 Note that while the output only has a linear interpolation, a higher order
