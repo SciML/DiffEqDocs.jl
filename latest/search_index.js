@@ -2189,7 +2189,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Exponential Rosenbrock Methods",
     "category": "section",
-    "text": "LawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4. Fixed timestepping only."
+    "text": "LawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4. Fixed timestepping only.\nExprb32 - 3rd order Exponential-Rosenbrock scheme.\nExprb43 - 4th order Exponential-Rosenbrock scheme."
 },
 
 {
@@ -2421,7 +2421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nIMEXEuler : 1st order explicit Euler mixed with implicit Euler.\nCNAB2: Crank-Nicholson Adams Bashforth Order 2.\nCNLF: Crank-Nicholson Leapfrog of Order 2.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method.\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method.\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method."
+    "text": "SplitEuler: 1st order fully explicit method. Used for testing accuracy of splits.\nIMEXEuler : 1st order explicit Euler mixed with implicit Euler. Fixed time step only.\nCNAB2: Crank-Nicholson Adams Bashforth Order 2. Fixed time step only.\nCNLF: Crank-Nicholson Leapfrog of Order 2. Fixed time step only.\nSBDF2 : 2nd order IMEX BDF method. Fixed time step only.\nSBDF3 : 3rd order IMEX BDF method. Fixed time step only.\nSBDF4 : 4th order IMEX BDF method. Fixed time step only.\nKenCarp3: An A-L stable stiffly-accurate 3rd order ESDIRK method.\nKenCarp4: An A-L stable stiffly-accurate 4rd order ESDIRK method.\nKenCarp5: An A-L stable stiffly-accurate 5rd order ESDIRK method."
 },
 
 {
