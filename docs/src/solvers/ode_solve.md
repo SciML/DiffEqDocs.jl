@@ -377,6 +377,8 @@ These methods require a choice of `dt`.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
+- `Exprb32` - 3rd order Exponential-Rosenbrock scheme.
+- `Exprb43` - 4th order Exponential-Rosenbrock scheme.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
