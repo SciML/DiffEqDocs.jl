@@ -105,8 +105,8 @@ library methods are as follows:
 - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
 - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-- `ode15s`/`vode` --> `CVODE_BDF()`, though in many cases `Rodas4()` or `radau()`
-  are more efficient
+- `ode15s`/`vode` --> `QNDF()`, though in many cases `CVODE_BDF()`, `Rodas4()`
+  or `radau()` are more efficient
 - `ode23t` --> `Trapezoid()` for efficiency and `GenericTrapezoid()` for robustness
 - `ode23tb` --> `TRBDF2`
 - `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
