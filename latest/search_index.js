@@ -2085,7 +2085,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Translations from MATLAB/Python/R",
     "category": "section",
-    "text": "For users familiar with MATLAB/Python/R, good translations of the standard library methods are as follows:ode23 –> BS3()\node45/dopri5 –> DP5(), though in most cases Tsit5() is more efficient\node23s –> Rosenbrock23(), though in most cases Rodas4() is more efficient\node113 –> VCABM(), though in many cases Vern7() is more efficient\ndop853 –> DP8(), though in most cases Vern7() is more efficient\node15s/vode –> CVODE_BDF(), though in many cases Rodas4() or radau() are more efficient\node23t –> Trapezoid() for efficiency and GenericTrapezoid() for robustness\node23tb –> TRBDF2\nlsoda –> lsoda() (requires Pkg.add(\"LSODA\"); using LSODA)\node15i –> IDA(), though in many cases Rodas4() can handle the DAE and is significantly more efficient"
+    "text": "For users familiar with MATLAB/Python/R, good translations of the standard library methods are as follows:ode23 –> BS3()\node45/dopri5 –> DP5(), though in most cases Tsit5() is more efficient\node23s –> Rosenbrock23(), though in most cases Rodas4() is more efficient\node113 –> VCABM(), though in many cases Vern7() is more efficient\ndop853 –> DP8(), though in most cases Vern7() is more efficient\node15s/vode –> QNDF(), though in many cases CVODE_BDF(), Rodas4() or radau() are more efficient\node23t –> Trapezoid() for efficiency and GenericTrapezoid() for robustness\node23tb –> TRBDF2\nlsoda –> lsoda() (requires Pkg.add(\"LSODA\"); using LSODA)\node15i –> IDA(), though in many cases Rodas4() can handle the DAE and is significantly more efficient"
 },
 
 {
@@ -2101,7 +2101,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. They are recommended for most ODE problems."
+    "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. On stiff ODEs these algorithms again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE problems."
 },
 
 {
