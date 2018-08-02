@@ -125,7 +125,8 @@ steps are computed lazily (i.e. not during the solve).
 
 The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff
 equations while being the most generic: accepting the most Julia-based types,
-allow for sophisticated event handling, etc. They are recommended for most ODE
+allow for sophisticated event handling, etc. On stiff ODEs these algorithms
+again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
 ### Runge-Kutta Methods for Non-Stiff Equations
