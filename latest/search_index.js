@@ -117,7 +117,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Acknowledgements",
     "category": "section",
-    "text": "JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:Chris Rackauckas (@ChrisRackauckas) (lead developer)\nYingbo Ma (@YingboMa)\nDavid Widmann (@devmotion)\nHendrik Ranocha (@ranocha)\nShivin Srivastava (@shivin9)\nAyush Pandey (@Ayush-iitkgp)\nEthan Levien (@elevien)\nTom Short (@tshort)\n@dextorious"
+    "text": ""
+},
+
+{
+    "location": "index.html#Core-Contributors-1",
+    "page": "Home",
+    "title": "Core Contributors",
+    "category": "section",
+    "text": "JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:Chris Rackauckas (@ChrisRackauckas) (lead developer)\nYingbo Ma (@YingboMa)\nDavid Widmann (@devmotion)\nHendrik Ranocha (@ranocha)\nEthan Levien (@elevien)\nTom Short (@tshort)\n@dextorious"
+},
+
+{
+    "location": "index.html#Google-Summer-of-Code-Alumni-1",
+    "page": "Home",
+    "title": "Google Summer of Code Alumni",
+    "category": "section",
+    "text": "Yingbo Ma (@YingboMa)\nShivin Srivastava (@shivin9)\nAyush Pandey (@Ayush-iitkgp)\nXingjian Guo (@MSeeker1340)\nShubham Maddhashiya (@sipah00)\nVaibhav Kumar Dixit (@Vaibhavdixit02)"
 },
 
 {
