@@ -70,8 +70,8 @@ The appropriate algorithms for this form are:
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential Rosenbrock scheme (not working at the moment).
-- `Exprb43` - 4th order adaptive Exponential Rosenbrock scheme (not working at the moment).
+- `Exprb32` - 3rd order adaptive Exponential Rosenbrock scheme (broken at the moment).
+- `Exprb43` - 4th order adaptive Exponential Rosenbrock scheme (broken at the moment).
 
 Note that the generic algorithms `GenericIIF1` and `GenericIIF2` allow for a choice of `nlsolve`.
 

@@ -95,6 +95,22 @@ parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
 situations which is 3rd order. `ROS3P` is only third order and achieves 3rd order
 on such problems and can thus be more efficient in this case.
 
+#### Exponential Integrators for Stiff Problems
+
+If explicit methods are preferred, then the exponential integrators provide an alternative
+to the implicit methods. They use Krylov approximations to efficiently compute the matrix-vector
+products and work best if the linear operator/jacobian is sparse. There are two main classes of
+exponential methods included in OrdinaryDiffEq:
+
+- Classical Exponential Runge-Kutta methods like `ETDRK4` and `HochOst4`. These methods can
+  also be used for [semilinear ODEs](../split_ode_solve.html#Semilinear-ODE-1).
+- Exponential Propagation Iterative Runge-Kutta Methods (EPIRK) like `Exp4` and `EPIRK5P1`.
+  These methods cannot be applied to semilinear ODEs.
+
+For both classes of methods, you're required to provide the jacobian associated with the
+problem (unless it's a semilinear problem, in which case the linear part will be used
+instead).
+
 ## Translations from MATLAB/Python/R
 
 For users familiar with MATLAB/Python/R, good translations of the standard
@@ -375,11 +391,23 @@ These methods require a choice of `dt`.
 - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
   Alias: `ETD1`.
 - `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
+- `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
+- `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme.
-- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
+- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme (broken at the moment).
+- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme (broken at the moment).
+
+Except for `ETD2`, all methods come with these options, which can be set in the methods'
+constructor:
+
+- `krylov` - boolean, default: `false`. Determines whether Krylov approximation or operator
+  caching is used, the latter only available for semilinear problems.
+- `m` - integer, default: `30`. Controls the size of Krylov subsapce.
+- `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
+  then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
@@ -391,6 +419,19 @@ These methods require a choice of `dt`.
 - `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5.
   Fixed time stepping only. Broken.
 - `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5. Fixed time stepping only.
+
+Options:
+
+- `adaptive_krylov` - boolean, default: `true`. Determines if the adaptive Krylov algorithm
+  with timestepping of Neisen & Wright is used.
+- `m` - integer, default: `30`. Controls the size of Krylov subsapce, or the size for the
+  first step if `adaptive_krylov=true`.
+- `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
+  then the Lanczos algorithm will always be used and the IOP setting is ignored.
+
+It should be noted that many of the methods are still at an experimental stage of development,
+and thus should be used with caution.
 
 #### Multistep Methods
 
@@ -845,3 +886,5 @@ a tableau, checkout the [premade tableau source code](https://github.com/JuliaDi
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.
+
+[^1]: Koskela, A. (2015). Approximating the matrix exponential of an advection-diffusion operator using the incomplete orthogonalization method. In Numerical Mathematics and Advanced Applications-ENUMATH 2013 (pp. 345-353). Springer, Cham.
