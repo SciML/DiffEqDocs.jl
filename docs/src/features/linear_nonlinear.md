@@ -123,9 +123,9 @@ three pre-built `nlsolve`s:
 - `NLNewton()`: It is a modified Newton iteration solver, and it is the default
   `nlsolve` for most of the implicit ODE solvers. It converges the fastest, but
   requires more memory usage and linear system solve.
-- `NLAnderson(n::Int)`: __In development.__ It is a Anderson acceleration solver. It
+- `NLAnderson(n::Int)`: It is an Anderson acceleration solver. It
   converges faster than `NLFunctional` but slower than `NLNewton`. It does not
-  require to solve a linear system.
+  require to solve a linear system. In development.
 - `NLFunctional()`: It is a functional (Picard) iteration solver. It converges
   the slowest, but requires the least amount of memory.
 
