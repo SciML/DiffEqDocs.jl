@@ -3381,7 +3381,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "Nonlinear Solvers: nlsolve Specification",
     "category": "section",
-    "text": "Nonlinear solvers can be chosen via the nlsolve option. An nlsolve function should have two dispatches:nlsolve(Val{init},f,u0_prototype) : Does an initialization phase. Returns a type init_f for later use in the solver. u0_prototype is the expected type for the initial condition u0.\nnlsolve(init_f,u0) : Solves for the root units the initialized f and the initial condition u0. Returns the zeros of the equation."
+    "text": "Nonlinear solvers can be chosen via the nlsolve option. Most algorithms use nonlinear solvers that are specialized for implicit ODE solvers. There are three pre-built nlsolves:NLNewton(): It is a modified Newton iteration solver, and it is the default nlsolve for most of the implicit ODE solvers. It converges the fastest, but requires more memory usage and linear system solve.\nNLAnderson(n::Int): It is an Anderson acceleration solver. It converges faster than NLFunctional but slower than NLNewton. It does not require to solve a linear system. In development.\nNLFunctional(): It is a functional (Picard) iteration solver. It converges the slowest, but requires the least amount of memory.One can specify a nonlinear solver byImplicitEuler(nlsolve = NLFunctional())"
+},
+
+{
+    "location": "features/linear_nonlinear.html#Nonlinear-Solvers-for-Generic-Implicit-ODE-Solvers-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Nonlinear Solvers for Generic Implicit ODE Solvers",
+    "category": "section",
+    "text": "For ODE solvers with names that begin with Generic, they take more generic nlsolve. An nlsolve function should have two dispatches:nlsolve(Val{init},f,u0_prototype) : Does an initialization phase. Returns a type init_f for later use in the solver. u0_prototype is the expected type for the initial condition u0.\nnlsolve(init_f,u0) : Solves for the root units the initialized f and the initial condition u0. Returns the zeros of the equation."
 },
 
 {
@@ -3389,7 +3397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "Basic nlsolve method: NLSOLVEJL_SETUP",
     "category": "section",
-    "text": "By default, a basic nonlinear solver setup is given as NLSOLVEJL_SETUP. For example, the default nlsolve in Trapezoid isTrapezoid(nlsolve=NLSOLVEJL_SETUP())This will use NLsolve.jl with autodifferentiation to solve the nonlinear systems. NLSOLVEJL_SETUP has two options:chunk_size : The autodifferentiation chunk size. Integer. Defaults to ForwardDiff.jl\'s auto-detection.\nautodiff : Whether to use autodifferentiation. Defaults to true.For example, to turn off autodifferentiation, useTrapezoid(nlsolve=NLSOLVEJL_SETUP(autodiff=false))"
+    "text": "By default, a basic nonlinear solver setup is given as NLSOLVEJL_SETUP. For example, the default nlsolve in GenericTrapezoid isGenericTrapezoid(nlsolve=NLSOLVEJL_SETUP())This will use NLsolve.jl with autodifferentiation to solve the nonlinear systems. NLSOLVEJL_SETUP has two options:chunk_size : The autodifferentiation chunk size. Integer. Defaults to ForwardDiff.jl\'s auto-detection.\nautodiff : Whether to use autodifferentiation. Defaults to true.For example, to turn off autodifferentiation, useTrapezoid(nlsolve=NLSOLVEJL_SETUP(autodiff=false))"
 },
 
 {
@@ -3397,7 +3405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "How NLSOLVEJL_SETUP Was Created",
     "category": "section",
-    "text": "To create a nonlinear solver, you need to define the two functions. Here we use a call-overloaded type so that way we can hold the chunk size and autodifferentiation information.immutable NLSOLVEJL_SETUP{CS,AD} end\nBase.@pure NLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()The solver function just calls NLsolve and returns the zeros(p::NLSOLVEJL_SETUP)(f,u0) = (res=NLsolve.nlsolve(f,u0); res.zero)while the initialization function has a different initialization for autodifferentiation or not:function (p::NLSOLVEJL_SETUP{CS,AD}){CS,AD}(::Type{Val{:init}},f,u0_prototype)\n  if AD\n    return non_autodiff_setup(f,u0_prototype)\n  else\n    return autodiff_setup(f,u0_prototype,Val{determine_chunksize(initial_x,CS)})\n  end\nendWe need to declare the get_chunksize trait for the solver:get_chunksize{CS,AD}(x::NLSOLVEJL_SETUP{CS,AD}) = CSThe initialization functions are directly for NLsolve. See the NLsolve.jl docs for the types of inputs it expects to see. This does exactly that:function autodiff_setup{CS}(f!, initial_x::Vector,chunk_size::Type{Val{CS}})\n\n    permf! = (fx, x) -> f!(x, fx)\n\n    fx2 = copy(initial_x)\n    jac_cfg = ForwardDiff.JacobianConfig{CS}(initial_x, initial_x)\n    g! = (x, gx) -> ForwardDiff.jacobian!(gx, permf!, fx2, x, jac_cfg)\n\n    fg! = (x, fx, gx) -> begin\n        jac_res = DiffBase.DiffResult(fx, gx)\n        ForwardDiff.jacobian!(jac_res, permf!, fx2, x, jac_cfg)\n        DiffBase.value(jac_res)\n    end\n\n    return DifferentiableMultivariateFunction(f!, g!, fg!)\nend\n\nfunction non_autodiff_setup(f!, initial_x::Vector)\n  DifferentiableMultivariateFunction(f!)\nend"
+    "text": "To create a nonlinear solver, you need to define the two functions. Here we use a call-overloaded type so that way we can hold the chunk size and autodifferentiation information.struct NLSOLVEJL_SETUP{CS,AD} end\nNLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()The solver function just calls NLsolve and returns the zeros(p::NLSOLVEJL_SETUP)(f,u0) = (res=NLsolve.nlsolve(f,u0); res.zero)while the initialization function has a different initialization for autodifferentiation or not:function (p::NLSOLVEJL_SETUP{CS,AD}){CS,AD}(::Type{Val{:init}},f,u0_prototype)\n  if AD\n    return non_autodiff_setup(f,u0_prototype)\n  else\n    return autodiff_setup(f,u0_prototype,Val{determine_chunksize(initial_x,CS)})\n  end\nendWe need to declare the get_chunksize trait for the solver:get_chunksize{CS,AD}(x::NLSOLVEJL_SETUP{CS,AD}) = CSThe initialization functions are directly for NLsolve. See the NLsolve.jl docs for the types of inputs it expects to see. This does exactly that:function autodiff_setup{CS}(f!, initial_x::Vector,chunk_size::Type{Val{CS}})\n\n    permf! = (fx, x) -> f!(x, fx)\n\n    fx2 = copy(initial_x)\n    jac_cfg = ForwardDiff.JacobianConfig{CS}(initial_x, initial_x)\n    g! = (x, gx) -> ForwardDiff.jacobian!(gx, permf!, fx2, x, jac_cfg)\n\n    fg! = (x, fx, gx) -> begin\n        jac_res = DiffBase.DiffResult(fx, gx)\n        ForwardDiff.jacobian!(jac_res, permf!, fx2, x, jac_cfg)\n        DiffBase.value(jac_res)\n    end\n\n    return DifferentiableMultivariateFunction(f!, g!, fg!)\nend\n\nfunction non_autodiff_setup(f!, initial_x::Vector)\n  DifferentiableMultivariateFunction(f!)\nend"
 },
 
 {
