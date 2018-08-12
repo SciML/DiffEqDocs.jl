@@ -60,26 +60,25 @@ The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
-- `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only.
-- `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only.
+- `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only. Doesn't support Krylov approximation.
+- `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only. Doesn't support Krylov approximation.
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
 - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
-- `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
+- `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
 - `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
 - `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential Rosenbrock scheme (broken at the moment).
-- `Exprb43` - 4th order adaptive Exponential Rosenbrock scheme (broken at the moment).
+- `Exprb32` - 3rd order adaptive Exponential Rosenbrock scheme (in development).
+- `Exprb43` - 4th order adaptive Exponential Rosenbrock scheme (in development).
 
 Note that the generic algorithms `GenericIIF1` and `GenericIIF2` allow for a choice of `nlsolve`.
 
 By default, the exponential methods cache matrix functions such as `exp(dt*A)` to accelerate
 the time stepping for small systems. For large systems, using Krylov-based versions of the
 methods can allow for lazy calculation of `exp(dt*A)*v` and similar entities, and thus improve
-performance. The algorithms that support this are: `LawsonEuler`, `NorsettEuler`, `ETDRK2`,
-`ETDRK3`, `ETDRK4`, `HochOst4`, `Exprb32` and `Exprb43`.
+performance.
 
 To tell a solver to use Krylov methods, pass `krylov=true` to its constructor. You
 can also manually set the size of the Krylov subspace by setting the `m` parameter, which

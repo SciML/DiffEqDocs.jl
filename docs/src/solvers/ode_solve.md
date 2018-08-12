@@ -390,14 +390,14 @@ These methods require a choice of `dt`.
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
 - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
   Alias: `ETD1`.
-- `ETD2` - Second order Exponential Time Differencing method. Fixed timestepping only.
+- `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only.
 - `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
 - `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme (broken at the moment).
-- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme (broken at the moment).
+- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme (in development).
+- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme (in development).
 
 Except for `ETD2`, all methods come with these options, which can be set in the methods'
 constructor:
