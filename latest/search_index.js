@@ -4557,15 +4557,167 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Chemical Reaction Models",
     "category": "section",
-    "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
+    "text": "The biological models functionality is provided by DiffEqBiological.jl and helps the user to build discrete stochastic and differential equation based systems biological models. These tools allow one to define the models at a high level by specifying reactions and rate constants, and the creation of the actual problems is then handled by the modeling package."
 },
 
 {
-    "location": "models/biological.html#The-Reaction-DSL-1",
+    "location": "models/biological.html#The-Reaction-DSL-Basic-1",
     "page": "Chemical Reaction Models",
-    "title": "The Reaction DSL",
+    "title": "The Reaction DSL - Basic",
     "category": "section",
-    "text": "The @reaction_network DSL allows you to define reaction networks in a more scientific format. Its input is a set of chemical reactions and from them it generates a reaction network object which can be used as input to ODEProblem, SDEProblem and JumpProblem constructors.The basic syntax is:rn = @reaction_network rType begin\n  2.0, X + Y --> XY               \n  1.0, XY --> Z            \nendwhere each line corresponds to a chemical reaction. The input rType designates the type of this instance (all instances will inherit from the abstract type AbstractReactionNetwork).The DSL can handle several types of arrows, in both backwards and forward direction. If a bi-directional arrow is used two reaction rates must be designated. These two reaction networks are identical:rn1 = @reaction_network rType begin\n  2.0, X + Y → XY               \n  1.0, XY > Z       \n  1.0, X + Y ← XY               \n  0.5, XY < Z           \nend\nrn1 = @reaction_network rType begin\n  (2.0,1.0), X + Y ↔ XY               \n  (1.0, 0.5), XY ⟷ Z       \nendThe empty set can be used for production or degradation and is declared using either 0 or ∅. Integers denote the number of each reactant partaking in the reaction.rn1 = @reaction_network rType begin\n  2.0, 2X --> 0        \n  2.0, ∅ --> X  \nendMultiple reactions can be declared in a single line:rn = @reaction_network rType begin\n  2.0, (X,Y) --> 0                   #Identical to reactions [2.0, X --> 0] and [2.0, Y --> 0]\n  (2.0, 1.0), (X,Y) --> 0            #Identical to reactions [2.0, X --> 0] and [1.0, X --> 0]\n  2.0, (X1,Y1) --> (X2,Y2)           #Identical to reactions [2.0, X1 --> X2] and [2.0, Y1 --> Y2]\n  (2.0,1.0), X + Y ↔ XY              #Identical to reactions [2.0, X + Y --> XY] and [1.0, XY --> X + Y].\n  ((2.0,1.0),(1.0,2.0)), (X,Y) ↔ 0   #Identical to reactions [(2.0,1.0), X ↔ 0] and [(1.0,2.0), Y ↔ 0].\nendParameters can be added to the network by declaring them after the reaction network. Parameters can only exist in the reaction rate and not as a part of the reaction.rn = @reaction_network rType begin\n    (kB, kD), X + Y ↔ XY\nend kB kD\np = [2.0, 1.0]The parameter set p must be passed to the problem constructor. The parameter values can be changed after the reaction network is defined.The reaction rate do not need to be constant, but maybe depend on the concentration of the reactants.rn = @reaction_network rType begin\n    (1.0,2XY), X + Y ↔ XY\nendThe hill function hill(x,v,K,n) = v*(x^n)/(x^n + K^n) can be used, as well as the Michaelis Menten function (the hill function with n = 1).rn = @reaction_network rType begin\n    (1.0,hill(XY,1.5,2.0,2)), X + Y ↔ XY\nendBy using the @reaction_func macro it is possible to define your own functions, which may then be used when creating new reaction networks.@reaction_func hill2(x, v, k) = v*x^2/(k^2+x^2)    \nrn = @reaction_network rType begin\n  (1.0,hill2(XY,1.5,2.0)), X + Y ↔ XY\nendReaction rates are automatically adjusted according mass kinetics, including taking special account of higher order terms like 2X -->. This can be disabled using any non-filled arrow (⇐, ⟽, ⇒, ⟾, ⇔, ⟺), in which case the reaction rate will be exactly as input. E.g the two reactions inrn = @reaction_network rType begin\n    2.0, X + Y --> XY\n    2.0*X*Y, X + Y ⟾ XY\nendwill both have reaction rate equal to 2[X][Y].Once a reaction network has been created it can be passed as input to either one of the ODEProblem, SDEProblem or JumpProblem constructors.  probODE = ODEProblem(rn, args...; kwargs...)      \n  probSDE = SDEProblem(rn, args...; kwargs...)\n  probJump = JumpProblem(prob,aggregator::Direct,rn)the output problems may then be used as normal input to the solvers of the DifferentialEquations package.The noise used by the SDEProblem will correspond to the Chemical Langevin Equations. However it is possible to scale the amount of noise be declaring a noise parameter. This will be done after declaring the type but before the network.rn = @reaction_network BiDir begin\n    2.0, X + Y ↔ XY\nend\np = [0.5]The noise term is then added as an additional parameter to the network (by default the last parameter in the parameter array, unless also declared after the reaction network among the other parameters). By reducing (or increasing) the noise term the amount stochastic fluctuations in the system can be reduced (or increased).It is possible to access expressions corresponding to the functions determining the deterministic and stochastic development of the network using.  f_expr = rn.f_func\n  g_expr = rn.g_funcThis can e.g. be used to generate LaTeX code corresponding to the system."
+    "text": "This section covers some of the basic syntax for building chemical reaction network models."
+},
+
+{
+    "location": "models/biological.html#Basic-syntax-1",
+    "page": "Chemical Reaction Models",
+    "title": "Basic syntax",
+    "category": "section",
+    "text": "The @reaction_network macro allows you to define reaction networks in a more scientific format. Its input is a set of chemical reactions and from them it generates a reaction network object which can be used as input to ODEProblem, SDEProblem and JumpProblem constructors.The basic syntax is:rn = @reaction_network begin\n  2.0, X + Y --> XY               \n  1.0, XY --> Z1 + Z2            \nendwhere each line corresponds to a chemical reaction. Each reaction consists of a reaction rate (the expression on the left hand side of  ,), a set of substrates (the expression in-between , and -->), and a set of products (the expression on the right hand side of -->). The substrates and the products may contain one or more reactants, separated by +.  The naming convention for these are the same as for normal variables in Julia.The chemical reaction model is generated by the @reaction_network macro and stored in the rn variable (a normal variable, do not need to be called rn). The macro generates a differential equation model according to the law of mass action, in the above example the ODEs become: $ \\frac{d[X]}{dt} = -2.0[X]\\cdot [Y]\\\n\\frac{d[Y]}{dt} = -2.0[X]\\cdot [Y]\\\n\\frac{d[XY]}{dt} = 2.0[X]\\cdot [Y] - 1.0[XY]\\\n\\frac{d[Z1]}{dt}= 1.0[XY]\\\n\\frac{d[Z2]}{dt} = 1.0[XY]\\\n$"
+},
+
+{
+    "location": "models/biological.html#Arrow-variants-1",
+    "page": "Chemical Reaction Models",
+    "title": "Arrow variants",
+    "category": "section",
+    "text": "Several types of arrows are accepted by the DSL and works instead of -->. All of these works:  >, → ↣, ↦, ⇾, ⟶, ⟼, ⥟, ⥟, ⇀, ⇁. Backwards arrows can also be used to write the reaction in the opposite direction. Hence all of these three reactions are equivalent:rn = @reaction_network begin\n  1.0, X + Y --> XY               \n  1.0, X + Y → XY      \n  1.0, XY ← X + Y      \nend(note that due to technical reasons <-- cannot be used)"
+},
+
+{
+    "location": "models/biological.html#Using-bi-directional-arrows-1",
+    "page": "Chemical Reaction Models",
+    "title": "Using bi-directional arrows",
+    "category": "section",
+    "text": "Bi-directional arrows can be used to designate a reaction that goes two ways. These two models are equivalent:rn = @reaction_network begin\n  2.0, X + Y → XY             \n  2.0, X + Y ← XY          \nend\nrn = @reaction_network begin\n  2.0, X + Y ↔ XY               \nendIf the reaction rate in the backwards and forwards directions are different they can be designated in the following way:rn = @reaction_network begin\n  (2.0,1.0) X + Y ↔ XY               \nendwhich is identical torn = @reaction_network begin\n  2.0, X + Y → XY             \n  1.0, X + Y ← XY          \nend"
+},
+
+{
+    "location": "models/biological.html#Combining-several-reactions-in-one-line-1",
+    "page": "Chemical Reaction Models",
+    "title": "Combining several reactions in one line",
+    "category": "section",
+    "text": "Several similar reactions can be combined in one line by providing a tuple of reaction rates and/or substrates and/or products. If several tuples are provided they much all be of identical length. These pairs of reaction networks are all identical:rn1 = @reaction_network begin\n  1.0, S → (P1,P2)               \nend\nrn2 = @reaction_network begin\n  1.0, S → P1     \n  1.0, S → P2 \nendrn1 = @reaction_network begin\n  (1.0,2.0), (S1,S2) → P             \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P     \n  2.0, S2 → P\nendrn1 = @reaction_network begin\n  (1.0,2.0,3.0), (S1,S2,S3) → (P1,P2,P3)        \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P1\n  2.0, S2 → P2   \n  3.0, S3 → P3  \nendThis can also be combined with bi-directional arrows in which case separate tuples can be provided for the backward and forward reaction rates separately. These reaction networks are identicalrn1 = @reaction_network begin\n (1.0,(1.0,2.0)), S ↔ (P1,P2)  \nend\nrn2 = @reaction_network begin\n  1.0, S → P1\n  1.0, S → P2\n  1.0, P1 → S   \n  2.0, P2 → S \nend"
+},
+
+{
+    "location": "models/biological.html#Production-and-Destruction-and-Stoichiometry-1",
+    "page": "Chemical Reaction Models",
+    "title": "Production and Destruction and Stoichiometry",
+    "category": "section",
+    "text": "Sometimes reactants are produced/destroyed from/to nothing. This can be designated using either 0 or ∅:rn = @reaction_network begin\n  2.0, 0 → X\n  1.0, X → ∅\nendSometimes several molecules of the same reactant is involved in a reaction, the stoichiometry of a reactant in a reaction can be set using a number. Here two species of X forms the dimer X2:rn = @reaction_network begin\n  1.0, 2X → X2\nendthis corresponds to the differential equation: d[X]/dt = -1.0*[X]^2/2! d[X2]/dt = 1.0*[X]^2/2! Other numbers than 2 can be used and parenthesises can be used to use the same stoichiometry for several reactants:rn = @reaction_network begin\n  1.0, X + 2(Y + Z) → XY2Z2\nend"
+},
+
+{
+    "location": "models/biological.html#Variable-reaction-rates-1",
+    "page": "Chemical Reaction Models",
+    "title": "Variable reaction rates",
+    "category": "section",
+    "text": "Reaction rates do not need to be constant, but can also depend on the current concentration of the various reactants (when e.g. one reactant activate the production of another one). E.g. this is a valid notation:rn = @reaction_network begin\n  X, Y → ∅\nendand will have Y degraded at rate  d[Y]/dt = -[X]*[Y] Note that this is actually equivalent to the reactionrn = @reaction_network begin\n  1.0, X + Y → X\nendMost expressions and functions are valid reaction rates, e.g:rn = @reaction_network begin\n  2.0*X^2, 0 → X + Y\n  gamma(Y)/5, X → ∅\n  pi*X/Y, Y → ∅\nendplease note that user defined functions cannot be used directly (see later section \"User defined functions in reaction rates\")."
+},
+
+{
+    "location": "models/biological.html#Defining-parameters-1",
+    "page": "Chemical Reaction Models",
+    "title": "Defining parameters",
+    "category": "section",
+    "text": "Just as when defining normal differential equations using DifferentialEquations parameter values does not need to be set when the model is created. Components can be designated as parameters by declaring them at the end:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p dParameters can only exist in the reaction rates (where they can be mixed with reactants). All variables not declared at the end will be considered a reactant."
+},
+
+{
+    "location": "models/biological.html#Pre-defined-functions-1",
+    "page": "Chemical Reaction Models",
+    "title": "Pre-defined functions",
+    "category": "section",
+    "text": "The hill function and the michaelis-menten function, both which are common in biochemical reaction networks, are pre-defined and can be used as expected. These pairs of reactions are all equivalent:rn1 = @reaction_network begin\n  hill(X,v,K,n), ∅ → X\n  v*X^n/(X^n+K^n), ∅ → X\nend v K n\nrn2 = @reaction_network begin\n  mm(X,v,K), ∅ → X\n  v*X/(X+K), ∅ → X\nend v K"
+},
+
+{
+    "location": "models/biological.html#Model-Simulation-1",
+    "page": "Chemical Reaction Models",
+    "title": "Model Simulation",
+    "category": "section",
+    "text": "Once created, a reaction network can be used as input to various problem types and the solved by DifferentialEquations.jl."
+},
+
+{
+    "location": "models/biological.html#Deterministic-simulations-using-ODEs-1",
+    "page": "Chemical Reaction Models",
+    "title": "Deterministic simulations using ODEs",
+    "category": "section",
+    "text": "A reaction network can be used as input to a ODEProblem instead of a function, using probODE = ODEProblem(rn, args...; kwargs...) E.g. a model can be created and simulated using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = ODEproblem(rn,u0,tspan,p)\nsol = solve(prob)(if no parameters are given p does not need to be provided)"
+},
+
+{
+    "location": "models/biological.html#Stochastic-simulations-using-SDEs-1",
+    "page": "Chemical Reaction Models",
+    "title": "Stochastic simulations using SDEs",
+    "category": "section",
+    "text": "In a similar way a SDE can be created using probSDE = SDEProblem(rn, args...; kwargs...). In this case the chemical Langevin equations (as derived in Gillespie 2000) will be used to generate stochastic differential equations."
+},
+
+{
+    "location": "models/biological.html#Stochastic-simulations-using-discrete-stochastic-simulation-algorithm-1",
+    "page": "Chemical Reaction Models",
+    "title": "Stochastic simulations using discrete stochastic simulation algorithm",
+    "category": "section",
+    "text": "Instead of solving SDEs one can make stochastic simulations of the model using real copy numbers and a discrete stochastic simulation algorithm. This can be done using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [10]\ntspan = (0.,1.)\ndiscrete_prob = DiscreteProblem(u0,tspan,p)\njump_prob = JumpProblem(discrete_prob,Direct(),rn)\nsol = solve(jump_prob,FunctionMap())"
+},
+
+{
+    "location": "models/biological.html#The-Reaction-DSL-Advanced-1",
+    "page": "Chemical Reaction Models",
+    "title": "The Reaction DSL - Advanced",
+    "category": "section",
+    "text": "This section covers some of the more advanced syntax for building chemical reaction network models (still not very complicated!)."
+},
+
+{
+    "location": "models/biological.html#User-defined-functions-in-reaction-rates-1",
+    "page": "Chemical Reaction Models",
+    "title": "User defined functions in reaction rates",
+    "category": "section",
+    "text": "The reaction network DSL cannot \"see\" user defined functions. E.g. this is not correct syntax:myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nendHowever, it is possible to define functions in such a way that the DSL can see them using the @reaction_func macro:@reaction_func myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nend"
+},
+
+{
+    "location": "models/biological.html#Defining-a-custom-reaction-network-type-1",
+    "page": "Chemical Reaction Models",
+    "title": "Defining a custom reaction network type",
+    "category": "section",
+    "text": "While the default type of a reaction network is reaction_network (which inherits from AbstractReactionNetwork) it is possible to define a custom type (which also will inherit from AbstractReactionNetwork) by adding the type name as a first argument to the @reaction_network macro:rn = @reaction_network my_custom_type begin\n  1.0, ∅ → X\nend"
+},
+
+{
+    "location": "models/biological.html#Scaling-noise-in-the-chemical-Langevin-equations-1",
+    "page": "Chemical Reaction Models",
+    "title": "Scaling noise in the chemical Langevin equations",
+    "category": "section",
+    "text": "When making stochastic simulations using SDEs it is possible to scale the amount of noise in the simulations by declaring a noise scaling parameter. This parameter is declared as a second argument to the @reaction_network` macro (when scaling the noise one have to declare a custom type).rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nendThe noise scaling parameter is automatically added as a last argument to the parameter array (even if not declared at the end). E.g. this is correct syntax:rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nend\np = [0.1,]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = SDEproblem(rn,u0,tspan,p)\nsol = solve(prob)Here the amount of noise in the stochastic simulation will be reduced by a factor 10."
+},
+
+{
+    "location": "models/biological.html#Ignoring-mass-kinetics-1",
+    "page": "Chemical Reaction Models",
+    "title": "Ignoring mass kinetics",
+    "category": "section",
+    "text": "While one in almost all cases want the reaction rate to take the law of mass action into account, so the reactionrn = @reaction_network my_custom_type ns begin\n  k, X → ∅\nend koccur at the rate d[X]/dt = -k*[X], it is possible to ignore this by using any of the following non-filled arrows when declaring the reaction: ⇐, ⟽, ⇒, ⟾, ⇔, ⟺. This means that the reaction rn = @reaction_network my_custom_type ns begin\n  k, X ⇒ ∅\nend kwill occur at rate d[X]/dt = -k (which might become a problem since [X] will be degraded at a constant rate even when very small or equal to 0."
+},
+
+{
+    "location": "models/biological.html#The-Reaction-Network-Object-1",
+    "page": "Chemical Reaction Models",
+    "title": "The Reaction Network Object",
+    "category": "section",
+    "text": "The @reaction_network macro generate a reaction_network object which have several fields which can be accessed.rn.syms is a vector containing symbols corresponding to all the reactants of the network.\nrn.params is a vector containing symbols corresponding to all the parameters of the network.\nrn.f_func is a vector containing expression corresponding to the equations in the ODE corresponding to the model.\nrn.g_func is a vector containing expressions corresponding the noise terms used when creating the SDEs (n*m element where there are n reactants and m reactions. The first m elements contains the noise term for the first reactant and each reaction correspondingly, next for the second reactant and so on).\nrn.symjac is the symbolically calculated Jacobian of the ODE corresponding to the model."
+},
+
+{
+    "location": "models/biological.html#Examples-1",
+    "page": "Chemical Reaction Models",
+    "title": "Examples",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -4573,7 +4725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Birth-Death Process",
     "category": "section",
-    "text": "rs = @reaction_network rType begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {
@@ -4581,7 +4733,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Michaelis-Menten Enzyme Kinetics",
     "category": "section",
-    "text": "rs = @reaction_network rType begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
 },
 
 {
