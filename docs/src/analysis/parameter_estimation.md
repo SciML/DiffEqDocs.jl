@@ -63,6 +63,38 @@ and the values at the steps every `verbose_steps` steps. `mpg_autodiff` uses
 autodifferentiation to define the derivative for the MathProgBase solver.
 The extra keyword arguments are passed to the differential equation solver.
 
+### multiple_shooting_objective
+
+Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:
+    
+  1. Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.
+  2. This objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn't match the begining of the next one.
+  3. Merge the solutions from the shorter intervals and then calculate the loss.
+
+For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
+
+```julia
+ms_f = function (du,u,p,t)
+  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
+  du[2] = -3.0 * u[2] + u[1]*u[2]
+end
+ms_u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+ms_p = [1.5,1.0]
+ms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)
+t = collect(range(0, stop=10, length=200))
+data = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))
+bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]
+
+
+ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
+```
+
+This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.
+
 #### The Loss Function
 
 ```julia
@@ -126,6 +158,15 @@ function my_loss_function(sol)
    tot_loss
 end
 ```
+#### First differencing
+
+```julia 
+L2Loss(t,data,differ_weight=0.3,data_weight=0.7)
+```
+
+First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. You can now assign a weight (vector or scalar) to use the first differencing technique in the `L2loss`.
+
+Adding first differencing is helpful in cases where the `L2Loss` alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates.
 
 #### The Regularization Function
 
@@ -208,6 +249,14 @@ lm_fit(prob::DEProblem,tspan,t,data,p0;prob_generator = problem_new_parameters,k
 The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
+
+### MAP estimate 
+
+You can also add a prior option to `build_loss_objective` and `multiple_shooting_objective` that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument `priors`, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution. 
+
+```julia
+ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=priors,discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
+```
 
 ## Bayesian Methods
 
