@@ -73,28 +73,6 @@ Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more
 
 For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
 
-```julia
-ms_f = function (du,u,p,t)
-  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
-  du[2] = -3.0 * u[2] + u[1]*u[2]
-end
-ms_u0 = [1.0;1.0]
-tspan = (0.0,10.0)
-ms_p = [1.5,1.0]
-ms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)
-t = collect(range(0, stop=10, length=200))
-data = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))
-bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
-                                (0, 10),(0, 10),(0, 10),(0, 10),
-                                (0, 10),(0, 10),(0, 10),(0, 10),
-                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]
-
-
-ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
-```
-
-This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.
-
 #### The Loss Function
 
 ```julia
@@ -519,6 +497,56 @@ Results of Optimization Algorithm
 
 and thus this algorithm was able to correctly identify all four parameters.
 
+We can also use Multiple Shooting method by creating a `multiple_shooting_objective`
+
+```julia
+ms_f = @ode_def_nohes LotkaVolterraTest begin
+    dx = a*x - b*x*y
+    dy = -3*y + x*y
+end a b 
+ms_u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+ms_p = [1.5,1.0]
+ms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)
+t = collect(linspace(0,10,200))
+data = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))
+bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]
+
+
+ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
+```
+
+This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.
+
+```julia
+result = bboptimize(ms_obj;SearchRange = bound, MaxSteps = 21e3)
+result.archive_output.best_candidate[end-1:end]
+```
+Giving us the results as
+```julia
+Starting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},BlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound{BlackBoxOptim.RangePerDimSearchSpace}}
+
+Optimization stopped after 21001 steps and 136.60030698776245 seconds
+Termination reason: Max number of steps (21000) reached
+Steps per second = 153.7405036862868
+Function evals per second = 154.43596332393247
+Improvements/step = 0.17552380952380953
+Total function evaluations = 21096
+
+
+Best candidate found: [0.997396, 1.04664, 3.77834, 0.275823, 2.14966, 4.33106, 1.43777, 0.468442, 6.22221, 0.673358, 0.970036, 2.05182, 2.4216, 0.274394, 5.64131, 3.38132, 1.52826, 1.01721]
+
+Fitness: 0.126884213
+
+Out[4]:2-element Array{Float64,1}:
+        1.52826
+        1.01721
+```
+Here we look at the last two indexes of `result` to get our parameter values.
+
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
 
 The `build_loss_objective` function builds an objective function which is able
@@ -695,7 +723,7 @@ plot(range,[obj([i,1.0]) for i in range],lw=3,
      xlabel = "Parameter 1", ylabel = "Objective Function Value")
 ```
 
-![1 Parmaeter Likelihood](../assets/1paramlike.png)
+![1 Parameter Likelihood](../assets/1paramlike.png)
 
 we can see that there's still a clear minimum at the true value. Thus we will
 use the global optimizers from BlackBoxOptim.jl to find the values. We set our
