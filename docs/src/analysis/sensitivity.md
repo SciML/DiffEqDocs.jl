@@ -388,38 +388,64 @@ res3 = Calculus.gradient(G,[1.5,1.0,3.0])
 
 ## Global Sensitivity Analysis
 
-Global Sensitivity Analysis methods are used to quantify the uncertainity in output of a model w.r.t.
-the parameters, their individual contributions or the contribution of their interactions. The type of GSA method
-to use depends on the interest of the user, below we describe the methods available in the suite at the moment (some more are already in development)
-and explain what is the output of each of the methods and what it represents. 
+Global Sensitivity Analysis methods are used to quantify the uncertainity in 
+output of a model w.r.t. the parameters, their individual contributions or the 
+contribution of their interactions. The type of GSA method to use depends on 
+the interest of the user, below we describe the methods available in the suite
+at the moment (some more are already in development) and explain what is 
+the output of each of the methods and what it represents. 
 
 ### Morris Method
 
-The Morris method also known as Morris’s OAT method where OAT stands for One At a Time can be described in the following steps:
+The Morris method also known as Morris’s OAT method where OAT stands for 
+One At a Time can be described in the following steps:
 
-We calculate local sensitivity measures known as “elementary effects”, which are calculated by measuring the perturbation in the output of the model on changing one parameter. 
+We calculate local sensitivity measures known as “elementary effects”, 
+which are calculated by measuring the perturbation in the output of the 
+model on changing one parameter. 
 
 $$ EE_i = \frac{f(x_1,x_2,..x_i+ \Delta,..x_k) - y}{\Delta} $$
 
-These are evaluated at various points in the input chosen such that a wide “spread” of the parameter space is explored and considered in the analysis, to provide an approximate global importance measure.
-The mean and variance of these elementary effects is computed.
-A high value of the mean implies that a parameter is important, a high variance implies that its effects are non-linear or the result of interactions with other inputs. This method fails to provide a proper quantification of the separate contribution from the interaction and the contribution of the parameters individually. 
+These are evaluated at various points in the input chosen such that a wide 
+“spread” of the parameter space is explored and considered in the analysis, 
+to provide an approximate global importance measure. The mean and variance of 
+these elementary effects is computed. A high value of the mean implies that 
+a parameter is important, a high variance implies that its effects are 
+non-linear or the result of interactions with other inputs. This method 
+does not evaluate separately the contribution from the 
+interaction and the contribution of the parameters individually and gives the 
+effects for each parameter which takes into cpnsideration all the interactions and its
+individual contribution. 
 
 `morris_effects = morris_sensitivity(f,param_range,param_steps;relative_scale=false,kwargs...)`
 
 `morris_effects = morris_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_steps;kwargs...)`
 
-Here, `f` is just the model (as a julia function or a `DEProblem`) you want to run the analysis on, `param_range` requires an array of your range for the parameters, `param_steps` decides the value of \Delta in the equation above and `relative_scale`, the above equation takes the assumption that the parameters lie in the range `[0,1]` but as this is not always the case scaling is used to get more informative, scaled effects.
+Here, `f` is just the model (as a julia function or a `DEProblem`) you want to 
+run the analysis on, `param_range` requires an array of your range for the 
+parameters as an array of the lower bound and the upper bound, `param_steps` decides the value of \Delta in the equation 
+above and `relative_scale`, the above equation takes the assumption that 
+the parameters lie in the range `[0,1]` but as this is not always the case 
+scaling is used to get more informative, scaled effects.
 
 ### Sobol Method
 
-Sobol is a variance-based method and it decomposes the variance of the output of the model or system into fractions which can be attributed to inputs or sets of inputs. This helps to get not just the individual parameter's sensitivities but also gives a way to quantify the affect and sensitivity from the interaction between the parameters. 
+Sobol is a variance-based method and it decomposes the variance of the output of 
+the model or system into fractions which can be attributed to inputs or sets 
+of inputs. This helps to get not just the individual parameter's sensitivities 
+but also gives a way to quantify the affect and sensitivity from 
+the interaction between the parameters. 
 
 $$ Y = f_0+ \sum_{i=1}^d f_i(X_i)+ \sum_{i < j}^d f_{ij}(X_i,X_j) ... + f_{1,2...d}(X_1,X_2,..X_d) $$
                                    
 $$ Var(Y) = \sum_{i=1}^d V_i + \sum_{i < j}^d V_{ij} + ... + V_{1,2...,d} $$
 
-The Sobol Indices are "order"ed, the first order indices given by $$S_i = \frac{V_i}{Var(Y)}$$ the contribution to the output variance of the main effect of $$ X_i $$, therefore it measures the effect of varying $$ X_i $$ alone, but averaged over variations in other input parameters. It is standardised by the total variance to provide a fractional contribution. Higher-order interaction indices $$ S_{i,j}, S_{i,j,k} $$ and so on can be formed by dividing other terms in the variance decomposition by $$ Var(Y) $$.
+The Sobol Indices are "order"ed, the first order indices given by $$S_i = \frac{V_i}{Var(Y)}$$ 
+the contribution to the output variance of the main effect of $$ X_i $$, therefore it 
+measures the effect of varying $$ X_i $$ alone, but averaged over variations 
+in other input parameters. It is standardised by the total variance to provide a fractional contribution. 
+Higher-order interaction indices $$ S_{i,j}, S_{i,j,k} $$ and so on can be formed 
+by dividing other terms in the variance decomposition by $$ Var(Y) $$.
 
 `sobol_second_order = sobol_sensitivity(f,param_range,N,order=2)`
 
@@ -429,7 +455,9 @@ Here `f` and `param_range` are the same as Morris's, providing a uniform interfa
 
 ### Regression Method
 
-If a sample of inputs and outputs $$ (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} $$􏰁 is available, it is possible to fit a linear model explaining the behaviour of Y given the values of X, provided that the sample size n is sufficiently large (at least n > d).
+If a sample of inputs and outputs $$ (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} $$􏰁 
+is available, it is possible to fit a linear model explaining the behaviour of Y given the 
+values of X, provided that the sample size n is sufficiently large (at least n > d).
 
 The measures provided for this analysis by us in DiffEqSensitivity.jl are
 
@@ -448,12 +476,82 @@ $$ SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}} $$
 
 $$ PCC_j = \rho(X_j - \hat{X_{-j}},Y_j - \hat{Y_{-j}}) $$
 
-  where $$ \hat{X_{-j}} $$􏰈 is the prediction of the linear model, expressing $$ X_{j} $$ with respect
-  to the other inputs and $$ \hat{Y􏰈_{-j}} $$ is the prediction of the linear model where $$ X_j $$
-  is absent. PCC measures the sensitivity of $$ Y $$ to $$ X_j $$ when the effects of the other inputs have been canceled.
+  where $$ \hat{X_{-j}} $$􏰈 is the prediction of the linear model, expressing $$ X_{j} $$ 
+  with respect to the other inputs and $$ \hat{Y􏰈_{-j}} $$ is the prediction of the 
+  linear model where $$ X_j $$ is absent. PCC measures the sensitivity of $$ Y $$ to 
+  $$ X_j $$ when the effects of the other inputs have been canceled.
 
 `regre_sensitivity = regression_sensitivity(f,param_range,param_fixed,n;coeffs=:rank)`
 
 `regre_sensitivity = regression_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_fixed,n;coeffs=:rank)`
 
-Again, `f` and `param_range` are the same as above. An array of the true parameter values that lie within the `param_range` bounds are passed through the `param_fixed` argument. `n` determines the number of simulations of the model run to generate the data points of the solution and parameter values and the `coeffs` kwarg lets you decide the coefficients you want.
+Again, `f` and `param_range` are the same as above. An array of the true parameter values 
+that lie within the `param_range` bounds are passed through the `param_fixed` argument. 
+`n` determines the number of simulations of the model run to generate the data points 
+of the solution and parameter values and the `coeffs` kwarg lets you decide the
+coefficients you want.
+
+### GSA example 
+
+Let's create the ODE problem to run our GSA on.
+
+```julia
+f = @ode_def_nohes LotkaVolterraTest begin
+    dx = a*x - b*x*y
+    dy = -3*y + x*y
+end a b 
+u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+p = [1.5,1.0]
+prob = ODEProblem(f,u0,tspan,p)
+t = collect(range(0, stop=10, length=200))
+```
+For Morris Method
+
+```julia
+m = DiffEqSensitivity.morris_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],[10,10],len_trajectory=1500,total_num_trajectory=1000,num_trajectory=150)
+
+
+Out[8]:MorrisSensitivity(Array{Float64,2}[[0.0 0.0513678 … 7.91336 7.93783; 0.0 0.00115769 … 3.66156 3.67284], [0.0 0.0488899 … 2.50728 2.359; 0.0 0.00112006 … 2.23431 2.44946]], Array{Float64,2}[[0.0 1.94672e-5 … 26.4223 24.8513; 0.0 4.81347e-9 … 37.4061 30.3068], [0.0 1.77615e-5 … 17.9555 14.9231; 0.0 4.47931e-9 … 48.074 51.9312]], Array{Array{Float64,2},1}[[[0.0 0.0502074 … 7.98867 9.97645; 0.0 0.00113922 … 2.91223 2.50633], [0.0 0.0580075 … 11.2991 7.40316; 0.0 0.0012612 … 5.7219 7.9419], [0.0 0.0552782 … 11.1432 12.8587; 0.0 0.00121893 … 5.19252 4.16375], [0.0 0.0540595 … 11.0023 11.2203; 0.0 0.0012001 … 1.14073 1.73876], [0.0 0.0541561 … 1.73364 2.29789; 0.0 0.00120179 … 2.46675 2.15942], [0.0 0.0541561 … 1.73364 2.29789; 0.0 0.00120179 … 2.46675 2.15942], [0.0 0.0554766 … 0.664665 1.09787; 0.0 0.00122238 … 3.62296 3.2128], [0.0 0.0554766 … 0.664665 1.09787; 0.0 0.00122238 … 3.62296 3.2128], [0.0 0.0554766 … 0.664665 1.09787; 0.0 0.00122238 … 3.62296 3.2128], [0.0 0.0541561 … 1.73364 2.29789; 0.0 0.00120179 … 2.46675 2.15942]  …  [0.0 0.0595316 … 0.322627 0.135043; 0.0 0.00128482 … 9.60211 8.46034], [0.0 0.0581124 … 1.99996 2.50206; 0.0 0.001263 … 2.12335 1.79987], [0.0 0.0608753 … 0.532116 0.708165; 0.0 0.00130521 … 3.34051 2.87788], [0.0 0.0608753 … 0.532116 0.708165; 0.0 0.00130521 … 3.34051 2.87788], [0.0 0.0609864 … 20.0782 13.8505; 0.0 0.00130709 … 20.0936 37.0211], [0.0 0.0609864 … 20.0782 13.8505; 0.0 0.00130709 … 20.0936 37.0211], [0.0 0.0623634 … 30.6292 28.7567; 0.0 0.00132789 … 65.3938 39.8315], [0.0 0.0623634 … 30.6292 28.7567; 0.0 0.00132789 … 65.3938 39.8315], [0.0 0.0608753 … 0.532116 0.708165; 0.0 0.00130521 … 3.34051 2.87788], [0.0 0.0608753 … 0.532116 0.708165; 0.0 0.00130521 … 3.34051 2.87788]], [[0.0 0.0488908 … 0.559981 0.41625; 0.0 0.00111992 … 0.309004 0.245778], [0.0 0.0478053 … 1.13904 0.800567; 0.0 0.00110272 … 0.371875 0.471092], [0.0 0.0489784 … 0.777046 0.447304; 0.0 0.0011215 … 0.409923 0.519859], [0.0 0.0501811 … 0.509473 0.491546; 0.0 0.00114065 … 0.26971 0.357191], [0.0 0.0514142 … 0.0317235 0.388981; 0.0 0.00116017 … 0.0443424 0.0666987], [0.0 0.0526785 … 1.34268 0.635881; 0.0 0.00118008 … 0.381449 0.521107], [0.0 0.0539748 … 4.35505 4.39203; 0.0 0.0012004 … 0.409809 0.657726], [0.0 0.0552028 … 11.2465 11.0146; 0.0 0.00121937 … 2.61037 0.503488], [0.0 0.0538765 … 3.00441 1.96804; 0.0 0.00119868 … 2.28968 2.68301], [0.0 0.0515072 … 0.539924 0.601361; 0.0 0.00116181 … 0.191549 0.165097]  …  [0.0 0.0566669 … 2.35688 2.84764; 0.0 0.00124227 … 4.30777 3.66766], [0.0 0.0554054 … 0.292358 0.503547; 0.0 0.00122288 … 10.9555 9.58808], [0.0 0.0566669 … 2.35688 2.84764; 0.0 0.00124227 … 4.30777 3.66766], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0580645 … 29.528 26.3741; 0.0 0.00126386 … 13.7705 29.949], [0.0 0.0566669 … 2.35688 2.84764; 0.0 0.00124227 … 4.30777 3.66766]]])
+```
+Let's get the means and variances from the `MorrisSensitivity` struct.
+
+```julia
+m.means
+
+Out[9]: 2-element Array{Array{Float64,2},1}:
+ [0.0 0.0513678 … 7.91336 7.93783; 0.0 0.00115769 … 3.66156 3.67284]
+ [0.0 0.0488899 … 2.50728 2.359; 0.0 0.00112006 … 2.23431 2.44946]  
+
+m.variances
+
+Out[10]: 2-element Array{Array{Float64,2},1}:
+ [0.0 1.94672e-5 … 26.4223 24.8513; 0.0 4.81347e-9 … 37.4061 30.3068]
+ [0.0 1.77615e-5 … 17.9555 14.9231; 0.0 4.47931e-9 … 48.074 51.9312] 
+```
+This gives the means of the effects and it's variances over the entire timespan and thus we get 200-length 
+arrays for each paramter and dependent variable pair.
+
+For Sobol Method
+
+```julia
+
+s0 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,0)
+Out[8]: 2-element Array{Array{Float64,2},1}:
+ [NaN 0.507831 … 1.00731 1.00436; NaN 1.92336 … 0.732384 0.730945]  
+ [NaN 0.47214 … 0.676224 0.681525; NaN -1.68656 … 0.879557 0.877603]
+
+s1 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,1)
+Out[9]: 2-element Array{Array{Float64,2},1}:
+ [NaN 0.39537 … 0.341697 0.343645; NaN -2.06101 … 0.10922 0.106976]     
+ [NaN 0.652815 … 0.00910675 0.00815206; NaN 5.24832 … 0.296978 0.296639]
+
+s2 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,2)
+Out[10]: 1-element Array{Array{Float64,2},1}:
+ [NaN -0.0596478 … 0.652303 0.657847; NaN -1.84504 … 0.645139 0.620036]
+```
+We can decide which order of Sobol Indices we are interested in my passing an argument for it, 
+by default it gives the second order indices. Again the result is obtained over the entire `timespan`
+
+
+

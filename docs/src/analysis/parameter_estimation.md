@@ -545,7 +545,7 @@ Out[4]:2-element Array{Float64,1}:
         1.52826
         1.01721
 ```
-Here we look at the last two indexes of `result` to get our parameter values.
+Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and the rest of the values are the initial values of the shorter timespans as described in the reference section.
 
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
 
