@@ -1129,6 +1129,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/problem.html#Functional-and-Condensed-Problem-Inputs-1",
+    "page": "Problem interface",
+    "title": "Functional and Condensed Problem Inputs",
+    "category": "section",
+    "text": "Note that the initial condition can be written as a function of parameters and initial time:u0(p,t0)and be resolved before going to the solver. Additionally, the initial condition can be a distribution from Distributions.jl, in which case a sample initial condition will be taken each time init or solve is called.In addition, tspan supports the following forms. The single value form t is equivalent to (zero(t),t). The functional form is allowed:tspan(p)which outputs a tuple."
+},
+
+{
+    "location": "basics/problem.html#Examples-1",
+    "page": "Problem interface",
+    "title": "Examples",
+    "category": "section",
+    "text": "prob = ODEProblem((u,p,t)->u,(p,t0)->p[1],(p)->(0.0,p[2]),(2.0,1.0))\nusing Distributions\nprob = ODEProblem((u,p,t)->u,(p,t)->Normal(p,1),(0.0,1.0),1.0)"
+},
+
+{
+    "location": "basics/problem.html#Lower-Level-__init-and-__solve-1",
+    "page": "Problem interface",
+    "title": "Lower Level __init and __solve",
+    "category": "section",
+    "text": "At the high level, known problematic problems will emit warnings before entering the solver to better clarify the error to the user. The following cases are checked if the solver is adaptive:Integer times warn\nDual numbers must be in the initial conditions and timespans\nMeasurements.jl values must be in the initial conditions and timespansIf there is an exception to these rules, please file an issue. If one wants to go around the high level solve interface and its warnings, one can call __init or __solve instead."
+},
+
+{
     "location": "basics/problem.html#Modification-of-problem-types-1",
     "page": "Problem interface",
     "title": "Modification of problem types",
@@ -2930,50 +2954,146 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "features/performance_overloads.html#",
-    "page": "Performance Overloads",
-    "title": "Performance Overloads",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "features/performance_overloads.html#Performance-Overloads-1",
-    "page": "Performance Overloads",
-    "title": "Performance Overloads",
+    "location": "features/performance_overloads.html#DiffEqFunctions-(Jacobians,-Gradients,-etc.)-and-Jacobian-Types-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "category": "section",
-    "text": "The DiffEq ecosystem provides an extensive interface for declaring extra functions associated with the differential equation\'s data. In traditional libraries there is usually only one option: the Jacobian. However, we allow for a large array of pre-computed functions to speed up the calculations. This is offered via function overloading (or overloaded types) and allows for these extra features to be offered without cluttering the problem interface."
+    "text": "The DiffEq ecosystem provides an extensive interface for declaring extra functions associated with the differential equation\'s data. In traditional libraries there is usually only one option: the Jacobian. However, we allow for a large array of pre-computed functions to speed up the calculations. This is offered via the DiffEqFunction types which can be passed to the problems."
 },
 
 {
-    "location": "features/performance_overloads.html#Declaring-Explicit-Jacobians-1",
-    "page": "Performance Overloads",
-    "title": "Declaring Explicit Jacobians",
+    "location": "features/performance_overloads.html#Function-Type-Definitions-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Function Type Definitions",
     "category": "section",
-    "text": "The most standard case, declaring a function for a Jacobian is done by overloading the function f(du,u,p,t) with an in-place updating function for the Jacobian: f(Val{:jac},J,u,p,t) where the value type is used for dispatch. For example, take the LotkaVolterra model:function f(du,u,p,t)\n  du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendTo declare the Jacobian we simply add the dispatch:function f(::Type{Val{:jac}},J,u,p,t)\n  J[1,1] = 2.0 - 1.2 * u[2]\n  J[1,2] = -1.2 * u[1]\n  J[2,1] = 1 * u[2]\n  J[2,2] = -3 + u[1]\n  nothing\nendNote that this can also be done by generating a call-overloaded type. Indeed, this is what ParameterizedFunctions.jl does, so see its README."
+    "text": ""
+},
+
+{
+    "location": "features/performance_overloads.html#Function-Choice-Definitions-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Function Choice Definitions",
+    "category": "section",
+    "text": "The full interface available to the solvers is as follows:jac: The Jacobian of the differential equation with respect to the state variable u at a time t with parameters p.\ntgrad: The gradient of the differential equation with respect to t at state u with parameters p.\nparamjac: The Jacobian of the differential equation with respect to p at state u at time t.\nanalytic: Defines an analytical solution using u0 at time t with p which will cause the solvers to return errors. Used for testing.\ninvW: The inverse of M - gamma*J where J is the jac.\ninvW_t: The inverse of M/gamma - J where J is the jac.\nggprime: See the definition in the SDEProblem page."
+},
+
+{
+    "location": "features/performance_overloads.html#ODEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "ODEFunction",
+    "category": "section",
+    "text": "function ODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing, # (u0,p,t)\n                 tgrad=nothing, # (dT,u,p,t) or (u,p,t)\n                 jac=nothing, # (J,u,p,t) or (u,p,t)\n                 jac_prototype=nothing, # Type for the Jacobian\n                 invW=nothing, # (iW,u,p,t) or (u,p,t)\n                 invW_t=nothing, # (iW,u,p,t) or (u,p,t)\n                 paramjac = nothing, # (pJ,u,p,t) or (u,p,t)\n                 syms = nothing) # collection of names for variables"
+},
+
+{
+    "location": "features/performance_overloads.html#DynamicalODEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DynamicalODEFunction",
+    "category": "section",
+    "text": "DynamicalODEFunction{iip,recompile}(f1, # (du,u,v,p,t) or (u,v,p,t)\n                                    f2; # (du,u,v,p,t) or (u,v,p,t)\n                                    mass_matrix=(I,I), # Mass matrix for each partition\n                                    analytic=nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#SplitFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "SplitFunction",
+    "category": "section",
+    "text": "SplitFunction{iip,recompile}(f1, # ODEFunction\n                        f2; # ODEFunction\n                        mass_matrix=I,\n                        _func_cache=nothing, # This is a cache used in f = f1+f2\n                        analytic=nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#SDEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "SDEFunction",
+    "category": "section",
+    "text": "function SDEFunction{iip,recompile}(f,g;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 ggprime = nothing,\n                 syms = nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#SplitSDEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "SplitSDEFunction",
+    "category": "section",
+    "text": "SplitSDEFunction{iip,recompile}(f1, # ODEFunction\n                           f2, # ODEFunction\n                           g;\n                           mass_matrix=I,\n                           _func_cache=nothing,\n                           analytic=nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#RODEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "RODEFunction",
+    "category": "section",
+    "text": "function RODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#DDEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DDEFunction",
+    "category": "section",
+    "text": "function DDEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)Note that the Jacobian of a DAE is defined as gamma*dG/d(du) + dG/du where gamma is given by the solver."
+},
+
+{
+    "location": "features/performance_overloads.html#DAEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DAEFunction",
+    "category": "section",
+    "text": "function DAEFunction{iip,recompile}(f;\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
+},
+
+{
+    "location": "features/performance_overloads.html#Inplace-Specification-and-No-Recompile-Mode-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Inplace Specification and No-Recompile Mode",
+    "category": "section",
+    "text": "Each DiffEqFunction type can be called with an \"is inplace\" (iip) choice.ODEFunction(f)\nODEFunction{iip}(f)which is a boolean for whether the function is in the inplace form (mutating to change the first value). This is automatically determined using the methods table but note that for full type-inferrability of the DEProblem this iip-ness should be specified.Additionally, the functions are fully specialized to reduce the runtimes. If one would instead like to not specialize on the functions to reduce compile time, then one can set recompile to false.ODEFunction{iip,false}(f)This makes the ODE solver compilation independent of the function and so changing the function will not cause recompilation. One can change the default value by changing the const RECOMPILE_BY_DEFAULT = true to false in the DiffEqBase.jl source code."
+},
+
+{
+    "location": "features/performance_overloads.html#Specifying-Jacobian-Types-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Specifying Jacobian Types",
+    "category": "section",
+    "text": "TBD."
+},
+
+{
+    "location": "features/performance_overloads.html#Examples-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Examples",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/performance_overloads.html#Declaring-Explicit-Jacobians-for-ODEs-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "Declaring Explicit Jacobians for ODEs",
+    "category": "section",
+    "text": "The most standard case, declaring a function for a Jacobian is done by overloading the function f(du,u,p,t) with an in-place updating function for the Jacobian: f_jac(J,u,p,t) where the value type is used for dispatch. For example, take the LotkaVolterra model:function f(du,u,p,t)\n  du[1] = 2.0 * u[1] - 1.2 * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendTo declare the Jacobian we simply add the dispatch:function f_jac(J,u,p,t)\n  J[1,1] = 2.0 - 1.2 * u[2]\n  J[1,2] = -1.2 * u[1]\n  J[2,1] = 1 * u[2]\n  J[2,2] = -3 + u[1]\n  nothing\nendThen we can supply the Jacobian with our ODE as:ff = ODEFunction(f;jac=f_jac)and use this in an ODEProblem:prob = ODEProblem(ff,ones(2),(0.0,10.0))"
 },
 
 {
     "location": "features/performance_overloads.html#Declaring-Explicit-Jacobians-for-DAEs-1",
-    "page": "Performance Overloads",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "Declaring Explicit Jacobians for DAEs",
     "category": "section",
     "text": "For fully implicit ODEs (DAEProblems), a slightly different Jacobian function is necessary. For the DAEG(duupt) = resThe Jacobian should be given in the form gamma*dG/d(du) + dG/du where gamma is given by the solver. This means that the signature is:f(::Type{Val{:jac}},J,du,u,p,gamma,t)For example, for the equationfunction testjac(res,du,u,p,t)\n  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]\n  res[2] = du[2] -3 * u[2] - u[1]*u[2]\nendwe would define the Jacobian as:function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)\n  J[1,1] = gamma - 2.0 + 1.2 * u[2]\n  J[1,2] = 1.2 * u[1]\n  J[2,1] = - 1 * u[2]\n  J[2,2] = gamma - 3 - u[1]\n  nothing\nend"
 },
 
 {
-    "location": "features/performance_overloads.html#Other-Available-Functions-1",
-    "page": "Performance Overloads",
-    "title": "Other Available Functions",
-    "category": "section",
-    "text": "The full interface available to the solvers is as follows:f(du,u,p,t) # Call the function\nf(Val{:analytic},u0,p,t) # The analytical solution. Used in testing\nf(Val{:tgrad},grad,u,p,t) # Call the explicit t-gradient function\nf(Val{:paramjac},J,u,p,t) # Call the explicit parameter Jacobian function\nf(Val{:jac},J,u,p,t) # Call the explicit Jacobian function\nf(Val{:invjac},iJ,u,p,t) # Call the explicit Inverse Jacobian function\nf(Val{:invW},iW,u,p,γ,t) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)\nf(Val{:invW_t},iW,u,p,γ,t) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)Overloads which require parameters should subtype ParameterizedFunction. Besides the analytical solution, these are all in-place functions which write into the first variable. See solver documentation specifics to know which optimizations the algorithms can use."
-},
-
-{
     "location": "features/performance_overloads.html#Symbolically-Calculating-the-Functions-1",
-    "page": "Performance Overloads",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "Symbolically Calculating the Functions",
     "category": "section",
-    "text": "ParameterizedFunctions.jl automatically calculates as many of these functions as possible and generates the overloads using SymEngine. Thus, for best performance with the least work, it is suggested one use ParameterizedFunctions.jl."
+    "text": "ParameterizedFunctions.jl automatically calculates as many of these functions as possible and generates the ODEFunction using SymEngine. Thus, for good performance with the least work, it is one can try ParameterizedFunctions.jl.Additionally, an up-and-coming effort in the JuliaDiffEq ecosystem is ModelingToolkit.jl for performing these calculations more generically."
 },
 
 {
