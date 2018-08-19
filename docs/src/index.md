@@ -255,6 +255,8 @@ Depth = 2
 
 ## Acknowledgements
 
+#### Core Contributors
+
 JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many
 individuals. Significant contributions have been made by the following individuals:
 
@@ -262,8 +264,15 @@ individuals. Significant contributions have been made by the following individua
 - Yingbo Ma (@YingboMa)
 - David Widmann (@devmotion)
 - Hendrik Ranocha (@ranocha)
-- Shivin Srivastava (@shivin9)
-- Ayush Pandey (@Ayush-iitkgp)
 - Ethan Levien (@elevien)
 - Tom Short (@tshort)
 - @dextorious
+
+#### Google Summer of Code Alumni
+
+- Yingbo Ma (@YingboMa)
+- Shivin Srivastava (@shivin9)
+- Ayush Pandey (@Ayush-iitkgp)
+- Xingjian Guo (@MSeeker1340)
+- Shubham Maddhashiya (@sipah00)
+- Vaibhav Kumar Dixit (@Vaibhavdixit02)
