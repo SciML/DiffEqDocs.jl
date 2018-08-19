@@ -565,5 +565,16 @@ Out[10]: 1-element Array{Array{Float64,2},1}:
 We can decide which order of Sobol Indices we are interested in my passing an argument for it, 
 by default it gives the second order indices. Again the result is obtained over the entire `timespan`
 
+We plot the first order and total order Sobol Indices for some timepoints for each of the parameters (`a` and `b`).
 
+``julia
+p1 = bar([s0[1][end],s0[2][end-2]],color=[:red,:blue])
+p2 = bar([s1[1][end],s1[2][end-2]],color=[:red,:blue])
+p3 = bar([s0[1][3],s0[2][3]],color=[:red,:blue])
+p4 = bar([s1[1][3],s1[2][3]],color=[:red,:blue])
+plo = plot(p1,p2,p3,p4,layout=(2,2))
+```
+![sobolplot](../assets/sobolbars.png)
+
+The length of the bar represents the sensitivity of the output to that parameter (first bar for `a` and second for `b`).
 
