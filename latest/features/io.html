@@ -52,7 +52,7 @@ u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
-@save &quot;out.jld2&quot; sol</code></pre><p>then we can get the full solution type back, interpolations and all, if we load the dependent functions first:</p><pre><code class="language-julia">using JLD2
+JLD2.@save &quot;out.jld2&quot; sol</code></pre><p>then we can get the full solution type back, interpolations and all, if we load the dependent functions first:</p><pre><code class="language-julia">using JLD2
 using OrdinaryDiffEq
 f(u,p,t) = 1.01*u
 JLD2.@load &quot;out.jld2&quot; sol</code></pre><p>The example with BSON.jl is:</p><pre><code class="language-julia">using OrdinaryDiffEq
