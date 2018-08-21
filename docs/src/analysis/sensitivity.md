@@ -422,8 +422,8 @@ individual contribution.
 `morris_effects = morris_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_steps;kwargs...)`
 
 Here, `f` is just the model (as a julia function or a `DEProblem`) you want to 
-run the analysis on, `param_range` requires an array of your range for the 
-parameters as an array of the lower bound and the upper bound, `param_steps` decides the value of \Delta in the equation 
+run the analysis on, `param_range` requires an array of 2-tuples with the lower bound 
+and the upper bound, `param_steps` decides the value of \Delta in the equation 
 above and `relative_scale`, the above equation takes the assumption that 
 the parameters lie in the range `[0,1]` but as this is not always the case 
 scaling is used to get more informative, scaled effects.
@@ -568,13 +568,13 @@ by default it gives the second order indices. Again the result is obtained over 
 We plot the first order and total order Sobol Indices for some timepoints for each of the parameters (`a` and `b`).
 
 ``julia
-p1 = bar([s0[1][end],s0[2][end-2]],color=[:red,:blue])
-p2 = bar([s1[1][end],s1[2][end-2]],color=[:red,:blue])
-p3 = bar([s0[1][3],s0[2][3]],color=[:red,:blue])
-p4 = bar([s1[1][3],s1[2][3]],color=[:red,:blue])
-plo = plot(p1,p2,p3,p4,layout=(2,2))
+p1 = bar(["a","b"],[s0[1][end-2],s0[2][end-2]],color=[:red,:blue],title="Total Order Indices for 199th time point",legend=false)
+p2 = bar(["a","b"],[s1[1][end-2],s1[2][end-2]],color=[:red,:blue],title="First Order Indices for 199th time point",legend=false)
+p3 = bar(["a","b"],[s0[1][3],s0[2][3]],color=[:red,:blue],title="Total Order Indices for 2nd time point",legend=false)
+p4 = bar(["a","b"],[s1[1][3],s1[2][3]],color=[:red,:blue],title="First Order Indices for 2nd time point",legend=false)
+plo = plot(p1,p2,p3,p4,layout=(4,1),size=(600,500))
 ```
 ![sobolplot](../assets/sobolbars.png)
 
-The length of the bar represents the sensitivity of the output to that parameter (first bar for `a` and second for `b`).
+Here we plot the Sobol indices of first order and the total Sobol indices for the parameters `a` and `b`. The plots are obtained by getting the Sobol Indices at the 199th and the 2nd time point of the first dependent variable `x` from the 200-length sensitivities over the entire time span. The length of the bar represents the quantification of the sensitivity of the output to that parameter and hence for the 199th time point you can say that `x` is more sensitive to `b`, also you can observe how the relative difference between `a` and `b` is larger in the first order than the total order indices, this tells us that most of the contribution of `a` to `x` arises from interactions and it's individual non-interaction contribution is significantly lesser than `b` and vice-versa for `b` as it's first order plot indicates quite high value.
 
