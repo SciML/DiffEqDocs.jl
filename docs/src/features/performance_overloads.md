@@ -1,17 +1,198 @@
-# Performance Overloads
+# DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types
 
 The DiffEq ecosystem provides an extensive interface for declaring extra functions
 associated with the differential equation's data. In traditional libraries there
 is usually only one option: the Jacobian. However, we allow for a large array
-of pre-computed functions to speed up the calculations. This is offered via function
-overloading (or overloaded types) and allows for these extra features to be
-offered without cluttering the problem interface.
+of pre-computed functions to speed up the calculations. This is offered via the
+`DiffEqFunction` types which can be passed to the problems.
 
-## Declaring Explicit Jacobians
+## Function Type Definitions
+
+### Function Choice Definitions
+
+The full interface available to the solvers is as follows:
+
+- `jac`: The Jacobian of the differential equation with respect to the state
+  variable `u` at a time `t` with parameters `p`.
+- `tgrad`: The gradient of the differential equation with respect to `t` at state
+  `u` with parameters `p`.
+- `paramjac`: The Jacobian of the differential equation with respect to `p` at
+  state `u` at time `t`.
+- `analytic`: Defines an analytical solution using `u0` at time `t` with `p`
+  which will cause the solvers to return errors. Used for testing.
+- `invW`: The inverse of `M - gamma*J` where `J` is the `jac`.
+- `invW_t`: The inverse of `M/gamma - J` where `J` is the `jac`.
+- `ggprime`: See the definition in the SDEProblem page.
+
+### ODEFunction
+
+```julia
+function ODEFunction{iip,recompile}(f;
+                 mass_matrix=I,
+                 analytic=nothing, # (u0,p,t)
+                 tgrad=nothing, # (dT,u,p,t) or (u,p,t)
+                 jac=nothing, # (J,u,p,t) or (u,p,t)
+                 jac_prototype=nothing, # Type for the Jacobian
+                 invW=nothing, # (iW,u,p,t) or (u,p,t)
+                 invW_t=nothing, # (iW,u,p,t) or (u,p,t)
+                 paramjac = nothing, # (pJ,u,p,t) or (u,p,t)
+                 syms = nothing) # collection of names for variables
+```
+
+### DynamicalODEFunction
+
+```julia
+DynamicalODEFunction{iip,recompile}(f1, # (du,u,v,p,t) or (u,v,p,t)
+                                    f2; # (du,u,v,p,t) or (u,v,p,t)
+                                    mass_matrix=(I,I), # Mass matrix for each partition
+                                    analytic=nothing)
+```
+
+### SplitFunction
+
+```julia
+SplitFunction{iip,recompile}(f1, # ODEFunction
+                        f2; # ODEFunction
+                        mass_matrix=I,
+                        _func_cache=nothing, # This is a cache used in f = f1+f2
+                        analytic=nothing)
+```
+
+### SDEFunction
+
+```julia
+function SDEFunction{iip,recompile}(f,g;
+                 mass_matrix=I,
+                 analytic=nothing,
+                 tgrad=nothing,
+                 jac=nothing,
+                 jac_prototype=nothing,
+                 invW=nothing,
+                 invW_t=nothing,
+                 paramjac = nothing,
+                 ggprime = nothing,
+                 syms = nothing)
+```
+
+### SplitSDEFunction
+
+```julia
+SplitSDEFunction{iip,recompile}(f1, # ODEFunction
+                           f2, # ODEFunction
+                           g;
+                           mass_matrix=I,
+                           _func_cache=nothing,
+                           analytic=nothing)
+```
+
+### RODEFunction
+
+```julia
+function RODEFunction{iip,recompile}(f;
+                 mass_matrix=I,
+                 analytic=nothing,
+                 tgrad=nothing,
+                 jac=nothing,
+                 jac_prototype=nothing,
+                 invW=nothing,
+                 invW_t=nothing,
+                 paramjac = nothing,
+                 syms = nothing)
+```
+
+### DDEFunction
+
+```julia
+function DDEFunction{iip,recompile}(f;
+                 mass_matrix=I,
+                 analytic=nothing,
+                 tgrad=nothing,
+                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)
+                 jac_prototype=nothing,
+                 invW=nothing,
+                 invW_t=nothing,
+                 paramjac = nothing,
+                 syms = nothing)
+```
+
+Note that the Jacobian of a DAE is defined as `gamma*dG/d(du) + dG/du ` where
+`gamma` is given by the solver.
+
+### DAEFunction
+
+```julia
+function DAEFunction{iip,recompile}(f;
+                 analytic=nothing,
+                 tgrad=nothing,
+                 jac=nothing,
+                 jac_prototype=nothing,
+                 invW=nothing,
+                 invW_t=nothing,
+                 paramjac = nothing,
+                 syms = nothing)
+```
+
+## Inplace Specification and No-Recompile Mode
+
+Each DiffEqFunction type can be called with an "is inplace" (iip) choice.
+
+```julia
+ODEFunction(f)
+ODEFunction{iip}(f)
+```
+
+which is a boolean for whether the function is in the inplace form (mutating to
+change the first value). This is automatically determined using the methods table
+but note that for full type-inferrability of the `DEProblem` this iip-ness should
+be specified.
+
+Additionally, the functions are fully specialized to reduce the runtimes. If one
+would instead like to not specialize on the functions to reduce compile time,
+then one can set `recompile` to false.
+
+```julia
+ODEFunction{iip,false}(f)
+```
+
+This makes the ODE solver compilation independent of the function and so changing
+the function will not cause recompilation. One can change the default value
+by changing the `const RECOMPILE_BY_DEFAULT = true` to false in the DiffEqBase.jl
+source code.
+
+## Specifying Jacobian Types
+
+The `jac` field of an inplace style `DiffEqFunction` has the signature `jac(J,u,p,t)`,
+which updates the jacobian `J` in-place. The intended type for `J` can sometimes be
+inferred (e.g. when it is just a dense `Matrix`), but not in general. To supply the
+type information, you can provide a `jac_prototype` in the function's constructor.
+
+The following example creates an inplace `ODEFunction` whose jacobian is a `Diagonal`:
+
+```julia
+using LinearAlgebra
+f = (du,u,p,t) -> du .= t .* u
+jac = (J,u,p,t) -> (J[1,1] = t; J[2,2] = t; J)
+jp = Diagonal(zeros(2))
+fun = ODEFunction(f; jac=jac, jac_prototype=jp)
+```
+
+Note that the integrators will always make a deep copy of `fun.jac_prototype`, so
+there's no worry of aliasing.
+
+In general the jacobian prototype can be anything that has `mul!` defined, in
+particular sparse matrices or custom lazy types that support `mul!`. A special case
+is when the `jac_prototype` is a `AbstractDiffEqLinearOperator`, in which case you
+do not need to supply `jac` as it is automatically set to `update_coefficients!`.
+Refer to the [DiffEqOperators](../diffeq_operator.html) section for more information
+on setting up time/parameter dependent operators.
+
+## Examples
+
+### Declaring Explicit Jacobians for ODEs
 
 The most standard case, declaring a function for a Jacobian is done by overloading
 the function `f(du,u,p,t)` with an in-place updating function for the Jacobian:
-`f(Val{:jac},J,u,p,t)` where the value type is used for dispatch. For example,
+`f_jac(J,u,p,t)` where the value type is used for dispatch. For example,
 take the LotkaVolterra model:
 
 ```julia
@@ -24,7 +205,7 @@ end
 To declare the Jacobian we simply add the dispatch:
 
 ```julia
-function f(::Type{Val{:jac}},J,u,p,t)
+function f_jac(J,u,p,t)
   J[1,1] = 2.0 - 1.2 * u[2]
   J[1,2] = -1.2 * u[1]
   J[2,1] = 1 * u[2]
@@ -33,10 +214,19 @@ function f(::Type{Val{:jac}},J,u,p,t)
 end
 ```
 
-Note that this can also be done by generating a call-overloaded type. Indeed, this
-is what ParameterizedFunctions.jl does, so see [its README](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
+Then we can supply the Jacobian with our ODE as:
 
-## Declaring Explicit Jacobians for DAEs
+```julia
+ff = ODEFunction(f;jac=f_jac)
+```
+
+and use this in an `ODEProblem`:
+
+```julia
+prob = ODEProblem(ff,ones(2),(0.0,10.0))
+```
+
+### Declaring Explicit Jacobians for DAEs
 
 For fully implicit ODEs (`DAEProblem`s), a slightly different Jacobian function
 is necessary. For the DAE
@@ -73,27 +263,11 @@ function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)
 end
 ```
 
-## Other Available Functions
-
-The full interface available to the solvers is as follows:
-
-```julia
-f(du,u,p,t) # Call the function
-f(Val{:analytic},u0,p,t) # The analytical solution. Used in testing
-f(Val{:tgrad},grad,u,p,t) # Call the explicit t-gradient function
-f(Val{:paramjac},J,u,p,t) # Call the explicit parameter Jacobian function
-f(Val{:jac},J,u,p,t) # Call the explicit Jacobian function
-f(Val{:invjac},iJ,u,p,t) # Call the explicit Inverse Jacobian function
-f(Val{:invW},iW,u,p,γ,t) # Call the explicit inverse Rosenbrock-W function (M - γJ)^(-1)
-f(Val{:invW_t},iW,u,p,γ,t) # Call the explicit transformed inverse Rosenbrock-W function (M/γ - J)^(-1)
-```
-
-Overloads which require parameters should subtype `ParameterizedFunction`. Besides the analytical solution, these
-are all in-place functions which write into the first variable. See solver documentation
-specifics to know which optimizations the algorithms can use.
-
 ## Symbolically Calculating the Functions
 
 ParameterizedFunctions.jl automatically calculates as many of these functions as
-possible and generates the overloads using SymEngine. Thus, for best performance
-with the least work, it is suggested one use ParameterizedFunctions.jl.
+possible and generates the `ODEFunction` using SymEngine. Thus, for good performance
+with the least work, it is one can try ParameterizedFunctions.jl.
+
+Additionally, an up-and-coming effort in the JuliaDiffEq ecosystem is
+ModelingToolkit.jl for performing these calculations more generically.
