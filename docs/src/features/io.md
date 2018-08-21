@@ -95,7 +95,7 @@ u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
-JLD2.@save "out.jld2" sol
+@save "out.jld2" sol
 ```
 
 then we can get the full solution type back, interpolations and all,
