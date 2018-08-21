@@ -89,7 +89,7 @@ JLD2.jl and BSON.jl will work with the full solution type if you bring the requi
 back into scope before loading. For eaxmple, if we save the solution:
 
 ```julia
-using OrdinaryDiffEq, JLD, JLD2
+using OrdinaryDiffEq, JLD2
 f(u,p,t) = 1.01*u
 u0=1/2
 tspan = (0.0,1.0)
