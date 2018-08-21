@@ -170,7 +170,7 @@ The following example creates an inplace `ODEFunction` whose jacobian is a `Diag
 
 ```julia
 using LinearAlgebra
-f = (du,u,p,t) -> du .= t * u
+f = (du,u,p,t) -> du .= t .* u
 jac = (J,u,p,t) -> (J[1,1] = t; J[2,2] = t; J)
 jp = Diagonal(zeros(2))
 fun = ODEFunction(f; jac=jac, jac_prototype=jp)
@@ -179,7 +179,9 @@ fun = ODEFunction(f; jac=jac, jac_prototype=jp)
 Note that the integrators will always make a deep copy of `fun.jac_prototype`, so
 there's no worry of aliasing.
 
-A special case is when `jac_prototype` is a `AbstractDiffEqLinearOperator`, then you
+In general the jacobian prototype can be anything that has `mul!` defined, in
+particular sparse matrices or custom lazy types that support `mul!`. A special case
+is when the `jac_prototype` is a `AbstractDiffEqLinearOperator`, in which case you
 do not need to supply `jac` as it is automatically set to `update_coefficients!`.
 Refer to the [DiffEqOperators](../diffeq_operator.html) section for more information
 on setting up time/parameter dependent operators.
