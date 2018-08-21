@@ -100,10 +100,10 @@ function RODEFunction{iip,recompile}(f;
                  syms = nothing)
 ```
 
-### DDEFunction
+### DAEFunction
 
 ```julia
-function DDEFunction{iip,recompile}(f;
+function DAEFunction{iip,recompile}(f;
                  mass_matrix=I,
                  analytic=nothing,
                  tgrad=nothing,
@@ -118,10 +118,11 @@ function DDEFunction{iip,recompile}(f;
 Note that the Jacobian of a DAE is defined as `gamma*dG/d(du) + dG/du ` where
 `gamma` is given by the solver.
 
-### DAEFunction
+### DDEFunction
 
 ```julia
-function DAEFunction{iip,recompile}(f;
+function DDEFunction{iip,recompile}(f;
+                 mass_matrix=I,
                  analytic=nothing,
                  tgrad=nothing,
                  jac=nothing,
