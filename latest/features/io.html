@@ -46,13 +46,13 @@ df = DataFrame(sol2)
 │ 5   │ 0.679082  │ 1.87672 │ 0.324733 │
 │ 6   │ 0.944406  │ 2.58825 │ 0.263362 │
 │ 7   │ 1.0       │ 2.77285 │ 0.25871  │</code></pre><p>Additionally, this data can be saved to a CSV:</p><pre><code class="language-julia">using CSV
-CSV.write(&quot;out.csv&quot;,df)</code></pre><p>For more information on using the IterableTables interface and other output formats, see <a href="https://github.com/davidanthoff/IterableTables.jl">IterableTables.jl</a>.</p><h2><a class="nav-anchor" id="JLD2-and-BSON.jl-1" href="#JLD2-and-BSON.jl-1">JLD2 and BSON.jl</a></h2><p>JLD2.jl and BSON.jl will work with the full solution type if you bring the required functions back into scope before loading. For eaxmple, if we save the solution:</p><pre><code class="language-julia">using OrdinaryDiffEq, JLD, JLD2
+CSV.write(&quot;out.csv&quot;,df)</code></pre><p>For more information on using the IterableTables interface and other output formats, see <a href="https://github.com/davidanthoff/IterableTables.jl">IterableTables.jl</a>.</p><h2><a class="nav-anchor" id="JLD2-and-BSON.jl-1" href="#JLD2-and-BSON.jl-1">JLD2 and BSON.jl</a></h2><p>JLD2.jl and BSON.jl will work with the full solution type if you bring the required functions back into scope before loading. For eaxmple, if we save the solution:</p><pre><code class="language-julia">using OrdinaryDiffEq, JLD2
 f(u,p,t) = 1.01*u
 u0=1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
-JLD2.@save &quot;out.jld2&quot; sol</code></pre><p>then we can get the full solution type back, interpolations and all, if we load the dependent functions first:</p><pre><code class="language-julia">using JLD2
+@save &quot;out.jld2&quot; sol</code></pre><p>then we can get the full solution type back, interpolations and all, if we load the dependent functions first:</p><pre><code class="language-julia">using JLD2
 using OrdinaryDiffEq
 f(u,p,t) = 1.01*u
 JLD2.@load &quot;out.jld2&quot; sol</code></pre><p>The example with BSON.jl is:</p><pre><code class="language-julia">using OrdinaryDiffEq
