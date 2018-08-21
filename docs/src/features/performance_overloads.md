@@ -161,7 +161,30 @@ source code.
 
 ## Specifying Jacobian Types
 
-TBD.
+The `jac` field of an inplace style `DiffEqFunction` has the signature `jac(J,u,p,t)`,
+which updates the jacobian `J` in-place. The intended type for `J` can sometimes be
+inferred (e.g. when it is just a dense `Matrix`), but not in general. To supply the
+type information, you can provide a `jac_prototype` in the function's constructor.
+
+The following example creates an inplace `ODEFunction` whose jacobian is a `Diagonal`:
+
+```julia
+using LinearAlgebra
+f = (du,u,p,t) -> du .= t .* u
+jac = (J,u,p,t) -> (J[1,1] = t; J[2,2] = t; J)
+jp = Diagonal(zeros(2))
+fun = ODEFunction(f; jac=jac, jac_prototype=jp)
+```
+
+Note that the integrators will always make a deep copy of `fun.jac_prototype`, so
+there's no worry of aliasing.
+
+In general the jacobian prototype can be anything that has `mul!` defined, in
+particular sparse matrices or custom lazy types that support `mul!`. A special case
+is when the `jac_prototype` is a `AbstractDiffEqLinearOperator`, in which case you
+do not need to supply `jac` as it is automatically set to `update_coefficients!`.
+Refer to the [DiffEqOperators](../diffeq_operator.html) section for more information
+on setting up time/parameter dependent operators.
 
 ## Examples
 
