@@ -3033,19 +3033,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/performance_overloads.html#DDEFunction-1",
-    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
-    "title": "DDEFunction",
-    "category": "section",
-    "text": "function DDEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)Note that the Jacobian of a DAE is defined as gamma*dG/d(du) + dG/du where gamma is given by the solver."
-},
-
-{
     "location": "features/performance_overloads.html#DAEFunction-1",
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "DAEFunction",
     "category": "section",
-    "text": "function DAEFunction{iip,recompile}(f;\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
+    "text": "function DAEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)Note that the Jacobian of a DAE is defined as gamma*dG/d(du) + dG/du where gamma is given by the solver."
+},
+
+{
+    "location": "features/performance_overloads.html#DDEFunction-1",
+    "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
+    "title": "DDEFunction",
+    "category": "section",
+    "text": "function DDEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
 },
 
 {
@@ -4045,7 +4045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "I/O: Saving and Loading Solution Data",
     "title": "JLD2 and BSON.jl",
     "category": "section",
-    "text": "JLD2.jl and BSON.jl will work with the full solution type if you bring the required functions back into scope before loading. For eaxmple, if we save the solution:using OrdinaryDiffEq, JLD2\nf(u,p,t) = 1.01*u\nu0=1/2\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)\nJLD2.@save \"out.jld2\" solthen we can get the full solution type back, interpolations and all, if we load the dependent functions first:using JLD2\nusing OrdinaryDiffEq\nf(u,p,t) = 1.01*u\nJLD2.@load \"out.jld2\" solThe example with BSON.jl is:using OrdinaryDiffEq\nf_2dlinear = (du,u,p,t) -> du.=1.01u\nprob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))\nsol1 =solve(prob,Euler();dt=1//2^(4))\n\nusing BSON\nbson(\"test.bson\",Dict(:sol1=>sol1))\n\n# New session\nusing OrdinaryDiffEq\nusing BSON\nBSON.load(\"test.bson\")If you load it without the DE function then for some algorithms the interpolation may not work, and for all algorithms you\'ll need at least a solver package or DiffEqBase.jl in scope in order for the solution interface (plot recipes, array indexing, etc.) to work. If none of these are put into scope, the solution type will still load and hold all of the values (so sol.u and sol.t will work), but none of the interface will be available."
+    "text": "JLD2.jl and BSON.jl will work with the full solution type if you bring the required functions back into scope before loading. For eaxmple, if we save the solution:using OrdinaryDiffEq, JLD2\nf(u,p,t) = 1.01*u\nu0=1/2\ntspan = (0.0,1.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)\n@save \"out.jld2\" solthen we can get the full solution type back, interpolations and all, if we load the dependent functions first:using JLD2\nusing OrdinaryDiffEq\nf(u,p,t) = 1.01*u\nJLD2.@load \"out.jld2\" solThe example with BSON.jl is:using OrdinaryDiffEq\nf_2dlinear = (du,u,p,t) -> du.=1.01u\nprob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))\nsol1 =solve(prob,Euler();dt=1//2^(4))\n\nusing BSON\nbson(\"test.bson\",Dict(:sol1=>sol1))\n\n# New session\nusing OrdinaryDiffEq\nusing BSON\nBSON.load(\"test.bson\")If you load it without the DE function then for some algorithms the interpolation may not work, and for all algorithms you\'ll need at least a solver package or DiffEqBase.jl in scope in order for the solution interface (plot recipes, array indexing, etc.) to work. If none of these are put into scope, the solution type will still load and hold all of the values (so sol.u and sol.t will work), but none of the interface will be available."
 },
 
 {

@@ -39,7 +39,7 @@
                  invW=nothing,
                  invW_t=nothing,
                  paramjac = nothing,
-                 syms = nothing)</code></pre><h3><a class="nav-anchor" id="DDEFunction-1" href="#DDEFunction-1">DDEFunction</a></h3><pre><code class="language-julia">function DDEFunction{iip,recompile}(f;
+                 syms = nothing)</code></pre><h3><a class="nav-anchor" id="DAEFunction-1" href="#DAEFunction-1">DAEFunction</a></h3><pre><code class="language-julia">function DAEFunction{iip,recompile}(f;
                  mass_matrix=I,
                  analytic=nothing,
                  tgrad=nothing,
@@ -48,7 +48,8 @@
                  invW=nothing,
                  invW_t=nothing,
                  paramjac = nothing,
-                 syms = nothing)</code></pre><p>Note that the Jacobian of a DAE is defined as <code>gamma*dG/d(du) + dG/du</code> where <code>gamma</code> is given by the solver.</p><h3><a class="nav-anchor" id="DAEFunction-1" href="#DAEFunction-1">DAEFunction</a></h3><pre><code class="language-julia">function DAEFunction{iip,recompile}(f;
+                 syms = nothing)</code></pre><p>Note that the Jacobian of a DAE is defined as <code>gamma*dG/d(du) + dG/du</code> where <code>gamma</code> is given by the solver.</p><h3><a class="nav-anchor" id="DDEFunction-1" href="#DDEFunction-1">DDEFunction</a></h3><pre><code class="language-julia">function DDEFunction{iip,recompile}(f;
+                 mass_matrix=I,
                  analytic=nothing,
                  tgrad=nothing,
                  jac=nothing,
