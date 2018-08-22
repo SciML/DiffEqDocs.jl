@@ -63,6 +63,16 @@ and the values at the steps every `verbose_steps` steps. `mpg_autodiff` uses
 autodifferentiation to define the derivative for the MathProgBase solver.
 The extra keyword arguments are passed to the differential equation solver.
 
+### multiple_shooting_objective
+
+Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:
+    
+  1. Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.
+  2. This objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn't match the begining of the next one.
+  3. Merge the solutions from the shorter intervals and then calculate the loss.
+
+For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
+
 #### The Loss Function
 
 ```julia
@@ -126,6 +136,15 @@ function my_loss_function(sol)
    tot_loss
 end
 ```
+#### First differencing
+
+```julia 
+L2Loss(t,data,differ_weight=0.3,data_weight=0.7)
+```
+
+First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. You can now assign a weight (vector or scalar) to use the first differencing technique in the `L2loss`.
+
+Adding first differencing is helpful in cases where the `L2Loss` alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates.
 
 #### The Regularization Function
 
@@ -208,6 +227,14 @@ lm_fit(prob::DEProblem,tspan,t,data,p0;prob_generator = problem_new_parameters,k
 The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
+
+### MAP estimate 
+
+You can also add a prior option to `build_loss_objective` and `multiple_shooting_objective` that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument `priors`, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution. 
+
+```julia
+ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=priors,discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
+```
 
 ## Bayesian Methods
 
@@ -470,6 +497,56 @@ Results of Optimization Algorithm
 
 and thus this algorithm was able to correctly identify all four parameters.
 
+We can also use Multiple Shooting method by creating a `multiple_shooting_objective`
+
+```julia
+ms_f = @ode_def_nohes LotkaVolterraTest begin
+    dx = a*x - b*x*y
+    dy = -3*y + x*y
+end a b 
+ms_u0 = [1.0;1.0]
+tspan = (0.0,10.0)
+ms_p = [1.5,1.0]
+ms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)
+t = collect(linspace(0,10,200))
+data = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))
+bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),
+                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]
+
+
+ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
+```
+
+This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.
+
+```julia
+result = bboptimize(ms_obj;SearchRange = bound, MaxSteps = 21e3)
+result.archive_output.best_candidate[end-1:end]
+```
+Giving us the results as
+```julia
+Starting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},BlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound{BlackBoxOptim.RangePerDimSearchSpace}}
+
+Optimization stopped after 21001 steps and 136.60030698776245 seconds
+Termination reason: Max number of steps (21000) reached
+Steps per second = 153.7405036862868
+Function evals per second = 154.43596332393247
+Improvements/step = 0.17552380952380953
+Total function evaluations = 21096
+
+
+Best candidate found: [0.997396, 1.04664, 3.77834, 0.275823, 2.14966, 4.33106, 1.43777, 0.468442, 6.22221, 0.673358, 0.970036, 2.05182, 2.4216, 0.274394, 5.64131, 3.38132, 1.52826, 1.01721]
+
+Fitness: 0.126884213
+
+Out[4]:2-element Array{Float64,1}:
+        1.52826
+        1.01721
+```
+Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and the rest of the values are the initial values of the shorter timespans as described in the reference section.
+
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
 
 The `build_loss_objective` function builds an objective function which is able
@@ -646,7 +723,7 @@ plot(range,[obj([i,1.0]) for i in range],lw=3,
      xlabel = "Parameter 1", ylabel = "Objective Function Value")
 ```
 
-![1 Parmaeter Likelihood](../assets/1paramlike.png)
+![1 Parameter Likelihood](../assets/1paramlike.png)
 
 we can see that there's still a clear minimum at the true value. Thus we will
 use the global optimizers from BlackBoxOptim.jl to find the values. We set our
