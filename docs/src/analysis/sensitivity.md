@@ -404,7 +404,7 @@ We calculate local sensitivity measures known as “elementary effects”,
 which are calculated by measuring the perturbation in the output of the 
 model on changing one parameter. 
 
-$$ EE_i = \frac{f(x_1,x_2,..x_i+ \Delta,..x_k) - y}{\Delta} $$
+``EE_i = \frac{f(x_1,x_2,..x_i+ \Delta,..x_k) - y}{\Delta}``
 
 These are evaluated at various points in the input chosen such that a wide 
 “spread” of the parameter space is explored and considered in the analysis, 
@@ -436,16 +436,20 @@ of inputs. This helps to get not just the individual parameter's sensitivities
 but also gives a way to quantify the affect and sensitivity from 
 the interaction between the parameters. 
 
-$$ Y = f_0+ \sum_{i=1}^d f_i(X_i)+ \sum_{i < j}^d f_{ij}(X_i,X_j) ... + f_{1,2...d}(X_1,X_2,..X_d) $$
+```math
+ Y = f_0+ \sum_{i=1}^d f_i(X_i)+ \sum_{i < j}^d f_{ij}(X_i,X_j) ... + f_{1,2...d}(X_1,X_2,..X_d)
+```
                                    
-$$ Var(Y) = \sum_{i=1}^d V_i + \sum_{i < j}^d V_{ij} + ... + V_{1,2...,d} $$
+```math
+ Var(Y) = \sum_{i=1}^d V_i + \sum_{i < j}^d V_{ij} + ... + V_{1,2...,d}
+```
 
-The Sobol Indices are "order"ed, the first order indices given by $$S_i = \frac{V_i}{Var(Y)}$$ 
-the contribution to the output variance of the main effect of $$ X_i $$, therefore it 
-measures the effect of varying $$ X_i $$ alone, but averaged over variations 
+The Sobol Indices are "order"ed, the first order indices given by ``S_i = \frac{V_i}{Var(Y)}`` 
+the contribution to the output variance of the main effect of `` X_i ``, therefore it 
+measures the effect of varying `` X_i `` alone, but averaged over variations 
 in other input parameters. It is standardised by the total variance to provide a fractional contribution. 
-Higher-order interaction indices $$ S_{i,j}, S_{i,j,k} $$ and so on can be formed 
-by dividing other terms in the variance decomposition by $$ Var(Y) $$.
+Higher-order interaction indices `` S_{i,j}, S_{i,j,k} `` and so on can be formed 
+by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
 `sobol_second_order = sobol_sensitivity(f,param_range,N,order=2)`
 
@@ -455,7 +459,7 @@ Here `f` and `param_range` are the same as Morris's, providing a uniform interfa
 
 ### Regression Method
 
-If a sample of inputs and outputs $$ (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} $$􏰁 
+If a sample of inputs and outputs `` (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} ``􏰁 
 is available, it is possible to fit a linear model explaining the behaviour of Y given the 
 values of X, provided that the sample size n is sufficiently large (at least n > d).
 
@@ -463,23 +467,28 @@ The measures provided for this analysis by us in DiffEqSensitivity.jl are
 
   a) Pearson Correlation Coefficient:
 
-$$ r = \frac{\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}
-{\sqrt{\sum_{i=1}^{n} (x_i - \overline{x})^2(y_i - \overline{y})^2}} $$
+```math
+r = \frac{\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \overline{x})^2(y_i - \overline{y})^2}}
+```
 
   b) Standard Regression Coefficient (SRC):
 
-$$ SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}} $$
+```math
+SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}}
+```
 
-  where $$ \beta_j $$ is the linear regression coefficient associated to $X_j$.
+  where ``\beta_j`` is the linear regression coefficient associated to $X_j$.
 
   c) Partial Correlation Coefficient (PCC):
 
-$$ PCC_j = \rho(X_j - \hat{X_{-j}},Y_j - \hat{Y_{-j}}) $$
+```math
+PCC_j = \rho(X_j - \hat{X_{-j}},Y_j - \hat{Y_{-j}})
+```
 
-  where $$ \hat{X_{-j}} $$􏰈 is the prediction of the linear model, expressing $$ X_{j} $$ 
-  with respect to the other inputs and $$ \hat{Y􏰈_{-j}} $$ is the prediction of the 
-  linear model where $$ X_j $$ is absent. PCC measures the sensitivity of $$ Y $$ to 
-  $$ X_j $$ when the effects of the other inputs have been canceled.
+  where ``\hat{X_{-j}}``􏰈 is the prediction of the linear model, expressing ``X_{j}`` 
+  with respect to the other inputs and ``\hat{Y􏰈_{-j}}`` is the prediction of the 
+  linear model where ``X_j`` is absent. PCC measures the sensitivity of ``Y`` to 
+  ``X_j`` when the effects of the other inputs have been canceled.
 
 `regre_sensitivity = regression_sensitivity(f,param_range,param_fixed,n;coeffs=:rank)`
 
@@ -567,12 +576,14 @@ by default it gives the second order indices. Again the result is obtained over 
 
 We plot the first order and total order Sobol Indices for some timepoints for each of the parameters (`a` and `b`).
 
-``julia
+```julia
+
 p1 = bar(["a","b"],[s0[1][end-2],s0[2][end-2]],color=[:red,:blue],title="Total Order Indices at t=9.949748743718592",legend=false)
 p2 = bar(["a","b"],[s1[1][end-2],s1[2][end-2]],color=[:red,:blue],title="First Order Indices at t=9.949748743718592",legend=false)
 p3 = bar(["a","b"],[s0[1][3],s0[2][3]],color=[:red,:blue],title="Total Order Indices at t=0.05025125628140704",legend=false)
 p4 = bar(["a","b"],[s1[1][3],s1[2][3]],color=[:red,:blue],title="First Order Indices at t=0.05025125628140704",legend=false)
 plo = plot(p1,p2,p3,p4,layout=(4,1),size=(600,500))
+
 ```
 ![sobolplot](../assets/sobolbars.png)
 
