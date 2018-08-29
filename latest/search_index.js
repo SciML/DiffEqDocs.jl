@@ -1325,7 +1325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Mathematical Specification of a Discrete Problem",
     "category": "section",
-    "text": "To define an Discrete Problem, you simply need to give the function f and the initial condition u which define a function map:u_n+1 = f(upt_n+1)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. t_{n+1} is the current time at which the map is applied. For a FunctionMap with defaults,  t_n = t0 + n*dt (with dt=1 being the default). For continuous-time Markov chains this is the time at which the change is occuring.Note that if the discrete solver is set to have scale_by_time=true, then the problem is interpreted as the map:u_n+1 = u_n + dt f(upt_n)"
+    "text": "To define an Discrete Problem, you simply need to give the function f and the initial condition u which define a function map:u_n+1 = f(upt_n+1)f should be specified as f(u,p,t) (or in-place as f(du,u,p,t)), and u₀ should be an AbstractArray (or number) whose geometry matches the desired geometry of u. Note that we are not limited to numbers or vectors for u₀; one is allowed to provide u₀ as arbitrary matrices / higher dimension tensors as well. t_{n+1} is the current time at which the map is applied. For a FunctionMap with defaults, t_n = t0 + n*dt (with dt=1 being the default). For continuous-time Markov chains this is the time at which the change is occuring.Note that if the discrete solver is set to have scale_by_time=true, then the problem is interpreted as the map:u_n+1 = u_n + dt f(upt_n)"
 },
 
 {
@@ -1341,7 +1341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(u0,tspan) : Defines the discrete problem with the identity map."
+    "text": "DiscreteProblem{isinplace}(f::ODEFunction,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(u0,tspan) : Defines the discrete problem with the identity map.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1397,7 +1397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "ODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet(),mass_matrix=I) : Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "ODEProblem(f::ODEFunction,u0,tspan,callback=CallbackSet())\nODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet()) : Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1405,7 +1405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1445,7 +1445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructor",
     "category": "section",
-    "text": "DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,callback=CallbackSet())\nDynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet())Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
 },
 
 {
@@ -1453,7 +1453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1 and f2: The functions in the ODE.\nv0 and u0: The initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f1 and f2: The functions in the ODE.\nv0 and u0: The initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1469,7 +1469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet(),mass_matrix=I)Defines the ODE with the specified functions."
+    "text": "SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet())Defines the ODE with the specified functions."
 },
 
 {
@@ -1477,7 +1477,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function for the second derivative.\ndu0: The initial derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function for the second derivative.\ndu0: The initial derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1501,7 +1501,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "H: The Hamiltonian H(p,q,params) which returns a scalar.\np0: The initial momentums.\nq0: The initial positions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "H: The Hamiltonian H(p,q,params) which returns a scalar.\np0: The initial momentums.\nq0: The initial positions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1533,7 +1533,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)The isinplace parameter can be omitted and will be determined using the signature of f2.  Note that both f1 and f2 should support the in-place style if isinplace is true or they  should both support the out-of-place style if isinplace is false. You cannot mix up the two styles.Under the hood, a SplitODEProblem is just a regular ODEProblem whose f is a SplitFunction.  Therefore you can solve a SplitODEProblem using the same solvers for ODEProblem. For solvers  dedicated to split problems, see Split ODE Solvers."
+    "text": "SplitODEProblem(f::SplitFunction,u0,tspan,p=nothing;kwargs...)\nSplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)The isinplace parameter can be omitted and will be determined using the signature of f2. Note that both f1 and f2 should support the in-place style if isinplace is true or they should both support the out-of-place style if isinplace is false. You cannot mix up the two styles.Under the hood, a SplitODEProblem is just a regular ODEProblem whose f is a SplitFunction. Therefore you can solve a SplitODEProblem using the same solvers for ODEProblem. For solvers dedicated to split problems, see Split ODE Solvers.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1541,7 +1541,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1581,7 +1581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from ODEProblems is provided:SteadyStateProblem(prob::ODEProblem)"
+    "text": "SteadyStateProblem(f::ODEFunction,u0)\nSteadyStateProblem{isinplace}(f,u0)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from ODEProblems is provided:SteadyStateProblem(prob::ODEProblem)For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1589,7 +1589,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial guess for the steady state.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The function in the ODE.\nu0: The initial guess for the steady state."
 },
 
 {
@@ -1685,7 +1685,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "SDEProblem(f::SDEFunction,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)\nSDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1693,7 +1693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1789,7 +1789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "RODEProblem(f::RODEFunction,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)\nRODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1797,7 +1797,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix."
+    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1853,7 +1853,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DDEProblem{isinplace}(f, u0, h, tspan, p=nothing;\n                      constant_lags=[],\n                      dependent_lags=[],\n                      mass_matrix=I,\n                      callback=nothing)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DDEProblem(f::DDEFunction, u0, h, tspan, p=nothing;\n                      constant_lags=[],\n                      dependent_lags=[],\n                      callback=nothing)\nDDEProblem{isinplace}(f, u0, h, tspan, p=nothing;\n                      constant_lags=[],\n                      dependent_lags=[],\n                      callback=nothing)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1861,7 +1861,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the DDE.\nu0: The initial condition.\nh: The history function for the DDE before t0.\np: The parameters with which function f is called.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h.\nmass_matrix: The mass-matrix. Defaults to I, the UniformScaling identity matrix.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The function in the DDE.\nu0: The initial condition.\nh: The history function for the DDE before t0.\np: The parameters with which function f is called.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -1901,7 +1901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DAEProblem{isinplace}(f,du0,u0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DAEProblem(f::DAEFunction,du0,u0,tspan)\nDAEProblem{isinplace}(f,du0,u0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
