@@ -45,16 +45,21 @@ efficiently be more accurate and thus this is recommended.
 
 ### Constructors
 
-```julia
+```
+DDEProblem(f::DDEFunction, u0, h, tspan, p=nothing;
+                      constant_lags=[],
+                      dependent_lags=[],
+                      callback=nothing)
 DDEProblem{isinplace}(f, u0, h, tspan, p=nothing;
                       constant_lags=[],
                       dependent_lags=[],
-                      mass_matrix=I,
                       callback=nothing)
 ```
 
-Parameter `isinplace` optionally sets whether the function is inplace or not. This is
-determined automatically, but not inferred.
+Parameter `isinplace` optionally sets whether the function is inplace or not.
+This is determined automatically, but not inferred. For specifying Jacobians
+and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
 
 ### Fields
 
@@ -67,6 +72,5 @@ determined automatically, but not inferred.
   to times that are used in the history function `h`.
 * `dependent_lags` A tuple of functions `(u, p, t) -> lag` for the state-dependent lags
   used by the history function `h`.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.

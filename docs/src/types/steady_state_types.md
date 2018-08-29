@@ -25,7 +25,8 @@ fixing `t=0`.
 ### Constructors
 
 ```julia
-SteadyStateProblem{isinplace}(f,u0,mass_matrix=I)
+SteadyStateProblem(f::ODEFunction,u0)
+SteadyStateProblem{isinplace}(f,u0)
 ```
 
 `isinplace` optionally sets whether the function is inplace or not. This is
@@ -36,11 +37,14 @@ determined automatically, but not inferred. Additionally, the constructor from
 SteadyStateProblem(prob::ODEProblem)
 ```
 
+For specifying Jacobians and mass matrices, see the
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
+
 ### Fields
 
 * `f`: The function in the ODE.
 * `u0`: The initial guess for the steady state.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Special Solution Fields
 

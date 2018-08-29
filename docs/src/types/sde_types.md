@@ -27,10 +27,15 @@ with initial condition ``u0``.
 
 ### Constructors
 
-`SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
-Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`.
-`isinplace` optionally sets whether the function is inplace or not. This is
-determined automatically, but not inferred.
+- `SDEProblem(f::SDEFunction,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)`
+- `SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
+  Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`.
+  `isinplace` optionally sets whether the function is inplace or not. This is
+  determined automatically, but not inferred.
+
+For specifying Jacobians and mass matrices, see the
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
 
 ### Fields
 
@@ -48,7 +53,6 @@ determined automatically, but not inferred.
   be interpreted as having diagonal noise.  
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Example Problems
 

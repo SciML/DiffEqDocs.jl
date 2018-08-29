@@ -26,16 +26,21 @@ For how to define a linear function `A`, see the documentation for the [DiffEqOp
 ### Constructors
 
 ```julia
+SplitODEProblem(f::SplitFunction,u0,tspan,p=nothing;kwargs...)
 SplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)
 ```
 
-The `isinplace` parameter can be omitted and will be determined using the signature of `f2`. 
-Note that both `f1` and `f2` should support the in-place style if `isinplace` is `true` or they 
+The `isinplace` parameter can be omitted and will be determined using the signature of `f2`.
+Note that both `f1` and `f2` should support the in-place style if `isinplace` is `true` or they
 should both support the out-of-place style if `isinplace` is `false`. You cannot mix up the two styles.
 
-Under the hood, a `SplitODEProblem` is just a regular `ODEProblem` whose `f` is a `SplitFunction`. 
-Therefore you can solve a `SplitODEProblem` using the same solvers for `ODEProblem`. For solvers 
+Under the hood, a `SplitODEProblem` is just a regular `ODEProblem` whose `f` is a `SplitFunction`.
+Therefore you can solve a `SplitODEProblem` using the same solvers for `ODEProblem`. For solvers
 dedicated to split problems, see [Split ODE Solvers](../../solvers/split_ode_solve.html).
+
+For specifying Jacobians and mass matrices, see the
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
 
 ### Fields
 
@@ -45,4 +50,3 @@ dedicated to split problems, see [Split ODE Solvers](../../solvers/split_ode_sol
 * `p`: The parameters for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.

@@ -13,7 +13,7 @@ u_{n+1} = f(u,p,t_{n+1})
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well. `t_{n+1}` is the
-current time at which the map is applied. For a `FunctionMap` with defaults, 
+current time at which the map is applied. For a `FunctionMap` with defaults,
 `t_n = t0 + n*dt` (with `dt=1` being the default). For continuous-time Markov chains
 this is the time at which the change is occuring.
 
@@ -28,10 +28,16 @@ u_{n+1} = u_n + dt f(u,p,t_n)
 
 ### Constructors
 
+- `DiscreteProblem{isinplace}(f::ODEFunction,u0,tspan)` : Defines the discrete problem with
+  the specified functions.
 - `DiscreteProblem{isinplace}(f,u0,tspan)` : Defines the discrete problem with
   the specified functions.
 - `DiscreteProblem{isinplace}(u0,tspan)` : Defines the discrete problem with the
   identity map.
+
+For specifying Jacobians and mass matrices, see the
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
 
 ### Fields
 

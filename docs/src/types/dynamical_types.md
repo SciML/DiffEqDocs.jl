@@ -26,7 +26,8 @@ quadratic kinetic energy".
 ### Constructor
 
 ```julia
-DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet(),mass_matrix=I)
+DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,callback=CallbackSet())
+DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet())
 ```
 
 Defines the ODE with the specified functions. `isinplace` optionally sets whether
@@ -39,7 +40,6 @@ the function is inplace or not. This is determined automatically, but not inferr
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Mathematical Specification of a 2nd Order ODE Problem
 
@@ -68,7 +68,7 @@ is generated.
 ### Constructors
 
 ```julia
-SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet(),mass_matrix=I)
+SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,callback=CallbackSet())
 ```
 
 Defines the ODE with the specified functions.
@@ -81,7 +81,6 @@ Defines the ODE with the specified functions.
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
 
 ## Hamiltonian Problems
 
@@ -110,4 +109,3 @@ HamiltonianProblem{T}(H,p0,q0,tspan;kwargs...)
 * `tspan`: The timespan for the problem.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.

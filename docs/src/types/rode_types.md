@@ -17,10 +17,15 @@ to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary 
 
 ### Constructors
 
-`RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I)` :
-Defines the RODE with the specified functions. The default noise is `WHITE_NOISE`.
-`isinplace` optionally sets whether the function is inplace or not. This is
-determined automatically, but not inferred.
+- `RODEProblem(f::RODEFunction,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)`
+- `RODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I)` :
+  Defines the RODE with the specified functions. The default noise is `WHITE_NOISE`.
+  `isinplace` optionally sets whether the function is inplace or not. This is
+  determined automatically, but not inferred.
+
+For specifying Jacobians and mass matrices, see the
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+page.
 
 ### Fields
 
@@ -35,4 +40,3 @@ determined automatically, but not inferred.
   vector whose size matches `u0`.
 * `callback`: A callback to be applied to every solver which uses the problem.
   Defaults to nothing.
-* `mass_matrix`: The mass-matrix. Defaults to `I`, the `UniformScaling` identity matrix.
