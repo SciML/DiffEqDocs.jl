@@ -81,7 +81,7 @@ end p d
 p = [1.0,2.0]
 u0 = [0.1]
 tspan = (0.,1.)
-prob = ODEproblem(rn,u0,tspan,p)
+prob = ODEProblem(rn,u0,tspan,p)
 sol = solve(prob)</code></pre><p>(if no parameters are given <code>p</code> does not need to be provided)</p><h4><a class="nav-anchor" id="Stochastic-simulations-using-SDEs-1" href="#Stochastic-simulations-using-SDEs-1">Stochastic simulations using SDEs</a></h4><p>In a similar way a SDE can be created using <code>probSDE = SDEProblem(rn, args...; kwargs...)</code>.  In this case the chemical Langevin equations (as derived in Gillespie 2000) will  be used to generate stochastic differential equations.</p><h4><a class="nav-anchor" id="Stochastic-simulations-using-discrete-stochastic-simulation-algorithm-1" href="#Stochastic-simulations-using-discrete-stochastic-simulation-algorithm-1">Stochastic simulations using discrete stochastic simulation algorithm</a></h4><p>Instead of solving SDEs one can make stochastic simulations of the model using real copy numbers and a discrete stochastic simulation algorithm. This can be done using:</p><pre><code class="language-julia">rn = @reaction_network begin
   p, ∅ → X
   d, X → ∅

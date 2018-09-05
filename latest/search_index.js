@@ -4829,7 +4829,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Deterministic simulations using ODEs",
     "category": "section",
-    "text": "A reaction network can be used as input to a ODEProblem instead of a function, using probODE = ODEProblem(rn, args...; kwargs...) E.g. a model can be created and simulated using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = ODEproblem(rn,u0,tspan,p)\nsol = solve(prob)(if no parameters are given p does not need to be provided)"
+    "text": "A reaction network can be used as input to a ODEProblem instead of a function, using probODE = ODEProblem(rn, args...; kwargs...) E.g. a model can be created and simulated using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = ODEProblem(rn,u0,tspan,p)\nsol = solve(prob)(if no parameters are given p does not need to be provided)"
 },
 
 {
