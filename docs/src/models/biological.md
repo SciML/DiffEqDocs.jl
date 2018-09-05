@@ -214,7 +214,7 @@ end p d
 p = [1.0,2.0]
 u0 = [0.1]
 tspan = (0.,1.)
-prob = ODEproblem(rn,u0,tspan,p)
+prob = ODEProblem(rn,u0,tspan,p)
 sol = solve(prob)
 ```
 (if no parameters are given `p` does not need to be provided)
