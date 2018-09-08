@@ -7,7 +7,7 @@ r0 = [1131.340, -2282.343, 6672.423]u&quot;km&quot;
 v0 = [-5.64305, 4.30333, 2.42879]u&quot;km/s&quot;
 Δt = 86400.0*365u&quot;s&quot;
 mu = 398600.4418u&quot;km^3/s^2&quot;
-rv0 = ArrayPartition(r0,v0)</code></pre><p>Here, <code>r0</code> is the initial positions, and <code>v0</code> are the initial velocities. <code>rv0</code> is the <code>ArrayPartition</code> initial condition. We now write our update function in terms of the <code>ArrayPartition</code>:</p><pre><code class="language-julia">function f(t, y, dy, μ)
+rv0 = ArrayPartition(r0,v0)</code></pre><p>Here, <code>r0</code> is the initial positions, and <code>v0</code> are the initial velocities. <code>rv0</code> is the <code>ArrayPartition</code> initial condition. We now write our update function in terms of the <code>ArrayPartition</code>:</p><pre><code class="language-julia">function f(t, y, μ, dy)
     r = norm(y.x[1])
     dy.x[1] .= y.x[2]
     dy.x[2] .= -μ .* y.x[1] / r^3
