@@ -55,7 +55,7 @@ is the `ArrayPartition` initial condition. We now write our update function in
 terms of the `ArrayPartition`:
 
 ```julia
-function f(t, y, dy, μ)
+function f(t, y, μ, dy)
     r = norm(y.x[1])
     dy.x[1] .= y.x[2]
     dy.x[2] .= -μ .* y.x[1] / r^3
