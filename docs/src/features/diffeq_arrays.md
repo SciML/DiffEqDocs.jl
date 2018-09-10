@@ -70,7 +70,7 @@ broadcasting will be efficient.
 Now to solve our equations, we do the same thing as always in DiffEq:
 
 ```julia
-prob = ODEProblem((t, y, dy) -> f(t, y, dy, mu), rv0, (0.0u"s", Δt))
+prob = ODEProblem(f, rv0, (0.0u"s", Δt))
 sol = solve(prob, Vern8())
 ```
 
