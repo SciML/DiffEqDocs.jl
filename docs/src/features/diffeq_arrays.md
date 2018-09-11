@@ -42,6 +42,7 @@ arrays will be:
 
 ```julia
 using Unitful, RecursiveArrayTools, DiffEqBase, OrdinaryDiffEq
+using LinearAlgebra
 
 r0 = [1131.340, -2282.343, 6672.423]u"km"
 v0 = [-5.64305, 4.30333, 2.42879]u"km/s"
