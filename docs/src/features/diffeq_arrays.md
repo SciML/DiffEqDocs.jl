@@ -46,7 +46,7 @@ using Unitful, RecursiveArrayTools, DiffEqBase, OrdinaryDiffEq
 r0 = [1131.340, -2282.343, 6672.423]u"km"
 v0 = [-5.64305, 4.30333, 2.42879]u"km/s"
 Δt = 86400.0*365u"s"
-mu = 398600.4418u"km^3/s^2"
+μ = 398600.4418u"km^3/s^2"
 rv0 = ArrayPartition(r0,v0)
 ```
 
@@ -55,7 +55,7 @@ is the `ArrayPartition` initial condition. We now write our update function in
 terms of the `ArrayPartition`:
 
 ```julia
-function f(t, y, μ, dy)
+function f(dy, y, μ, t)
     r = norm(y.x[1])
     dy.x[1] .= y.x[2]
     dy.x[2] .= -μ .* y.x[1] / r^3
@@ -70,7 +70,7 @@ broadcasting will be efficient.
 Now to solve our equations, we do the same thing as always in DiffEq:
 
 ```julia
-prob = ODEProblem(f, rv0, (0.0u"s", Δt))
+prob = ODEProblem(f, rv0, (0.0u"s", Δt), μ)
 sol = solve(prob, Vern8())
 ```
 
