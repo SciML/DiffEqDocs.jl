@@ -215,6 +215,7 @@ NoiseProcess(t0,W0,Z0,dist,bridge;
   at new values.
 - `save_everystep` whether to save every step of the Brownian timeseries.
 - `timeseries_steps` number of points to skip between each timeseries save.
+- `rng` the local RNG used for generating the random numbers.
 - `reset` whether to reset the process with each solve.
 - `reseed` whether to reseed the process with each solve.
 
