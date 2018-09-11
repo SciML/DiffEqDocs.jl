@@ -202,6 +202,7 @@ A `NoiseProcess` is a type defined as
 NoiseProcess(t0,W0,Z0,dist,bridge;
              iip=DiffEqBase.isinplace(dist,3),
              rswm = RSWM(),save_everystep=true,timeseries_steps=1,
+             rng = Xorshifts.Xoroshiro128Plus(rand(UInt64)),
              reset = true, reseed = true)
 ```
 
