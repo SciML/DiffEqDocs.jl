@@ -33,17 +33,17 @@ ith independent variable to the jth parameter is `` \frac{\partial y}{\partial p
 The local sensitivity is computed using the sensitivity ODE:
 
 ```math
-\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial y}\frac{\partial y}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}
+\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial u}\frac{\partial y}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}
 ```
 
 where
 
 ```math
 J=\left(\begin{array}{cccc}
-\frac{\partial f_{1}}{\partial y_{1}} & \frac{\partial f_{1}}{\partial y_{2}} & \cdots & \frac{\partial f_{1}}{\partial y_{k}}\\
-\frac{\partial f_{2}}{\partial y_{1}} & \frac{\partial f_{2}}{\partial y_{2}} & \cdots & \frac{\partial f_{2}}{\partial y_{k}}\\
+\frac{\partial f_{1}}{\partial u_{1}} & \frac{\partial f_{1}}{\partial u_{2}} & \cdots & \frac{\partial f_{1}}{\partial u_{k}}\\
+\frac{\partial f_{2}}{\partial u_{1}} & \frac{\partial f_{2}}{\partial u_{2}} & \cdots & \frac{\partial f_{2}}{\partial u_{k}}\\
 \cdots & \cdots & \cdots & \cdots\\
-\frac{\partial f_{k}}{\partial y_{1}} & \frac{\partial f_{k}}{\partial y_{2}} & \cdots & \frac{\partial f_{k}}{\partial y_{k}}
+\frac{\partial f_{k}}{\partial u_{1}} & \frac{\partial f_{k}}{\partial u_{2}} & \cdots & \frac{\partial f_{k}}{\partial u_{k}}
 \end{array}\right)
 ```
 
