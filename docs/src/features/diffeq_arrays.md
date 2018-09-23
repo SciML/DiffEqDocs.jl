@@ -93,7 +93,7 @@ like the differential equation to treat directly. The other fields are treated
 as "discrete variables". For example:
 
 ```julia
-type MyDataArray{T,N} <: DEDataArray{T,N}
+mutable struct MyDataArray{T,N} <: DEDataArray{T,N}
     x::Array{T,1}
     a::T
     b::Symbol
@@ -128,7 +128,7 @@ In this example we will use a `DEDataArray` to solve a problem where control par
 change at various timepoints. First we will build
 
 ```julia
-type SimType{T} <: DEDataVector{T}
+mutable struct SimType{T} <: DEDataVector{T}
     x::Array{T,1}
     f1::T
 end
