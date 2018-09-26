@@ -1,4 +1,4 @@
 using DiffEqDocs, DifferentialEquations
-using Base.Test
+using Test
 
 # Tests are just for docs generation

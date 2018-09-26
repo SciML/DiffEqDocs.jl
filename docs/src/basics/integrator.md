@@ -68,7 +68,7 @@ Additionally, you can make the iterator return specific time points via the
 `TimeChoiceIterator`:
 
 ```julia
-ts = linspace(0,1,11)
+ts = range(0, stop=1, length=11)
 for (u,t) in TimeChoiceIterator(integrator,ts)
   @show u,t
 end

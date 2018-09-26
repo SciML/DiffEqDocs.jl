@@ -175,7 +175,7 @@ This type will have a value for the current maximum. By doing it this way, we
 can store the current state for the running maximum. The code is as follows:
 
 ```julia
-type AutoAbstolAffect{T}
+mutable struct AutoAbstolAffect{T}
   curmax::T
 end
 # Now make `affect!` for this:
@@ -463,7 +463,7 @@ Now let's check-in on a cell. We can still use the interpolation to get a nice
 plot of the concentration of cell 1 over time. This is done with the command:
 
 ```julia
-ts = linspace(0,10,100)
+ts = range(0, stop=10, length=100)
 plot(ts,map((x)->x[1],sol.(ts)),lw=3,
      ylabel="Amount of X in Cell 1",xlabel="Time")
 ```

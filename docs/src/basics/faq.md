@@ -303,18 +303,18 @@ choice based on the element type of `u`. This is done by the following:
 ```julia
 using ForwardDiff
 struct MyTag end
-immutable DiffCache{T<:AbstractArray, S<:AbstractArray}
+struct DiffCache{T<:AbstractArray, S<:AbstractArray}
     du::T
     dual_du::S
 end
 
-function DiffCache{chunk_size}(T, size, ::Type{Val{chunk_size}})
+function DiffCache(T, size, ::Type{Val{chunk_size}}) where chunk_size
     DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))
 end
 
 DiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})
 
-get_tmp{T<:ForwardDiff.Dual}(dc::DiffCache, ::Type{T}) = dc.dual_du
+get_tmp(dc::DiffCache, ::Type{T}) where {T<:ForwardDiff.Dual} = dc.dual_du
 get_tmp(dc::DiffCache, T) = dc.du
 ```
 
