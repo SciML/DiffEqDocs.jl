@@ -211,7 +211,7 @@ the interpolation must be done manually. For example:
 
 ```julia
 n = 100 #number of timepoints
-ts = linspace(0,1,n)
+ts = range(0, stop=1, length=n)
 plot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))
 ```
 

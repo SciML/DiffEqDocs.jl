@@ -330,7 +330,7 @@ So, if we wanted to use a grid of evenly spaced initial conditions from `0` to `
 we could simply index the `linspace` type:
 
 ```julia
-initial_conditions = linspace(0,1,100)
+initial_conditions = range(0, stop=1, length=100)
 function prob_func(prob,i,repeat)
   prob.u0 = initial_conditions[i]
   prob
@@ -438,7 +438,7 @@ as sufficiently small:
 ```julia
 function reduction(u,batch,I)
   u = append!(u,batch)
-  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false
+  u,((var(u)/sqrt(last(I)))/mean(u)<0.5) ? true : false
 end
 ```
 
