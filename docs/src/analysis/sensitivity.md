@@ -28,12 +28,12 @@ adjoint sensitivity method.
 
 The local sensitivity of the solution to a parameter is defined by how much the
 solution would change by changes in the parameter, i.e. the sensitivity of the
-ith independent variable to the jth parameter is `` \frac{\partial y}{\partial p_{j}}``.
+ith independent variable to the jth parameter is `` \frac{\partial u}{\partial p_{j}}``.
 
 The local sensitivity is computed using the sensitivity ODE:
 
 ```math
-\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial u}\frac{\partial y}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}
+\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial u}\frac{\partial u}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}
 ```
 
 where
