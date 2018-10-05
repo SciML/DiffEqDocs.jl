@@ -79,6 +79,10 @@ section at the end of this page for some example usage.
   timeseries. These "steps" are the steps that the solver stops internally
   (the ones you get by `save_everystep = true`), not the ones that are
   instructed by the user (all solvers work in a step-like manner). Defaults to 1.
+* `save_on`: Denotes whether intermediate solutions are saved. This overrides the
+  settings of `dense`, `saveat` and `save_everystep` and is used by some applicatioins
+  to manually turn off saving temporarily. Everyday use of the solvers should leave
+  this unchanged. Defaults to `true`.
 * `save_start`: Denotes whether the initial condition should be included in
   the solution type as the first timepoint. Defaults to `true`.
 * `save_end`: Denotes whether the final timepoint is forced to be saved,
