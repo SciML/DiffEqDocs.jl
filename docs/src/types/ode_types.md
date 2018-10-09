@@ -37,7 +37,7 @@ page.
 
 ## Example Problems
 
-Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/ode_premade_problems.jl).
+Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/ode).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
