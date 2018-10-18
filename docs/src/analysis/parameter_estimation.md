@@ -351,7 +351,7 @@ We create data using the numerical result with `a=1.5`:
 
 ```julia
 sol = solve(prob,Tsit5())
-t = collect(linspace(0,10,200))
+t = collect(range(0,stop=10,length=200))
 using RecursiveArrayTools # for VectorOfArray
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 data = convert(Array,randomized)
@@ -387,9 +387,9 @@ Before optimizing, let's visualize our cost function by plotting it for a range
 of parameter values:
 
 ```julia
-range = 0.0:0.1:10.0
+vals = 0.0:0.1:10.0
 using Plots; plotly()
-plot(range,[cost_function(i) for i in range],yscale=:log10,
+plot(range,[cost_function(i) for i in vals],yscale=:log10,
      xaxis = "Parameter", yaxis = "Cost", title = "1-Parameter Cost Function",
      lw = 3)
 ```
@@ -566,7 +566,7 @@ p = [1.5]
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5())
 
-t = collect(linspace(0,10,200))
+t = collect(range(0,stop=10,range=200))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 data = convert(Array,randomized)
 
