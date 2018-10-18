@@ -389,7 +389,7 @@ of parameter values:
 ```julia
 vals = 0.0:0.1:10.0
 using Plots; plotly()
-plot(range,[cost_function(i) for i in vals],yscale=:log10,
+plot(vals,[cost_function(i) for i in vals],yscale=:log10,
      xaxis = "Parameter", yaxis = "Cost", title = "1-Parameter Cost Function",
      lw = 3)
 ```
