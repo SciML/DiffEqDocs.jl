@@ -2469,7 +2469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Solvers",
     "title": "SteadyStateDiffEq.jl",
     "category": "section",
-    "text": "SSRootfind : Uses a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.\nDynamicSS : Uses an ODE solver to find the steady state. Automatically terminates when close to the steady state. DynamicSS(alg,abstol=1e-8,reltol=1e-6) requires that an ODE algorithm is given as the first argument. The absolute and relative tolerances specify the termination conditions on the derivative\'s closeness to zero. This internally uses the TerminateSteadyState callback from the Callback Library.Example usage:sol = solve(prob,SSRootfind())\nsol = solve(prob,DynamicSS(Tsit5()))\nsol = solve(prob,DynamicSS(CVODE_BDF()),dt=1.0)"
+    "text": "SSRootfind : Uses a rootfinding algorithm to find a steady state. Defaults to using NLsolve.jl. A different algorithm can be specified via the nlsolve keyword argument.\nDynamicSS : Uses an ODE solver to find the steady state. Automatically terminates when close to the steady state. DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf) requires that an ODE algorithm is given as the first argument.  The absolute and relative tolerances specify the termination conditions on the derivative\'s closeness to zero.  This internally uses the TerminateSteadyState callback from the Callback Library.  The simulated time for which given ODE is solved can be limited by tspan.  If tspan is a number, it is equivalent to passing (zero(tspan), tspan).Example usage:sol = solve(prob,SSRootfind())\nsol = solve(prob,DynamicSS(Tsit5()))\nsol = solve(prob,DynamicSS(CVODE_BDF()),dt=1.0)"
 },
 
 {
