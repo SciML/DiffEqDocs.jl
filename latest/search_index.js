@@ -1001,11 +1001,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/integrator.html#DiffEqBase.step!",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.step!",
+    "category": "function",
+    "text": "step!(integ::DEIntegrator [, dt [, stop_at_tdt]])\n\nPerform one (successful) step on the integrator.\n\nAlternative, if a dt is given, then step! the integrator until there is a temporal difference ≥ dt in integ.t.  When true is passed to the optional third argument, the integrator advances exactly dt.\n\n\n\n\n\n"
+},
+
+{
+    "location": "basics/integrator.html#DiffEqBase.check_error",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.check_error",
+    "category": "function",
+    "text": "check_error(integrator)\n\nCheck state of integrator and return one of the Return Codes\n\n\n\n\n\n"
+},
+
+{
+    "location": "basics/integrator.html#DiffEqBase.check_error!",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.check_error!",
+    "category": "function",
+    "text": "check_error!(integrator)\n\nSame as check_error but also set solution\'s return code (integrator.sol.retcode) and run postamble!.\n\n\n\n\n\n"
+},
+
+{
     "location": "basics/integrator.html#Initialization-and-Stepping-1",
     "page": "Integrator Interface",
     "title": "Initialization and Stepping",
     "category": "section",
-    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve and the returned value is an integrator which satisfies typeof(integrator)<:DEIntegrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. Additonally:step!(integrator,dt[,stop_at_tdt=false])passing a dt will make the integrator keep stepping until integrator.t+dt, and setting stop_at_tdt=true will add a tstop to force it to step to integrator.t+dtTo check whether or not the integration step was successful, you can call check_error(integrator) which returns one of the Return Codes (RetCodes).This type also implements an iterator interface, so one can step n times  (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the iterator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (u,t) in tuples(integrator)\n  @show u,t\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,u,t) in intervals(integrator)\n  @show tprev,t\nendAdditionally, you can make the iterator return specific time points via the TimeChoiceIterator:ts = linspace(0,1,11)\nfor (u,t) in TimeChoiceIterator(integrator,ts)\n  @show u,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: add_tstop!(integrator,new_t).Finally, to solve to the last tstop, call solve!(integrator). Doing init and then solve! is equivalent to solve."
+    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve and the returned value is an integrator which satisfies typeof(integrator)<:DEIntegrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. Additonally:step!(integrator,dt[,stop_at_tdt=false])passing a dt will make the integrator keep stepping until integrator.t+dt, and setting stop_at_tdt=true will add a tstop to force it to step to integrator.t+dtTo check whether or not the integration step was successful, you can call check_error(integrator) which returns one of the Return Codes (RetCodes).This type also implements an iterator interface, so one can step n times  (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the iterator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (u,t) in tuples(integrator)\n  @show u,t\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,u,t) in intervals(integrator)\n  @show tprev,t\nendAdditionally, you can make the iterator return specific time points via the TimeChoiceIterator:ts = linspace(0,1,11)\nfor (u,t) in TimeChoiceIterator(integrator,ts)\n  @show u,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: add_tstop!(integrator,new_t).Finally, to solve to the last tstop, call solve!(integrator). Doing init and then solve! is equivalent to solve.DiffEqBase.step!\nDiffEqBase.check_error\nDiffEqBase.check_error!"
 },
 
 {
@@ -1017,11 +1041,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/integrator.html#DiffEqBase.set_t!",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.set_t!",
+    "category": "function",
+    "text": "set_t!(integrator::DEIntegrator, t::Real)\n\nSet current time point of the integrator to t.\n\n\n\n\n\n"
+},
+
+{
+    "location": "basics/integrator.html#DiffEqBase.set_u!",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.set_u!",
+    "category": "function",
+    "text": "set_u!(integrator::DEIntegrator, u)\n\nSet current state of the integrator to u.\n\n\n\n\n\n"
+},
+
+{
+    "location": "basics/integrator.html#DiffEqBase.set_ut!",
+    "page": "Integrator Interface",
+    "title": "DiffEqBase.set_ut!",
+    "category": "function",
+    "text": "set_ut!(integrator::DEIntegrator, u, t)\n\nSet current state of the integrator to u and t\n\n\n\n\n\n"
+},
+
+{
     "location": "basics/integrator.html#Note-about-mutating-1",
     "page": "Integrator Interface",
     "title": "Note about mutating",
     "category": "section",
-    "text": "Be cautious: one should not directly mutate the t and u fields of the integrator. Doing so will destroy the accuracy of the interpolator and can harm certain algorithms. Instead if one wants to introduce discontinuous changes, one should use the Event Handling and Callback Functions. Modifications within a callback affect! surrounded by saves provides an error-free handling of the discontinuity.As low-level alternative to the callbacks, one can use set_t!, set_u! and set_ut! to mutate integrator states.  Note that certain integrators may not have efficient ways to modify u and t.  In such case, set_*! are as inefficient as reinit!.set_t!(integrator, t): Set current time point of the integrator to t.\nset_u!(integrator, u): Set current state of the integrator to u.\nset_ut!(integrator, u, t): Set current state of the integrator to u and t."
+    "text": "Be cautious: one should not directly mutate the t and u fields of the integrator. Doing so will destroy the accuracy of the interpolator and can harm certain algorithms. Instead if one wants to introduce discontinuous changes, one should use the Event Handling and Callback Functions. Modifications within a callback affect! surrounded by saves provides an error-free handling of the discontinuity.As low-level alternative to the callbacks, one can use set_t!, set_u! and set_ut! to mutate integrator states.  Note that certain integrators may not have efficient ways to modify u and t.  In such case, set_*! are as inefficient as reinit!.DiffEqBase.set_t!\nDiffEqBase.set_u!\nDiffEqBase.set_ut!"
 },
 
 {
