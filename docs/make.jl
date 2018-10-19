@@ -5,6 +5,7 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
          format =:html,
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
+         assets = ["assets/custom.css"],
          pages = Any[
          "Home" => "index.md",
          "Tutorials" => Any[
