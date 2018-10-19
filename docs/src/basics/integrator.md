@@ -83,6 +83,12 @@ options field: `add_tstop!(integrator,new_t)`.
 Finally, to solve to the last `tstop`, call `solve!(integrator)`. Doing `init`
 and then `solve!` is equivalent to `solve`.
 
+```@docs
+DiffEqBase.step!
+DiffEqBase.check_error
+DiffEqBase.check_error!
+```
+
 ## Handing Integrators
 
 The `integrator<:DEIntegrator` type holds all of the information for the intermediate solution
@@ -128,9 +134,11 @@ As low-level alternative to the callbacks, one can use `set_t!`, `set_u!` and
 have efficient ways to modify `u` and `t`.  In such case, `set_*!` are as
 inefficient as `reinit!`.
 
-- `set_t!(integrator, t)`: Set current time point of the `integrator` to `t`.
-- `set_u!(integrator, u)`: Set current state of the `integrator` to `u`.
-- `set_ut!(integrator, u, t)`: Set current state of the `integrator` to `u` and `t`.
+```@docs
+DiffEqBase.set_t!
+DiffEqBase.set_u!
+DiffEqBase.set_ut!
+```
 
 ### Integrator vs Solution
 
