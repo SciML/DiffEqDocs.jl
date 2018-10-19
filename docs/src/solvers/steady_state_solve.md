@@ -23,10 +23,14 @@ you may need to give a starting `dt` via `dt=....`.
   keyword argument.
 - `DynamicSS` : Uses an ODE solver to find the steady state. Automatically
   terminates when close to the steady state.
-  `DynamicSS(alg,abstol=1e-8,reltol=1e-6)` requires that an ODE algorithm is
-  given as the first argument. The absolute and relative tolerances specify
-  the termination conditions on the derivative's closeness to zero. This
-  internally uses the `TerminateSteadyState` callback from the Callback Library.
+  `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
+  ODE algorithm is given as the first argument.  The absolute and
+  relative tolerances specify the termination conditions on the
+  derivative's closeness to zero.  This internally uses the
+  `TerminateSteadyState` callback from the Callback Library.  The
+  simulated time for which given ODE is solved can be limited by
+  `tspan`.  If `tspan` is a number, it is equivalent to passing
+  `(zero(tspan), tspan)`.
 
 Example usage:
 
