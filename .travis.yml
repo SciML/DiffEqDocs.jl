@@ -7,5 +7,5 @@ julia:
 notifications:
   email: false
 script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'using Pkg; Pkg.clone(pwd()); Pkg.add("DiffEqBase"); Pkg.add("DiffEqPDEBase"); Pkg.add("DiffEqProblemLibrary"); Pkg.add("Documenter"); cd(Pkg.dir("DiffEqDocs")); include(joinpath("docs", "make.jl"))'
+  - julia --color=yes -e 'using Pkg; Pkg.instantiate()'
+  - julia --color=yes docs/make.jl
