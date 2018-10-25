@@ -206,7 +206,10 @@ algorithms for both speed and accuracy. The current methods are:
   offer better performance and be preferred to `FRM`.
 - `FRMFW`: the Gillespie first reaction method SSA with `FunctionWrappers`.
   `DirectFW` should generally offer better performance and be preferred to `FRMFW`.
-
+- *`NRM`*: The Gibson-Bruck Next Reaction Method. For some reaction network structures
+   this may offer better performance than `Direct` (for example, large, linear chains of reactions). (Requires dependency graph, see below.)
+- *`SortingDirect`*: The Sorting Direct Method of McCollum et al. It will usually offer performance as good
+  as `Direct`, and for some systems can offer substantially better performance. (Requires dependency graph, see below.)
 
 To pass the aggregator, pass the instantiation of the type. For example:
 
@@ -217,13 +220,17 @@ JumpProblem(prob,Direct(),jump1,jump2)
 will build a problem where the constant rate jumps are solved using Gillespie's
 Direct SSA method.
 
+## Constant Rate Jump Aggregators Requiring Dependency Graphs
+Italicized constant rate jump aggregators (`NRM` and `SortingDirect`) require the user to pass a dependency graph to `JumpProblem` through the named parameter `dep_graph`. i.e.
+```julia
+JumpProblem(prob,Direct(),jump1,jump2; dep_graph=your_dependency_graph)
+```
+For systems with only `MassActionJump`s, or those generated from a `DiffEqBiological` `reaction_network`, this graph will be auto-generated. Otherwise you must construct the dependency graph manually. Dependency graphs are represented as a `Vector{Vector{Int}}`, with the `i`th vector containing the indices of the jumps for which propensities/intensities must be recalculated when the `i`th jump occurs.
 
 ## Recommendations for Constant Rate Jumps
 For representing and aggregating constant rate jumps 
 - Use a `MassActionJump` to handle all jumps that can be represented as mass
   action reactions. This will generally offer the fastest performance. 
 - Use `ConstantRateJump`s for any remaining jumps.
-  - If there are *less* than ~10 `ConstantRateJumps`, the `Direct` aggregator
-    will generally offer the best performance.
-  - If there are *more* than ~10 `ConstantRateJumps`, the `DirectFW` aggregator
-    will generally offer the best performance.
+- For a small number of jumps (< ~10) `Direct` will often perform as well as the other aggregators.
+- For > ~10 jumps `NRM` or `SortingDirect` may offer better performance than `Direct`.
