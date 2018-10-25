@@ -1989,7 +1989,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Jump Problems",
     "title": "Constant Rate Jump Aggregators",
     "category": "section",
-    "text": "Constant rate jump aggregators are the methods by which constant rate jumps, including MassActionJumps, are lumped together. This is required in all algorithms for both speed and accuracy. The current methods are:Direct: the Gillespie Direct method SSA.\nDirectFW: the Gillespie Direct method SSA with FunctionWrappers. This aggregator uses a different internal storage format for collections of ConstantRateJumps. For systems with ~10 or more ConstantRateJumps it should offer better performance than Direct.\nFRM: the Gillespie first reaction method SSA. Direct should generally offer better performance and be preferred to FRM.\nFRMFW: the Gillespie first reaction method SSA with FunctionWrappers. DirectFW should generally offer better performance and be preferred to FRMFW.To pass the aggregator, pass the instantiation of the type. For example:JumpProblem(prob,Direct(),jump1,jump2)will build a problem where the constant rate jumps are solved using Gillespie\'s Direct SSA method."
+    "text": "Constant rate jump aggregators are the methods by which constant rate jumps, including MassActionJumps, are lumped together. This is required in all algorithms for both speed and accuracy. The current methods are:Direct: the Gillespie Direct method SSA.\nDirectFW: the Gillespie Direct method SSA with FunctionWrappers. This aggregator uses a different internal storage format for collections of ConstantRateJumps. For systems with ~10 or more ConstantRateJumps it should offer better performance than Direct.\nFRM: the Gillespie first reaction method SSA. Direct should generally offer better performance and be preferred to FRM.\nFRMFW: the Gillespie first reaction method SSA with FunctionWrappers. DirectFW should generally offer better performance and be preferred to FRMFW.\nNRM: The Gibson-Bruck Next Reaction Method. For some reaction network structures  this may offer better performance than Direct (for example, large, linear chains of reactions). (Requires dependency graph, see below.)\nSortingDirect: The Sorting Direct Method of McCollum et al. It will usually offer performance as good as Direct, and for some systems can offer substantially better performance. (Requires dependency graph, see below.)To pass the aggregator, pass the instantiation of the type. For example:JumpProblem(prob,Direct(),jump1,jump2)will build a problem where the constant rate jumps are solved using Gillespie\'s Direct SSA method."
+},
+
+{
+    "location": "types/jump_types.html#Constant-Rate-Jump-Aggregators-Requiring-Dependency-Graphs-1",
+    "page": "Jump Problems",
+    "title": "Constant Rate Jump Aggregators Requiring Dependency Graphs",
+    "category": "section",
+    "text": "Italicized constant rate jump aggregators (NRM and SortingDirect) require the user to pass a dependency graph to JumpProblem through the named parameter dep_graph. i.e.JumpProblem(prob,Direct(),jump1,jump2; dep_graph=your_dependency_graph)For systems with only MassActionJumps, or those generated from a DiffEqBiological reaction_network, this graph will be auto-generated. Otherwise you must construct the dependency graph manually. Dependency graphs are represented as a Vector{Vector{Int}}, with the ith vector containing the indices of the jumps for which propensities/intensities must be recalculated when the ith jump occurs."
 },
 
 {
@@ -1997,7 +2005,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Jump Problems",
     "title": "Recommendations for Constant Rate Jumps",
     "category": "section",
-    "text": "For representing and aggregating constant rate jumps Use a MassActionJump to handle all jumps that can be represented as mass action reactions. This will generally offer the fastest performance. \nUse ConstantRateJumps for any remaining jumps.\nIf there are less than ~10 ConstantRateJumps, the Direct aggregator will generally offer the best performance.\nIf there are more than ~10 ConstantRateJumps, the DirectFW aggregator will generally offer the best performance."
+    "text": "For representing and aggregating constant rate jumps Use a MassActionJump to handle all jumps that can be represented as mass action reactions. This will generally offer the fastest performance. \nUse ConstantRateJumps for any remaining jumps.\nFor a small number of jumps (< ~10) Direct will often perform as well as the other aggregators.\nFor > ~10 jumps NRM or SortingDirect may offer better performance than Direct."
 },
 
 {
@@ -4749,7 +4757,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Basic syntax",
     "category": "section",
-    "text": "The @reaction_network macro allows you to define reaction networks in a more scientific format. Its input is a set of chemical reactions and from them it generates a reaction network object which can be used as input to ODEProblem, SDEProblem and JumpProblem constructors.The basic syntax is:rn = @reaction_network begin\n  2.0, X + Y --> XY               \n  1.0, XY --> Z1 + Z2            \nendwhere each line corresponds to a chemical reaction. Each reaction consists of a reaction rate (the expression on the left hand side of  ,), a set of substrates (the expression in-between , and -->), and a set of products (the expression on the right hand side of -->). The substrates and the products may contain one or more reactants, separated by +.  The naming convention for these are the same as for normal variables in Julia.The chemical reaction model is generated by the @reaction_network macro and stored in the rn variable (a normal variable, do not need to be called rn). The macro generates a differential equation model according to the law of mass action, in the above example the ODEs become:fracdXdt = -20Xcdot Y\nfracdYdt = -20Xcdot Y\nfracdXYdt = 20Xcdot Y - 10XY\nfracdZ1dt= 10XY\nfracdZ2dt = 10XY"
+    "text": "The @reaction_network macro allows you to define reaction networks in a more scientific format. Its input is a set of chemical reactions and from them it generates a reaction network object which can be used as input to ODEProblem, SDEProblem and JumpProblem constructors.The basic syntax is:rn = @reaction_network begin\n  2.0, X + Y --> XY               \n  1.0, XY --> Z1 + Z2            \nendwhere each line corresponds to a chemical reaction. Each reaction consists of a reaction rate (the expression on the left hand side of  ,), a set of substrates (the expression in-between , and -->), and a set of products (the expression on the right hand side of -->). The substrates and the products may contain one or more reactants, separated by +.  The naming convention for these are the same as for normal variables in Julia.The chemical reaction model is generated by the @reaction_network macro and stored in the rn variable (a normal variable, do not need to be called rn). The macro generates a differential equation model according to the law of mass action, in the above example the ODEs become:fracdXdt = -2 X Y\nfracdYdt = -2 X Y\nfracdXYdt = 2 X Y - XY\nfracdZ1dt= XY\nfracdZ2dt = XY"
 },
 
 {
@@ -4781,7 +4789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Production and Destruction and Stoichiometry",
     "category": "section",
-    "text": "Sometimes reactants are produced/destroyed from/to nothing. This can be designated using either 0 or ∅:rn = @reaction_network begin\n  2.0, 0 → X\n  1.0, X → ∅\nendSometimes several molecules of the same reactant is involved in a reaction, the stoichiometry of a reactant in a reaction can be set using a number. Here two species of X forms the dimer X2:rn = @reaction_network begin\n  1.0, 2X → X2\nendthis corresponds to the differential equation:dXdt = -10*X^22\ndX2dt = 10*X^22Other numbers than 2 can be used and parenthesises can be used to use the same stoichiometry for several reactants:rn = @reaction_network begin\n  1.0, X + 2(Y + Z) → XY2Z2\nend"
+    "text": "Sometimes reactants are produced/destroyed from/to nothing. This can be designated using either 0 or ∅:rn = @reaction_network begin\n  2.0, 0 → X\n  1.0, X → ∅\nendSometimes several molecules of the same reactant is involved in a reaction, the stoichiometry of a reactant in a reaction can be set using a number. Here two species of X forms the dimer X2:rn = @reaction_network begin\n  1.0, 2X → X2\nendthis corresponds to the differential equation:fracdXdt = -frac12 X^2\nfracdX2dt = frac12 X^2Other numbers than 2 can be used and parenthesises can be used to use the same stoichiometry for several reactants:rn = @reaction_network begin\n  1.0, X + 2(Y + Z) → XY2Z2\nend"
 },
 
 {
@@ -4789,7 +4797,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Variable reaction rates",
     "category": "section",
-    "text": "Reaction rates do not need to be constant, but can also depend on the current concentration of the various reactants (when e.g. one reactant activate the production of another one). E.g. this is a valid notation:rn = @reaction_network begin\n  X, Y → ∅\nendand will have Y degraded at rate dYdt = -X*YNote that this is actually equivalent to the reactionrn = @reaction_network begin\n  1.0, X + Y → X\nendMost expressions and functions are valid reaction rates, e.g:rn = @reaction_network begin\n  2.0*X^2, 0 → X + Y\n  gamma(Y)/5, X → ∅\n  pi*X/Y, Y → ∅\nendplease note that user defined functions cannot be used directly (see later section \"User defined functions in reaction rates\")."
+    "text": "Reaction rates do not need to be constant, but can also depend on the current concentration of the various reactants (when e.g. one reactant activate the production of another one). E.g. this is a valid notation:rn = @reaction_network begin\n  X, Y → ∅\nendand will have Y degraded at rate fracdYdt = -XYNote that this is actually equivalent to the reactionrn = @reaction_network begin\n  1.0, X + Y → X\nendMost expressions and functions are valid reaction rates, e.g:rn = @reaction_network begin\n  2.0*X^2, 0 → X + Y\n  gamma(Y)/5, X → ∅\n  pi*X/Y, Y → ∅\nendplease note that user defined functions cannot be used directly (see later section \"User defined functions in reaction rates\")."
 },
 
 {
@@ -4837,7 +4845,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Stochastic simulations using discrete stochastic simulation algorithm",
     "category": "section",
-    "text": "Instead of solving SDEs one can make stochastic simulations of the model using real copy numbers and a discrete stochastic simulation algorithm. This can be done using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [10]\ntspan = (0.,1.)\ndiscrete_prob = DiscreteProblem(u0,tspan,p)\njump_prob = JumpProblem(discrete_prob,Direct(),rn)\nsol = solve(jump_prob,FunctionMap())"
+    "text": "Instead of solving SDEs one can make stochastic simulations of the model using real copy numbers and a discrete stochastic simulation algorithm. This can be done using:rn = @reaction_network begin\n  p, ∅ → X\n  d, X → ∅\nend p d\np = [1.0,2.0]\nu0 = [10]\ntspan = (0.,1.)\ndiscrete_prob = DiscreteProblem(u0,tspan,p)\njump_prob = JumpProblem(discrete_prob,Direct(),rn)\nsol = solve(jump_prob,SSAStepper())"
 },
 
 {
@@ -4869,7 +4877,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Scaling noise in the chemical Langevin equations",
     "category": "section",
-    "text": "When making stochastic simulations using SDEs it is possible to scale the amount of noise  in the simulations by declaring a noise scaling parameter. This parameter is declared as a  second argument to the @reaction_network macro (when scaling the noise one have to  declare a custom type).rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nendThe noise scaling parameter is automatically added as a last argument to the parameter array  (even if not declared at the end). E.g. this is correct syntax:rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nend\np = [0.1,]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = SDEproblem(rn,u0,tspan,p)\nsol = solve(prob)Here the amount of noise in the stochastic simulation will be reduced by a factor 10."
+    "text": "When making stochastic simulations using SDEs it is possible to scale the amount of noise  in the simulations by declaring a noise scaling parameter. This parameter is declared as a  second argument to the @reaction_network macro (when scaling the noise one have to  declare a custom type).rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nendThe noise scaling parameter is automatically added as a last argument to the parameter array  (even if not declared at the end). E.g. this is correct syntax:rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nend\np = [0.1,]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = SDEProblem(rn,u0,tspan,p)\nsol = solve(prob)Here the amount of noise in the stochastic simulation will be reduced by a factor 10."
 },
 
 {
@@ -4877,7 +4885,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Ignoring mass kinetics",
     "category": "section",
-    "text": "While one in almost all cases want the reaction rate to take the law of mass action into account, so the reactionrn = @reaction_network my_custom_type ns begin\n  k, X → ∅\nend koccur at the rate dXdt = -k*X, it is possible to ignore this by using any of the following  non-filled arrows when declaring the reaction: ⇐, ⟽, ⇒, ⟾, ⇔, ⟺. This means that  the reaction rn = @reaction_network my_custom_type ns begin\n  k, X ⇒ ∅\nend kwill occur at rate dXdt = -k (which might become a problem since X will be degraded  at a constant rate even when very small or equal to 0."
+    "text": "While one in almost all cases want the reaction rate to take the law of mass action into account, so the reactionrn = @reaction_network my_custom_type ns begin\n  k, X → ∅\nend koccur at the rate dXdt = -kX, it is possible to ignore this by using any of the following  non-filled arrows when declaring the reaction: ⇐, ⟽, ⇒, ⟾, ⇔, ⟺. This means that  the reaction rn = @reaction_network my_custom_type ns begin\n  k, X ⇒ ∅\nend kwill occur at rate dXdt = -k (which might become a problem since X will be degraded  at a constant rate even when very small or equal to 0."
 },
 
 {
@@ -4901,7 +4909,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Birth-Death Process",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, X --> 2X\n  c2, X --> 0\n  c3, 0 --> X\nend c1 c2 c3\np = (2.0,1.0,0.5)\nprob = DiscreteProblem([5], (0.0, 4.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, SSAStepper())"
 },
 
 {
@@ -4909,7 +4917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Example: Michaelis-Menten Enzyme Kinetics",
     "category": "section",
-    "text": "rs = @reaction_network begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, Discrete())"
+    "text": "rs = @reaction_network begin\n  c1, S + E --> SE\n  c2, SE --> S + E\n  c3, SE --> P + E\nend c1 c2 c3\np = (0.00166,0.0001,0.1)\n# S = 301, E = 100, SE = 0, P = 0\nprob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)\njump_prob = JumpProblem(prob, Direct(), rs)\nsol = solve(jump_prob, SSAStepper())"
 },
 
 {
