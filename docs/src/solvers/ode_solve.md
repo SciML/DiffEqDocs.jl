@@ -369,6 +369,23 @@ These methods require a choice of `dt`.
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
 
+#### Exponential Methods for Linear and Affine Problems
+
+- `LinearExponential` - Exact solution formula for linear, time-independent problems.
+
+Options:
+
+- `krylov` - symbol. One of
+  - :off (default) - cache the operator beforehand. Requires `Matrix(A)` method
+    defined for the operator `A`.
+  - :simple - uses simple Krylov approximations with fixed subspace size `m`.
+  - :adaptive - uses adaptive Krylov approximations with internal timestepping.
+- `m` - integer, default: `30`. Controls the size of Krylov subsapce if
+  `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
+- `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
+  then the Lanczos algorithm will always be used and the IOP setting is ignored.
+
 #### Exponential Runge-Kutta Methods
 
 These methods are all fixed timestepping only.
