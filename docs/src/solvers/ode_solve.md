@@ -369,19 +369,22 @@ These methods require a choice of `dt`.
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
 
-#### Exponential Rosenbrock Methods
+#### Exponential Runge-Kutta Methods
 
-- `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
-- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only.
-  Alias: `ETD1`.
-- `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only.
-- `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
-- `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
-- `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
-- `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
-  timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme (in development).
-- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme (in development).
+These methods are all fixed timestepping only.
+
+- `LawsonEuler` - First order exponential Euler scheme.
+- `NorsettEuler` - First order exponential-RK scheme. Alias: `ETD1`.
+- `ETD2` - Second order Exponential Time Differencing method (in development).
+- `ETDRK2` - 2nd order exponential-RK scheme.
+- `ETDRK3` - 3rd order exponential-RK scheme.
+- `ETDRK4` - 4th order exponential-RK scheme.
+- `HochOst4` - 4th order exponential-RK scheme with stiff order 4.
+
+The methods are intended for semilinear problems constructed by 
+[`SplitODEProblem`](../types/split_ode_types.html) or `SplitODEFunction`. They can
+also be used for a general nonlinear problem, in which case the jacobian of the right
+hand side is used as the linear operator in each time step.
 
 Except for `ETD2`, all methods come with these options, which can be set in the methods'
 constructor:
@@ -392,20 +395,29 @@ constructor:
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
+- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
+  is not given. See [Extra Options](#Extra-Options-1) for more details.
 
-Unless used for a semilinear problem, the jacobian associated with the right hand side function
-is required for the methods to work.
+#### Adaptive Exponential Rosenbrock Methods
+
+- `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme.
+- `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
+
+The exponential rosenbrock methods cannot be applied to semilinear problems. Options for the
+solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1)
+except that Krylov approximation is always used.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
-- `Exp4` - 4th order EPIRK scheme. Fixed time stepping only.
-- `EPIRK4s3A` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
-- `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.
-- `EPIRK5P1` - 5th order EPIRK scheme. Fixed time stepping only.
-- `EPIRK5P2` - 5th order EPIRK scheme. Fixed time stepping only.
-- `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5.
-  Fixed time stepping only. Broken.
-- `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5. Fixed time stepping only.
+These methods are all fixed timestepping only.
+
+- `Exp4` - 4th order EPIRK scheme.
+- `EPIRK4s3A` - 4th order EPIRK scheme with stiff order 4.
+- `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4.
+- `EPIRK5P1` - 5th order EPIRK scheme.
+- `EPIRK5P2` - 5th order EPIRK scheme.
+- `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5. Broken.
+- `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5.
 
 Options:
 
@@ -416,8 +428,8 @@ Options:
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
-
-You're required to provide the jacobian associated with the problem for the methods to work.
+- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
+  is not given. See [Extra Options](#Extra-Options-1) for more details.
 
 It should be noted that many of the methods are still at an experimental stage of development,
 and thus should be used with caution.
