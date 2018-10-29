@@ -372,6 +372,8 @@ These methods require a choice of `dt`.
 #### Exponential Methods for Linear and Affine Problems
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
+  Expects the right hand side function to be a
+  [`AbstractDiffEqOperator`](../features/diffeq_operator.html).
 
 Options:
 
