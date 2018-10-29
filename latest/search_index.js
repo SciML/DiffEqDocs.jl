@@ -2225,11 +2225,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Exponential-Rosenbrock-Methods-1",
+    "location": "solvers/ode_solve.html#Exponential-Methods-for-Linear-and-Affine-Problems-1",
     "page": "ODE Solvers",
-    "title": "Exponential Rosenbrock Methods",
+    "title": "Exponential Methods for Linear and Affine Problems",
     "category": "section",
-    "text": "LawsonEuler - First order exponential Euler scheme. Fixed timestepping only.\nNorsettEuler - First order exponential-RK scheme. Fixed timestepping only. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method (in development). Fixed timestepping only.\nETDRK2 - 2nd order exponential-RK scheme. Fixed timestepping only.\nETDRK3 - 3rd order exponential-RK scheme. Fixed timestepping only.\nETDRK4 - 4th order exponential-RK scheme. Fixed timestepping only.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4. Fixed timestepping only.\nExprb32 - 3rd order adaptive Exponential-Rosenbrock scheme (in development).\nExprb43 - 4th order adaptive Exponential-Rosenbrock scheme (in development).Except for ETD2, all methods come with these options, which can be set in the methods\' constructor:krylov - boolean, default: false. Determines whether Krylov approximation or operator caching is used, the latter only available for semilinear problems.\nm - integer, default: 30. Controls the size of Krylov subsapce.\niop - integer, default: 0. If not zero, determines the length of the incomplete orthogonalization procedure (IOP) [1]. Note that if the linear operator/jacobian is hermitian, then the Lanczos algorithm will always be used and the IOP setting is ignored.Unless used for a semilinear problem, the jacobian associated with the right hand side function is required for the methods to work."
+    "text": "LinearExponential - Exact solution formula for linear, time-independent problems. Expects the right hand side function to be a AbstractDiffEqOperator.Options:krylov - symbol. One of\n:off (default) - cache the operator beforehand. Requires Matrix(A) method defined for the operator A.\n:simple - uses simple Krylov approximations with fixed subspace size m.\n:adaptive - uses adaptive Krylov approximations with internal timestepping.\nm - integer, default: 30. Controls the size of Krylov subsapce if krylov=:simple, and the initial subspace size if krylov=:adaptive.\niop - integer, default: 0. If not zero, determines the length of the incomplete orthogonalization procedure (IOP) [1]. Note that if the linear operator/jacobian is hermitian, then the Lanczos algorithm will always be used and the IOP setting is ignored."
+},
+
+{
+    "location": "solvers/ode_solve.html#Exponential-Runge-Kutta-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Exponential Runge-Kutta Methods",
+    "category": "section",
+    "text": "These methods are all fixed timestepping only.LawsonEuler - First order exponential Euler scheme.\nNorsettEuler - First order exponential-RK scheme. Alias: ETD1.\nETD2 - Second order Exponential Time Differencing method (in development).\nETDRK2 - 2nd order exponential-RK scheme.\nETDRK3 - 3rd order exponential-RK scheme.\nETDRK4 - 4th order exponential-RK scheme.\nHochOst4 - 4th order exponential-RK scheme with stiff order 4.The methods are intended for semilinear problems constructed by  SplitODEProblem or SplitODEFunction. They can also be used for a general nonlinear problem, in which case the jacobian of the right hand side is used as the linear operator in each time step.Except for ETD2, all methods come with these options, which can be set in the methods\' constructor:krylov - boolean, default: false. Determines whether Krylov approximation or operator caching is used, the latter only available for semilinear problems.\nm - integer, default: 30. Controls the size of Krylov subsapce.\niop - integer, default: 0. If not zero, determines the length of the incomplete orthogonalization procedure (IOP) [1]. Note that if the linear operator/jacobian is hermitian, then the Lanczos algorithm will always be used and the IOP setting is ignored.\nautodiff and chunksize: autodiff control if problem is not semilinear and explicit jacobian is not given. See Extra Options for more details."
+},
+
+{
+    "location": "solvers/ode_solve.html#Adaptive-Exponential-Rosenbrock-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Adaptive Exponential Rosenbrock Methods",
+    "category": "section",
+    "text": "Exprb32 - 3rd order adaptive Exponential-Rosenbrock scheme.\nExprb43 - 4th order adaptive Exponential-Rosenbrock scheme.The exponential rosenbrock methods cannot be applied to semilinear problems. Options for the solvers are the same as Exponential Runge-Kutta Methods except that Krylov approximation is always used."
 },
 
 {
@@ -2237,7 +2253,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)",
     "category": "section",
-    "text": "Exp4 - 4th order EPIRK scheme. Fixed time stepping only.\nEPIRK4s3A - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.\nEPIRK4s3B - 4th order EPIRK scheme with stiff order 4. Fixed time stepping only.\nEPIRK5P1 - 5th order EPIRK scheme. Fixed time stepping only.\nEPIRK5P2 - 5th order EPIRK scheme. Fixed time stepping only.\nEPIRK5s3 - 5th order \"horizontal\" EPIRK scheme with stiff order 5. Fixed time stepping only. Broken.\nEXPRB53s3- 5th order EPIRK scheme with stiff order 5. Fixed time stepping only.Options:adaptive_krylov - boolean, default: true. Determines if the adaptive Krylov algorithm with timestepping of Neisen & Wright is used.\nm - integer, default: 30. Controls the size of Krylov subsapce, or the size for the first step if adaptive_krylov=true.\niop - integer, default: 0. If not zero, determines the length of the incomplete orthogonalization procedure (IOP) [1]. Note that if the linear operator/jacobian is hermitian, then the Lanczos algorithm will always be used and the IOP setting is ignored.You\'re required to provide the jacobian associated with the problem for the methods to work.It should be noted that many of the methods are still at an experimental stage of development, and thus should be used with caution."
+    "text": "These methods are all fixed timestepping only.Exp4 - 4th order EPIRK scheme.\nEPIRK4s3A - 4th order EPIRK scheme with stiff order 4.\nEPIRK4s3B - 4th order EPIRK scheme with stiff order 4.\nEPIRK5P1 - 5th order EPIRK scheme.\nEPIRK5P2 - 5th order EPIRK scheme.\nEPIRK5s3 - 5th order \"horizontal\" EPIRK scheme with stiff order 5. Broken.\nEXPRB53s3- 5th order EPIRK scheme with stiff order 5.Options:adaptive_krylov - boolean, default: true. Determines if the adaptive Krylov algorithm with timestepping of Neisen & Wright is used.\nm - integer, default: 30. Controls the size of Krylov subsapce, or the size for the first step if adaptive_krylov=true.\niop - integer, default: 0. If not zero, determines the length of the incomplete orthogonalization procedure (IOP) [1]. Note that if the linear operator/jacobian is hermitian, then the Lanczos algorithm will always be used and the IOP setting is ignored.\nautodiff and chunksize: autodiff control if problem is not semilinear and explicit jacobian is not given. See Extra Options for more details.It should be noted that many of the methods are still at an experimental stage of development, and thus should be used with caution."
 },
 
 {
