@@ -141,23 +141,17 @@ i.e. no points outside the interval will be plotted.
 
 ```julia
 using DifferentialEquations, Plots
-lorenz = @ode_def Lorenz begin
+lorenz = @ode_def begin
   dx = σ*(y-x)
   dy = ρ*x-y-x*z
   dz = x*y-β*z
-end σ = 10.0 β = 8.0/3.0 ρ => 28.0
-
+end σ β ρ
 u0 = [1., 5., 10.]
 tspan = (0., 100.)
-prob = ODEProblem(lorenz, u0, tspan)
+p = (10.0,8/3,28.0)
+prob = ODEProblem(lorenz, u0, tspan,p)
 sol = solve(prob)
-
 xyzt = plot(sol, plotdensity=10000,lw=1.5)
-xy = plot(sol, plotdensity=10000, vars=(:x,:y))
-xz = plot(sol, plotdensity=10000, vars=(:x,:z))
-yz = plot(sol, plotdensity=10000, vars=(:y,:z))
-xyz = plot(sol, plotdensity=10000, vars=(:x,:y,:z))
-plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
 ![lorenz_plot](../assets/vars_plotting_example.png)
