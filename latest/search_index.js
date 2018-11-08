@@ -125,7 +125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Core Contributors",
     "category": "section",
-    "text": "JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:Chris Rackauckas (@ChrisRackauckas) (lead developer)\nYingbo Ma (@YingboMa)\nDavid Widmann (@devmotion)\nHendrik Ranocha (@ranocha)\nEthan Levien (@elevien)\nTom Short (@tshort)\n@dextorious"
+    "text": "JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:Chris Rackauckas (@ChrisRackauckas) (lead developer)\nYingbo Ma (@YingboMa)\nDavid Widmann (@devmotion)\nHendrik Ranocha (@ranocha)\nEthan Levien (@elevien)\nTom Short (@tshort)\n@dextorious\nSamuel Isaacson (@isaacsas)"
 },
 
 {
