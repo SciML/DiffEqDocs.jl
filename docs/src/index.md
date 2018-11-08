@@ -267,7 +267,7 @@ individuals. Significant contributions have been made by the following individua
 - Ethan Levien (@elevien)
 - Tom Short (@tshort)
 - @dextorious
-- Samual Isaacson (@isaacsas)
+- Samuel Isaacson (@isaacsas)
 
 #### Google Summer of Code Alumni
 
