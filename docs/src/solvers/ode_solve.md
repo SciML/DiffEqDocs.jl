@@ -835,6 +835,8 @@ For more information on these algorithms, see
 
 ## GeometricIntegrators.jl
 
+#### Note: This package currently segfaults on non-Linux Julia v1.0!
+
 GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
 Note that this setup is not automatically included with DifferentialEquaitons.jl.
 To use the following algorithms, you must install and use
