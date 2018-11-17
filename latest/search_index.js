@@ -2349,6 +2349,14 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "GeometricIntegrators.jl",
     "category": "section",
+    "text": ""
+},
+
+{
+    "location": "solvers/ode_solve.html#Note:-This-package-currently-segfaults-on-non-Linux-Julia-v1.0!-1",
+    "page": "ODE Solvers",
+    "title": "Note: This package currently segfaults on non-Linux Julia v1.0!",
+    "category": "section",
     "text": "GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use GeometricIntegratorsDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl\")\nusing GeometricIntegratorsDiffEqGIEuler - 1st order Euler method\nGIMidpoint - 2nd order explicit midpoint method\nGIHeun - 2nd order Heun\'s method\nGIKutta - 3rd order Kutta\'s method\nGIERK4 - standard 4th order Runge-Kutta\nGIERK438 - 4th order Runge-Kutta, 3/8\'s rule\nGIImplicitEuler - 1st order implicit Euler method\nGIImplicitMidpoint - 2nd order implicit midpoint method\nGIRadIIA2 - 2-stage order 3 Radau-IIA\nGIRadIIA3 - 3-stage order 5 Radau-IIA\nGISRK3 - 3-stage order 4 symmetric Runge-Kutta method\nGIGLRK(s) - Gauss-Legendre Runge-Kutta method of order 2sNote that all of these methods require the user supplies dt."
 },
 
