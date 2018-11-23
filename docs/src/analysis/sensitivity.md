@@ -191,7 +191,7 @@ G(u,p)=G(u(p))=\int_{t_{0}}^{T}g(u(t,p))dt
 some integral of the solution. It does so by solving the adjoint problem
 
 ```math
-\frac{d\lambda^{\star}}{dt}=-g_{u}(t)-\lambda^{\star}(t)f_{u}(t),\thinspace\thinspace\thinspace\lambda^{\star}(T)=0
+\frac{d\lambda^{\star}}{dt}=g_{u}(t)-\lambda^{\star}(t)f_{u}(t),\thinspace\thinspace\thinspace\lambda^{\star}(T)=0
 ```
 
 where ``f_u`` is the Jacobian of the system with respect to the state `u` while
