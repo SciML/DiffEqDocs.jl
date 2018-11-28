@@ -34,29 +34,6 @@ plot!(sol.t, t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 
 where the pieces are described below.
 
-#### Note
-
-If that code errors, it is most likely due to versioning issues.
-
-```julia
-Pkg.status("DifferentialEquations")
-```
-
-should return a version higher than `v4.0.0`. If not, `Pkg.update()` to
-get the latest versions. If that does not work, then there is some other
-package upper bounding the allowed version of DifferentialEqautions.jl.
-The changes are described at length here:
-
-http://juliadiffeq.org/2018/01/24/Parameters.html
-
-If you don't wish to update right now, simply do
-
-```julia
-Pkg.pin("DifferentialEquations",v"3.1.0")
-```
-
-and use the sidebar to change the documentation to v3.2.0.
-
 ### Step 1: Defining a Problem
 
 To solve this numerically, we define a problem type by giving it the equation,
