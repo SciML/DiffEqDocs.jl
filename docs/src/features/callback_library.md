@@ -328,6 +328,7 @@ function IterativeCallback(time_choice, user_affect!,tType = Float64;
 
 where `time_choice(integrator)` determines the time of the next callback and
 `user_affect!` is the effect applied to the integrator at the stopping points.
+If `nothing` is returned for the time choice then the iterator ends.
 
 ## PeriodicCallback
 
