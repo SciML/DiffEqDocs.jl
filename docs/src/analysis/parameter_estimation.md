@@ -689,7 +689,7 @@ adds a little bit of randomness:
 
 ```julia
 using RecursiveArrayTools # for VectorOfArray
-t = collect(linspace(0,10,200))
+t = collect(range(0,stop=10,length=200))
 function generate_data(sol,t)
   randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
   data = convert(Array,randomized)
@@ -922,7 +922,7 @@ u0 = [1.0,1.0]
 tspan = (0.0,10.0)
 prob1 = ODEProblem(f1,u0,tspan,p)
 sol = solve(prob1,Tsit5())
-t = collect(linspace(1,10,10))
+t = collect(range(1,stop=10,length=10))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 data = convert(Array,randomized)
 ```
