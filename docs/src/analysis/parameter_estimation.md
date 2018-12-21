@@ -137,7 +137,7 @@ function my_loss_function(sol)
    tot_loss
 end
 ```
-#### First differencing
+#### First Differencing
 
 ```julia 
 L2Loss(t,data,differ_weight=0.3,data_weight=0.7)
@@ -558,10 +558,11 @@ Out[4]:2-element Array{Float64,1}:
 Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and 
 the rest of the values are the initial values of the shorter timespans as described in the reference section.
 
-The objective function for Two Stage method can be created as
+The objective function for Two Stage method can be created and passed to an optimizer as
 
 ```julia
 two_stage_obj = two_stage_method(ms_prob,t,data)
+result = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
 ```
 The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`, 
 `Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the 
@@ -790,19 +791,20 @@ likelihood to fit the parameters of an SDE's Monte Carlo evaluation.
 Let's use the same Lotka-Volterra equation as before, but this time add noise:
 
 ```julia
-pf = function (du,u,p,t)
-  du[1] = p[1] * u[1] - u[1]*u[2]
-  du[2] = -3u[2] + u[1]*u[2]
+pf_func = function (du,u,p,t)
+  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
+  du[2] = -3 * u[2] + u[1]*u[2]
 end
 
 u0 = [1.0;1.0]
-pg = function (du,u,p,t)
-  du[1] = p[2]*u[1]
-  du[2] = 1e-2u[2]
-end
-p = [1.5,1e-2]
 tspan = (0.0,10.0)
-prob = SDEProblem(pf,pg,u0,tspan,p)
+p = [1.5,1.0]
+pg_func = function (du,u,p,t)
+  du[1] = 1e-6u[1]
+  du[2] = 1e-6u[2]
+end
+prob = SDEProblem(pf_func,pg_func,u0,tspan,p)
+sol = solve(prob,SRIW1())
 ```
 
 Now lets generate a dataset from 10,000 solutions of the SDE
@@ -818,14 +820,6 @@ end
 aggregate_data = convert(Array,VectorOfArray([generate_data(t) for i in 1:10000]))
 ```
 
-Instead of using `UnivariateDistribution`s like in the previous example, lets fit
-our data to `MultivariateNormal` distributions.
-
-```julia
-using Distributions
-distributions = [fit_mle(MultivariateNormal,aggregate_data[:,j,:]) for j in 1:200]
-```
-
 Now let's estimate the parameters. Instead of using single runs from the SDE, we
 will use a `MonteCarloProblem`. This means that it will solve the SDE `N` times
 to come up with an approximate probability distribution at each time point and
@@ -833,40 +827,65 @@ use that in the likelihood estimate.
 
 ```julia
 monte_prob = MonteCarloProblem(prob)
-obj = build_loss_objective(monte_prob,SOSRI(),LogLikeLoss(t,distributions),
+obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,data),
                                      maxiters=10000,verbose=false,num_monte = 1000,
                                      parallel_type = :threads)
 ```
 
-To speed things up I enabled multithreading. Just as before, we hand this over
-to BlackBoxOptim.jl:
+Now we use Optim.jl for optimization below 
 
 ```julia
-using BlackBoxOptim
-bound1 = Tuple{Float64, Float64}[(0.5, 3),(1e-3, 1e-1)]
-result = bboptimize(obj;SearchRange = bound1, MaxSteps = 400)
+obj = build_loss_objective(monte_prob,SRIW1(),L2Loss(t,data),maxiters=1000,
+                           verbose=false,verbose_opt=false,verbose_steps=1,num_monte=50)
 
-Optimization stopped after 201 steps and 2713
-.5920000076294 seconds
-Termination reason: Max number of steps (200)
- reached
-Steps per second = 0.07407156271076672
-Function evals per second = 0.106869418836429
-59
-Improvements/step = 0.42
-Total function evaluations = 290
+result = Optim.optimize(obj, [1.4,0.95], Optim.BFGS())
+```
+Parameter Estimation in case of SDE's with a regular `L2Loss` leads to poor accuracy in the result as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1). 
 
-
-Best candidate found: [1.52075, 0.0216393]
-
-Fitness: 1544423.794270536
+```julia
+Results of Optimization Algorithm
+ * Algorithm: BFGS
+ * Starting Point: [1.0,0.5]
+ * Minimizer: [4.164848835940667,4.597047813254346]
+ * Minimum: 1.838501e+03
+ * Iterations: 8
+ * Convergence: false
+   * |x - x'| ≤ 0.0e+00: false 
+     |x - x'| = 6.58e-05 
+   * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
+     |f(x) - f(x')| = 2.70e-08 |f(x)|
+   * |g(x)| ≤ 1.0e-08: false 
+     |g(x)| = 1.10e+01 
+   * Stopped by an increasing objective: true
+   * Reached Maximum Number of Iterations: false
+ * Objective Calls: 44
+ * Gradient Calls: 44
 ```
 
+Instead when we use `L2Loss` with first differencing enabled we get much more accurate estimates.
+
+```julia
+Results of Optimization Algorithm
+ * Algorithm: BFGS
+ * Starting Point: [1.0,0.5]
+ * Minimizer: [1.5010680535080316,1.0023875062385483]
+ * Minimum: 1.166632e-01
+ * Iterations: 12
+ * Convergence: false
+   * |x - x'| ≤ 0.0e+00: false 
+     |x - x'| = 2.64e-07 
+   * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
+     |f(x) - f(x')| = 3.92e-06 |f(x)|
+   * |g(x)| ≤ 1.0e-08: false 
+     |g(x)| = 2.47e-01 
+   * Stopped by an increasing objective: true
+   * Reached Maximum Number of Iterations: false
+ * Objective Calls: 87
+ * Gradient Calls: 87
+```
 
 Here we see that we successfully recovered the drift parameter, and got close to
 the original noise parameter after searching a two orders of magnitude range.
-It would require a larger `num_monte` to accurately get samples of the the
-variance and receive a better estimate there.
 
 ## Bayesian Inference Examples
 
