@@ -509,7 +509,7 @@ and thus this algorithm was able to correctly identify all four parameters.
 We can also use Multiple Shooting method by creating a `multiple_shooting_objective`
 
 ```julia
-ms_f = @ode_def_nohes LotkaVolterraTest begin
+ms_f = @ode_def begin
     dx = a*x - b*x*y
     dy = -3*y + x*y
 end a b 
@@ -517,7 +517,7 @@ ms_u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 ms_p = [1.5,1.0]
 ms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)
-t = collect(linspace(0,10,200))
+t = collect(range(0,stop=10,length=200))
 data = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))
 bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
                                 (0, 10),(0, 10),(0, 10),(0, 10),
@@ -562,7 +562,25 @@ The objective function for Two Stage method can be created and passed to an opti
 
 ```julia
 two_stage_obj = two_stage_method(ms_prob,t,data)
-result = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
+result = Optim.optimize(two_stage_obj, [1.3,0.8,2.8,1.2], Optim.BFGS()
+)
+Results of Optimization Algorithm
+ * Algorithm: BFGS
+ * Starting Point: [1.3,0.8,2.8,1.2]
+ * Minimizer: [1.5035938533664717,0.9925731153746833, ...]
+ * Minimum: 1.513400e+00
+ * Iterations: 9
+ * Convergence: true
+   * |x - x'| ≤ 0.0e+00: false 
+     |x - x'| = 4.58e-10 
+   * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
+     |f(x) - f(x')| = 5.87e-16 |f(x)|
+   * |g(x)| ≤ 1.0e-08: true 
+     |g(x)| = 7.32e-11 
+   * Stopped by an increasing objective: false
+   * Reached Maximum Number of Iterations: false
+ * Objective Calls: 31
+ * Gradient Calls: 31
 ```
 The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`, 
 `Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the 
@@ -811,7 +829,7 @@ Now lets generate a dataset from 10,000 solutions of the SDE
 
 ```julia
 using RecursiveArrayTools # for VectorOfArray
-t = collect(linspace(0,10,200))
+t = collect(range(0, stop=10, length=200))
 function generate_data(t)
   sol = solve(prob,SRIW1())
   randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
@@ -827,61 +845,61 @@ use that in the likelihood estimate.
 
 ```julia
 monte_prob = MonteCarloProblem(prob)
-obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,data),
-                                     maxiters=10000,verbose=false,num_monte = 1000,
-                                     parallel_type = :threads)
 ```
 
-Now we use Optim.jl for optimization below 
+We use Optim.jl for optimization below 
 
 ```julia
-obj = build_loss_objective(monte_prob,SRIW1(),L2Loss(t,data),maxiters=1000,
-                           verbose=false,verbose_opt=false,verbose_steps=1,num_monte=50)
-
-result = Optim.optimize(obj, [1.4,0.95], Optim.BFGS())
+obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),
+                                     maxiters=10000,verbose=false,num_monte = 1000,
+                                     parallel_type = :threads)
+result = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())
 ```
-Parameter Estimation in case of SDE's with a regular `L2Loss` leads to poor accuracy in the result as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1). 
+Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1). 
 
 ```julia
 Results of Optimization Algorithm
  * Algorithm: BFGS
  * Starting Point: [1.0,0.5]
- * Minimizer: [4.164848835940667,4.597047813254346]
- * Minimum: 1.838501e+03
- * Iterations: 8
+ * Minimizer: [6.070728870478734,5.113357737345448]
+ * Minimum: 1.700440e+03
+ * Iterations: 14
  * Convergence: false
    * |x - x'| ≤ 0.0e+00: false 
-     |x - x'| = 6.58e-05 
+     |x - x'| = 1.00e-03 
    * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
-     |f(x) - f(x')| = 2.70e-08 |f(x)|
+     |f(x) - f(x')| = 1.81e-07 |f(x)|
    * |g(x)| ≤ 1.0e-08: false 
-     |g(x)| = 1.10e+01 
+     |g(x)| = 2.34e+00 
    * Stopped by an increasing objective: true
    * Reached Maximum Number of Iterations: false
- * Objective Calls: 44
- * Gradient Calls: 44
+ * Objective Calls: 61
+ * Gradient Calls: 61
 ```
 
 Instead when we use `L2Loss` with first differencing enabled we get much more accurate estimates.
 
 ```julia
+ obj = build_loss_objective(monte_prob,SRIW1(),L2Loss(t,data,differ_weight=1.0,data_weight=0.5),maxiters=1000,
+                                  verbose=false,verbose_opt=false,verbose_steps=1,num_monte=50)
+result = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())
 Results of Optimization Algorithm
  * Algorithm: BFGS
  * Starting Point: [1.0,0.5]
- * Minimizer: [1.5010680535080316,1.0023875062385483]
- * Minimum: 1.166632e-01
- * Iterations: 12
+ * Minimizer: [1.5010687426045128,1.0023453619050238]
+ * Minimum: 1.166650e-01
+ * Iterations: 16
  * Convergence: false
    * |x - x'| ≤ 0.0e+00: false 
-     |x - x'| = 2.64e-07 
+     |x - x'| = 6.84e-09 
    * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
-     |f(x) - f(x')| = 3.92e-06 |f(x)|
+     |f(x) - f(x')| = 5.85e-06 |f(x)|
    * |g(x)| ≤ 1.0e-08: false 
-     |g(x)| = 2.47e-01 
+     |g(x)| = 1.81e-01 
    * Stopped by an increasing objective: true
    * Reached Maximum Number of Iterations: false
- * Objective Calls: 87
- * Gradient Calls: 87
+ * Objective Calls: 118
+ * Gradient Calls: 118
 ```
 
 Here we see that we successfully recovered the drift parameter, and got close to
