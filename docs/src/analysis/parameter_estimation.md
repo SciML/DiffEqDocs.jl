@@ -24,23 +24,7 @@ which refines using a method like `build_loss_objective`.
 
 ## Optimization-Based Methods
 
-### two_stage_method
-
-The two-stage method is a collocation method for estimating parameters without
-requiring repeated solving of the differential equation. It does so by
-determining a smoothed estimated trajectory of the data and optimizing
-the derivative function and the data's timepoints to match the derivatives
-of the smoothed trajectory. This method has less accuracy than other methods
-but is much faster, and is a good method to try first to get in the general
-"good parameter" region, to then finish using one of the other methods.
-
-```julia
-function two_stage_method(prob::DEProblem,tpoints,data;kernel= :Epanechnikov,
-                          loss_func = L2DistLoss,mpg_autodiff = false,
-                          verbose = false,verbose_steps = 100)
-```
-
-### build_loss_objective
+### Building objective function
 
 `build_loss_objective` builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.
 
@@ -63,7 +47,7 @@ and the values at the steps every `verbose_steps` steps. `mpg_autodiff` uses
 autodifferentiation to define the derivative for the MathProgBase solver.
 The extra keyword arguments are passed to the differential equation solver.
 
-### multiple_shooting_objective
+### Multiple Shooting objective
 
 Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:
     
@@ -72,6 +56,23 @@ Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more
   3. Merge the solutions from the shorter intervals and then calculate the loss.
 
 For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
+
+
+### Two Stage method
+
+The two-stage method is a collocation method for estimating parameters without
+requiring repeated solving of the differential equation. It does so by
+determining a smoothed estimated trajectory of the data and optimizing
+the derivative function and the data's timepoints to match the derivatives
+of the smoothed trajectory. This method has less accuracy than other methods
+but is much faster, and is a good method to try first to get in the general
+"good parameter" region, to then finish using one of the other methods.
+
+```julia
+function two_stage_method(prob::DEProblem,tpoints,data;kernel= :Epanechnikov,
+                          loss_func = L2DistLoss,mpg_autodiff = false,
+                          verbose = false,verbose_steps = 100)
+```
 
 #### The Loss Function
 
@@ -459,6 +460,14 @@ cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),
                                       maxiters=10000,verbose=false)
 result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
 ```
+We can also use First-Differences in L2Loss by passing the kwarg `differ_weight` which decides the contribution of the 
+differencing loss to the total loss. 
+
+```julia
+cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data,differ_weight=0.3,data_weight=0.7),
+                                      maxiters=10000,verbose=false)
+result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
+```
 
 To solve it using LeastSquaresOptim.jl, we use the `build_lsoptim_objective` function:
 
@@ -519,7 +528,8 @@ bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
 ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
 ```
 
-This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.
+This creates the objective function that can be passed to an optimizer from which we can then get the parameter values 
+and the initial values of the short time periods keeping in mind the indexing.
 
 ```julia
 result = bboptimize(ms_obj;SearchRange = bound, MaxSteps = 21e3)
@@ -545,7 +555,18 @@ Out[4]:2-element Array{Float64,1}:
         1.52826
         1.01721
 ```
-Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and the rest of the values are the initial values of the shorter timespans as described in the reference section.
+Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and 
+the rest of the values are the initial values of the shorter timespans as described in the reference section.
+
+The objective function for Two Stage method can be created as
+
+```julia
+two_stage_obj = two_stage_method(ms_prob,t,data)
+```
+The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`, 
+`Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the 
+`kernel` keyword argument. `loss_func` keyword argument can be used to pass te loss function (cost function) you want
+ to use and `mpg_autodiff` enables Auto Differentiation. 
 
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
 
