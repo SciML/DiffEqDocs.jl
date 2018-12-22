@@ -202,7 +202,7 @@ end
 which simply matches the type for time to `p` (once again, for autodifferentiation)
 and uses `p` as the initial condition in the initial value problem.
 
-### build_lsoptim_objective
+### LeastSquaresOptim.jl objective
 
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
