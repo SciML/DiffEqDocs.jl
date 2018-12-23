@@ -16,7 +16,7 @@ These correspond to partitioned equations of motion:
 ```
 The functions should be specified as `f1(dv,v,u,p,t)` and `f2(du,v,u,p,t)`
 (in the inplace form), where `f1` is independent of `v` (unless
-specified by the solver), and `f2` is independent of `t` and `v`. This includes
+specified by the solver), and `f2` is independent of `t` and `u`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not
 used in the acceleration function, and Hamiltonians where the potential is
 (or can be) time-dependent but the kinetic energy is only dependent on `v`.
