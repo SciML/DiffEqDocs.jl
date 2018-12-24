@@ -2389,7 +2389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "title": "Dynamical, Hamiltonian, and 2nd Order ODE Solvers",
     "category": "section",
-    "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,du0,u0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdvdt = f_1(tu) \nfracdudt = f_2(v) The functions should be specified as f1(dv,v,u,p,t) and f2(du,v,u,p,t) (in the inplace form), where f1 is independent of v (unless specified by the solver), and f2 is independent of t and v. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f2 is a quadratic form. That means that f2=v\'*M*v, i.e. int f_2 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
+    "text": "These algorithms require an ODE defined in the following ways:DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan;kwargs...)\nSecondOrderODEProblem{isinplace}(f,du0,u0,tspan;kwargs...)\nHamiltonianProblem{T}(H,q0,p0,tspan;kwargs...)These correspond to partitioned equations of motion:fracdvdt = f_1(tu) \nfracdudt = f_2(v) The functions should be specified as f1(dv,v,u,p,t) and f2(du,v,u,p,t) (in the inplace form), where f1 is independent of v (unless specified by the solver), and f2 is independent of t and u. This includes discretizations arising from SecondOrderODEProblems where the velocity is not used in the acceleration function, and Hamiltonians where the potential is (or can be) time-dependent but the kinetic energy is only dependent on v.Note that some methods assume that the integral of f2 is a quadratic form. That means that f2=v\'*M*v, i.e. int f_2 = frac12 m v^2, giving du = v. This is equivalent to saying that the kinetic energy is related to v^2. The methods which require this assumption will lose accuracy if this assumption is violated. Methods listed below make note of this requirement with \"Requires quadratic kinetic energy\"."
 },
 
 {
@@ -4257,9 +4257,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameter_estimation.html#build*lsoptim*objective-1",
+    "location": "analysis/parameter_estimation.html#LeastSquaresOptim.jl-objective-1",
     "page": "Parameter Estimation",
-    "title": "buildlsoptimobjective",
+    "title": "LeastSquaresOptim.jl objective",
     "category": "section",
     "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameters,kwargs...)The arguments are the same as build_loss_objective."
 },
