@@ -170,19 +170,19 @@ we will decrease `f1` to `-1.5`. This is done via the functions:
 
 ```julia
 function affect!(integrator)
-  for c in user_cache(integrator)
+  for c in full_cache(integrator)
     c.f1 = 1.5
   end
 end
 
 function affect2!(integrator)
-  for c in user_cache(integrator)
+  for c in full_cache(integrator)
     c.f1 = -1.5
   end
 end
 ```
 
-Notice that we have to loop through the `user_cache` array (provided by the integrator
+Notice that we have to loop through the `full_cache` array (provided by the integrator
 interface) to ensure that all internal caches are also updated. With these functions
 we can build our callbacks:
 
@@ -243,15 +243,15 @@ const tstop = [5.;8.]
 sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
 ```
 
-where we now change the callbacks to changing the parameter in the function:
+where we now change the callbacks to changing the parameter:
 
 ```julia
 function affect!(integrator)
-  integrator.f.params = 1.5
+  integrator.p = 1.5
 end
 
 function affect2!(integrator)
-  integrator.f.params = -1.5
+  integrator.p = -1.5
 end
 ```
 
