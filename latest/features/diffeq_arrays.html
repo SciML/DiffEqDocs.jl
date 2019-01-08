@@ -36,16 +36,16 @@ end
 function condition2(u,t,integrator)
   t in tstop2
 end</code></pre><p>Now we have to apply an effect when these conditions are reached. When <code>condition</code> is hit (at <code>t=5.0</code>), we will increase <code>f1</code> to 1.5. When <code>condition2</code> is reached, we will decrease <code>f1</code> to <code>-1.5</code>. This is done via the functions:</p><pre><code class="language-julia">function affect!(integrator)
-  for c in user_cache(integrator)
+  for c in full_cache(integrator)
     c.f1 = 1.5
   end
 end
 
 function affect2!(integrator)
-  for c in user_cache(integrator)
+  for c in full_cache(integrator)
     c.f1 = -1.5
   end
-end</code></pre><p>Notice that we have to loop through the <code>user_cache</code> array (provided by the integrator interface) to ensure that all internal caches are also updated. With these functions we can build our callbacks:</p><pre><code class="language-julia">save_positions = (true,true)
+end</code></pre><p>Notice that we have to loop through the <code>full_cache</code> array (provided by the integrator interface) to ensure that all internal caches are also updated. With these functions we can build our callbacks:</p><pre><code class="language-julia">save_positions = (true,true)
 
 cb = DiscreteCallback(condition, affect!, save_positions=save_positions)
 
@@ -63,10 +63,10 @@ u0 = SimType([10.0;10.0], 0.0)
 p = 0.0
 prob = ODEProblem(f,u0,(0.0,10.0),p)
 const tstop = [5.;8.]
-sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)</code></pre><p>where we now change the callbacks to changing the parameter in the function:</p><pre><code class="language-julia">function affect!(integrator)
-  integrator.f.params = 1.5
+sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)</code></pre><p>where we now change the callbacks to changing the parameter:</p><pre><code class="language-julia">function affect!(integrator)
+  integrator.p = 1.5
 end
 
 function affect2!(integrator)
-  integrator.f.params = -1.5
+  integrator.p = -1.5
 end</code></pre><p>This will also solve the equation and get a similar result. It will also be slightly faster in some cases. However, if the equation is solved in this manner, there will be no record of what the parameter was at each timepoint. That is the tradeoff between <code>DEDataArray</code>s and <code>ParameterizedFunction</code>s.</p><footer><hr/><a class="previous" href="performance_overloads.html"><span class="direction">Previous</span><span class="title">DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types</span></a><a class="next" href="diffeq_operator.html"><span class="direction">Next</span><span class="title">DiffEqOperators</span></a></footer></article></body></html>
