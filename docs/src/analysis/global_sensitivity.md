@@ -1,6 +1,6 @@
 # Global Sensitivity Analysis
 
-Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainity in
+Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainty in
 output of a model w.r.t. the parameters, their individual contributions, or the
 contribution of their interactions. The type of GSA method to use depends on
 the interest of the user, below we describe the methods available in the suite
