@@ -73,6 +73,7 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
            "analysis/parameter_estimation.md",
            "analysis/bifurcation.md",
            "analysis/sensitivity.md",
+           "analysis/global_sensitivity.md",
            "analysis/uncertainty_quantification.md",
            "analysis/dev_and_test.md"
          ],
