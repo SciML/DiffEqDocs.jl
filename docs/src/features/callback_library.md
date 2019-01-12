@@ -281,7 +281,7 @@ for the saved values, and then call the solver with the callback.
 
 ```julia
 using DiffEqCallbacks, OrdinaryDiffEq
-prob = ODEProblem((du,u,t)->du.=u,rand(4,4),(0.0,1.0))
+prob = ODEProblem((du,u,p,t)->du.=u,rand(4,4),(0.0,1.0))
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
 cb = SavingCallback((u,t,integrator)->(trace(u),norm(u)), saved_values)
 sol = solve(prob, Tsit5(), callback=cb)
