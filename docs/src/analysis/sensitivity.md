@@ -118,11 +118,18 @@ each value we want to take the derivative by, we seed a derivative with a
 
 ```julia
 using ForwardDiff: Dual
-p1dual = Dual{Float64}(1.5, (1.0, 0.0, 0.0, 0.0))
-p2dual = Dual{Float64}(1.0, (0.0, 1.0, 0.0, 0.0))
-p3dual = Dual{Float64}(3.0, (0.0, 0.0, 1.0, 0.0))
-p4dual = Dual{Float64}(3.0, (0.0, 0.0, 0.0, 0.0))
+struct MyTag end
+p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))
+p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))
+p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))
+p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 0.0))
 pdual = [p1dual, p2dual, p3dual, p4dual]
+```
+
+or equivalently using the `seed_duals` convenience function:
+
+```julia
+pdual = seed_duals(p,MyTag)
 ```
 
 Next we need to make our initial condition Dual numbers so that these propogate
