@@ -408,7 +408,21 @@ quadrature via QuadGK for the resulting functional.
 #### Options
 
 Options for handling the adjoint computation are set by passing a `SensitivityAlg`
-type.
+type, e.g. `SensitivityAlg(backsolve=true)`.
+
+* `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
+  integral. Disabling it can decrease memory usage but increase computation
+  time. Default is `true`.
+* `backsolve`: Solve the differential equation backward to get the past values.
+  Note that for chaotic or non-reversible systems, enabling this option can
+  lead to wildly incorrect results. Enabling it can decrease memory usage but
+  increase computation time. When it is set to `true`, `quad` will be
+  automatically set to `false`. Default is `false`.
+* `autodiff`: Use automatic differentiation. Default is `true`.
+* `chunk_size`: Chunk size for forward mode differentiation. Default is `0`.
+* `autojacvec`: Calculate Jacobian-vector (local sensitivity analysis) or
+  vector-Jacobian (adjoint sensitivity analysis) product via automatic
+  differentiation with special seeding. Default is `true`.
 
 #### Example discrete adjoints on a cost function
 
