@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Analysis Tools",
     "category": "section",
-    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/bifurcation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
+    "text": "Because DifferentialEquations.jl has a common interface on the solutions, it is easy to add functionality to the entire DiffEq ecosystem by developing it to the solution interface. These pages describe the add-on analysis tools which are available.Pages = [\n    \"analysis/parameterized_functions.md\",\n    \"analysis/parameter_estimation.md\",\n    \"analysis/bifurcation.md\",\n    \"analysis/sensitivity.md\",\n    \"analysis/global_sensitivity.md\",\n    \"analysis/uncertainty_quantification.md\",\n    \"analysis/dev_and_test.md\"\n]\nDepth = 2"
 },
 
 {
@@ -4434,47 +4434,71 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/sensitivity.html#",
-    "page": "Sensitivity Analysis",
-    "title": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Local Sensitivity Analysis (Automatic Differentiation)",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "analysis/sensitivity.html#Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
-    "title": "Sensitivity Analysis",
+    "location": "analysis/sensitivity.html#Local-Sensitivity-Analysis-(Automatic-Differentiation)-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Local Sensitivity Analysis (Automatic Differentiation)",
     "category": "section",
-    "text": "Sensitivity analysis for ODE models is provided by the DiffEq suite. The model sensitivities are defined as the derivatives of the solution with respect to the parameters. Sensitivity analysis serves two major purposes. On one hand, the sensitivities are diagnostics of the model which are useful for understand how it will change in accordance to changes in the parameters. But another use is simply because in many cases these derivatives are useful. Sensitivity analysis provides a cheap way to calculate the gradient of the solution which can be used in parameter estimation and other optimization tasks.There are three types of sensitivity analysis. Local sensitivity analysis directly gives the gradient of the solution with respect to each parameter along the time series. The computational cost scales like N*M, where N is the number of states and M is the number of parameters. While this gives all of the information, it can be expensive for large models. Instead, adjoint sensitivity analysis solves directly for the gradient of some functional of the solution, such as a cost function or energy functional, in a much cheaper manner. Global Sensitivty Analysis methods are meant to be used for exploring the sensitivity over a larger domain without calculating derivatives."
+    "text": "Sensitivity analysis for ODE models is provided by the DiffEq suite. The model sensitivities are the derivatives of the solution with respect to the parameters. Specifically, the local sensitivity of the solution to a parameter is defined by how much the solution would change by changes in the parameter, i.e. the sensitivity of the ith independent variable to the jth parameter is fracpartial upartial p_j.Sensitivity analysis serves two major purposes. On one hand, the sensitivities are diagnostics of the model which are useful for understand how it will change in accordance to changes in the parameters. But another use is simply because in many cases these derivatives are useful. Sensitivity analysis provides a cheap way to calculate the gradient of the solution which can be used in parameter estimation and other optimization tasks.There are three types of sensitivity analysis. Local forward sensitivity analysis directly gives the gradient of the solution with respect to each parameter along the time series. The computational cost scales like N*M, where N is the number of states and M is the number of parameters. While this gives all of the information, it can be expensive for models with large numbers of parameters. Local adjoint sensitivity analysis solves directly for the gradient of some functional of the solution, such as a cost function or energy functional, in a manner that is cheaper when the number of parameters is large. Global Sensitivity Analysis methods are meant to be used for exploring the sensitivity over a larger domain without calculating derivatives and are covered on a different page."
 },
 
 {
-    "location": "analysis/sensitivity.html#Note-1",
-    "page": "Sensitivity Analysis",
-    "title": "Note",
+    "location": "analysis/sensitivity.html#Efficiency-of-the-Different-Methods-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Efficiency of the Different Methods",
     "category": "section",
-    "text": "Currently there are more performance optimizations needed to be done on the adjoint sensitivity method."
+    "text": "For an analysis of which methods will be most efficient for computing the solution derivatives for a given problem, consult our analysis in this arxiv paper. A general rule of thumb is:Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for ODEs with small numbers of parameters (<100)\nAdjoint senstivity analysis is the fastest when the number of parameters is sufficiently large.\nThe methods which use automatic differentiation support the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work on native Julia solvers. The methods which utilize altered ODE systems only work on ODEs (without events), but work on any ODE solver."
 },
 
 {
-    "location": "analysis/sensitivity.html#Local-Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
-    "title": "Local Sensitivity Analysis",
+    "location": "analysis/sensitivity.html#Local-Forward-Sensitivity-Analysis-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Local Forward Sensitivity Analysis",
     "category": "section",
-    "text": "The local sensitivity of the solution to a parameter is defined by how much the solution would change by changes in the parameter, i.e. the sensitivity of the ith independent variable to the jth parameter is fracpartial upartial p_j.The local sensitivity is computed using the sensitivity ODE:fracddtfracpartial upartial p_j=fracpartial fpartial ufracpartial upartial p_j+fracpartial fpartial p_j=Jcdot S_j+F_jwhereJ=left(beginarraycccc\nfracpartial f_1partial u_1  fracpartial f_1partial u_2  cdots  fracpartial f_1partial u_k\nfracpartial f_2partial u_1  fracpartial f_2partial u_2  cdots  fracpartial f_2partial u_k\ncdots  cdots  cdots  cdots\nfracpartial f_kpartial u_1  fracpartial f_kpartial u_2  cdots  fracpartial f_kpartial u_k\nendarrayright)is the Jacobian of the system,F_j=left(beginarrayc\nfracpartial f_1partial p_j\nfracpartial f_2partial p_j\nvdots\nfracpartial f_kpartial p_j\nendarrayright)are the parameter derivatives, andS_j=left(beginarrayc\nfracpartial y_1partial p_j\nfracpartial y_2partial p_j\nvdots\nfracpartial y_kpartial p_j\nendarrayright)is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system."
+    "text": "Local forward sensitivity analysis gives a solution along with a timeseries of the sensitivities along the solution."
+},
+
+{
+    "location": "analysis/sensitivity.html#Discrete-Local-Forward-Sensitivity-Analysis-via-ForwardDiff.jl-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Discrete Local Forward Sensitivity Analysis via ForwardDiff.jl",
+    "category": "section",
+    "text": "This method is the application of ForwardDiff.jl numbers to the ODE solver. This is done simply by making the u0 state vector a vector of Dual numbers, and multiple dispatch then allows the internals of the solver to propagate the derivatives along the solution."
+},
+
+{
+    "location": "analysis/sensitivity.html#Examples-using-ForwardDiff.jl-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Examples using ForwardDiff.jl",
+    "category": "section",
+    "text": "The easiest way to use ForwardDiff.jl for local forward sensitivity analysis is to simply put the ODE solve inside of a function which you would like to differentiate. For example, let\'s define the ODE system for the Lotka-Volterra equations:f = @ode_def begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a b c\n\np = [1.5,1.0,3.0,1.0]\nu0 = [1.0;1.0]\nprob = ODEProblem(f,u0,(0.0,10.0),p)Let\'s say we wanted to get the derivative of the final value w.r.t. each of the parameters. We can define the following function:function test_f(p)\n  _prob = remake(prob;u0=convert.(eltype(p),prob.u0),p=p)\n  solve(prob,Vern9(),save_everystep=false)[end]\nendWhat this function does is use the remake function from the Problem Interface page to generate a new ODE problem with the new parameters, solves it, and returns the solution at the final time point. Notice that it takes care to make sure that the type of u0 matches the type of p. This is because ForwardDiff.jl will want to use Dual numbers, and thus to propagate the Duals throughout the solver we need to make sure the initial condition is also of the type of Dual number. On this function we can call ForwardDiff.jl and it will return the derivatives we wish to calculate:using ForwardDiff\nfd_res = ForwardDiff.jacobian(test_f,p)If we would like to get the solution and the value at the time point at the same time, we can use DiffResults.jl. For example, the following uses a single ODE solution to calculate the value at the end point and its parameter Jacobian:using DiffResults\nres = DiffResults.JacobianResult(u0,p) # Build the results object\nDiffResults.jacobian!(res,p) # Populate it with the results\nval = DiffResults.value(res) # This is the sol[end]\njac = DiffResults.jacobian(res) # This is dsol/dpIf we would like to get the time series, we can do so by seeding the dual numbers directly. To do this, we use the Dual constructor. The first value is the value of the parameter. The second is a tuple of the derivatives. For each value we want to take the derivative by, we seed a derivative with a 1 in a unique index. For example, we can build our parameter vector like:using ForwardDiff: Dual\nstruct MyTag end\np1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))\np2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))\np3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))\np4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 0.0))\npdual = [p1dual, p2dual, p3dual, p4dual]or equivalently using the seed_duals convenience function:function seed_duals(x::AbstractArray{V},::Type{T},\n                    ::ForwardDiff.Chunk{N} = ForwardDiff.Chunk(x)) where {V,T,N}\n  seeds = ForwardDiff.construct_seeds(ForwardDiff.Partials{N,V})\n  duals = [Dual{T}(x[i],seeds[i]) for i in eachindex(x)]\nend\npdual = seed_duals(p,MyTag)Next we need to make our initial condition Dual numbers so that these propogate through the solution. We can do this manually like:u0dual = [Dual{MyTag}(1.0, (0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0))]or use the same shorthand from before:u0dual = convert.(eltype(pdual),u0)Now we just use these Dual numbers to solve:prob_dual = ODEProblem(f,u0,tspan,pdual)\nsol_dual = solve(prob_dual,Tsit5(), saveat=0.2)The solution is now in terms of Dual numbers. We can extract the derivatives by looking at the partials of the duals in the solution. For example, sol[1,end] is the Dual number for the x component at the end of the integration, and so sol[1,end].partial[i] is dx(t_end)/dp_i."
+},
+
+{
+    "location": "analysis/sensitivity.html#Local-Forward-Sensitivity-Analysis-via-ODELocalSensitivityProblem-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Local Forward Sensitivity Analysis via ODELocalSensitivityProblem",
+    "category": "section",
+    "text": "For this method local sensitivity is computed using the sensitivity ODE:fracddtfracpartial upartial p_j=fracpartial fpartial ufracpartial upartial p_j+fracpartial fpartial p_j=Jcdot S_j+F_jwhereJ=left(beginarraycccc\nfracpartial f_1partial u_1  fracpartial f_1partial u_2  cdots  fracpartial f_1partial u_k\nfracpartial f_2partial u_1  fracpartial f_2partial u_2  cdots  fracpartial f_2partial u_k\ncdots  cdots  cdots  cdots\nfracpartial f_kpartial u_1  fracpartial f_kpartial u_2  cdots  fracpartial f_kpartial u_k\nendarrayright)is the Jacobian of the system,F_j=left(beginarrayc\nfracpartial f_1partial p_j\nfracpartial f_2partial p_j\nvdots\nfracpartial f_kpartial p_j\nendarrayright)are the parameter derivatives, andS_j=left(beginarrayc\nfracpartial y_1partial p_j\nfracpartial y_2partial p_j\nvdots\nfracpartial y_kpartial p_j\nendarrayright)is the vector of sensitivities. Since this ODE is dependent on the values of the independent variables themselves, this ODE is computed simultaneously with the actual ODE system."
 },
 
 {
     "location": "analysis/sensitivity.html#Example-solving-an-ODELocalSensitivityProblem-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Example solving an ODELocalSensitivityProblem",
     "category": "section",
-    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. Note that this requires a ParameterizedFunction with a Jacobian. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def_nohes LotkaVolterraSensitivity begin\n  dx = a*x - b*x*y\n  dy = -c*y + x*y\nend a b c\n\np = [1.5,1.0,3.0]\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. We can use the following helper functions to extract the sensitivity information:x,dp = extract_local_sensitivities(sol)\nx,dp = extract_local_sensitivities(sol,i)\nx,dp = extract_local_sensitivities(sol,t)In each case, x is the ODE values and dp is the matrix of sensitivities where dp[i] is the gradient of component i by the parameters. The first gives the full timeseries of values. The second returns the ith values, while the third interpolates to calculate the sensitivities at time t. For example, if we do:x,dp = extract_local_sensitivities(sol)\nda = dp[1]then da is the timeseries for fracpartial u(t)partial p. We can plot thisplot(sol.t,da\',lw=3)transposing so that the rows (the timeseries) is plotted.(Image: Local Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems.We can also quickly see that these values are equivalent to those given by autodifferentiation and numerical differentiation through the ODE solver:using ForwardDiff, Calculus\nfunction test_f(p)\n  prob = ODEProblem(f,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)\n  solve(prob,Vern9(),abstol=1e-14,reltol=1e-14,save_everystep=false)[end]\nend\n\np = [1.5,1.0,3.0]\nfd_res = ForwardDiff.jacobian(test_f,p)\ncalc_res = Calculus.finite_difference_jacobian(test_f,p)Here we just checked the derivative at the end point."
+    "text": "To define a sensitivity problem, simply use the ODELocalSensitivityProblem type instead of an ODE type. For example, we generate an ODE with the sensitivity equations attached for the Lotka-Volterra equations by:f = @ode_def begin\n  dx = a*x - b*x*y\n  dy = -c*y + x*y\nend a b c\n\np = [1.5,1.0,3.0]\nprob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)This generates a problem which the ODE solvers can solve:sol = solve(prob,DP8())Note that the solution is the standard ODE system and the sensitivity system combined. We can use the following helper functions to extract the sensitivity information:x,dp = extract_local_sensitivities(sol)\nx,dp = extract_local_sensitivities(sol,i)\nx,dp = extract_local_sensitivities(sol,t)In each case, x is the ODE values and dp is the matrix of sensitivities where dp[i] is the gradient of component i by the parameters. The first gives the full timeseries of values. The second returns the ith values, while the third interpolates to calculate the sensitivities at time t. For example, if we do:x,dp = extract_local_sensitivities(sol)\nda = dp[1]then da is the timeseries for fracpartial u(t)partial p. We can plot thisplot(sol.t,da\',lw=3)transposing so that the rows (the timeseries) is plotted.(Image: Local Sensitivity Solution)Here we see that there is a periodicity to the sensitivity which matches the periodicity of the Lotka-Volterra solutions. However, as time goes on the sensitivity increases. This matches the analysis of Wilkins in Sensitivity Analysis for Oscillating Dynamical Systems.We can also quickly see that these values are equivalent to those given by autodifferentiation and numerical differentiation through the ODE solver:using ForwardDiff, Calculus\nfunction test_f(p)\n  prob = ODEProblem(f,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)\n  solve(prob,Vern9(),abstol=1e-14,reltol=1e-14,save_everystep=false)[end]\nend\n\np = [1.5,1.0,3.0]\nfd_res = ForwardDiff.jacobian(test_f,p)\ncalc_res = Calculus.finite_difference_jacobian(test_f,p)Here we just checked the derivative at the end point."
 },
 
 {
     "location": "analysis/sensitivity.html#Internal-representation-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Internal representation",
     "category": "section",
     "text": "For completeness, we detail the internal representation. Therefore, the solution to the ODE are the first n components of the solution. This means we can grab the matrix of solution values like:x = sol[1:sol.prob.indvars,:]Since each sensitivity is a vector of derivatives for each function, the sensitivities are each of size sol.prob.indvars. We can pull out the parameter sensitivities from the solution as follows:da = sol[sol.prob.indvars+1:sol.prob.indvars*2,:]\ndb = sol[sol.prob.indvars*2+1:sol.prob.indvars*3,:]\ndc = sol[sol.prob.indvars*3+1:sol.prob.indvars*4,:]This means that da[1,i] is the derivative of the x(t) by the parameter a at time sol.t[i]. Note that all of the functionality available to ODE solutions is available in this case, including interpolations and plot recipes (the recipes will plot the expanded system)."
@@ -4482,23 +4506,39 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/sensitivity.html#Adjoint-Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Adjoint Sensitivity Analysis",
     "category": "section",
-    "text": "Adjoint sensitivity analysis is used to find the gradient of the solution with respect to some functional of the solution. In many cases this is used in an optimization problem to return the gradient with respect to some cost function.The adjoint requires the definition of some scalar functional g(upt) where u is the (numerical) solution to the differential equation. Adjoint sensitivity analysis finds the gradient ofG(up)=G(u(p))=int_t_0^Tg(u(tp))dtsome integral of the solution. It does so by solving the adjoint problemfracdlambda^stardt=g_u(t)-lambda^star(t)f_u(t)thinspacethinspacethinspacelambda^star(T)=0where f_u is the Jacobian of the system with respect to the state u while f_p is the Jacobian with respect to the parameters. The adjoint problem\'s solution gives the sensitivities through the integral:fracdGdp=int_t_0^Tlambda^star(t)f_p(t)+g_p(t)dt+lambda^star(t_0)u_p(t_0)Notice that since the adjoints require the Jacobian of the system at the state, it requires the ability to evaluate the state at any point in time. Thus it requires the continuous forward solution in order to solve the adjoint solution, and the adjoint solution is required to be continuous in order to calculate the resulting integral.There is one extra detail to consider. In many cases we would like to calculate the adjoint sensitivity of some discontinuous functional of the solution. One canonical function is the L2 loss against some data points, that is:L(upt)=sum_i=1^nVerttildeu(t_i)-u(t_ip)Vert^2In this case, we can reinterpret our summation as the distribution integral:G(up)=int_0^Tsum_i=1^nVerttildeu(t_i)-u(t_ip)Vert^2delta(t_i-t)dtwhere δ is the Dirac distribution. In this case, the integral is continuous except at finitely many points. Thus it can be calculated between each t_i. At a given t_i, given that the t_i are unique, we have thatg_y(t_i)=2left(tildeu(t_i)-u(t_ip)right)Thus the adjoint solution is given by integrating between the integrals and applying the jump function g_y at every data point."
+    "text": "Adjoint sensitivity analysis is used to find the gradient of the solution with respect to some functional of the solution. In many cases this is used in an optimization problem to return the gradient with respect to some cost function. It is equivalent to \"backpropogation\" or reverse-mode automatic differentiation of a differential equation."
+},
+
+{
+    "location": "analysis/sensitivity.html#Adjoint-Sensitivity-Analysis-via-adjoint_sensitivities-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Adjoint Sensitivity Analysis via adjoint_sensitivities",
+    "category": "section",
+    "text": "This adjoint requires the definition of some scalar functional g(upt) where u is the (numerical) solution to the differential equation. Adjoint sensitivity analysis finds the gradient ofG(up)=G(u(p))=int_t_0^Tg(u(tp))dtsome integral of the solution. It does so by solving the adjoint problemfracdlambda^stardt=g_u(t)-lambda^star(t)f_u(t)thinspacethinspacethinspacelambda^star(T)=0where f_u is the Jacobian of the system with respect to the state u while f_p is the Jacobian with respect to the parameters. The adjoint problem\'s solution gives the sensitivities through the integral:fracdGdp=int_t_0^Tlambda^star(t)f_p(t)+g_p(t)dt+lambda^star(t_0)u_p(t_0)Notice that since the adjoints require the Jacobian of the system at the state, it requires the ability to evaluate the state at any point in time. Thus it requires the continuous forward solution in order to solve the adjoint solution, and the adjoint solution is required to be continuous in order to calculate the resulting integral.There is one extra detail to consider. In many cases we would like to calculate the adjoint sensitivity of some discontinuous functional of the solution. One canonical function is the L2 loss against some data points, that is:L(upt)=sum_i=1^nVerttildeu(t_i)-u(t_ip)Vert^2In this case, we can reinterpret our summation as the distribution integral:G(up)=int_0^Tsum_i=1^nVerttildeu(t_i)-u(t_ip)Vert^2delta(t_i-t)dtwhere δ is the Dirac distribution. In this case, the integral is continuous except at finitely many points. Thus it can be calculated between each t_i. At a given t_i, given that the t_i are unique, we have thatg_y(t_i)=2left(tildeu(t_i)-u(t_ip)right)Thus the adjoint solution is given by integrating between the integrals and applying the jump function g_y at every data point."
 },
 
 {
     "location": "analysis/sensitivity.html#Syntax-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Syntax",
     "category": "section",
     "text": "There are two forms. For discrete adjoints, the form is:s = adjoint_sensitivities(sol,alg,dg,ts;kwargs...)where alg is the ODE algorithm to solve the adjoint problem, dg is the jump function, and ts is the time points for data. dg is given by:dg(out,u,p,t,i)which is the in-place gradient of the cost functional g at time point ts[i] with u=u(t).For continuous functionals, the form is:s = adjoint_sensitivities(sol,alg,g,nothing,dg;kwargs...)for the cost functionalg(u,p,t)with in-place gradientdg(out,u,p,t)Currently, the gradient is required. Note that the keyword arguments are passed to the internal ODE solver for solving the adjoint problem. Two special keyword arguments are iabstol and ireltol which are the tolerances for the internal quadrature via QuadGK for the resulting functional."
 },
 
 {
+    "location": "analysis/sensitivity.html#Options-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Options",
+    "category": "section",
+    "text": "Options for handling the adjoint computation are set by passing a SensitivityAlg type, e.g. SensitivityAlg(backsolve=true). Additionally, if Gauss-Kronrod quadrature is used, the options ireltol and iabstol into adjoint_sensitivities controls the behavior of the quadrature. Example calls:res = adjoint_sensitivities(sol,Rodas4(),dg,t,ireltol=1e-8)\n\nres = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,\n                            sensealg=SensitivityAlg(backsolve=true))quad: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity integral. Disabling it can decrease memory usage but increase computation time. Default is true.\nbacksolve: Solve the differential equation backward to get the past values. Note that for chaotic or non-reversible systems, enabling this option can lead to wildly incorrect results. Enabling it can decrease memory usage but increase computation time. When it is set to true, quad will be automatically set to false. Default is false.\nautodiff: Use automatic differentiation. Default is true.\nchunk_size: Chunk size for forward mode differentiation. Default is 0.\nautojacvec: Calculate Jacobian-vector (local sensitivity analysis) or vector-Jacobian (adjoint sensitivity analysis) product via automatic differentiation with special seeding. Default is true."
+},
+
+{
     "location": "analysis/sensitivity.html#Example-discrete-adjoints-on-a-cost-function-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Example discrete adjoints on a cost function",
     "category": "section",
     "text": "In this example we will show solving for the adjoint sensitivities of a discrete cost functional. First let\'s solve the ODE and get a high quality continuous solution:f = @ode_def LotkaVolterra begin\n  dx = a*x - b*x*y\n  dy = -c*y + x*y\nend a b c\n\np = [1.5,1.0,3.0]\nprob = ODEProblem(f,[1.0;1.0],(0.0,10.0),p)\nsol = solve(prob,Vern9(),abstol=1e-10,reltol=1e-10)Now let\'s calculate the sensitivity of the L2 error against 1 at evenly spaced points in time, that is:L(upt)=sum_i=1^nfracVert1-u(t_ip)Vert^22for t_i = 05i. This is the assumption that the data is data[i]=1.0. For this function, notice we have that:beginalign\ndg_1=1-u_1 \ndg_2=1-u_2\nendalignand thus:dg(out,u,i) = (out.=1.0.-u)If we had data, we\'d just replace 1.0 with data[i]. To get the adjoint sensitivities, call:res = adjoint_sensitivities(sol,Vern9(),dg,t,abstol=1e-14,\n                            reltol=1e-14,iabstol=1e-14,ireltol=1e-12)This is super high accuracy. As always, there\'s a tradeoff between accuracy and computation time. We can check this almost exactly matches the autodifferentiation and numerical differentiation results:using ForwardDiff,Calculus\nfunction G(p)\n  tmp_prob = remake(prob,u0=convert.(eltype(p),prob.u0),p=p)\n  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=t)\n  A = convert(Array,sol)\n  sum(((1-A).^2)./2)\nend\nG([1.5,1.0,3.0])\nres2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])\nres3 = Calculus.gradient(G,[1.5,1.0,3.0])\nres4 = Flux.Tracker.gradient(G,[1.5,1.0,3.0])\nres5 = ReverseDiff.gradient(G,[1.5,1.0,3.0])and see this gives the same values."
@@ -4506,47 +4546,55 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/sensitivity.html#Example-continuous-adjoints-on-an-energy-functional-1",
-    "page": "Sensitivity Analysis",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Example continuous adjoints on an energy functional",
     "category": "section",
     "text": "In this case we\'d like to calculate the adjoint sensitivity of the scalar energy functionalG(up)=int_0^Tfracsum_i=1^nu_i^2(t)2dtwhich isg(u,p,t) = (sum(u).^2) ./ 2Notice that the gradient of this function with respect to the state u is:function dg(out,u,p,t)\n  out[1]= u[1] + u[2]\n  out[2]= u[1] + u[2]\nendTo get the adjoint sensitivities, we call:res = adjoint_sensitivities(sol,Vern9(),g,nothing,dg,abstol=1e-8,\n                                 reltol=1e-8,iabstol=1e-8,ireltol=1e-8)Notice that we can check this against autodifferentiation and numerical differentiation as follows:function G(p)\n  tmp_prob = problem_new_parameters(prob,p)\n  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)\n  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)\n  res\nend\nres2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])\nres3 = Calculus.gradient(G,[1.5,1.0,3.0])"
 },
 
 {
-    "location": "analysis/sensitivity.html#Global-Sensitivity-Analysis-1",
-    "page": "Sensitivity Analysis",
+    "location": "analysis/global_sensitivity.html#",
+    "page": "Global Sensitivity Analysis",
     "title": "Global Sensitivity Analysis",
-    "category": "section",
-    "text": "Global Sensitivity Analysis methods are used to quantify the uncertainity in output of a model w.r.t. the parameters, their individual contributions or the contribution of their interactions. The type of GSA method to use depends on the interest of the user, below we describe the methods available in the suite at the moment (some more are already in development) and explain what is the output of each of the methods and what it represents."
+    "category": "page",
+    "text": ""
 },
 
 {
-    "location": "analysis/sensitivity.html#Morris-Method-1",
-    "page": "Sensitivity Analysis",
+    "location": "analysis/global_sensitivity.html#Global-Sensitivity-Analysis-1",
+    "page": "Global Sensitivity Analysis",
+    "title": "Global Sensitivity Analysis",
+    "category": "section",
+    "text": "Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainty in output of a model w.r.t. the parameters, their individual contributions, or the contribution of their interactions. The type of GSA method to use depends on the interest of the user, below we describe the methods available in the suite at the moment (some more are already in development) and explain what is the output of each of the methods and what it represents."
+},
+
+{
+    "location": "analysis/global_sensitivity.html#Morris-Method-1",
+    "page": "Global Sensitivity Analysis",
     "title": "Morris Method",
     "category": "section",
     "text": "The Morris method also known as Morris’s OAT method where OAT stands for One At a Time can be described in the following steps:We calculate local sensitivity measures known as “elementary effects”, which are calculated by measuring the perturbation in the output of the model on changing one parameter.EE_i = fracf(x_1x_2x_i+ Deltax_k) - yDeltaThese are evaluated at various points in the input chosen such that a wide “spread” of the parameter space is explored and considered in the analysis, to provide an approximate global importance measure. The mean and variance of these elementary effects is computed. A high value of the mean implies that a parameter is important, a high variance implies that its effects are non-linear or the result of interactions with other inputs. This method does not evaluate separately the contribution from the interaction and the contribution of the parameters individually and gives the effects for each parameter which takes into cpnsideration all the interactions and its individual contribution.morris_effects = morris_sensitivity(f,param_range,param_steps;relative_scale=false,kwargs...)morris_effects = morris_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_steps;kwargs...)Here, f is just the model (as a julia function or a DEProblem) you want to run the analysis on, param_range requires an array of 2-tuples with the lower bound and the upper bound, param_steps decides the value of \\Delta in the equation above and relative_scale, the above equation takes the assumption that the parameters lie in the range [0,1] but as this is not always the case scaling is used to get more informative, scaled effects."
 },
 
 {
-    "location": "analysis/sensitivity.html#Sobol-Method-1",
-    "page": "Sensitivity Analysis",
+    "location": "analysis/global_sensitivity.html#Sobol-Method-1",
+    "page": "Global Sensitivity Analysis",
     "title": "Sobol Method",
     "category": "section",
     "text": "Sobol is a variance-based method and it decomposes the variance of the output of the model or system into fractions which can be attributed to inputs or sets of inputs. This helps to get not just the individual parameter\'s sensitivities but also gives a way to quantify the affect and sensitivity from the interaction between the parameters. Y = f_0+ sum_i=1^d f_i(X_i)+ sum_i  j^d f_ij(X_iX_j)  + f_12d(X_1X_2X_d) Var(Y) = sum_i=1^d V_i + sum_i  j^d V_ij +  + V_12dThe Sobol Indices are \"order\"ed, the first order indices given by S_i = fracV_iVar(Y) the contribution to the output variance of the main effect of X_i, therefore it measures the effect of varying X_i alone, but averaged over variations in other input parameters. It is standardised by the total variance to provide a fractional contribution. Higher-order interaction indices S_ij S_ijk and so on can be formed by dividing other terms in the variance decomposition by Var(Y).sobol_second_order = sobol_sensitivity(f,param_range,N,order=2)sobol_second_order = sobol_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,N,order=2)Here f and param_range are the same as Morris\'s, providing a uniform interface."
 },
 
 {
-    "location": "analysis/sensitivity.html#Regression-Method-1",
-    "page": "Sensitivity Analysis",
+    "location": "analysis/global_sensitivity.html#Regression-Method-1",
+    "page": "Global Sensitivity Analysis",
     "title": "Regression Method",
     "category": "section",
-    "text": "If a sample of inputs and outputs (X^n Y^n) = (X^i_1     X^i_d Y_i)_i=1n􏰁 is available, it is possible to fit a linear model explaining the behaviour of Y given the values of X, provided that the sample size n is sufficiently large (at least n > d).The measures provided for this analysis by us in DiffEqSensitivity.jl area) Pearson Correlation Coefficient:r = fracsum_i=1^n (x_i - overlinex)(y_i - overliney)sqrtsum_i=1^n (x_i - overlinex)^2(y_i - overliney)^2b) Standard Regression Coefficient (SRC):SRC_j = beta_j sqrtfracVar(X_j)Var(Y)where beta_j is the linear regression coefficient associated to X_j.c) Partial Correlation Coefficient (PCC):PCC_j = rho(X_j - hatX_-jY_j - hatY_-j)where hatX_-j􏰈 is the prediction of the linear model, expressing X_j   with respect to the other inputs and hatY_-j is the prediction of the   linear model where X_j is absent. PCC measures the sensitivity of Y to   X_j when the effects of the other inputs have been canceled.regre_sensitivity = regression_sensitivity(f,param_range,param_fixed,n;coeffs=:rank)regre_sensitivity = regression_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_fixed,n;coeffs=:rank)Again, f and param_range are the same as above. An array of the true parameter values that lie within the param_range bounds are passed through the param_fixed argument. n determines the number of simulations of the model run to generate the data points of the solution and parameter values and the coeffs kwarg lets you decide the coefficients you want."
+    "text": "If a sample of inputs and outputs (X^n Y^n) = (X^i_1     X^i_d Y_i)_i=1n􏰁 is available, it is possible to fit a linear model explaining the behavior of Y given the values of X, provided that the sample size n is sufficiently large (at least n > d).The measures provided for this analysis by us in DiffEqSensitivity.jl area) Pearson Correlation Coefficient:r = fracsum_i=1^n (x_i - overlinex)(y_i - overliney)sqrtsum_i=1^n (x_i - overlinex)^2(y_i - overliney)^2b) Standard Regression Coefficient (SRC):SRC_j = beta_j sqrtfracVar(X_j)Var(Y)where beta_j is the linear regression coefficient associated to X_j.c) Partial Correlation Coefficient (PCC):PCC_j = rho(X_j - hatX_-jY_j - hatY_-j)where hatX_-j􏰈 is the prediction of the linear model, expressing X_j   with respect to the other inputs and hatY_-j is the prediction of the   linear model where X_j is absent. PCC measures the sensitivity of Y to   X_j when the effects of the other inputs have been canceled.regre_sensitivity = regression_sensitivity(f,param_range,param_fixed,n;coeffs=:rank)regre_sensitivity = regression_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_fixed,n;coeffs=:rank)Again, f and param_range are the same as above. An array of the true parameter values that lie within the param_range bounds are passed through the param_fixed argument. n determines the number of simulations of the model run to generate the data points of the solution and parameter values and the coeffs kwarg lets you decide the coefficients you want."
 },
 
 {
-    "location": "analysis/sensitivity.html#GSA-example-1",
-    "page": "Sensitivity Analysis",
+    "location": "analysis/global_sensitivity.html#GSA-example-1",
+    "page": "Global Sensitivity Analysis",
     "title": "GSA example",
     "category": "section",
     "text": "Let\'s create the ODE problem to run our GSA on.f = @ode_def_nohes LotkaVolterraTest begin\n    dx = a*x - b*x*y\n    dy = -3*y + x*y\nend a b\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5,1.0]\nprob = ODEProblem(f,u0,tspan,p)\nt = collect(range(0, stop=10, length=200))For Morris Methodm = DiffEqSensitivity.morris_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],[10,10],len_trajectory=1500,total_num_trajectory=1000,num_trajectory=150)Let\'s get the means and variances from the MorrisSensitivity struct.m.means\n\nOut[9]: 2-element Array{Array{Float64,2},1}:\n [0.0 0.0513678 … 7.91336 7.93783; 0.0 0.00115769 … 3.66156 3.67284]\n [0.0 0.0488899 … 2.50728 2.359; 0.0 0.00112006 … 2.23431 2.44946]\n\nm.variances\n\nOut[10]: 2-element Array{Array{Float64,2},1}:\n [0.0 1.94672e-5 … 26.4223 24.8513; 0.0 4.81347e-9 … 37.4061 30.3068]\n [0.0 1.77615e-5 … 17.9555 14.9231; 0.0 4.47931e-9 … 48.074 51.9312]This gives the means of the effects and it\'s variances over the entire timespan and thus we get 200-length arrays for each paramter and dependent variable pair.We can plot the trajectory of the sensitivity with the standard deviation bars.# For the first parameter (a)\nstdv1 = sqrt.(m.variances[1])\np = plot(m.means[1]\', yerror=stdv1)(Image: morrisparameter1)# For the second parameter (b)\nstdv2 = sqrt.(m.variances[2])\np = plot(m.means[2]\', yerror=stdv2)(Image: morrisparameter2)For Sobol Method\ns0 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,0)\nOut[8]: 2-element Array{Array{Float64,2},1}:\n [NaN 0.507831 … 1.00731 1.00436; NaN 1.92336 … 0.732384 0.730945]\n [NaN 0.47214 … 0.676224 0.681525; NaN -1.68656 … 0.879557 0.877603]\n\ns1 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,1)\nOut[9]: 2-element Array{Array{Float64,2},1}:\n [NaN 0.39537 … 0.341697 0.343645; NaN -2.06101 … 0.10922 0.106976]\n [NaN 0.652815 … 0.00910675 0.00815206; NaN 5.24832 … 0.296978 0.296639]\n\ns2 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,2)\nOut[10]: 1-element Array{Array{Float64,2},1}:\n [NaN -0.0596478 … 0.652303 0.657847; NaN -1.84504 … 0.645139 0.620036]We can decide which order of Sobol Indices we are interested in my passing an argument for it, by default it gives the second order indices. Again the result is obtained over the entire timespanWe plot the first order and total order Sobol Indices for some timepoints for each of the parameters (a and b).\np1 = bar([\"a\",\"b\"],[s0[1][end-2],s0[2][end-2]],color=[:red,:blue],title=\"Total Order Indices at t=9.949748743718592\",legend=false)\np2 = bar([\"a\",\"b\"],[s1[1][end-2],s1[2][end-2]],color=[:red,:blue],title=\"First Order Indices at t=9.949748743718592\",legend=false)\np3 = bar([\"a\",\"b\"],[s0[1][3],s0[2][3]],color=[:red,:blue],title=\"Total Order Indices at t=0.05025125628140704\",legend=false)\np4 = bar([\"a\",\"b\"],[s1[1][3],s1[2][3]],color=[:red,:blue],title=\"First Order Indices at t=0.05025125628140704\",legend=false)\nplo = plot(p1,p2,p3,p4,layout=(4,1),size=(600,500))\n(Image: sobolplot)Here we plot the Sobol indices of first order and the total Sobol indices for the parameters a and b. The plots are obtained by getting the Sobol Indices at the t = 9.949748743718592 and the t = 0.05025125628140704 time point of the first dependent variable x(t) from the 200-length sensitivities over the entire time span. The length of the bar represents the quantification of the sensitivity of the output to that parameter and hence for the 199th time point you can say that x(t) is more sensitive to b, also you can observe how the relative difference between a and b is larger in the first order than the total order indices, this tells us that most of the contribution of a to x(t) arises from interactions and it\'s individual non-interaction contribution is significantly lesser than b and vice-versa for b as it\'s first order plot indicates quite high value."
