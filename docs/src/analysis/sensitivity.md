@@ -129,6 +129,11 @@ pdual = [p1dual, p2dual, p3dual, p4dual]
 or equivalently using the `seed_duals` convenience function:
 
 ```julia
+function seed_duals(x::AbstractArray{V},::Type{T},
+                    ::ForwardDiff.Chunk{N} = ForwardDiff.Chunk(x)) where {V,T,N}
+  seeds = ForwardDiff.construct_seeds(ForwardDiff.Partials{N,V})
+  duals = [Dual{T}(x[i],seeds[i]) for i in eachindex(x)]
+end
 pdual = seed_duals(p,MyTag)
 ```
 
@@ -136,7 +141,7 @@ Next we need to make our initial condition Dual numbers so that these propogate
 through the solution. We can do this manually like:
 
 ```julia
-u0dual = [Dual{Float64}(1.0, (0.0, 0.0)),Dual{Float64}(1.0, (0.0, 0.0))]
+u0dual = [Dual{MyTag}(1.0, (0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0))]
 ```
 
 or use the same shorthand from before:
@@ -414,7 +419,7 @@ the behavior of the quadrature. Example calls:
 
 ```julia
 res = adjoint_sensitivities(sol,Rodas4(),dg,t,ireltol=1e-8)
-                            
+
 res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
                             sensealg=SensitivityAlg(backsolve=true))
 ```
