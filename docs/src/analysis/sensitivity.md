@@ -408,7 +408,16 @@ quadrature via QuadGK for the resulting functional.
 #### Options
 
 Options for handling the adjoint computation are set by passing a `SensitivityAlg`
-type, e.g. `SensitivityAlg(backsolve=true)`.
+type, e.g. `SensitivityAlg(backsolve=true)`. Additionally, if Gauss-Kronrod quadrature
+is used, the options `ireltol` and `iabstol` into `adjoint_sensitivities` controls
+the behavior of the quadrature. Example calls:
+
+```julia
+res = adjoint_sensitivities(sol,Rodas4(),dg,t,ireltol=1e-8)
+                            
+res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
+                            sensealg=SensitivityAlg(backsolve=true))
+```
 
 * `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
   integral. Disabling it can decrease memory usage but increase computation
