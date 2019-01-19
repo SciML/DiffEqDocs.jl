@@ -34,7 +34,7 @@ To check whether or not the integration step was successful, you can
 call `check_error(integrator)` which returns one of the
 [Return Codes (RetCodes)](@ref).
 
-This type also implements an iterator interface, so one can step `n` times 
+This type also implements an iterator interface, so one can step `n` times
 (or to the last `tstop`) using the `take` iterator:
 
 ```julia
@@ -143,12 +143,12 @@ DiffEqBase.set_ut!
 ### Integrator vs Solution
 
 The integrator and the solution have very different actions because they have
-very different meanings. The `typeof(sol) <: DESolution` type is a type with 
+very different meanings. The `typeof(sol) <: DESolution` type is a type with
 history: it stores
 all of the (requested) timepoints and interpolates/acts using the values closest
-in time. On the other hand, the `typeof(integrator)<:DEIntegrator` type is a 
-local object. It only knows the times of the interval it currently spans, 
-the current caches and values, and the current state of the solver 
+in time. On the other hand, the `typeof(integrator)<:DEIntegrator` type is a
+local object. It only knows the times of the interval it currently spans,
+the current caches and values, and the current state of the solver
 (the current options, tolerances, etc.). These serve very different purposes:
 
 * The `integrator`'s interpolation can extrapolate, both forward and backward in
@@ -179,11 +179,6 @@ The following functions make up the interface:
   safe to use as temporary arrays. This should be used for integrator interface
   and callbacks which need arrays to write into in order to be non-allocating.
   The length of the tuple is dependent on the method.
-* `user_cache(integrator)`: Returns an iterator over the user-facing cache arrays.
-* `u_cache(integrator)`:  Returns an iterator over the cache arrays for `u` in the method.
-  This can be used to change internal values as needed.
-* `du_cache(integrator)`:  Returns an iterator over the cache arrays for rate quantities the method.
-  This can be used to change internal values as needed.
 * `full_cache(integrator)`:  Returns an iterator over the cache arrays of the method.
   This can be used to change internal values as needed.
 
@@ -218,24 +213,24 @@ The following functions make up the interface:
 
 * `resize!(integrator,k)`: Resizes the DE to a size `k`. This chops off the end
   of the array, or adds blank values at the end, depending on whether `k>length(integrator.u)`.
+* `deleteat!(integrator,idxs)`: Shrinks the ODE by deleting the `idxs` components.
+* `addat!(integrator,idxs)`: Grows the ODE by adding the `idxs` components.
+  Must be contiguous indices.
 * `resize_non_user_cache!(integrator,k)`: Resizes the non-user facing caches to be
   compatible with a DE of size `k`. This includes resizing Jacobian caches. Note
-  that in many cases, `resize!` simple resizes `user_cache` variables and then
+  that in many cases, `resize!` simply resizes `full_cache` variables and then
   calls this function. This finer control is required for some `AbstractArray`
   operations.
 * `deleteat_non_user_cache!(integrator,idxs)`: `deleteat!`s the non-user facing caches
   at indices `idxs`. This includes resizing Jacobian caches. Note
-  that in many cases, `deleteat!` simple `deleteat!`s `user_cache` variables and then
+  that in many cases, `deleteat!` simply `deleteat!`s `full_cache` variables and then
   calls this function. This finer control is required for some `AbstractArray`
   operations.
 * `addat_non_user_cache!(integrator,idxs)`: `addat!`s the non-user facing caches
   at indices `idxs`. This includes resizing Jacobian caches. Note
-  that in many cases, `addat!` simple `addat!`s `user_cache` variables and then
+  that in many cases, `addat!` simply `addat!`s `full_cache` variables and then
   calls this function. This finer control is required for some `AbstractArray`
   operations.
-* `deleteat!(integrator,idxs)`: Shrinks the ODE by deleting the `idxs` components.
-* `addat!(integrator,idxs)`: Grows the ODE by adding the `idxs` components.
-  Must be contiguous indices.
 
 ### Reinit
 
