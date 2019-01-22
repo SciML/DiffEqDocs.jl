@@ -36,7 +36,12 @@ is:
 - Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for
   ODEs with small numbers of parameters (<100)
 - Adjoint senstivity analysis is the fastest when the number of parameters is
-  sufficiently large.
+  sufficiently large. There are three configurations of note. Using
+  `backsolve` is the fastest and uses the least memory, but is not 
+  guerenteed to be stable. Checkpointing is the slowest but uses O(1)
+  memory and is stable. Interpolating is the second fastest, is stable,
+  but requires the ability to hold the full forward solution and its
+  interpolation in memory.
 - The methods which use automatic differentiation support the full range of
   DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
   on native Julia solvers. The methods which utilize altered ODE systems only
@@ -405,7 +410,15 @@ with in-place gradient
 dg(out,u,p,t)
 ```
 
-Currently, the gradient is required. Note that the keyword arguments are passed
+If the gradient is omitted, i.e.
+
+```julia
+s = adjoint_sensitivities(sol,alg,g,nothing;kwargs...)
+```
+
+then it will be computed automatically using ForwardDiff or finite
+differencing, depending on the `autodiff` setting in the `SensitivityAlg`.
+Note that the keyword arguments are passed
 to the internal ODE solver for solving the adjoint problem. Two special keyword
 arguments are `iabstol` and `ireltol` which are the tolerances for the internal
 quadrature via QuadGK for the resulting functional.
@@ -424,6 +437,10 @@ res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
                             sensealg=SensitivityAlg(backsolve=true))
 ```
 
+* `checkpointing`: When enabled, the adjoint solutions compute the Jacobians
+  by starting from the nearest saved value in `sol` and computing forward.
+  By default, this is false if `sol.dense==true`, i.e. if `sol` has
+  its higher order interpolation then this is by default disabled.
 * `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
   integral. Disabling it can decrease memory usage but increase computation
   time. Default is `true`.
@@ -432,11 +449,13 @@ res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
   lead to wildly incorrect results. Enabling it can decrease memory usage but
   increase computation time. When it is set to `true`, `quad` will be
   automatically set to `false`. Default is `false`.
-* `autodiff`: Use automatic differentiation. Default is `true`.
-* `chunk_size`: Chunk size for forward mode differentiation. Default is `0`.
+* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
+  computations. Default is `true`.
+* `chunk_size`: Chunk size for forward mode differentiation. Default is `0` for
+  automatic.
 * `autojacvec`: Calculate Jacobian-vector (local sensitivity analysis) or
   vector-Jacobian (adjoint sensitivity analysis) product via automatic
-  differentiation with special seeding. Default is `true`.
+  differentiation with special seeding. Default is `true` if `autodiff` is true.
 
 #### Example discrete adjoints on a cost function
 
@@ -506,6 +525,68 @@ res5 = ReverseDiff.gradient(G,[1.5,1.0,3.0])
 ```
 
 and see this gives the same values.
+
+#### Example controlling adjoint method choices and checkpointing
+
+In the previous examples, all calculations were done using the interpolating
+method. This maximizes speed but at a cost of storing a dense `sol`. If it
+is not possible to hold a dense forward solution in memory, then one can use
+checkpointing. This is enabled by default if `sol` is not dense, so for
+example
+
+```julia
+sol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])
+```
+
+Creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
+can do
+
+```julia
+res = adjoint_sensitivities(sol,Vern9(),dg,t)
+```
+
+When grabbing a Jacobian value during the backwards solution, it will no longer
+interpolate to get the value. Instead, it will start a forward solution at the
+nearest checkpoint and solve until the necessary time.
+
+To eliminate the extra forward solutions, one can instead pass the `SensitivityAlg`
+with the `backsolve=true` option:
+
+```julia
+sol = solve(prob,Vern9(),save_everystep=false,save_start=false)
+res = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=SensitivityAlg(backsolve=true))
+```
+
+When this is done, the values for the Jacobian will be computing the original ODE in
+reverse. Note that this only requires the final value of the solution. 
+
+#### Applicability of Backsolve and Caution
+
+When `backsolve` is applicable it is the fastest method and requires the least memory.
+However, one must be cautious because not all ODEs are stable under backwards integration
+by the majority of ODE solvers. An example of such an equation is the Lorenz equation.
+Notice that if one solves the Lorenz equation forward and then in reverse with any
+adaptive time step and non-reversible integrator, then the backwards solution diverges
+from the forward solution. As a quick demonstration:
+
+```julia
+using Sundials, DiffEqBase
+function lorenz(du,u,p,t)
+ du[1] = 10.0*(u[2]-u[1])
+ du[2] = u[1]*(28.0-u[3]) - u[2]
+ du[3] = u[1]*u[2] - (8/3)*u[3]
+end
+u0 = [1.0;0.0;0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(lorenz,u0,tspan)
+sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
+prob2 = ODEProblem(lorenz,sol[end],(100.0,0.0))
+sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
+@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]
+```
+
+Thus one should check the stability of the backsolve on their type of problem before
+enabling this method.
 
 #### Example continuous adjoints on an energy functional
 
