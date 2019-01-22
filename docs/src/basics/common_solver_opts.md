@@ -235,7 +235,7 @@ The following lines are examples of how one could use the configuration of
 the extention to other types is straightforward.
 
 1. `solve(prob, AlgorithmName())` : The "default" setting, with a user-specified
-  algorithm (given by `AlgorithmName()`).All parameters get their default values.
+  algorithm (given by `AlgorithmName()`). All parameters get their default values.
   This means that the solution is saved at the steps the Algorithm stops internally
   and dense output is enabled if the chosen algorithm allows for it.
   
@@ -243,7 +243,7 @@ the extention to other types is straightforward.
 2. `solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9)` : Standard setting
   for accurate output at specified (and equidistant) time intervals, used for
   e.g. Fourier Transform. The solution is given every 0.01 time units,
-  starting from `tspan[1]`. The solver used is Tsit5() since no keyword
+  starting from `tspan[1]`. The solver used is `Tsit5()` since no keyword
   `alg_hits` is given.
   
 3. `solve(prob, maxiters = 1e7, progress = true, save_idxs = [1])` : Using longer
