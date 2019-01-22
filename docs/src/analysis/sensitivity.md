@@ -439,7 +439,8 @@ res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
 
 * `checkpointing`: When enabled, the adjoint solutions compute the Jacobians
   by starting from the nearest saved value in `sol` and computing forward.
-  By default is `false`.
+  By default, this is false if `sol.dense==true`, i.e. if `sol` has
+  its higher order interpolation then this is by default disabled.
 * `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
   integral. Disabling it can decrease memory usage but increase computation
   time. Default is `true`.
@@ -530,7 +531,8 @@ and see this gives the same values.
 In the previous examples, all calculations were done using the interpolating
 method. This maximizes speed but at a cost of requiring a dense `sol`. If it
 is not possible to hold a dense forward solution in memory, then one can use
-checkpointing. For example,
+checkpointing. This is enabled by default if `sol` is not dense, so for
+example
 
 ```julia
 sol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])
@@ -540,7 +542,7 @@ creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
 can do
 
 ```julia
-res = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=Sensitivity(checkpointing=true))
+res = adjoint_sensitivities(sol,Vern9(),dg,t)
 ```
 
 When grabbing a Jacobian value during the backwards solution, it will no longer
