@@ -520,7 +520,7 @@ sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=Val{:forward})) # Numeric
 
 Additionally, there is the tableau method:
 
-  - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
+- `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
   are specified via the keyword argument `tab=tableau`. The default tableau is
   for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.
 
