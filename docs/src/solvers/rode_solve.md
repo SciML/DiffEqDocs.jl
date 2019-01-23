@@ -5,9 +5,9 @@
 Currently, the only implemented method is the `RandomEM` method in StochasticDiffEq.jl.
 It is strong order alpha for a alpha-Holder continuous noise process.
 
-# Full List of Methods
+## Full List of Methods
 
-## StochasticDiffEq.jl
+### StochasticDiffEq.jl
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
