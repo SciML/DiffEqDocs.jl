@@ -7,15 +7,20 @@ by specifying reactions and rate constants, and the creation of the actual probl
 is then handled by the modelling package.
 
 ## The Reaction DSL - Basic 
-This section covers some of the basic syntax for building chemical reaction network models.
+This section covers some of the basic syntax for building chemical reaction network models. Examples
+showing how to both construct and solve network models are provided in [Chemical Reaction Network Examples](@ref).
+
 #### Basic syntax
 
-The `@reaction_network` macro allows the (symbolic) specification of reaction networks with a simple format. Its input is a set of chemical reactions, and from them it
-generates a reaction network object which can be used as input to `ODEProblem`,
-`SDEProblem` and `JumpProblem` constructors. The `@min_reaction_network` macro 
-constructs a more simplified reaction network, deferring construction of all the various functions
-needed for each of these problem types. It can then be incrementally filled in for specific
-problem types as needed, which reduces network construction time for very large networks (see [The Min Reaction Network Object](@ref) for a detailed description).
+The `@reaction_network` macro allows the (symbolic) specification of reaction
+networks with a simple format. Its input is a set of chemical reactions, and
+from them it generates a reaction network object which can be used as input to
+`ODEProblem`, `SteadyStateProblem`, `SDEProblem` and `JumpProblem` constructors.
+The `@min_reaction_network` macro constructs a more simplified reaction network,
+deferring construction of all the various functions needed for each of these
+problem types. It can then be incrementally filled in for specific problem types
+as needed, which reduces network construction time for very large networks (see
+[The Min Reaction Network Object](@ref) for a detailed description).
 
 The basic syntax is:
 
@@ -135,7 +140,7 @@ end
 this corresponds to the differential equation:
 
 ```math
-\frac{d[X]}{dt} = -\frac{1}{2!} [X]^2\\
+\frac{d[X]}{dt} = -[X]^2\\
 \frac{d[X2]}{dt} = \frac{1}{2!} [X]^2
 ```
 
@@ -188,7 +193,7 @@ end p d
 Parameters can only exist in the reaction rates (where they can be mixed with reactants). All variables not declared at the end will be considered a reactant.
 
 #### Pre-defined functions
-The hill function and the michaelis-menten function, both which are common in biochemical reaction networks, are pre-defined and can be used as expected. These pairs of reactions are all equivalent:
+Hill functions and a Michaelis-Menten function are pre-defined and can be used as rate laws. Below, the pair of reactions within `rn1` are equivalent, as are the pair of reactions within `rn2`:
 ```julia
 rn1 = @reaction_network begin
   hill(X,v,K,n), ∅ → X
@@ -197,6 +202,17 @@ end v K n
 rn2 = @reaction_network begin
   mm(X,v,K), ∅ → X
   v*X/(X+K), ∅ → X
+end v K
+```
+Repressor Hill (`hillr`) and Michaelis-Menten (`mmr`) functions are also provided:
+```julia
+rn1 = @reaction_network begin
+  hillr(X,v,K,n), ∅ → X
+  v*K^n/(X^n+K^n), ∅ → X
+end v K n
+rn2 = @reaction_network begin
+  mmr(X,v,K), ∅ → X
+  v*K/(X+K), ∅ → X
 end v K
 ```
 
@@ -371,7 +387,7 @@ The `@min_reaction_network` macro works similarly to the `@reaction_network` mac
    
 
 
-For example, to simulate a jump process (i.e. Gillespie) simulation without constructing any `RegularJump`s:
+For example, to simulate a jump process (i.e. Gillespie) simulation without constructing any `RegularJump`s, and only constructing a minimal set of jumps:
 
 ```julia
 rs = @min_reaction_network begin
@@ -380,14 +396,14 @@ rs = @min_reaction_network begin
   c3, 0 --> X
 end c1 c2 c3
 p = (2.0,1.0,0.5)
-addjumps!(rs; build_regular_jumps=false)
+addjumps!(rs; build_regular_jumps=false, minimal_jumps=true)
 prob = DiscreteProblem([5], (0.0, 4.0), p)
 jump_prob = JumpProblem(prob, Direct(), rs)
 sol = solve(jump_prob, SSAStepper())
 ```
 
 
-## Examples
+## Chemical Reaction Network Examples
 
 #### Example: Birth-Death Process
 
@@ -397,10 +413,27 @@ rs = @reaction_network begin
   c2, X --> 0
   c3, 0 --> X
 end c1 c2 c3
-p = (2.0,1.0,0.5)
-prob = DiscreteProblem([5], (0.0, 4.0), p)
-jump_prob = JumpProblem(prob, Direct(), rs)
-sol = solve(jump_prob, SSAStepper())
+p = (1.0,2.0,50.)
+tspan = (0.,4.)
+u0 = [5.]
+
+# solve ODEs
+oprob = ODEProblem(rs, u0, tspan, p)
+osol  = solve(oprob, Tsit5())
+
+# solve for Steady-States
+ssprob = SteadyStateProblem(rs, u0, p)
+sssol  = solve(ssprob, SSRootfind())
+
+# solve SDEs
+sprob = SDEProblem(rs, u0, tspan, p)
+ssol  = solve(sprob, EM(), dt=.01)
+
+# solve JumpProblem
+u0 = [5]
+dprob = DiscreteProblem(u0, tspan, p)
+jprob = JumpProblem(dprob, Direct(), rs)
+jsol = solve(jprob, SSAStepper())
 ```
 
 #### Example: Michaelis-Menten Enzyme Kinetics
@@ -412,8 +445,16 @@ rs = @reaction_network begin
   c3, SE --> P + E
 end c1 c2 c3
 p = (0.00166,0.0001,0.1)
-# S = 301, E = 100, SE = 0, P = 0
-prob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)
-jump_prob = JumpProblem(prob, Direct(), rs)
-sol = solve(jump_prob, SSAStepper())
+tspan = (0., 100.)
+u0 = [301., 100., 0., 0.]  # S = 301, E = 100, SE = 0, P = 0
+
+# solve ODEs
+oprob = ODEProblem(rs, u0, tspan, p)
+osol  = solve(oprob, Tsit5())
+
+# solve JumpProblem
+u0 = [301, 100, 0, 0] 
+dprob = DiscreteProblem(u0, tspan, p)
+jprob = JumpProblem(dprob, Direct(), rs)
+jsol = solve(jprob, SSAStepper())
 ```
