@@ -16,9 +16,9 @@ When the problem is a large two-point boundary value problem that is sensitive
 to the boundary conditions, `MIRK4` utilizes a sparse Jacobian to greatly
 improve the efficiency.
 
-# Full List of Methods
+## Full List of Methods
 
-## BoundaryValueDiffEq.jl
+### BoundaryValueDiffEq.jl
 
 - `Shooting` - A wrapper over initial value problem solvers.
 - `GeneralMIRK4` - A 4th order collocation method using an implicit Runge-Kutta

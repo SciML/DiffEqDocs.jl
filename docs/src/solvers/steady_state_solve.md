@@ -14,9 +14,9 @@ Rosenbrock method (`Rodas5` or `CVODE_BDF`), is a good way to allow for very
 large time steps as the steady state approaches. Note that if you use `CVODE_BDF`
 you may need to give a starting `dt` via `dt=....`.
 
-# Full List of Methods
+## Full List of Methods
 
-## SteadyStateDiffEq.jl
+### SteadyStateDiffEq.jl
 
 - `SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
   to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
