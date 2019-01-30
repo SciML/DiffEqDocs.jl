@@ -5,6 +5,8 @@ wraps the functionality of PyDSTool. The the package has an interface for
 directly using PyDSTool itself, included is a higher level interface that
 makes these tools compatible with more standard JuliaDiffEq types.
 
+## Installation
+
 This functionality does not come standard with DifferentialEquations.jl.
 To use this functionality, you must install PyDSTool.jl:
 

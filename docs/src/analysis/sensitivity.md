@@ -26,6 +26,16 @@ large. Global Sensitivity Analysis methods are meant to be used for exploring th
 sensitivity over a larger domain without calculating derivatives and are covered
 on a different page.
 
+## Installation
+
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install DiffEqSensitivty.jl:
+
+```julia
+]add DiffEqSensitivity
+using DiffEqSensitivty
+```
+
 ## Efficiency of the Different Methods
 
 For an analysis of which methods will be most efficient for computing the
@@ -37,7 +47,7 @@ is:
   ODEs with small numbers of parameters (<100)
 - Adjoint senstivity analysis is the fastest when the number of parameters is
   sufficiently large. There are three configurations of note. Using
-  `backsolve` is the fastest and uses the least memory, but is not 
+  `backsolve` is the fastest and uses the least memory, but is not
   guerenteed to be stable. Checkpointing is the slowest but uses O(1)
   memory and is stable. Interpolating is the second fastest, is stable,
   but requires the ability to hold the full forward solution and its
@@ -538,7 +548,7 @@ example
 sol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])
 ```
 
-creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
+Creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
 can do
 
 ```julia
@@ -558,7 +568,7 @@ res = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=SensitivityAlg(backsolve=t
 ```
 
 When this is done, the values for the Jacobian will be computing the original ODE in
-reverse. Note that this only requires the final value of the solution. 
+reverse. Note that this only requires the final value of the solution.
 
 #### Applicability of Backsolve and Caution
 

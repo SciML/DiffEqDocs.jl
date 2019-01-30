@@ -1,5 +1,15 @@
 # ParameterizedFunctions
 
+## Installation
+
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install ParameterizedFunctions.jl:
+
+```julia
+]add ParameterizedFunctions
+using ParameterizedFunctions
+```
+
 ## Function Definition Macros
 
 DifferentialEquations.jl provides a set of macros for more easily and legibly

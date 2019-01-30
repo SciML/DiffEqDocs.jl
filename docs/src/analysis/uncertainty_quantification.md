@@ -6,6 +6,16 @@ This page describes the different methods available for quantifying such
 uncertainties. Note that this requires one of the native Julia solvers like
 OrdinaryDiffEq.jl, StochasticDiffEq.jl, or DelayDiffEq.jl.
 
+## Installation
+
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install DiffEqUncertainty.jl:
+
+```julia
+]add DiffEqUncertainty
+using DiffEqUncertainty
+```
+
 ## ProbInts
 
 The [ProbInts](http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/girolami/probints)

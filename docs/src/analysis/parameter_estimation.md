@@ -1,7 +1,24 @@
-# Parameter Estimation
+# Parameter Estimation and Bayesian Analysis
 
 Parameter estimation for ODE models, also known as dynamic data analysis,
 is provided by the DiffEq suite.
+
+## Installation
+
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install DiffEqParamEstim.jl:
+
+```julia
+]add DiffEqSensitivity
+using DiffEqSensitivty
+```
+
+For the Bayesian, methods, you must install DiffEqBayes.jl:
+
+```julia
+]add DiffEqBayes
+using DiffEqBayes
+```
 
 ## Recommended Methods
 
@@ -50,7 +67,7 @@ The extra keyword arguments are passed to the differential equation solver.
 ### Multiple Shooting objective
 
 Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:
-    
+
   1. Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.
   2. This objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn't match the begining of the next one.
   3. Merge the solutions from the shorter intervals and then calculate the loss.
@@ -139,7 +156,7 @@ end
 ```
 #### First Differencing
 
-```julia 
+```julia
 L2Loss(t,data,differ_weight=0.3,data_weight=0.7)
 ```
 
@@ -220,9 +237,9 @@ The arguments are similar to before, but with `p0` being the initial conditions
 for the parameters and the `kwargs` as the args passed to the LsqFit `curve_fit`
 function (which is used for the LM solver). This returns the fitted parameters.
 
-### MAP estimate 
+### MAP estimate
 
-You can also add a prior option to `build_loss_objective` and `multiple_shooting_objective` that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument `priors`, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution. 
+You can also add a prior option to `build_loss_objective` and `multiple_shooting_objective` that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument `priors`, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution.
 
 ```julia
 ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=priors,discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
@@ -288,15 +305,15 @@ dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;
                       σ = 0.01,ϵ=0.001,initial=Float64[])
 ```
 
-`dynamichmc_inference` uses [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) to 
- perform the bayesian parameter estimation. `prob` can be any `DEProblem`, `data` is the set 
- of observations for our model whihc is to be used in the Bayesian Inference process. `priors` represent the 
+`dynamichmc_inference` uses [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) to
+ perform the bayesian parameter estimation. `prob` can be any `DEProblem`, `data` is the set
+ of observations for our model whihc is to be used in the Bayesian Inference process. `priors` represent the
  choice of prior distributions for the parameters to be determined, passed as an array of [Distributions.jl]
  (https://juliastats.github.io/Distributions.jl/latest/) distributions. `t` is the array of time points. `transformations`
- is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the 
+ is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the
  parameter values to specific domains. `initial` values for the parameters can be passed, if not passed the means of the
  `priors` are used. `ϵ` can be used as a kwarg to pass the initial step size for the NUTS algorithm.      
- 
+
 ### abc_inference
 
 ```julia
@@ -451,8 +468,8 @@ cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),
                                       maxiters=10000,verbose=false)
 result_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())
 ```
-We can also use First-Differences in L2Loss by passing the kwarg `differ_weight` which decides the contribution of the 
-differencing loss to the total loss. 
+We can also use First-Differences in L2Loss by passing the kwarg `differ_weight` which decides the contribution of the
+differencing loss to the total loss.
 
 ```julia
 cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data,differ_weight=0.3,data_weight=0.7),
@@ -503,7 +520,7 @@ We can also use Multiple Shooting method by creating a `multiple_shooting_object
 ms_f = @ode_def begin
     dx = a*x - b*x*y
     dy = -3*y + x*y
-end a b 
+end a b
 ms_u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 ms_p = [1.5,1.0]
@@ -519,7 +536,7 @@ bound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),
 ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)
 ```
 
-This creates the objective function that can be passed to an optimizer from which we can then get the parameter values 
+This creates the objective function that can be passed to an optimizer from which we can then get the parameter values
 and the initial values of the short time periods keeping in mind the indexing.
 
 ```julia
@@ -546,7 +563,7 @@ Out[4]:2-element Array{Float64,1}:
         1.52826
         1.01721
 ```
-Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and 
+Here as our model had 2 parameters, we look at the last two indexes of `result` to get our parameter values and
 the rest of the values are the initial values of the shorter timespans as described in the reference section.
 
 The objective function for Two Stage method can be created and passed to an optimizer as
@@ -562,21 +579,21 @@ Results of Optimization Algorithm
  * Minimum: 1.513400e+00
  * Iterations: 9
  * Convergence: true
-   * |x - x'| ≤ 0.0e+00: false 
-     |x - x'| = 4.58e-10 
+   * |x - x'| ≤ 0.0e+00: false
+     |x - x'| = 4.58e-10
    * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
      |f(x) - f(x')| = 5.87e-16 |f(x)|
-   * |g(x)| ≤ 1.0e-08: true 
-     |g(x)| = 7.32e-11 
+   * |g(x)| ≤ 1.0e-08: true
+     |g(x)| = 7.32e-11
    * Stopped by an increasing objective: false
    * Reached Maximum Number of Iterations: false
  * Objective Calls: 31
  * Gradient Calls: 31
 ```
-The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`, 
-`Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the 
+The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`,
+`Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the
 `kernel` keyword argument. `loss_func` keyword argument can be used to pass te loss function (cost function) you want
- to use and `mpg_autodiff` enables Auto Differentiation. 
+ to use and `mpg_autodiff` enables Auto Differentiation.
 
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
 
@@ -838,7 +855,7 @@ use that in the likelihood estimate.
 monte_prob = MonteCarloProblem(prob)
 ```
 
-We use Optim.jl for optimization below 
+We use Optim.jl for optimization below
 
 ```julia
 obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),
@@ -846,7 +863,7 @@ obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),
                                      parallel_type = :threads)
 result = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())
 ```
-Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1). 
+Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1).
 
 ```julia
 Results of Optimization Algorithm
@@ -856,12 +873,12 @@ Results of Optimization Algorithm
  * Minimum: 1.700440e+03
  * Iterations: 14
  * Convergence: false
-   * |x - x'| ≤ 0.0e+00: false 
-     |x - x'| = 1.00e-03 
+   * |x - x'| ≤ 0.0e+00: false
+     |x - x'| = 1.00e-03
    * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
      |f(x) - f(x')| = 1.81e-07 |f(x)|
-   * |g(x)| ≤ 1.0e-08: false 
-     |g(x)| = 2.34e+00 
+   * |g(x)| ≤ 1.0e-08: false
+     |g(x)| = 2.34e+00
    * Stopped by an increasing objective: true
    * Reached Maximum Number of Iterations: false
  * Objective Calls: 61
@@ -881,12 +898,12 @@ Results of Optimization Algorithm
  * Minimum: 1.166650e-01
  * Iterations: 16
  * Convergence: false
-   * |x - x'| ≤ 0.0e+00: false 
-     |x - x'| = 6.84e-09 
+   * |x - x'| ≤ 0.0e+00: false
+     |x - x'| = 6.84e-09
    * |f(x) - f(x')| ≤ 0.0e+00 |f(x)|: false
      |f(x) - f(x')| = 5.85e-06 |f(x)|
-   * |g(x)| ≤ 1.0e-08: false 
-     |g(x)| = 1.81e-01 
+   * |g(x)| ≤ 1.0e-08: false
+     |g(x)| = 1.81e-01
    * Stopped by an increasing objective: true
    * Reached Maximum Number of Iterations: false
  * Objective Calls: 118
@@ -1043,9 +1060,9 @@ plot_chain(bayesian_result)
 ### DynamicHMC
 
 We can use [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) as the backend
-for sampling with the `dynamic_inference` function. It supports any `DEProblem`, 
+for sampling with the `dynamic_inference` function. It supports any `DEProblem`,
 `priors` can be passed as an array of [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
-distributions, passing `initial` values is optional and in case where the user has a firm understanding of the 
+distributions, passing `initial` values is optional and in case where the user has a firm understanding of the
 domain the parameter values will lie in, `tranformations` can be used to pass an array of constraints for the parameters
 as an array of [Transformations](https://github.com/tpapp/ContinuousTransformations.jl).
 
