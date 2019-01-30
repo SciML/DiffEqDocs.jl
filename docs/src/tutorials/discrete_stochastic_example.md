@@ -83,6 +83,8 @@ c2, i --> r
 Thus our full reaction network is:
 
 ```julia
+# ]add DiffEqBiological
+using DiffEqBiological
 sir_model = @reaction_network SIR begin
     c1, s + i --> 2i
     c2, i --> r
@@ -140,7 +142,7 @@ simulation. `FunctionMap` is a `DiscreteProblem` algorithm in OrdinaryDiffEq.jl.
 This shows that any common interface algorithm can be used to perform the
 timestepping since this is implemented over the callback interface. In many
 cases we may have a pure jump system that only involves `ConstantRateJump`s
-and/or `MassActionJump`s. When that's the case, a substantial performance benefit 
+and/or `MassActionJump`s. When that's the case, a substantial performance benefit
 may be gained by using `SSAStepper()`
 
 ```julia
@@ -240,12 +242,12 @@ We can encode this system as a mass action jump by specifying the rates, reactan
 stoichiometry, and the net stoichiometry as follows:
 ```julia
 rates = [0.1/1000, 0.01]    # i.e. [c1,c2]
-reactant_stoich = 
+reactant_stoich =
 [
   [1 => 1, 2 => 1],         # 1*s and 1*i
   [2 => 1]                  # 1*i
 ]
-net_stoich = 
+net_stoich =
 [
   [1 => -1, 2 => 1],        # -1*s and 1*i
   [2 => -1, 3 => 1]         # -1*i and 1*r

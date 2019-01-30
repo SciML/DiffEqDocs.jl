@@ -7,6 +7,16 @@ the interest of the user, below we describe the methods available in the suite
 at the moment (some more are already in development) and explain what is
 the output of each of the methods and what it represents.
 
+## Installation
+
+This functionality does not come standard with DifferentialEquations.jl.
+To use this functionality, you must install DiffEqSensitivty.jl:
+
+```julia
+]add DiffEqSensitivity
+using DiffEqSensitivty
+```
+
 ## Morris Method
 
 The Morris method also known as Morris’s OAT method where OAT stands for
