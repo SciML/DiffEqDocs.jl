@@ -34,7 +34,7 @@ function build_loss_objective(prob::DEProblem,alg,loss_func
                               mpg_autodiff = false,
                               verbose_opt = false,
                               verbose_steps = 100,
-                              prob_generator = problem_new_parameters,
+                              prob_generator = (p)->remake(prob,p=p),
                               kwargs...)
 ```
 
@@ -171,20 +171,12 @@ The regularization defaults to L2 if no penalty function is specified.
 The argument `prob_generator` allows one to specify a function for generating
 new problems from a given parameter set. By default, this just builds a new
 problem which fixes the element types in a way that's autodifferentiation
-compatible and adds the new parameter vector `p`. For example, for ODEs this
-is given by the dispatch on `DiffEqBase.problem_new_parameters` which does the
-following:
+compatible and adds the new parameter vector `p`. For example, the code for this is:
 
 ```julia
-function problem_new_parameters(prob::ODEProblem,p;kwargs...)
-  uEltype = eltype(p)
-  u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]
-  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
-  ODEProblem{isinplace(prob)}(prob.f,u0,tspan,p,prob.problem_type;
-  callback = prob.callback, mass_matrix = prob.mass_matrix,
-  kwargs...)
-end
+prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p)
 ```
+
 Then the new problem with these new values is returned.
 
 One can use this to change the meaning of the parameters using this function. For
@@ -192,22 +184,19 @@ example, if one instead wanted to optimize the initial conditions for a function
 without parameters, you could change this to:
 
 ```julia
-function my_problem_new_parameters(prob::ODEProblem,p)
-  uEltype = eltype(p)
-  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))
-  ODEProblem(prob.f,p,tspan)
-end
+prob_generator = (prob,p) -> remake(prob.f,u0=p)
 ```
 
-which simply matches the type for time to `p` (once again, for autodifferentiation)
-and uses `p` as the initial condition in the initial value problem.
+which simply uses `p` as the initial condition in the initial value problem.
 
 ### LeastSquaresOptim.jl objective
 
 `build_lsoptim_objective` builds an objective function to be used with LeastSquaresOptim.jl.
 
 ```julia
-build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameters,kwargs...)
+build_lsoptim_objective(prob,tspan,t,data;
+                        prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p),
+                        kwargs...)
 ```
 
 The arguments are the same as `build_loss_objective`.
@@ -222,7 +211,9 @@ use an LM-based algorithm, so this allows one to test the increased effectivenes
 of not using LM.
 
 ```julia
-lm_fit(prob::DEProblem,tspan,t,data,p0;prob_generator = problem_new_parameters,kwargs...)
+lm_fit(prob::DEProblem,tspan,t,data,p0;
+       prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p),
+       kwargs...)
 ```
 
 The arguments are similar to before, but with `p0` being the initial conditions
