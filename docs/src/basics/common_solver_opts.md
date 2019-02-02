@@ -73,12 +73,8 @@ section at the end of this page for some example usage.
 * `d_discontinuities:` Denotes locations of discontinuities in low order derivatives.
   This will force FSAL algorithms which assume derivative continuity to re-evaluate
   the derivatives at the point of discontinuity. The default is `[]`.
-* `save_everystep`: Saves the result at every timeseries_steps iteration.    
+* `save_everystep`: Saves the result at every step.    
   Default is true if `isempty(saveat)`.
-* `timeseries_steps`: Denotes how many steps between saving a value for the
-  timeseries. These "steps" are the steps that the solver stops internally
-  (the ones you get by `save_everystep = true`), not the ones that are
-  instructed by the user (all solvers work in a step-like manner). Defaults to 1.
 * `save_on`: Denotes whether intermediate solutions are saved. This overrides the
   settings of `dense`, `saveat` and `save_everystep` and is used by some applicatioins
   to manually turn off saving temporarily. Everyday use of the solvers should leave
@@ -238,14 +234,14 @@ the extention to other types is straightforward.
   algorithm (given by `AlgorithmName()`). All parameters get their default values.
   This means that the solution is saved at the steps the Algorithm stops internally
   and dense output is enabled if the chosen algorithm allows for it.
-  
+
   All other integration parameters (e.g. stepsize) are chosen automatically.
 2. `solve(prob, saveat = 0.01, abstol = 1e-9, reltol = 1e-9)` : Standard setting
   for accurate output at specified (and equidistant) time intervals, used for
   e.g. Fourier Transform. The solution is given every 0.01 time units,
   starting from `tspan[1]`. The solver used is `Tsit5()` since no keyword
   `alg_hits` is given.
-  
+
 3. `solve(prob, maxiters = 1e7, progress = true, save_idxs = [1])` : Using longer
   maximum number of solver iterations can be useful when a given `tspan` is very
   long. This example only saves the first of the variables of the system, either
