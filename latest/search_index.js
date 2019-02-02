@@ -453,7 +453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining a Model using Reactions",
     "category": "section",
-    "text": "For our example, we will build an SIR model which matches the tutorial from Gillespie.jl. SIR stands for susceptible, infected, and recovered, and is a model of disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since in larger populations there is a greater chance that two people come into contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is determined by factors like the type of the disease. It can be interpreted as the probability per time one pair of susceptible and infected people encounter each other, with the susceptible person becoming sick. The overall rate (i.e. probability per time) that some susceptible person gets sick is then given by the rate constant multiplied by the number of possible pairs of susceptible and infected people. This formulation is known as the law of mass action.Let s be the number of susceptible persons, i be the number of infected persons, and r be the number of recovered persons. In this case, we can re-write our overall rate as:rate_constant*s*iThus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:s -= 1\ni += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts the are encoded in the reaction:c1, s + i --> 2iThis \"reaction\" encodes that a susceptible person and an infected person can interact, resulting in two infected persons (i.e. the susceptible person was infected). Here, c1 is the reaction constant.To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected people turn into recovered people israte_constant*iWhen this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:c2, i --> rThus our full reaction network is:sir_model = @reaction_network SIR begin\n    c1, s + i --> 2i\n    c2, i --> r\nend c1 c2Notice that the order the variables are introduced in the model is s, then i, then r, and thus this is the canonical ordering of the variables."
+    "text": "For our example, we will build an SIR model which matches the tutorial from Gillespie.jl. SIR stands for susceptible, infected, and recovered, and is a model of disease spread. When a susceptible person comes in contact with an infected person, the disease has a chance of infecting the susceptible person. This \"chance\" is determined by the number of susceptible persons and the number of infected persons, since in larger populations there is a greater chance that two people come into contact. Normally, the rate is modeled as the amountrate_constant*num_of_susceptible_people*num_of_infected_peopleThe rate_constant is determined by factors like the type of the disease. It can be interpreted as the probability per time one pair of susceptible and infected people encounter each other, with the susceptible person becoming sick. The overall rate (i.e. probability per time) that some susceptible person gets sick is then given by the rate constant multiplied by the number of possible pairs of susceptible and infected people. This formulation is known as the law of mass action.Let s be the number of susceptible persons, i be the number of infected persons, and r be the number of recovered persons. In this case, we can re-write our overall rate as:rate_constant*s*iThus we have that our \"reactants\" are components 1 and 2. When this \"reaction\" occurs, the result is that one susceptible person turns into an infected person. We can think of this as doing:s -= 1\ni += 1that is, we decrease the number of susceptible persons by 1 and increase the number of infected persons by 1.These are the facts the are encoded in the reaction:c1, s + i --> 2iThis \"reaction\" encodes that a susceptible person and an infected person can interact, resulting in two infected persons (i.e. the susceptible person was infected). Here, c1 is the reaction constant.To finish the model, we define one more reaction. Over time, infected people become less infected. The chance that any one person heals during some time unit depends on the number of people who are infected. Thus the rate at which infected people turn into recovered people israte_constant*iWhen this happens, we lose one infected person and gain a recovered person. This reaction is thus modeled as:c2, i --> rThus our full reaction network is:# ]add DiffEqBiological\nusing DiffEqBiological\nsir_model = @reaction_network SIR begin\n    c1, s + i --> 2i\n    c2, i --> r\nend c1 c2Notice that the order the variables are introduced in the model is s, then i, then r, and thus this is the canonical ordering of the variables."
 },
 
 {
@@ -469,7 +469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "SSAStepper",
     "category": "section",
-    "text": "The previous example used FunctionMap() to perform the jump process simulation. FunctionMap is a DiscreteProblem algorithm in OrdinaryDiffEq.jl. This shows that any common interface algorithm can be used to perform the timestepping since this is implemented over the callback interface. In many cases we may have a pure jump system that only involves ConstantRateJumps and/or MassActionJumps. When that\'s the case, a substantial performance benefit  may be gained by using SSAStepper()sol = solve(jump_prob,SSAStepper())SSAStepper is a barebones SSA method which doesn\'t allow defining events or integrating simultaneous ODEs, but is very efficient for pure jump/SSA problems."
+    "text": "The previous example used FunctionMap() to perform the jump process simulation. FunctionMap is a DiscreteProblem algorithm in OrdinaryDiffEq.jl. This shows that any common interface algorithm can be used to perform the timestepping since this is implemented over the callback interface. In many cases we may have a pure jump system that only involves ConstantRateJumps and/or MassActionJumps. When that\'s the case, a substantial performance benefit may be gained by using SSAStepper()sol = solve(jump_prob,SSAStepper())SSAStepper is a barebones SSA method which doesn\'t allow defining events or integrating simultaneous ODEs, but is very efficient for pure jump/SSA problems."
 },
 
 {
@@ -493,7 +493,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Stochastic (Gillespie) Equations",
     "title": "Defining the Jumps Directly: MassActionJump",
     "category": "section",
-    "text": "For systems that can be represented as mass action reactions, a further specialization of the jump type is possible that offers improved computational performance; MasssActionJump. Suppose the system has N chemical species S_1dotsS_N. A general mass action reaction has the formR_1 S_1 + R_2 S_2 + dots + R_N S_N oversetkrightarrow P_1 S_1 + P_2 S_2 + dots + P_N S_Nwhere the non-negative integers (R_1dotsR_N) denote the reactant stoichiometry of the reaction, and the non-negative integers (P_1dotsP_N) the product stoichiometry. The net stoichiometry is the net change in each chemical species from the reaction occurring one time, given by (P_1-R_1dotsP_N-R_N).As an example, consider again the SIR model defined in the @reaction_network above. The species are then (s,i,r). The first reaction has rate c1, reactant stoichiometry (1,1,0), product stoichiometry (0,2,0), and net stoichiometry (-1,1,0). The second reaction has rate c2, reactant stoichiometry (0,1,0), product stoichiometry (0,0,1), and net stoichiometry (0,-1,1).We can encode this system as a mass action jump by specifying the rates, reactant stoichiometry, and the net stoichiometry as follows:rates = [0.1/1000, 0.01]    # i.e. [c1,c2]\nreactant_stoich = \n[\n  [1 => 1, 2 => 1],         # 1*s and 1*i\n  [2 => 1]                  # 1*i\n]\nnet_stoich = \n[\n  [1 => -1, 2 => 1],        # -1*s and 1*i\n  [2 => -1, 3 => 1]         # -1*i and 1*r\n]\nmass_act_jump = MassActionJump(rates, reactant_stoich, net_stoich)Just like for ConstantRateJumps, to then simulate the system we create a JumpProblem and call solve:jump_prob = JumpProblem(prob, Direct(), mass_act_jump)\nsol = solve(jump_prob, SSAStepper())"
+    "text": "For systems that can be represented as mass action reactions, a further specialization of the jump type is possible that offers improved computational performance; MasssActionJump. Suppose the system has N chemical species S_1dotsS_N. A general mass action reaction has the formR_1 S_1 + R_2 S_2 + dots + R_N S_N oversetkrightarrow P_1 S_1 + P_2 S_2 + dots + P_N S_Nwhere the non-negative integers (R_1dotsR_N) denote the reactant stoichiometry of the reaction, and the non-negative integers (P_1dotsP_N) the product stoichiometry. The net stoichiometry is the net change in each chemical species from the reaction occurring one time, given by (P_1-R_1dotsP_N-R_N).As an example, consider again the SIR model defined in the @reaction_network above. The species are then (s,i,r). The first reaction has rate c1, reactant stoichiometry (1,1,0), product stoichiometry (0,2,0), and net stoichiometry (-1,1,0). The second reaction has rate c2, reactant stoichiometry (0,1,0), product stoichiometry (0,0,1), and net stoichiometry (0,-1,1).We can encode this system as a mass action jump by specifying the rates, reactant stoichiometry, and the net stoichiometry as follows:rates = [0.1/1000, 0.01]    # i.e. [c1,c2]\nreactant_stoich =\n[\n  [1 => 1, 2 => 1],         # 1*s and 1*i\n  [2 => 1]                  # 1*i\n]\nnet_stoich =\n[\n  [1 => -1, 2 => 1],        # -1*s and 1*i\n  [2 => -1, 3 => 1]         # -1*i and 1*r\n]\nmass_act_jump = MassActionJump(rates, reactant_stoich, net_stoich)Just like for ConstantRateJumps, to then simulate the system we create a JumpProblem and call solve:jump_prob = JumpProblem(prob, Direct(), mass_act_jump)\nsol = solve(jump_prob, SSAStepper())"
 },
 
 {
@@ -4121,6 +4121,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/parameterized_functions.html#Installation-1",
+    "page": "ParameterizedFunctions",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install ParameterizedFunctions.jl:]add ParameterizedFunctions\nusing ParameterizedFunctions"
+},
+
+{
     "location": "analysis/parameterized_functions.html#Function-Definition-Macros-1",
     "page": "ParameterizedFunctions",
     "title": "Function Definition Macros",
@@ -4146,23 +4154,31 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#",
-    "page": "Parameter Estimation",
-    "title": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
+    "title": "Parameter Estimation and Bayesian Analysis",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "analysis/parameter_estimation.html#Parameter-Estimation-1",
-    "page": "Parameter Estimation",
-    "title": "Parameter Estimation",
+    "location": "analysis/parameter_estimation.html#Parameter-Estimation-and-Bayesian-Analysis-1",
+    "page": "Parameter Estimation and Bayesian Analysis",
+    "title": "Parameter Estimation and Bayesian Analysis",
     "category": "section",
     "text": "Parameter estimation for ODE models, also known as dynamic data analysis, is provided by the DiffEq suite."
 },
 
 {
+    "location": "analysis/parameter_estimation.html#Installation-1",
+    "page": "Parameter Estimation and Bayesian Analysis",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqParamEstim.jl:]add DiffEqSensitivity\nusing DiffEqSensitivtyFor the Bayesian, methods, you must install DiffEqBayes.jl:]add DiffEqBayes\nusing DiffEqBayes"
+},
+
+{
     "location": "analysis/parameter_estimation.html#Recommended-Methods-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Recommended Methods",
     "category": "section",
     "text": "The recommended method is to use build_loss_objective with the optimizer of your choice. This method can thus be paired with global optimizers from packages like BlackBoxOptim.jl or NLopt.jl which can be much less prone to finding local minima than local optimization methods. Also, it allows the user to define the cost function in the way they choose as a function loss(sol), and thus can fit using any cost function on the solution, making it applicable to fitting non-temporal data and other types of problems. Also, build_loss_objective works for all of the DEProblem types, allowing it to optimize parameters on ODEs, SDEs, DDEs, DAEs, etc.However, this method requires repeated solution of the differential equation. If the data is temporal data, the most efficient method is the two_stage_method which does not require repeated solutions but is not as accurate. Usage of the two_stage_method should have a post-processing step which refines using a method like build_loss_objective."
@@ -4170,7 +4186,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Optimization-Based-Methods-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Optimization-Based Methods",
     "category": "section",
     "text": ""
@@ -4178,15 +4194,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Building-objective-function-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Building objective function",
     "category": "section",
-    "text": "build_loss_objective builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.function build_loss_objective(prob::DEProblem,alg,loss_func\n                              regularization=nothing;\n                              mpg_autodiff = false,\n                              verbose_opt = false,\n                              verbose_steps = 100,\n                              prob_generator = problem_new_parameters,\n                              kwargs...)The first argument is the DEProblem to solve, and next is the alg to use. The alg must match the problem type, which can be any DEProblem (ODEs, SDEs, DAEs, DDEs, etc.). regularization defaults to nothing which has no regularization function. One can also choose verbose_opt and verbose_steps, which, in the optimization routines, will print the steps and the values at the steps every verbose_steps steps. mpg_autodiff uses autodifferentiation to define the derivative for the MathProgBase solver. The extra keyword arguments are passed to the differential equation solver."
+    "text": "build_loss_objective builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.function build_loss_objective(prob::DEProblem,alg,loss_func\n                              regularization=nothing;\n                              mpg_autodiff = false,\n                              verbose_opt = false,\n                              verbose_steps = 100,\n                              prob_generator = (p)->remake(prob,p=p),\n                              kwargs...)The first argument is the DEProblem to solve, and next is the alg to use. The alg must match the problem type, which can be any DEProblem (ODEs, SDEs, DAEs, DDEs, etc.). regularization defaults to nothing which has no regularization function. One can also choose verbose_opt and verbose_steps, which, in the optimization routines, will print the steps and the values at the steps every verbose_steps steps. mpg_autodiff uses autodifferentiation to define the derivative for the MathProgBase solver. The extra keyword arguments are passed to the differential equation solver."
 },
 
 {
     "location": "analysis/parameter_estimation.html#Multiple-Shooting-objective-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Multiple Shooting objective",
     "category": "section",
     "text": "Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.\nThis objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn\'t match the begining of the next one.\nMerge the solutions from the shorter intervals and then calculate the loss.For consistency multiple_shooting_objective takes exactly the same arguments as build_loss_objective. It also has the option for discontinuity_error as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span."
@@ -4194,7 +4210,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Two-Stage-method-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Two Stage method",
     "category": "section",
     "text": "The two-stage method is a collocation method for estimating parameters without requiring repeated solving of the differential equation. It does so by determining a smoothed estimated trajectory of the data and optimizing the derivative function and the data\'s timepoints to match the derivatives of the smoothed trajectory. This method has less accuracy than other methods but is much faster, and is a good method to try first to get in the general \"good parameter\" region, to then finish using one of the other methods.function two_stage_method(prob::DEProblem,tpoints,data;kernel= :Epanechnikov,\n                          loss_func = L2DistLoss,mpg_autodiff = false,\n                          verbose = false,verbose_steps = 100)"
@@ -4202,7 +4218,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#The-Loss-Function-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "The Loss Function",
     "category": "section",
     "text": "loss_func(sol)is a function which reduces the problem\'s solution to a scalar which the optimizer will try to minimize. While this is very flexible, two convenience routines are included for fitting to data with standard cost functions:L2Loss(t,data;weight=nothing)where t is the set of timepoints which the data is found at, and data are the values that are known where each column corresponds to measures of the values of the system. L2Loss is an optimized version of the L2-distance. The weight is a vector of weights for the loss function which must match the size of the data. Note that minimization of a weighted L2Loss is equivalent to maximum likelihood estimation of a heteroskedastic Normally distributed likelihood.Additionally, we include a more flexible log-likelihood approach:LogLikeLoss(t,distributions;loss_func = L2Loss,weight=nothing)In this case, there are two forms. The simple case is where distributions[i,j] is the likelihood distributions from a UnivariateDistribution from Distributions.jl, where it corresponds to the likelihood at t[i] for component j. The second case is where distributions[i] is a MultivariateDistribution which corresponds to the likelihood at t[i] over the vector of components. This likelihood function then calculates the negative of the total loglikelihood over time as its objective value (negative since optimizers generally find minimimums, and thus this corresponds to maximum likelihood estimation).Note that these distributions can be generated via fit_mle on some dataset against some chosen distribution type."
@@ -4210,7 +4226,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Note-About-Loss-Functions-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Note About Loss Functions",
     "category": "section",
     "text": "For parameter estimation problems, it\'s not uncommon for the optimizers to hit unstable regions of parameter space. This causes warnings that the solver exited early, and the built-in loss functions like L2Loss automatically handle this. However, if using a user-supplied loss function, you should make sure it\'s robust to these issues. One common pattern is to apply infinite loss when the integration is not successful. Using the retcodes, this can be done via:function my_loss_function(sol)\n   tot_loss = 0.0\n   if any((s.retcode != :Success for s in sol))\n     tot_loss = Inf\n   else\n     # calculation for the loss here\n   end\n   tot_loss\nend"
@@ -4218,7 +4234,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#First-Differencing-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "First Differencing",
     "category": "section",
     "text": "L2Loss(t,data,differ_weight=0.3,data_weight=0.7)First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. You can now assign a weight (vector or scalar) to use the first differencing technique in the L2loss.Adding first differencing is helpful in cases where the L2Loss alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates."
@@ -4226,7 +4242,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#The-Regularization-Function-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "The Regularization Function",
     "category": "section",
     "text": "The regularization can be any function of p, the parameter vector:regularization(p)The Regularization helper function builds a regularization using a penalty function penalty from PenaltyFunctions.jl:Regularization(λ,penalty=L2Penalty())The regularization defaults to L2 if no penalty function is specified. λ is the weight parameter for the addition of the regularization term."
@@ -4234,39 +4250,39 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#The-Problem-Generator-Function-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "The Problem Generator Function",
     "category": "section",
-    "text": "The argument prob_generator allows one to specify a function for generating new problems from a given parameter set. By default, this just builds a new problem which fixes the element types in a way that\'s autodifferentiation compatible and adds the new parameter vector p. For example, for ODEs this is given by the dispatch on DiffEqBase.problem_new_parameters which does the following:function problem_new_parameters(prob::ODEProblem,p;kwargs...)\n  uEltype = eltype(p)\n  u0 = [uEltype(prob.u0[i]) for i in 1:length(prob.u0)]\n  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))\n  ODEProblem{isinplace(prob)}(prob.f,u0,tspan,p,prob.problem_type;\n  callback = prob.callback, mass_matrix = prob.mass_matrix,\n  kwargs...)\nendThen the new problem with these new values is returned.One can use this to change the meaning of the parameters using this function. For example, if one instead wanted to optimize the initial conditions for a function without parameters, you could change this to:function my_problem_new_parameters(prob::ODEProblem,p)\n  uEltype = eltype(p)\n  tspan = (uEltype(prob.tspan[1]),uEltype(prob.tspan[2]))\n  ODEProblem(prob.f,p,tspan)\nendwhich simply matches the type for time to p (once again, for autodifferentiation) and uses p as the initial condition in the initial value problem."
+    "text": "The argument prob_generator allows one to specify a function for generating new problems from a given parameter set. By default, this just builds a new problem which fixes the element types in a way that\'s autodifferentiation compatible and adds the new parameter vector p. For example, the code for this is:prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p)Then the new problem with these new values is returned.One can use this to change the meaning of the parameters using this function. For example, if one instead wanted to optimize the initial conditions for a function without parameters, you could change this to:prob_generator = (prob,p) -> remake(prob.f,u0=p)which simply uses p as the initial condition in the initial value problem."
 },
 
 {
     "location": "analysis/parameter_estimation.html#LeastSquaresOptim.jl-objective-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "LeastSquaresOptim.jl objective",
     "category": "section",
-    "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob,tspan,t,data;prob_generator = problem_new_parameters,kwargs...)The arguments are the same as build_loss_objective."
+    "text": "build_lsoptim_objective builds an objective function to be used with LeastSquaresOptim.jl.build_lsoptim_objective(prob,tspan,t,data;\n                        prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p),\n                        kwargs...)The arguments are the same as build_loss_objective."
 },
 
 {
     "location": "analysis/parameter_estimation.html#lm_fit-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "lm_fit",
     "category": "section",
-    "text": "lm_fit is a function for fitting the parameters of an ODE using the Levenberg-Marquardt algorithm. This algorithm is really bad and thus not recommended since, for example, the Optim.jl algorithms on an L2 loss are more performant and robust. However, this is provided for completeness as most other differential equation libraries use an LM-based algorithm, so this allows one to test the increased effectiveness of not using LM.lm_fit(prob::DEProblem,tspan,t,data,p0;prob_generator = problem_new_parameters,kwargs...)The arguments are similar to before, but with p0 being the initial conditions for the parameters and the kwargs as the args passed to the LsqFit curve_fit function (which is used for the LM solver). This returns the fitted parameters."
+    "text": "lm_fit is a function for fitting the parameters of an ODE using the Levenberg-Marquardt algorithm. This algorithm is really bad and thus not recommended since, for example, the Optim.jl algorithms on an L2 loss are more performant and robust. However, this is provided for completeness as most other differential equation libraries use an LM-based algorithm, so this allows one to test the increased effectiveness of not using LM.lm_fit(prob::DEProblem,tspan,t,data,p0;\n       prob_generator = (prob,p) -> remake(prob,u0=convert.(eltype(p),prob.u0),p=p),\n       kwargs...)The arguments are similar to before, but with p0 being the initial conditions for the parameters and the kwargs as the args passed to the LsqFit curve_fit function (which is used for the LM solver). This returns the fitted parameters."
 },
 
 {
     "location": "analysis/parameter_estimation.html#MAP-estimate-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "MAP estimate",
     "category": "section",
-    "text": "You can also add a prior option to build_loss_objective and multiple_shooting_objective that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument priors, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution. ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=priors,discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)"
+    "text": "You can also add a prior option to build_loss_objective and multiple_shooting_objective that essentially turns it into MAP by multiplying the loglikelihood (the cost) by the prior. The option was added as a keyword argument priors, it can take in either an array of univariate distributions for each of the parameters or a multivariate distribution.ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=priors,discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)"
 },
 
 {
     "location": "analysis/parameter_estimation.html#Bayesian-Methods-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Bayesian Methods",
     "category": "section",
     "text": "The following methods require the DiffEqBayes.jlPkg.add(\"DiffEqBayes\")\nusing DiffEqBayes"
@@ -4274,7 +4290,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#stan_inference-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "stan_inference",
     "category": "section",
     "text": "stan_inference(prob::ODEProblem,t,data,priors = nothing;alg=:rk45,\n               num_samples=1000, num_warmup=1000, reltol=1e-3,\n               abstol=1e-6, maxiter=Int(1e5),likelihood=Normal,\n               vars=(StanODEData(),InverseGamma(2,3)))stan_inference uses Stan.jl to perform the Bayesian inference. The Stan installation process is required to use this function. The input requires that the function is defined by a ParameterizedFunction with the @ode_def macro. t is the array of time and data is the array where the first dimension (columns) corresponds to the array of system values. priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. alg is a choice between :rk45 and :bdf, the two internal integrators of Stan. num_samples is the number of samples to take per chain, and num_warmup is the number of MCMC warmup steps. abstol and reltol are the keyword arguments for the internal integrator. liklihood is the likelihood distribution to use with the arguments from vars, and vars is a tuple of priors for the distributions of the likelihood hyperparameters. The special value StanODEData() in this tuple denotes the position that the ODE solution takes in the likelihood\'s parameter list."
@@ -4282,7 +4298,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#turing_inference-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "turing_inference",
     "category": "section",
     "text": "turing_inference(prob::DEProblem,alg,t,data,priors = nothing;\n                 num_samples=1000, epsilon = 0.02, tau = 4, kwargs...)turing_inference uses Turing.jl to perform its parameter inference. prob can be any DEProblem with a corresponding alg choice. t is the array of time points and data[:,i] is the set of observations for the differential equation system at time point t[i] (or higher dimensional). priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. num_samples is the number of samples per MCMC chain. epsilon and tau are the HMC parameters. The extra kwargs are given to the internal differential equation solver."
@@ -4290,15 +4306,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#dynamichmc_inference-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "dynamichmc_inference",
     "category": "section",
-    "text": "dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;\n                      σ = 0.01,ϵ=0.001,initial=Float64[])dynamichmc_inference uses DynamicHMC.jl to   perform the bayesian parameter estimation. prob can be any DEProblem, data is the set   of observations for our model whihc is to be used in the Bayesian Inference process. priors represent the   choice of prior distributions for the parameters to be determined, passed as an array of Distributions.jl distributions. t is the array of time points. transformations  is an array of Tranformations imposed for constraining the   parameter values to specific domains. initial values for the parameters can be passed, if not passed the means of the  priors are used. ϵ can be used as a kwarg to pass the initial step size for the NUTS algorithm.      "
+    "text": "dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;\n                      σ = 0.01,ϵ=0.001,initial=Float64[])dynamichmc_inference uses DynamicHMC.jl to  perform the bayesian parameter estimation. prob can be any DEProblem, data is the set  of observations for our model whihc is to be used in the Bayesian Inference process. priors represent the  choice of prior distributions for the parameters to be determined, passed as an array of Distributions.jl distributions. t is the array of time points. transformations  is an array of Tranformations imposed for constraining the  parameter values to specific domains. initial values for the parameters can be passed, if not passed the means of the  priors are used. ϵ can be used as a kwarg to pass the initial step size for the NUTS algorithm.      "
 },
 
 {
     "location": "analysis/parameter_estimation.html#abc_inference-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "abc_inference",
     "category": "section",
     "text": "abc_inference(prob::DEProblem, alg, t, data, priors; ϵ=0.001,\n     distancefunction = euclidean, ABCalgorithm = ABCSMC, progress = false,\n     num_samples = 500, maxiterations = 10^5, kwargs...)abc_inference uses ApproxBayes.jl which uses Approximate Bayesian Computation (ABC) to perform its parameter inference. prob can be any DEProblem with a corresponding alg choice. t is the array of time points and data[:,i] is the set of observations for the differential equation system at time point t[i] (or higher dimensional). priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. num_samples is the number of posterior samples. ϵ is the target distance between the data and simulated data. distancefunction is a distance metric specified from the Distances.jl package, the default is euclidean. ABCalgorithm is the ABC algorithm to use, options are ABCSMC or ABCRejection from ApproxBayes.jl, the default is the former which is more efficient. maxiterations is the maximum number of iterations before the algorithm terminates. The extra kwargs are given to the internal differential equation solver."
@@ -4306,7 +4322,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Optimization-Based-ODE-Inference-Examples-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Optimization-Based ODE Inference Examples",
     "category": "section",
     "text": ""
@@ -4314,15 +4330,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Simple-Local-Optimization-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Simple Local Optimization",
     "category": "section",
-    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParameterizedFunction:f = @ode_def LotkaVolterraTest begin\n  dx = a*x - x*y\n  dy = -3y + x*y\nend a\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5]\nprob = ODEProblem(f,u0,tspan,p)We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(range(0,stop=10,length=200))\nusing RecursiveArrayTools # for VectorOfArray\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)Here we used VectorOfArray from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective function:cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),\n                                     maxiters=10000,verbose=false)This objective function internally is calling the ODE solver to get solutions to test against the data. The keyword arguments are passed directly to the solver. Note that we set maxiters in a way that causes the differential equation solvers to error more quickly when in bad regions of the parameter space, speeding up the process. If the integrator stops early (due to divergence), then those parameters are given an infinite loss, and thus this is a quick way to avoid bad parameters. We set verbose=false because this divergence can get noisy.Before optimizing, let\'s visualize our cost function by plotting it for a range of parameter values:vals = 0.0:0.1:10.0\nusing Plots; plotly()\nplot(vals,[cost_function(i) for i in vals],yscale=:log10,\n     xaxis = \"Parameter\", yaxis = \"Cost\", title = \"1-Parameter Cost Function\",\n     lw = 3)(Image: 1 Parameter Likelihood)Here we see that there is a very well-defined minimum in our cost function at the real parameter (because this is where the solution almost exactly fits the dataset).Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent\'s algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl. We can improve our solution by noting that the Lotka-Volterra equation requires that the parameters are positive. Thus following the Optim.jl documentation we can add box constraints to ensure the optimizer only checks between 0.0 and 3.0 which improves the efficiency of our algorithm:lower = [0.0]\nupper = [3.0]\nresult = optimize(cost_function, [1.42], lower, upper, Fminbox{BFGS}())Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let\'s use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a b c d\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5,1.0,3.0,1.0]\nprob = ODEProblem(f2,u0,tspan,p)We can build an objective function and solve the multiple parameter version just as before:cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),\n                                      maxiters=10000,verbose=false)\nresult_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())We can also use First-Differences in L2Loss by passing the kwarg differ_weight which decides the contribution of the  differencing loss to the total loss. cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data,differ_weight=0.3,data_weight=0.7),\n                                      maxiters=10000,verbose=false)\nresult_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob1,t,data,Tsit5())The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR())We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x\'| < 1.0e-15: true\n * |f(x) - f(x\')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters.We can also use Multiple Shooting method by creating a multiple_shooting_objectivems_f = @ode_def begin\n    dx = a*x - b*x*y\n    dy = -3*y + x*y\nend a b \nms_u0 = [1.0;1.0]\ntspan = (0.0,10.0)\nms_p = [1.5,1.0]\nms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)\nt = collect(range(0,stop=10,length=200))\ndata = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))\nbound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]\n\n\nms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)This creates the objective function that can be passed to an optimizer from which we can then get the parameter values  and the initial values of the short time periods keeping in mind the indexing.result = bboptimize(ms_obj;SearchRange = bound, MaxSteps = 21e3)\nresult.archive_output.best_candidate[end-1:end]Giving us the results asStarting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},BlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound{BlackBoxOptim.RangePerDimSearchSpace}}\n\nOptimization stopped after 21001 steps and 136.60030698776245 seconds\nTermination reason: Max number of steps (21000) reached\nSteps per second = 153.7405036862868\nFunction evals per second = 154.43596332393247\nImprovements/step = 0.17552380952380953\nTotal function evaluations = 21096\n\n\nBest candidate found: [0.997396, 1.04664, 3.77834, 0.275823, 2.14966, 4.33106, 1.43777, 0.468442, 6.22221, 0.673358, 0.970036, 2.05182, 2.4216, 0.274394, 5.64131, 3.38132, 1.52826, 1.01721]\n\nFitness: 0.126884213\n\nOut[4]:2-element Array{Float64,1}:\n        1.52826\n        1.01721Here as our model had 2 parameters, we look at the last two indexes of result to get our parameter values and  the rest of the values are the initial values of the shorter timespans as described in the reference section.The objective function for Two Stage method can be created and passed to an optimizer astwo_stage_obj = two_stage_method(ms_prob,t,data)\nresult = Optim.optimize(two_stage_obj, [1.3,0.8,2.8,1.2], Optim.BFGS()\n)\nResults of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.3,0.8,2.8,1.2]\n * Minimizer: [1.5035938533664717,0.9925731153746833, ...]\n * Minimum: 1.513400e+00\n * Iterations: 9\n * Convergence: true\n   * |x - x\'| ≤ 0.0e+00: false \n     |x - x\'| = 4.58e-10 \n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 5.87e-16 |f(x)|\n   * |g(x)| ≤ 1.0e-08: true \n     |g(x)| = 7.32e-11 \n   * Stopped by an increasing objective: false\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 31\n * Gradient Calls: 31The default kernel used in the method is Epanechnikov others that are available are Uniform,  Triangular,  Quartic, Triweight, Tricube, Gaussian, Cosine, Logistic and Sigmoid, this can be passed by the  kernel keyword argument. loss_func keyword argument can be used to pass te loss function (cost function) you want  to use and mpg_autodiff enables Auto Differentiation. "
+    "text": "We choose to optimize the parameters on the Lotka-Volterra equation. We do so by defining the function as a ParameterizedFunction:f = @ode_def LotkaVolterraTest begin\n  dx = a*x - x*y\n  dy = -3y + x*y\nend a\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5]\nprob = ODEProblem(f,u0,tspan,p)We create data using the numerical result with a=1.5:sol = solve(prob,Tsit5())\nt = collect(range(0,stop=10,length=200))\nusing RecursiveArrayTools # for VectorOfArray\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)Here we used VectorOfArray from RecursiveArrayTools.jl to turn the result of an ODE into a matrix.If we plot the solution with the parameter at a=1.42, we get the following:(Image: Parameter Estimation Not Fit)Notice that after one period this solution begins to drift very far off: this problem is sensitive to the choice of a.To build the objective function for Optim.jl, we simply call the build_loss_objective function:cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),\n                                     maxiters=10000,verbose=false)This objective function internally is calling the ODE solver to get solutions to test against the data. The keyword arguments are passed directly to the solver. Note that we set maxiters in a way that causes the differential equation solvers to error more quickly when in bad regions of the parameter space, speeding up the process. If the integrator stops early (due to divergence), then those parameters are given an infinite loss, and thus this is a quick way to avoid bad parameters. We set verbose=false because this divergence can get noisy.Before optimizing, let\'s visualize our cost function by plotting it for a range of parameter values:vals = 0.0:0.1:10.0\nusing Plots; plotly()\nplot(vals,[cost_function(i) for i in vals],yscale=:log10,\n     xaxis = \"Parameter\", yaxis = \"Cost\", title = \"1-Parameter Cost Function\",\n     lw = 3)(Image: 1 Parameter Likelihood)Here we see that there is a very well-defined minimum in our cost function at the real parameter (because this is where the solution almost exactly fits the dataset).Now this cost function can be used with Optim.jl in order to get the parameters. For example, we can use Brent\'s algorithm to search for the best solution on the interval [0,10] by:using Optim\nresult = optimize(cost_function, 0.0, 10.0)This returns result.minimizer[1]==1.5 as the best parameter to match the data. When we plot the fitted equation on the data, we receive the following:(Image: Parameter Estimation Fit)Thus we see that after fitting, the lines match up with the generated data and receive the right parameter value.We can also use the multivariate optimization functions. For example, we can use the BFGS algorithm to optimize the parameter starting at a=1.42 using:result = optimize(cost_function, [1.42], BFGS())Note that some of the algorithms may be sensitive to the initial condition. For more details on using Optim.jl, see the documentation for Optim.jl. We can improve our solution by noting that the Lotka-Volterra equation requires that the parameters are positive. Thus following the Optim.jl documentation we can add box constraints to ensure the optimizer only checks between 0.0 and 3.0 which improves the efficiency of our algorithm:lower = [0.0]\nupper = [3.0]\nresult = optimize(cost_function, [1.42], lower, upper, Fminbox{BFGS}())Lastly, we can use the same tools to estimate multiple parameters simultaneously. Let\'s use the Lotka-Volterra equation with all parameters free:f2 = @ode_def_nohes LotkaVolterraAll begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a b c d\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5,1.0,3.0,1.0]\nprob = ODEProblem(f2,u0,tspan,p)We can build an objective function and solve the multiple parameter version just as before:cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data),\n                                      maxiters=10000,verbose=false)\nresult_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())We can also use First-Differences in L2Loss by passing the kwarg differ_weight which decides the contribution of the differencing loss to the total loss.cost_function = build_loss_objective(prob,Tsit5(),L2Loss(t,data,differ_weight=0.3,data_weight=0.7),\n                                      maxiters=10000,verbose=false)\nresult_bfgs = Optim.optimize(cost_function, [1.3,0.8,2.8,1.2], Optim.BFGS())To solve it using LeastSquaresOptim.jl, we use the build_lsoptim_objective function:cost_function = build_lsoptim_objective(prob1,t,data,Tsit5())The result is a cost function which can be used with LeastSquaresOptim. For more details, consult the documentation for LeastSquaresOptim.jl:x = [1.3,0.8,2.8,1.2]\nres = optimize!(LeastSquaresProblem(x = x, f! = cost_function,\n                output_length = length(t)*length(prob.u0)),\n                LeastSquaresOptim.Dogleg(),LeastSquaresOptim.LSMR())We can see the results are:println(res.minimizer)\n\nResults of Optimization Algorithm\n * Algorithm: Dogleg\n * Minimizer: [1.4995074428834114,0.9996531871795851,3.001556360700904,1.0006272074128821]\n * Sum of squares at Minimum: 0.035730\n * Iterations: 63\n * Convergence: true\n * |x - x\'| < 1.0e-15: true\n * |f(x) - f(x\')| / |f(x)| < 1.0e-14: false\n * |g(x)| < 1.0e-14: false\n * Function Calls: 64\n * Gradient Calls: 9\n * Multiplication Calls: 135and thus this algorithm was able to correctly identify all four parameters.We can also use Multiple Shooting method by creating a multiple_shooting_objectivems_f = @ode_def begin\n    dx = a*x - b*x*y\n    dy = -3*y + x*y\nend a b\nms_u0 = [1.0;1.0]\ntspan = (0.0,10.0)\nms_p = [1.5,1.0]\nms_prob = ODEProblem(ms_f,ms_u0,tspan,ms_p)\nt = collect(range(0,stop=10,length=200))\ndata = Array(solve(ms_prob,Tsit5(),saveat=t,abstol=1e-12,reltol=1e-12))\nbound = Tuple{Float64, Float64}[(0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),\n                                (0, 10),(0, 10),(0, 10),(0, 10),(0, 10),(0, 10)]\n\n\nms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);discontinuity_weight=1.0,abstol=1e-12,reltol=1e-12)This creates the objective function that can be passed to an optimizer from which we can then get the parameter values and the initial values of the short time periods keeping in mind the indexing.result = bboptimize(ms_obj;SearchRange = bound, MaxSteps = 21e3)\nresult.archive_output.best_candidate[end-1:end]Giving us the results asStarting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},BlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound{BlackBoxOptim.RangePerDimSearchSpace}}\n\nOptimization stopped after 21001 steps and 136.60030698776245 seconds\nTermination reason: Max number of steps (21000) reached\nSteps per second = 153.7405036862868\nFunction evals per second = 154.43596332393247\nImprovements/step = 0.17552380952380953\nTotal function evaluations = 21096\n\n\nBest candidate found: [0.997396, 1.04664, 3.77834, 0.275823, 2.14966, 4.33106, 1.43777, 0.468442, 6.22221, 0.673358, 0.970036, 2.05182, 2.4216, 0.274394, 5.64131, 3.38132, 1.52826, 1.01721]\n\nFitness: 0.126884213\n\nOut[4]:2-element Array{Float64,1}:\n        1.52826\n        1.01721Here as our model had 2 parameters, we look at the last two indexes of result to get our parameter values and the rest of the values are the initial values of the shorter timespans as described in the reference section.The objective function for Two Stage method can be created and passed to an optimizer astwo_stage_obj = two_stage_method(ms_prob,t,data)\nresult = Optim.optimize(two_stage_obj, [1.3,0.8,2.8,1.2], Optim.BFGS()\n)\nResults of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.3,0.8,2.8,1.2]\n * Minimizer: [1.5035938533664717,0.9925731153746833, ...]\n * Minimum: 1.513400e+00\n * Iterations: 9\n * Convergence: true\n   * |x - x\'| ≤ 0.0e+00: false\n     |x - x\'| = 4.58e-10\n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 5.87e-16 |f(x)|\n   * |g(x)| ≤ 1.0e-08: true\n     |g(x)| = 7.32e-11\n   * Stopped by an increasing objective: false\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 31\n * Gradient Calls: 31The default kernel used in the method is Epanechnikov others that are available are Uniform,  Triangular, Quartic, Triweight, Tricube, Gaussian, Cosine, Logistic and Sigmoid, this can be passed by the kernel keyword argument. loss_func keyword argument can be used to pass te loss function (cost function) you want  to use and mpg_autodiff enables Auto Differentiation."
 },
 
 {
     "location": "analysis/parameter_estimation.html#More-Algorithms-(Global-Optimization)-via-MathProgBase-Solvers-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "More Algorithms (Global Optimization) via MathProgBase Solvers",
     "category": "section",
     "text": "The build_loss_objective function builds an objective function which is able to be used with MathProgBase-associated solvers. This includes packages like IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a cost function for the single parameter optimization problem like:f = @ode_def_nohes LotkaVolterraTest begin\n  dx = a*x - x*y\n  dy = -3y + x*y\nend a\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5]\nprob = ODEProblem(f,u0,tspan,p)\nsol = solve(prob,Tsit5())\n\nt = collect(range(0,stop=10,range=200))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)\n\nobj = build_loss_objective(prob,Tsit5(),L2Loss(t,data),maxiters=10000)We can now use this obj as the objective function with MathProgBase solvers. For our example, we will use NLopt. To use the local derivative-free Constrained Optimization BY Linear Approximations algorithm, we can simply do:using NLopt\nopt = Opt(:LN_COBYLA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])This finds a minimum at [1.49997]. For a modified evolutionary algorithm, we can use:opt = Opt(:GN_ESCH, 1)\nmin_objective!(opt, obj)\nlower_bounds!(opt,[0.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])We can even use things like the Improved Stochastic Ranking Evolution Strategy (and add constraints if needed). This is done via:opt = Opt(:GN_ISRES, 1)\nmin_objective!(opt, obj.cost_function2)\nlower_bounds!(opt,[-1.0])\nupper_bounds!(opt,[5.0])\nxtol_rel!(opt,1e-3)\nmaxeval!(opt, 100000)\n(minf,minx,ret) = NLopt.optimize(opt,[0.2])which is very robust to the initial condition. The fastest result comes from the following:using NLopt\nopt = Opt(:LN_BOBYQA, 1)\nmin_objective!(opt, obj)\n(minf,minx,ret) = NLopt.optimize(opt,[1.3])For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!"
@@ -4330,7 +4346,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Generalized-Likelihood-Example-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Generalized Likelihood Example",
     "category": "section",
     "text": "In this example we will demo the likelihood-based approach to parameter fitting. First let\'s generate a dataset to fit. We will re-use the Lotka-Volterra equation but in this case fit just two parameters. Note that the parameter estimation tools do not require the use of the @ode_def macro, so let\'s demonstrate what the macro-less version looks like:f1 = function (du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3.0 * u[2] + u[1]*u[2]\nend\np = [1.5,1.0]\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\nprob1 = ODEProblem(f1,u0,tspan,p)\nsol = solve(prob1,Tsit5())This is a function with two parameters, [1.5,1.0] which generates the same ODE solution as before. This time, let\'s generate 100 datasets where at each point adds a little bit of randomness:using RecursiveArrayTools # for VectorOfArray\nt = collect(range(0,stop=10,length=200))\nfunction generate_data(sol,t)\n  randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\n  data = convert(Array,randomized)\nend\naggregate_data = convert(Array,VectorOfArray([generate_data(sol,t) for i in 1:100]))here with t we measure the solution at 200 evenly spaced points. Thus aggregate_data is a 2x200x100 matrix where aggregate_data[i,j,k] is the ith component at time j of the kth dataset. What we first want to do is get a matrix of distributions where distributions[i,j] is the likelihood of component i at take j. We can do this via fit_mle on a chosen distributional form. For simplicity we choose the Normal distribution. aggregate_data[i,j,:] is the array of points at the given component and time, and thus we find the distribution parameters which fits best at each time point via:using Distributions\ndistributions = [fit_mle(Normal,aggregate_data[i,j,:]) for i in 1:2, j in 1:200]Notice for example that we have:julia> distributions[1,1]\nDistributions.Normal{Float64}(μ=1.0022440583676806, σ=0.009851964521952437)that is, it fit the distribution to have its mean just about where our original solution was and the variance is about how much noise we added to the dataset. This this is a good check to see that the distributions we are trying to fit our parameters to makes sense.Note that in this case the Normal distribution was a good choice, and in many cases it\'s a nice go-to choice, but one should experiment with other choices of distributions as well. For example, a TDist can be an interesting way to incorporate robustness to outliers since low degrees of free T-distributions act like Normal distributions but with longer tails (though fit_mle does not work with a T-distribution, you can get the means/variances and build appropriate distribution objects yourself).Once we have the matrix of distributions, we can build the objective function corresponding to that distribution fit:using DiffEqParamEstim\nobj = build_loss_objective(prob1,Tsit5(),LogLikeLoss(t,distributions),\n                                     maxiters=10000,verbose=false)First let\'s use the objective function to plot the likelihood landscape:using Plots; plotly()\nrange = 0.5:0.1:5.0\nheatmap(range,range,[obj([j,i]) for i in range, j in range],\n        yscale=:log10,xlabel=\"Parameter 1\",ylabel=\"Parameter 2\",\n        title=\"Likelihood Landscape\")(Image: 2 Parameter Likelihood)Recall that this is the negative loglikelihood and thus the minimum is the maximum of the likelihood. There is a clear valley where the second parameter is 1.5, while the first parameter\'s likelihood is more muddled. By taking a one-dimensional slice:plot(range,[obj([i,1.0]) for i in range],lw=3,\n     title=\"Parameter 1 Likelihood (Parameter 2 = 1.5)\",\n     xlabel = \"Parameter 1\", ylabel = \"Objective Function Value\")(Image: 1 Parameter Likelihood)we can see that there\'s still a clear minimum at the true value. Thus we will use the global optimizers from BlackBoxOptim.jl to find the values. We set our search range to be from 0.5 to 5.0 for both of the parameters and let it optimize:using BlackBoxOptim\nbound1 = Tuple{Float64, Float64}[(0.5, 5),(0.5, 5)]\nresult = bboptimize(obj;SearchRange = bound1, MaxSteps = 11e3)\n\nStarting optimization with optimizer BlackBoxOptim.DiffEvoOpt{BlackBoxOptim.FitPopulation{Float64},B\nlackBoxOptim.RadiusLimitedSelector,BlackBoxOptim.AdaptiveDiffEvoRandBin{3},BlackBoxOptim.RandomBound\n{BlackBoxOptim.RangePerDimSearchSpace}}\n0.00 secs, 0 evals, 0 steps\n0.50 secs, 1972 evals, 1865 steps, improv/step: 0.266 (last = 0.2665), fitness=-737.311433781\n1.00 secs, 3859 evals, 3753 steps, improv/step: 0.279 (last = 0.2913), fitness=-739.658421879\n1.50 secs, 5904 evals, 5799 steps, improv/step: 0.280 (last = 0.2830), fitness=-739.658433715\n2.00 secs, 7916 evals, 7811 steps, improv/step: 0.225 (last = 0.0646), fitness=-739.658433715\n2.50 secs, 9966 evals, 9861 steps, improv/step: 0.183 (last = 0.0220), fitness=-739.658433715\n\nOptimization stopped after 11001 steps and 2.7839999198913574 seconds\nTermination reason: Max number of steps (11000) reached\nSteps per second = 3951.50873439296\nFunction evals per second = 3989.2242527195904\nImprovements/step = 0.165\nTotal function evaluations = 11106\n\n\nBest candidate found: [1.50001, 1.00001]\n\nFitness: -739.658433715This shows that it found the true parameters as the best fit to the likelihood."
@@ -4338,15 +4354,15 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Parameter-Estimation-for-Stochastic-Differential-Equations-and-Monte-Carlo-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Parameter Estimation for Stochastic Differential Equations and Monte Carlo",
     "category": "section",
-    "text": "We can use any DEProblem, which not only includes DAEProblem and DDEProblems, but also stochastic problems. In this case, let\'s use the generalized maximum likelihood to fit the parameters of an SDE\'s Monte Carlo evaluation.Let\'s use the same Lotka-Volterra equation as before, but this time add noise:pf_func = function (du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5,1.0]\npg_func = function (du,u,p,t)\n  du[1] = 1e-6u[1]\n  du[2] = 1e-6u[2]\nend\nprob = SDEProblem(pf_func,pg_func,u0,tspan,p)\nsol = solve(prob,SRIW1())Now lets generate a dataset from 10,000 solutions of the SDEusing RecursiveArrayTools # for VectorOfArray\nt = collect(range(0, stop=10, length=200))\nfunction generate_data(t)\n  sol = solve(prob,SRIW1())\n  randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\n  data = convert(Array,randomized)\nend\naggregate_data = convert(Array,VectorOfArray([generate_data(t) for i in 1:10000]))Now let\'s estimate the parameters. Instead of using single runs from the SDE, we will use a MonteCarloProblem. This means that it will solve the SDE N times to come up with an approximate probability distribution at each time point and use that in the likelihood estimate.monte_prob = MonteCarloProblem(prob)We use Optim.jl for optimization below obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),\n                                     maxiters=10000,verbose=false,num_monte = 1000,\n                                     parallel_type = :threads)\nresult = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())Parameter Estimation in case of SDE\'s with a regular L2Loss can have poor accuracy due to only fitting against the mean properties as mentioned in First Differencing. Results of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.0,0.5]\n * Minimizer: [6.070728870478734,5.113357737345448]\n * Minimum: 1.700440e+03\n * Iterations: 14\n * Convergence: false\n   * |x - x\'| ≤ 0.0e+00: false \n     |x - x\'| = 1.00e-03 \n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 1.81e-07 |f(x)|\n   * |g(x)| ≤ 1.0e-08: false \n     |g(x)| = 2.34e+00 \n   * Stopped by an increasing objective: true\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 61\n * Gradient Calls: 61Instead when we use L2Loss with first differencing enabled we get much more accurate estimates. obj = build_loss_objective(monte_prob,SRIW1(),L2Loss(t,data,differ_weight=1.0,data_weight=0.5),maxiters=1000,\n                                  verbose=false,verbose_opt=false,verbose_steps=1,num_monte=50)\nresult = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())\nResults of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.0,0.5]\n * Minimizer: [1.5010687426045128,1.0023453619050238]\n * Minimum: 1.166650e-01\n * Iterations: 16\n * Convergence: false\n   * |x - x\'| ≤ 0.0e+00: false \n     |x - x\'| = 6.84e-09 \n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 5.85e-06 |f(x)|\n   * |g(x)| ≤ 1.0e-08: false \n     |g(x)| = 1.81e-01 \n   * Stopped by an increasing objective: true\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 118\n * Gradient Calls: 118Here we see that we successfully recovered the drift parameter, and got close to the original noise parameter after searching a two orders of magnitude range."
+    "text": "We can use any DEProblem, which not only includes DAEProblem and DDEProblems, but also stochastic problems. In this case, let\'s use the generalized maximum likelihood to fit the parameters of an SDE\'s Monte Carlo evaluation.Let\'s use the same Lotka-Volterra equation as before, but this time add noise:pf_func = function (du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5,1.0]\npg_func = function (du,u,p,t)\n  du[1] = 1e-6u[1]\n  du[2] = 1e-6u[2]\nend\nprob = SDEProblem(pf_func,pg_func,u0,tspan,p)\nsol = solve(prob,SRIW1())Now lets generate a dataset from 10,000 solutions of the SDEusing RecursiveArrayTools # for VectorOfArray\nt = collect(range(0, stop=10, length=200))\nfunction generate_data(t)\n  sol = solve(prob,SRIW1())\n  randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\n  data = convert(Array,randomized)\nend\naggregate_data = convert(Array,VectorOfArray([generate_data(t) for i in 1:10000]))Now let\'s estimate the parameters. Instead of using single runs from the SDE, we will use a MonteCarloProblem. This means that it will solve the SDE N times to come up with an approximate probability distribution at each time point and use that in the likelihood estimate.monte_prob = MonteCarloProblem(prob)We use Optim.jl for optimization belowobj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),\n                                     maxiters=10000,verbose=false,num_monte = 1000,\n                                     parallel_type = :threads)\nresult = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())Parameter Estimation in case of SDE\'s with a regular L2Loss can have poor accuracy due to only fitting against the mean properties as mentioned in First Differencing.Results of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.0,0.5]\n * Minimizer: [6.070728870478734,5.113357737345448]\n * Minimum: 1.700440e+03\n * Iterations: 14\n * Convergence: false\n   * |x - x\'| ≤ 0.0e+00: false\n     |x - x\'| = 1.00e-03\n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 1.81e-07 |f(x)|\n   * |g(x)| ≤ 1.0e-08: false\n     |g(x)| = 2.34e+00\n   * Stopped by an increasing objective: true\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 61\n * Gradient Calls: 61Instead when we use L2Loss with first differencing enabled we get much more accurate estimates. obj = build_loss_objective(monte_prob,SRIW1(),L2Loss(t,data,differ_weight=1.0,data_weight=0.5),maxiters=1000,\n                                  verbose=false,verbose_opt=false,verbose_steps=1,num_monte=50)\nresult = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())\nResults of Optimization Algorithm\n * Algorithm: BFGS\n * Starting Point: [1.0,0.5]\n * Minimizer: [1.5010687426045128,1.0023453619050238]\n * Minimum: 1.166650e-01\n * Iterations: 16\n * Convergence: false\n   * |x - x\'| ≤ 0.0e+00: false\n     |x - x\'| = 6.84e-09\n   * |f(x) - f(x\')| ≤ 0.0e+00 |f(x)|: false\n     |f(x) - f(x\')| = 5.85e-06 |f(x)|\n   * |g(x)| ≤ 1.0e-08: false\n     |g(x)| = 1.81e-01\n   * Stopped by an increasing objective: true\n   * Reached Maximum Number of Iterations: false\n * Objective Calls: 118\n * Gradient Calls: 118Here we see that we successfully recovered the drift parameter, and got close to the original noise parameter after searching a two orders of magnitude range."
 },
 
 {
     "location": "analysis/parameter_estimation.html#Bayesian-Inference-Examples-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Bayesian Inference Examples",
     "category": "section",
     "text": ""
@@ -4354,7 +4370,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Stan-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Stan",
     "category": "section",
     "text": "Like in the previous examples, we setup the Lotka-Volterra system and generate data:f1 = @ode_def LotkaVolterraTest4 begin\n  dx = a*x - b*x*y\n  dy = -c*y + d*x*y\nend a b c d\np = [1.5,1.0,3.0,1.0]\nu0 = [1.0,1.0]\ntspan = (0.0,10.0)\nprob1 = ODEProblem(f1,u0,tspan,p)\nsol = solve(prob1,Tsit5())\nt = collect(range(1,stop=10,length=10))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\ndata = convert(Array,randomized)Here we now give Stan an array of prior distributions for our parameters. Since the parameters of our differential equation must be positive, we utilize truncated Normal distributions to make sure that is satisfied in the result:priors = [Truncated(Normal(1.5,0.1),0,2),Truncated(Normal(1.0,0.1),0,1.5),\n          Truncated(Normal(3.0,0.1),0,4),Truncated(Normal(1.0,0.1),0,2)]We then give these to the inference function.bayesian_result = stan_inference(prob1,t,data,priors;\n                                 num_samples=100,num_warmup=500,\n                                 vars = (StanODEData(),InverseGamma(4,1)))InverseGamma(4,1) is our starting estimation for the variance hyperparameter of the default Normal distribution. The result is a Mamba.jl chain object. We can pull out the parameter values via:theta1 = bayesian_result.chain_results[:,[\"theta.1\"],:]\ntheta2 = bayesian_result.chain_results[:,[\"theta.2\"],:]\ntheta3 = bayesian_result.chain_results[:,[\"theta.3\"],:]\ntheta4 = bayesian_result.chain_results[:,[\"theta.4\"],:]From these chains we can get our estimate for the parameters via:mean(theta1.value[:,:,1])We can get more of a description via:Mamba.describe(bayesian_result.chain_results)\n\n# Result\n\nIterations = 1:100\nThinning interval = 1\nChains = 1,2,3,4\nSamples per chain = 100\n\nEmpirical Posterior Estimates:\n                  Mean         SD        Naive SE        MCSE         ESS    \n         lp__ -6.15472697 1.657551334 0.08287756670 0.18425029767  80.9314979\naccept_stat__  0.90165904 0.125913744 0.00629568721 0.02781181930  20.4968668\n   stepsize__  0.68014975 0.112183047 0.00560915237 0.06468790087   3.0075188\n  treedepth__  2.68750000 0.524911975 0.02624559875 0.10711170182  24.0159141\n n_leapfrog__  6.77000000 4.121841086 0.20609205428 0.18645821695 100.0000000\n  divergent__  0.00000000 0.000000000 0.00000000000 0.00000000000         NaN\n     energy__  9.12245750 2.518330231 0.12591651153 0.32894488320  58.6109941\n     sigma1.1  0.57164997 0.128579363 0.00642896816 0.00444242658 100.0000000\n     sigma1.2  0.58981422 0.131346442 0.00656732209 0.00397310122 100.0000000\n       theta1  1.50237077 0.008234095 0.00041170473 0.00025803930 100.0000000\n       theta2  0.99778276 0.009752574 0.00048762870 0.00009717115 100.0000000\n       theta3  3.00087782 0.009619775 0.00048098873 0.00020301023 100.0000000\n       theta4  0.99803569 0.008893244 0.00044466218 0.00040886528 100.0000000\n      theta.1  1.50237077 0.008234095 0.00041170473 0.00025803930 100.0000000\n      theta.2  0.99778276 0.009752574 0.00048762870 0.00009717115 100.0000000\n      theta.3  3.00087782 0.009619775 0.00048098873 0.00020301023 100.0000000\n      theta.4  0.99803569 0.008893244 0.00044466218 0.00040886528 100.0000000\n\nQuantiles:\n                  2.5%        25.0%      50.0%      75.0%       97.5%   \n         lp__ -10.11994750 -7.0569000 -5.8086150 -4.96936500 -3.81514375\naccept_stat__   0.54808912  0.8624483  0.9472840  0.98695850  1.00000000\n   stepsize__   0.57975100  0.5813920  0.6440120  0.74276975  0.85282400\n  treedepth__   2.00000000  2.0000000  3.0000000  3.00000000  3.00000000\n n_leapfrog__   3.00000000  7.0000000  7.0000000  7.00000000 15.00000000\n  divergent__   0.00000000  0.0000000  0.0000000  0.00000000  0.00000000\n     energy__   5.54070300  7.2602200  8.7707000 10.74517500 14.91849500\n     sigma1.1   0.38135240  0.4740865  0.5533195  0.64092575  0.89713635\n     sigma1.2   0.39674703  0.4982615  0.5613655  0.66973025  0.88361407\n       theta1   1.48728600  1.4967650  1.5022750  1.50805500  1.51931475\n       theta2   0.97685115  0.9914630  0.9971435  1.00394250  1.01765575\n       theta3   2.98354100  2.9937575  3.0001450  3.00819000  3.02065950\n       theta4   0.97934128  0.9918495  0.9977415  1.00430750  1.01442975\n      theta.1   1.48728600  1.4967650  1.5022750  1.50805500  1.51931475\n      theta.2   0.97685115  0.9914630  0.9971435  1.00394250  1.01765575\n      theta.3   2.98354100  2.9937575  3.0001450  3.00819000  3.02065950\n      theta.4   0.97934128  0.9918495  0.9977415  1.00430750  1.01442975More extensive information about the distributions is given by the plots:plot_chain(bayesian_result)"
@@ -4362,7 +4378,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#Turing-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Turing",
     "category": "section",
     "text": "This case we will build off of the Stan example. Note that turing_inference does not require the use of the @ode_def macro like Stan does, but it will still work with macro-defined functions. Thus, using the same setup as before, we simply give the setup to:bayesian_result = turing_inference(prob,Tsit5(),t,data,priors;num_samples=500)The chain for the ith parameter is then given by:bayesian_result[:theta1]Summary statistics can be also be accessed:Mamba.describe(bayesian_result)The chain can be analysed by the trace plots and other plots obtained by:plot_chain(bayesian_result)"
@@ -4370,10 +4386,10 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "analysis/parameter_estimation.html#DynamicHMC-1",
-    "page": "Parameter Estimation",
+    "page": "Parameter Estimation and Bayesian Analysis",
     "title": "DynamicHMC",
     "category": "section",
-    "text": "We can use DynamicHMC.jl as the backend for sampling with the dynamic_inference function. It supports any DEProblem,  priors can be passed as an array of Distributions.jl distributions, passing initial values is optional and in case where the user has a firm understanding of the  domain the parameter values will lie in, tranformations can be used to pass an array of constraints for the parameters as an array of Transformations.bayesian_result_hmc = dynamichmc_inference(prob1, Tsit5(), t, data, [Normal(1.5, 1)], [bridge(ℝ, ℝ⁺, )])A tuple with summary statistics and the chain values is returned. The chain for the ith parameter is given by:bayesian_result_hmc[1][i]For accessing the various summary statistics:DynamicHMC.NUTS_statistics(bayesian_result_dynamic[2])Some details about the NUTS sampler can be obtained from:bayesian_result_dynamic[3]In case of dynamic_inference the trace plots for the ith parameter can be obtained by:plot(bayesian_result_hmc[1][i])For a better idea of the summary statistics and plotting you can take a look at the benchmark notebooks"
+    "text": "We can use DynamicHMC.jl as the backend for sampling with the dynamic_inference function. It supports any DEProblem, priors can be passed as an array of Distributions.jl distributions, passing initial values is optional and in case where the user has a firm understanding of the domain the parameter values will lie in, tranformations can be used to pass an array of constraints for the parameters as an array of Transformations.bayesian_result_hmc = dynamichmc_inference(prob1, Tsit5(), t, data, [Normal(1.5, 1)], [bridge(ℝ, ℝ⁺, )])A tuple with summary statistics and the chain values is returned. The chain for the ith parameter is given by:bayesian_result_hmc[1][i]For accessing the various summary statistics:DynamicHMC.NUTS_statistics(bayesian_result_dynamic[2])Some details about the NUTS sampler can be obtained from:bayesian_result_dynamic[3]In case of dynamic_inference the trace plots for the ith parameter can be obtained by:plot(bayesian_result_hmc[1][i])For a better idea of the summary statistics and plotting you can take a look at the benchmark notebooks"
 },
 
 {
@@ -4389,7 +4405,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Bifurcation Analysis",
     "title": "Bifurcation Analysis",
     "category": "section",
-    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types.This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install PyDSTool.jl:Pkg.add(\"PyDSTool\")\nusing PyDSTool"
+    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types."
+},
+
+{
+    "location": "analysis/bifurcation.html#Installation-1",
+    "page": "Bifurcation Analysis",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install PyDSTool.jl:Pkg.add(\"PyDSTool\")\nusing PyDSTool"
 },
 
 {
@@ -4433,11 +4457,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/sensitivity.html#Installation-1",
+    "page": "Local Sensitivity Analysis (Automatic Differentiation)",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqSensitivty.jl:]add DiffEqSensitivity\nusing DiffEqSensitivty"
+},
+
+{
     "location": "analysis/sensitivity.html#Efficiency-of-the-Different-Methods-1",
     "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Efficiency of the Different Methods",
     "category": "section",
-    "text": "For an analysis of which methods will be most efficient for computing the solution derivatives for a given problem, consult our analysis in this arxiv paper. A general rule of thumb is:Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for ODEs with small numbers of parameters (<100)\nAdjoint senstivity analysis is the fastest when the number of parameters is sufficiently large. There are three configurations of note. Using backsolve is the fastest and uses the least memory, but is not  guerenteed to be stable. Checkpointing is the slowest but uses O(1) memory and is stable. Interpolating is the second fastest, is stable, but requires the ability to hold the full forward solution and its interpolation in memory.\nThe methods which use automatic differentiation support the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work on native Julia solvers. The methods which utilize altered ODE systems only work on ODEs (without events), but work on any ODE solver."
+    "text": "For an analysis of which methods will be most efficient for computing the solution derivatives for a given problem, consult our analysis in this arxiv paper. A general rule of thumb is:Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for ODEs with small numbers of parameters (<100)\nAdjoint senstivity analysis is the fastest when the number of parameters is sufficiently large. There are three configurations of note. Using backsolve is the fastest and uses the least memory, but is not guerenteed to be stable. Checkpointing is the slowest but uses O(1) memory and is stable. Interpolating is the second fastest, is stable, but requires the ability to hold the full forward solution and its interpolation in memory.\nThe methods which use automatic differentiation support the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work on native Julia solvers. The methods which utilize altered ODE systems only work on ODEs (without events), but work on any ODE solver."
 },
 
 {
@@ -4533,7 +4565,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Example controlling adjoint method choices and checkpointing",
     "category": "section",
-    "text": "In the previous examples, all calculations were done using the interpolating method. This maximizes speed but at a cost of requiring a dense sol. If it is not possible to hold a dense forward solution in memory, then one can use checkpointing. This is enabled by default if sol is not dense, so for examplesol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])creates a non-dense solution with checkpoints at [0.0,0.2,0.5,0.7]. Now we can dores = adjoint_sensitivities(sol,Vern9(),dg,t)When grabbing a Jacobian value during the backwards solution, it will no longer interpolate to get the value. Instead, it will start a forward solution at the nearest checkpoint and solve until the necessary time.To eliminate the extra forward solutions, one can instead pass the SensitivityAlg with the backsolve=true option:sol = solve(prob,Vern9(),save_everystep=false,save_start=false)\nres = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=SensitivityAlg(backsolve=true))When this is done, the values for the Jacobian will be computing the original ODE in reverse. Note that this only requires the final value of the solution. "
+    "text": "In the previous examples, all calculations were done using the interpolating method. This maximizes speed but at a cost of requiring a dense sol. If it is not possible to hold a dense forward solution in memory, then one can use checkpointing. This is enabled by default if sol is not dense, so for examplesol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])Creates a non-dense solution with checkpoints at [0.0,0.2,0.5,0.7]. Now we can dores = adjoint_sensitivities(sol,Vern9(),dg,t)When grabbing a Jacobian value during the backwards solution, it will no longer interpolate to get the value. Instead, it will start a forward solution at the nearest checkpoint and solve until the necessary time.To eliminate the extra forward solutions, one can instead pass the SensitivityAlg with the backsolve=true option:sol = solve(prob,Vern9(),save_everystep=false,save_start=false)\nres = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=SensitivityAlg(backsolve=true))When this is done, the values for the Jacobian will be computing the original ODE in reverse. Note that this only requires the final value of the solution."
 },
 
 {
@@ -4549,7 +4581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Local Sensitivity Analysis (Automatic Differentiation)",
     "title": "Example continuous adjoints on an energy functional",
     "category": "section",
-    "text": "In this case we\'d like to calculate the adjoint sensitivity of the scalar energy functionalG(up)=int_0^Tfracsum_i=1^nu_i^2(t)2dtwhich isg(u,p,t) = (sum(u).^2) ./ 2Notice that the gradient of this function with respect to the state u is:function dg(out,u,p,t)\n  out[1]= u[1] + u[2]\n  out[2]= u[1] + u[2]\nendTo get the adjoint sensitivities, we call:res = adjoint_sensitivities(sol,Vern9(),g,nothing,dg,abstol=1e-8,\n                                 reltol=1e-8,iabstol=1e-8,ireltol=1e-8)Notice that we can check this against autodifferentiation and numerical differentiation as follows:function G(p)\n  tmp_prob = problem_new_parameters(prob,p)\n  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)\n  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)\n  res\nend\nres2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])\nres3 = Calculus.gradient(G,[1.5,1.0,3.0])"
+    "text": "In this case we\'d like to calculate the adjoint sensitivity of the scalar energy functionalG(up)=int_0^Tfracsum_i=1^nu_i^2(t)2dtwhich isg(u,p,t) = (sum(u).^2) ./ 2Notice that the gradient of this function with respect to the state u is:function dg(out,u,p,t)\n  out[1]= u[1] + u[2]\n  out[2]= u[1] + u[2]\nendTo get the adjoint sensitivities, we call:res = adjoint_sensitivities(sol,Vern9(),g,nothing,dg,abstol=1e-8,\n                                 reltol=1e-8,iabstol=1e-8,ireltol=1e-8)Notice that we can check this against autodifferentiation and numerical differentiation as follows:function G(p)\n  tmp_prob = remake(prob,p=p)\n  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)\n  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)\n  res\nend\nres2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])\nres3 = Calculus.gradient(G,[1.5,1.0,3.0])"
 },
 
 {
@@ -4566,6 +4598,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Global Sensitivity Analysis",
     "category": "section",
     "text": "Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainty in output of a model w.r.t. the parameters, their individual contributions, or the contribution of their interactions. The type of GSA method to use depends on the interest of the user, below we describe the methods available in the suite at the moment (some more are already in development) and explain what is the output of each of the methods and what it represents."
+},
+
+{
+    "location": "analysis/global_sensitivity.html#Installation-1",
+    "page": "Global Sensitivity Analysis",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqSensitivty.jl:]add DiffEqSensitivity\nusing DiffEqSensitivty"
 },
 
 {
@@ -4617,6 +4657,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "analysis/uncertainty_quantification.html#Installation-1",
+    "page": "Uncertainty Quantification",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqUncertainty.jl:]add DiffEqUncertainty\nusing DiffEqUncertainty"
+},
+
+{
     "location": "analysis/uncertainty_quantification.html#ProbInts-1",
     "page": "Uncertainty Quantification",
     "title": "ProbInts",
@@ -4662,6 +4710,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Algorithm Development and Testing",
     "category": "section",
     "text": "Algorithm developing and testing tools are provided by DiffEqDevTools.jl and are documented in the developer documentation."
+},
+
+{
+    "location": "analysis/dev_and_test.html#Installation-1",
+    "page": "Algorithm Development and Testing",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqDevTools.jl:]add DiffEqDevTools\nusing DiffEqDevTools"
 },
 
 {
@@ -4809,6 +4865,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "models/biological.html#Installation-1",
+    "page": "Chemical Reaction Models",
+    "title": "Installation",
+    "category": "section",
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqBiological.jl:]add DiffEqBiological\nusing DiffEqBiological"
+},
+
+{
     "location": "models/biological.html#The-Reaction-DSL-Basic-1",
     "page": "Chemical Reaction Models",
     "title": "The Reaction DSL - Basic",
@@ -4845,7 +4909,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Combining several reactions in one line",
     "category": "section",
-    "text": "Several similar reactions can be combined in one line by providing a tuple of reaction rates and/or substrates and/or products. If several tuples are provided they much all be of identical length. These pairs of reaction networks are all identical:rn1 = @reaction_network begin\n  1.0, S → (P1,P2)               \nend\nrn2 = @reaction_network begin\n  1.0, S → P1     \n  1.0, S → P2 \nendrn1 = @reaction_network begin\n  (1.0,2.0), (S1,S2) → P             \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P     \n  2.0, S2 → P\nendrn1 = @reaction_network begin\n  (1.0,2.0,3.0), (S1,S2,S3) → (P1,P2,P3)        \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P1\n  2.0, S2 → P2   \n  3.0, S3 → P3  \nendThis can also be combined with bi-directional arrows in which case separate tuples can be provided for the backward and forward reaction rates separately. These reaction networks are identicalrn1 = @reaction_network begin\n (1.0,(1.0,2.0)), S ↔ (P1,P2)  \nend\nrn2 = @reaction_network begin\n  1.0, S → P1\n  1.0, S → P2\n  1.0, P1 → S   \n  2.0, P2 → S \nend"
+    "text": "Several similar reactions can be combined in one line by providing a tuple of reaction rates and/or substrates and/or products. If several tuples are provided they much all be of identical length. These pairs of reaction networks are all identical:rn1 = @reaction_network begin\n  1.0, S → (P1,P2)               \nend\nrn2 = @reaction_network begin\n  1.0, S → P1     \n  1.0, S → P2\nendrn1 = @reaction_network begin\n  (1.0,2.0), (S1,S2) → P             \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P     \n  2.0, S2 → P\nendrn1 = @reaction_network begin\n  (1.0,2.0,3.0), (S1,S2,S3) → (P1,P2,P3)        \nend\nrn2 = @reaction_network begin\n  1.0, S1 → P1\n  2.0, S2 → P2   \n  3.0, S3 → P3  \nendThis can also be combined with bi-directional arrows in which case separate tuples can be provided for the backward and forward reaction rates separately. These reaction networks are identicalrn1 = @reaction_network begin\n (1.0,(1.0,2.0)), S ↔ (P1,P2)  \nend\nrn2 = @reaction_network begin\n  1.0, S → P1\n  1.0, S → P2\n  1.0, P1 → S   \n  2.0, P2 → S\nend"
 },
 
 {
@@ -4861,7 +4925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Variable reaction rates",
     "category": "section",
-    "text": "Reaction rates do not need to be constant, but can also depend on the current concentration of the various reactants (when e.g. one reactant activate the production of another one). E.g. this is a valid notation:rn = @reaction_network begin\n  X, Y → ∅\nendand will have Y degraded at rate fracdYdt = -XYNote that this is actually equivalent to the reactionrn = @reaction_network begin\n  1.0, X + Y → X\nendMost expressions and functions are valid reaction rates, e.g:rn = @reaction_network begin\n  2.0*X^2, 0 → X + Y\n  gamma(Y)/5, X → ∅\n  pi*X/Y, Y → ∅\nendplease note that user defined functions cannot be used directly (see later section \"User defined functions in reaction rates\")."
+    "text": "Reaction rates do not need to be constant, but can also depend on the current concentration of the various reactants (when e.g. one reactant activate the production of another one). E.g. this is a valid notation:rn = @reaction_network begin\n  X, Y → ∅\nendand will have Y degraded at ratefracdYdt = -XYNote that this is actually equivalent to the reactionrn = @reaction_network begin\n  1.0, X + Y → X\nendMost expressions and functions are valid reaction rates, e.g:rn = @reaction_network begin\n  2.0*X^2, 0 → X + Y\n  gamma(Y)/5, X → ∅\n  pi*X/Y, Y → ∅\nendplease note that user defined functions cannot be used directly (see later section \"User defined functions in reaction rates\")."
 },
 
 {
@@ -4901,7 +4965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Stochastic simulations using SDEs",
     "category": "section",
-    "text": "In a similar way a SDE can be created using probSDE = SDEProblem(rn, args...; kwargs...).  In this case the chemical Langevin equations (as derived in Gillespie 2000) will  be used to generate stochastic differential equations."
+    "text": "In a similar way a SDE can be created using probSDE = SDEProblem(rn, args...; kwargs...). In this case the chemical Langevin equations (as derived in Gillespie 2000) will be used to generate stochastic differential equations."
 },
 
 {
@@ -4925,7 +4989,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "User defined functions in reaction rates",
     "category": "section",
-    "text": "The reaction network DSL cannot \"see\" user defined functions. E.g. this is not correct syntax:myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nendHowever, it is possible to define functions in such a way that the DSL can see them  using the @reaction_func macro:@reaction_func myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nend"
+    "text": "The reaction network DSL cannot \"see\" user defined functions. E.g. this is not correct syntax:myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nendHowever, it is possible to define functions in such a way that the DSL can see them using the @reaction_func macro:@reaction_func myHill(x) = 2.0*x^3/(x^3+1.5^3)\nrn = @reaction_network begin\n  myHill(X), ∅ → X\nend"
 },
 
 {
@@ -4933,7 +4997,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Defining a custom reaction network type",
     "category": "section",
-    "text": "While the default type of a reaction network is reaction_network (which inherits  from AbstractReactionNetwork) it is possible to define a custom type (which also  will inherit from AbstractReactionNetwork) by adding the type name as a first  argument to the @reaction_network macro:rn = @reaction_network my_custom_type begin\n  1.0, ∅ → X\nend"
+    "text": "While the default type of a reaction network is reaction_network (which inherits from AbstractReactionNetwork) it is possible to define a custom type (which also will inherit from AbstractReactionNetwork) by adding the type name as a first argument to the @reaction_network macro:rn = @reaction_network my_custom_type begin\n  1.0, ∅ → X\nend"
 },
 
 {
@@ -4941,7 +5005,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Scaling noise in the chemical Langevin equations",
     "category": "section",
-    "text": "When making stochastic simulations using SDEs it is possible to scale the amount of noise  in the simulations by declaring a noise scaling parameter. This parameter is declared as a  second argument to the @reaction_network macro (when scaling the noise one have to  declare a custom type).rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nendThe noise scaling parameter is automatically added as a last argument to the parameter array  (even if not declared at the end). E.g. this is correct syntax:rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nend\np = [0.1,]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = SDEProblem(rn,u0,tspan,p)\nsol = solve(prob)Here the amount of noise in the stochastic simulation will be reduced by a factor 10."
+    "text": "When making stochastic simulations using SDEs it is possible to scale the amount of noise in the simulations by declaring a noise scaling parameter. This parameter is declared as a second argument to the @reaction_network macro (when scaling the noise one have to declare a custom type).rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nendThe noise scaling parameter is automatically added as a last argument to the parameter array (even if not declared at the end). E.g. this is correct syntax:rn = @reaction_network my_custom_type ns begin\n  1.0, ∅ → X\nend\np = [0.1,]\nu0 = [0.1]\ntspan = (0.,1.)\nprob = SDEProblem(rn,u0,tspan,p)\nsol = solve(prob)Here the amount of noise in the stochastic simulation will be reduced by a factor 10."
 },
 
 {
@@ -4949,7 +5013,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Ignoring mass kinetics",
     "category": "section",
-    "text": "While one in almost all cases want the reaction rate to take the law of mass action into account, so the reactionrn = @reaction_network my_custom_type ns begin\n  k, X → ∅\nend koccur at the rate dXdt = -kX, it is possible to ignore this by using any of the following  non-filled arrows when declaring the reaction: ⇐, ⟽, ⇒, ⟾, ⇔, ⟺. This means that  the reaction rn = @reaction_network my_custom_type ns begin\n  k, X ⇒ ∅\nend kwill occur at rate dXdt = -k (which might become a problem since X will be degraded  at a constant rate even when very small or equal to 0."
+    "text": "While one in almost all cases want the reaction rate to take the law of mass action into account, so the reactionrn = @reaction_network my_custom_type ns begin\n  k, X → ∅\nend koccur at the rate dXdt = -kX, it is possible to ignore this by using any of the following non-filled arrows when declaring the reaction: ⇐, ⟽, ⇒, ⟾, ⇔, ⟺. This means that the reactionrn = @reaction_network my_custom_type ns begin\n  k, X ⇒ ∅\nend kwill occur at rate dXdt = -k (which might become a problem since X will be degraded at a constant rate even when very small or equal to 0."
 },
 
 {
