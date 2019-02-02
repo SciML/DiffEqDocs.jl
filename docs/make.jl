@@ -75,6 +75,7 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
            "analysis/sensitivity.md",
            "analysis/global_sensitivity.md",
            "analysis/uncertainty_quantification.md",
+           "analysis/neural_networks.md",
            "analysis/dev_and_test.md"
          ],
          "Domain Modeling Tools" => Any[

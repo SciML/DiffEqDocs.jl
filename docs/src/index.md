@@ -220,6 +220,7 @@ Pages = [
     "analysis/sensitivity.md",
     "analysis/global_sensitivity.md",
     "analysis/uncertainty_quantification.md",
+    "analysis/neural_networks.md",
     "analysis/dev_and_test.md"
 ]
 Depth = 2
