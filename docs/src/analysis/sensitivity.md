@@ -624,7 +624,7 @@ differentiation as follows:
 
 ```julia
 function G(p)
-  tmp_prob = problem_new_parameters(prob,p)
+  tmp_prob = remake(prob,p=p)
   sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)
   res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)
   res
