@@ -223,6 +223,10 @@ solve(prob,Vern7(lazy=false))
 - `SSPRK104` - The ten-stage, fourth order strong stability preserving method
   of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant).
   Fixed timestep only.
+- `SSPRKMSVS32` - 3-stage, 2nd order SSP-optimal linear multistep method.
+  (SSP coefficent 0.5, 3rd order Hermite interpolant). Fixed timestep only.
+- `SSPRKMSVS43` - 4-stage, 3rd order SSP-optimal linear multistep method.
+  (SSP coefficent 0.33, 3rd order Hermite interpolant). Fixed timestep only.
 
 The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
 All explicit SSP methods take two optional arguments
@@ -239,11 +243,21 @@ Royal Society, 2011.).
 
 #### Low-Storage Methods
 
-Up to now, there are still some improvements concerning memory consumption posible, e.g. dropping the dense
-output, interpolations, callbacks etc. However, some basic methods are available.
-
+- `ORK256` - 5-stage, second order low-storage method for wave propogation
+  equations. Fixed timestep only.
+- `SSPRK53_2N1` and `SSPRK53_2N2` - 5-stage, third order low-storage methods
+  with large SSP coefficients. (SSP coefficient 2.18 and 2.15, free 3rd order
+  Hermite interpolant). Fixed timestep only.
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
+- `NDBLSRK144` - 14-stage, fourth order low-storage method with optimized
+  stability regions for advection-dominated problems. Fixed timestep only.
+- `NDBLSRK144` - 12-stage, fourth order low-storage method with optimized
+  stability regions for advection-dominated problems. Fixed timestep only.
+- `CFRLDDRK64` - 6-stage, fourth order low-storage, low-dissipation,
+  low-dispersion scheme. Fixed timestep only.
+- `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
+  scheme. Fixed timestep only.
 
 #### Explicit Multistep Methods
 
@@ -332,6 +346,11 @@ These methods require a choice of `dt`.
 - `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
 - `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
 
+##### Fully-Implicit Runge-Kutta Methods (FIRK)
+
+- `Radau5` - An A-B-L stable fully implicit Runge-Kutta method with internal
+  tableau complex basis transform for efficiency.
+
 ##### Rosenbrock Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
@@ -366,6 +385,9 @@ These methods require a choice of `dt`.
 ##### Stabilized Explicit Methods
 
 - `ROCK2` - Second order stabilized Runge-Kutta method. Exhibits high stability
+  for real eigenvalues and is smoothened to allow for moderate sized complex
+  eigenvalues.
+- `ROCK4` - Fourth order stabilized Runge-Kutta method. Exhibits high stability
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
 
@@ -474,6 +496,8 @@ Sundials CVODE integrator.
 - `QBDF` - An adaptive order quasi-constant timestep BDF method.
 - `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
   method in Nordsieck form. In development.
+- `MEBDF2` - The second order Modified Extended BDF method, which has improved
+  stability properties over the standard BDF. Fixed timestep only.
 
 ##### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
