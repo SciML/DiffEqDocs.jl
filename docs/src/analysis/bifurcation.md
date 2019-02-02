@@ -26,7 +26,8 @@ and re-create the results using the wrapped functionality.
 We will specify the model using a ParameterizedFunction:
 
 ```julia
-f = @ode_def Calcium begin
+using ParameterizedFunctions
+f = @ode_def begin
   dv = ( i + gl * (vl - v) - gca * 0.5 * (1 + tanh( (v-v1)/v2 )) * (v-vca) )/c
   dw = v-w
 end vl vca i gl gca c v1 v2

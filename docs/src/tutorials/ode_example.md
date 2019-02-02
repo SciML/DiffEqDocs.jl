@@ -330,6 +330,18 @@ p = [10.0,28.0,8/3]
 prob = ODEProblem(parameterized_lorenz,u0,tspan,p)
 ```
 
+We can make our functions like nicer by doing a few tricks. For example:
+
+```julia
+function parameterized_lorenz(du,u,p,t)
+  x,y,z = u
+  σ,ρ,β = p
+  du[1] = dx = σ*(y-x)
+  du[2] = dy = x*(ρ-z) - y
+  du[3] = dz = x*y - β*z
+end
+```
+
 Note that the type for the parameters `p` can be anything: you can use arrays,
 static arrays, named tuples, etc. to enclose your parameters in a way that is
 sensible for your problem.
@@ -342,7 +354,7 @@ independent variable is `t`, and the other variables are parameters which you pa
 at the end. For example, we can write the Lorenz system as:
 
 ```julia
-g = @ode_def LorenzExample begin
+g = @ode_def begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
@@ -368,8 +380,7 @@ The macro does "behind-the-scenes" symbolic calculations to
 pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up
 calculations. Thus not only will this lead to legible ODE definitions, but
 "unfairly fast" code! We can turn off some of the calculations by using a more
-specific macro. Here, we can turn off the Jacobian inversion calculations via
-`@ode_def_noinvjac`. See
+specific macro, like `@ode_def_bare`. See
 [ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
 for more details.
 

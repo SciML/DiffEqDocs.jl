@@ -77,10 +77,10 @@ differentiate. For example, let's define the ODE system for the Lotka-Volterra
 equations:
 
 ```julia
-f = @ode_def begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a b c
+function f(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -p[3]*u[2] + u[1]*u[2]
+end
 
 p = [1.5,1.0,3.0,1.0]
 u0 = [1.0;1.0]
@@ -229,10 +229,10 @@ instead of an ODE type. For example, we generate an ODE with the sensitivity
 equations attached for the Lotka-Volterra equations by:
 
 ```julia
-f = @ode_def begin
-  dx = a*x - b*x*y
-  dy = -c*y + x*y
-end a b c
+function f(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -p[3]*u[2] + u[1]*u[2]
+end
 
 p = [1.5,1.0,3.0]
 prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)
@@ -474,10 +474,10 @@ cost functional. First let's solve the ODE and get a high quality continuous
 solution:
 
 ```julia
-f = @ode_def LotkaVolterra begin
-  dx = a*x - b*x*y
-  dy = -c*y + x*y
-end a b c
+function f(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -p[3]*u[2] + u[1]*u[2]
+end
 
 p = [1.5,1.0,3.0]
 prob = ODEProblem(f,[1.0;1.0],(0.0,10.0),p)

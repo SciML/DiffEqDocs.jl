@@ -51,7 +51,7 @@ If a `ParameterizedFunction` is used, the output will use the variable names:
 ```julia
 using ParameterizedFunctions
 
-f = @ode_def LotkaVolterra begin
+f = @ode_def begin
   dx = a*x - b*x*y
   dy = -3y + x*y
 end a b

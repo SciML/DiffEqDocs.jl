@@ -42,10 +42,10 @@ the parameter estimation docs we have:
 
 ```julia
 using DifferentialEquations
-f = @ode_def LotkaVolterraTest begin
-  dx = a*x - x*y
-  dy = -3y + x*y
-end a
+function f(du,u,p,t)
+  dx = p[1]*u[1] - u[1]*u[2]
+  dy = -3*u[2] + u[1]*u[2]
+end
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)

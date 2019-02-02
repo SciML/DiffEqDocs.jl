@@ -195,13 +195,13 @@ Note also that in this format, it is fine to use ParameterizedFunctions. For exa
 the Lorenz equation could have been defined as:
 
 ```julia
-f = @ode_def_nohes LorenzSDE begin
+f = @ode_def begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
   dz = x*y - β*z
 end σ ρ β
 
-g = @ode_def_nohes LorenzSDENoise begin
+g = @ode_def begin
   dx = α
   dy = α
   dz = α

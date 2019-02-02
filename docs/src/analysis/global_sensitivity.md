@@ -127,10 +127,10 @@ coefficients you want.
 Let's create the ODE problem to run our GSA on.
 
 ```julia
-f = @ode_def_nohes LotkaVolterraTest begin
-    dx = a*x - b*x*y
-    dy = -3*y + x*y
-end a b
+function f(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -3*u[2] + u[1]*u[2]
+end
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 p = [1.5,1.0]

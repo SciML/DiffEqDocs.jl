@@ -22,7 +22,7 @@ Using the `@ode_def` macro from ParameterizedFunctions.jl, we can do this by wri
 
 ```julia
 using ParameterizedFunctions
-f = @ode_def ROBERExample begin
+f = @ode_def begin
   dy₁ = -k₁*y₁+k₃*y₂*y₃
   dy₂ =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
   dy₃ =  k₂*y₂^2
@@ -45,7 +45,7 @@ will number the variables for you. For example, the following defines the functi
 for the Lotka-Volterra model, with full Unicode support to boot:
 
 ```julia
-f = @ode_def LotkaVolterraExample begin
+f = @ode_def begin
   d🐁  = α*🐁  - β*🐁*🐈
   d🐈 = -γ*🐈 + δ*🐁*🐈
 end α β γ δ
@@ -72,6 +72,5 @@ Jacobians are also used.
 
 Normally these will be computed fast enough that the user doesn't have to worry.
 However, in some cases you may want to restrict the number of functions (or get rid
-of a warning). Macros like `@ode_def_nojac` turn off the Jacobian calculations,
-and `@ode_def_noinvjac` turns off the Jacobian inversion. For more information,
+of a warning). For more information,
 please see the [ParameterizedFunctions.jl documentation](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).

@@ -141,11 +141,12 @@ i.e. no points outside the interval will be plotted.
 
 ```julia
 using DifferentialEquations, Plots
-lorenz = @ode_def begin
-  dx = σ*(y-x)
-  dy = ρ*x-y-x*z
-  dz = x*y-β*z
-end σ β ρ
+function lorenz(du,u,p,t)
+ du[1] = p[1]*(u[2]-u[1])
+ du[2] = u[1]*(p[2]-u[3]) - u[2]
+ du[3] = u[1]*u[2] - p[3]*u[3]
+end
+
 u0 = [1., 5., 10.]
 tspan = (0., 100.)
 p = (10.0,8/3,28.0)

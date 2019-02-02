@@ -234,17 +234,15 @@ Another example of a `DiscreteCallback` is the [control problem demonstrated on 
 
 ### Example 1: Bouncing Ball
 
-Let's look at the bouncing ball. `@ode_def` from
-[ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
-was to define the problem, where the first variable `y` is the height which changes
-by `v` the velocity, where the velocity is always changing at `-g` which is the
-gravitational constant. This is the equation:
+Let's look at the bouncing ball. Let the first variable `y` is the height which
+changes by `v` the velocity, where the velocity is always changing at `-g` which
+is the gravitational constant. This is the equation:
 
 ```julia
-f = @ode_def BallBounce begin
-  dy =  v
-  dv = -g
-end g
+function f(du,u,p,t)
+  du[1] = u[2]
+  du[2] = -p
+end
 ```
 
 All we have to do in order to specify the event is to have a function which

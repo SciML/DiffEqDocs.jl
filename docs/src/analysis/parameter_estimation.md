@@ -345,10 +345,10 @@ We choose to optimize the parameters on the Lotka-Volterra equation. We do so
 by defining the function as a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
 
 ```julia
-f = @ode_def LotkaVolterraTest begin
-  dx = a*x - x*y
-  dy = -3y + x*y
-end a
+function f(du,u,p,t)
+  dx = p[1]*u[1] - u[1]*u[2]
+  dy = -3*u[2] + u[1]*u[2]
+end
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
@@ -450,10 +450,10 @@ Lastly, we can use the same tools to estimate multiple parameters simultaneously
 Let's use the Lotka-Volterra equation with all parameters free:
 
 ```julia
-f2 = @ode_def_nohes LotkaVolterraAll begin
-  dx = a*x - b*x*y
-  dy = -c*y + d*x*y
-end a b c d
+function f2(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -p[3]*u[2] + p[4]*u[1]*u[2]
+end
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
@@ -517,10 +517,10 @@ and thus this algorithm was able to correctly identify all four parameters.
 We can also use Multiple Shooting method by creating a `multiple_shooting_objective`
 
 ```julia
-ms_f = @ode_def begin
-    dx = a*x - b*x*y
-    dy = -3*y + x*y
-end a b
+function ms_f(du,u,p,t)
+  dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  dy = -3*u[2] + u[1]*u[2]
+end
 ms_u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 ms_p = [1.5,1.0]
@@ -603,10 +603,10 @@ IPOPT, NLopt, MOSEK, etc. Building off of the previous example, we can build a
 cost function for the single parameter optimization problem like:
 
 ```julia
-f = @ode_def_nohes LotkaVolterraTest begin
-  dx = a*x - x*y
-  dy = -3y + x*y
-end a
+function f(du,u,p,t)
+  dx = p[1]*u[1] - u[1]*u[2]
+  dy = -3*u[2] + u[1]*u[2]
+end
 
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
@@ -675,9 +675,7 @@ or MOSEK a try!
 
 In this example we will demo the likelihood-based approach to parameter fitting.
 First let's generate a dataset to fit. We will re-use the Lotka-Volterra equation
-but in this case fit just two parameters. Note that the parameter estimation
-tools do not require the use of the `@ode_def` macro, so let's demonstrate
-what the macro-less version looks like:
+but in this case fit just two parameters.
 
 ```julia
 f1 = function (du,u,p,t)
@@ -918,10 +916,10 @@ the original noise parameter after searching a two orders of magnitude range.
 ### Stan
 
 Like in the previous examples, we setup the Lotka-Volterra system and generate
-data:
+data. Note that using `@ode_def` here is required.
 
 ```julia
-f1 = @ode_def LotkaVolterraTest4 begin
+f1 = @ode_def begin
   dx = a*x - b*x*y
   dy = -c*y + d*x*y
 end a b c d
