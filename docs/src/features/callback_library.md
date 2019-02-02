@@ -263,9 +263,9 @@ SavingCallback(save_func, saved_values::SavedValues;
   `save_func(t, u, integrator)::savevalType`. It's specified via
   `SavedValues(typeof(t),savevalType)`, i.e. give the type for time and the
   type that `save_func` will output (or higher compatible type).
-- `saveat` Mimicks `saveat` in `solve` from `solve`.
-- `save_everystep` Mimicks `save_everystep` from `solve`.
-- `save_start` Mimicks `save_start` from `solve`.
+- `saveat` mimicks `saveat` in `solve` from `solve`.
+- `save_everystep` mimicks `save_everystep` from `solve`.
+- `save_start` mimicks `save_start` from `solve`.
 - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should
   be adapted if `tspan[1] > tspan[end]`.
 
@@ -280,41 +280,40 @@ the `SavedValues` cache to use `Float64` for time and `Tuple{Float64,Float64}`
 for the saved values, and then call the solver with the callback.
 
 ```julia
-using DiffEqCallbacks, OrdinaryDiffEq
-prob = ODEProblem((du,u,p,t)->du.=u,rand(4,4),(0.0,1.0))
+using DiffEqCallbacks, OrdinaryDiffEq, LinearAlgebra
+prob = ODEProblem((du,u,p,t) -> du .= u, rand(4,4), (0.0,1.0))
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
-cb = SavingCallback((u,t,integrator)->(trace(u),norm(u)), saved_values)
+cb = SavingCallback((u,t,integrator)->(tr(u),norm(u)), saved_values)
 sol = solve(prob, Tsit5(), callback=cb)
 
 print(saved_values.saveval)
 #=
-Tuple{Float64,Float64}[(2.86723, 2.27932), (3.16894, 2.51918), (4.0612, 3.22848), (5.67802, 4.51378)
-, (7.79393, 6.19584)]
+Tuple{Float64,Float64}[(2.23186, 2.49102), (2.46675, 2.75318), (3.16138, 3.52847), (4.42011, 4.93337), (6.06683, 6.77129)]
 =#
 ```
 
-Note that the values are retreived from the cache as `.saveval`, and the time points are found as
+Note that the values are retrieved from the cache as `.saveval`, and the time points are found as
 `.t`. If we want to control the saved times, we use `saveat` in the callback. The save controls like
-`saveat` act analygously to how they act in the `solve` function.
+`saveat` act analogously to how they act in the `solve` function.
 
 ```julia
 saved_values = SavedValues(Float64, Tuple{Float64,Float64})
-cb = SavingCallback((u,p,t,integrator)->(trace(u),norm(u)), saved_values, saveat=0.0:0.1:1.0)
+cb = SavingCallback((u,t,integrator)->(tr(u),norm(u)), saved_values, saveat=0.0:0.1:1.0)
 sol = solve(prob, Tsit5(), callback=cb)
 print(saved_values.saveval)
 print(saved_values.t)
 
 #=
-Tuple{Float64,Float64}[(2.86723, 2.27932), (3.16877, 2.51904), (3.50204, 2.78397), (3.87035, 3.07677
-), (4.2774, 3.40035), (4.72725, 3.75797), (5.22442, 4.1532), (5.77388, 4.58999), (6.38113, 5.07273),
- (7.05223, 5.60623), (7.79393, 6.19584)]
+Tuple{Float64,Float64}[(2.23186, 2.49102), (2.46659, 2.753), (2.726, 3.04254), (3.0127, 3.36253), 
+(3.32955, 3.71617), (3.67972, 4.107), (4.06672, 4.53893), (4.49442, 5.0163), (4.9671, 5.54387), 
+(5.48949, 6.12692), (6.06683, 6.77129)]
 [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 =#
 ```
 
 ## IterativeCallback
 
-`IterativeCallback` is a callback to be used to iteratively apply some affect.
+`IterativeCallback` is a callback to be used to iteratively apply some effect.
 For example, if given the first effect at `t₁`, you can define `t₂` to apply
 the next effect.
 
