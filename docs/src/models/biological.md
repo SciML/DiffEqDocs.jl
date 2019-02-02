@@ -16,14 +16,21 @@ To use this functionality, you must install DiffEqBiological.jl:
 using DiffEqBiological
 ```
 
-## The Reaction DSL - Basic
-This section covers some of the basic syntax for building chemical reaction network models.
+## The Reaction DSL - Basics
+This section covers some of the basic syntax for building chemical reaction network models. Examples
+showing how to both construct and solve network models are provided in [Chemical Reaction Network Examples](@ref).
+
 #### Basic syntax
 
-The `@reaction_network` macro allows you to define reaction networks in a more
-scientific format. Its input is a set of chemical reactions and from them it
-generates a reaction network object which can be used as input to `ODEProblem`,
-`SDEProblem` and `JumpProblem` constructors.
+The `@reaction_network` macro allows the (symbolic) specification of reaction
+networks with a simple format. Its input is a set of chemical reactions, and
+from them it generates a reaction network object which can be used as input to
+`ODEProblem`, `SteadyStateProblem`, `SDEProblem` and `JumpProblem` constructors.
+The `@min_reaction_network` macro constructs a more simplified reaction network,
+deferring construction of all the various functions needed for each of these
+problem types. It can then be incrementally filled in for specific problem types
+as needed, which reduces network construction time for very large networks (see
+[The Min Reaction Network Object](@ref) for a detailed description).
 
 The basic syntax is:
 
@@ -143,7 +150,7 @@ end
 this corresponds to the differential equation:
 
 ```math
-\frac{d[X]}{dt} = -\frac{1}{2!} [X]^2\\
+\frac{d[X]}{dt} = -[X]^2\\
 \frac{d[X2]}{dt} = \frac{1}{2!} [X]^2
 ```
 
@@ -196,7 +203,7 @@ end p d
 Parameters can only exist in the reaction rates (where they can be mixed with reactants). All variables not declared at the end will be considered a reactant.
 
 #### Pre-defined functions
-The hill function and the michaelis-menten function, both which are common in biochemical reaction networks, are pre-defined and can be used as expected. These pairs of reactions are all equivalent:
+Hill functions and a Michaelis-Menten function are pre-defined and can be used as rate laws. Below, the pair of reactions within `rn1` are equivalent, as are the pair of reactions within `rn2`:
 ```julia
 rn1 = @reaction_network begin
   hill(X,v,K,n), ∅ → X
@@ -207,13 +214,24 @@ rn2 = @reaction_network begin
   v*X/(X+K), ∅ → X
 end v K
 ```
+Repressor Hill (`hillr`) and Michaelis-Menten (`mmr`) functions are also provided:
+```julia
+rn1 = @reaction_network begin
+  hillr(X,v,K,n), ∅ → X
+  v*K^n/(X^n+K^n), ∅ → X
+end v K n
+rn2 = @reaction_network begin
+  mmr(X,v,K), ∅ → X
+  v*K/(X+K), ∅ → X
+end v K
+```
 
 ## Model Simulation
 
-Once created, a reaction network can be used as input to various problem types and the solved by `DifferentialEquations.jl`.
+Once created, a reaction network can be used as input to various problem types which can be solved by `DifferentialEquations.jl`.
 
 #### Deterministic simulations using ODEs
-A reaction network can be used as input to a `ODEProblem` instead of a function, using
+A reaction network can be used as input to an `ODEProblem` instead of a function, using
 ```probODE = ODEProblem(rn, args...; kwargs...) ```
 E.g. a model can be created and simulated using:
 ```julia
@@ -229,13 +247,24 @@ sol = solve(prob)
 ```
 (if no parameters are given `p` does not need to be provided)
 
+To solve for a steady-state starting from the guess `u0`, one can use
+```julia
+prob = SteadyStateProblem(rn,u0,p)
+sol = solve(prob, SSRootfind())
+```
+or
+```julia
+prob = SteadyStateProblem(rn,u0,p)
+sol = solve(prob, DynamicSS(Tsit5()))
+```
+
 #### Stochastic simulations using SDEs
 In a similar way a SDE can be created using `probSDE = SDEProblem(rn, args...; kwargs...)`.
 In this case the chemical Langevin equations (as derived in Gillespie 2000) will
 be used to generate stochastic differential equations.
 
-#### Stochastic simulations using discrete stochastic simulation algorithm
-Instead of solving SDEs one can make stochastic simulations of the model using real copy numbers and a discrete stochastic simulation algorithm. This can be done using:
+#### Stochastic simulations using discrete stochastic simulation algorithms
+Instead of solving SDEs one can create a stochastic jump process model using integer copy numbers and a discrete stochastic simulation algorithm. This can be done using:
 ```julia
 rn = @reaction_network begin
   p, ∅ → X
@@ -248,6 +277,7 @@ discrete_prob = DiscreteProblem(u0,tspan,p)
 jump_prob = JumpProblem(discrete_prob,Direct(),rn)
 sol = solve(jump_prob,SSAStepper())
 ```
+Here we used Gillespie's `Direct` method as the underlying stochastic simulation algorithm.
 
 
 ## The Reaction DSL - Advanced
@@ -332,18 +362,58 @@ will occur at rate ``d[X]/dt = -k`` (which might become a problem since ``[X]`` 
 at a constant rate even when very small or equal to 0.
 
 ## The Reaction Network Object
-The `@reaction_network` macro generate a `reaction_network` object which have several fields
+
+The `@reaction_network` macro generates a `reaction_network` object, which has a number of fields 
 which can be accessed.
 
-* `rn.syms` is a vector containing symbols corresponding to all the reactants of the network.
+* `rn.f` is a function encoding the right hand side of the ODEs (i.e. the time derivatives of the chemical species).
+* `rn.f_func` is a vector of expressions corresponding to the time derivatives of the chemical species.
+* `rn.f_symfuncs` is a vector of `SymEngine` expressions corresponding to the time derivatives of the chemical species.
+* `rn.g` is a function encoding the noise terms for the SDEs (see `rn.g_func` for details).
+* `rn.g_func` is a vector containing expressions corresponding to the noise terms used when creating the SDEs (n\*m elements when there are n reactants and m reactions. The first m elements correspond to the noise terms for the first reactant and each reaction, the next m elements for the second reactant and all reactions, and so on).
+* `rn.jump_affect_expr` is a vector of expressions for how each reaction causes the species populations to change.
+* `rn.jump_rate_expr` is a vector of expressions for how the transition rate (i.e. propensity) of each reaction is calculated from the species populations.
+* `rn.jumps` is a vector storing a jump corresponding to each reaction (i.e. `ConstantRateJump`, `VariableRateJump`, etc...)
+* `rn.odefun` stores an `ODEFunction` that can be used to create an `ODEProblem` corresponding to the reaction network.
+* `rn.p_matrix` is a prototype matrix with the same size as the noise term.
 * `rn.params` is a vector containing symbols corresponding to all the parameters of the network.
-* `rn.f_func` is a vector containing expression corresponding to the equations in the ODE corresponding to the model.
-* `rn.g_func` is a vector containing expressions corresponding the noise terms used when creating the SDEs (n\*m element where there are n reactants and m reactions. The first m elements contains the noise term for the first reactant and each reaction correspondingly, next for the second reactant and so on).
-* `rn.symjac` is the symbolically calculated Jacobian of the ODE corresponding to the model.
+* `rn.params_to_ints` provides a mapping from parameter symbol to the integer id of the parameter (i.e. where it is stored in the parameter vector passed to `ODEProblem`, `SDEProblem`, etc...)
+* `rn.reactions` stores a vector of `DiffEqBiological.ReactionStruct`s, which collect info for their corresponding reaction (such as stoichiometric coefficients).
+* `rn.regular_jumps` stores a `RegularJump` representation of the network, for use in ``\tau``-leaping methods.
+* `rn.scale_noise` is the noise scaling parameter symbol (if provided).
+* `rn.sdefun` is a `SDEFunction` that can be used to create an `SDEProblem` corresponding to the reaction network.
+* `rn.symjac` is the symbolically calculated Jacobian of the ODEs corresponding to the model.
+* `rn.syms` is a vector containing symbols for all species of the network.
+* `rn.syms_to_ints` is a map from the symbol of a species to its integer index within the solution vector.
+
+## The Min Reaction Network Object 
+The `@min_reaction_network` macro works similarly to the `@reaction_network` macro, but initially only fills in fields corresponding to basic reaction network properties (i.e. `rn.params`, `rn.params_to_ints`, `rn.scale_noise`, `rn.reactions`, `rn.syms`, and `rn.syms_to_ints`). To fill in the remaining fields call 
+* `addodes!(rn)` to complete ODE-related fields
+* `addsdes!(rn)` to complete SDE-related fields
+* `addjumps!(rn)` to complete jump-related fields. `addjumps!` accepts several keyword arguments to control which jumps get created ([] gives the default value for the keyword). 
+  * `build_jumps=[true]` is `true` if `rn.jumps` should be constructed. This can be set to `false` for regular jump problems, where only `rn.regular_jumps` is needed.
+  * `build_regular_jumps=[true]` is `true` if `rn.regular_jumps` should be constructed. This can be set to `false` for Gillespie-type jump problems, where `regular_jumps` are not used.
+  * `minimal_jumps=[false]` is `false` if `rn.jumps` should contain a jump for each possible reaction. If set to `true` jumps are only added to `rn.jumps` for non-mass action jumps. (Note, mass action jumps are still resolved within any jump simulation. This option simply speeds up the construction of the jump problem since entries in `rn.jumps` that correspond to mass action jumps are never directly called within jump simulations.)
+   
 
 
+For example, to simulate a jump process (i.e. Gillespie) simulation without constructing any `RegularJump`s, and only constructing a minimal set of jumps:
 
-## Examples
+```julia
+rs = @min_reaction_network begin
+  c1, X --> 2X
+  c2, X --> 0
+  c3, 0 --> X
+end c1 c2 c3
+p = (2.0,1.0,0.5)
+addjumps!(rs; build_regular_jumps=false, minimal_jumps=true)
+prob = DiscreteProblem([5], (0.0, 4.0), p)
+jump_prob = JumpProblem(prob, Direct(), rs)
+sol = solve(jump_prob, SSAStepper())
+```
+
+
+## Chemical Reaction Network Examples
 
 #### Example: Birth-Death Process
 
@@ -353,10 +423,27 @@ rs = @reaction_network begin
   c2, X --> 0
   c3, 0 --> X
 end c1 c2 c3
-p = (2.0,1.0,0.5)
-prob = DiscreteProblem([5], (0.0, 4.0), p)
-jump_prob = JumpProblem(prob, Direct(), rs)
-sol = solve(jump_prob, SSAStepper())
+p = (1.0,2.0,50.)
+tspan = (0.,4.)
+u0 = [5.]
+
+# solve ODEs
+oprob = ODEProblem(rs, u0, tspan, p)
+osol  = solve(oprob, Tsit5())
+
+# solve for Steady-States
+ssprob = SteadyStateProblem(rs, u0, p)
+sssol  = solve(ssprob, SSRootfind())
+
+# solve SDEs
+sprob = SDEProblem(rs, u0, tspan, p)
+ssol  = solve(sprob, EM(), dt=.01)
+
+# solve JumpProblem
+u0 = [5]
+dprob = DiscreteProblem(u0, tspan, p)
+jprob = JumpProblem(dprob, Direct(), rs)
+jsol = solve(jprob, SSAStepper())
 ```
 
 #### Example: Michaelis-Menten Enzyme Kinetics
@@ -368,8 +455,16 @@ rs = @reaction_network begin
   c3, SE --> P + E
 end c1 c2 c3
 p = (0.00166,0.0001,0.1)
-# S = 301, E = 100, SE = 0, P = 0
-prob = DiscreteProblem([301, 100, 0, 0], (0.0, 100.0), p)
-jump_prob = JumpProblem(prob, Direct(), rs)
-sol = solve(jump_prob, SSAStepper())
+tspan = (0., 100.)
+u0 = [301., 100., 0., 0.]  # S = 301, E = 100, SE = 0, P = 0
+
+# solve ODEs
+oprob = ODEProblem(rs, u0, tspan, p)
+osol  = solve(oprob, Tsit5())
+
+# solve JumpProblem
+u0 = [301, 100, 0, 0] 
+dprob = DiscreteProblem(u0, tspan, p)
+jprob = JumpProblem(dprob, Direct(), rs)
+jsol = solve(jprob, SSAStepper())
 ```

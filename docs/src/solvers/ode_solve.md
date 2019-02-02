@@ -113,9 +113,9 @@ library methods are as follows:
 - `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
   significantly more efficient
 
-# Full List of Methods
+## Full List of Methods
 
-## OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a
@@ -129,7 +129,7 @@ allow for sophisticated event handling, etc. On stiff ODEs these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
-### Runge-Kutta Methods for Non-Stiff Equations
+#### Runge-Kutta Methods for Non-Stiff Equations
 
 - `Euler`- The canonical forward Euler method. Fixed timestep only.
 - `Midpoint` - The second order midpoint method. Uses embedded Euler method for
@@ -194,7 +194,7 @@ solve(prob,Vern7(lazy=false))
 ```
 
 
-### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+#### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPRK22` - The two-stage, second order strong stability preserving (SSP)
   method of Shu and Osher (SSP coefficient 1, free 2nd order SSP interpolant).
@@ -237,7 +237,7 @@ schemes for conservation laws: survey and new developments." Proceedings of the
 Royal Society of London A: Mathematical, Physical and Engineering Sciences. The
 Royal Society, 2011.).
 
-### Low-Storage Methods
+#### Low-Storage Methods
 
 Up to now, there are still some improvements concerning memory consumption posible, e.g. dropping the dense
 output, interpolations, callbacks etc. However, some basic methods are available.
@@ -245,13 +245,13 @@ output, interpolations, callbacks etc. However, some basic methods are available
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
 
-### Explicit Multistep Methods
+#### Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
 the approximation at the next point are called multistep methods. These methods
 tend to be more efficient as the size of the system or the cost of `f` increases.
 
-#### Adams-Bashforth Explicit Methods
+##### Adams-Bashforth Explicit Methods
 
 These methods require a choice of `dt`.
 
@@ -271,7 +271,7 @@ These methods require a choice of `dt`.
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
   is used to calculate starting values.
 
-#### Adaptive step size Adams explicit Methods
+##### Adaptive step size Adams explicit Methods
 
 - `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to
   calculate starting values.  
@@ -293,9 +293,9 @@ These methods require a choice of `dt`.
   method in Nordsieck form. The order adaptivity algorithm is derived from
   Sundials' `CVODE_Adams`. In development.
 
-### Methods for Stiff Equations
+#### Methods for Stiff Equations
 
-#### SDIRK Methods
+##### SDIRK Methods
 
 - `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
@@ -332,7 +332,7 @@ These methods require a choice of `dt`.
 - `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
 - `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
 
-#### Rosenbrock Methods
+##### Rosenbrock Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
   stiff equations with oscillations at low tolerances. 2nd order stiff-aware
@@ -363,13 +363,13 @@ These methods require a choice of `dt`.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
-#### Stabilized Explicit Methods
+##### Stabilized Explicit Methods
 
 - `ROCK2` - Second order stabilized Runge-Kutta method. Exhibits high stability
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
 
-#### Exponential Methods for Linear and Affine Problems
+##### Exponential Methods for Linear and Affine Problems
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
   Expects the right hand side function to be a
@@ -388,7 +388,7 @@ Options:
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
-#### Exponential Runge-Kutta Methods
+##### Exponential Runge-Kutta Methods
 
 These methods are all fixed timestepping only.
 
@@ -417,7 +417,7 @@ constructor:
 - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
   is not given. See [Extra Options](#Extra-Options-1) for more details.
 
-#### Adaptive Exponential Rosenbrock Methods
+##### Adaptive Exponential Rosenbrock Methods
 
 - `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme.
 - `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
@@ -426,7 +426,7 @@ The exponential rosenbrock methods cannot be applied to semilinear problems. Opt
 solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1)
 except that Krylov approximation is always used.
 
-#### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
+##### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
 These methods are all fixed timestepping only.
 
@@ -453,7 +453,7 @@ Options:
 It should be noted that many of the methods are still at an experimental stage of development,
 and thus should be used with caution.
 
-#### Multistep Methods
+##### Multistep Methods
 
 Quasi-constant stepping is the time stepping strategy which matches the classic
 GEAR, LSODE,  and `ode15s` integrators. The variable-coefficient methods match
@@ -475,12 +475,12 @@ Sundials CVODE integrator.
 - `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
   method in Nordsieck form. In development.
 
-#### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+##### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
   stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only.
 
-#### Extra Options
+##### Extra Options
 
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
@@ -516,11 +516,11 @@ sol = solve(prob,Rosenbrock23(autodiff=false)) # Numerical differentiation with 
 sol = solve(prob,Rosenbrock23(autodiff=false,diff_type=Val{:forward})) # Numerical differentiation with forward differencing
 ```
 
-### Tableau Method
+#### Tableau Method
 
 Additionally, there is the tableau method:
 
-  - `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
+- `ExplicitRK` - A general Runge-Kutta solver which takes in a tableau. Can be adaptive. Tableaus
   are specified via the keyword argument `tab=tableau`. The default tableau is
   for Dormand-Prince 4/5. Other supplied tableaus can be found in the Supplied Tableaus section.
 
@@ -531,7 +531,7 @@ alg = ExplicitRK(tableau=constructDormandPrince())
 solve(prob,alg)
 ```
 
-### CompositeAlgorithm
+#### CompositeAlgorithm
 
 One unique feature of OrdinaryDiffEq.jl is the `CompositeAlgorithm`, which allows
 you to, with very minimal overhead, design a multimethod which switches between
@@ -570,7 +570,7 @@ region. `dtfac` is the factor that `dt` is changed when switching: multiplied
 when going from non-stiff to stiff and divided when going stiff to non-stiff.
 `stiffalgfirst` denotes whether the first step should use the stiff algorithm.
 
-#### Pre-Built Stiffness Detecting and Auto-Switching Algorithms
+##### Pre-Built Stiffness Detecting and Auto-Switching Algorithms
 
 These methods require a `Autoalg(stiffalg)` to be chosen as the method to switch
 to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff
@@ -594,7 +594,7 @@ tsidas_alg = AutoTsit5(Rodas5(),nonstifftol = 11/10)
 
 Is the `Tsit5` method with automatic switching to `Rodas5`.
 
-## Sundials.jl
+### Sundials.jl
 
 The Sundials suite is built around multistep methods. These methods are more efficient
 than other methods when the cost of the function calculations is really high, but
@@ -747,7 +747,7 @@ See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/c
 and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
 for details on the additional options.
 
-## ODEInterface.jl
+### ODEInterface.jl
 
 The ODEInterface algorithms are the classic Fortran algorithms. While the
 non-stiff algorithms are superseded by the more featured and higher performance
@@ -778,7 +778,7 @@ Note that while the output only has a linear interpolation, a higher order
 interpolation is used for intermediate dense output for `saveat` and for
 event handling.
 
-## LSODA.jl
+### LSODA.jl
 
 This setup provides a wrapper to the algorithm LSODA, a well-known method which uses switching
 to solve both stiff and non-stiff equations.
@@ -793,7 +793,7 @@ Pkg.add("LSODA")
 using LSODA
 ```
 
-## ODE.jl
+### ODE.jl
 
   - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
   - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
@@ -807,7 +807,7 @@ using LSODA
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).
 
-## MATLABDiffEq.jl
+### MATLABDiffEq.jl
 
 These algorithms require that the problem was defined using a `ParameterizedFunction`
 via the `@ode_def` macro. Note that this setup is not automatically included
@@ -833,9 +833,9 @@ This requires a licensed MATLAB installation. The available methods are:
 For more information on these algorithms, see
 [the MATLAB documentation](https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html).
 
-## GeometricIntegrators.jl
+### GeometricIntegrators.jl
 
-#### Note: This package currently segfaults on non-Linux Julia v1.0!
+##### Note: This package currently segfaults on non-Linux Julia v1.0!
 
 GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
 Note that this setup is not automatically included with DifferentialEquaitons.jl.
@@ -862,7 +862,7 @@ using GeometricIntegratorsDiffEq
 
 Note that all of these methods require the user supplies `dt`.
 
-## BridgeDiffEq.jl
+### BridgeDiffEq.jl
 
 Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
 are made and optimized for out-of-place functions on immutable (static vector)
@@ -878,7 +878,7 @@ using BridgeDiffEq
 - `BridgeR3` - 3rd order Ralston method
 - `BridgeBS3` - 3rd order Bogacki-Shampine method
 
-## TaylorIntegration.jl
+### TaylorIntegration.jl
 
 TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor
 series method for high accuracy integration of ODEs. These methods are optimized
@@ -894,7 +894,7 @@ using TaylorIntegration
 
 - `TaylorMethod(order)` - Taylor integration method with maximal `order` (required)
 
-## List of Supplied Tableaus
+### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
 The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/internals/tableaus.html).

@@ -76,14 +76,14 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 * `seed`: Sets the seed for the random number generator. This overrides any seed
   set in the `SDEProblem`.
 
-# Full List of Methods
+## Full List of Methods
 
-## StochasticDiffEq.jl
+### StochasticDiffEq.jl
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 Orders are given in terms of strong order.
 
-### Nonstiff Methods
+#### Nonstiff Methods
 
 - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an
   optional argument `split=true` for controlling step splitting. When splitting
@@ -141,13 +141,13 @@ Example usage:
 sol = solve(prob,SRIW1())
 ```
 
-### Tableau Controls
+#### Tableau Controls
 
 For `SRA` and `SRI`, the following option is allowed:
 
 * `tableau`: The tableau for an `:SRA` or `:SRI` algorithm. Defaults to SRIW1 or SRA1.
 
-### Stiff Methods
+#### Stiff Methods
 
 - `ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which
   defaults to `theta=1/2` or the Trapezoid method on the drift term. This method
@@ -188,7 +188,7 @@ For `SRA` and `SRI`, the following option is allowed:
   Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
   and scalar additive noise.†
 
-### Derivative-Based Methods
+#### Derivative-Based Methods
 
 The following methods require analytic derivatives of the diffusion term.
 
@@ -206,7 +206,7 @@ The following methods require analytic derivatives of the diffusion term.
   The default settings for the drift implicitness is `theta=0.5` and
   the diffusion implicitness is `eta=0.5`.  
 
-## StochasticCompositeAlgorithm
+### StochasticCompositeAlgorithm
 
 One unique feature of StochasticDiffEq.jl is the `StochasticCompositeAlgorithm`, which allows
 you to, with very minimal overhead, design a multimethod which switches between
@@ -225,7 +225,7 @@ The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
 
-## BridgeDiffEq.jl
+### BridgeDiffEq.jl
 
 Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
 are made and optimized for out-of-place functions on immutable (static vector)
@@ -243,7 +243,7 @@ using BridgeDiffEq
 - `BridgeSRK` - Strong order 1.0 derivative-free stochastic Runge-Kutta method
   for scalar (`<:Number`) Ito equations.†
 
-#### Notes
+##### Notes
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.html).

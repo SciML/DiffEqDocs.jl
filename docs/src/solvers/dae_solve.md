@@ -14,14 +14,14 @@ performance is `IDA` from the Sundials.jl package if you are solving problems wi
 control over the linear solver to better tailor it to your problem. A similar
 algorithm is `daskr`. Which one is more efficient is problem-dependent.
 
-# Full List of Methods
+## Full List of Methods
 
-## OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl
 
 These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
 
-### Rosenbrock Methods
+#### Rosenbrock Methods
 
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
   accuracy on discretizations of nonlinear parabolic PDEs.
@@ -38,7 +38,7 @@ extra options for the solvers, see the ODE solver page.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
-### SDIRK Methods
+#### SDIRK Methods
 
 SDIRK Methods
 
@@ -48,7 +48,7 @@ SDIRK Methods
 - `ImplicitMidpoint` - Stage order 1. Symplectic. Good for when symplectic
   integration is required.
 
-## Sundials.jl
+### Sundials.jl
 
 - `IDA` - This is the IDA method from the Sundials.jl package.
 
@@ -102,7 +102,7 @@ implicit equation), `init_all=false` means that the algebraic variables and deri
 be modified in order to satisfy the DAE. If `init_all=true`, all initial conditions will be
 modified to satify the DAE.
 
-## DASKR.jl
+### DASKR.jl
 
 DASKR.jl is not automatically included by DifferentialEquations.jl. To use this
 algorithm, you will need to install and use the package:
@@ -134,11 +134,11 @@ Choices for the linear solver are:
 - `:Banded`
 - `:SPIGMR`, a Krylov method
 
-## DASSL.jl
+### DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
 
-## ODEInterfaceDiffEq.jl
+### ODEInterfaceDiffEq.jl
 
 These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
