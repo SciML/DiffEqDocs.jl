@@ -37,5 +37,6 @@ Example usage:
 ```julia
 sol = solve(prob,SSRootfind())
 sol = solve(prob,DynamicSS(Tsit5()))
+using Sundials
 sol = solve(prob,DynamicSS(CVODE_BDF()),dt=1.0)
 ```

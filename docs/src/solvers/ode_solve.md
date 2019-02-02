@@ -109,7 +109,7 @@ library methods are as follows:
   or `radau()` are more efficient
 - `ode23t` --> `Trapezoid()` for efficiency and `GenericTrapezoid()` for robustness
 - `ode23tb` --> `TRBDF2`
-- `lsoda` --> `lsoda()` (requires `Pkg.add("LSODA"); using LSODA`)
+- `lsoda` --> `lsoda()` (requires `]add LSODA; using LSODA`)
 - `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
   significantly more efficient
 
@@ -400,7 +400,7 @@ These methods are all fixed timestepping only.
 - `ETDRK4` - 4th order exponential-RK scheme.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4.
 
-The methods are intended for semilinear problems constructed by 
+The methods are intended for semilinear problems constructed by
 [`SplitODEProblem`](../types/split_ode_types.html) or `SplitODEFunction`. They can
 also be used for a general nonlinear problem, in which case the jacobian of the right
 hand side is used as the linear operator in each time step.
@@ -596,6 +596,14 @@ Is the `Tsit5` method with automatic switching to `Rodas5`.
 
 ### Sundials.jl
 
+Note that this setup is not automatically included with DifferentialEquations.jl.
+To use the following algorithms, you must install and use Sundials.jl:
+
+```julia
+]add Sundials
+using Sundials
+```
+
 The Sundials suite is built around multistep methods. These methods are more efficient
 than other methods when the cost of the function calculations is really high, but
 for less costly functions the cost of nurturing the timestep overweighs the benefits.
@@ -759,7 +767,7 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:
 
 ```julia
-Pkg.add("ODEInterfaceDiffEq")
+]add ODEInterfaceDiffEq
 using ODEInterfaceDiffEq
 ```
 
@@ -789,7 +797,7 @@ Note that this setup is not automatically included with DifferentialEquaitons.jl
 To use the following algorithms, you must install and use LSODA.jl:
 
 ```julia
-Pkg.add("LSODA")
+]add LSODA
 using LSODA
 ```
 
@@ -888,7 +896,7 @@ To use the following algorithms, you must install and
 use TaylorIntegration.jl:
 
 ```julia
-Pkg.add("TaylorIntegration")
+]add TaylorIntegration
 using TaylorIntegration
 ```
 

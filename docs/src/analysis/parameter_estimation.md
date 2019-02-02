@@ -250,7 +250,7 @@ ms_obj = multiple_shooting_objective(ms_prob,Tsit5(),L2Loss(t,data);priors=prior
 The following methods require the DiffEqBayes.jl
 
 ```julia
-Pkg.add("DiffEqBayes")
+]add DiffEqBayes
 using DiffEqBayes
 ```
 

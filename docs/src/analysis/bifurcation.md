@@ -11,7 +11,7 @@ This functionality does not come standard with DifferentialEquations.jl.
 To use this functionality, you must install PyDSTool.jl:
 
 ```julia
-Pkg.add("PyDSTool")
+]add PyDSTool
 using PyDSTool
 ```
 

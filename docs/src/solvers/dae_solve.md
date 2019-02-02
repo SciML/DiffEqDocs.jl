@@ -50,6 +50,14 @@ SDIRK Methods
 
 ### Sundials.jl
 
+Note that this setup is not automatically included with DifferentialEquations.jl.
+To use the following algorithms, you must install and use Sundials.jl:
+
+```julia
+]add Sundials
+using Sundials
+```
+
 - `IDA` - This is the IDA method from the Sundials.jl package.
 
 Note that the constructors for the Sundials algorithms take a main argument:
@@ -108,7 +116,7 @@ DASKR.jl is not automatically included by DifferentialEquations.jl. To use this
 algorithm, you will need to install and use the package:
 
 ```julia
-Pkg.add("DASKR")
+]add DASKR
 using DASKR
 ```
 

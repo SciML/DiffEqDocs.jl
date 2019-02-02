@@ -209,7 +209,7 @@ convenience commands are defined by recipes for Plots.jl. To plot the solution
 object, simply call plot:
 
 ```julia
-#Pkg.add("Plots") # You need to install Plots.jl before your first time using it!
+#]add Plots # You need to install Plots.jl before your first time using it!
 using Plots
 #plotly() # You can optionally choose a plotting backend
 plot(sol)

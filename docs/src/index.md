@@ -51,7 +51,7 @@ be grateful if you could cite our work.
 
 To install the package, use the following command inside the Julia REPL:
 ```julia
-Pkg.add("DifferentialEquations")
+]add DifferentialEquations
 ```
 
 To load the package, use the command:
@@ -60,7 +60,7 @@ To load the package, use the command:
 using DifferentialEquations
 ```
 
-The command `Pkg.add("DifferentialEquations")` will add solvers and dependencies
+The command `]add DifferentialEquations` will add solvers and dependencies
 for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported
 Equations section below). If you are interested in only one type of equation
 solvers of `DifferentialEquations.jl` or simply want a more lightweight
@@ -88,7 +88,7 @@ If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
 view them locally and interactively, by cloning the repository:
 
 ```julia
-#Pkg.add("IJulia") # Need to do this the first time to install IJulia!
+#]add IJulia # Need to do this the first time to install IJulia!
 Pkg.clone("https://github.com/JuliaDiffEq/DiffEqTutorials.jl")
 using IJulia
 notebook(dir = Pkg.dir("DiffEqTutorials"))

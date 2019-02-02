@@ -74,6 +74,7 @@ As with the other DifferentialEquations problems, the commands are then to solve
 and plot. Here we will use the IDA solver from Sundials:
 
 ```julia
+using Sundials
 sol = solve(prob,IDA())
 ```
 
