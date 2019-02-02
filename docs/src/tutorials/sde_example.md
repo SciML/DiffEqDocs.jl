@@ -195,6 +195,9 @@ Note also that in this format, it is fine to use ParameterizedFunctions. For exa
 the Lorenz equation could have been defined as:
 
 ```julia
+#]add ParameterizedFunctions
+using ParameterizedFunctions
+
 f = @ode_def begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y

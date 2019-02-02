@@ -354,6 +354,8 @@ independent variable is `t`, and the other variables are parameters which you pa
 at the end. For example, we can write the Lorenz system as:
 
 ```julia
+#]add ParameterizedFunctions
+using ParameterizedFunctions
 g = @ode_def begin
   dx = σ*(y-x)
   dy = x*(ρ-z) - y
