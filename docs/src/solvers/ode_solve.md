@@ -250,10 +250,14 @@ Royal Society, 2011.).
   Hermite interpolant). Fixed timestep only.
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
   (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
-- `NDBLSRK144` - 14-stage, fourth order low-storage method with optimized
-  stability regions for advection-dominated problems. Fixed timestep only.
 - `NDBLSRK124` - 12-stage, fourth order low-storage method with optimized
   stability regions for advection-dominated problems. Fixed timestep only.
+- `NDBLSRK134` - 13-stage, fourth order low-storage method with optimized
+  stability regions for advection-dominated problems. Fixed timestep only.
+- `NDBLSRK144` - 14-stage, fourth order low-storage method with optimized
+  stability regions for advection-dominated problems. Fixed timestep only.
+- `TSLDDRK74` - 7-stage, fourth order low-storage low-dissipation,
+  low-dispersion scheme with maximal accuracy and stability limit along the imaginary axes. Fixed timestep only.
 - `CFRLDDRK64` - 6-stage, fourth order low-storage, low-dissipation,
   low-dispersion scheme. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
