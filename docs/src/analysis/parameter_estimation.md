@@ -75,11 +75,12 @@ Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more
 For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
 
 
-### Two Stage method
+### Two Stage method (Non-Parametric Collocation)
 
 The two-stage method is a collocation method for estimating parameters without
 requiring repeated solving of the differential equation. It does so by
-determining a smoothed estimated trajectory of the data and optimizing
+determining a smoothed estimated trajectory of the data (local quadratic polynomial
+fit by least squares) and optimizing
 the derivative function and the data's timepoints to match the derivatives
 of the smoothed trajectory. This method has less accuracy than other methods
 but is much faster, and is a good method to try first to get in the general
