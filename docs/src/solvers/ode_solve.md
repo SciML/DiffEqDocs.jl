@@ -935,6 +935,13 @@ using TaylorIntegration
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
 The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/internals/tableaus.html).
+To use them, note you must install the library:
+
+```julia
+]add DiffEqDevTools
+using DiffEqDevTools
+```
+
 For the most useful and common algorithms, a hand-optimized version is supplied
 in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5`
 instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
