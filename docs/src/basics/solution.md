@@ -164,6 +164,10 @@ error state of the solution. The retcodes are as follows:
 
 - `:Default`: The solver did not set retcodes.
 - `:Success`: The integration completed without erroring.
+- `:Terminated`: The integration is terminated with `terminate!(integrator)`.
+  Note that this may occur by using `TerminateSteadyState` from the callback
+  library `DiffEqCallbacks` or, consequently, steady state solver `DynamicSS`
+  from `SteadyStateDiffEq`.
 - `:MaxIters`: The integration exited early because it reached its maximum number
   of iterations.
 - `:DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
