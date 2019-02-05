@@ -3201,9 +3201,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/diffeq_operator.html#Note:-this-functionality-is-under-heavy-development.-Interfaces-may-change.-Treat-this-as-experimental-until-the-end-of-Summer-2018.-1",
+    "location": "features/diffeq_operator.html#Note:-this-functionality-is-under-heavy-development.-Interfaces-may-change.-Treat-this-as-experimental-until-the-end-of-Summer-2019.-1",
     "page": "DiffEqOperators",
-    "title": "Note: this functionality is under heavy development. Interfaces may change. Treat this as experimental until the end of Summer 2018.",
+    "title": "Note: this functionality is under heavy development. Interfaces may change. Treat this as experimental until the end of Summer 2019.",
     "category": "section",
     "text": ""
 },
