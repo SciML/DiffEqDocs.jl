@@ -263,13 +263,18 @@ Royal Society, 2011.).
   along the imaginary axes. Fixed timestep only.
 - `DGLDDRK73_C` - 7-stage, third order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
-  applied to wave propagation problems. Fixed timestep only.
+  applied to wave propagation problems, optimized for PDE discretizations
+  when maximum spatial step is small due to geometric features of computational
+  domain. Fixed timestep only.
 - `DGLDDRK84_C` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
-  applied to wave propagation problems. Fixed timestep only.
+  applied to wave propagation problems, optimized for PDE discretizations
+  when maximum spatial step is small due to geometric features of computational
+  domain. Fixed timestep only.
 - `DGLDDRK84_F` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
-  applied to wave propagation problems. Fixed timestep only.
+  applied to wave propagation problems, optimized for PDE discretizations
+  when the maximum spatial step size is not constrained. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
 
