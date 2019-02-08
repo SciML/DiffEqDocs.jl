@@ -275,6 +275,8 @@ Royal Society, 2011.).
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when the maximum spatial step size is not constrained. Fixed timestep only.
+- `HSLDDRK64` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
+  scheme. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
 
