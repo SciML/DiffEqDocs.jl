@@ -261,6 +261,15 @@ Royal Society, 2011.).
 - `TSLDDRK74` - 7-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme with maximal accuracy and stability limit
   along the imaginary axes. Fixed timestep only.
+- `DGLDDRK73_C` - 7-stage, third order low-storage low-dissipation,
+  low-dispersion scheme for discontinuous Galerkin space discretizations
+  applied to wave propagation problems. Fixed timestep only.
+- `DGLDDRK84_C` - 8-stage, fourth order low-storage low-dissipation,
+  low-dispersion scheme for discontinuous Galerkin space discretizations
+  applied to wave propagation problems. Fixed timestep only.
+- `DGLDDRK84_F` - 8-stage, fourth order low-storage low-dissipation,
+  low-dispersion scheme for discontinuous Galerkin space discretizations
+  applied to wave propagation problems. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
 
