@@ -246,4 +246,4 @@ using BridgeDiffEq
 ##### Notes
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../features/diffeq_arrays.md).
+detection, and [discrete variables need to be updated appropriately](../../features/diffeq_arrays.html).
