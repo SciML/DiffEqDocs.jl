@@ -777,11 +777,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "basics/common_solver_opts.html#Memory-Optimizations-1",
+    "page": "Common Solver Options",
+    "title": "Memory Optimizations",
+    "category": "section",
+    "text": "calck: Turns on and off the internal ability for intermediate     interpolations (also known as intermediate density). Not the same as dense, which is post-solution interpolation. This defaults to dense || !isempty(saveat) ||  \"no custom callback is given\". This can be used to turn off interpolations (to save memory) if one isn\'t using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used nowhere else. Note that this is only required if the algorithm doesn\'t have a free or lazy interpolation (DP8()). If calck = false, saveat cannot be used. The rare keyword calck can be useful in event handling.\nalias_u0: allows the solver to alias the initial condition array that is contained in the problem struct. Defaults to false."
+},
+
+{
     "location": "basics/common_solver_opts.html#Miscellaneous-1",
     "page": "Common Solver Options",
     "title": "Miscellaneous",
     "category": "section",
-    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(u,p,t) where, when it returns true, it will reject the timestep. Disabled by default.\nunstable_check: Specifies a function unstable_check(dt,u,p,t) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defualts to true.\ncalck: Turns on and off the internal ability for intermediate     interpolations (also known as intermediate density). Not the same as dense, which is post-solution interpolation. This defaults to dense || !isempty(saveat) ||  \"no custom callback is given\". This can be used to turn off interpolations (to save memory) if one isn\'t using interpolations when a custom callback is used. Another case where this may be used is to turn on interpolations for usage in the integrator interface even when interpolations are used nowhere else. Note that this is only required if the algorithm doesn\'t have a free or lazy interpolation (DP8()). If calck = false, saveat cannot be used. The rare keyword calck can be useful in event handling."
+    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(u,p,t) where, when it returns true, it will reject the timestep. Disabled by default.\nunstable_check: Specifies a function unstable_check(dt,u,p,t) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defualts to true."
 },
 
 {
@@ -790,14 +798,6 @@ var documenterSearchIndex = {"docs": [
     "title": "Progress Monitoring",
     "category": "section",
     "text": "These arguments control the usage of the progressbar in the Juno IDE.progress: Turns on/off the Juno progressbar. Default is false.\nprogress_steps: Numbers of steps between updates of the progress bar. Default is 1000.\nprogress_name: Controls the name of the progressbar. Default is the name of the problem type.\nprogress_message: Controls the message with the progressbar. Defaults to showing dt, t, the maximum of u."
-},
-
-{
-    "location": "basics/common_solver_opts.html#User-Data-1",
-    "page": "Common Solver Options",
-    "title": "User Data",
-    "category": "section",
-    "text": "userdata: This is a user-chosen type which will show up in the integrator type, allowing the user to have a cache for callbacks, event handling, and other various activities."
 },
 
 {
