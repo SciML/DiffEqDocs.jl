@@ -171,6 +171,21 @@ explanations of the timestepping algorithms, see the
 * `failfactor`: The amount to decrease the timestep by if the Newton iterations
   of an implicit method fail. Default is 2.
 
+## Memory Optimizations
+
+* `calck`: Turns on and off the internal ability for intermediate    
+  interpolations (also known as intermediate density). Not the same as `dense`, which is post-solution interpolation.
+  This defaults to `dense || !isempty(saveat) ||  "no custom callback is given"`.
+  This can be used to turn off interpolations
+  (to save memory) if one isn't using interpolations when a custom callback is
+  used. Another case where this may be used is to turn on interpolations for
+  usage in the integrator interface even when interpolations are used nowhere else.
+  Note that this is only required if the algorithm doesn't have
+  a free or lazy interpolation (`DP8()`). If `calck = false`, `saveat` cannot be used.
+  The rare keyword `calck` can be useful in event handling.
+* `alias_u0`: allows the solver to alias the initial condition array that is contained
+  in the problem struct. Defaults to false.
+
 ## Miscellaneous
 
 * `maxiters`: Maximum number of iterations before stopping. Defaults to 1e5.
@@ -184,17 +199,7 @@ explanations of the timestepping algorithms, see the
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
 * `verbose`: Toggles whether warnings are thrown when the solver exits early.
   Defualts to true.
-* `calck`: Turns on and off the internal ability for intermediate    
-  interpolations (also known as intermediate density). Not the same as `dense`, which is post-solution interpolation.
-  This defaults to `dense || !isempty(saveat) ||  "no custom callback is given"`.
-  This can be used to turn off interpolations
-  (to save memory) if one isn't using interpolations when a custom callback is
-  used. Another case where this may be used is to turn on interpolations for
-  usage in the integrator interface even when interpolations are used nowhere else.
-  Note that this is only required if the algorithm doesn't have
-  a free or lazy interpolation (`DP8()`). If `calck = false`, `saveat` cannot be used.
-  The rare keyword `calck` can be useful in event handling.
-
+  
 ## Progress Monitoring
 
 These arguments control the usage of the progressbar in the Juno IDE.
@@ -206,12 +211,6 @@ These arguments control the usage of the progressbar in the Juno IDE.
   of the problem type.
 * `progress_message`: Controls the message with the progressbar. Defaults to
   showing `dt`, `t`, the maximum of `u`.
-
-## User Data
-
-* `userdata`: This is a user-chosen type which will show up in the `integrator`
-  type, allowing the user to have a cache for callbacks, event handling, and
-  other various activities.
 
 ## Error Calculations
 
