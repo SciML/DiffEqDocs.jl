@@ -773,7 +773,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Advanced Adaptive Stepsize Control",
     "category": "section",
-    "text": "These arguments control more advanced parts of the internals of adaptive timestepping and are mostly used to make it more efficient on specific problems. For detained explanations of the timestepping algorithms, see the timestepping descriptionsinternalnorm: The norm function internalnorm(u) which error estimates are calculated. Defaults are package-dependent.\ngamma: The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\nbeta1: The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2: The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqsteady_min: Defines the minimum for the range around 1 where the timestep is held constant. Defaults are algorithm-dependent.\nqsteady_max: Defines the maximum for the range around 1 where the timestep is held constant. Defaults are algorithm-dependent.\nqoldinit: The initial qold in stabilization stepping. Defaults are algorithm-dependent.\nfailfactor: The amount to decrease the timestep by if the Newton iterations of an implicit method fail. Default is 2."
+    "text": "These arguments control more advanced parts of the internals of adaptive timestepping and are mostly used to make it more efficient on specific problems. For detained explanations of the timestepping algorithms, see the timestepping descriptionsinternalnorm: The norm function internalnorm(u,t) which error estimates are calculated. Required are two dispatches: one dispatch for the state variable and the other on the elements of the state variable (scalar norm). Defaults are package-dependent.\ngamma: The risk-factor γ in the q equation for adaptive timestepping. Default is algorithm dependent.\nbeta1: The Lund stabilization α parameter. Defaults are algorithm-dependent.\nbeta2: The Lund stabilization β parameter. Defaults are algorithm-dependent.\nqmax: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqmin: Defines the maximum value possible for the adaptive q. Defaults are algorithm-dependent.\nqsteady_min: Defines the minimum for the range around 1 where the timestep is held constant. Defaults are algorithm-dependent.\nqsteady_max: Defines the maximum for the range around 1 where the timestep is held constant. Defaults are algorithm-dependent.\nqoldinit: The initial qold in stabilization stepping. Defaults are algorithm-dependent.\nfailfactor: The amount to decrease the timestep by if the Newton iterations of an implicit method fail. Default is 2."
 },
 
 {
@@ -2321,6 +2321,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#SimpleDiffEq.jl-1",
+    "page": "ODE Solvers",
+    "title": "SimpleDiffEq.jl",
+    "category": "section",
+    "text": "This setup provides access to simplified versions of a few ODE solvers. They mostly exist for experimentation, but offer shorter compile times. They have limitations compared to OrdinaryDiffEq.jl and are not generally faster.SimpleTsit5 - A fixed timestep integrator form of Tsit5. Not compatible with events.\nSimpleATsit5 - An adaptive Tsit5 with an interpolation in its simplest form. Not compatible with events.\nGPUSimpleATsit5 - A version of SimpleATsit5 without the integrator interface. Only allows solve.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use SimpleDiffEq.jl:]add SimpleDiffEq\nusing SimpleDiffEq"
+},
+
+{
     "location": "solvers/ode_solve.html#ODE.jl-1",
     "page": "ODE Solvers",
     "title": "ODE.jl",
@@ -2742,6 +2750,14 @@ var documenterSearchIndex = {"docs": [
     "title": "StochasticCompositeAlgorithm",
     "category": "section",
     "text": "One unique feature of StochasticDiffEq.jl is the StochasticCompositeAlgorithm, which allows you to, with very minimal overhead, design a multimethod which switches between chosen algorithms as needed. The syntax is StochasticCompositeAlgorithm(algtup,choice_function) where algtup is a tuple of StochasticDiffEq.jl algorithms, and choice_function is a function which declares which method to use in the following step. For example, we can design a multimethod which uses EM() but switches to RKMil() whenever dt is too small:choice_function(integrator) = (Int(integrator.dt<0.001) + 1)\nalg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)The choice_function takes in an integrator and thus all of the features available in the Integrator Interface can be used in the choice function."
+},
+
+{
+    "location": "solvers/sde_solve.html#SimpleDiffEq.jl-1",
+    "page": "SDE Solvers",
+    "title": "SimpleDiffEq.jl",
+    "category": "section",
+    "text": "This setup provides access to simplified versions of a few SDE solvers. They mostly exist for experimentation, but offer shorter compile times. They have limitations compared to StochasticDiffEq.jl.SimpleEM - A fixed timestep solve method for Euler-Maruyama. Only works with non-colored Gaussian noise.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use SimpleDiffEq.jl:]add SimpleDiffEq\nusing SimpleDiffEq"
 },
 
 {
