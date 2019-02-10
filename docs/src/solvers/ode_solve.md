@@ -846,6 +846,27 @@ To use the following algorithms, you must install and use LSODA.jl:
 using LSODA
 ```
 
+### SimpleDiffEq.jl
+
+This setup provides access to simplified versions of a few ODE solvers. They
+mostly exist for experimentation, but offer shorter compile times. They have
+limitations compared to OrdinaryDiffEq.jl and are not generally faster.
+
+  - `SimpleTsit5` - A fixed timestep integrator form of Tsit5. Not compatible
+    with events.
+  - `SimpleATsit5` - An adaptive Tsit5 with an interpolation in its simplest
+    form. Not compatible with events.
+  - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
+    interface. Only allows `solve`.
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use SimpleDiffEq.jl:
+
+```julia
+]add SimpleDiffEq
+using SimpleDiffEq
+```
+
 ### ODE.jl
 
   - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method

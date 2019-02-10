@@ -225,6 +225,23 @@ The `choice_function` takes in an `integrator` and thus all of the features
 available in the [Integrator Interface](@ref)
 can be used in the choice function.
 
+### SimpleDiffEq.jl
+
+This setup provides access to simplified versions of a few SDE solvers. They
+mostly exist for experimentation, but offer shorter compile times. They have
+limitations compared to StochasticDiffEq.jl.
+
+  - `SimpleEM` - A fixed timestep solve method for Euler-Maruyama. Only works
+    with non-colored Gaussian noise.
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use SimpleDiffEq.jl:
+
+```julia
+]add SimpleDiffEq
+using SimpleDiffEq
+```
+
 ### BridgeDiffEq.jl
 
 Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods

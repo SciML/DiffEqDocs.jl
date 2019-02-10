@@ -150,8 +150,10 @@ and are mostly used to make it more efficient on specific problems. For detained
 explanations of the timestepping algorithms, see the
 [timestepping descriptions](../../extras/timestepping.html)
 
-* `internalnorm`: The norm function `internalnorm(u)` which error estimates
-  are calculated. Defaults are package-dependent.
+* `internalnorm`: The norm function `internalnorm(u,t)` which error estimates
+  are calculated. Required are two dispatches: one dispatch for the state variable
+  and the other on the elements of the state variable (scalar norm).
+  Defaults are package-dependent.
 * `gamma`: The risk-factor γ in the q equation for adaptive timestepping.
   Default is algorithm dependent.
 * `beta1`: The Lund stabilization α parameter. Defaults are
@@ -199,7 +201,7 @@ explanations of the timestepping algorithms, see the
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
 * `verbose`: Toggles whether warnings are thrown when the solver exits early.
   Defualts to true.
-  
+
 ## Progress Monitoring
 
 These arguments control the usage of the progressbar in the Juno IDE.
