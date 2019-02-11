@@ -4197,7 +4197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Installation",
     "category": "section",
-    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqParamEstim.jl:]add DiffEqSensitivity\nusing DiffEqSensitivtyFor the Bayesian, methods, you must install DiffEqBayes.jl:]add DiffEqBayes\nusing DiffEqBayes"
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqParamEstim.jl:]add DiffEqParamEstim\nusing DiffEqParamEstimFor the Bayesian, methods, you must install DiffEqBayes.jl:]add DiffEqBayes\nusing DiffEqBayes"
 },
 
 {
@@ -4217,9 +4217,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameter_estimation.html#Building-objective-function-1",
+    "location": "analysis/parameter_estimation.html#Nonlinear-Regression-1",
     "page": "Parameter Estimation and Bayesian Analysis",
-    "title": "Building objective function",
+    "title": "Nonlinear Regression",
     "category": "section",
     "text": "build_loss_objective builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.function build_loss_objective(prob::DEProblem,alg,loss_func\n                              regularization=nothing;\n                              mpg_autodiff = false,\n                              verbose_opt = false,\n                              verbose_steps = 100,\n                              prob_generator = (p)->remake(prob,p=p),\n                              kwargs...)The first argument is the DEProblem to solve, and next is the alg to use. The alg must match the problem type, which can be any DEProblem (ODEs, SDEs, DAEs, DDEs, etc.). regularization defaults to nothing which has no regularization function. One can also choose verbose_opt and verbose_steps, which, in the optimization routines, will print the steps and the values at the steps every verbose_steps steps. mpg_autodiff uses autodifferentiation to define the derivative for the MathProgBase solver. The extra keyword arguments are passed to the differential equation solver."
 },
@@ -4229,7 +4229,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation and Bayesian Analysis",
     "title": "Multiple Shooting objective",
     "category": "section",
-    "text": "Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.\nThis objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn\'t match the begining of the next one.\nMerge the solutions from the shorter intervals and then calculate the loss.For consistency multiple_shooting_objective takes exactly the same arguments as build_loss_objective. It also has the option for discontinuity_error as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span."
+    "text": "Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:Divide up the time span into short time periods and solve the equationwith the current parameters which here consist of both, the parameters of the   differential equations and also the initial values for the short time periods.This objective additionally involves a discontinuity error term that imposeshigher cost if the end of the solution of one time period doesn\'t match the   beginning of the next one.Merge the solutions from the shorter intervals and then calculate the loss.For consistency multiple_shooting_objective takes exactly the same arguments as build_loss_objective. It also has the option for discontinuity_error as a keyword argument which assigns weight to the error occurring due to the discontinuity that arises from the breaking up of the time span."
 },
 
 {
@@ -4245,7 +4245,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation and Bayesian Analysis",
     "title": "The Loss Function",
     "category": "section",
-    "text": "loss_func(sol)is a function which reduces the problem\'s solution to a scalar which the optimizer will try to minimize. While this is very flexible, two convenience routines are included for fitting to data with standard cost functions:L2Loss(t,data;weight=nothing)where t is the set of timepoints which the data is found at, and data are the values that are known where each column corresponds to measures of the values of the system. L2Loss is an optimized version of the L2-distance. The weight is a vector of weights for the loss function which must match the size of the data. Note that minimization of a weighted L2Loss is equivalent to maximum likelihood estimation of a heteroskedastic Normally distributed likelihood.Additionally, we include a more flexible log-likelihood approach:LogLikeLoss(t,distributions;loss_func = L2Loss,weight=nothing)In this case, there are two forms. The simple case is where distributions[i,j] is the likelihood distributions from a UnivariateDistribution from Distributions.jl, where it corresponds to the likelihood at t[i] for component j. The second case is where distributions[i] is a MultivariateDistribution which corresponds to the likelihood at t[i] over the vector of components. This likelihood function then calculates the negative of the total loglikelihood over time as its objective value (negative since optimizers generally find minimimums, and thus this corresponds to maximum likelihood estimation).Note that these distributions can be generated via fit_mle on some dataset against some chosen distribution type."
+    "text": "loss_func(sol)is a function which reduces the problem\'s solution to a scalar which the optimizer will try to minimize. While this is very flexible, two convenience routines are included for fitting to data with standard cost functions:L2Loss(t,data;differ_weight=nothing,data_weight=nothing,\n              colloc_grad=nothing,dudt=nothing)where t is the set of timepoints which the data is found at, and data are the values that are known where each column corresponds to measures of the values of the system. L2Loss is an optimized version of the L2-distance. The data_weight is a scalar or vector of weights for the loss function which must match the size of the data. Note that minimization of a weighted L2Loss is equivalent to maximum likelihood estimation of a heteroskedastic Normally distributed likelihood. differ_weight allows one to add a weight on the first differencing terms sol[i+1]-sol[i] against the data first differences. This smooths out the loss term and can make it easier to fit strong solutions of stochastic models, but is zero (nothing) by default. Additionally, colloc_grad allows one to give a matrix of the collocation gradients for the data. This is used to add an interpolation derivative term, like the two-stage method. A convenience function colloc_grad(t,data) returns a collocation gradient from a 3rd order spline calculated by Dierckx.jl, which can be used as the colloc_grad. Note that, with a collocation gradient and regularization, this loss is equivalent to a 4DVAR.Additionally, we include a more flexible log-likelihood approach:LogLikeLoss(t,distributions,diff_distributions=nothing)In this case, there are two forms. The simple case is where distributions[i,j] is the likelihood distributions from a UnivariateDistribution from Distributions.jl, where it corresponds to the likelihood at t[i] for component j. The second case is where distributions[i] is a MultivariateDistribution which corresponds to the likelihood at t[i] over the vector of components. This likelihood function then calculates the negative of the total loglikelihood over time as its objective value (negative since optimizers generally find minimimums, and thus this corresponds to maximum likelihood estimation). The third term, diff_distributions, acts similarly but allows putting a distribution on the first difference terms sol[i+1]-sol[i].Note that these distributions can be generated via fit_mle on some dataset against some chosen distribution type."
 },
 
 {
@@ -4257,11 +4257,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "analysis/parameter_estimation.html#First-Differencing-1",
+    "location": "analysis/parameter_estimation.html#Note-on-First-Differencing-1",
     "page": "Parameter Estimation and Bayesian Analysis",
-    "title": "First Differencing",
+    "title": "Note on First Differencing",
     "category": "section",
-    "text": "L2Loss(t,data,differ_weight=0.3,data_weight=0.7)First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. You can now assign a weight (vector or scalar) to use the first differencing technique in the L2loss.Adding first differencing is helpful in cases where the L2Loss alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates."
+    "text": "L2Loss(t,data,differ_weight=0.3,data_weight=0.7)First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. Adding first differencing is helpful in cases where the L2Loss alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates."
 },
 
 {
