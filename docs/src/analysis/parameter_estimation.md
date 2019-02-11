@@ -729,7 +729,7 @@ t = 0.0:0.01:1.0
 tspan = (0.0,1.0)
 model_ode(p_) = ODEProblem(g, u0, tspan,p_) 
 solve_model(mp_) = OrdinaryDiffEq.solve(model_ode(mp_), Tsit5(),saveat=0.01)
-mock_data = solve_model([10.0,28.0,8/3]).u
+mock_data = Array(solve_model([10.0,28.0,8/3]))
 ```
 Now we define a custom objective function to pass for optimization to JuMP using
 the `build_loss_objective` described above provided by DiffEqParamEstim that defines an objective 
@@ -765,11 +765,11 @@ best_mp = getvalue.(getindex.((jumodel,), Symbol.(jumodel.colNames)))
 Let's compare the solution at the obtained parameter values and our data. 
 
 ```julia
-sol = OrdinaryDiffEq.solve(best_mp |> model_ode, Tsit5(); op...)
+sol = OrdinaryDiffEq.solve(best_mp |> model_ode, Tsit5())
 plot(getindex.(sol.(t),1))
 scatter!(mock_data, markersize=2)
 ```
-
+![jumpestimationplot](../assets/jumpestimationplot.png)
 ### Generalized Likelihood Example
 
 In this example we will demo the likelihood-based approach to parameter fitting.
