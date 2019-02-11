@@ -163,7 +163,29 @@ maxeval!(opt, 100000)
 (minf,minx,ret) = NLopt.optimize(opt,[0.2])</code></pre><p>which is very robust to the initial condition. The fastest result comes from the following:</p><pre><code class="language-julia">using NLopt
 opt = Opt(:LN_BOBYQA, 1)
 min_objective!(opt, obj)
-(minf,minx,ret) = NLopt.optimize(opt,[1.3])</code></pre><p>For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!</p><h3><a class="nav-anchor" id="Generalized-Likelihood-Example-1" href="#Generalized-Likelihood-Example-1">Generalized Likelihood Example</a></h3><p>In this example we will demo the likelihood-based approach to parameter fitting. First let&#39;s generate a dataset to fit. We will re-use the Lotka-Volterra equation but in this case fit just two parameters.</p><pre><code class="language-julia">f1 = function (du,u,p,t)
+(minf,minx,ret) = NLopt.optimize(opt,[1.3])</code></pre><p>For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!</p><h3><a class="nav-anchor" id="Using-JuMP-with-DiffEqParamEstim-1" href="#Using-JuMP-with-DiffEqParamEstim-1">Using JuMP with DiffEqParamEstim</a></h3><p><a href="https://github.com/JuliaOpt/JuMP.jl">JuMP</a> is a domain-specific modeling language  for mathematical optimization embedded in Julia.</p><pre><code class="language-julia">using OrdinaryDiffEq, ParameterizedFunctions, DiffEqParamEstim
+using JuMP, NLopt, Plots</code></pre><p>Let&#39;s define the Lorenz equation to use as our example</p><pre><code class="language-julia">g = @ode_def begin
+  dx = σ*(y-x)
+  dy = x*(ρ-z) - y
+  dz = x*y - β*z
+end σ ρ β</code></pre><p>Let&#39;s get a solution of the system with parameter values <code>σ=10.0</code> <code>ρ=28.0</code> <code>β=8/3</code> to use as our data. We define some convenience functions <code>model_ode</code> (to create an <code>ODEProblem</code>) and <code>solve_model</code>(to obtain  solution of the <code>ODEProblem</code>) to use in a custom objective function later.</p><pre><code class="language-julia">u0 = [1.0;0.0;0.0]
+t = 0.0:0.01:1.0
+tspan = (0.0,1.0)
+model_ode(p_) = ODEProblem(g, u0, tspan,p_) 
+solve_model(mp_) = OrdinaryDiffEq.solve(model_ode(mp_), Tsit5(),saveat=0.01)
+mock_data = Array(solve_model([10.0,28.0,8/3]))</code></pre><p>Now we define a custom objective function to pass for optimization to JuMP using the <code>build_loss_objective</code> described above provided by DiffEqParamEstim that defines an objective  function for the parameter estimation problem.</p><pre><code class="language-julia">loss_objective(mp_, dat) = build_loss_objective(model_ode(mp_), Tsit5(), L2Loss(t,dat))</code></pre><p>We create a JuMP model, variables, set the obbjective function and the choice of  oprimization algorithm to be used in the JuMP syntax. You can read more about this in  JuMP&#39;s <a href="http://www.juliaopt.org/JuMP.jl/0.18/index.html">documentation</a>.</p><pre><code class="language-julia">juobj(args...) = loss_objective(args, mock_data)(args)
+jumodel = Model()
+JuMP.register(jumodel, :juobj, 3, juobj, autodiff=true)
+@variables jumodel begin
+    σ,(start=8)
+    ρ,(start=25.0)
+    β,(start=10/3)
+end
+@NLobjective(jumodel, Min, juobj(σ, ρ, β))
+setsolver(jumodel, NLoptSolver(algorithm=:LD_MMA))</code></pre><p>Let&#39;s call the optimizer to obtain the fitted parameter values.</p><pre><code class="language-julia">sol = JuMP.solve(jumodel)
+best_mp = getvalue.(getindex.((jumodel,), Symbol.(jumodel.colNames)))</code></pre><p>Let&#39;s compare the solution at the obtained parameter values and our data. </p><pre><code class="language-julia">sol = OrdinaryDiffEq.solve(best_mp |&gt; model_ode, Tsit5())
+plot(getindex.(sol.(t),1))
+scatter!(mock_data, markersize=2)</code></pre><p><img src="../assets/jumpestimationplot.png" alt="jumpestimationplot"/></p><h3><a class="nav-anchor" id="Generalized-Likelihood-Example-1" href="#Generalized-Likelihood-Example-1">Generalized Likelihood Example</a></h3><p>In this example we will demo the likelihood-based approach to parameter fitting. First let&#39;s generate a dataset to fit. We will re-use the Lotka-Volterra equation but in this case fit just two parameters.</p><pre><code class="language-julia">f1 = function (du,u,p,t)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3.0 * u[2] + u[1]*u[2]
 end
