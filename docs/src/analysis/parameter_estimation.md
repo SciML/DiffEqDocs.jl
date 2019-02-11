@@ -9,8 +9,8 @@ This functionality does not come standard with DifferentialEquations.jl.
 To use this functionality, you must install DiffEqParamEstim.jl:
 
 ```julia
-]add DiffEqSensitivity
-using DiffEqSensitivty
+]add DiffEqParamEstim
+using DiffEqParamEstim
 ```
 
 For the Bayesian, methods, you must install DiffEqBayes.jl:
@@ -41,9 +41,10 @@ which refines using a method like `build_loss_objective`.
 
 ## Optimization-Based Methods
 
-### Building objective function
+### Nonlinear Regression
 
-`build_loss_objective` builds an objective function to be used with Optim.jl and MathProgBase-associated solvers like NLopt.
+`build_loss_objective` builds an objective function to be used with Optim.jl
+and MathProgBase-associated solvers like NLopt.
 
 ```julia
 function build_loss_objective(prob::DEProblem,alg,loss_func
@@ -66,14 +67,22 @@ The extra keyword arguments are passed to the differential equation solver.
 
 ### Multiple Shooting objective
 
-Multiple Shooting is generally used in Boundary Value Problems (BVP) and is more robust than the regular objective function used in these problems. It proceeds as follows:
+Multiple Shooting is generally used in Boundary Value Problems (BVP) and is
+more robust than the regular objective function used in these problems. It
+proceeds as follows:
 
-  1. Divide up the time span into short time periods and solve the equation with the current parameters which here consist of both, the parameters of the differential equations and also the initial values for the short time periods.
-  2. This objective additionally involves a dicontinuity error term that imposes higher cost if the end of the solution of one time period doesn't match the begining of the next one.
+  1. Divide up the time span into short time periods and solve the equation
+  with the current parameters which here consist of both, the parameters of the
+  differential equations and also the initial values for the short time periods.
+  2. This objective additionally involves a discontinuity error term that imposes
+  higher cost if the end of the solution of one time period doesn't match the
+  beginning of the next one.
   3. Merge the solutions from the shorter intervals and then calculate the loss.
 
-For consistency `multiple_shooting_objective` takes exactly the same arguments as `build_loss_objective`. It also has the option for `discontinuity_error` as a kwarg which assigns weight to te error occuring due to the discontinuity that arises from the breaking up of the time span.
-
+For consistency `multiple_shooting_objective` takes exactly the same arguments
+as `build_loss_objective`. It also has the option for `discontinuity_error` as
+a keyword argument which assigns weight to the error occurring due to the
+discontinuity that arises from the breaking up of the time span.
 
 ### Two Stage method (Non-Parametric Collocation)
 
@@ -104,21 +113,32 @@ flexible, two convenience routines are included for fitting to data with standar
 cost functions:
 
 ```julia
-L2Loss(t,data;weight=nothing)
+L2Loss(t,data;differ_weight=nothing,data_weight=nothing,
+              colloc_grad=nothing,dudt=nothing)
 ```
 
 where `t` is the set of timepoints which the data is found at, and
 `data` are the values that are known where each column corresponds to measures
 of the values of the system. `L2Loss` is an optimized version
-of the L2-distance. The `weight` is a vector
+of the L2-distance. The `data_weight` is a scalar or vector
 of weights for the loss function which must match the size of the data.
 Note that minimization of a weighted `L2Loss` is equivalent to maximum
 likelihood estimation of a heteroskedastic Normally distributed likelihood.
+`differ_weight` allows one to add a weight on the first differencing terms
+`sol[i+1]-sol[i]` against the data first differences. This smooths out the
+loss term and can make it easier to fit strong solutions of stochastic models,
+but is zero (nothing) by default. Additionally, `colloc_grad` allows one to
+give a matrix of the collocation gradients for the data. This is used to add
+an interpolation derivative term, like the two-stage method. A convenience
+function `colloc_grad(t,data)` returns a collocation gradient from a 3rd order
+spline calculated by Dierckx.jl, which can be used as the `colloc_grad`. Note
+that, with a collocation gradient and regularization, this loss is equivalent
+to a 4DVAR.
 
 Additionally, we include a more flexible log-likelihood approach:
 
 ```julia
-LogLikeLoss(t,distributions;loss_func = L2Loss,weight=nothing)
+LogLikeLoss(t,distributions,diff_distributions=nothing)
 ```
 
 In this case, there are two forms. The simple case is where `distributions[i,j]`
@@ -129,7 +149,9 @@ where `distributions[i]` is a `MultivariateDistribution` which corresponds to
 the likelihood at `t[i]` over the vector of components. This likelihood function
 then calculates the negative of the total loglikelihood over time as its objective
 value (negative since optimizers generally find minimimums, and thus this corresponds
-to maximum likelihood estimation).
+to maximum likelihood estimation). The third term, `diff_distributions`, acts
+similarly but allows putting a distribution on the first difference terms
+`sol[i+1]-sol[i]`.
 
 Note that these distributions can be generated via `fit_mle` on some dataset
 against some chosen distribution type.
@@ -155,15 +177,21 @@ function my_loss_function(sol)
    tot_loss
 end
 ```
-#### First Differencing
+
+#### Note on First Differencing
 
 ```julia
 L2Loss(t,data,differ_weight=0.3,data_weight=0.7)
 ```
 
-First differencing incorporates the differences of data points at consecutive time points which adds more information about the trajectory in the loss function. You can now assign a weight (vector or scalar) to use the first differencing technique in the `L2loss`.
-
-Adding first differencing is helpful in cases where the `L2Loss` alone leads to non-identifiable parameters but adding a first differencing term makes it more identifiable. This can be noted on stochastic differential equation models, where this aims to capture the autocorrelation and therefore helps us avoid getting the same stationary distribution despite different trajectories and thus wrong parameter estimates.
+First differencing incorporates the differences of data points at consecutive
+time points which adds more information about the trajectory in the loss
+function. Adding first differencing is helpful in cases where the `L2Loss`
+alone leads to non-identifiable parameters but adding a first differencing
+term makes it more identifiable. This can be noted on stochastic differential
+equation models, where this aims to capture the autocorrelation and therefore
+helps us avoid getting the same stationary distribution despite different
+trajectories and thus wrong parameter estimates.
 
 #### The Regularization Function
 
