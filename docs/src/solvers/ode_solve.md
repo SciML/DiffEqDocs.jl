@@ -279,6 +279,22 @@ Royal Society, 2011.).
   scheme. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
+- `ParsaniKetchesonDeconinck3S32` - 3-stage, second order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S82` - 8-stage, second order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S53` - 5-stage, third order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S173` - 17-stage, third order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S94` - 9-stage, fourth order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S184` - 18-stage, fourth order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S105` - 10-stage, fifth order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
+- `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimised for for the
+  spectral difference method applied to wave propagation problems.
 
 #### Explicit Multistep Methods
 
