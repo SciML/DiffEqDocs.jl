@@ -273,7 +273,7 @@ end p d
 p = [1.0,2.0]
 u0 = [10]
 tspan = (0.,1.)
-discrete_prob = DiscreteProblem(u0,tspan,p)
+discrete_prob = DiscreteProblem(rn, u0,tspan,p)
 jump_prob = JumpProblem(discrete_prob,Direct(),rn)
 sol = solve(jump_prob,SSAStepper())
 ```
@@ -370,6 +370,7 @@ which can be accessed.
 * `rn.f_symfuncs` is a vector of `SymEngine` expressions corresponding to the time derivatives of the chemical species.
 * `rn.g` is a function encoding the noise terms for the SDEs (see `rn.g_func` for details).
 * `rn.g_func` is a vector containing expressions corresponding to the noise terms used when creating the SDEs (n\*m elements when there are n reactants and m reactions. The first m elements correspond to the noise terms for the first reactant and each reaction, the next m elements for the second reactant and all reactions, and so on).
+* `rn.jac` is a function that evaluates the Jacobian of `rn.f` in place. i.e. has the form `rn.jac(dJ,u,p,t)`, for pre-allocated Jacobian matrix `dJ`.
 * `rn.jump_affect_expr` is a vector of expressions for how each reaction causes the species populations to change.
 * `rn.jump_rate_expr` is a vector of expressions for how the transition rate (i.e. propensity) of each reaction is calculated from the species populations.
 * `rn.jumps` is a vector storing a jump corresponding to each reaction (i.e. `ConstantRateJump`, `VariableRateJump`, etc...)
@@ -387,10 +388,12 @@ which can be accessed.
  
 
 ## The Min Reaction Network Object 
-The `@min_reaction_network` macro works similarly to the `@reaction_network` macro, but initially only fills in fields corresponding to basic reaction network properties (i.e. `rn.params`, `rn.params_to_ints`, `rn.scale_noise`, `rn.reactions`, `rn.syms`, and `rn.syms_to_ints`). To fill in the remaining fields call 
-* `addodes!(rn)` to complete ODE-related fields
-* `addsdes!(rn)` to complete SDE-related fields
-* `addjumps!(rn)` to complete jump-related fields. `addjumps!` accepts several keyword arguments to control which jumps get created ([] gives the default value for the keyword). 
+The `@min_reaction_network` macro works similarly to the `@reaction_network` macro, but initially only fills in fields corresponding to basic reaction network properties (i.e. `rn.params`, `rn.params_to_ints`, `rn.scale_noise`, `rn.reactions`, `rn.syms`, and `rn.syms_to_ints`). To fill in the remaining fields call (in the following `[val]` denotes the default value of a keyword argument):
+* `addodes!(rn)` to complete ODE-related fields, optional keyword arguments include:
+  * `build_jac=[true]`, is true if `rn.jac` and `rn.symjac` should be constructed. (Currently these build a dense Jacobian, so should be set to `false` for sufficiently large systems.)
+  * `build_symfuncs=[true]`, is true if symbolic functions should be constructed for each ODE rhs. It is recommended to disable this for larger systems to reduce memory usage and speedup network construction.
+* `addsdes!(rn)` to complete SDE-related fields. 
+* `addjumps!(rn)` to complete jump-related fields. `addjumps!` accepts several keyword arguments to control which jumps get created: 
   * `build_jumps=[true]` is `true` if `rn.jumps` should be constructed. This can be set to `false` for regular jump problems, where only `rn.regular_jumps` is needed.
   * `build_regular_jumps=[true]` is `true` if `rn.regular_jumps` should be constructed. This can be set to `false` for Gillespie-type jump problems, where `regular_jumps` are not used.
   * `minimal_jumps=[false]` is `false` if `rn.jumps` should contain a jump for each possible reaction. If set to `true` jumps are only added to `rn.jumps` for non-mass action jumps. (Note, mass action jumps are still resolved within any jump simulation. This option simply speeds up the construction of the jump problem since entries in `rn.jumps` that correspond to mass action jumps are never directly called within jump simulations.)
@@ -407,7 +410,7 @@ rs = @min_reaction_network begin
 end c1 c2 c3
 p = (2.0,1.0,0.5)
 addjumps!(rs; build_regular_jumps=false, minimal_jumps=true)
-prob = DiscreteProblem([5], (0.0, 4.0), p)
+prob = DiscreteProblem(rs, [5], (0.0, 4.0), p)
 jump_prob = JumpProblem(prob, Direct(), rs)
 sol = solve(jump_prob, SSAStepper())
 ```
@@ -441,7 +444,7 @@ ssol  = solve(sprob, EM(), dt=.01)
 
 # solve JumpProblem
 u0 = [5]
-dprob = DiscreteProblem(u0, tspan, p)
+dprob = DiscreteProblem(rs, u0, tspan, p)
 jprob = JumpProblem(dprob, Direct(), rs)
 jsol = solve(jprob, SSAStepper())
 ```
@@ -464,7 +467,7 @@ osol  = solve(oprob, Tsit5())
 
 # solve JumpProblem
 u0 = [301, 100, 0, 0] 
-dprob = DiscreteProblem(u0, tspan, p)
+dprob = DiscreteProblem(rs, u0, tspan, p)
 jprob = JumpProblem(dprob, Direct(), rs)
 jsol = solve(jprob, SSAStepper())
 ```
