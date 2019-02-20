@@ -148,7 +148,7 @@ corresponds to the likelihood at `t[i]` for component `j`. The second case is
 where `distributions[i]` is a `MultivariateDistribution` which corresponds to
 the likelihood at `t[i]` over the vector of components. This likelihood function
 then calculates the negative of the total loglikelihood over time as its objective
-value (negative since optimizers generally find minimimums, and thus this corresponds
+value (negative since optimizers generally find minimums, and thus this corresponds
 to maximum likelihood estimation). The third term, `diff_distributions`, acts
 similarly but allows putting a distribution on the first difference terms
 `sol[i+1]-sol[i]`.
@@ -303,7 +303,7 @@ parameter, specified via a [Distributions.jl](https://juliastats.github.io/Distr
 type. `alg` is a choice between `:rk45` and `:bdf`, the two internal integrators
 of Stan. `num_samples` is the number of samples to take per chain, and `num_warmup`
 is the number of MCMC warmup steps. `abstol` and `reltol` are the keyword
-arguments for the internal integrator. `liklihood` is the likelihood distribution
+arguments for the internal integrator. `likelihood` is the likelihood distribution
 to use with the arguments from `vars`, and `vars` is a tuple of priors for the
 distributions of the likelihood hyperparameters. The special value `StanODEData()`
 in this tuple denotes the position that the ODE solution takes in the likelihood's
@@ -336,7 +336,7 @@ dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;
 
 `dynamichmc_inference` uses [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) to
  perform the bayesian parameter estimation. `prob` can be any `DEProblem`, `data` is the set
- of observations for our model whihc is to be used in the Bayesian Inference process. `priors` represent the
+ of observations for our model which is to be used in the Bayesian Inference process. `priors` represent the
  choice of prior distributions for the parameters to be determined, passed as an array of [Distributions.jl]
  (https://juliastats.github.io/Distributions.jl/latest/) distributions. `t` is the array of time points. `transformations`
  is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the
@@ -621,7 +621,7 @@ Results of Optimization Algorithm
 ```
 The default kernel used in the method is `Epanechnikov` others that are available are `Uniform`,  `Triangular`,
 `Quartic`, `Triweight`, `Tricube`, `Gaussian`, `Cosine`, `Logistic` and `Sigmoid`, this can be passed by the
-`kernel` keyword argument. `loss_func` keyword argument can be used to pass te loss function (cost function) you want
+`kernel` keyword argument. `loss_func` keyword argument can be used to pass the loss function (cost function) you want
  to use and `mpg_autodiff` enables Auto Differentiation.
 
 ### More Algorithms (Global Optimization) via MathProgBase Solvers
@@ -739,8 +739,8 @@ function for the parameter estimation problem.
 loss_objective(mp_, dat) = build_loss_objective(model_ode(mp_), Tsit5(), L2Loss(t,dat))
 ```
 
-We create a JuMP model, variables, set the obbjective function and the choice of 
-oprimization algorithm to be used in the JuMP syntax. You can read more about this in 
+We create a JuMP model, variables, set the objective function and the choice of 
+optimization algorithm to be used in the JuMP syntax. You can read more about this in 
 JuMP's [documentation](http://www.juliaopt.org/JuMP.jl/0.18/index.html).
 
 ```julia
@@ -1160,7 +1160,7 @@ We can use [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) as the backen
 for sampling with the `dynamic_inference` function. It supports any `DEProblem`,
 `priors` can be passed as an array of [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
 distributions, passing `initial` values is optional and in case where the user has a firm understanding of the
-domain the parameter values will lie in, `tranformations` can be used to pass an array of constraints for the parameters
+domain the parameter values will lie in, `transformations` can be used to pass an array of constraints for the parameters
 as an array of [Transformations](https://github.com/tpapp/ContinuousTransformations.jl).
 
 ```julia
