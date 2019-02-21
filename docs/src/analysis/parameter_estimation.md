@@ -375,8 +375,8 @@ by defining the function as a [ParameterizedFunction](https://github.com/JuliaDi
 
 ```julia
 function f(du,u,p,t)
-  dx = p[1]*u[1] - u[1]*u[2]
-  dy = -3*u[2] + u[1]*u[2]
+  du[1] = dx = p[1]*u[1] - u[1]*u[2]
+  du[2] = dy = -3*u[2] + u[1]*u[2]
 end
 
 u0 = [1.0;1.0]
@@ -480,8 +480,8 @@ Let's use the Lotka-Volterra equation with all parameters free:
 
 ```julia
 function f2(du,u,p,t)
-  dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  dy = -p[3]*u[2] + p[4]*u[1]*u[2]
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + p[4]*u[1]*u[2]
 end
 
 u0 = [1.0;1.0]
@@ -712,11 +712,13 @@ using JuMP, NLopt, Plots
 Let's define the Lorenz equation to use as our example
 
 ```julia
-g = @ode_def begin
-  dx = σ*(y-x)
-  dy = x*(ρ-z) - y
-  dz = x*y - β*z
-end σ ρ β
+function g(du,u,p,t)
+  σ,ρ,β = p
+  x,y,z = u
+  du[1] = dx = σ*(y-x)
+  du[2] = dy = x*(ρ-z) - y
+  du[3] = dz = x*y - β*z
+end
 ```
 
 Let's get a solution of the system with parameter values `σ=10.0` `ρ=28.0` `β=8/3` to use as our
