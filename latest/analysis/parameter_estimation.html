@@ -163,8 +163,7 @@ maxeval!(opt, 100000)
 (minf,minx,ret) = NLopt.optimize(opt,[0.2])</code></pre><p>which is very robust to the initial condition. The fastest result comes from the following:</p><pre><code class="language-julia">using NLopt
 opt = Opt(:LN_BOBYQA, 1)
 min_objective!(opt, obj)
-(minf,minx,ret) = NLopt.optimize(opt,[1.3])</code></pre><p>For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!</p><h3><a class="nav-anchor" id="Using-JuMP-with-DiffEqParamEstim-1" href="#Using-JuMP-with-DiffEqParamEstim-1">Using JuMP with DiffEqParamEstim</a></h3><p><a href="https://github.com/JuliaOpt/JuMP.jl">JuMP</a> is a domain-specific modeling language  for mathematical optimization embedded in Julia.</p><pre><code class="language-julia">using OrdinaryDiffEq, ParameterizedFunctions, DiffEqParamEstim
-using JuMP, NLopt, Plots</code></pre><p>Let&#39;s define the Lorenz equation to use as our example</p><pre><code class="language-julia">function g(du,u,p,t)
+(minf,minx,ret) = NLopt.optimize(opt,[1.3])</code></pre><p>For more information, see the NLopt documentation for more details. And give IPOPT or MOSEK a try!</p><h3><a class="nav-anchor" id="Using-JuMP-with-DiffEqParamEstim-1" href="#Using-JuMP-with-DiffEqParamEstim-1">Using JuMP with DiffEqParamEstim</a></h3><p><a href="https://github.com/JuliaOpt/JuMP.jl">JuMP</a> is a domain-specific modeling language  for mathematical optimization embedded in Julia.</p><pre><code class="language-julia">using OrdinaryDiffEq, DiffEqParamEstim, JuMP, NLopt, Plots</code></pre><p>Let&#39;s define the Lorenz equation to use as our example</p><pre><code class="language-julia">function g(du,u,p,t)
   σ,ρ,β = p
   x,y,z = u
   du[1] = dx = σ*(y-x)
