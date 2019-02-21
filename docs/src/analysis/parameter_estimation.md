@@ -706,8 +706,7 @@ or MOSEK a try!
 for mathematical optimization embedded in Julia.
 
 ```julia
-using OrdinaryDiffEq, ParameterizedFunctions, DiffEqParamEstim
-using JuMP, NLopt, Plots
+using OrdinaryDiffEq, DiffEqParamEstim, JuMP, NLopt, Plots
 ```
 Let's define the Lorenz equation to use as our example
 
