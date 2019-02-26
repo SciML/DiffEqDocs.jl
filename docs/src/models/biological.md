@@ -279,6 +279,21 @@ sol = solve(jump_prob,SSAStepper())
 ```
 Here we used Gillespie's `Direct` method as the underlying stochastic simulation algorithm.
 
+#### Reaction rate laws used in simulations
+In generating mathematical models from a `reaction_network`, reaction rates are treated as *microscopic* rates. That is, for a general mass action reaction of the form $n_1 S_1 + n_2 S_2 + \dots n_M S_M \to \dots$ with stoichiometric substrate coefficients $\{n_i\}_{i=1}^M$ and rate constant $k$, the corresponding ODE rate law is taken to be
+```math
+k \prod_{i=1}^M \frac{(S_i)^{n_i}}{n_i!},
+```
+while the jump process transition rate (i.e. propensity function) is
+```math
+k \prod_{i=1}^M \frac{S_i (S_i-1) \dots (S_i-(n_i+1))}{n_i!}.
+```
+For example, the ODE model of the reaction $2X + 3Y \to Z$ with rate constant $k$ would be
+```math
+\frac{dX}{dt} =  -2 k \frac{X^2}{2!} \frac{Y^3}{3!} = -k \frac{X^2 Y^3}{3!} \\
+\frac{dY}{dt} =  -3 k \frac{X^2}{2!} \frac{Y^3}{3!} = -k \frac{X^2 Y^3}{4} \\
+\frac{dZ}{dt} = k \frac{X^2}{2!} \frac{Y^3}{3!}.
+```
 
 ## The Reaction DSL - Advanced
 This section covers some of the more advanced syntax for building chemical reaction network models (still not very complicated!).
