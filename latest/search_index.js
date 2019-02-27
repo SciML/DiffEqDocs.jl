@@ -5025,6 +5025,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "models/biological.html#Reaction-rate-laws-used-in-simulations-1",
+    "page": "Chemical Reaction Models",
+    "title": "Reaction rate laws used in simulations",
+    "category": "section",
+    "text": "In generating mathematical models from a reaction_network, reaction rates are treated as microscopic rates. That is, for a general mass action reaction of the form n_1 S_1 + n_2 S_2 + dots n_M S_M to dots with stoichiometric substrate coefficients n_i_i=1^M and rate constant k, the corresponding ODE rate law is taken to bek prod_i=1^M frac(S_i)^n_in_iwhile the jump process transition rate (i.e. propensity function) isk prod_i=1^M fracS_i (S_i-1) dots (S_i-(n_i+1))n_iFor example, the ODE model of the reaction 2X + 3Y to Z with rate constant k would befracdXdt =  -2 k fracX^22 fracY^33 = -k fracX^2 Y^33 \nfracdYdt =  -3 k fracX^22 fracY^33 = -k fracX^2 Y^34 \nfracdZdt = k fracX^22 fracY^33"
+},
+
+{
     "location": "models/biological.html#The-Reaction-DSL-Advanced-1",
     "page": "Chemical Reaction Models",
     "title": "The Reaction DSL - Advanced",
