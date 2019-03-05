@@ -45,7 +45,7 @@ individual contribution.
 
 Here, `f` is just the model (as a julia function or a `DEProblem`) you want to
 run the analysis on, `param_range` requires an array of 2-tuples with the lower bound
-and the upper bound, `param_steps` decides the value of \Delta in the equation
+and the upper bound, `param_steps` decides the value of ``\Delta`` in the equation
 above and `relative_scale`, the above equation takes the assumption that
 the parameters lie in the range `[0,1]` but as this is not always the case
 scaling is used to get more informative, scaled effects.
