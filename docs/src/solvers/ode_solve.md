@@ -297,12 +297,21 @@ Royal Society, 2011.).
   spectral difference method applied to wave propagation problems.
 
 #### Extrapolation Methods
-- `AitkenNevillie` - It is an adaptive order, adaptive step size extrapolation method using Aitken - Neville algorithm. Romberg Sequence is used as step-number sequence.
 
-Example:
+- `AitkenNevillie` - An adaptive order, adaptive step size extrapolation method using Aitken-Neville 
+  algorithm. The step-number sequence is the Romberg Sequence.
+
+These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order 
+algorithm. The defaults are:
+
+- `max_order=9`
+- `min_order=1`
+- `init_order=5`
+
+To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = AitkenNeville(max_order,min_order,init_order)#by default max_order=9, min_order=1 & init_order=5
+alg = AitkenNeville(max_order=7,min_order=4,init_order=4)
 solve(prob,alg)
 ```
 
