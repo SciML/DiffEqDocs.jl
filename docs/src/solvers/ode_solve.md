@@ -159,7 +159,6 @@ problems.
 - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
 - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
 - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
-- `KuttaPRK2p5` - 5th order 2 processor parallel across the method Runge Kutta method.
 
 Example usage:
 
@@ -194,15 +193,12 @@ solve(prob,Vern7()) # lazy by default
 solve(prob,Vern7(lazy=false))
 ```
 
-#### Parallel across the method - Explicit Runge-Kutta Methods
+#### Parallel Explicit Runge-Kutta Methods
 
-- `KuttaPRK2p5` - A 5 parallel, 2 processor Explicit Runge-Kutta method of 5th order.
+- `KuttaPRK2p5` - A 5 parallel, 2 processor explicit Runge-Kutta method of 5th order.
 
-This method is problem independent parallel solution due to a special structure of the method. Problems that are amenable to parallel solutions generally have one or more of the following attributes
-
-- The right hand side of the ODE is expensive to evaulate.
-- The interval of integration is long.
-- The Problem takes too long to run.
+These methods utilize multithreading on the `f` calls to parallelize the problem. This
+requires that simultanious calls to `f` are thread-safe.
 
 #### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
