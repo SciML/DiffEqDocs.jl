@@ -51,7 +51,8 @@ be grateful if you could cite our work.
 
 To install the package, use the following command inside the Julia REPL:
 ```julia
-]add DifferentialEquations
+using Pkg
+Pkg.add("DifferentialEquations")
 ```
 
 To load the package, use the command:
@@ -60,8 +61,8 @@ To load the package, use the command:
 using DifferentialEquations
 ```
 
-The command `]add DifferentialEquations` will add solvers and dependencies
-for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported
+This will add solvers and dependencies
+for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Supported
 Equations section below). If you are interested in only one type of equation
 solvers of `DifferentialEquations.jl` or simply want a more lightweight
 version, see the
@@ -83,16 +84,17 @@ for power users. Information on how to get to the bleeding edge is found in the
 ### IJulia Notebook Tutorials
 
 You can access extra tutorials supplied in the
-[DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
-If you have [IJulia](https://github.com/JuliaLang/IJulia.jl) installed, you can
-view them locally and interactively, by cloning the repository:
+[DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
+via the commands:
 
 ```julia
-#]add IJulia # Need to do this the first time to install IJulia!
-Pkg.clone("https://github.com/JuliaDiffEq/DiffEqTutorials.jl")
-using IJulia
-notebook(dir = Pkg.dir("DiffEqTutorials"))
+using Pkg
+pkg"add https://github.com/JuliaDiffEq/DiffEqTutorials.jl"
+using DiffEqTutorials
+DiffEqTutorials.open_notebooks()
 ```
+
+Or you can view the webpages for the rendered tutorials at the links found in the repository.
 
 ### Video Tutorial
 
