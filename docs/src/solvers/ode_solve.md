@@ -296,6 +296,16 @@ Royal Society, 2011.).
 - `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimised for for the
   spectral difference method applied to wave propagation problems.
 
+#### Extrapolation Methods
+- `AitkenNevillie` - It is a adaptive order, adaptive step size extrapolation method using Aitken - Neville algorithm. Romberg Sequence is used as step-number sequence.
+
+Example:
+
+```julia
+alg = AitkenNeville(max_order,min_order,init_order)#by default max_order=9, min_order=1 & init_order=5
+solve(prob,alg)
+```
+
 #### Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
