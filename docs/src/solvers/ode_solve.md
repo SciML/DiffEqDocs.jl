@@ -297,7 +297,7 @@ Royal Society, 2011.).
   spectral difference method applied to wave propagation problems.
 
 #### Extrapolation Methods
-- `AitkenNevillie` - It is a adaptive order, adaptive step size extrapolation method using Aitken - Neville algorithm. Romberg Sequence is used as step-number sequence.
+- `AitkenNevillie` - It is an adaptive order, adaptive step size extrapolation method using Aitken - Neville algorithm. Romberg Sequence is used as step-number sequence.
 
 Example:
 
