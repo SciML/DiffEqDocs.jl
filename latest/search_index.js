@@ -2137,6 +2137,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#Parallel-Explicit-Runge-Kutta-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Parallel Explicit Runge-Kutta Methods",
+    "category": "section",
+    "text": "KuttaPRK2p5 - A 5 parallel, 2 processor explicit Runge-Kutta method of 5th order.These methods utilize multithreading on the f calls to parallelize the problem. This requires that simultanious calls to f are thread-safe."
+},
+
+{
     "location": "solvers/ode_solve.html#Explicit-Strong-Stability-Preserving-Runge-Kutta-Methods-for-Hyperbolic-PDEs-(Conservation-Laws)-1",
     "page": "ODE Solvers",
     "title": "Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)",
