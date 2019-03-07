@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Getting Started: Installation And First Steps",
     "category": "section",
-    "text": "To install the package, use the following command inside the Julia REPL:]add DifferentialEquationsTo load the package, use the command:using DifferentialEquationsThe command ]add DifferentialEquations will add solvers and dependencies for all kind of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of DifferentialEquations.jl or simply want a more lightweight version, see the Low Dependency Usage page.To understand the package in more detail, check out the following tutorials in this manual. It is highly recommended that new users start with the ODE tutorial. Example IJulia notebooks can also be found in DiffEqTutorials.jl. If you find any example where there seems to be an error, please open an issue.For the most up to date information on using the package, please join the Gitter channel.Using the bleeding edge for the latest features and development is only recommended for power users. Information on how to get to the bleeding edge is found in the developer documentation."
+    "text": "To install the package, use the following command inside the Julia REPL:using Pkg\nPkg.add(\"DifferentialEquations\")To load the package, use the command:using DifferentialEquationsThis will add solvers and dependencies for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solvers of DifferentialEquations.jl or simply want a more lightweight version, see the Low Dependency Usage page.To understand the package in more detail, check out the following tutorials in this manual. It is highly recommended that new users start with the ODE tutorial. Example IJulia notebooks can also be found in DiffEqTutorials.jl. If you find any example where there seems to be an error, please open an issue.For the most up to date information on using the package, please join the Gitter channel.Using the bleeding edge for the latest features and development is only recommended for power users. Information on how to get to the bleeding edge is found in the developer documentation."
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "IJulia Notebook Tutorials",
     "category": "section",
-    "text": "You can access extra tutorials supplied in the DiffEqTutorials.jl repository. If you have IJulia installed, you can view them locally and interactively, by cloning the repository:#]add IJulia # Need to do this the first time to install IJulia!\nPkg.clone(\"https://github.com/JuliaDiffEq/DiffEqTutorials.jl\")\nusing IJulia\nnotebook(dir = Pkg.dir(\"DiffEqTutorials\"))"
+    "text": "You can access extra tutorials supplied in the DiffEqTutorials.jl repository via the commands:using Pkg\npkg\"add https://github.com/JuliaDiffEq/DiffEqTutorials.jl\"\nusing DiffEqTutorials\nDiffEqTutorials.open_notebooks()Or you can view the webpages for the rendered tutorials at the links found in the repository."
 },
 
 {
