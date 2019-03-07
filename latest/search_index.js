@@ -2153,6 +2153,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "solvers/ode_solve.html#Extrapolation-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Extrapolation Methods",
+    "category": "section",
+    "text": "AitkenNevillie - An adaptive order, adaptive step size extrapolation method using Aitken-Neville  algorithm. The step-number sequence is the Romberg Sequence.These methods have arguments for max_order, min_order, and init_order on the adaptive order  algorithm. The defaults are:max_order=9\nmin_order=1\ninit_order=5To override, utilize the keyword arguments. For example:alg = AitkenNeville(max_order=7,min_order=4,init_order=4)\nsolve(prob,alg)"
+},
+
+{
     "location": "solvers/ode_solve.html#Explicit-Multistep-Methods-1",
     "page": "ODE Solvers",
     "title": "Explicit Multistep Methods",
