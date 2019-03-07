@@ -159,6 +159,7 @@ problems.
 - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
 - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
 - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
+- `KuttaPRK2p5` - 5th order 2 processor parallel across the method Runge Kutta method.
 
 Example usage:
 
