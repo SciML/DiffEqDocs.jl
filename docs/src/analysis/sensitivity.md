@@ -93,7 +93,7 @@ the parameters. We can define the following function:
 ```julia
 function test_f(p)
   _prob = remake(prob;u0=convert.(eltype(p),prob.u0),p=p)
-  solve(prob,Vern9(),save_everystep=false)[end]
+  solve(_prob,Vern9(),save_everystep=false)[end]
 end
 ```
 
