@@ -78,8 +78,8 @@ equations:
 
 ```julia
 function f(du,u,p,t)
-  dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  dy = -p[3]*u[2] + u[1]*u[2]
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + u[1]*u[2]
 end
 
 p = [1.5,1.0,3.0,1.0]
@@ -230,8 +230,8 @@ equations attached for the Lotka-Volterra equations by:
 
 ```julia
 function f(du,u,p,t)
-  dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  dy = -p[3]*u[2] + u[1]*u[2]
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + u[1]*u[2]
 end
 
 p = [1.5,1.0,3.0]
@@ -475,8 +475,8 @@ solution:
 
 ```julia
 function f(du,u,p,t)
-  dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  dy = -p[3]*u[2] + u[1]*u[2]
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + u[1]*u[2]
 end
 
 p = [1.5,1.0,3.0]
