@@ -207,8 +207,8 @@ algorithms for both speed and accuracy. The current methods are:
 - `FRMFW`: the Gillespie first reaction method SSA with `FunctionWrappers`.
 - *`NRM`*: The Gibson-Bruck Next Reaction Method. For some reaction network structures
    this may offer better performance than `Direct` (for example, large, linear chains of reactions). (Requires dependency graph, see below.) 
-- *`SortingDirect`*: The Sorting Direct Method of McCollum et al. It will usually offer performance as good as `Direct`, and for some systems can offer substantially better performance. (Requires dependency graph, see below.)
 - *`RSSA`*: The Rejection SSA (RSSA) method of Thanh et al. For very large reaction networks it often offers the best performance of all methods. (Requires dependency graph, see below.)
+- *`SortingDirect`*: The Sorting Direct Method of McCollum et al. It will usually offer performance as good as `Direct`, and for some systems can offer substantially better performance. (Requires dependency graph, see below.)
 
 To pass the aggregator, pass the instantiation of the type. For example:
 
