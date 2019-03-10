@@ -391,6 +391,7 @@ which can be accessed.
 * `rn.jumps` is a vector storing a jump corresponding to each reaction (i.e. `ConstantRateJump`, `VariableRateJump`, etc...)
 * `rn.odefun` stores an `ODEFunction` that can be used to create an `ODEProblem` corresponding to the reaction network.
 * `rn.p_matrix` is a prototype matrix with the same size as the noise term.
+* `rn.paramjac` is a function that evaluates the Jacobian of `rn.f` with respect to the *parameters*, `p`, in-place. It has the form `rn.paramjac(dpJ,u,p,t)` for pre-allocated parameter Jacobian matrix `dpJ`.
 * `rn.params` is a vector containing symbols corresponding to all the parameters of the network.
 * `rn.params_to_ints` provides a mapping from parameter symbol to the integer id of the parameter (i.e. where it is stored in the parameter vector passed to `ODEProblem`, `SDEProblem`, etc...)
 * `rn.reactions` stores a vector of `DiffEqBiological.ReactionStruct`s, which collect info for their corresponding reaction (such as stoichiometric coefficients).
