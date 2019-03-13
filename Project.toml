@@ -1,5 +1,6 @@
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
+DiffEqBiological = "eb300fae-53e8-50a0-950c-e21f52c2b7e0"
 DiffEqPDEBase = "34035eb4-37db-58ae-b003-a3202c898701"
 DiffEqProblemLibrary = "a077e3f3-b75c-5d7f-a0c6-6bc4c8ec64a9"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
