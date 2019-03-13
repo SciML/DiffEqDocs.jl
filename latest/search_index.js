@@ -105,6 +105,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "index.html#APIs-1",
+    "page": "Home",
+    "title": "APIs",
+    "category": "section",
+    "text": "Some DifferentialEquations.jl packages provide documented APIs, these include:Pages = [\n    \"apis/diffeqbio.md\"\n]\nDepth = 2"
+},
+
+{
     "location": "index.html#Extra-Details-1",
     "page": "Home",
     "title": "Extra Details",
@@ -973,7 +981,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Plot Functions",
     "title": "Plotting Without the Plot Recipe",
     "category": "section",
-    "text": "What if you don\'t want to use Plots.jl? Odd choice, but that\'s okay! If the differential equation was described by a vector of values, then the solution object acts as an AbstractMatrix sol[i,j] for the ith variable at timepoint j. You can use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can do the following to plot the timeseries:plot(sol.t,sol\')since these plot along the columns, and sol\' has the timeseries along the column. Phase plots can be done similarly, for example:plot(sol[i,:],sol[j,:],sol[k,:])is a 3d phase plot between variables i, j, and k.Notice that this does not use the interpolation. When not using the plot recipe, the interpolation must be done manually. For example:n = 100 #number of timepoints\nts = linspace(0,1,n)\nplot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))is the phase space using values 0.001 apart in time."
+    "text": "What if you don\'t want to use Plots.jl? Odd choice, but that\'s okay! If the differential equation was described by a vector of values, then the solution object acts as an AbstractMatrix sol[i,j] for the ith variable at timepoint j. You can use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can do the following to plot the timeseries:plot(sol.t,sol\')since these plot along the columns, and sol\' has the timeseries along the column. Phase plots can be done similarly, for example:plot(sol[i,:],sol[j,:],sol[k,:])is a 3d phase plot between variables i, j, and k.Notice that this does not use the interpolation. When not using the plot recipe, the interpolation must be done manually. For example:n = 100 #number of timepoints\nts = range(0, stop=1, length=n)\nplot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))is the phase space using values 0.001 apart in time."
 },
 
 {
@@ -1021,7 +1029,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Initialization and Stepping",
     "category": "section",
-    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve and the returned value is an integrator which satisfies typeof(integrator)<:DEIntegrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. Additonally:step!(integrator,dt[,stop_at_tdt=false])passing a dt will make the integrator keep stepping until integrator.t+dt, and setting stop_at_tdt=true will add a tstop to force it to step to integrator.t+dtTo check whether or not the integration step was successful, you can call check_error(integrator) which returns one of the Return Codes (RetCodes).This type also implements an iterator interface, so one can step n times (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the iterator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (u,t) in tuples(integrator)\n  @show u,t\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,u,t) in intervals(integrator)\n  @show tprev,t\nendAdditionally, you can make the iterator return specific time points via the TimeChoiceIterator:ts = linspace(0,1,11)\nfor (u,t) in TimeChoiceIterator(integrator,ts)\n  @show u,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: add_tstop!(integrator,new_t).Finally, to solve to the last tstop, call solve!(integrator). Doing init and then solve! is equivalent to solve.DiffEqBase.step!\nDiffEqBase.check_error\nDiffEqBase.check_error!"
+    "text": "To initialize an integrator, use the syntax:integrator = init(prob,alg;kwargs...)The keyword args which are accepted are the same Common Solver Options used by solve and the returned value is an integrator which satisfies typeof(integrator)<:DEIntegrator. One can manually choose to step via the step! command:step!(integrator)which will take one successful step. Additonally:step!(integrator,dt[,stop_at_tdt=false])passing a dt will make the integrator keep stepping until integrator.t+dt, and setting stop_at_tdt=true will add a tstop to force it to step to integrator.t+dtTo check whether or not the integration step was successful, you can call check_error(integrator) which returns one of the Return Codes (RetCodes).This type also implements an iterator interface, so one can step n times (or to the last tstop) using the take iterator:for i in take(integrator,n) endOne can loop to the end by using solve!(integrator) or using the iterator interface:for i in integrator endIn addition, some helper iterators are provided to help monitor the solution. For example, the tuples iterator lets you view the values:for (u,t) in tuples(integrator)\n  @show u,t\nendand the intervals iterator lets you view the full interval:for (tprev,uprev,u,t) in intervals(integrator)\n  @show tprev,t\nendAdditionally, you can make the iterator return specific time points via the TimeChoiceIterator:ts = range(0, stop=1, length=11)\nfor (u,t) in TimeChoiceIterator(integrator,ts)\n  @show u,t\nendLastly, one can dynamically control the \"endpoint\". The initialization simply makes prob.tspan[2] the last value of tstop, and many of the iterators are made to stop at the final tstop value. However, step! will always take a step, and one can dynamically add new values of tstops by modifiying the variable in the options field: add_tstop!(integrator,new_t).Finally, to solve to the last tstop, call solve!(integrator). Doing init and then solve! is equivalent to solve.DiffEqBase.step!\nDiffEqBase.check_error\nDiffEqBase.check_error!"
 },
 
 {
@@ -1317,7 +1325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Frequently Asked Questions",
     "title": "I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?",
     "category": "section",
-    "text": "This is because you\'re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:const tmp = zeros(4)\nconst A = rand(4,4)\nfunction f(du,u,p,t)\n  A_mul_B!(tmp,A,u)\n  du .= tmp .+ u\nendHere we use a cached temporary array in order to avoid the allocations of matrix multiplication. When autodifferentiation occurs, the element type of u is Dual numbers, so A*u produces Dual numbers, so the error arises when it tries to write into tmp. There are two ways to avoid this. The first way, the easy way, is to just turn off autodifferentiation with the autodiff=false option in the solver. Every solver which uses autodifferentiation has this option. Thus we\'d solve this with:prob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23(autodiff=false))and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.** Warning: Advanced **The more difficult way is to create a Dual cache which dispatches for the cache choice based on the element type of u. This is done by the following:using ForwardDiff\nstruct MyTag end\nimmutable DiffCache{T<:AbstractArray, S<:AbstractArray}\n    du::T\n    dual_du::S\nend\n\nfunction DiffCache{chunk_size}(T, size, ::Type{Val{chunk_size}})\n    DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))\nend\n\nDiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})\n\nget_tmp{T<:ForwardDiff.Dual}(dc::DiffCache, ::Type{T}) = dc.dual_du\nget_tmp(dc::DiffCache, T) = dc.duNow we can get a cache that by dispatch either gives a cache array of Dual numbers or just floating point numbers:const dual_cache = DiffCache(rand(4)) # Build the cache, this must match your IC\ndu = get_tmp(dual_cache,typeof(rand(4))) # Gives a Array{Float64}\ndual_du = get_tmp(dual_cache,typeof(ForwardDiff.Dual(0.2,3.0))) # Gives Array{Dual}Note that you have to make sure that your chunk size matches the choice in the ODE solver (by default, it uses ForwardDiff.pickchunksize(length(u)) as well, so you only need to change this if you explicitly set chunksize = ...). Now we can setup and solve our ODE using this cache:function f(du,u,p,t)\n  # Get du from cache\n  tmp = get_tmp(dual_cache,eltype(u))\n  # Fix tag\n  _tmp = reinterpret(eltype(u),tmp)\n  A_mul_B!(_tmp,A,u)\n  du .= _tmp .+ u\nend\nprob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23())Small explanation is in order. tmp = get_tmp(dual_cache,eltype(u)) makes tmp match u in terms of Dual or not, but it doesn\'t necessarily match the tag. So now we reinterpret our Dual array to put the right tag on there. Note that this simply changes type information and thus does not create any temporary arrays. Once we do that, our cached array is now typed correctly to hold the result of A_mul_B!."
+    "text": "This is because you\'re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:const tmp = zeros(4)\nconst A = rand(4,4)\nfunction f(du,u,p,t)\n  A_mul_B!(tmp,A,u)\n  du .= tmp .+ u\nendHere we use a cached temporary array in order to avoid the allocations of matrix multiplication. When autodifferentiation occurs, the element type of u is Dual numbers, so A*u produces Dual numbers, so the error arises when it tries to write into tmp. There are two ways to avoid this. The first way, the easy way, is to just turn off autodifferentiation with the autodiff=false option in the solver. Every solver which uses autodifferentiation has this option. Thus we\'d solve this with:prob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23(autodiff=false))and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.** Warning: Advanced **The more difficult way is to create a Dual cache which dispatches for the cache choice based on the element type of u. This is done by the following:using ForwardDiff\nstruct MyTag end\nstruct DiffCache{T<:AbstractArray, S<:AbstractArray}\n    du::T\n    dual_du::S\nend\n\nfunction DiffCache(T, size, ::Type{Val{chunk_size}}) where chunk_size\n    DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))\nend\n\nDiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})\n\nget_tmp(dc::DiffCache, ::Type{T}) where {T<:ForwardDiff.Dual} = dc.dual_du\nget_tmp(dc::DiffCache, T) = dc.duNow we can get a cache that by dispatch either gives a cache array of Dual numbers or just floating point numbers:const dual_cache = DiffCache(rand(4)) # Build the cache, this must match your IC\ndu = get_tmp(dual_cache,typeof(rand(4))) # Gives a Array{Float64}\ndual_du = get_tmp(dual_cache,typeof(ForwardDiff.Dual(0.2,3.0))) # Gives Array{Dual}Note that you have to make sure that your chunk size matches the choice in the ODE solver (by default, it uses ForwardDiff.pickchunksize(length(u)) as well, so you only need to change this if you explicitly set chunksize = ...). Now we can setup and solve our ODE using this cache:function f(du,u,p,t)\n  # Get du from cache\n  tmp = get_tmp(dual_cache,eltype(u))\n  # Fix tag\n  _tmp = reinterpret(eltype(u),tmp)\n  A_mul_B!(_tmp,A,u)\n  du .= _tmp .+ u\nend\nprob = ODEProblem(f,rand(4),(0.0,1.0))\nsol = solve(prob,Rosenbrock23())Small explanation is in order. tmp = get_tmp(dual_cache,eltype(u)) makes tmp match u in terms of Dual or not, but it doesn\'t necessarily match the tag. So now we reinterpret our Dual array to put the right tag on there. Note that this simply changes type information and thus does not create any temporary arrays. Once we do that, our cached array is now typed correctly to hold the result of A_mul_B!."
 },
 
 {
@@ -3453,7 +3461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Noise Processes",
     "title": "NoiseApproximation",
     "category": "section",
-    "text": "In many cases, one would like to define a noise process directly by a stochastic differential equation which does not have an analytical solution. Of course, this will not be distributionally-exact and how well the properties match depends on how well the differential equation is integrated, but in many cases this can be used as a good approximation when other methods are much more difficult.A NoiseApproximation is defined by a DEIntegrator. The constructor for a NoiseApproximation is:NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing;reset=true)The DEIntegrator should have a final time point of integration far enough such that it will not halt during the integration. For ease of use, you can use a final time point as Inf. Note that the time points do not have to match the time points of the future integration since the interpolant of the SDE solution will be used. Thus the limiting factor is error tolerance and not hitting specific points."
+    "text": "In many cases, one would like to define a noise process directly by a stochastic differential equation which does not have an analytical solution. Of course, this will not be distributionally-exact and how well the properties match depends on how well the differential equation is integrated, but in many cases this can be used as a good approximation when other methods are much more difficult.A NoiseApproximation is defined by a DEIntegrator. The constructor for a NoiseApproximation is:NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Nothing}=nothing;reset=true)The DEIntegrator should have a final time point of integration far enough such that it will not halt during the integration. For ease of use, you can use a final time point as Inf. Note that the time points do not have to match the time points of the future integration since the interpolant of the SDE solution will be used. Thus the limiting factor is error tolerance and not hitting specific points."
 },
 
 {
@@ -3541,7 +3549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "How LinSolveFactorize Was Created",
     "category": "section",
-    "text": "In order to make your own linsolve functions, let\'s look at how the LinSolveFactorize function is created. For example, for an LU-Factorization, we would like to use lufact! to do our linear solving. We can directly write this as:function linsolve!(::Type{Val{:init}},f,u0)\n  function _linsolve!(x,A,b,update_matrix=false)\n    _A = lufact!(A)\n    A_ldiv_B!(x,_A,b)\n  end\nendThis initialization function returns a linear solving function that always computes the LU-factorization and then does the solving. This method works fine and you can pass it to the methods likeRosenbrock23(linsolve=linsolve!)and it will work, but this method does not cache _A, the factorization. This means that, even if A has not changed, it will re-factorize the matrix.To change this, we can instead create a call-overloaded type. The generalized form of this is:type LinSolveFactorize{F}\n  factorization::F\n  A\nend\nLinSolveFactorize(factorization) = LinSolveFactorize(factorization,nothing)\nfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nend\nfunction (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)\n  LinSolveFactorize(p.factorization,nothing)\nend\nlinsolve = LinSolveFactorize(lufact!)LinSolveFactorize is a type which holds the factorization method and the pre-factorized matrix. When linsolve is passed to the ODE/SDE/etc. solver, it will use the function linsolve(Val{:init},f,u0_prototype) to create a LinSolveFactorize object which holds the factorization method and a cache for holding a factorized matrix. Thenfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nendis what\'s used in the solver\'s internal loop. If matrix_updated is true, it will re-compute the factorization. Otherwise it just solves the linear system with the cached factorization. This general idea of using a call-overloaded type can be employed to do many other things."
+    "text": "In order to make your own linsolve functions, let\'s look at how the LinSolveFactorize function is created. For example, for an LU-Factorization, we would like to use lufact! to do our linear solving. We can directly write this as:function linsolve!(::Type{Val{:init}},f,u0)\n  function _linsolve!(x,A,b,update_matrix=false)\n    _A = lufact!(A)\n    A_ldiv_B!(x,_A,b)\n  end\nendThis initialization function returns a linear solving function that always computes the LU-factorization and then does the solving. This method works fine and you can pass it to the methods likeRosenbrock23(linsolve=linsolve!)and it will work, but this method does not cache _A, the factorization. This means that, even if A has not changed, it will re-factorize the matrix.To change this, we can instead create a call-overloaded type. The generalized form of this is:mutable struct LinSolveFactorize{F}\n  factorization::F\n  A\nend\nLinSolveFactorize(factorization) = LinSolveFactorize(factorization,nothing)\nfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nend\nfunction (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)\n  LinSolveFactorize(p.factorization,nothing)\nend\nlinsolve = LinSolveFactorize(lufact!)LinSolveFactorize is a type which holds the factorization method and the pre-factorized matrix. When linsolve is passed to the ODE/SDE/etc. solver, it will use the function linsolve(Val{:init},f,u0_prototype) to create a LinSolveFactorize object which holds the factorization method and a cache for holding a factorized matrix. Thenfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nendis what\'s used in the solver\'s internal loop. If matrix_updated is true, it will re-compute the factorization. Otherwise it just solves the linear system with the cached factorization. This general idea of using a call-overloaded type can be employed to do many other things."
 },
 
 {
@@ -3573,7 +3581,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "How NLSOLVEJL_SETUP Was Created",
     "category": "section",
-    "text": "To create a nonlinear solver, you need to define the two functions. Here we use a call-overloaded type so that way we can hold the chunk size and autodifferentiation information.struct NLSOLVEJL_SETUP{CS,AD} end\nNLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()The solver function just calls NLsolve and returns the zeros(p::NLSOLVEJL_SETUP)(f,u0) = (res=NLsolve.nlsolve(f,u0); res.zero)while the initialization function has a different initialization for autodifferentiation or not:function (p::NLSOLVEJL_SETUP{CS,AD}){CS,AD}(::Type{Val{:init}},f,u0_prototype)\n  if AD\n    return non_autodiff_setup(f,u0_prototype)\n  else\n    return autodiff_setup(f,u0_prototype,Val{determine_chunksize(initial_x,CS)})\n  end\nendWe need to declare the get_chunksize trait for the solver:get_chunksize{CS,AD}(x::NLSOLVEJL_SETUP{CS,AD}) = CSThe initialization functions are directly for NLsolve. See the NLsolve.jl docs for the types of inputs it expects to see. This does exactly that:function autodiff_setup{CS}(f!, initial_x::Vector,chunk_size::Type{Val{CS}})\n\n    permf! = (fx, x) -> f!(x, fx)\n\n    fx2 = copy(initial_x)\n    jac_cfg = ForwardDiff.JacobianConfig{CS}(initial_x, initial_x)\n    g! = (x, gx) -> ForwardDiff.jacobian!(gx, permf!, fx2, x, jac_cfg)\n\n    fg! = (x, fx, gx) -> begin\n        jac_res = DiffBase.DiffResult(fx, gx)\n        ForwardDiff.jacobian!(jac_res, permf!, fx2, x, jac_cfg)\n        DiffBase.value(jac_res)\n    end\n\n    return DifferentiableMultivariateFunction(f!, g!, fg!)\nend\n\nfunction non_autodiff_setup(f!, initial_x::Vector)\n  DifferentiableMultivariateFunction(f!)\nend"
+    "text": "To create a nonlinear solver, you need to define the two functions. Here we use a call-overloaded type so that way we can hold the chunk size and autodifferentiation information.struct NLSOLVEJL_SETUP{CS,AD} end\nNLSOLVEJL_SETUP(;chunk_size=0,autodiff=true) = NLSOLVEJL_SETUP{chunk_size,autodiff}()The solver function just calls NLsolve and returns the zeros(p::NLSOLVEJL_SETUP)(f,u0) = (res=NLsolve.nlsolve(f,u0); res.zero)while the initialization function has a different initialization for autodifferentiation or not:function (p::NLSOLVEJL_SETUP{CS,AD})(::Type{Val{:init}},f,u0_prototype) where {CS,AD}\n  if AD\n    return non_autodiff_setup(f,u0_prototype)\n  else\n    return autodiff_setup(f,u0_prototype,Val{determine_chunksize(initial_x,CS)})\n  end\nendWe need to declare the get_chunksize trait for the solver:get_chunksize(x::NLSOLVEJL_SETUP{CS,AD}) where {CS,AD} = CSThe initialization functions are directly for NLsolve. See the NLsolve.jl docs for the types of inputs it expects to see. This does exactly that:function autodiff_setup(f!, initial_x::Vector,chunk_size::Type{Val{CS}}) where CS\n\n    permf! = (fx, x) -> f!(x, fx)\n\n    fx2 = copy(initial_x)\n    jac_cfg = ForwardDiff.JacobianConfig{CS}(initial_x, initial_x)\n    g! = (x, gx) -> ForwardDiff.jacobian!(gx, permf!, fx2, x, jac_cfg)\n\n    fg! = (x, fx, gx) -> begin\n        jac_res = DiffBase.DiffResult(fx, gx)\n        ForwardDiff.jacobian!(jac_res, permf!, fx2, x, jac_cfg)\n        DiffBase.value(jac_res)\n    end\n\n    return DifferentiableMultivariateFunction(f!, g!, fg!)\nend\n\nfunction non_autodiff_setup(f!, initial_x::Vector)\n  DifferentiableMultivariateFunction(f!)\nend"
 },
 
 {
@@ -3669,7 +3677,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "Example 1: AutoAbstol",
     "category": "section",
-    "text": "MATLAB\'s Simulink has the option for an automatic absolute tolerance. In this example we will implement a callback which will add this behavior to any JuliaDiffEq solver which implments the integrator and callback interface.The algorithm is as follows. The default value is set to start at 1e-6, though we will give the user an option for this choice. Then as the simulation progresses, at each step the absolute tolerance is set to the maximum value that has been reached so far times the relative tolerance. This is the behavior that we will implement in affect!.Since the effect is supposed to occur every timestep, we use the trivial condition:condition = function (u,t,integrator)\n    true\nendwhich always returns true. For our effect we will overload the call on a type. This type will have a value for the current maximum. By doing it this way, we can store the current state for the running maximum. The code is as follows:type AutoAbstolAffect{T}\n  curmax::T\nend\n# Now make `affect!` for this:\nfunction (p::AutoAbstolAffect)(integrator)\n  p.curmax = max(p.curmax,integrator.u)\n  integrator.opts.abstol = p.curmax * integrator.opts.reltol\n  u_modified!(integrator,false)\nendThis makes affect!(integrator) use an internal mutating value curmax to update the absolute tolerance of the integrator as the algorithm states.Lastly, we can wrap it in a nice little constructor:function AutoAbstol(save=true;init_curmax=1e-6)\n  affect! = AutoAbstolAffect(init_curmax)\n  condtion = (u,t,integrator) -> true\n  save_positions = (save,false)\n  DiscreteCallback(condtion,affect!,save_positions=save_positions)\nendThis creates the DiscreteCallback from the affect! and condition functions that we implemented. Nowcb = AutoAbstol(save=true;init_curmax=1e-6)returns the callback that we created. We can then solve an equation using this by simply passing it with the callback keyword argument. Using the integrator interface rather than the solve interface, we can step through one by one to watch the absolute tolerance increase:integrator = init(prob,BS3(),callback=cb)\nat1 = integrator.opts.abstol\nstep!(integrator)\nat2 = integrator.opts.abstol\n@test at1 < at2\nstep!(integrator)\nat3 = integrator.opts.abstol\n@test at2 < at3Note that this example is contained in DiffEqCallbacks.jl, a library of useful callbacks for JuliaDiffEq solvers."
+    "text": "MATLAB\'s Simulink has the option for an automatic absolute tolerance. In this example we will implement a callback which will add this behavior to any JuliaDiffEq solver which implments the integrator and callback interface.The algorithm is as follows. The default value is set to start at 1e-6, though we will give the user an option for this choice. Then as the simulation progresses, at each step the absolute tolerance is set to the maximum value that has been reached so far times the relative tolerance. This is the behavior that we will implement in affect!.Since the effect is supposed to occur every timestep, we use the trivial condition:condition = function (u,t,integrator)\n    true\nendwhich always returns true. For our effect we will overload the call on a type. This type will have a value for the current maximum. By doing it this way, we can store the current state for the running maximum. The code is as follows:mutable struct AutoAbstolAffect{T}\n  curmax::T\nend\n# Now make `affect!` for this:\nfunction (p::AutoAbstolAffect)(integrator)\n  p.curmax = max(p.curmax,integrator.u)\n  integrator.opts.abstol = p.curmax * integrator.opts.reltol\n  u_modified!(integrator,false)\nendThis makes affect!(integrator) use an internal mutating value curmax to update the absolute tolerance of the integrator as the algorithm states.Lastly, we can wrap it in a nice little constructor:function AutoAbstol(save=true;init_curmax=1e-6)\n  affect! = AutoAbstolAffect(init_curmax)\n  condtion = (u,t,integrator) -> true\n  save_positions = (save,false)\n  DiscreteCallback(condtion,affect!,save_positions=save_positions)\nendThis creates the DiscreteCallback from the affect! and condition functions that we implemented. Nowcb = AutoAbstol(save=true;init_curmax=1e-6)returns the callback that we created. We can then solve an equation using this by simply passing it with the callback keyword argument. Using the integrator interface rather than the solve interface, we can step through one by one to watch the absolute tolerance increase:integrator = init(prob,BS3(),callback=cb)\nat1 = integrator.opts.abstol\nstep!(integrator)\nat2 = integrator.opts.abstol\n@test at1 < at2\nstep!(integrator)\nat3 = integrator.opts.abstol\n@test at2 < at3Note that this example is contained in DiffEqCallbacks.jl, a library of useful callbacks for JuliaDiffEq solvers."
 },
 
 {
@@ -3709,7 +3717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Event Handling and Callback Functions",
     "title": "Example 3: Growing Cell Population",
     "category": "section",
-    "text": "Another interesting issue is with models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nfunction f(du,u,p,t)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(u,t,integrator) # Event when event_f(u,t) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as when condition==0, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the cell splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function affect!(integrator)\n  u = integrator.u\n  resize!(integrator,length(u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\n  nothing\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:callback = ContinuousCallback(condition,affect!)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let\'s make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let\'s check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = linspace(0,10,100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
+    "text": "Another interesting issue is with models of changing sizes. The ability to handle such events is a unique feature of DifferentialEquations.jl! The problem we would like to tackle here is a cell population. We start with 1 cell with a protein X which increases linearly with time with rate parameter α. Since we are going to be changing the size of the population, we write the model in the general form:const α = 0.3\nfunction f(du,u,p,t)\n  for i in 1:length(u)\n    du[i] = α*u[i]\n  end\nendOur model is that, whenever the protein X gets to a concentration of 1, it triggers a cell division. So we check to see if any concentrations hit 1:function condition(u,t,integrator) # Event when event_f(u,t) == 0\n  1-maximum(u)\nendAgain, recall that this function finds events as when condition==0, so 1-maximum(u) is positive until a cell has a concentration of X which is 1, which then triggers the event. At the event, we have that the cell splits into two cells, giving a random amount of protein to each one. We can do this by resizing the cache (adding 1 to the length of all of the caches) and setting the values of these two cells at the time of the event:function affect!(integrator)\n  u = integrator.u\n  resize!(integrator,length(u)+1)\n  maxidx = findmax(u)[2]\n  Θ = rand()\n  u[maxidx] = Θ\n  u[end] = 1-Θ\n  nothing\nendAs noted in the Integrator Interface, resize!(integrator,length(integrator.u)+1) is used to change the length of all of the internal caches (which includes u) to be their current length + 1, growing the ODE system. Then the following code sets the new protein concentrations. Now we can solve:callback = ContinuousCallback(condition,affect!)\nu0 = [0.2]\ntspan = (0.0,10.0)\nprob = ODEProblem(f,u0,tspan)\nsol = solve(prob,callback=callback)The plot recipes do not have a way of handling the changing size, but we can plot from the solution object directly. For example, let\'s make a plot of how many cells there are at each time. Since these are discrete values, we calculate and plot them directly:plot(sol.t,map((x)->length(x),sol[:]),lw=3,\n     ylabel=\"Number of Cells\",xlabel=\"Time\")(Image: NumberOfCells)Now let\'s check-in on a cell. We can still use the interpolation to get a nice plot of the concentration of cell 1 over time. This is done with the command:ts = range(0, stop=10, length=100)\nplot(ts,map((x)->x[1],sol.(ts)),lw=3,\n     ylabel=\"Amount of X in Cell 1\",xlabel=\"Time\")(Image: Cell1)Notice that every time it hits 1 the cell divides, giving cell 1 a random amount of X which then grows until the next division.Note that one macro which was not shown in this example is deleteat! on the caches. For example, to delete the second cell, we could use:deleteat!(integrator,2)This allows you to build sophisticated models of populations with births and deaths."
 },
 
 {
@@ -4029,7 +4037,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Pre-Determined Initial Conditions",
     "category": "section",
-    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have num_monte=100, then we have i as some index in 1:100, and it\'s different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = linspace(0,1,100)\nfunction prob_func(prob,i,repeat)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
+    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have num_monte=100, then we have i as some index in 1:100, and it\'s different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = range(0, stop=1, length=100)\nfunction prob_func(prob,i,repeat)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
 },
 
 {
@@ -4045,7 +4053,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Example 3: Using the Reduction to Halt When Estimator is Within Tolerance",
     "category": "section",
-    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.function output_func(sol,i)\n  last(sol)\nendOur prob_func will simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\n\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:function reduction(u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5)?true:false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that\'s small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:function reduction(u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
+    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.function output_func(sol,i)\n  last(sol)\nendOur prob_func will simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\n\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:function reduction(u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5) ? true : false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that\'s small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:function reduction(u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
 },
 
 {
@@ -4125,7 +4133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low Dependency Usage",
     "title": "Generalizing the Idea",
     "category": "section",
-    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types, but the solvers will automatically reexport it. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne\'t sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nfunction f(du,u,p,t)\n  dx = p[1]*u[1] - u[1]*u[2]\n  dy = -3*u[2] + u[1]*u[2]\nend\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5]\nprob = ODEProblem(f,u0,tspan,p)\nsol = solve(prob,Tsit5())\nt = collect(linspace(0,10,200))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\nusing RecursiveArrayTools\ndata = convert(Array,randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it\'s in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
+    "text": "In general, you will always need DiffEqBase.jl, since it defines all of the fundamental types, but the solvers will automatically reexport it. For solvers, you typically only need that solver package. So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface with that specific solver setup. DiffEqBase.jl is a very lightweight dependency, so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase in addition to the solver package.For the addon packages, you will normally need DiffEqBase, the solver package you choose, and the addon package. So for example, for parameter estimation you would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne\'t sure which package a specific command is from, they using @which. For example, from the parameter estimation docs we have:using DifferentialEquations\nfunction f(du,u,p,t)\n  dx = p[1]*u[1] - u[1]*u[2]\n  dy = -3*u[2] + u[1]*u[2]\nend\n\nu0 = [1.0;1.0]\ntspan = (0.0,10.0)\np = [1.5]\nprob = ODEProblem(f,u0,tspan,p)\nsol = solve(prob,Tsit5())\nt = collect(range(0, stop=10, length=200))\nrandomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])\nusing RecursiveArrayTools\ndata = convert(Array,randomized)\ncost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)If we wanted to know where build_loss_objective came from, we can do:@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)\n\n(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)This says it\'s in the DiffEqParamEstim.jl package. Thus in this case, we could have doneusing OrdinaryDiffEq, DiffEqParamEstiminstead of the full using DifferentialEquations. Note that due to the way Julia dependencies work, any internal function in the package will work. The only dependencies you need to explicitly using are the functions you are specifically calling. Thus this method can be used to determine all of the DiffEq packages you are using."
 },
 
 {
@@ -5190,6 +5198,366 @@ var documenterSearchIndex = {"docs": [
     "title": "QuantumOptics.jl",
     "category": "section",
     "text": "QunatumOptics.jl is a package for simulation of quantum systems."
+},
+
+{
+    "location": "apis/diffeqbio.html#",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jl API",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.jl-API-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jl API",
+    "category": "section",
+    "text": "CurrentModule = DiffEqBiological"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.@min_reaction_network",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.@min_reaction_network",
+    "category": "macro",
+    "text": "@min_reaction_network\n\nGenerates a subtype of an AbstractReactionNetwork that only encodes a chemical reaction network. Use addodes!, addsdes! or addjumps! to complete the network for specific problem types.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.@reaction_network",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.@reaction_network",
+    "category": "macro",
+    "text": "@reaction_network\n\nGenerates a subtype of an AbstractReactionNetwork that encodes a chemical reaction network, and complete ODE, SDE and jump representations of the system.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Reaction-Network-Generation-Macros-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Reaction Network Generation Macros",
+    "category": "section",
+    "text": "@min_reaction_network\n@reaction_network"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addodes!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addodes!",
+    "category": "function",
+    "text": "addodes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network macro with everything needed to use ODE solvers.\n\nOptional kwargs can be used to disable the construction of additional ODE solver components.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addsdes!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addsdes!",
+    "category": "function",
+    "text": "addsdes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network macro with everything needed to use SDE solvers.\n\nOptional kwargs can be used to disable the construction of additional SDE solver components.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addjumps!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addjumps!",
+    "category": "function",
+    "text": "addjumps!(network; build_jumps=true, build_regular_jumps=true, minimal_jumps=false)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network macro with everything needed to use jump SSA solvers.\n\nOptional kwargs can be used to disable the construction of additional jump solver components.\n\nKeyword arguments:\n\nbuild_jumps: if true jump rates and affects will be calculated for use in DiffEqJump SSAs.\nbuild_regular_jumps: if true a RegularJump representation of the stochastic chemical kinetics model will be calculated for use in τ-leaping methods.\nminimal_jumps: if true ConstantRate jumps are only constructed for non-mass action jumps. (Note, mass action jumps are still resolved within any jump simulation. This option simply speeds up the construction of the jump problem since it avoids building redundant ConstantRate jumps that encode MassActionJumps, which are subsequently ignored within jump simulations.)\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#@min_reaction_network-modifiers-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "@min_reaction_network modifiers",
+    "category": "section",
+    "text": "addodes!\naddsdes!\naddjumps!"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.speciesmap",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.speciesmap",
+    "category": "function",
+    "text": "speciesmap(network)\n\nGiven an AbstractReactionNetwork, return a Dictionary mapping from species symbol to species index. \n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.paramsmap",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.paramsmap",
+    "category": "function",
+    "text": "paramsmap(network)\n\nGiven an AbstractReactionNetwork, return a Dictionary mapping from parameter symbol to parameter index.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.numspecies",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.numspecies",
+    "category": "function",
+    "text": "numspecies(network)\n\nReturn the number of species within the given AbstractReactionNetwork.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.numparams",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.numparams",
+    "category": "function",
+    "text": "numparams(network)\n\nReturn the number of parameters within the given AbstractReactionNetwork.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.numreactions",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.numreactions",
+    "category": "function",
+    "text": "numreactions(network)\n\nReturn the number of reactions within the given AbstractReactionNetwork.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Basic-properties-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Basic properties",
+    "category": "section",
+    "text": "speciesmap\nparamsmap \nnumspecies \nnumparams\nnumreactions"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.substrates",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.substrates",
+    "category": "function",
+    "text": "substrates(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to substrates in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:Y].\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.products",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.products",
+    "category": "function",
+    "text": "products(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to products in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:W].\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.dependents",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.dependents",
+    "category": "function",
+    "text": "dependents(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species the reaction rate law depends on. i.e. for\n\nk*W, 2X + 3Y --> 5Z + W\n\nthe returned vector would be [:W,:X,:Y].\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.dependants",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.dependants",
+    "category": "function",
+    "text": "dependants(network, rxidx)\n\nSee documentation for dependents(network, rxidx).\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.ismassaction",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.ismassaction",
+    "category": "function",
+    "text": "ismassaction(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a boolean indicating whether the given reaction is of mass action form. For example, the reaction\n\n2*k, 2X + 3Y --> 5Z + W\n\nwould return true, while reactions with state-dependent rates like\n\nk*X, X + Y --> Z\n\nwould return false.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.substratestoich",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.substratestoich",
+    "category": "function",
+    "text": "substratestoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.productstoich",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.productstoich",
+    "category": "function",
+    "text": "productstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that are products in the reaction to the corresponding stoichiometric coefficient as a product.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.netstoich",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.netstoich",
+    "category": "function",
+    "text": "netstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that participate in the reaction to the net stoichiometric coefficient of the species (i.e. net change in the species due to the reaction).\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Reaction-Properties-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Reaction Properties",
+    "category": "section",
+    "text": "substrates\nproducts\ndependents\ndependants\nismassaction\nsubstratestoich\nproductstoich\nnetstoich"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.oderhsfun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.oderhsfun",
+    "category": "function",
+    "text": "oderhsfun(network)\n\nGiven an AbstractReactionNetwork, return a function, f!(du,u,p,t), that evaluates the current value of the ODE model derivative functions, dudt = f(ut),  within du.\n\nNote, for a network generated with the @min_reaction_network macro addodes! must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.jacfun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jacfun",
+    "category": "function",
+    "text": "jacfun(network)\n\nGiven an AbstractReactionNetwork, return a function, jac!(J,u,p,t), that evaluates the current Jacobian matrix, J, of the ODE model, dudt = f(ut).  The Jacobian matrix has entries \n\nJ_ij = partial f_i(ut)  partial u_j.\n\nNote, for a network generated with the @min_reaction_network macro addodes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.paramjacfun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.paramjacfun",
+    "category": "function",
+    "text": "paramjacfun(network)\n\nGiven an AbstractReactionNetwork, return a function, pjac(pJ,u,p,t), that evaluates the current parameter Jacobian matrix, pJ, of the ODE model, dudt = f(ut).  The parameter Jacobian matrix has entries \n\npJ_ij = partial f_i(ut)  partial p_j.\n\nNote, for a network generated with the @min_reaction_network macro addodes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.odefun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.odefun",
+    "category": "function",
+    "text": "odefun(network)\n\nGiven an AbstractReactionNetwork, return a DiffEqBase.ODEFunction encoding an ODE model for the reaction network. \n\nNote, for a network generated with the @min_reaction_network macro addodes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.noisefun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.noisefun",
+    "category": "function",
+    "text": "noisefun(network)\n\nGiven an AbstractReactionNetwork, return a function, g(η,u,p,t), that evaluates the current noise coefficients for each reaction in the Chemical Langevin Equation representation within η.\n\nNote, for a network generated with the @min_reaction_network macro addsdes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.sdefun",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.sdefun",
+    "category": "function",
+    "text": "sdefun(network)\n\nGiven an AbstractReactionNetwork, return a DiffEqBase.SDEFunction encoding a Chemical Langevin Equation SDE model for the reaction network. \n\nNote, for a network generated with the @min_reaction_network macro addsdes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.jumps",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jumps",
+    "category": "function",
+    "text": "jumps(network)\n\nGiven an AbstractReactionNetwork, return a tuple of AbstractJumps encoding a stochastical chemical kinetics representation for the reaction network.\n\nNote, for a network generated with the @min_reaction_network macro addjumps!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.regularjumps",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.regularjumps",
+    "category": "function",
+    "text": "regularjumps(network)\n\nGiven an AbstractReactionNetwork, return a RegularJump encoding a stochastical chemical kinetics representation of the reaction network for use in tau-leaping approximations.\n\nNote, for a network generated with the @min_reaction_network macro addjumps!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Generated-Functions-for-Models-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Generated Functions for Models",
+    "category": "section",
+    "text": "oderhsfun\njacfun\nparamjacfun\nodefun\nnoisefun\nsdefun\njumps\nregularjumps"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.odeexprs",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.odeexprs",
+    "category": "function",
+    "text": "odeexprs(network)\n\nGiven an AbstractReactionNetwork, return a vector of the ODE expressions.\n\nNote, for a network generated with the @min_reaction_network macro addodes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.jacobianexprs",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jacobianexprs",
+    "category": "function",
+    "text": "jacobianexprs(network)\n\nGiven an AbstractReactionNetwork, return a matrix with the ODE Jacobian expressions.\n\nNote, for a network generated with the @min_reaction_network macro addodes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.noiseexprs",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.noiseexprs",
+    "category": "function",
+    "text": "noiseexprs(network)\n\nGiven an AbstractReactionNetwork, return a vector of the SDE noise expressions for each reaction.\n\nNote, for a network generated with the @min_reaction_network macro addsdes!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.jumpexprs",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.jumpexprs",
+    "category": "function",
+    "text": "jumpexprs(network)\n\nGiven an AbstractReactionNetwork, return a tuple of the jump rates and affects expressions.\n\nNote, for a network generated with the @min_reaction_network macro addjumps!  must be called first.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.rateexpr",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.rateexpr",
+    "category": "function",
+    "text": "rateexpr(network, rxidx)\n\nGiven an AbstractReactionNetwork, return the reaction rate expression for the reaction with index rxidx. Note, for a reaction defined by\n\nk*X*Y, X+Z --> 2X + Y\n\nthe expression that is returned will be :(k*X*Y), while the rate law used in ODEs and SDEs would be k*X^2*Y*Z.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.oderatelawexpr",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.oderatelawexpr",
+    "category": "function",
+    "text": "oderatelawexpr(network, rxidx)\n\nGiven an AbstractReactionNetwork, return the reaction rate law expression used in generated ODEs for the reaction with index rxidx. Note, for a reaction defined by\n\nk*X*Y, X+Z --> 2X + Y\n\nthe expression that is returned will be :(k*X^2*Y*Z). For a reaction of the form \n\nk, 2X+3Y --> Z\n\nthe expression that is returned will be :(k * (X^2/2) * (Y^3/6)).\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.ssaratelawexpr",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.ssaratelawexpr",
+    "category": "function",
+    "text": "ssaratelawexpr(network, rxidx)\n\nGiven an AbstractReactionNetwork, return the reaction rate law expression used in generated stochastic chemical kinetic model SSAs for the reaction with index rxidx. Note, for a reaction defined by\n\nk*X*Y, X+Z --> 2X + Y\n\nthe expression that is returned will be :(k*X^2*Y*Z). For a reaction of the form \n\nk, 2X+3Y --> Z\n\nthe expression that is returned will be :(k * binomial(X,2) * binomial(Y,3)).\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Generated-Expressions-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Generated Expressions",
+    "category": "section",
+    "text": "odeexprs\njacobianexprs\nnoiseexprs\njumpexprs\nrateexpr\noderatelawexpr\nssaratelawexpr"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.rxtospecies_depgraph",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.rxtospecies_depgraph",
+    "category": "function",
+    "text": "rxtospecies_depgraph(network)\n\nGiven an AbstractReactionNetwork, returns a Vector{Vector{Int}} mapping each reaction index to the indices of species that depend on it.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.speciestorx_depgraph",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.speciestorx_depgraph",
+    "category": "function",
+    "text": "speciestorx_depgraph(network)\n\nGiven an AbstractReactionNetwork, returns a Vector{Vector{Int}} mapping each species index to the indices of reactions that depend on it.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.rxtorx_depgraph",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.rxtorx_depgraph",
+    "category": "function",
+    "text": "rxtorx_depgraph(network)\n\nGiven an AbstractReactionNetwork, returns a Vector{Vector{Int}} mapping each reaction index to the indices of reactions that depend on it.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Dependency-Graphs-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Dependency Graphs",
+    "category": "section",
+    "text": "rxtospecies_depgraph\nspeciestorx_depgraph\nrxtorx_depgraph"
 },
 
 {
