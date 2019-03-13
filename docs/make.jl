@@ -1,6 +1,6 @@
-using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary
+using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological
 
-makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
+makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological],
          doctest=false, clean=true,
          format =:html,
          sitename="DifferentialEquations.jl",
@@ -84,6 +84,9 @@ makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary],
              "models/financial.md",
              "models/biological.md",
              "models/external_modeling.md"
+         ],
+         "APIs" => Any[
+             "apis/diffeqbio.md"
          ],
          "Extra Details" => Any[
              "extras/timestepping.md",

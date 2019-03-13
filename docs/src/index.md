@@ -246,6 +246,18 @@ Pages = [
 Depth = 2
 ```
 
+### APIs
+
+Some DifferentialEquations.jl packages provide documented APIs, these include:
+```@contents
+Pages = [
+    "apis/diffeqbio.md"
+]
+Depth = 2
+```
+
+
+
 ### Extra Details
 
 These are just assorted extra explanations for the curious.
