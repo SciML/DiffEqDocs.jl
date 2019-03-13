@@ -50,13 +50,12 @@ section at the end of this page for some example usage.
   is a linear interpolation between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
-  most efficient manner (always including the points of `tspan`). Note that this
-  can be used even if `dense=false`. In fact, if only `saveat` is given, then
-  the arguments `save_everystep` and `dense` are becoming `false` by default and
-  must be explicitly given as `true` if desired.   If `saveat` is given a number,
-  then it will automatically expand to `tspan[1]:saveat:tspan[2]`. For methods
-  where interpolation is not possible, `saveat` may be equivalent to `tstops`.
-  Default is `[]`.
+  most efficient manner available to the solver. Note that this
+  can be used even if `dense=false`. If only `saveat` is given, then
+  the arguments `save_everystep` and `dense` are `false` by default.   
+  If `saveat` is given a number, then it will automatically expand to 
+  `tspan[1]:saveat:tspan[2]`. For methods where interpolation is not possible, 
+  `saveat` may be equivalent to `tstops`. The default value is `[]`.
 * `save_idxs`: Denotes the indices for the components of the equation to save.
   Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE,
   and given `save_idxs = [1, 3]`, only the first and third components of the
