@@ -97,6 +97,6 @@ deploydocs(
    repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git",
    target = "build",
    osname = "linux",
-   julia = "1.0",
+   julia = "1.1",
    deps = nothing,
    make = nothing)

@@ -402,7 +402,7 @@ A `NoiseApproximation` is defined by a `DEIntegrator`. The constructor for a
 `NoiseApproximation` is:
 
 ```julia
-NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Void}=nothing;reset=true)
+NoiseApproximation(source1::DEIntegrator,source2::Union{DEIntegrator,Nothing}=nothing;reset=true)
 ```
 
 The `DEIntegrator` should have a final time point of integration far enough such

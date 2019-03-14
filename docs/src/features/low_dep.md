@@ -52,7 +52,7 @@ tspan = (0.0,10.0)
 p = [1.5]
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5())
-t = collect(linspace(0,10,200))
+t = collect(range(0, stop=10, length=200))
 randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
 using RecursiveArrayTools
 data = convert(Array,randomized)

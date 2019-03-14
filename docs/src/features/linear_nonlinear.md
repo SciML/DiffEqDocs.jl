@@ -78,7 +78,7 @@ To change this, we can instead create a call-overloaded type. The generalized fo
 of this is:
 
 ```julia
-type LinSolveFactorize{F}
+mutable struct LinSolveFactorize{F}
   factorization::F
   A
 end
@@ -189,7 +189,7 @@ while the initialization function has a different initialization for autodiffere
 or not:
 
 ```julia
-function (p::NLSOLVEJL_SETUP{CS,AD}){CS,AD}(::Type{Val{:init}},f,u0_prototype)
+function (p::NLSOLVEJL_SETUP{CS,AD})(::Type{Val{:init}},f,u0_prototype) where {CS,AD}
   if AD
     return non_autodiff_setup(f,u0_prototype)
   else
@@ -201,14 +201,14 @@ end
 We need to declare the `get_chunksize` trait for the solver:
 
 ```julia
-get_chunksize{CS,AD}(x::NLSOLVEJL_SETUP{CS,AD}) = CS
+get_chunksize(x::NLSOLVEJL_SETUP{CS,AD}) where {CS,AD} = CS
 ```
 
 The initialization functions are directly for NLsolve. See the NLsolve.jl docs
 for the types of inputs it expects to see. This does exactly that:
 
 ```julia
-function autodiff_setup{CS}(f!, initial_x::Vector,chunk_size::Type{Val{CS}})
+function autodiff_setup(f!, initial_x::Vector,chunk_size::Type{Val{CS}}) where CS
 
     permf! = (fx, x) -> f!(x, fx)
 
