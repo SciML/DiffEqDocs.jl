@@ -13,13 +13,14 @@ systems it is the recommended form to use.
 information needed to represent the species, parameters and chemical reactions.
 This is sufficient for network analysis, such as calculating dependency graphs,
 but means the network must be extended to build mathematical models, see
-[`addodes!](@ref), [`addsdes!](@ref), and [`addjumps!](@ref). 
+[`addodes!`](@ref), [`addsdes!`](@ref), and [`addjumps!`](@ref). 
 
 `@empty_reaction_network` constructs an empty network. Both
 `min_reaction_network`s and `empty_reaction_network`s can be enlarged using
-[`addspecies!](@ref), [`addparam!](@ref), and [`addreaction!](@ref). Once the
-final chemistry for the network is set, [`addodes!](@ref), [`addsdes!](@ref),
-and [`addjumps!](@ref) can be called to build corresponding mathematical models.
+[`addspecies!`](@ref), [`addparam!`](@ref), and [`addreaction!`](@ref). Once the
+final chemistry for the network is set, [`addodes!`](@ref), [`addsdes!`](@ref),
+and [`addjumps!`](@ref) can be called to build corresponding mathematical
+models.
 
 It is important to note for `@reaction_network` and `@min_reaction_network` that
 species which are used *within the macro* as part of a rate expression, but not
@@ -63,10 +64,10 @@ netstoich
 ```
 
 ## Functions to Add Species, Parameters and Reactions to a Network
-Both `@min_reaction_network` and `empty_reaction_network` can be extended
+Both `@min_reaction_network` and `@empty_reaction_network` can be extended
 with additional species, parameters, and reactions. 
 
-*Note* always add all species and parameter definitions before adding any
+*Note*, always add all species and parameter definitions before adding any
 reaction definitions. Other orderings may result in incorrect information stored
 within the generated network.
 
