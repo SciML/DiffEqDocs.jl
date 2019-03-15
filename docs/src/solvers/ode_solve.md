@@ -302,6 +302,27 @@ Royal Society, 2011.).
 - `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimised for for the
   spectral difference method applied to wave propagation problems.
 
+__NOTE__: All the 2N Methods (`ORK256`, `CarpenterKennedy2N54`, `NDBLSRK124`, `NDBLSRK134`, `NDBLSRK144`, `DGLDDRK73_C`, `DGLDDRK84_C`, `DGLDDRK84_F` and `HSLDDRK64`) work on the basic principle of being able to perform step `S1 = S1 + F(S2)` in just 2 registers. Certain optimizations have been done to achieve this theoritical limit (when `alias_u0` is set) but have a limitation that `du` should always be on the left hand side (assignments only) in the implementation.
+
+Example - This is an invalid implementation for 2N methods:
+
+```julia
+function f(du,u,p,t)
+  du[1] = u[1] * u[2]
+  du[2] = du[1] * u[2] # du appears on the RHS
+end
+```
+
+If you don't wish to have the optimization and have to use `du` on the RHS, please set the keyword argument `williamson_condition` to `false` in the algorithm (by default it is set to `true`). In this case 3 registers worth memory would be needed instead.
+
+Example :
+
+```julia
+alg = CarpenterKennedy2N54(;williamson_condition=false)
+```
+
+So the above implementation of `f` becomes valid.
+
 #### Extrapolation Methods
 
 - `AitkenNevillie` - An adaptive order, adaptive step size extrapolation method using Aitken-Neville 
