@@ -5217,14 +5217,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "apis/diffeqbio.html#DiffEqBiological.@min_reaction_network",
-    "page": "DiffEqBiological.jl API",
-    "title": "DiffEqBiological.@min_reaction_network",
-    "category": "macro",
-    "text": "@min_reaction_network\n\nGenerates a subtype of an AbstractReactionNetwork that only encodes a chemical reaction network. Use addodes!, addsdes! or addjumps! to complete the network for specific problem types. It accepts the same arguments as @reaction_network.\n\n\n\n\n\n"
-},
-
-{
     "location": "apis/diffeqbio.html#DiffEqBiological.@reaction_network",
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.@reaction_network",
@@ -5233,43 +5225,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbio.html#DiffEqBiological.@min_reaction_network",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.@min_reaction_network",
+    "category": "macro",
+    "text": "@min_reaction_network\n\nGenerates a subtype of an AbstractReactionNetwork that only encodes a chemical reaction network. Use addodes!, addsdes! or addjumps! to complete the network for specific problem types. It accepts the same arguments as @reaction_network.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.@empty_reaction_network",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.@empty_reaction_network",
+    "category": "macro",
+    "text": "@empty_reaction_network networktype\n\nGenerates a subtype of an AbstractReactionNetwork that encodes an empty chemical reaction network. networktype is an optional parameter that specifies the type of the generated network. Use addspecies!, addparam! and addreaction! to extend the network.  Use addodes!, addsdes! or addjumps! to complete the network for specific problem types.\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbio.html#Reaction-Network-Generation-Macros-1",
     "page": "DiffEqBiological.jl API",
     "title": "Reaction Network Generation Macros",
     "category": "section",
-    "text": "@min_reaction_network\n@reaction_network"
+    "text": "DiffEqBiological has three macros for generating reaction networks. @reaction_network generates a complete network, including everything needed to construct ODE, SDE and Jump problems directly from the network. For small systems it is the recommended form to use.@min_reaction_network constructs a network that just stores the basic information needed to represent the species, parameters and chemical reactions. This is sufficient for network analysis, such as calculating dependency graphs, but means the network must be extended to build mathematical models, see addodes!, addsdes!, and addjumps!. @empty_reaction_network constructs an empty network. Both min_reaction_networks and empty_reaction_networks can be enlarged using addspecies!, addparam!, and addreaction!. Once the final chemistry for the network is set, addodes!, addsdes!, and addjumps! can be called to build corresponding mathematical models.It is important to note for @reaction_network and @min_reaction_network that species which are used within the macro as part of a rate expression, but not as a substrate or product of some reaction, are not recognized as either a species or parameter. i.e. avoidrn = @reaction_network begin\n    k*X, Y --> W\nend kas here X is never defined as either a species or parameter. This leads to internal problems in the representation of reactions that can not be corrected by subsequently calling addspecies!. @reaction_network\n@min_reaction_network\n@empty_reaction_network"
 },
 
 {
-    "location": "apis/diffeqbio.html#DiffEqBiological.addodes!",
+    "location": "apis/diffeqbio.html#DiffEqBiological.species",
     "page": "DiffEqBiological.jl API",
-    "title": "DiffEqBiological.addodes!",
+    "title": "DiffEqBiological.species",
     "category": "function",
-    "text": "addodes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use ODE solvers.\n\nOptional kwargs can be used to disable the construction of additional ODE solver components.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apis/diffeqbio.html#DiffEqBiological.addsdes!",
-    "page": "DiffEqBiological.jl API",
-    "title": "DiffEqBiological.addsdes!",
-    "category": "function",
-    "text": "addsdes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use SDE solvers.\n\nOptional kwargs can be used to disable the construction of additional SDE solver components.\n\n\n\n\n\n"
-},
-
-{
-    "location": "apis/diffeqbio.html#DiffEqBiological.addjumps!",
-    "page": "DiffEqBiological.jl API",
-    "title": "DiffEqBiological.addjumps!",
-    "category": "function",
-    "text": "addjumps!(network; build_jumps=true, build_regular_jumps=true, minimal_jumps=false)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use jump SSA solvers.\n\nOptional kwargs can be used to disable the construction of additional jump solver components.\n\nKeyword arguments:\n\nbuild_jumps: if true jump rates and affects will be calculated for use in DiffEqJump SSAs.\nbuild_regular_jumps: if true a RegularJump representation of the stochastic chemical kinetics model will be calculated for use in τ-leaping methods.\nminimal_jumps: if true ConstantRate jumps are only constructed for non-mass action jumps. (Note, mass action jumps are still resolved within any jump simulation. This option simply speeds up the construction of the jump problem since it avoids building redundant ConstantRate jumps that encode MassActionJumps, which are subsequently ignored within jump simulations.)\n\n\n\n\n\n"
-},
-
-{
-    "location": "apis/diffeqbio.html#@min_reaction_network-modifiers-1",
-    "page": "DiffEqBiological.jl API",
-    "title": "@min_reaction_network modifiers",
-    "category": "section",
-    "text": "addodes!\naddsdes!\naddjumps!"
+    "text": "species(network)\n\nGiven an AbstractReactionNetwork, return a vector of species symbols.\n\n\n\n\n\n"
 },
 
 {
@@ -5278,6 +5262,14 @@ var documenterSearchIndex = {"docs": [
     "title": "DiffEqBiological.speciesmap",
     "category": "function",
     "text": "speciesmap(network)\n\nGiven an AbstractReactionNetwork, return a Dictionary mapping from species symbol to species index. \n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.params",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.params",
+    "category": "function",
+    "text": "params(network)\n\nGiven an AbstractReactionNetwork, return a vector of parameter symbols.\n\n\n\n\n\n"
 },
 
 {
@@ -5317,7 +5309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "Basic properties",
     "category": "section",
-    "text": "speciesmap\nparamsmap \nnumspecies \nnumparams\nnumreactions"
+    "text": "species\nspeciesmap\nparams\nparamsmap \nnumspecies \nnumparams\nnumreactions"
 },
 
 {
@@ -5390,6 +5382,78 @@ var documenterSearchIndex = {"docs": [
     "title": "Reaction Properties",
     "category": "section",
     "text": "substrates\nproducts\ndependents\ndependants\nismassaction\nsubstratestoich\nproductstoich\nnetstoich"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addspecies!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addspecies!",
+    "category": "function",
+    "text": "addspecies!(network, speciessym::Symbol)\n\nGiven an AbstractReaction network, add the species corresponding to the passed in symbol to the network (if it is not already defined). \n\n\n\n\n\naddspecies!(network, speciesname::String)\n\nGiven an AbstractReaction network, add the species with name given by the passed in string to the network (if it is not already defined.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addparam!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addparam!",
+    "category": "function",
+    "text": "addparam!(network, param::Symbol)\n\nGiven an AbstractReaction network, add the parameter corresponding to the passed in symbol to the network (if it is not already defined).\n\n\n\n\n\naddparam!(network, paramname::String)\n\nGiven an AbstractReaction network, add the parameter with name given by the passed in string to the network (if it is not already defined).\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addreaction!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addreaction!",
+    "category": "function",
+    "text": "addreaction!(network, rateexpr::Union{Expr,Symbol,Int,Float64}, rxexpr::Expr)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate and reaction expressions. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateexpr=:(k*X) and rxexpr=:(2X + Y --> W), \n\n10.5, 0 --> X\n\nwould have rateexpr=10.5 and rxexpr=:(0 --> X), and\n\nk, X+X --> Z\n\nwould have rateexpr=:k and rxexpr=:(X+X --> Z).\n\nAll normal DSL reaction definition notation should be supported.\n\n\n\n\n\naddreaction!(network, rateexpr::Union{Expr,Symbol,Int,Float64}, substrates, products)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate, rateexpr, substrate stoichiometry, and product stoichiometry. Stoichiometries are represented as tuples of Pair{Symbol,Int}. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateexpr=:(k*X), substrates=(:X=>2, :Y=>2)andproducts=(W=>2,)`, \n\n10.5, 0 --> X\n\nwould have rateexpr=10.5, substrates=() and products=(:X=>1,), and\n\nk, X+X --> Z\n\nwould have rateexpr=:k, substrates=(:X=>2,) and products=(:Z=>2,).\n\nAll normal DSL reaction definition notation should be supported for the rateexpr.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.add_scale_noise_param!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.add_scale_noise_param!",
+    "category": "function",
+    "text": "add_scale_noise_param!(network, scale_noise::Symbol)\n\nGiven an AbstractReaction network, add the parameter corresponding to the passed in symbol to the network (if it is not already defined), and register it as the noise scaling coefficient.\n\n\n\n\n\nadd_scale_noise_param!(network, scale_noise_name::String)\n\nGiven an AbstractReaction network, add the parameter with the passed in string as its name to the network (if it is not already defined), and register it as the noise scaling coefficient.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Functions-to-Add-Species,-Parameters-and-Reactions-to-a-Network-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Functions to Add Species, Parameters and Reactions to a Network",
+    "category": "section",
+    "text": "Both @min_reaction_network and @empty_reaction_network can be extended with additional species, parameters, and reactions. Note, always add all species and parameter definitions before adding any reaction definitions. Other orderings may result in incorrect information stored within the generated network.addspecies!\naddparam!\naddreaction!\nadd_scale_noise_param!"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addodes!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addodes!",
+    "category": "function",
+    "text": "addodes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use ODE solvers.\n\nOptional kwargs can be used to disable the construction of additional ODE solver components.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addsdes!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addsdes!",
+    "category": "function",
+    "text": "addsdes!(network; build_jac=true, build_symfuncs=true)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use SDE solvers.\n\nOptional kwargs can be used to disable the construction of additional SDE solver components.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.addjumps!",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.addjumps!",
+    "category": "function",
+    "text": "addjumps!(network; build_jumps=true, build_regular_jumps=true, minimal_jumps=false)\n\nExtend an AbstractReactionNetwork generated with the @min_reaction_network or @empty_reaction_network macros with everything needed to use jump SSA solvers.\n\nOptional kwargs can be used to disable the construction of additional jump solver components.\n\nKeyword arguments:\n\nbuild_jumps: if true jump rates and affects will be calculated for use in DiffEqJump SSAs.\nbuild_regular_jumps: if true a RegularJump representation of the stochastic chemical kinetics model will be calculated for use in τ-leaping methods.\nminimal_jumps: if true ConstantRate jumps are only constructed for non-mass action jumps. (Note, mass action jumps are still resolved within any jump simulation. This option simply speeds up the construction of the jump problem since it avoids building redundant ConstantRate jumps that encode MassActionJumps, which are subsequently ignored within jump simulations.)\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Functions-to-Add-ODEs,-SDEs-or-Jumps-to-a-Network-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Functions to Add ODEs, SDEs or Jumps to a Network",
+    "category": "section",
+    "text": "addodes!\naddsdes!\naddjumps!"
 },
 
 {
