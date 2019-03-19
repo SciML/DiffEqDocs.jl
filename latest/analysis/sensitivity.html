@@ -20,7 +20,7 @@ struct MyTag end
 p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))
 p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))
 p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))
-p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 0.0))
+p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 1.0))
 pdual = [p1dual, p2dual, p3dual, p4dual]</code></pre><p>or equivalently using the <code>seed_duals</code> convenience function:</p><pre><code class="language-julia">function seed_duals(x::AbstractArray{V},::Type{T},
                     ::ForwardDiff.Chunk{N} = ForwardDiff.Chunk(x)) where {V,T,N}
   seeds = ForwardDiff.construct_seeds(ForwardDiff.Partials{N,V})
