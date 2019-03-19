@@ -137,7 +137,7 @@ struct MyTag end
 p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))
 p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))
 p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))
-p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 0.0))
+p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 1.0))
 pdual = [p1dual, p2dual, p3dual, p4dual]
 ```
 
