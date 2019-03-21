@@ -59,7 +59,9 @@ dependents
 dependants
 ismassaction
 substratestoich
+substratesymstoich
 productstoich
+productsymstoich
 netstoich
 ```
 
@@ -106,6 +108,11 @@ jumpexprs
 rateexpr
 oderatelawexpr
 ssaratelawexpr
+```
+
+## Network Comparison Functions
+```@docs
+==(rn1::DiffEqBase.AbstractReactionNetwork, rn2::DiffEqBase.AbstractReactionNetwork)
 ```
 
 ## Dependency Graphs
