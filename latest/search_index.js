@@ -5361,11 +5361,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbio.html#DiffEqBiological.substratesymstoich",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.substratesymstoich",
+    "category": "function",
+    "text": "substratesymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a ReactantStruct, mapping the symbols of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbio.html#DiffEqBiological.productstoich",
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.productstoich",
     "category": "function",
     "text": "productstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that are products in the reaction to the corresponding stoichiometric coefficient as a product.\n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#DiffEqBiological.productsymstoich",
+    "page": "DiffEqBiological.jl API",
+    "title": "DiffEqBiological.productsymstoich",
+    "category": "function",
+    "text": "productsymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a ReactantStruct, mapping the symbols of species that are products in the reaction to the corresponding stoichiometric coefficient as a product. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
 },
 
 {
@@ -5381,7 +5397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "Reaction Properties",
     "category": "section",
-    "text": "substrates\nproducts\ndependents\ndependants\nismassaction\nsubstratestoich\nproductstoich\nnetstoich"
+    "text": "substrates\nproducts\ndependents\ndependants\nismassaction\nsubstratestoich\nsubstratesymstoich\nproductstoich\nproductsymstoich\nnetstoich"
 },
 
 {
@@ -5590,6 +5606,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Generated Expressions",
     "category": "section",
     "text": "odeexprs\njacobianexprs\nnoiseexprs\njumpexprs\nrateexpr\noderatelawexpr\nssaratelawexpr"
+},
+
+{
+    "location": "apis/diffeqbio.html#Base.:==-Tuple{DiffEqBase.AbstractReactionNetwork,DiffEqBase.AbstractReactionNetwork}",
+    "page": "DiffEqBiological.jl API",
+    "title": "Base.:==",
+    "category": "method",
+    "text": "==(rn1::DiffEqBase.AbstractReactionNetwork, rn2::DiffEqBase.AbstractReactionNetwork)\n\nTests whether the underlying species symbols, parameter symbols and reactions are the same in the two networks. Ignores order network components were defined, so the integer id of any individual species/parameters/reactions may be different between the two networks. Does not currently account for different reaction definitions, so \"k, X+Y –> Y + Z\" will not be the same as \"k, Y+X –> Y + Z\"\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbio.html#Network-Comparison-Functions-1",
+    "page": "DiffEqBiological.jl API",
+    "title": "Network Comparison Functions",
+    "category": "section",
+    "text": "==(rn1::DiffEqBase.AbstractReactionNetwork, rn2::DiffEqBase.AbstractReactionNetwork)"
 },
 
 {
