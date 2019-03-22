@@ -5053,7 +5053,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Chemical Reaction Models",
     "title": "Reaction rate laws used in simulations",
     "category": "section",
-    "text": "In generating mathematical models from a reaction_network, reaction rates are treated as microscopic rates. That is, for a general mass action reaction of the form n_1 S_1 + n_2 S_2 + dots n_M S_M to dots with stoichiometric substrate coefficients n_i_i=1^M and rate constant k, the corresponding ODE rate law is taken to bek prod_i=1^M frac(S_i)^n_in_iwhile the jump process transition rate (i.e. propensity function) isk prod_i=1^M fracS_i (S_i-1) dots (S_i-(n_i+1))n_iFor example, the ODE model of the reaction 2X + 3Y to Z with rate constant k would befracdXdt =  -2 k fracX^22 fracY^33 = -k fracX^2 Y^33 \nfracdYdt =  -3 k fracX^22 fracY^33 = -k fracX^2 Y^34 \nfracdZdt = k fracX^22 fracY^33"
+    "text": "In generating mathematical models from a reaction_network, reaction rates are treated as microscopic rates. That is, for a general mass action reaction of the form n_1 S_1 + n_2 S_2 + dots n_M S_M to dots with stoichiometric substrate coefficients n_i_i=1^M and rate constant k, the corresponding ODE rate law is taken to bek prod_i=1^M frac(S_i)^n_in_iwhile the jump process transition rate (i.e. propensity function) isk prod_i=1^M fracS_i (S_i-1) dots (S_i-n_i+1)n_iFor example, the ODE model of the reaction 2X + 3Y to Z with rate constant k would befracdXdt =  -2 k fracX^22 fracY^33 = -k fracX^2 Y^33 \nfracdYdt =  -3 k fracX^22 fracY^33 = -k fracX^2 Y^34 \nfracdZdt = k fracX^22 fracY^33"
 },
 
 {
@@ -5317,7 +5317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.substrates",
     "category": "function",
-    "text": "substrates(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to substrates in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:Y].\n\n\n\n\n\n"
+    "text": "substrates(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to substrates in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:Y].\n\nAllocates a new vector to store the symbols.\n\n\n\n\n\n"
 },
 
 {
@@ -5325,7 +5325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.products",
     "category": "function",
-    "text": "products(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to products in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:W].\n\n\n\n\n\n"
+    "text": "products(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species that correspond to products in the reaction.  i.e. for\n\nk*W, X + 3Y --> X + W\n\nthe returned vector would be [:X,:W].\n\nAllocates a new vector to store the symbols.\n\n\n\n\n\n"
 },
 
 {
@@ -5333,7 +5333,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.dependents",
     "category": "function",
-    "text": "dependents(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species the reaction rate law depends on. i.e. for\n\nk*W, 2X + 3Y --> 5Z + W\n\nthe returned vector would be [:W,:X,:Y].\n\n\n\n\n\n"
+    "text": "dependents(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of symbols of species the reaction rate law depends on. i.e. for\n\nk*W, 2X + 3Y --> 5Z + W\n\nthe returned vector would be [:W,:X,:Y].\n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
 },
 
 {
@@ -5349,7 +5349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.ismassaction",
     "category": "function",
-    "text": "ismassaction(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a boolean indicating whether the given reaction is of mass action form. For example, the reaction\n\n2*k, 2X + 3Y --> 5Z + W\n\nwould return true, while reactions with state-dependent rates like\n\nk*X, X + Y --> Z\n\nwould return false.\n\n\n\n\n\n"
+    "text": "ismassaction(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a boolean indicating whether the given reaction is of mass action form. For example, the reaction\n\n2*k, 2X + 3Y --> 5Z + W\n\nwould return true, while reactions with state-dependent rates like\n\nk*X, X + Y --> Z\n\nwould return false.\n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
 },
 
 {
@@ -5357,7 +5357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.substratestoich",
     "category": "function",
-    "text": "substratestoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\n\n\n\n\n"
+    "text": "substratestoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
 },
 
 {
@@ -5365,7 +5365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.productstoich",
     "category": "function",
-    "text": "productstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that are products in the reaction to the corresponding stoichiometric coefficient as a product.\n\n\n\n\n\n"
+    "text": "productstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that are products in the reaction to the corresponding stoichiometric coefficient as a product.\n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
 },
 
 {
@@ -5373,7 +5373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.netstoich",
     "category": "function",
-    "text": "netstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that participate in the reaction to the net stoichiometric coefficient of the species (i.e. net change in the species due to the reaction).\n\n\n\n\n\n"
+    "text": "netstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that participate in the reaction to the net stoichiometric coefficient of the species (i.e. net change in the species due to the reaction).\n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
 },
 
 {
@@ -5405,7 +5405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.addreaction!",
     "category": "function",
-    "text": "addreaction!(network, rateexpr::Union{Expr,Symbol,Int,Float64}, rxexpr::Expr)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate and reaction expressions. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateexpr=:(k*X) and rxexpr=:(2X + Y --> W), \n\n10.5, 0 --> X\n\nwould have rateexpr=10.5 and rxexpr=:(0 --> X), and\n\nk, X+X --> Z\n\nwould have rateexpr=:k and rxexpr=:(X+X --> Z).\n\nAll normal DSL reaction definition notation should be supported.\n\n\n\n\n\naddreaction!(network, rateexpr::Union{Expr,Symbol,Int,Float64}, substrates, products)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate, rateexpr, substrate stoichiometry, and product stoichiometry. Stoichiometries are represented as tuples of Pair{Symbol,Int}. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateexpr=:(k*X), substrates=(:X=>2, :Y=>2)andproducts=(W=>2,)`, \n\n10.5, 0 --> X\n\nwould have rateexpr=10.5, substrates=() and products=(:X=>1,), and\n\nk, X+X --> Z\n\nwould have rateexpr=:k, substrates=(:X=>2,) and products=(:Z=>2,).\n\nAll normal DSL reaction definition notation should be supported for the rateexpr.\n\n\n\n\n\n"
+    "text": "addreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, rxexpr::Expr)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate and reaction expressions. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X) and rxexpr=:(2X + Y --> W), \n\n10.5, 0 --> X\n\nwould have rateex=10.5 and rxexpr=:(0 --> X), and\n\nk, X+X --> Z\n\nwould have rateex=:k and rxexpr=:(X+X --> Z).\n\nAll normal DSL reaction definition notation should be supported.\n\n\n\n\n\naddreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, substrates, products)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate, rateex, substrate stoichiometry, and product stoichiometry. Stoichiometries are represented as tuples of Pair{Symbol,Int}. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X), substrates=(:X=>2, :Y=>2)andproducts=(W=>2,)`, \n\n10.5, 0 --> X\n\nwould have rateex=10.5, substrates=() and products=(:X=>1,), and\n\nk, X+X --> Z\n\nwould have rateex=:k, substrates=(:X=>2,) and products=(:Z=>2,).\n\nAll normal DSL reaction definition notation should be supported for the rateex.\n\n\n\n\n\n"
 },
 
 {
