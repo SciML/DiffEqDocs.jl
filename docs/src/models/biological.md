@@ -286,7 +286,7 @@ k \prod_{i=1}^M \frac{(S_i)^{n_i}}{n_i!},
 ```
 while the jump process transition rate (i.e. propensity function) is
 ```math
-k \prod_{i=1}^M \frac{S_i (S_i-1) \dots (S_i-(n_i+1))}{n_i!}.
+k \prod_{i=1}^M \frac{S_i (S_i-1) \dots (S_i-n_i+1)}{n_i!}.
 ```
 For example, the ODE model of the reaction $2X + 3Y \to Z$ with rate constant $k$ would be
 ```math
