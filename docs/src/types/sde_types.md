@@ -2,8 +2,8 @@
 
 ## Mathematical Specification of a SDE Problem
 
-To define an SDE Problem, you simply need to give the forcing function ``f``,
-the noise function `g`, and the initial condition ``u₀`` which define an SDE:
+To define an SDE Problem, you simply need to give the forcing function `f`,
+the noise function `g`, and the initial condition `u₀` which define an SDE:
 
 ```math
 du = f(u,p,t)dt + Σgᵢ(u,p,t)dWⁱ
@@ -23,7 +23,7 @@ Wraps the data which defines an SDE problem
 u = f(u,p,t)dt + Σgᵢ(u,p,t)dWⁱ
 ```
 
-with initial condition ``u0``.
+with initial condition `u0`.
 
 ### Constructors
 
