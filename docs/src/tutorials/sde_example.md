@@ -55,7 +55,7 @@ test convergence of the algorithms for methods developers. Thus we define the pr
 object with:
 
 ```julia
-f(::Type{Val{:analytic}},u,p,t₀,W) = u₀*exp((α-(β^2)/2)*t+β*W)
+f(::Type{Val{:analytic}},u₀,p,t,W) = u₀*exp((α-(β^2)/2)*t+β*W)
 prob = SDEProblem(f,g,u₀,(0.0,1.0))
 ```
 
