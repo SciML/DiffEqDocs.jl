@@ -291,7 +291,7 @@ A = zeros(2,4)
 A[1,1] = 1
 A[1,4] = 1
 A[2,4] = 1
-sparse(A)
+A=sparse(A)
 
 # Make `g` write the sparse matrix values
 function g(du,u,p,t)
