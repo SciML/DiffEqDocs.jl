@@ -153,6 +153,11 @@ p = (10.0,8/3,28.0)
 prob = ODEProblem(lorenz, u0, tspan,p)
 sol = solve(prob)
 xyzt = plot(sol, plotdensity=10000,lw=1.5)
+xy = plot(sol, plotdensity=10000, vars=(1,2))
+xz = plot(sol, plotdensity=10000, vars=(1,3))
+yz = plot(sol, plotdensity=10000, vars=(2,3))
+xyz = plot(sol, plotdensity=10000, vars=(1,2,3))
+plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
 ![lorenz_plot](../assets/vars_plotting_example.png)
