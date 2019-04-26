@@ -43,7 +43,8 @@ individual contribution.
 
 `morris_effects = morris_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_steps;kwargs...)`
 
-Here, `f` is just the model (as a julia function or a `DEProblem`) you want to
+Here, `f` is just the model (as a julia function 
+`f(input_vector) -> output_vector` or a `DEProblem`) you want to
 run the analysis on, `param_range` requires an array of 2-tuples with the lower bound
 and the upper bound, `param_steps` decides the value of ``\Delta`` in the equation
 above and `relative_scale`, the above equation takes the assumption that
