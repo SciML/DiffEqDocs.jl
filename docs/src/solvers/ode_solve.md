@@ -342,6 +342,78 @@ alg = AitkenNeville(max_order=7,min_order=4,init_order=4)
 solve(prob,alg)
 ```
 
+##### `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
+
+`ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner` adapt order
+and stepsize. Both extrapolate the explicit midpoint rule and differ only in the
+implementation of the adaptive behavior.
+
+###### Arguments for Initializing the Algorithms
+
+Both methods accept the same set of arguments:
+* `min_extrapolation_order` and `max_extrapolation_order`
+ restrict the range of values the adaptively controlled extrapolation
+ order can attain.
+ Since the order control mechanism relies on information from the *previous*  time
+ step, the order of extrapolation for the very first timestep is provided externally
+ by `init_extrapolation_order`.
+
+  - `ExtrapolationMidpointDeuflhard` uses by default an order range of `1:10` and
+  starts with `init_extrapolation_order = 5`.
+  -  `ExtrapolationMidpointHairerWanner` works similarly but uses a default range of
+  `2:10` since it  requires
+  `2 <= min_extrapolation_order <=  init_extrapolation_order < max_extrapolation_order`.
+
+* `sequence_symbol` specifies the step-number sequences, also called the subdividing
+ sequence, for both algorithms.
+ Possible values for this flag are `:harmonic`, `:romberg` or `:bulirsch`.
+
+To override the default values use keyword arguments like shown above for the
+ `AitkenNevillie` algorithm.
+
+If you specify values that do not make sense, e.g.
+ `init_extrapolation_order = 3, min_extrapolation_order = 4 `or
+ `sequence_symbol = :foo`, the constructor will correct the input and warn you
+ it did so.
+
+Finally note that the *extrapolation order* and the *order* of the method do not
+ coincide. For both algorithms an extrapolation order of `n` translates to an error of
+ of order `2(n+1)`.
+
+###### Details on the Implementation
+
+ As mentioned above, the explicit midpoint rule is the internal method which is
+ extrapolated. Since it is not a one step method, it is started with one explicit
+ Euler step.
+
+The actual extrapolation is not achieved by the
+[algorithm of Aitken and Neville](https://en.wikipedia.org/wiki/Neville%27s_algorithm)
+ but by usage of the First Barycentric Formula (A short overview of Barycentric
+Interpolation
+is given in this [paper](https://doi.org/10.1137/S0036144502417715) of Berrut
+ and Trefethen).
+This means that scalars and weights necessary for carrying out the extrapolation are
+precomputed and tabulated once at the beginning of the call of `solve`.
+From there the
+actual extrapolation performed in each timestep is achieved by computing a linear
+combination of the internal discretizations that have been obtained by the explicit
+midpoint rule.
+Thus initializing the precomputed values requires time and storage of order
+`max_extrapolation_order ^ 2` but the time computing the extrapolation for some timestep
+scales only linearly in `max_extrapolation_order`.
+
+Since the algorithms do not use the Aitken Neville scheme for extrapolation, they
+also use a different embedded approximation than other extrapolation methods, e.g.
+`ODEX`, do.
+Using a notation common for the algorithm of Aitken Neville, let the internal
+discretizations be given by `T[1:n, 1]`. Then `ODEX` would use the entry `T[n,n]` as
+the new solution and estimate the local error with approximation given by `T[n,n-1]`
+(cf. equation (9.23) in
+[Solving Ordinary Differential Equations I](https://doi.org/10.1007/978-3-540-78862-1)
+of Hairer, Wanner and Nørsett).
+Since for the two algorithms presented here only the entries `T[i,i]` for `i = 1:n`
+are accessible, they use the value `T[n-1,n-1]` for error estimation instead.
+
 #### Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
