@@ -33,7 +33,7 @@ To use this functionality, you must install DiffEqSensitivty.jl:
 
 ```julia
 ]add DiffEqSensitivity
-using DiffEqSensitivty
+using DiffEqSensitivity
 ```
 
 ## Efficiency of the Different Methods
