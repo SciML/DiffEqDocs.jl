@@ -214,18 +214,14 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 #### Are the native Julia solvers compatible with autodifferentiation?
 
-Yes! However, you should first look into
+Yes! Take a look at the
 [sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity.html)
-as a (possibly in the future) more efficient method for calculating derivatives
-of the solution and functionals of the solution.
+page for more details.
 
-But if you still want to do it the naive way, here's how you do it.
-If the algorithm does not use adaptive time stepping, then you simply
-need to make the initial condition have elements of Dual numbers. If the
-algorithm uses Dual numbers, you need to make sure that time is also
-given by Dual numbers. A quick explanation of this is because changing
-the value of the initial condition will change the error in the steps, thus
-causing different steps to be taken changing the time values.
+If the algorithm does not have differentiation of parameter-depedendent events, 
+then you simply need to make the initial condition have elements of Dual numbers. 
+If the algorithm uses Dual numbers, you need to make sure that time is also
+given by Dual numbers. 
 
 To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
@@ -237,14 +233,16 @@ function func(du,u,p,t)
 end
 function f(p)
   prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
-  solve(prob,Tsit5(),save_everystep=false)[end]
+  # Lower tolerances to show the methods converge to the same value
+  solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]
 end
 ```
 
 This function takes in new parameters and spits out the solution at the end.
 We make the inital condition `eltype(p).([1.0,1.0])` so that way it's typed to
 be Dual numbers whenever `p` is an array of `Dual` numbers, and we do the same
-for the timespan. Then we can take the Jacobian via ForwardDiff.jl:
+for the timespan just to show what you'd do if there was parameters-dependent events. 
+Then we can take the Jacobian via ForwardDiff.jl:
 
 ```julia
 using ForwardDiff
