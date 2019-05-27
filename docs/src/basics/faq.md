@@ -11,7 +11,7 @@ DelayDiffEq.jl) are all written to be generic to the array and number types.
 This means they will adopt the implementation that is given by the array type.
 The in-place algorithms internally utilize Julia's broadcast (with some exceptions
 due to a Julia bug for now, see [this issue](https://github.com/JuliaDiffEq/OrdinaryDiffEq.jl/issues/106))
-and Julia's `A_mul_B!` in-place matrix multiplication function. The out-of-place
+and Julia's `mul!` in-place matrix multiplication function. The out-of-place
 algorithms utilize standard arithmetical functions. Both additionally utilize
 the user's norm specified via the common interface options and, if a stiff
 solver, ForwardDiff/DiffEqDiffTools for the Jacobian calculation, and Base linear
@@ -21,7 +21,7 @@ a [better form of the norm](http://docs.juliadiffeq.org/latest/basics/common_sol
 or [linear solve calculations](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html)
 to fully utilize parallelism.
 
-GPUArrays.jl, ArrayFire.jl, DistributedArrays.jl have been tested and work in
+GPUArrays.jl (CuArrays.jl), ArrayFire.jl, DistributedArrays.jl have been tested and work in
 various forms, where the last one is still not recommended for common use
 yet.
 
@@ -57,7 +57,7 @@ This is demonstrated
 with static matrices. Static vectors/arrays are stack-allocated, and thus creating
 new arrays is free and the compiler doesn't have to heap-allocate any of the
 temporaries (that's the expensive part!). These have specialized super fast
-dispatches for arithmetic operations and extra things like QR-factorizations,
+dispatches for arithmetic operations and extra things like LU-factorizations,
 and thus they are preferred when possible. However, they lose efficiency if they
 grow too large.
 
