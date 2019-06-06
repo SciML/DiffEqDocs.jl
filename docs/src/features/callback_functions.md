@@ -504,3 +504,58 @@ deleteat!(integrator,2)
 ```
 
 This allows you to build sophisticated models of populations with births and deaths.
+
+## VectorContinuousCallback Example
+
+### Example 1: Bouncing Ball with multiple walls
+
+This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as - 
+
+```julia
+function f(du,u,p,t)
+  du[1] = u[2]
+  du[2] = -p
+  du[3] = u[4]
+  du[4] = 0.0
+end
+```
+
+where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `u[3]` denotes `x`-coordinate and `u[4]` denotes velocity in `x`-direction. We will make a `VectorContinuousCallback` of length 2 - one for `x` axis collision, one for walls parallel to `y` axis. 
+
+```julia
+function condition(out,u,t,integrator) # Event when event_f(u,t) == 0
+  out[1] = u[1]
+  out[2] = (u[3] - 10.0)u[3]
+end
+
+function affect!(integrator, idx)
+  if idx == 1
+    integrator.u[2] = -0.9integrator.u[2]
+  elseif idx == 2
+    integrator.u[4] = -0.9integrator.u[4]
+  end
+end
+
+cb = VectorContinuousCallback(condition,affect!,2)
+```
+
+It is evident that `out[2]` will be zero when `u[3]` (x-coordinate) is either `0.0` or `10.0`. And when that happens, we flip the velocity with some coefficient of restitution (`0.9`).
+
+Completeting rest of the code-
+```julia
+u0 = [50.0,0.0,0.0,2.0]
+tspan = (0.0,15.0)
+p = 9.8
+prob = ODEProblem(f,u0,tspan,p)
+sol = solve(prob,Tsit5(),callback=cb,dt=1e-3,adaptive=false)
+x = []
+y = []
+for i in 1:length(sol.u)
+  append!(y, sol.u[i][1])
+  append!(x, sol.u[i][3])
+end
+plot(x,y)
+```
+And you get the following output: 
+
+![Cell1](../assets/ball2.png)
