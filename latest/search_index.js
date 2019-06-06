@@ -3729,6 +3729,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_functions.html#VectorContinuousCallback-Example-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "VectorContinuousCallback Example",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "features/callback_functions.html#Example-1:-Bouncing-Ball-with-multiple-walls-1",
+    "page": "Event Handling and Callback Functions",
+    "title": "Example 1: Bouncing Ball with multiple walls",
+    "category": "section",
+    "text": "This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at x = 0 and x = 10.0. We have our ODEFunction as - function f(du,u,p,t)\n  du[1] = u[2]\n  du[2] = -p\n  du[3] = u[4]\n  du[4] = 0.0\nendwhere u[1] denotes y-coordinate, u[2] denotes velocity in y-direction, u[3] denotes x-coordinate and u[4] denotes velocity in x-direction. We will make a VectorContinuousCallback of length 2 - one for x axis collision, one for walls parallel to y axis. function condition(out,u,t,integrator) # Event when event_f(u,t) == 0\n  out[1] = u[1]\n  out[2] = (u[3] - 10.0)u[3]\nend\n\nfunction affect!(integrator, idx)\n  if idx == 1\n    integrator.u[2] = -0.9integrator.u[2]\n  elseif idx == 2\n    integrator.u[4] = -0.9integrator.u[4]\n  end\nend\n\ncb = VectorContinuousCallback(condition,affect!,2)It is evident that out[2] will be zero when u[3] (x-coordinate) is either 0.0 or 10.0. And when that happens, we flip the velocity with some coefficient of restitution (0.9).Completeting rest of the code-u0 = [50.0,0.0,0.0,2.0]\ntspan = (0.0,15.0)\np = 9.8\nprob = ODEProblem(f,u0,tspan,p)\nsol = solve(prob,Tsit5(),callback=cb,dt=1e-3,adaptive=false)\nplot(sol,vars=(1,3))And you get the following output: (Image: Cell1)"
+},
+
+{
     "location": "features/callback_library.html#",
     "page": "Callback Library",
     "title": "Callback Library",
