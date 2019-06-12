@@ -422,11 +422,11 @@ plot(sol)
 ![ODE System Solution](../assets/multiODEplot.png)
 
 We can instead use the in-place form by using Julia's in-place matrix multiplication
-function `rmul!`:
+function `mul!`:
 
 ```julia
 using LinearAlgebra
-f(du,u,p,t) = rmul!(du,A,u)
+f(du,u,p,t) = mul!(du,A,u)
 ```
 
 Additionally, we can use non-traditional array types as well. For example,
