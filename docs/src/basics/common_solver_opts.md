@@ -161,7 +161,7 @@ explanations of the timestepping algorithms, see the
   algorithm-dependent.
 * `qmax`: Defines the maximum value possible for the adaptive q. Defaults are
   algorithm-dependent.
-* `qmin`: Defines the maximum value possible for the adaptive q. Defaults are
+* `qmin`: Defines the minimum value possible for the adaptive q. Defaults are
   algorithm-dependent.
 * `qsteady_min`: Defines the minimum for the range around 1 where the timestep
   is held constant. Defaults are algorithm-dependent.
