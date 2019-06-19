@@ -2397,7 +2397,15 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "TaylorIntegration.jl",
     "category": "section",
-    "text": "TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor series method for high accuracy integration of ODEs. These methods are optimized when the absolute tolerance is required to be very low. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use TaylorIntegration.jl:]add TaylorIntegration\nusing TaylorIntegrationTaylorMethod(order) - Taylor integration method with maximal order (required)"
+    "text": "TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor series method for high accuracy integration of ODEs. These methods are optimized when the absolute tolerance is required to be very low. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use TaylorIntegration.jl:]add TaylorIntegration\nusing TaylorIntegrationTaylorMethod(order) - Taylor integration method with maximal order (required)Note: this method is much faster if you put @taylorize on your derivative function!"
+},
+
+{
+    "location": "solvers/ode_solve.html#NeuralNetDiffEq.jl-1",
+    "page": "ODE Solvers",
+    "title": "NeuralNetDiffEq.jl",
+    "category": "section",
+    "text": "This method trains a neural network using Flux.jl to approximate the solution of the ODE. Currently this method isn\'t competitive but it is a fun curiosity that will be improved with future integration with Zygote. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use NeuralNetDiffEq.jl:]add NeuralNetDiffEq\nusing NeuralNetDiffEqnnode(chain,opt=ADAM(0.1)) - Defines a neural network solver which utilizes a Flux.jl chain under the hood which must be supplied by the user. Defaults to using the ADAM optimization method, but the user can pass any Flux.jl optimizer."
 },
 
 {
@@ -5389,7 +5397,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.substratesymstoich",
     "category": "function",
-    "text": "substratesymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a ReactantStruct, mapping the symbols of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
+    "text": "substratesymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a Vector of ReactantStructs, mapping the symbols of species that serve as substrates in the reaction to the corresponding stoichiometric coefficient as a substrate. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
 },
 
 {
@@ -5405,7 +5413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.productsymstoich",
     "category": "function",
-    "text": "productsymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a ReactantStruct, mapping the symbols of species that are products in the reaction to the corresponding stoichiometric coefficient as a product. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
+    "text": "productsymstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a Vector of ReactantStructs, mapping the symbols of species that are products in the reaction to the corresponding stoichiometric coefficient as a product. \n\nNon-allocating, returns underlying field within the reaction_network.\n\n\n\n\n\n"
 },
 
 {
@@ -5413,7 +5421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.netstoich",
     "category": "function",
-    "text": "netstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that participate in the reaction to the net stoichiometric coefficient of the species (i.e. net change in the species due to the reaction).\n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
+    "text": "netstoich(network, rxidx)\n\nGiven an AbstractReactionNetwork and a reaction index, rxidx, return a vector of pairs, mapping ids of species that change numbers due to the reaction to the net stoichiometric coefficient of the species (i.e. net change in the species due to the reaction).\n\nAllocates a new vector to store the pairs.\n\n\n\n\n\n"
 },
 
 {
