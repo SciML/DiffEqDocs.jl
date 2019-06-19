@@ -1045,6 +1045,27 @@ using TaylorIntegration
 
 - `TaylorMethod(order)` - Taylor integration method with maximal `order` (required)
 
+Note: this method is much faster if you put `@taylorize` on your derivative function!
+
+### NeuralNetDiffEq.jl
+
+This method trains a neural network using Flux.jl to approximate the solution of the
+ODE. Currently this method isn't competitive but it is a fun curiosity that will be
+improved with future integration with Zygote. 
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and
+use NeuralNetDiffEq.jl:
+
+```julia
+]add NeuralNetDiffEq
+using NeuralNetDiffEq
+```
+
+- `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
+  `chain` under the hood which must be supplied by the user. Defaults to using the ADAM
+  optimization method, but the user can pass any Flux.jl optimizer.
+
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
