@@ -1469,7 +1469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "category": "section",
-    "text": ""
+    "text": "Dynamical ordinary differential equations, such as those arising from the definition of a Hamiltonian system or a second order ODE, have a special structure that can be utilized in the solution of the differential equation. On this page we describe how to define second order differential equations for their efficient numerical solution."
 },
 
 {
