@@ -1,5 +1,8 @@
 # Dynamical, Hamiltonian, and 2nd Order ODE Solvers
 
+Dynamical ODEs, such as those arising from Hamiltonians or second
+order ordinary differential equations, give rise to a special structure
+that can be specialized on in the solver for more efficiency.
 These algorithms require an ODE defined in the following ways:
 
 ```julia
