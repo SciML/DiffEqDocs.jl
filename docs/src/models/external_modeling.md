@@ -42,8 +42,3 @@ and model selection routines.
 
 [QunatumOptics.jl](https://github.com/qojulia/QuantumOptics.jl) is a package
 for simulation of quantum systems.
-
-## QuDiffEq.jl
-
-[QuDiffEq.jl](https://github.com/QuantumBFS/QuDiffEq.jl) is a package
-for solving differential equations using quantum algorithm.
