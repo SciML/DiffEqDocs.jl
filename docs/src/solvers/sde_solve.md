@@ -111,6 +111,12 @@ Orders are given in terms of strong order.
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
+- `WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+- `WangLi3SMil_B` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+- `WangLi3SMil_C` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+- `WangLi3SMil_D` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+- `WangLi3SMil_E` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+- `WangLi3SMil_F` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
 - `SRA` - Adaptive strong order 1.5 methods for additive Ito and Stratonovich SDEs.
   Default tableau is for SRA1. Can handle diagonal, non-diagonal and scalar
   additive noise.
@@ -146,6 +152,18 @@ sol = solve(prob,SRIW1())
 For `SRA` and `SRI`, the following option is allowed:
 
 * `tableau`: The tableau for an `:SRA` or `:SRI` algorithm. Defaults to SRIW1 or SRA1.
+
+#### S-ROCK Methods
+
+- `SROCK1` - is a fixed step size stabilized explicit method for stiff problems. Defaults to
+  solving th Ito problem but `SROCK1(interpretation=:Stratonovich)` can make it solve
+  the Stratonovich problem. Strong order of convergence is 0.5 and weak order 1, but is
+  optimised to get order 1 in case os scalar/diagonal noise.
+- `SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization thus can
+  handle stiff problems. Only for Ito problems. Defaults to strong and weak order 1.0,
+  but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`.
+- `SROCK2` - is a weak second order and strong first order fixed step stabilized method for
+  stiff Ito problems.
 
 #### Stiff Methods
 
