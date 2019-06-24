@@ -301,6 +301,22 @@ Royal Society, 2011.).
   spectral difference method applied to wave propagation problems.
 - `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimised for for the
   spectral difference method applied to wave propagation problems.
+- `CKLLSRK43_2` - 4-stage, third order low-storage scheme, optimised for compressible Navier–Stokes equations..
+- `CKLLSRK54_3C` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK95_4S` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK95_4C` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK95_4M` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK54_3C_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK54_3M_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK54_3N_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK85_4C_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK85_4M_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK85_4P_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK54_3N_4R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK54_3M_4R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK65_4M_4R` - 6-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK85_4FM_4R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK75_4M_5R` - 7-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
 
 __NOTE__: All the 2N Methods (`ORK256`, `CarpenterKennedy2N54`, `NDBLSRK124`, `NDBLSRK134`, `NDBLSRK144`, `DGLDDRK73_C`, `DGLDDRK84_C`, `DGLDDRK84_F` and `HSLDDRK64`) work on the basic principle of being able to perform step `S1 = S1 + F(S2)` in just 2 registers. Certain optimizations have been done to achieve this theoritical limit (when `alias_u0` is set) but have a limitation that `du` should always be on the left hand side (assignments only) in the implementation.
 
@@ -488,6 +504,19 @@ These methods require a choice of `dt`.
 - `ROCK4` - Fourth order stabilized Runge-Kutta method. Exhibits high stability
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
+- `RKC` - Second order stabilized Runge-Kutta method. Exhibits high stability
+  for real eigenvalues and is smoothened to allow for moderate sized complex
+  eigenvalues.
+- `SERK2v2` - Second order stabilized extrapolated Runge-Kutta method. Exhibits
+  high stability for real eigenvalues and is smoothened to allow for moderate
+  sized complex eigenvalues.
+- `ESERK5` - Fifth order stabilized extrapolated Runge-Kutta method. Exhibits
+  high stability for real eigenvalues and is smoothened to allow for moderate
+  sized complex eigenvalues.
+
+ROCK methods offer a `min_stages` and `max_stages` functionality. SERK methods
+derive higher orders by Aitken-Neville algorithm. SERK2v2 is defaulted to Predictive
+control but has option of PI control.
 
 ##### Exponential Methods for Linear and Affine Problems
 
@@ -1076,7 +1105,7 @@ using QuDiffEq
 
 This method trains a neural network using Flux.jl to approximate the solution of the
 ODE. Currently this method isn't competitive but it is a fun curiosity that will be
-improved with future integration with Zygote. 
+improved with future integration with Zygote.
 
 Note that this setup is not automatically included with DifferentialEquaitons.jl.
 To use the following algorithms, you must install and
