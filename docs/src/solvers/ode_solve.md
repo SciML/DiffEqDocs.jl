@@ -1059,24 +1059,9 @@ use QuDiffEq.jl:
 Pkg.clone("https://github.com/QuantumBFS/QuDiffEq.jl")
 using QuDiffEq
 ```
-1. Algorithms based on linear equations solver (HHL) subroutine
-  - `QuEuler`
-  - `QuLeapfrog`
-  - `QuAB2`
-  - `QuAB3`
-  - `QuAB4`
-  
-Usage : `solve(prob::QuLDEProblem, alg::LDEMSAlgHHL)` for linear differential equations using the HHL based quantum circuit. 
 
-Methods takes argument `nreg` as `QuEuler(nreg)`. It selects the number of ancilla registers to control precision.
-  
-2. `QuLDE` - algorithm based on truncated Taylor series aprroximation
+- `QuLDE(k,Δu)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `Δu` is the intial condition for the resulting linear differential equations which is to be set to a small number e.g. `Δu = [1e-5,1e-5]`.
 
-It can be used in two ways:
-  - `solve(prob::QuLDEProblem, alg::QuLDE)` for linear differential equations using the QuLDE quantum circuit.
-  - `solve(prob::ODEProblem, alg::QuLDE)` for solving a system of differential equations by linearising them. It uses the above as a subroutine.
-  
-Method can take arguments `k` and `Δu` as `QuLDE(k,Δu)`. `k` sets the order of Taylor series aprroximation and `Δu` is the intial condition for the differential equations obtained in the second use. By default `k = 3`.
 
 ### NeuralNetDiffEq.jl
 
