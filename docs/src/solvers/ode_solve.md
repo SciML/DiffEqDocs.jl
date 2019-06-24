@@ -1047,6 +1047,37 @@ using TaylorIntegration
 
 Note: this method is much faster if you put `@taylorize` on your derivative function!
 
+  ### QuDiffEq.jl
+
+QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and
+use QuDiffEq.jl:
+
+```julia
+Pkg.clone("https://github.com/QuantumBFS/QuDiffEq.jl")
+using QuDiffEq
+```
+1. Algorithms based on linear equations solver (HHL) subroutine
+  - `QuEuler`
+  - `QuLeapfrog`
+  - `QuAB2`
+  - `QuAB3`
+  - `QuAB4`
+  
+Usage : `solve(prob::QuLDEProblem, alg::LDEMSAlgHHL)` for linear differential equations using the HHL based quantum circuit. 
+
+Methods takes argument `nreg` as `QuEuler(nreg)`. It selects the number of ancilla registers to control precision.
+  
+2. `QuLDE` - algorithm based on truncated Taylor series aprroximation
+
+It can be used in two ways:
+  - `solve(prob::QuLDEProblem, alg::QuLDE)` for linear differential equations using the QuLDE quantum circuit.
+  - `solve(prob::ODEProblem, alg::QuLDE)` for solving a system of differential equations by linearising them. It uses the above as a subroutine.
+  
+Method can take arguments `k` and `Δu` as `QuLDE(k,Δu)`. `k` sets the order of Taylor series aprroximation and `Δu` is the intial condition for the differential equations obtained in the second use. By default `k = 3`.
+
 ### NeuralNetDiffEq.jl
 
 This method trains a neural network using Flux.jl to approximate the solution of the
@@ -1065,7 +1096,7 @@ using NeuralNetDiffEq
 - `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
   `chain` under the hood which must be supplied by the user. Defaults to using the ADAM
   optimization method, but the user can pass any Flux.jl optimizer.
-
+  
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
