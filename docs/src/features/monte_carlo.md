@@ -65,48 +65,42 @@ end value of the 2nd dependent variable for each of the runs.
 ### Solving the Problem
 
 ```julia
-sim = solve(prob,alg,collect_result = Val{true},kwargs...)
+sim = solve(prob,alg,montealg,kwargs...)
 ```
-
-This solve command has an extra keyword argument `collect_result` for whether to
-collect the result to a local array. If `Val{true}`, it will return a `Vector`
-of the results of `output_func`. If `Val{false}`, it will run each batch
-independently to form a `DArray`. Notice that `parallel_type` would be a layer
-of parallelism below this.
-
 The keyword arguments take in the arguments for the common solver interface and will
-pass them to the differential equation solver. The special keyword arguments to note are:
+pass them to the differential equation solver. The `montealg` is optional, and will
+default to an embaressingly parallel multiprocessing approach. The special keyword 
+arguments to note are:
 
-* `num_monte`: The number of simulations to run. Default is 10,000.
-* `parallel_type` : The type of parallelism to employ. Default is `:pmap` if
-  `collect_result`, otherwise it's `none`.
+* `num_monte`: The number of simulations to run. This argument is required.
 * `batch_size` : The size of the batches on which the reductions are applies. Defaults to `num_monte`.
 * `pmap_batch_size`: The size of the `pmap` batches. Default is
    `batch_size÷100 > 0 ? batch_size÷100 : 1`
 
-The types of parallelism included are:
+### MonteCarloAlgorihtms
 
-* `:none` - No parallelism
-* `:threads` - This uses multithreading. It's local (single computer, shared memory)
+The choice of Monte Carlo algorithm allows for control over how the multiple trajectories
+are handled. Currently, the Monte Carlo algorithm types are:
+
+* `MonteSerial()` - No parallelism
+* `MonteThreads()` - This uses multithreading. It's local (single computer, shared memory)
   parallelism only. Fastest when the trajectories are quick.
 * `:parfor` - A multiprocessing parallelism. Slightly better than `pmap` when the
   calculations are fast. Does not re-distribute work: each trajectory is assumed
   to take as long to calculate.
-* `:pmap` - The default. Uses `pmap` internally. It will use as many processors as you
+* `MonteDistributed()` - The default. Uses `pmap` internally. It will use as many processors as you
   have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
   documentation for more details. Recommended for the case when each trajectory
   calculation isn't "too quick" (at least about a millisecond each?).
-* `:split_threads` - This uses threading on each process, splitting the problem
+* `MonteSplitThreads()` - This uses threading on each process, splitting the problem
   into `nprocs()` even parts. This is for solving many quick trajectories on a
   multi-node machine. It's recommended you have one process on each node.
 
-Additionally, a `MonteCarloEstimator` can be supplied
+For example, `MonteThreads()` is invoked by:
 
 ```julia
-sim = solve(prob,estimator,alg,kwargs...)
+solve(monteprob,alg,MonteThreads;num_monte=1000)
 ```
-
-These will be detailed when implemented.
 
 ### Solution Type
 
@@ -312,7 +306,7 @@ function prob_func(prob,i,repeat)
   ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
 end
 monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
-sim = solve(monte_prob,Tsit5(),num_monte=100, parallel_type = :threads)
+sim = solve(monte_prob,Tsit5(),MonteThreads(),num_monte=100)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
