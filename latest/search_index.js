@@ -2357,7 +2357,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "ODE.jl",
     "category": "section",
-    "text": "ode23 - Bogacki-Shampine\'s order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
+    "text": "Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use ODE.jl:]add ODE\nusing ODEode23 - Bogacki-Shampine\'s order 2/3 Runge-Kutta  method\node45 - A Dormand-Prince order 4/5 Runge-Kutta method\node23s - A modified Rosenbrock order 2/3 method due to Shampine\node78 - A Fehlburg order 7/8 Runge-Kutta method\node4 - The classic Runge-Kutta order 4 method\node4ms - A fixed-step, fixed order Adams-Bashforth-Moulton method†\node4s - A 4th order Rosenbrock method due to Shampine†: Does not step to the interval endpoint. This can cause issues with discontinuity detection, and discrete variables need to be updated appropriately."
 },
 
 {
@@ -2365,7 +2365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "MATLABDiffEq.jl",
     "category": "section",
-    "text": "These algorithms require that the problem was defined using a ParameterizedFunction via the @ode_def macro. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use MATLABDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/MATLABDiffEq.jl\")\nusing MATLABDiffEqThis requires a licensed MATLAB installation. The available methods are:ode23\node45\node113\node23s\node23t\node23tb\node15s\node15iFor more information on these algorithms, see the MATLAB documentation."
+    "text": "These algorithms require that the problem was defined using a ParameterizedFunction via the @ode_def macro. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use MATLABDiffEq.jl:]add https://github.com/JuliaDiffEq/MATLABDiffEq.jl\nusing MATLABDiffEqThis requires a licensed MATLAB installation. The available methods are:ode23\node45\node113\node23s\node23t\node23tb\node15s\node15iFor more information on these algorithms, see the MATLAB documentation."
 },
 
 {
@@ -2381,7 +2381,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Note: This package currently segfaults on non-Linux Julia v1.0!",
     "category": "section",
-    "text": "GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use GeometricIntegratorsDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl\")\nusing GeometricIntegratorsDiffEqGIEuler - 1st order Euler method\nGIMidpoint - 2nd order explicit midpoint method\nGIHeun - 2nd order Heun\'s method\nGIKutta - 3rd order Kutta\'s method\nGIERK4 - standard 4th order Runge-Kutta\nGIERK438 - 4th order Runge-Kutta, 3/8\'s rule\nGIImplicitEuler - 1st order implicit Euler method\nGIImplicitMidpoint - 2nd order implicit midpoint method\nGIRadIIA2 - 2-stage order 3 Radau-IIA\nGIRadIIA3 - 3-stage order 5 Radau-IIA\nGISRK3 - 3-stage order 4 symmetric Runge-Kutta method\nGIGLRK(s) - Gauss-Legendre Runge-Kutta method of order 2sNote that all of these methods require the user supplies dt."
+    "text": "GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use GeometricIntegratorsDiffEq.jl:]add https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl\nusing GeometricIntegratorsDiffEqGIEuler - 1st order Euler method\nGIMidpoint - 2nd order explicit midpoint method\nGIHeun - 2nd order Heun\'s method\nGIKutta - 3rd order Kutta\'s method\nGIERK4 - standard 4th order Runge-Kutta\nGIERK438 - 4th order Runge-Kutta, 3/8\'s rule\nGIImplicitEuler - 1st order implicit Euler method\nGIImplicitMidpoint - 2nd order implicit midpoint method\nGIRadIIA2 - 2-stage order 3 Radau-IIA\nGIRadIIA3 - 3-stage order 5 Radau-IIA\nGISRK3 - 3-stage order 4 symmetric Runge-Kutta method\nGIGLRK(s) - Gauss-Legendre Runge-Kutta method of order 2sNote that all of these methods require the user supplies dt."
 },
 
 {
@@ -2389,7 +2389,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "BridgeDiffEq.jl",
     "category": "section",
-    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:Pkg.clone(\"https://github.com/JuliaDiffEq/BridgeDiffEq.jl\")\nusing BridgeDiffEqBridgeR3 - 3rd order Ralston method\nBridgeBS3 - 3rd order Bogacki-Shampine method"
+    "text": "Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods are made and optimized for out-of-place functions on immutable (static vector) types. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use BridgeDiffEq.jl:]add https://github.com/JuliaDiffEq/BridgeDiffEq.jl\nusing BridgeDiffEqBridgeR3 - 3rd order Ralston method\nBridgeBS3 - 3rd order Bogacki-Shampine method"
 },
 
 {
@@ -2398,6 +2398,14 @@ var documenterSearchIndex = {"docs": [
     "title": "TaylorIntegration.jl",
     "category": "section",
     "text": "TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor series method for high accuracy integration of ODEs. These methods are optimized when the absolute tolerance is required to be very low. Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use TaylorIntegration.jl:]add TaylorIntegration\nusing TaylorIntegrationTaylorMethod(order) - Taylor integration method with maximal order (required)Note: this method is much faster if you put @taylorize on your derivative function!"
+},
+
+{
+    "location": "solvers/ode_solve.html#QuDiffEq.jl-1",
+    "page": "ODE Solvers",
+    "title": "QuDiffEq.jl",
+    "category": "section",
+    "text": "QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use QuDiffEq.jl:]add https://github.com/QuantumBFS/QuDiffEq.jl\nusing QuDiffEqQuLDE(k,Δu) - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. k selects the order in the Taylor series aprroximation (for the quantum circuit). Δu is the intial condition for the resulting linear differential equations which is to be set to a small number e.g. Δu = [1e-5,1e-5]."
 },
 
 {
@@ -3957,7 +3965,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Solving the Problem",
     "category": "section",
-    "text": "sim = solve(prob,alg,collect_result = Val{true},kwargs...)This solve command has an extra keyword argument collect_result for whether to collect the result to a local array. If Val{true}, it will return a Vector of the results of output_func. If Val{false}, it will run each batch independently to form a DArray. Notice that parallel_type would be a layer of parallelism below this.The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The special keyword arguments to note are:num_monte: The number of simulations to run. Default is 10,000.\nparallel_type : The type of parallelism to employ. Default is :pmap if collect_result, otherwise it\'s none.\nbatch_size : The size of the batches on which the reductions are applies. Defaults to num_monte.\npmap_batch_size: The size of the pmap batches. Default is  batch_size÷100 > 0 ? batch_size÷100 : 1The types of parallelism included are::none - No parallelism\n:threads - This uses multithreading. It\'s local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\n:pmap - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia\'s documentation for more details. Recommended for the case when each trajectory calculation isn\'t \"too quick\" (at least about a millisecond each?).\n:split_threads - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It\'s recommended you have one process on each node.Additionally, a MonteCarloEstimator can be suppliedsim = solve(prob,estimator,alg,kwargs...)These will be detailed when implemented."
+    "text": "sim = solve(prob,alg,montealg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The montealg is optional, and will default to an embaressingly parallel multiprocessing approach. The special keyword  arguments to note are:num_monte: The number of simulations to run. This argument is required.\nbatch_size : The size of the batches on which the reductions are applies. Defaults to num_monte.\npmap_batch_size: The size of the pmap batches. Default is  batch_size÷100 > 0 ? batch_size÷100 : 1"
+},
+
+{
+    "location": "features/monte_carlo.html#MonteCarloAlgorihtms-1",
+    "page": "Parallel Monte Carlo Simulations",
+    "title": "MonteCarloAlgorihtms",
+    "category": "section",
+    "text": "The choice of Monte Carlo algorithm allows for control over how the multiple trajectories are handled. Currently, the Monte Carlo algorithm types are:MonteSerial() - No parallelism\nMonteThreads() - This uses multithreading. It\'s local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\n:parfor - A multiprocessing parallelism. Slightly better than pmap when the calculations are fast. Does not re-distribute work: each trajectory is assumed to take as long to calculate.\nMonteDistributed() - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia\'s documentation for more details. Recommended for the case when each trajectory calculation isn\'t \"too quick\" (at least about a millisecond each?).\nMonteSplitThreads() - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It\'s recommended you have one process on each node.For example, MonteThreads() is invoked by:solve(monteprob,alg,MonteThreads;num_monte=1000)"
 },
 
 {
@@ -4061,7 +4077,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Monte Carlo Simulations",
     "title": "Using multithreading",
     "category": "section",
-    "text": "The previous Monte Carlo simulation can also be parallelized using a multithreading approach, which will make use of the different cores within a single computer. Because the memory is shared across the different threads, it is not necessary to use the @everywhere macro. Instead, the same problem can be implemented simply as:using DifferentialEquations\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100, parallel_type = :threads)The number of threads to be used has to be defined outside of Julia, in the environmental variable JULIA_NUM_THREADS (see Julia\'s documentation for details)."
+    "text": "The previous Monte Carlo simulation can also be parallelized using a multithreading approach, which will make use of the different cores within a single computer. Because the memory is shared across the different threads, it is not necessary to use the @everywhere macro. Instead, the same problem can be implemented simply as:using DifferentialEquations\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),MonteThreads(),num_monte=100)The number of threads to be used has to be defined outside of Julia, in the environmental variable JULIA_NUM_THREADS (see Julia\'s documentation for details)."
 },
 
 {
