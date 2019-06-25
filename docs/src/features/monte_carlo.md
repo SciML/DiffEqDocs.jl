@@ -85,9 +85,6 @@ are handled. Currently, the Monte Carlo algorithm types are:
 * `MonteSerial()` - No parallelism
 * `MonteThreads()` - This uses multithreading. It's local (single computer, shared memory)
   parallelism only. Fastest when the trajectories are quick.
-* `:parfor` - A multiprocessing parallelism. Slightly better than `pmap` when the
-  calculations are fast. Does not re-distribute work: each trajectory is assumed
-  to take as long to calculate.
 * `MonteDistributed()` - The default. Uses `pmap` internally. It will use as many processors as you
   have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
   documentation for more details. Recommended for the case when each trajectory
