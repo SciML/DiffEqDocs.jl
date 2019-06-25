@@ -96,7 +96,7 @@ are handled. Currently, the Monte Carlo algorithm types are:
 For example, `MonteThreads()` is invoked by:
 
 ```julia
-solve(monteprob,alg,MonteThreads;num_monte=1000)
+solve(monteprob,alg,MonteThreads();num_monte=1000)
 ```
 
 ### Solution Type
