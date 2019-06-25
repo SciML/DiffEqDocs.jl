@@ -146,6 +146,7 @@ Example usage:
 ```julia
 sol = solve(prob,SRIW1())
 ```
+3-stage Milstein Methods `WangLi3SMil_A`, `WangLi3SMil_B`, `WangLi3SMil_D`, `WangLi3SMil_E` and `WangLi3SMil_F` are currently implemented for 1-Dimensional noise only.
 
 #### Tableau Controls
 
@@ -164,6 +165,16 @@ For `SRA` and `SRI`, the following option is allowed:
   but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`.
 - `SROCK2` - is a weak second order and strong first order fixed step stabilized method for
   stiff Ito problems.
+- `SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
+  and weak order 1. This method has a better stability domain then `SROCK1`. Also it allows
+  special post-processing techniques in case of ergodic dynamical systems, in the context of
+  ergodic Brownian dynamics, to achieve order 2 accuracy.
+- `TangXiaoSROCK2` - is a fixed step size stabilized expicit method for stiff problems. Only for
+  Ito problems. Weak order of 2 and strog order of 1. Has 5 versions with different stability
+  domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5.
+
+Note: Post processing in `SKSROCK` is still under development. Also `TangXiaoSROCK2` is also not fully
+functional.
 
 #### Stiff Methods
 
