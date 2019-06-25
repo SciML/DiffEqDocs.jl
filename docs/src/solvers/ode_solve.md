@@ -946,6 +946,15 @@ using SimpleDiffEq
 
 ### ODE.jl
 
+
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use ODE.jl:
+
+```julia
+]add ODE
+using ODE
+```
+
   - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
   - `ode45` - A Dormand-Prince order 4/5 Runge-Kutta method
   - `ode23s` - A modified Rosenbrock order 2/3 method due to Shampine
@@ -966,7 +975,7 @@ with DifferentialEquaitons.jl. To use the following algorithms, you must install
 and use MATLABDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/JuliaDiffEq/MATLABDiffEq.jl")
+]add https://github.com/JuliaDiffEq/MATLABDiffEq.jl
 using MATLABDiffEq
 ```
 
@@ -994,7 +1003,7 @@ To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl")
+]add https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl
 using GeometricIntegratorsDiffEq
 ```
 
@@ -1022,7 +1031,7 @@ DifferentialEquaitons.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
+]add https://github.com/JuliaDiffEq/BridgeDiffEq.jl
 using BridgeDiffEq
 ```
 
@@ -1047,7 +1056,7 @@ using TaylorIntegration
 
 Note: this method is much faster if you put `@taylorize` on your derivative function!
 
-  ### QuDiffEq.jl
+### QuDiffEq.jl
 
 QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.
 
@@ -1056,7 +1065,7 @@ To use the following algorithms, you must install and
 use QuDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/QuantumBFS/QuDiffEq.jl")
+]add https://github.com/QuantumBFS/QuDiffEq.jl
 using QuDiffEq
 ```
 
