@@ -162,19 +162,20 @@ For `SRA` and `SRI`, the following option is allowed:
   optimised to get order 1 in case os scalar/diagonal noise.
 - `SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization thus can
   handle stiff problems. Only for Ito problems. Defaults to strong and weak order 1.0,
-  but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`.
+  but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`. This method can handle
+  1-dimensional, diagonal and multi-dimensional noise.
 - `SROCK2` - is a weak second order and strong first order fixed step stabilized method for
-  stiff Ito problems.
+  stiff Ito problems.This method can handle 1-dimensional, diagonal and multi-dimensional noise.
 - `SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
   and weak order 1. This method has a better stability domain then `SROCK1`. Also it allows
   special post-processing techniques in case of ergodic dynamical systems, in the context of
-  ergodic Brownian dynamics, to achieve order 2 accuracy.
+  ergodic Brownian dynamics, to achieve order 2 accuracy. `SKSROCKSKSROCK(;post_processing=true)`
+  will make use of post processing. By default it doesn't use post processing. Post processing is
+  optional and under development. The rest of the method is completely functional and can handle
+  1-dimensional, diagonal and multi-dimensional noise.  
 - `TangXiaoSROCK2` - is a fixed step size stabilized expicit method for stiff problems. Only for
   Ito problems. Weak order of 2 and strog order of 1. Has 5 versions with different stability
   domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5. Under Development.
-
-Note: Post processing in `SKSROCK` is still under development. Also `TangXiaoSROCK2` is also not fully
-functional.
 
 #### Stiff Methods
 
