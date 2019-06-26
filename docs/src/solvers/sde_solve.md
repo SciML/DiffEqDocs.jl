@@ -146,7 +146,7 @@ Example usage:
 ```julia
 sol = solve(prob,SRIW1())
 ```
-3-stage Milstein Methods `WangLi3SMil_A`, `WangLi3SMil_B`, `WangLi3SMil_D`, `WangLi3SMil_E` and `WangLi3SMil_F` are currently implemented for 1-Dimensional noise only.
+3-stage Milstein Methods `WangLi3SMil_A`, `WangLi3SMil_B`, `WangLi3SMil_D`, `WangLi3SMil_E` and `WangLi3SMil_F` are currently implemented for 1-dimensional and diagonal noise only.
 
 #### Tableau Controls
 
