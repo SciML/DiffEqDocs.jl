@@ -171,7 +171,7 @@ For `SRA` and `SRI`, the following option is allowed:
   ergodic Brownian dynamics, to achieve order 2 accuracy.
 - `TangXiaoSROCK2` - is a fixed step size stabilized expicit method for stiff problems. Only for
   Ito problems. Weak order of 2 and strog order of 1. Has 5 versions with different stability
-  domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5.
+  domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5. Under Development.
 
 Note: Post processing in `SKSROCK` is still under development. Also `TangXiaoSROCK2` is also not fully
 functional.
