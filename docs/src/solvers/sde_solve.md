@@ -169,7 +169,7 @@ For `SRA` and `SRI`, the following option is allowed:
 - `SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
   and weak order 1. This method has a better stability domain then `SROCK1`. Also it allows
   special post-processing techniques in case of ergodic dynamical systems, in the context of
-  ergodic Brownian dynamics, to achieve order 2 accuracy. `SKSROCKSKSROCK(;post_processing=true)`
+  ergodic Brownian dynamics, to achieve order 2 accuracy. `SKSROCK(;post_processing=true)`
   will make use of post processing. By default it doesn't use post processing. Post processing is
   optional and under development. The rest of the method is completely functional and can handle
   1-dimensional, diagonal and multi-dimensional noise.  
