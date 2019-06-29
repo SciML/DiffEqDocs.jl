@@ -31,7 +31,7 @@ ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the manifold components.
 - `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html).
-- `save`: Whether to do the standard saving (applied after the callback).
+- `save`: Whether to do the save after the callback is applied. Standard saving is unchanged.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
 - `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
 
@@ -64,10 +64,13 @@ To build the callback, we just call
 cb = ManifoldProjection(g)
 ```
 
-Using this callback, the Runge-Kutta method `Vern7` conserves energy:
+Using this callback, the Runge-Kutta method `Vern7` conserves energy. Note that the
+standard saving occurs after the step and before the callback, and thus we set 
+`save_everystep=false` to turn off all standard saving and let the callback
+save after the projection is applied.
 
 ```julia
-sol = solve(prob,Vern7(),callback=cb)
+sol = solve(prob,Vern7(),save_everystep=false,callback=cb)
 @test sol[end][1]^2 + sol[end][2]^2 ≈ 2
 ```
 
