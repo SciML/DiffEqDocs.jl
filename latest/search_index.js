@@ -3797,7 +3797,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Constructor",
     "category": "section",
-    "text": "ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g)==2, nlopts=Dict{Symbol,Any}())g: The residual function for the manifold. This is an inplace function of form g(u, resid) or g(t, u, resid) which writes to the residual the difference from the manifold components.\nnlsolve: A nonlinear solver as defined in the nlsolve format.\nsave: Whether to do the standard saving (applied after the callback).\nautonomous: Whether g is an autonomous function of the form g(u, resid).\nnlopts: Optional arguments to nonlinear solver which can be any of the NLsolve keywords."
+    "text": "ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g)==2, nlopts=Dict{Symbol,Any}())g: The residual function for the manifold. This is an inplace function of form g(u, resid) or g(t, u, resid) which writes to the residual the difference from the manifold components.\nnlsolve: A nonlinear solver as defined in the nlsolve format.\nsave: Whether to do the save after the callback is applied. Standard saving is unchanged.\nautonomous: Whether g is an autonomous function of the form g(u, resid).\nnlopts: Optional arguments to nonlinear solver which can be any of the NLsolve keywords."
 },
 
 {
@@ -3805,7 +3805,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Callback Library",
     "title": "Example",
     "category": "section",
-    "text": "Here we solve the harmonic oscillator:u0 = ones(2)\nfunction f(du,u,p,t)\n  du[1] = u[2]\n  du[2] = -u[1]\nend\nprob = ODEProblem(f,u0,(0.0,100.0))However, this problem is supposed to conserve energy, and thus we define our manifold to conserve the sum of squares:function g(resid,u,p,t)\n  resid[1] = u[2]^2 + u[1]^2 - 2\n  resid[2] = 0\nendTo build the callback, we just callcb = ManifoldProjection(g)Using this callback, the Runge-Kutta method Vern7 conserves energy:sol = solve(prob,Vern7(),callback=cb)\n@test sol[end][1]^2 + sol[end][2]^2 ≈ 2(Image: manifold_projection)"
+    "text": "Here we solve the harmonic oscillator:u0 = ones(2)\nfunction f(du,u,p,t)\n  du[1] = u[2]\n  du[2] = -u[1]\nend\nprob = ODEProblem(f,u0,(0.0,100.0))However, this problem is supposed to conserve energy, and thus we define our manifold to conserve the sum of squares:function g(resid,u,p,t)\n  resid[1] = u[2]^2 + u[1]^2 - 2\n  resid[2] = 0\nendTo build the callback, we just callcb = ManifoldProjection(g)Using this callback, the Runge-Kutta method Vern7 conserves energy. Note that the standard saving occurs after the step and before the callback, and thus we set  save_everystep=false to turn off all standard saving and let the callback save after the projection is applied.sol = solve(prob,Vern7(),save_everystep=false,callback=cb)\n@test sol[end][1]^2 + sol[end][2]^2 ≈ 2(Image: manifold_projection)"
 },
 
 {
