@@ -149,7 +149,7 @@ end
 
 u0 = [1., 5., 10.]
 tspan = (0., 100.)
-p = (10.0,8/3,28.0)
+p = (10.0,28.0,8/3)
 prob = ODEProblem(lorenz, u0, tspan,p)
 sol = solve(prob)
 xyzt = plot(sol, plotdensity=10000,lw=1.5)
