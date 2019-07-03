@@ -85,7 +85,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Additional Features",
     "category": "section",
-    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/diffeq_operator.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/monte_carlo.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
+    "text": "These sections discuss extra performance enhancements, event handling, and other in-depth features.Pages = [\n    \"features/performance_overloads.md\",\n    \"features/diffeq_arrays.md\",\n    \"features/diffeq_operator.md\",\n    \"features/noise_process.md\",\n    \"features/linear_nonlinear.md\",\n    \"features/callback_functions.md\",\n    \"features/callback_library.md\",\n    \"features/ensemble.md\",\n    \"features/io.md\",\n    \"features/low_dep.md\",\n    \"features/progress_bar.md\"\n]\nDepth = 2"
 },
 
 {
@@ -3937,187 +3937,187 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/monte_carlo.html#",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#",
+    "page": "Parallel Ensemble Simulations",
+    "title": "Parallel Ensemble Simulations",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "features/monte_carlo.html#Parallel-Monte-Carlo-Simulations-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Parallel-Ensemble-Simulations-1",
+    "page": "Parallel Ensemble Simulations",
+    "title": "Parallel Ensemble Simulations",
+    "category": "section",
+    "text": "Performing Monte Carlo simulations, solving with a predetermined set of initial conditions, and GPU-parallelizing a parameter search all fall under the ensemble simulation interface. This interface allows one to declare a template DEProblem to parallelize, how to tweak the template in trajectories many trajectories, solve each in parallel batches, reduce the solutions down to specific answers, and compute summary statistics on the results."
+},
+
+{
+    "location": "features/ensemble.html#Performing-an-Ensemble-Simulation-1",
+    "page": "Parallel Ensemble Simulations",
+    "title": "Performing an Ensemble Simulation",
     "category": "section",
     "text": ""
 },
 
 {
-    "location": "features/monte_carlo.html#Performing-a-Monte-Carlo-Simulation-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Performing a Monte Carlo Simulation",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "features/monte_carlo.html#Building-a-Problem-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Building-a-Problem-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Building a Problem",
     "category": "section",
-    "text": "To perform a Monte Carlo simulation, define a MonteCarloProblem. The constructor is:MonteCarloProblem(prob::DEProblem;\n                  output_func = (sol,i) -> (sol,false),\n                  prob_func= (prob,i,repeat)->(prob),\n                  reduction = (u,data,I)->(append!(u,data),false),\n                  u_init = [])prob_func: The function by which the problem is to be modified. prob is the problem, i is the unique id 1:num_monte for the problem, and repeat is for if the iteration of the repeat. At first it\'s 0, but if rerun was true this will be 1, 2, etc. counting the number of times problem i has been repeated.\noutput_func: The function determines what is saved from the solution to the output array. Defaults to saving the solution itself. The output is (out,rerun) where out is the output and rerun is a boolean which designates whether to rerun\nreduction: This function determines how to reduce the data in each batch. Defaults to appending the data from the batches. The second part of the output determines whether the simulation has converged. If true, the simulation will exit early. By default, this is always false.One can specify a function prob_func which changes the problem. For example:function prob_func(prob,i,repeat)\n  @. prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). Notice that since problem types are immutable, it uses .=. Otherwise, one can just create a new problem type:function prob_func(prob,i,repeat)\n  @. prob.u0 = u0_arr[i]\n  prob\nendIf your function is a ParameterizedFunction, you can do similar modifications to prob.f to perform a parameter search. The output_func is a reduction function. It\'s arguments are the generated solution and the unique index for the run. For example, if we wish to only save the 2nd coordinate at the end of each solution, we can do:output_func(sol,i) = (sol[end,2],false)Thus the Monte Carlo Simulation would return as its data an array which is the end value of the 2nd dependent variable for each of the runs."
+    "text": "To perform a simulation on an ensemble of trajectories, define a EnsembleProblem. The constructor is:EnsembleProblem(prob::DEProblem;\n                output_func = (sol,i) -> (sol,false),\n                prob_func= (prob,i,repeat)->(prob),\n                reduction = (u,data,I)->(append!(u,data),false),\n                u_init = [])prob_func: The function by which the problem is to be modified. prob is the problem, i is the unique id 1:trajectories for the problem, and repeat is for if the iteration of the repeat. At first it\'s 0, but if rerun was true this will be 1, 2, etc. counting the number of times problem i has been repeated.\noutput_func: The function determines what is saved from the solution to the output array. Defaults to saving the solution itself. The output is (out,rerun) where out is the output and rerun is a boolean which designates whether to rerun\nreduction: This function determines how to reduce the data in each batch. Defaults to appending the data from the batches. The second part of the output determines whether the simulation has converged. If true, the simulation will exit early. By default, this is always false.One can specify a function prob_func which changes the problem. For example:function prob_func(prob,i,repeat)\n  @. prob.u0 = randn()*prob.u0\n  prob\nendmodifies the initial condition for all of the problems by a standard normal random number (a different random number per simulation). Notice that since problem types are immutable, it uses .=. Otherwise, one can just create a new problem type:function prob_func(prob,i,repeat)\n  @. prob.u0 = u0_arr[i]\n  prob\nendIf your function is a ParameterizedFunction, you can do similar modifications to prob.f to perform a parameter search. The output_func is a reduction function. It\'s arguments are the generated solution and the unique index for the run. For example, if we wish to only save the 2nd coordinate at the end of each solution, we can do:output_func(sol,i) = (sol[end,2],false)Thus the ensemble simulation would return as its data an array which is the end value of the 2nd dependent variable for each of the runs."
 },
 
 {
-    "location": "features/monte_carlo.html#Solving-the-Problem-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Solving-the-Problem-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Solving the Problem",
     "category": "section",
-    "text": "sim = solve(prob,alg,montealg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The montealg is optional, and will default to an embaressingly parallel multiprocessing approach. The special keyword  arguments to note are:num_monte: The number of simulations to run. This argument is required.\nbatch_size : The size of the batches on which the reductions are applies. Defaults to num_monte.\npmap_batch_size: The size of the pmap batches. Default is  batch_size÷100 > 0 ? batch_size÷100 : 1"
+    "text": "sim = solve(prob,alg,ensemblealg,kwargs...)The keyword arguments take in the arguments for the common solver interface and will pass them to the differential equation solver. The ensemblealg is optional, and will default to an embaressingly parallel multiprocessing approach. The special keyword  arguments to note are:trajectories: The number of simulations to run. This argument is required.\nbatch_size : The size of the batches on which the reductions are applies. Defaults to trajectories.\npmap_batch_size: The size of the pmap batches. Default is  batch_size÷100 > 0 ? batch_size÷100 : 1"
 },
 
 {
-    "location": "features/monte_carlo.html#MonteCarloAlgorihtms-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "MonteCarloAlgorihtms",
+    "location": "features/ensemble.html#EnsembleAlgorihtms-1",
+    "page": "Parallel Ensemble Simulations",
+    "title": "EnsembleAlgorihtms",
     "category": "section",
-    "text": "The choice of Monte Carlo algorithm allows for control over how the multiple trajectories are handled. Currently, the Monte Carlo algorithm types are:MonteSerial() - No parallelism\nMonteThreads() - This uses multithreading. It\'s local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\nMonteDistributed() - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia\'s documentation for more details. Recommended for the case when each trajectory calculation isn\'t \"too quick\" (at least about a millisecond each?).\nMonteSplitThreads() - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It\'s recommended you have one process on each node.For example, MonteThreads() is invoked by:solve(monteprob,alg,MonteThreads();num_monte=1000)"
+    "text": "The choice of ensemble algorithm allows for control over how the multiple trajectories are handled. Currently, the ensemble algorithm types are:EnsembleSerial() - No parallelism\nEnsembleThreads() - This uses multithreading. It\'s local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\nEnsembleDistributed() - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia\'s documentation for more details. Recommended for the case when each trajectory calculation isn\'t \"too quick\" (at least about a millisecond each?).\nEnsembleSplitThreads() - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It\'s recommended you have one process on each node.For example, EnsembleThreads() is invoked by:solve(ensembleprob,alg,EnsembleThreads();trajectories=1000)"
 },
 
 {
-    "location": "features/monte_carlo.html#Solution-Type-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Solution-Type-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Solution Type",
     "category": "section",
-    "text": "The resulting type is a MonteCarloSimulation, which includes the array of solutions. If the problem was a TestProblem, summary statistics on the errors are returned as well."
+    "text": "The resulting type is a EnsembleSimulation, which includes the array of solutions."
 },
 
 {
-    "location": "features/monte_carlo.html#Plot-Recipe-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Plot-Recipe-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "There is a plot recipe for a AbstractMonteCarloSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots. An additional argument is idxs which allows you to choose which components of the solution to plot. For example, if the differential equation is a vector of 9 values, idxs=1:2:9 will plot only the Monte Carlo solutions of the odd components. An other additional argument is zcolors which allows you to pass a zcolor for each series. For details about zcolor see the  documentation for Plots.jl."
+    "text": "There is a plot recipe for a AbstractEnsembleSimulation which composes all of the plot recipes for the component solutions. The keyword arguments are passed along. A useful argument to use is linealpha which will change the transparency of the plots. An additional argument is idxs which allows you to choose which components of the solution to plot. For example, if the differential equation is a vector of 9 values, idxs=1:2:9 will plot only the solutions of the odd components. An other additional argument is zcolors which allows you to pass a zcolor for each series. For details about zcolor see the  documentation for Plots.jl."
 },
 
 {
-    "location": "features/monte_carlo.html#Analyzing-a-Monte-Carlo-Experiment-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "Analyzing a Monte Carlo Experiment",
+    "location": "features/ensemble.html#Analyzing-an-Ensemble-Experiment-1",
+    "page": "Parallel Ensemble Simulations",
+    "title": "Analyzing an Ensemble Experiment",
     "category": "section",
-    "text": "Analysis tools are included for generating summary statistics and summary plots for a MonteCarloSimulation."
+    "text": "Analysis tools are included for generating summary statistics and summary plots for a EnsembleSimulation."
 },
 
 {
-    "location": "features/monte_carlo.html#Time-steps-vs-time-points-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Time-steps-vs-time-points-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Time steps vs time points",
     "category": "section",
     "text": "For the summary statistics, there are two types. You can either summarize by time steps or by time points. Summarizing by time steps assumes that the time steps are all the same time point, i.e. the integrator used a fixed dt or the values were saved using saveat. Summarizing by time points requires interpolating the solution."
 },
 
 {
-    "location": "features/monte_carlo.html#Analysis-at-a-time-step-or-time-point-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Analysis-at-a-time-step-or-time-point-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Analysis at a time step or time point",
     "category": "section",
     "text": "get_timestep(sim,i) # Returns an iterator of each simulation at time step i\nget_timepoint(sim,t) # Returns an iterator of each simulation at time point t\ncomponentwise_vectors_timestep(sim,i) # Returns a vector of each simulation at time step i\ncomponentwise_vectors_timepoint(sim,t) # Returns a vector of each simulation at time point t"
 },
 
 {
-    "location": "features/monte_carlo.html#Summary-Statistics-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Summary-Statistics-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Summary Statistics",
     "category": "section",
     "text": ""
 },
 
 {
-    "location": "features/monte_carlo.html#Single-Time-Statistics-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Single-Time-Statistics-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Single Time Statistics",
     "category": "section",
     "text": "The available functions for time steps are:timestep_mean(sim,i) # Computes the mean of each component at time step i\ntimestep_median(sim,i) # Computes the median of each component at time step i\ntimestep_quantile(sim,q,i) # Computes the quantile q of each component at time step i\ntimestep_meanvar(sim,i)  # Computes the mean and variance of each component at time step i\ntimestep_meancov(sim,i,j) # Computes the mean at i and j, and the covariance, for each component\ntimestep_meancor(sim,i,j) # Computes the mean at i and j, and the correlation, for each component\ntimestep_weighted_meancov(sim,W,i,j) # Computes the mean at i and j, and the weighted covariance W, for each componentThe available functions for time points are:timepoint_mean(sim,t) # Computes the mean of each component at time t\ntimepoint_median(sim,t) # Computes the median of each component at time t\ntimepoint_quantile(sim,q,t) # Computes the quantile q of each component at time t\ntimepoint_meanvar(sim,t) # Computes the mean and variance of each component at time t\ntimepoint_meancov(sim,t1,t2) # Computes the mean at t1 and t2, the covariance, for each component\ntimepoint_meancor(sim,t1,t2) # Computes the mean at t1 and t2, the correlation, for each component\ntimepoint_weighted_meancov(sim,W,t1,t2) # Computes the mean at t1 and t2, the weighted covariance W, for each component"
 },
 
 {
-    "location": "features/monte_carlo.html#Full-Timeseries-Statistics-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Full-Timeseries-Statistics-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Full Timeseries Statistics",
     "category": "section",
     "text": "Additionally, the following functions are provided for analyzing the full timeseries. The mean and meanvar versions return a DiffEqArray which can be directly plotted. The meancov and meancor return a matrix of tuples, where the tuples are the (mean_t1,mean_t2,cov or cor).The available functions for the time steps are:timeseries_steps_mean(sim) # Computes the mean at each time step\ntimeseries_steps_median(sim) # Computes the median at each time step\ntimeseries_steps_quantile(sim,q) # Computes the quantile q at each time step\ntimeseries_steps_meanvar(sim) # Computes the mean and variance at each time step\ntimeseries_steps_meancov(sim) # Computes the covariance matrix and means at each time step\ntimeseries_steps_meancor(sim) # Computes the correlation matrix and means at each time step\ntimeseries_steps_weighted_meancov(sim) # Computes the weighted covariance matrix and means at each time stepThe available functions for the time points are:timeseries_point_mean(sim,ts) # Computes the mean at each time point in ts\ntimeseries_point_median(sim,ts) # Computes the median at each time point in ts\ntimeseries_point_quantile(sim,q,ts) # Computes the quantile q at each time point in ts\ntimeseries_point_meanvar(sim,ts) # Computes the mean and variance at each time point in ts\ntimeseries_point_meancov(sim,ts) # Computes the covariance matrix and means at each time point in ts\ntimeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at each time point in ts\ntimeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts"
 },
 
 {
-    "location": "features/monte_carlo.html#MonteCarloSummary-1",
-    "page": "Parallel Monte Carlo Simulations",
-    "title": "MonteCarloSummary",
+    "location": "features/ensemble.html#EnsembleSummary-1",
+    "page": "Parallel Ensemble Simulations",
+    "title": "EnsembleSummary",
     "category": "section",
-    "text": "The MonteCarloSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:MonteCarloSummary(sim;quantile=[0.05,0.95])\nMonteCarloSummary(sim,ts;quantile=[0.05,0.95])The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution. Quantile is used to determine the qlow and qhigh quantiles at each timepoint. It defaults to the 5% and 95% quantiles."
+    "text": "The EnsembleSummary type is included to help with analyzing the general summary statistics. Two constructors are provided:EnsembleSummary(sim;quantile=[0.05,0.95])\nEnsembleSummary(sim,ts;quantile=[0.05,0.95])The first produces a (mean,var) summary at each time step. As with the summary statistics, this assumes that the time steps are all the same. The second produces a (mean,var) summary at each time point t in ts. This requires the ability to interpolate the solution. Quantile is used to determine the qlow and qhigh quantiles at each timepoint. It defaults to the 5% and 95% quantiles."
 },
 
 {
-    "location": "features/monte_carlo.html#Plot-Recipe-2",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Plot-Recipe-2",
+    "page": "Parallel Ensemble Simulations",
     "title": "Plot Recipe",
     "category": "section",
-    "text": "The MonteCarloSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.\nci_type : Defaults to :quantile which has (qlow,qhigh) quantiles whose limits were determined when constructing the MonteCarloSummary. Gaussian CI 1.96*(standard error of the mean) can be set using ci_type=:SEM.One useful argument is fillalpha which controls the transparency of the ribbon around the mean."
+    "text": "The EnsembleSummary comes with a plot recipe for visualizing the summary statistics. The extra keyword arguments are:idxs: the solution components to plot. Defaults to plotting all components.\nerror_style: The style for plotting the error. Defaults to ribbon. Other choices are :bars for error bars and :none for no error bars.\nci_type : Defaults to :quantile which has (qlow,qhigh) quantiles whose limits were determined when constructing the EnsembleSummary. Gaussian CI 1.96*(standard error of the mean) can be set using ci_type=:SEM.One useful argument is fillalpha which controls the transparency of the ribbon around the mean."
 },
 
 {
-    "location": "features/monte_carlo.html#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Example 1: Solving an ODE With Different Initial Conditions",
     "category": "section",
     "text": ""
 },
 
 {
-    "location": "features/monte_carlo.html#Random-Initial-Conditions-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Random-Initial-Conditions-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Random Initial Conditions",
     "category": "section",
-    "text": "Let\'s test the sensitivity of the linear ODE to its initial condition. To do this, we would like to solve the linear ODE 100 times and plot what the trajectories look like. Let\'s start by opening up some extra processes so that way the computation will be parallelized. This will use pmap as default, which means that the required functions must be made available to all processes. This can be achieved with @everywhere macro:addprocs()\n@everywhere using DifferentialEquationsNow let\'s define the linear ODE which is our base problem:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))For our Monte Carlo simulation, we would like to change the initial condition around. This is done through the prob_func. This function takes in the base problem and modifies it to create the new problem that the trajectory actually solves. Here we will take the base problem, multiply the initial condition by a rand(), and use that for calculating the trajectory:@everywhere function prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendNow we build and solve the MonteCarloProblem with this base problem and prob_func:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),num_monte=100)We can use the plot recipe to plot what the 100 ODEs look like:using Plots\nplotly()\nplot(sim,linealpha=0.4)(Image: monte_carlo_plot)We note that if we wanted to find out what the initial condition was for a given trajectory, we can retrieve it from the solution. sim[i] returns the ith solution object. sim[i].prob is the problem that specific trajectory solved, and sim[i].prob.u0 would then be the initial condition used in the ith trajectory.Note: If the problem has callbacks, the functions for the condition and affect! must be named functions (not anonymous functions)."
+    "text": "Let\'s test the sensitivity of the linear ODE to its initial condition. To do this, we would like to solve the linear ODE 100 times and plot what the trajectories look like. Let\'s start by opening up some extra processes so that way the computation will be parallelized. This will use pmap as default, which means that the required functions must be made available to all processes. This can be achieved with @everywhere macro:addprocs()\n@everywhere using DifferentialEquationsNow let\'s define the linear ODE which is our base problem:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))For our ensemble simulation, we would like to change the initial condition around. This is done through the prob_func. This function takes in the base problem and modifies it to create the new problem that the trajectory actually solves. Here we will take the base problem, multiply the initial condition by a rand(), and use that for calculating the trajectory:@everywhere function prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendNow we build and solve the EnsembleProblem with this base problem and prob_func:ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)\nsim = solve(ensemble_prob,Tsit5(),trajectories=100)We can use the plot recipe to plot what the 100 ODEs look like:using Plots\nplotly()\nplot(sim,linealpha=0.4)(Image: monte_carlo_plot)We note that if we wanted to find out what the initial condition was for a given trajectory, we can retrieve it from the solution. sim[i] returns the ith solution object. sim[i].prob is the problem that specific trajectory solved, and sim[i].prob.u0 would then be the initial condition used in the ith trajectory.Note: If the problem has callbacks, the functions for the condition and affect! must be named functions (not anonymous functions)."
 },
 
 {
-    "location": "features/monte_carlo.html#Using-multithreading-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Using-multithreading-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Using multithreading",
     "category": "section",
-    "text": "The previous Monte Carlo simulation can also be parallelized using a multithreading approach, which will make use of the different cores within a single computer. Because the memory is shared across the different threads, it is not necessary to use the @everywhere macro. Instead, the same problem can be implemented simply as:using DifferentialEquations\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nend\nmonte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,Tsit5(),MonteThreads(),num_monte=100)The number of threads to be used has to be defined outside of Julia, in the environmental variable JULIA_NUM_THREADS (see Julia\'s documentation for details)."
+    "text": "The previous ensemble simulation can also be parallelized using a multithreading approach, which will make use of the different cores within a single computer. Because the memory is shared across the different threads, it is not necessary to use the @everywhere macro. Instead, the same problem can be implemented simply as:using DifferentialEquations\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nend\nensemble_prob = EnsembleProblem(prob,prob_func=prob_func)\nsim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)The number of threads to be used has to be defined outside of Julia, in the environmental variable JULIA_NUM_THREADS (see Julia\'s documentation for details)."
 },
 
 {
-    "location": "features/monte_carlo.html#Pre-Determined-Initial-Conditions-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Pre-Determined-Initial-Conditions-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Pre-Determined Initial Conditions",
     "category": "section",
-    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have num_monte=100, then we have i as some index in 1:100, and it\'s different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = range(0, stop=1, length=100)\nfunction prob_func(prob,i,repeat)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
+    "text": "In many cases, you may already know what initial conditions you want to use. This can be specified by the i argument of the prob_func. This i is the unique index of each trajectory. So, if we have trajectories=100, then we have i as some index in 1:100, and it\'s different for each trajectory.So, if we wanted to use a grid of evenly spaced initial conditions from 0 to 1, we could simply index the linspace type:initial_conditions = range(0, stop=1, length=100)\nfunction prob_func(prob,i,repeat)\n  prob.u0 = initial_conditions[i]\n  prob\nend"
 },
 
 {
-    "location": "features/monte_carlo.html#Example-2:-Solving-an-SDE-with-Different-Parameters-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Example-2:-Solving-an-SDE-with-Different-Parameters-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Example 2: Solving an SDE with Different Parameters",
     "category": "section",
-    "text": "Let\'s solve the same SDE but with varying parameters. Let\'s create a Lotka-Volterra  system with multiplicative noise. Our Lotka-Volterra system will have as its  drift component:function f(du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendFor our noise function we will use multiplicative noise:function g(du,u,p,t)\n  du[1] = p[3]*u[1]\n  du[2] = p[4]*u[2]\nendNow we build the SDE with these functions:p = [1.5,1.0,0.1,0.1]\nprob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using 0.3rand(2) as our parameters. Once again, we do this with a prob_func, and here we modify the parameters in prob.p:function prob_func(prob,i,repeat)\n  prob.p[3:4] = 0.3rand(2)\n  prob\nendNow we solve the problem 10 times and plot all of the trajectories in phase space:monte_prob = MonteCarloProblem(prob,prob_func=prob_func)\nsim = solve(monte_prob,SRIW1(),num_monte=10)\nusing Plots; plotly()\nusing Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title=\"Phase Space Plot\")\nplot!(sim,linealpha=0.6,color=:red,vars=(0,2),title=\"Phase Space Plot\")(Image: monte_lotka_blue)We can then summarize this information with the mean/variance bounds using a MonteCarloSummary plot. We will take the mean/quantile at every 0.1 time units and directly plot the summary:summ = MonteCarloSummary(sim,0:0.1:10)\npyplot() # Note that plotly does not support ribbon plots\nplot(summ,fillalpha=0.5)(Image: monte_carlo_quantile)Note that here we used the quantile bounds, which default to [0.05,0.95] in the MonteCarloSummary constructor. We can change to standard error of the mean bounds using ci_type=:SEM in the plot recipe."
+    "text": "Let\'s solve the same SDE but with varying parameters. Let\'s create a Lotka-Volterra  system with multiplicative noise. Our Lotka-Volterra system will have as its  drift component:function f(du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nendFor our noise function we will use multiplicative noise:function g(du,u,p,t)\n  du[1] = p[3]*u[1]\n  du[2] = p[4]*u[2]\nendNow we build the SDE with these functions:p = [1.5,1.0,0.1,0.1]\nprob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)This is the base problem for our study. What would like to do with this experiment is keep the same parameters in the deterministic component each time, but very the parameters for the amount of noise using 0.3rand(2) as our parameters. Once again, we do this with a prob_func, and here we modify the parameters in prob.p:function prob_func(prob,i,repeat)\n  prob.p[3:4] = 0.3rand(2)\n  prob\nendNow we solve the problem 10 times and plot all of the trajectories in phase space:ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)\nsim = solve(ensemble_prob,SRIW1(),trajectories=10)\nusing Plots; plotly()\nusing Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title=\"Phase Space Plot\")\nplot!(sim,linealpha=0.6,color=:red,vars=(0,2),title=\"Phase Space Plot\")(Image: monte_lotka_blue)We can then summarize this information with the mean/variance bounds using a EnsembleSummary plot. We will take the mean/quantile at every 0.1 time units and directly plot the summary:summ = EnsembleSummary(sim,0:0.1:10)\npyplot() # Note that plotly does not support ribbon plots\nplot(summ,fillalpha=0.5)(Image: monte_carlo_quantile)Note that here we used the quantile bounds, which default to [0.05,0.95] in the EnsembleSummary constructor. We can change to standard error of the mean bounds using ci_type=:SEM in the plot recipe."
 },
 
 {
-    "location": "features/monte_carlo.html#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Example 3: Using the Reduction to Halt When Estimator is Within Tolerance",
     "category": "section",
-    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.function output_func(sol,i)\n  last(sol)\nendOur prob_func will simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\n\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:function reduction(u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5) ? true : false\nendThen we can define and solve the problem:prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that\'s small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:function reduction(u,batch,I)\n  u+sum(batch),false\nend\nprob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
+    "text": "In this problem we will solve the equation just as many times as needed to get the standard error of the mean for the final time point below our tolerance 0.5. Since we only care about the endpoint, we can tell the output_func to discard the rest of the data.function output_func(sol,i)\n  last(sol)\nendOur prob_func will simply randomize the initial condition:# Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0\nprob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))\n\nfunction prob_func(prob,i,repeat)\n  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)\nendOur reduction function will append the data from the current batch to the previous batch, and declare convergence if the standard error of the mean is calculated as sufficiently small:function reduction(u,batch,I)\n  u = append!(u,batch)\n  u,((var(u)/sqrt(last(I)))/mean(u)<0.5) ? true : false\nendThen we can define and solve the problem:prob2 = EnsembleProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())\nsim = solve(prob2,Tsit5(),trajectories=10000,batch_size=20)Since batch_size=20, this means that every 20 simulations, it will take this batch, append the results to the previous batch, calculate (var(u)/sqrt(last(I)))/mean(u), and if that\'s small enough, exit the simulation. In this case, the simulation exits only after 20 simulations (i.e. after calculating the first batch). This can save a lot of time!In addition to saving time by checking convergence, we can save memory by reducing between batches. For example, say we only care about the mean at the end once again. Instead of saving the solution at the end for each trajectory, we can instead save the running summation of the endpoints:function reduction(u,batch,I)\n  u+sum(batch),false\nend\nprob2 = EnsembleProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)\nsim2 = solve(prob2,Tsit5(),trajectories=100,batch_size=20)this will sum up the endpoints after every 20 solutions, and save the running sum. The final result will have sim2.u as simply a number, and thus sim2.u/100 would be the mean."
 },
 
 {
-    "location": "features/monte_carlo.html#Example-4:-Using-the-Analysis-Tools-1",
-    "page": "Parallel Monte Carlo Simulations",
+    "location": "features/ensemble.html#Example-4:-Using-the-Analysis-Tools-1",
+    "page": "Parallel Ensemble Simulations",
     "title": "Example 4: Using the Analysis Tools",
     "category": "section",
-    "text": "In this example we will show how to analyze a MonteCarloSolution. First, let\'s generate a 10 solution Monte Carlo experiment. For our problem we will use a 4x2 system of linear stochastic differential equations:function f(du,u,p,t)\n  for i = 1:length(u)\n    du[i] = 1.01*u[i]\n  end\nend\nfunction σ(du,u,p,t)\n  for i in 1:length(u)\n    du[i] = .87*u[i]\n  end\nend\nprob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2DlinearTo solve this 10 times, we use the MonteCarloProblem constructor and solve with num_monte=10. Since we wish to compare values at the timesteps, we need to make sure the steps all hit the same times. Thus we set adaptive=false and explicitly give a dt.prob2 = MonteCarloProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)Note that if you don\'t do the timeseries_steps calculations, this code is compatible with adaptive timestepping. Using adaptivity is usually more efficient!We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a MonteCarloSummary type.summ = MonteCarloSummary(sim)will summarize at each time step, whilesumm = MonteCarloSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let\'s only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
+    "text": "In this example we will show how to analyze a EnsembleSolution. First, let\'s generate a 10 solution Monte Carlo experiment. For our problem we will use a 4x2 system of linear stochastic differential equations:function f(du,u,p,t)\n  for i = 1:length(u)\n    du[i] = 1.01*u[i]\n  end\nend\nfunction σ(du,u,p,t)\n  for i in 1:length(u)\n    du[i] = .87*u[i]\n  end\nend\nprob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2DlinearTo solve this 10 times, we use the EnsembleProblem constructor and solve with trajectories=10. Since we wish to compare values at the timesteps, we need to make sure the steps all hit the same times. Thus we set adaptive=false and explicitly give a dt.prob2 = EnsembleProblem(prob)\nsim = solve(prob2,SRIW1(),dt=1//2^(3),trajectories=10,adaptive=false)Note that if you don\'t do the timeseries_steps calculations, this code is compatible with adaptive timestepping. Using adaptivity is usually more efficient!We can compute the mean and the variance at the 3rd timestep using:m,v = timestep_meanvar(sim,3)or we can compute the mean and the variance at the t=0.5 using:m,v = timepoint_meanvar(sim,0.5)We can get a series for the mean and the variance at each time step using:m_series,v_series = timeseries_steps_meanvar(sim)or at chosen values of t:ts = 0:0.1:1\nm_series = timeseries_point_mean(sim,ts)Note that these mean and variance series can be directly plotted. We can compute covariance matrices similarly:timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt\ntimeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolateFor general analysis, we can build a EnsembleSummary type.summ = EnsembleSummary(sim)will summarize at each time step, whilesumm = EnsembleSummary(sim,0.0:0.1:1.0)will summarize at the 0.1 time points using the interpolations. To visualize the results we can plot it. Since there are 8 components to the differential equation, this can get messy, so let\'s only plot the 3rd component:plot(summ;idxs=3)(Image: monte_ribbon)We can change to errorbars instead of ribbons and plot two different indices:plot(summ;idxs=(3,5),error_style=:bars)(Image: monte_bars)Or we can simply plot the mean of every component over time:plot(summ;error_style=:none)(Image: monte_means)"
 },
 
 {
