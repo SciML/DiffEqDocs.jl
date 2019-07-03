@@ -1,21 +1,27 @@
-# Parallel Monte Carlo Simulations
+# Parallel Ensemble Simulations
 
-## Performing a Monte Carlo Simulation
+Performing Monte Carlo simulations, solving with a predetermined set of initial conditions, and
+GPU-parallelizing a parameter search all fall under the ensemble simulation interface. This
+interface allows one to declare a template DEProblem to parallelize, how to tweak the template
+in `trajectories` many trajectories, solve each in parallel batches, reduce the solutions down
+to specific answers, and compute summary statistics on the results.
+
+## Performing an Ensemble Simulation
 
 ### Building a Problem
 
-To perform a Monte Carlo simulation, define a `MonteCarloProblem`. The constructor is:
+To perform a simulation on an ensemble of trajectories, define a `EnsembleProblem`. The constructor is:
 
 ```julia
-MonteCarloProblem(prob::DEProblem;
-                  output_func = (sol,i) -> (sol,false),
-                  prob_func= (prob,i,repeat)->(prob),
-                  reduction = (u,data,I)->(append!(u,data),false),
-                  u_init = [])
+EnsembleProblem(prob::DEProblem;
+                output_func = (sol,i) -> (sol,false),
+                prob_func= (prob,i,repeat)->(prob),
+                reduction = (u,data,I)->(append!(u,data),false),
+                u_init = [])
 ```
 
 * `prob_func`: The function by which the problem is to be modified. `prob`
-  is the problem, `i` is the unique id `1:num_monte` for the problem, and
+  is the problem, `i` is the unique id `1:trajectories` for the problem, and
   `repeat` is for if the iteration of the repeat. At first it's `0`, but if
   `rerun` was true this will be `1`, `2`, etc. counting the number of times
   problem `i` has been repeated.
@@ -59,68 +65,67 @@ at the end of each solution, we can do:
 output_func(sol,i) = (sol[end,2],false)
 ```
 
-Thus the Monte Carlo Simulation would return as its data an array which is the
+Thus the ensemble simulation would return as its data an array which is the
 end value of the 2nd dependent variable for each of the runs.
 
 ### Solving the Problem
 
 ```julia
-sim = solve(prob,alg,montealg,kwargs...)
+sim = solve(prob,alg,ensemblealg,kwargs...)
 ```
 The keyword arguments take in the arguments for the common solver interface and will
-pass them to the differential equation solver. The `montealg` is optional, and will
+pass them to the differential equation solver. The `ensemblealg` is optional, and will
 default to an embaressingly parallel multiprocessing approach. The special keyword 
 arguments to note are:
 
-* `num_monte`: The number of simulations to run. This argument is required.
-* `batch_size` : The size of the batches on which the reductions are applies. Defaults to `num_monte`.
+* `trajectories`: The number of simulations to run. This argument is required.
+* `batch_size` : The size of the batches on which the reductions are applies. Defaults to `trajectories`.
 * `pmap_batch_size`: The size of the `pmap` batches. Default is
    `batch_size÷100 > 0 ? batch_size÷100 : 1`
 
-### MonteCarloAlgorihtms
+### EnsembleAlgorihtms
 
-The choice of Monte Carlo algorithm allows for control over how the multiple trajectories
-are handled. Currently, the Monte Carlo algorithm types are:
+The choice of ensemble algorithm allows for control over how the multiple trajectories
+are handled. Currently, the ensemble algorithm types are:
 
-* `MonteSerial()` - No parallelism
-* `MonteThreads()` - This uses multithreading. It's local (single computer, shared memory)
+* `EnsembleSerial()` - No parallelism
+* `EnsembleThreads()` - This uses multithreading. It's local (single computer, shared memory)
   parallelism only. Fastest when the trajectories are quick.
-* `MonteDistributed()` - The default. Uses `pmap` internally. It will use as many processors as you
+* `EnsembleDistributed()` - The default. Uses `pmap` internally. It will use as many processors as you
   have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
   documentation for more details. Recommended for the case when each trajectory
   calculation isn't "too quick" (at least about a millisecond each?).
-* `MonteSplitThreads()` - This uses threading on each process, splitting the problem
+* `EnsembleSplitThreads()` - This uses threading on each process, splitting the problem
   into `nprocs()` even parts. This is for solving many quick trajectories on a
   multi-node machine. It's recommended you have one process on each node.
 
-For example, `MonteThreads()` is invoked by:
+For example, `EnsembleThreads()` is invoked by:
 
 ```julia
-solve(monteprob,alg,MonteThreads();num_monte=1000)
+solve(ensembleprob,alg,EnsembleThreads();trajectories=1000)
 ```
 
 ### Solution Type
 
-The resulting type is a `MonteCarloSimulation`, which includes the array of
-solutions. If the problem was a `TestProblem`, summary statistics on the errors
-are returned as well.
+The resulting type is a `EnsembleSimulation`, which includes the array of
+solutions.
 
 ### Plot Recipe
 
-There is a plot recipe for a `AbstractMonteCarloSimulation` which composes all
+There is a plot recipe for a `AbstractEnsembleSimulation` which composes all
 of the plot recipes for the component solutions. The keyword arguments are passed
 along. A useful argument to use is `linealpha` which will change the transparency
 of the plots. An additional argument is `idxs` which allows you to choose which
 components of the solution to plot. For example, if the differential equation
-is a vector of 9 values, `idxs=1:2:9` will plot only the Monte Carlo solutions
+is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
 of the odd components. An other additional argument is `zcolors` which allows
 you to pass a `zcolor` for each series. For details about `zcolor` see the 
 [documentation for Plots.jl](http://docs.juliaplots.org/latest/attributes/).
 
-## Analyzing a Monte Carlo Experiment
+## Analyzing an Ensemble Experiment
 
 Analysis tools are included for generating summary statistics and summary plots
-for a `MonteCarloSimulation`.
+for a `EnsembleSimulation`.
 
 ### Time steps vs time points
 
@@ -197,14 +202,14 @@ timeseries_point_meancor(sim,ts) # Computes the correlation matrix and means at 
 timeseries_point_weighted_meancov(sim,ts) # Computes the weighted covariance matrix and means at each time point in ts
 ```
 
-### MonteCarloSummary
+### EnsembleSummary
 
-The `MonteCarloSummary` type is included to help with analyzing the general summary
+The `EnsembleSummary` type is included to help with analyzing the general summary
 statistics. Two constructors are provided:
 
 ```julia
-MonteCarloSummary(sim;quantile=[0.05,0.95])
-MonteCarloSummary(sim,ts;quantile=[0.05,0.95])
+EnsembleSummary(sim;quantile=[0.05,0.95])
+EnsembleSummary(sim,ts;quantile=[0.05,0.95])
 ```
 
 The first produces a `(mean,var)` summary at each time step. As with the summary
@@ -215,14 +220,14 @@ quantiles at each timepoint. It defaults to the 5% and 95% quantiles.
 
 #### Plot Recipe
 
-The `MonteCarloSummary` comes with a plot recipe for visualizing the summary
+The `EnsembleSummary` comes with a plot recipe for visualizing the summary
 statistics. The extra keyword arguments are:
 
 - `idxs`: the solution components to plot. Defaults to plotting all components.
 - `error_style`: The style for plotting the error. Defaults to `ribbon`. Other
   choices are `:bars` for error bars and `:none` for no error bars.
 - `ci_type` : Defaults to `:quantile` which has `(qlow,qhigh)` quantiles
-  whose limits were determined when constructing the `MonteCarloSummary`.
+  whose limits were determined when constructing the `EnsembleSummary`.
   Gaussian CI `1.96*(standard error of the mean)` can be set using `ci_type=:SEM`.
 
 One useful argument is `fillalpha` which controls the transparency of the ribbon
@@ -251,7 +256,7 @@ Now let's define the linear ODE which is our base problem:
 prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 ```
 
-For our Monte Carlo simulation, we would like to change the initial condition around.
+For our ensemble simulation, we would like to change the initial condition around.
 This is done through the `prob_func`. This function takes in the base problem
 and modifies it to create the new problem that the trajectory actually solves.
 Here we will take the base problem, multiply the initial condition by a `rand()`,
@@ -263,11 +268,11 @@ and use that for calculating the trajectory:
 end
 ```
 
-Now we build and solve the `MonteCarloProblem` with this base problem and `prob_func`:
+Now we build and solve the `EnsembleProblem` with this base problem and `prob_func`:
 
 ```julia
-monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
-sim = solve(monte_prob,Tsit5(),num_monte=100)
+ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
+sim = solve(ensemble_prob,Tsit5(),trajectories=100)
 ```
 
 We can use the plot recipe to plot what the 100 ODEs look like:
@@ -291,7 +296,7 @@ Note: If the problem has callbacks, the functions for the `condition` and
 
 ### Using multithreading
 
-The previous Monte Carlo simulation can also be parallelized using a multithreading
+The previous ensemble simulation can also be parallelized using a multithreading
 approach, which will make use of the different cores within a single computer.
 Because the memory is shared across the different threads, it is not necessary to
 use the `@everywhere` macro. Instead, the same problem can be implemented simply as:
@@ -302,8 +307,8 @@ prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 function prob_func(prob,i,repeat)
   ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
 end
-monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
-sim = solve(monte_prob,Tsit5(),MonteThreads(),num_monte=100)
+ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
+sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
@@ -314,7 +319,7 @@ the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](http
 
 In many cases, you may already know what initial conditions you want to use. This
 can be specified by the `i` argument of the `prob_func`. This `i` is the unique
-index of each trajectory. So, if we have `num_monte=100`, then we have `i` as
+index of each trajectory. So, if we have `trajectories=100`, then we have `i` as
 some index in `1:100`, and it's different for each trajectory.
 
 So, if we wanted to use a grid of evenly spaced initial conditions from `0` to `1`,
@@ -373,8 +378,8 @@ end
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
 ```julia
-monte_prob = MonteCarloProblem(prob,prob_func=prob_func)
-sim = solve(monte_prob,SRIW1(),num_monte=10)
+ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
+sim = solve(ensemble_prob,SRIW1(),trajectories=10)
 using Plots; plotly()
 using Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title="Phase Space Plot")
 plot!(sim,linealpha=0.6,color=:red,vars=(0,2),title="Phase Space Plot")
@@ -383,11 +388,11 @@ plot!(sim,linealpha=0.6,color=:red,vars=(0,2),title="Phase Space Plot")
 ![monte_lotka_blue](../assets/monte_carlo_blue.png)
 
 We can then summarize this information with the mean/variance bounds using a
-`MonteCarloSummary` plot. We will take the mean/quantile at every `0.1` time
+`EnsembleSummary` plot. We will take the mean/quantile at every `0.1` time
 units and directly plot the summary:
 
 ```julia
-summ = MonteCarloSummary(sim,0:0.1:10)
+summ = EnsembleSummary(sim,0:0.1:10)
 pyplot() # Note that plotly does not support ribbon plots
 plot(summ,fillalpha=0.5)
 ```
@@ -395,7 +400,7 @@ plot(summ,fillalpha=0.5)
 ![monte_carlo_quantile](../assets/monte_carlo_quantile.png)
 
 Note that here we used the quantile bounds, which default to `[0.05,0.95]` in
-the `MonteCarloSummary` constructor. We can change to standard error of the mean
+the `EnsembleSummary` constructor. We can change to standard error of the mean
 bounds using `ci_type=:SEM` in the plot recipe.
 
 ## Example 3: Using the Reduction to Halt When Estimator is Within Tolerance
@@ -436,8 +441,8 @@ end
 Then we can define and solve the problem:
 
 ```julia
-prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
-sim = solve(prob2,Tsit5(),num_monte=10000,batch_size=20)
+prob2 = EnsembleProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
+sim = solve(prob2,Tsit5(),trajectories=10000,batch_size=20)
 ```
 
 Since `batch_size=20`, this means that every 20 simulations, it will take this batch,
@@ -455,8 +460,8 @@ save the running summation of the endpoints:
 function reduction(u,batch,I)
   u+sum(batch),false
 end
-prob2 = MonteCarloProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
-sim2 = solve(prob2,Tsit5(),num_monte=100,batch_size=20)
+prob2 = EnsembleProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=0.0)
+sim2 = solve(prob2,Tsit5(),trajectories=100,batch_size=20)
 ```
 
 this will sum up the endpoints after every 20 solutions, and save the running sum.
@@ -465,7 +470,7 @@ be the mean.
 
 ## Example 4: Using the Analysis Tools
 
-In this example we will show how to analyze a `MonteCarloSolution`. First, let's
+In this example we will show how to analyze a `EnsembleSolution`. First, let's
 generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x2`
 system of linear stochastic differential equations:
 
@@ -483,14 +488,14 @@ end
 prob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2Dlinear
 ```
 
-To solve this 10 times, we use the `MonteCarloProblem` constructor and solve
-with `num_monte=10`. Since we wish to compare values at the timesteps, we need
+To solve this 10 times, we use the `EnsembleProblem` constructor and solve
+with `trajectories=10`. Since we wish to compare values at the timesteps, we need
 to make sure the steps all hit the same times. Thus we set `adaptive=false` and
 explicitly give a `dt`.
 
 ```julia
-prob2 = MonteCarloProblem(prob)
-sim = solve(prob2,SRIW1(),dt=1//2^(3),num_monte=10,adaptive=false)
+prob2 = EnsembleProblem(prob)
+sim = solve(prob2,SRIW1(),dt=1//2^(3),trajectories=10,adaptive=false)
 ```
 
 **Note that if you don't do the `timeseries_steps` calculations, this code is
@@ -529,16 +534,16 @@ timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt
 timeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolate
 ```
 
-For general analysis, we can build a `MonteCarloSummary` type.
+For general analysis, we can build a `EnsembleSummary` type.
 
 ```julia
-summ = MonteCarloSummary(sim)
+summ = EnsembleSummary(sim)
 ```
 
 will summarize at each time step, while
 
 ```julia
-summ = MonteCarloSummary(sim,0.0:0.1:1.0)
+summ = EnsembleSummary(sim,0.0:0.1:1.0)
 ```
 
 will summarize at the `0.1` time points using the interpolations. To
