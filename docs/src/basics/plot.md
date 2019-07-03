@@ -166,7 +166,7 @@ An example using the functions:
 
 ```julia
 f(x,y,z) = (sqrt(x^2+y^2+z^2),x)
-plot(sol,vars=(f,:x,:y,:z))
+plot(sol,vars=(f,1,2,3))
 ```
 
 ![norm_plot](../assets/normalized.png)
