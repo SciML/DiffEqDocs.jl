@@ -199,7 +199,7 @@ Pages = [
     "features/linear_nonlinear.md",
     "features/callback_functions.md",
     "features/callback_library.md",
-    "features/monte_carlo.md",
+    "features/ensemble.md",
     "features/io.md",
     "features/low_dep.md",
     "features/progress_bar.md"
