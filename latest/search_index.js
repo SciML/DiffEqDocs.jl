@@ -965,7 +965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Plot Functions",
     "title": "Example",
     "category": "section",
-    "text": "using DifferentialEquations, Plots\nfunction lorenz(du,u,p,t)\n du[1] = p[1]*(u[2]-u[1])\n du[2] = u[1]*(p[2]-u[3]) - u[2]\n du[3] = u[1]*u[2] - p[3]*u[3]\nend\n\nu0 = [1., 5., 10.]\ntspan = (0., 100.)\np = (10.0,28.0,8/3)\nprob = ODEProblem(lorenz, u0, tspan,p)\nsol = solve(prob)\nxyzt = plot(sol, plotdensity=10000,lw=1.5)\nxy = plot(sol, plotdensity=10000, vars=(1,2))\nxz = plot(sol, plotdensity=10000, vars=(1,3))\nyz = plot(sol, plotdensity=10000, vars=(2,3))\nxyz = plot(sol, plotdensity=10000, vars=(1,2,3))\nplot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))(Image: lorenz_plot)An example using the functions:f(x,y,z) = (sqrt(x^2+y^2+z^2),x)\nplot(sol,vars=(f,:x,:y,:z))(Image: norm_plot)"
+    "text": "using DifferentialEquations, Plots\nfunction lorenz(du,u,p,t)\n du[1] = p[1]*(u[2]-u[1])\n du[2] = u[1]*(p[2]-u[3]) - u[2]\n du[3] = u[1]*u[2] - p[3]*u[3]\nend\n\nu0 = [1., 5., 10.]\ntspan = (0., 100.)\np = (10.0,28.0,8/3)\nprob = ODEProblem(lorenz, u0, tspan,p)\nsol = solve(prob)\nxyzt = plot(sol, plotdensity=10000,lw=1.5)\nxy = plot(sol, plotdensity=10000, vars=(1,2))\nxz = plot(sol, plotdensity=10000, vars=(1,3))\nyz = plot(sol, plotdensity=10000, vars=(2,3))\nxyz = plot(sol, plotdensity=10000, vars=(1,2,3))\nplot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))(Image: lorenz_plot)An example using the functions:f(x,y,z) = (sqrt(x^2+y^2+z^2),x)\nplot(sol,vars=(f,1,2,3))(Image: norm_plot)"
 },
 
 {
