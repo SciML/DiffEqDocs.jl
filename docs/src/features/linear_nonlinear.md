@@ -21,7 +21,23 @@ specify the function `linsolve(Val{:init},f,x)` which returns a `linsolve!` func
 The setting `matrix_updated` determines whether the matrix `A` has changed from the
 last call. This can be used to smartly cache factorizations.
 
-### Basic linsolve method: Factorization
+### Pre-Built Linear Solver Choices
+
+The following choices of pre-built linear solvers exist:
+
+- DefaultLinSolve
+- LinSolveFactorize
+- LinSolveGPUFactorize
+- LinSolveGMRES
+- LinSolveCG
+- LinSolveBiCGStabl
+- LinSolveChebyshev
+- LinSolveMINRES
+- LinSolveIterativeSolvers
+
+### DefaultLinSolve
+
+### Basic linsolve method choice: Factorization by LinSolveFactorize
 
 The easiest way to specify a `linsolve` is by a `factorization` function which
 generates a type on which `\` (or `A_ldiv_B!`) is called.  This is done through
@@ -48,7 +64,9 @@ This function creates a `KSP` type which makes `\` perform the GMRES iterative
 method provided by PETSc.jl. Thus if we pass this function into the algorithm
 as the factorization method, all internal linear solves will happen by PETSc.jl.
 
-### How LinSolveFactorize Was Created
+### IterativeSolvers.jl-Based Methods
+
+### Implementing Your Own LinSolve: How LinSolveFactorize Was Created
 
 In order to make your own `linsolve` functions, let's look at how the `LinSolveFactorize`
 function is created. For example, for an LU-Factorization, we would like to use
@@ -58,7 +76,7 @@ function is created. For example, for an LU-Factorization, we would like to use
 function linsolve!(::Type{Val{:init}},f,u0)
   function _linsolve!(x,A,b,update_matrix=false)
     _A = lufact!(A)
-    A_ldiv_B!(x,_A,b)
+    ldiv!(x,_A,b)
   end
 end
 ```
@@ -135,7 +153,7 @@ One can specify a nonlinear solver by
 ImplicitEuler(nlsolve = NLFunctional())
 ```
 
-### Nonlinear Solvers for Generic Implicit ODE Solvers
+## Nonlinear Solvers for Generic Implicit ODE Solvers
 
 For ODE solvers with names that begin with `Generic`, they take more generic
 `nlsolve`. An `nlsolve` function should have two dispatches:
@@ -146,7 +164,7 @@ For ODE solvers with names that begin with `Generic`, they take more generic
 - `nlsolve(init_f,u0)` : Solves for the root units the initialized `f` and the initial
   condition `u0`. Returns the zeros of the equation.
 
-#### Basic nlsolve method: `NLSOLVEJL_SETUP`
+### Basic nlsolve method: `NLSOLVEJL_SETUP`
 
 By default, a basic nonlinear solver setup is given as `NLSOLVEJL_SETUP`. For example,
 the default `nlsolve` in `GenericTrapezoid` is
