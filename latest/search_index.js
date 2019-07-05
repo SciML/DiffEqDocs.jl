@@ -3561,19 +3561,43 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/linear_nonlinear.html#Basic-linsolve-method:-Factorization-1",
+    "location": "features/linear_nonlinear.html#Pre-Built-Linear-Solver-Choices-1",
     "page": "Specifying (Non)Linear Solvers",
-    "title": "Basic linsolve method: Factorization",
+    "title": "Pre-Built Linear Solver Choices",
+    "category": "section",
+    "text": "The following choices of pre-built linear solvers exist:DefaultLinSolve\nLinSolveFactorize\nLinSolveGPUFactorize\nLinSolveGMRES\nLinSolveCG\nLinSolveBiCGStabl\nLinSolveChebyshev\nLinSolveMINRES\nLinSolveIterativeSolvers"
+},
+
+{
+    "location": "features/linear_nonlinear.html#DefaultLinSolve-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "DefaultLinSolve",
+    "category": "section",
+    "text": "The default linear solver is DefaultLinSolve. This method is adaptive, and automatically chooses an LU factorization choose for dense and sparse arrays, and is compatible with GPU-based arrays. When the Jacobian is an AbstractDiffEqOperator, i.e. is matrix-free, DefaultLinSolve defaults to using a gmres iterative solver."
+},
+
+{
+    "location": "features/linear_nonlinear.html#Basic-linsolve-method-choice:-Factorization-by-LinSolveFactorize-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Basic linsolve method choice: Factorization by LinSolveFactorize",
     "category": "section",
     "text": "The easiest way to specify a linsolve is by a factorization function which generates a type on which \\ (or A_ldiv_B!) is called.  This is done through the helper function LinSolveFactorize which makes the appropriate function. For example, the  Rosenbrock23 takes in a linsolve function, which we can choose to be a  QR-factorization by:Rosenbrock23(linsolve=LinSolveFactorize(qrfact!))LinSolveFactorize takes in a function which returns an object that can \\. Direct methods like qrfact! will automatically cache the factorization, making it efficient for small dense problems.However, for large sparse problems, you can let \\ be an iterative method. For example, using PETSc.jl, we can define our factorization function to be:linsolve = LinSolveFactorize((A) -> KSP(A, ksp_type=\"gmres\", ksp_rtol=1e-6))This function creates a KSP type which makes \\ perform the GMRES iterative method provided by PETSc.jl. Thus if we pass this function into the algorithm as the factorization method, all internal linear solves will happen by PETSc.jl."
 },
 
 {
-    "location": "features/linear_nonlinear.html#How-LinSolveFactorize-Was-Created-1",
+    "location": "features/linear_nonlinear.html#IterativeSolvers.jl-Based-Methods-1",
     "page": "Specifying (Non)Linear Solvers",
-    "title": "How LinSolveFactorize Was Created",
+    "title": "IterativeSolvers.jl-Based Methods",
     "category": "section",
-    "text": "In order to make your own linsolve functions, let\'s look at how the LinSolveFactorize function is created. For example, for an LU-Factorization, we would like to use lufact! to do our linear solving. We can directly write this as:function linsolve!(::Type{Val{:init}},f,u0)\n  function _linsolve!(x,A,b,update_matrix=false)\n    _A = lufact!(A)\n    A_ldiv_B!(x,_A,b)\n  end\nendThis initialization function returns a linear solving function that always computes the LU-factorization and then does the solving. This method works fine and you can pass it to the methods likeRosenbrock23(linsolve=linsolve!)and it will work, but this method does not cache _A, the factorization. This means that, even if A has not changed, it will re-factorize the matrix.To change this, we can instead create a call-overloaded type. The generalized form of this is:mutable struct LinSolveFactorize{F}\n  factorization::F\n  A\nend\nLinSolveFactorize(factorization) = LinSolveFactorize(factorization,nothing)\nfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nend\nfunction (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)\n  LinSolveFactorize(p.factorization,nothing)\nend\nlinsolve = LinSolveFactorize(lufact!)LinSolveFactorize is a type which holds the factorization method and the pre-factorized matrix. When linsolve is passed to the ODE/SDE/etc. solver, it will use the function linsolve(Val{:init},f,u0_prototype) to create a LinSolveFactorize object which holds the factorization method and a cache for holding a factorized matrix. Thenfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nendis what\'s used in the solver\'s internal loop. If matrix_updated is true, it will re-compute the factorization. Otherwise it just solves the linear system with the cached factorization. This general idea of using a call-overloaded type can be employed to do many other things."
+    "text": "The signature for LinSolveIterativeSolvers is:LinSolveIterativeSolvers(generate_iterator,args...;\n                         Pl=IterativeSolvers.Identity(),\n                         Pr=IterativeSolvers.Identity(),\n                         kwargs...)where Pl is the left preconditioner, Pr is the right preconditioner, and the other args... and kwargs... are passed into the iterative solver chosen in generate_iterator which designates the construction of an iterator from IterativeSolvers.jl. For example, using gmres_iterable! would make a version that uses IterativeSolvers.gmres. The following are aliases to common choices:LinSolveGMRES – GMRES\nLinSolveCG – CG (Conjugate Gradient)\nLinSolveBiCGStabl – BiCGStabl Stabilized Bi-Conjugate Gradient\nLinSolveChebyshev – Chebyshev\nLinSolveMINRES – MINRESwhich all have the same arguments as LinSolveIterativeSolvers except with generate_iterator pre-specified."
+},
+
+{
+    "location": "features/linear_nonlinear.html#Implementing-Your-Own-LinSolve:-How-LinSolveFactorize-Was-Created-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "Implementing Your Own LinSolve: How LinSolveFactorize Was Created",
+    "category": "section",
+    "text": "In order to make your own linsolve functions, let\'s look at how the LinSolveFactorize function is created. For example, for an LU-Factorization, we would like to use lufact! to do our linear solving. We can directly write this as:function linsolve!(::Type{Val{:init}},f,u0)\n  function _linsolve!(x,A,b,update_matrix=false)\n    _A = lufact!(A)\n    ldiv!(x,_A,b)\n  end\nendThis initialization function returns a linear solving function that always computes the LU-factorization and then does the solving. This method works fine and you can pass it to the methods likeRosenbrock23(linsolve=linsolve!)and it will work, but this method does not cache _A, the factorization. This means that, even if A has not changed, it will re-factorize the matrix.To change this, we can instead create a call-overloaded type. The generalized form of this is:mutable struct LinSolveFactorize{F}\n  factorization::F\n  A\nend\nLinSolveFactorize(factorization) = LinSolveFactorize(factorization,nothing)\nfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nend\nfunction (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)\n  LinSolveFactorize(p.factorization,nothing)\nend\nlinsolve = LinSolveFactorize(lufact!)LinSolveFactorize is a type which holds the factorization method and the pre-factorized matrix. When linsolve is passed to the ODE/SDE/etc. solver, it will use the function linsolve(Val{:init},f,u0_prototype) to create a LinSolveFactorize object which holds the factorization method and a cache for holding a factorized matrix. Thenfunction (p::LinSolveFactorize)(x,A,b,matrix_updated=false)\n  if matrix_updated\n    p.A = p.factorization(A)\n  end\n  A_ldiv_B!(x,p.A,b)\nendis what\'s used in the solver\'s internal loop. If matrix_updated is true, it will re-compute the factorization. Otherwise it just solves the linear system with the cached factorization. This general idea of using a call-overloaded type can be employed to do many other things."
 },
 
 {
