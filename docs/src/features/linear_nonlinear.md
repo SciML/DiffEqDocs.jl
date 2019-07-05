@@ -79,6 +79,10 @@ linear solver is provided. It works similarly to `LinSolveFactorize`, but
 the matrix is automatically sent to the GPU as a `CuArray` and the `ldiv!`
 is performed against a CUDA QR factorization of the matrix.
 
+Note that this method requires that you have done `using CuArrays` in your
+script. A working installation of CuArrays.jl is required, which requires
+an installation of CUDA Toolkit.
+
 ### IterativeSolvers.jl-Based Methods
 
 The signature for `LinSolveIterativeSolvers` is:
