@@ -37,6 +37,12 @@ The following choices of pre-built linear solvers exist:
 
 ### DefaultLinSolve
 
+The default linear solver is `DefaultLinSolve`. This method is adaptive, and
+automatically chooses an LU factorization choose for dense and sparse
+arrays, and is compatible with GPU-based arrays. When the Jacobian is an
+`AbstractDiffEqOperator`, i.e. is matrix-free, `DefaultLinSolve` defaults to
+using a `gmres` iterative solver.
+
 ### Basic linsolve method choice: Factorization by LinSolveFactorize
 
 The easiest way to specify a `linsolve` is by a `factorization` function which
@@ -65,6 +71,31 @@ method provided by PETSc.jl. Thus if we pass this function into the algorithm
 as the factorization method, all internal linear solves will happen by PETSc.jl.
 
 ### IterativeSolvers.jl-Based Methods
+
+The signature for `LinSolveIterativeSolvers` is:
+
+```julia
+LinSolveIterativeSolvers(generate_iterator,args...;
+                         Pl=IterativeSolvers.Identity(),
+                         Pr=IterativeSolvers.Identity(),
+                         kwargs...)
+```
+
+where `Pl` is the left preconditioner, `Pr` is the right preconditioner, and
+the other `args...` and `kwargs...` are passed into the iterative solver
+chosen in `generate_iterator` which designates the construction of an iterator
+from IterativeSolvers.jl. For example, using `gmres_iterable!` would make a
+version that uses `IterativeSolvers.gmres`. The following are aliases to common
+choices:
+
+- LinSolveGMRES -- GMRES
+- LinSolveCG -- CG (Conjugate Gradient)
+- LinSolveBiCGStabl -- BiCGStabl Stabilized Bi-Conjugate Gradient
+- LinSolveChebyshev -- Chebyshev
+- LinSolveMINRES -- MINRES
+
+which all have the same arguments as `LinSolveIterativeSolvers` except with
+`generate_iterator` pre-specified.
 
 ### Implementing Your Own LinSolve: How LinSolveFactorize Was Created
 
