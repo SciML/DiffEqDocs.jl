@@ -3585,6 +3585,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/linear_nonlinear.html#GPU-offloading-of-factorization-with-LinSolveGPUFactorize-1",
+    "page": "Specifying (Non)Linear Solvers",
+    "title": "GPU offloading of factorization with LinSolveGPUFactorize",
+    "category": "section",
+    "text": "If one has a problem with a sufficiently large Jacobian (~100x100) and a sufficiently powerful GPU, it can make sense to offload the factorization and backpropogation steps to the GPU. For this, the LinSolveGPUFactorize linear solver is provided. It works similarly to LinSolveFactorize, but the matrix is automatically sent to the GPU as a CuArray and the ldiv! is performed against a CUDA QR factorization of the matrix.Note that this method requires that you have done using CuArrays in your script. A working installation of CuArrays.jl is required, which requires an installation of CUDA Toolkit."
+},
+
+{
     "location": "features/linear_nonlinear.html#IterativeSolvers.jl-Based-Methods-1",
     "page": "Specifying (Non)Linear Solvers",
     "title": "IterativeSolvers.jl-Based Methods",
