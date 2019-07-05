@@ -70,6 +70,15 @@ This function creates a `KSP` type which makes `\` perform the GMRES iterative
 method provided by PETSc.jl. Thus if we pass this function into the algorithm
 as the factorization method, all internal linear solves will happen by PETSc.jl.
 
+### GPU offloading of factorization with LinSolveGPUFactorize
+
+If one has a problem with a sufficiently large Jacobian (~100x100) and a
+sufficiently powerful GPU, it can make sense to offload the factorization
+and backpropogation steps to the GPU. For this, the `LinSolveGPUFactorize`
+linear solver is provided. It works similarly to `LinSolveFactorize`, but
+the matrix is automatically sent to the GPU as a `CuArray` and the `ldiv!`
+is performed against a CUDA QR factorization of the matrix.
+
 ### IterativeSolvers.jl-Based Methods
 
 The signature for `LinSolveIterativeSolvers` is:
