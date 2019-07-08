@@ -3557,7 +3557,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Specifying (Non)Linear Solvers",
     "title": "Linear Solvers: linsolve Specification",
     "category": "section",
-    "text": "For differential equation integrators which use linear solvers, an argument to the method linsolve determines the linear solver which is used. The signature is:linsolve! = linsolve(Val{:init},f,x)\nlinsolve!(x,A,b,matrix_updated=false)This is an in-place function which updates x by solving Ax=b. The user should specify the function linsolve(Val{:init},f,x) which returns a linsolve! function. The setting matrix_updated determines whether the matrix A has changed from the last call. This can be used to smartly cache factorizations."
+    "text": "For differential equation integrators which use linear solvers, an argument to the method linsolve determines the linear solver which is used. The signature is:linsolve! = linsolve(Val{:init},f,x;kwargs...)\nlinsolve!(x,A,b,matrix_updated=false;kwargs...)This is an in-place function which updates x by solving Ax=b. The user should specify the function linsolve(Val{:init},f,x) which returns a linsolve! function. The setting matrix_updated determines whether the matrix A has changed from the last call. This can be used to smartly cache factorizations.Note that linsolve! needs to accept splatted keyword arguments. The possible arguments passed to the linear solver are as follows:Pl, a pre-specified left preconditioner which utilizes the internal adaptive norm estimates\nPr, a pre-specified right preconditioner which utilizes the internal adaptive norm estimates\ntol, a linear solver tolerance specified from the ODE solver\'s implicit handling"
 },
 
 {
