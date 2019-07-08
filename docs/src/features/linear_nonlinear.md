@@ -12,14 +12,21 @@ to the method `linsolve` determines the linear solver which is used. The signatu
 is:
 
 ```julia
-linsolve! = linsolve(Val{:init},f,x)
-linsolve!(x,A,b,matrix_updated=false)
+linsolve! = linsolve(Val{:init},f,x;kwargs...)
+linsolve!(x,A,b,matrix_updated=false;kwargs...)
 ```
 
 This is an in-place function which updates `x` by solving `Ax=b`. The user should
 specify the function `linsolve(Val{:init},f,x)` which returns a `linsolve!` function.
 The setting `matrix_updated` determines whether the matrix `A` has changed from the
 last call. This can be used to smartly cache factorizations.
+
+Note that `linsolve!` needs to accept splatted keyword arguments. The possible arguments
+passed to the linear solver are as follows:
+
+- `Pl`, a pre-specified left preconditioner which utilizes the internal adaptive norm estimates
+- `Pr`, a pre-specified right preconditioner which utilizes the internal adaptive norm estimates
+- `tol`, a linear solver tolerance specified from the ODE solver's implicit handling
 
 ### Pre-Built Linear Solver Choices
 
