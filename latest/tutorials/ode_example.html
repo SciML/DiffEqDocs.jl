@@ -34,7 +34,7 @@ sol = solve(prob)</code></pre><p>Using the plot recipe tools <a href="http://doc
 end</code></pre><p>and then we add the parameters to the <code>ODEProblem</code>:</p><pre><code class="language-julia">u0 = [1.0,0.0,0.0]
 tspan = (0.0,1.0)
 p = [10.0,28.0,8/3]
-prob = ODEProblem(parameterized_lorenz,u0,tspan,p)</code></pre><p>We can make our functions like nicer by doing a few tricks. For example:</p><pre><code class="language-julia">function parameterized_lorenz(du,u,p,t)
+prob = ODEProblem(parameterized_lorenz,u0,tspan,p)</code></pre><p>We can make our functions look nicer by doing a few tricks. For example:</p><pre><code class="language-julia">function parameterized_lorenz(du,u,p,t)
   x,y,z = u
   σ,ρ,β = p
   du[1] = dx = σ*(y-x)
