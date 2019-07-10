@@ -330,7 +330,7 @@ p = [10.0,28.0,8/3]
 prob = ODEProblem(parameterized_lorenz,u0,tspan,p)
 ```
 
-We can make our functions like nicer by doing a few tricks. For example:
+We can make our functions look nicer by doing a few tricks. For example:
 
 ```julia
 function parameterized_lorenz(du,u,p,t)
