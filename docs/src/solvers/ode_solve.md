@@ -373,6 +373,15 @@ Note that the order that is referred to is the extrapolation order. For `AitkenN
 this is the order of the method, for the others an extrapolation order of `n`
 gives an order `2(n+1)` method.
 
+#### Implicit Extrapolation Methods
+
+- `ImplicitEulerExtrapolation` - Extrapolation of implicit Euler method with Romberg sequence.
+  This method has arguments of `max_order`, `min_order`, and `init_order` on the adaptive order
+  algorithm. The defaults are:
+  - `max_order=10`
+  - `min_order=1`
+  - `init_order=5`
+
 #### Explicit Multistep Methods
 
 Methods using the approximation at more than one previous mesh point to determine
