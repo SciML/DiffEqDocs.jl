@@ -99,24 +99,24 @@ plot(sol,plot_analytic=true)
 
 ![Better Automatic Solution](../assets/sde_start_time.png)
 
-### Monte Carlo Simulations
+### Ensemble Simulations
 
-Instead of solving single trajectories, we can turn our problem into a `MonteCarloProblem`
-to solve many trajectories all at once. This is done by the `MonteCarloProblem`
+Instead of solving single trajectories, we can turn our problem into a `EnsembleProblem`
+to solve many trajectories all at once. This is done by the `EnsembleProblem`
 constructor:
 
 ```julia
-monte_prob = MonteCarloProblem(prob)
+ensembleprob = EnsembleProblem(prob)
 ```
 
-The solver commands are defined [at the Monte Carlo page](../../features/monte_carlo.html).
+The solver commands are defined [at the Parallel Ensemble Simulatuions page](../../features/ensemble.html).
 For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
-`parallel_type=:threads`. Together, this looks like:
+`EnsembleThreads()`. Together, this looks like:
 
 ```julia
-sol = solve(monte_prob,num_monte=1000,parallel_type=:threads)
+sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
 ```
 
 Many more controls are defined at the Monte Carlo page, including analysis tools.
@@ -125,9 +125,9 @@ mean/var statistics and has an associated plot recipe. For example, we can get
 the statistics at every `0.01` timesteps and plot the average + error using:
 
 ```julia
-summ = MonteCarloSummary(sol,0:0.01:1)
+summ = EnsembleSummary(sol,0:0.01:1)
 plot(summ,labels="Middle 95%")
-summ = MonteCarloSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
+summ = EnsembleSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
 plot!(summ,labels="Middle 50%",legend=true)
 ```
 
