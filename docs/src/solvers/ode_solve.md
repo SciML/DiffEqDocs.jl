@@ -355,6 +355,9 @@ algorithm. The defaults are:
 - `min_order=1` except for `ExtrapolationMidpointHairerWanner` it's 2.
 - `init_order=5`
 
+These methods also have an argument for enabling `threading` for calculation. 
+By default, `threading` is enabled.
+
 Additionally, the `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
 methods have the additional argument:
 
@@ -365,7 +368,7 @@ methods have the additional argument:
 To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)
+alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch,threading=false)
 solve(prob,alg)
 ```
 
