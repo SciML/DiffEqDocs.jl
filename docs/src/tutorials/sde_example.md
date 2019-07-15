@@ -109,7 +109,7 @@ constructor:
 ensembleprob = EnsembleProblem(prob)
 ```
 
-The solver commands are defined [at the Parallel Ensemble Simulatuions page](../../features/ensemble.html).
+The solver commands are defined [at the Parallel Ensemble Simulations page](../../features/ensemble.html).
 For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
