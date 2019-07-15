@@ -67,10 +67,6 @@ since it will use a rejection-based approach to adapt to the delay discontinuiti
   to true. If lags can grow or some lags are undeclared this may need to be set
   to false since it might impact the quality of the solution otherwise.
 
-- `initial_order` - Order of discontinuity at the initial time point. Defaults
-  to 0 if the evaluation of the history function at the initial time point does
-  not equal the initial state, and 1 otherwise.
-
 - `discontinuity_interp_points` - Number of interpolation points used to track
   discontinuities arising from dependent delays. Defaults to 10. Only relevant
   if dependent delays are declared.
