@@ -349,14 +349,12 @@ The following are adaptive order, adaptive step size extrapolation methods:
   following Hairer's `ODEX` in the adaptivity behavior.
 
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
-algorithm. The defaults are:
+algorithm. These methods also have an argument for enabling `threading` for calculation. The defaults are:
 
 - `max_order=10`
 - `min_order=1` except for `ExtrapolationMidpointHairerWanner` it's 2.
 - `init_order=5`
-
-These methods also have an argument for enabling `threading` for calculation. 
-By default, `threading` is enabled.
+- `threading=true`
 
 Additionally, the `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
 methods have the additional argument:
