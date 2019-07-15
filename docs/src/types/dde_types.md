@@ -7,11 +7,11 @@ condition ``u_0`` at time point ``t_0``, and the history function ``h``
 which together define a DDE:
 
 ```math
-\begin{align}
-\frac{du}{dt} &= f(u,h,p,t) \qquad & (t \geq t_0), \\
-u(t_0) &= u_0, \\
-u(t) &= h(t) \qquad &(t < t_0).
-\end{align}
+\begin{align*}
+    \frac{du}{dt} &= f(u,h,p,t) \qquad & (t \geq t_0), \\
+    u(t_0) &= u_0, \\
+    u(t) &= h(t) \qquad &(t < t_0).
+\end{align*}
 ```
 
 ``f`` should be specified as `f(u, h, p, t)` (or in-place as `f(du, u, h, p, t)`),
@@ -21,7 +21,7 @@ history function `h` is accessed for all delayed values. Note that we are not
 limited to numbers or vectors for ``u_0``; one is allowed to provide ``u_0``
 as arbitrary matrices / higher dimension tensors as well.
 
-### Functional Forms of the History Function
+## Functional Forms of the History Function
 
 The history function `h` can be called in the following ways:
 
@@ -46,31 +46,25 @@ efficiently be more accurate and thus this is recommended.
 ### Constructors
 
 ```
-DDEProblem(f::DDEFunction, u0, h, tspan, p=nothing;
-                      constant_lags=[],
-                      dependent_lags=[],
-                      callback=nothing)
-DDEProblem{isinplace}(f, u0, h, tspan, p=nothing;
-                      constant_lags=[],
-                      dependent_lags=[],
-                      callback=nothing)
+DDEProblem(f[, u0], h, tspan[, p]; <keyword arguments>)
+DDEProblem{isinplace}(f[, u0], h, tspan[, p]; <keyword arguments>)
 ```
 
 Parameter `isinplace` optionally sets whether the function is inplace or not.
-This is determined automatically, but not inferred. For specifying Jacobians
-and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
-page.
+This is determined automatically, but not inferred.
 
-### Fields
+For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html) page.
+
+### Arguments
 
 * `f`: The function in the DDE.
-* `u0`: The initial condition.
+* `u0`: The initial condition. Defaults to the value `h(p, first(tspan))` of the history function evaluated at the initial time point.
 * `h`: The history function for the DDE before `t0`.
-* `p`: The parameters with which function `f` is called.
 * `tspan`: The timespan for the problem.
-* `constant_lags`: An array of constant lags. These should be numbers corresponding
-  to times that are used in the history function `h`.
+* `p`: The parameters with which function `f` is called. Defaults to `nothing`.
+* `constant_lags`: A collection of constant lags used by the history function `h`. Defaults to `()`.
 * `dependent_lags` A tuple of functions `(u, p, t) -> lag` for the state-dependent lags
-  used by the history function `h`.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+  used by the history function `h`. Defaults to `()`.
+* `neutral`: If the DDE is neutral, i.e., if delays appear in derivative terms.
+* `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
+* `callback`: A callback to be applied to every solver which uses the problem. Defaults to `nothing`.
