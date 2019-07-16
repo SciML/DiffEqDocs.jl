@@ -1805,7 +1805,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Mathematical Specification of a DDE Problem",
     "category": "section",
-    "text": "To define a DDE Problem, you simply need to give the function f, the initial condition u_0 at time point t_0, and the history function h which together define a DDE:beginalign\nfracdudt = f(uhpt) qquad  (t geq t_0) \nu(t_0) = u_0 \nu(t) = h(t) qquad (t  t_0)\nendalignf should be specified as f(u, h, p, t) (or in-place as f(du, u, h, p, t)), u_0 should be an AbstractArray (or number) whose geometry matches the desired geometry of u, and h should be specified as described below. The history function h is accessed for all delayed values. Note that we are not limited to numbers or vectors for u_0; one is allowed to provide u_0 as arbitrary matrices / higher dimension tensors as well."
+    "text": "To define a DDE Problem, you simply need to give the function f, the initial condition u_0 at time point t_0, and the history function h which together define a DDE:beginalign*\n    fracdudt = f(uhpt) qquad  (t geq t_0) \n    u(t_0) = u_0 \n    u(t) = h(t) qquad (t  t_0)\nendalign*f should be specified as f(u, h, p, t) (or in-place as f(du, u, h, p, t)), u_0 should be an AbstractArray (or number) whose geometry matches the desired geometry of u, and h should be specified as described below. The history function h is accessed for all delayed values. Note that we are not limited to numbers or vectors for u_0; one is allowed to provide u_0 as arbitrary matrices / higher dimension tensors as well."
 },
 
 {
@@ -1837,15 +1837,15 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DDEProblem(f::DDEFunction, u0, h, tspan, p=nothing;\n                      constant_lags=[],\n                      dependent_lags=[],\n                      callback=nothing)\nDDEProblem{isinplace}(f, u0, h, tspan, p=nothing;\n                      constant_lags=[],\n                      dependent_lags=[],\n                      callback=nothing)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "DDEProblem(f[, u0], h, tspan[, p]; <keyword arguments>)\nDDEProblem{isinplace}(f[, u0], h, tspan[, p]; <keyword arguments>)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
-    "location": "types/dde_types.html#Fields-1",
+    "location": "types/dde_types.html#Arguments-1",
     "page": "DDE Problems",
-    "title": "Fields",
+    "title": "Arguments",
     "category": "section",
-    "text": "f: The function in the DDE.\nu0: The initial condition.\nh: The history function for the DDE before t0.\np: The parameters with which function f is called.\ntspan: The timespan for the problem.\nconstant_lags: An array of constant lags. These should be numbers corresponding to times that are used in the history function h.\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The function in the DDE.\nu0: The initial condition. Defaults to the value h(p, first(tspan)) of the history function evaluated at the initial time point.\nh: The history function for the DDE before t0.\ntspan: The timespan for the problem.\np: The parameters with which function f is called. Defaults to nothing.\nconstant_lags: A collection of constant lags used by the history function h. Defaults to ().\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h. Defaults to ().\nneutral: If the DDE is neutral, i.e., if delays appear in derivative terms.\norder_discontinuity_t0: The order of the discontinuity at the initial time point. Defaults to 0 if an initial condition u0 is provided. Otherwise it is forced to be greater or equal than 1.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -2917,7 +2917,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Solvers",
     "title": "Special Keyword Arguments",
     "category": "section",
-    "text": "minimal_solution - Allows the algorithm to delete past history when dense and save_everystep are false, and only constant lags are specified. Defaults to true. If lags can grow or some lags are undeclared this may need to be set to false since it might impact the quality of the solution otherwise.\ninitial_order - Order of discontinuity at the initial time point. Defaults to 0 if the evaluation of the history function at the initial time point does not equal the initial state, and 1 otherwise.\ndiscontinuity_interp_points - Number of interpolation points used to track discontinuities arising from dependent delays. Defaults to 10. Only relevant if dependent delays are declared.\ndiscontinuity_abstol and discontinuity_reltol - These are absolute and relative tolerances used by the check whether the time point at the beginning of the current step is a discontinuity arising from dependent delays. Defaults to 1/10^12 and 0. Only relevant if dependent delays are declared."
+    "text": "minimal_solution - Allows the algorithm to delete past history when dense and save_everystep are false, and only constant lags are specified. Defaults to true. If lags can grow or some lags are undeclared this may need to be set to false since it might impact the quality of the solution otherwise.\ndiscontinuity_interp_points - Number of interpolation points used to track discontinuities arising from dependent delays. Defaults to 10. Only relevant if dependent delays are declared.\ndiscontinuity_abstol and discontinuity_reltol - These are absolute and relative tolerances used by the check whether the time point at the beginning of the current step is a discontinuity arising from dependent delays. Defaults to 1/10^12 and 0. Only relevant if dependent delays are declared."
 },
 
 {
