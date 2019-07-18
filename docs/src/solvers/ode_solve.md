@@ -432,7 +432,7 @@ These methods require a choice of `dt`.
 - `ImplicitMidpoint` - A second order A-stable symplectic and symmetric implicit
   solver. Good for highly stiff equations which need symplectic integration.
 - `Trapezoid` - A second order A-stable symmetric ESDIRK method. "Almost
-  symplectic" without numerical dampening. Also known as Crank-Nicholson when
+  symplectic" without numerical dampening. Also known as Crank-Nicolson when
   applied to PDEs. Adaptive timestepping via divided differences on the memory.
   Good for highly stiff equations which are non-oscillatory.
 - `TRBDF2` - A second order A-B-L-S-stable one-step ESDIRK method. Includes
@@ -444,7 +444,7 @@ These methods require a choice of `dt`.
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
 - `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
-  as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
+  as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided
   differences on the memory. Good for highly stiff equations which are
   non-oscillatory.
   Uses an external nonlinear solver. Defaults to trust region
