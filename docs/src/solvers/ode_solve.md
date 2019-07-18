@@ -431,7 +431,7 @@ These methods require a choice of `dt`.
   preserving (SSP).
 - `ImplicitMidpoint` - A second order A-stable symplectic and symmetric implicit
   solver. Good for highly stiff equations which need symplectic integration.
-- `Trapezoid` - A second order A-L-stable symmetric ESDIRK method. "Almost
+- `Trapezoid` - A second order A-stable symmetric ESDIRK method. "Almost
   symplectic" without numerical dampening. Also known as Crank-Nicholson when
   applied to PDEs. Adaptive timestepping via divided differences on the memory.
   Good for highly stiff equations which are non-oscillatory.
