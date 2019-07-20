@@ -269,12 +269,14 @@ This is because you're using a cache which is not compatible with autodifferenti
 via ForwardDiff.jl. For example, if we use the ODE function:
 
 ```julia
-const tmp = zeros(4)
-const A = rand(4,4)
-function f(du,u,p,t)
-  A_mul_B!(tmp,A,u)
-  du .= tmp .+ u
+using LinearAlgebra, OrdinaryDiffEq
+function foo(du, u, (A, tmp), t)
+    mul!(tmp, A, u)
+    @. du = u + tmp
+    nothing
 end
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), zeros(5,5)))
+solve(prob, Rosenbrock23())
 ```
 
 Here we use a cached temporary array in order to avoid the allocations of matrix
@@ -293,60 +295,17 @@ sol = solve(prob,Rosenbrock23(autodiff=false))
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
 calculate Jacobians.
 
-** Warning: Advanced **
-
-The more difficult way is to create a Dual cache which dispatches for the cache
-choice based on the element type of `u`. This is done by the following:
+We could use `get_tmp` and `dualcache` functions from `DiffEqBase` to solve this issue, e.g.,
 
 ```julia
-using ForwardDiff
-struct MyTag end
-struct DiffCache{T<:AbstractArray, S<:AbstractArray}
-    du::T
-    dual_du::S
+using LinearAlgebra, OrdinaryDiffEq
+using DiffEqBase: get_tmp, dualcache
+function foo(du, u, (A, tmp), t)
+    tmp = get_tmp(tmp, u)
+    mul!(tmp, A, u)
+    @. du = u + tmp
+    nothing
 end
-
-function DiffCache(T, size, ::Type{Val{chunk_size}}) where chunk_size
-    DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))
-end
-
-DiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})
-
-get_tmp(dc::DiffCache, ::Type{T}) where {T<:ForwardDiff.Dual} = dc.dual_du
-get_tmp(dc::DiffCache, T) = dc.du
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), dualcache(zeros(5,5))))
+solve(prob, TRBDF2())
 ```
-
-Now we can get a cache that by dispatch either gives a cache array of `Dual`
-numbers or just floating point numbers:
-
-
-```julia
-const dual_cache = DiffCache(rand(4)) # Build the cache, this must match your IC
-du = get_tmp(dual_cache,typeof(rand(4))) # Gives a Array{Float64}
-dual_du = get_tmp(dual_cache,typeof(ForwardDiff.Dual(0.2,3.0))) # Gives Array{Dual}
-```
-
-Note that you have to make sure that your chunk size matches the choice in the
-ODE solver (by default, it uses `ForwardDiff.pickchunksize(length(u))` as well,
-so you only need to change this if you explicitly set `chunksize = ...`). Now
-we can setup and solve our ODE using this cache:
-
-```julia
-function f(du,u,p,t)
-  # Get du from cache
-  tmp = get_tmp(dual_cache,eltype(u))
-  # Fix tag
-  _tmp = reinterpret(eltype(u),tmp)
-  A_mul_B!(_tmp,A,u)
-  du .= _tmp .+ u
-end
-prob = ODEProblem(f,rand(4),(0.0,1.0))
-sol = solve(prob,Rosenbrock23())
-```
-
-Small explanation is in order. `tmp = get_tmp(dual_cache,eltype(u))` makes `tmp`
-match `u` in terms of `Dual` or not, but it doesn't necessarily match the tag.
-So now we `reinterpret` our `Dual` array to put the right tag on there. Note
-that this simply changes type information and thus does not create any temporary
-arrays. Once we do that, our cached array is now typed correctly to hold the
-result of `A_mul_B!`.
