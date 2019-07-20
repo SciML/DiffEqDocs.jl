@@ -25,35 +25,21 @@ ForwardDiff.jacobian(f,[1.5,1.0])
 
 2×2 Array{Float64,2}:
   2.20214   0.189782
- -6.2273   -0.700188</code></pre><h4><a class="nav-anchor" id="I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1" href="#I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1">I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?</a></h4><p>This is because you&#39;re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:</p><pre><code class="language-julia">const tmp = zeros(4)
-const A = rand(4,4)
-function f(du,u,p,t)
-  A_mul_B!(tmp,A,u)
-  du .= tmp .+ u
-end</code></pre><p>Here we use a cached temporary array in order to avoid the allocations of matrix multiplication. When autodifferentiation occurs, the element type of <code>u</code> is <code>Dual</code> numbers, so <code>A*u</code> produces <code>Dual</code> numbers, so the error arises when it tries to write into <code>tmp</code>. There are two ways to avoid this. The first way, the easy way, is to just turn off autodifferentiation with the <code>autodiff=false</code> option in the solver. Every solver which uses autodifferentiation has this option. Thus we&#39;d solve this with:</p><pre><code class="language-julia">prob = ODEProblem(f,rand(4),(0.0,1.0))
-sol = solve(prob,Rosenbrock23(autodiff=false))</code></pre><p>and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.</p><p>** Warning: Advanced **</p><p>The more difficult way is to create a Dual cache which dispatches for the cache choice based on the element type of <code>u</code>. This is done by the following:</p><pre><code class="language-julia">using ForwardDiff
-struct MyTag end
-struct DiffCache{T&lt;:AbstractArray, S&lt;:AbstractArray}
-    du::T
-    dual_du::S
+ -6.2273   -0.700188</code></pre><h4><a class="nav-anchor" id="I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1" href="#I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1">I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?</a></h4><p>This is because you&#39;re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:</p><pre><code class="language-julia">using LinearAlgebra, OrdinaryDiffEq
+function foo(du, u, (A, tmp), t)
+    mul!(tmp, A, u)
+    @. du = u + tmp
+    nothing
 end
-
-function DiffCache(T, size, ::Type{Val{chunk_size}}) where chunk_size
-    DiffCache(zeros(T, size...), zeros(ForwardDiff.Dual{nothing,T,chunk_size}, size...))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), zeros(5,5)))
+solve(prob, Rosenbrock23())</code></pre><p>Here we use a cached temporary array in order to avoid the allocations of matrix multiplication. When autodifferentiation occurs, the element type of <code>u</code> is <code>Dual</code> numbers, so <code>A*u</code> produces <code>Dual</code> numbers, so the error arises when it tries to write into <code>tmp</code>. There are two ways to avoid this. The first way, the easy way, is to just turn off autodifferentiation with the <code>autodiff=false</code> option in the solver. Every solver which uses autodifferentiation has this option. Thus we&#39;d solve this with:</p><pre><code class="language-julia">prob = ODEProblem(f,rand(4),(0.0,1.0))
+sol = solve(prob,Rosenbrock23(autodiff=false))</code></pre><p>and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.</p><p>We could use <code>get_tmp</code> and <code>dualcache</code> functions from <code>DiffEqBase</code> to solve this issue, e.g.,</p><pre><code class="language-julia">using LinearAlgebra, OrdinaryDiffEq
+using DiffEqBase: get_tmp, dualcache
+function foo(du, u, (A, tmp), t)
+    tmp = get_tmp(tmp, u)
+    mul!(tmp, A, u)
+    @. du = u + tmp
+    nothing
 end
-
-DiffCache(u::AbstractArray) = DiffCache(eltype(u),size(u),Val{ForwardDiff.pickchunksize(length(u))})
-
-get_tmp(dc::DiffCache, ::Type{T}) where {T&lt;:ForwardDiff.Dual} = dc.dual_du
-get_tmp(dc::DiffCache, T) = dc.du</code></pre><p>Now we can get a cache that by dispatch either gives a cache array of <code>Dual</code> numbers or just floating point numbers:</p><pre><code class="language-julia">const dual_cache = DiffCache(rand(4)) # Build the cache, this must match your IC
-du = get_tmp(dual_cache,typeof(rand(4))) # Gives a Array{Float64}
-dual_du = get_tmp(dual_cache,typeof(ForwardDiff.Dual(0.2,3.0))) # Gives Array{Dual}</code></pre><p>Note that you have to make sure that your chunk size matches the choice in the ODE solver (by default, it uses <code>ForwardDiff.pickchunksize(length(u))</code> as well, so you only need to change this if you explicitly set <code>chunksize = ...</code>). Now we can setup and solve our ODE using this cache:</p><pre><code class="language-julia">function f(du,u,p,t)
-  # Get du from cache
-  tmp = get_tmp(dual_cache,eltype(u))
-  # Fix tag
-  _tmp = reinterpret(eltype(u),tmp)
-  A_mul_B!(_tmp,A,u)
-  du .= _tmp .+ u
-end
-prob = ODEProblem(f,rand(4),(0.0,1.0))
-sol = solve(prob,Rosenbrock23())</code></pre><p>Small explanation is in order. <code>tmp = get_tmp(dual_cache,eltype(u))</code> makes <code>tmp</code> match <code>u</code> in terms of <code>Dual</code> or not, but it doesn&#39;t necessarily match the tag. So now we <code>reinterpret</code> our <code>Dual</code> array to put the right tag on there. Note that this simply changes type information and thus does not create any temporary arrays. Once we do that, our cached array is now typed correctly to hold the result of <code>A_mul_B!</code>.</p><footer><hr/><a class="previous" href="problem.html"><span class="direction">Previous</span><span class="title">Problem interface</span></a><a class="next" href="compatibility_chart.html"><span class="direction">Next</span><span class="title">Solver Compatibility Chart</span></a></footer></article></body></html>
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), dualcache(zeros(5,5))))
+solve(prob, TRBDF2())</code></pre><footer><hr/><a class="previous" href="problem.html"><span class="direction">Previous</span><span class="title">Problem interface</span></a><a class="next" href="compatibility_chart.html"><span class="direction">Next</span><span class="title">Solver Compatibility Chart</span></a></footer></article></body></html>
