@@ -112,7 +112,7 @@ be specified element-wise by passing a vector whose size matches `u0`.
 * `adaptive`: Turns on adaptive timestepping for appropriate methods. Default
   is true.
 * `abstol`: Absolute tolerance in adaptive timestepping. This is the tolerance
-  on local error estimatoes, not necessarily the global error (though these quantities
+  on local error estimates, not necessarily the global error (though these quantities
   are related). Defaults to `1e-6` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
   on stochastic equations (SDEs/RODEs).
 * `reltol`: Relative tolerance in adaptive timestepping.  This is the tolerance
