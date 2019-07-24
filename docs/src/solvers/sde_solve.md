@@ -216,7 +216,7 @@ For `SRA` and `SRI`, the following option is allowed:
   and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
 - `SKenCarp` - Adaptive L-stable drfit-implicit strong order 1.5 for additive
   Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
-  and scalar additive noise.†
+  and scalar additive noise.\*†
 
 #### Derivative-Based Methods
 
@@ -294,3 +294,5 @@ using BridgeDiffEq
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](../../features/diffeq_arrays.html).
+
+\*:  Note that although `SKenCarp` uses the same table as `KenCarp3`, solving a ODE problem using `SKenCarp` by setting `g(du,u,p,t) = du .= 0` will take much more steps than `KenCarp3` because error estimator of `SKenCarp` is different (because of noise terms) and default value of `qmax` (maximum permissible ratio of relaxing/tightening `dt` for adaptive steps) is smaller for StochasticDiffEq algorithms.
