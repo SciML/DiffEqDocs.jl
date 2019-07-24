@@ -1099,8 +1099,8 @@ use QuDiffEq.jl:
 using QuDiffEq
 ```
 
-- `QuLDE(k,Δu)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `Δu` is the intial condition for the resulting linear differential equations which is to be set to a small number e.g. `Δu = [1e-5,1e-5]`.
-
+- `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit).
+- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution. 
 
 ### NeuralNetDiffEq.jl
 
