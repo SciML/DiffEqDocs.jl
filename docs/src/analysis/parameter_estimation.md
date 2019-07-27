@@ -52,7 +52,7 @@ function build_loss_objective(prob::DEProblem,alg,loss_func
                               mpg_autodiff = false,
                               verbose_opt = false,
                               verbose_steps = 100,
-                              prob_generator = (p)->remake(prob,p=p),
+                              prob_generator = (prob,p)->remake(prob,p=p),
                               kwargs...)
 ```
 
