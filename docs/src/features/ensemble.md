@@ -75,8 +75,7 @@ sim = solve(prob,alg,ensemblealg,kwargs...)
 ```
 The keyword arguments take in the arguments for the common solver interface and will
 pass them to the differential equation solver. The `ensemblealg` is optional, and will
-default to an embaressingly parallel multiprocessing approach. The special keyword 
-arguments to note are:
+default to `EnsembleThreads()`. The special keyword arguments to note are:
 
 * `trajectories`: The number of simulations to run. This argument is required.
 * `batch_size` : The size of the batches on which the reductions are applies. Defaults to `trajectories`.
@@ -104,6 +103,9 @@ For example, `EnsembleThreads()` is invoked by:
 ```julia
 solve(ensembleprob,alg,EnsembleThreads();trajectories=1000)
 ```
+
+Additionally, an experimental GPU-based ensembling method is provided by DiffEqGPU.jl. Add and
+import that package to get `EnsembleGPUArray()`.
 
 ### Solution Type
 
