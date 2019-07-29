@@ -198,7 +198,7 @@ solve(prob,Vern7(lazy=false))
 - `KuttaPRK2p5` - A 5 parallel, 2 processor explicit Runge-Kutta method of 5th order.
 
 These methods utilize multithreading on the `f` calls to parallelize the problem. This
-requires that simultanious calls to `f` are thread-safe.
+requires that simultaneous calls to `f` are thread-safe.
 
 #### Explicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
@@ -339,7 +339,7 @@ alg = CarpenterKennedy2N54(;williamson_condition=false)
 
 So the above implementation of `f` becomes valid.
 
-#### Extrapolation Methods
+#### Parallelized Explicit Extrapolation Methods
 
 The following are adaptive order, adaptive step size extrapolation methods:
 
@@ -349,11 +349,13 @@ The following are adaptive order, adaptive step size extrapolation methods:
   following Hairer's `ODEX` in the adaptivity behavior.
 
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
-algorithm. The defaults are:
+algorithm. `threading` denotes whether to automatically multithread the `f` evaluations,
+allowing for a high degree of within-method parallelism. The defaults are:
 
 - `max_order=10`
 - `min_order=1` except for `ExtrapolationMidpointHairerWanner` it's 2.
 - `init_order=5`
+- `threading=true`
 
 Additionally, the `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
 methods have the additional argument:
@@ -372,15 +374,6 @@ solve(prob,alg)
 Note that the order that is referred to is the extrapolation order. For `AitkenNevillie`
 this is the order of the method, for the others an extrapolation order of `n`
 gives an order `2(n+1)` method.
-
-#### Implicit Extrapolation Methods
-
-- `ImplicitEulerExtrapolation` - Extrapolation of implicit Euler method with Romberg sequence.
-  This method has arguments of `max_order`, `min_order`, and `init_order` on the adaptive order
-  algorithm. The defaults are:
-  - `max_order=10`
-  - `min_order=1`
-  - `init_order=5`
 
 #### Explicit Multistep Methods
 
@@ -526,6 +519,44 @@ These methods require a choice of `dt`.
 ROCK methods offer a `min_stages` and `max_stages` functionality. SERK methods
 derive higher orders by Aitken-Neville algorithm. SERK2v2 is defaulted to Predictive
 control but has option of PI control.
+
+#### Parallelized Implicit Extrapolation Methods
+
+The following are adaptive order, adaptive step size extrapolation methods:
+
+- `ImplicitEulerExtrapolation` - Extrapolation of implicit Euler method with Romberg sequence.
+  Similar to Hairer's `SEULEX`.
+- `ImplicitDeuflhardExtrapolation` - Midpoint extrapolation using Barycentric coordinates
+- `ImplicitHairerWannerExtrapolation` - Midpoint extrapolation using Barycentric coordinates,
+  following Hairer's `SODEX` in the adaptivity behavior.
+
+These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
+algorithm. `threading` denotes whether to automatically multithread the `f` evaluations
+and J/W instantiations+factorizations, allowing for a high degree of
+within-method parallelism. The defaults are:
+
+- `max_order=10`
+- `min_order=1` except for `ImplicitHairerWannerExtrapolation` it's 2.
+- `init_order=5`
+- `threading=true`
+
+Additionally, the `ImplicitDeuflhardExtrapolation` and `ImplicitHairerWannerExtrapolation`
+methods have the additional argument:
+
+* `sequence`: the step-number sequences, also called the subdividing
+ sequence. Possible values are `:harmonic`, `:romberg` or `:bulirsch`. Default
+ is `:harmonic`.
+
+To override, utilize the keyword arguments. For example:
+
+```julia
+alg = ImplicitEulerExtrapolation(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)
+solve(prob,alg)
+```
+
+Note that the order that is referred to is the extrapolation order. For `ImplicitEulerExtrapolation`
+this is the order of the method, for the others an extrapolation order of `n`
+gives an order `2(n+1)` method.
 
 ##### Exponential Methods for Linear and Affine Problems
 
@@ -1128,7 +1159,7 @@ using NeuralNetDiffEq
 - `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
   `chain` under the hood which must be supplied by the user. Defaults to using the ADAM
   optimization method, but the user can pass any Flux.jl optimizer.
-  
+
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
