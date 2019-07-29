@@ -115,7 +115,7 @@ library methods are as follows:
 
 ## Full List of Methods
 
-### OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl for Non-Stiff Equations
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a
@@ -129,7 +129,7 @@ allow for sophisticated event handling, etc. On stiff ODEs these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
-#### Runge-Kutta Methods for Non-Stiff Equations
+#### Explicit Runge-Kutta Methods
 
 - `Euler`- The canonical forward Euler method. Fixed timestep only.
 - `Midpoint` - The second order midpoint method. Uses embedded Euler method for
@@ -381,7 +381,7 @@ Methods using the approximation at more than one previous mesh point to determin
 the approximation at the next point are called multistep methods. These methods
 tend to be more efficient as the size of the system or the cost of `f` increases.
 
-##### Adams-Bashforth Explicit Methods
+#### Adams-Bashforth Explicit Methods
 
 These methods require a choice of `dt`.
 
@@ -401,7 +401,7 @@ These methods require a choice of `dt`.
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
   is used to calculate starting values.
 
-##### Adaptive step size Adams explicit Methods
+#### Adaptive step size Adams explicit Methods
 
 - `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to
   calculate starting values.  
@@ -423,9 +423,9 @@ These methods require a choice of `dt`.
   method in Nordsieck form. The order adaptivity algorithm is derived from
   Sundials' `CVODE_Adams`. In development.
 
-#### Methods for Stiff Equations
+### OrdinaryDiffEq.jl for Stiff Equations
 
-##### SDIRK Methods
+#### SDIRK Methods
 
 - `ImplicitEuler` - A 1st order implicit solver. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
@@ -462,12 +462,12 @@ These methods require a choice of `dt`.
 - `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
 - `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
 
-##### Fully-Implicit Runge-Kutta Methods (FIRK)
+#### Fully-Implicit Runge-Kutta Methods (FIRK)
 
 - `Radau5` - An A-B-L stable fully implicit Runge-Kutta method with internal
   tableau complex basis transform for efficiency.
 
-##### Rosenbrock Methods
+#### Rosenbrock Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
   stiff equations with oscillations at low tolerances. 2nd order stiff-aware
@@ -498,7 +498,7 @@ These methods require a choice of `dt`.
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
 
-##### Stabilized Explicit Methods
+#### Stabilized Explicit Methods
 
 - `ROCK2` - Second order stabilized Runge-Kutta method. Exhibits high stability
   for real eigenvalues and is smoothened to allow for moderate sized complex
@@ -558,7 +558,15 @@ Note that the order that is referred to is the extrapolation order. For `Implici
 this is the order of the method, for the others an extrapolation order of `n`
 gives an order `2(n+1)` method.
 
-##### Exponential Methods for Linear and Affine Problems
+#### Parallelized DIRK Methods
+
+These methods parallelize the J/W instantiation and factorization, making them
+efficient on small highly stiff ODEs. Has an option `threading=true` to turn
+on/off multithreading.
+
+- `PDIRK44`: a 4th order 2-processor DIRK method.
+
+#### Exponential Methods for Linear and Affine Problems
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
   Expects the right hand side function to be a
@@ -577,7 +585,7 @@ Options:
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
-##### Exponential Runge-Kutta Methods
+#### Exponential Runge-Kutta Methods
 
 These methods are all fixed timestepping only.
 
@@ -606,7 +614,7 @@ constructor:
 - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
   is not given. See [Extra Options](#Extra-Options-1) for more details.
 
-##### Adaptive Exponential Rosenbrock Methods
+#### Adaptive Exponential Rosenbrock Methods
 
 - `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme.
 - `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
@@ -615,7 +623,7 @@ The exponential rosenbrock methods cannot be applied to semilinear problems. Opt
 solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1)
 except that Krylov approximation is always used.
 
-##### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
+#### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
 
 These methods are all fixed timestepping only.
 
@@ -642,7 +650,7 @@ Options:
 It should be noted that many of the methods are still at an experimental stage of development,
 and thus should be used with caution.
 
-##### Multistep Methods
+#### Multistep Methods
 
 Quasi-constant stepping is the time stepping strategy which matches the classic
 GEAR, LSODE,  and `ode15s` integrators. The variable-coefficient methods match
@@ -666,12 +674,12 @@ Sundials CVODE integrator.
 - `MEBDF2` - The second order Modified Extended BDF method, which has improved
   stability properties over the standard BDF. Fixed timestep only.
 
-##### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
+#### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
 - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
   stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only.
 
-##### Extra Options
+#### Extra Options
 
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
@@ -761,7 +769,7 @@ region. `dtfac` is the factor that `dt` is changed when switching: multiplied
 when going from non-stiff to stiff and divided when going stiff to non-stiff.
 `stiffalgfirst` denotes whether the first step should use the stiff algorithm.
 
-##### Pre-Built Stiffness Detecting and Auto-Switching Algorithms
+#### Pre-Built Stiffness Detecting and Auto-Switching Algorithms
 
 These methods require a `Autoalg(stiffalg)` to be chosen as the method to switch
 to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff
@@ -1064,7 +1072,7 @@ For more information on these algorithms, see
 
 ### GeometricIntegrators.jl
 
-##### Note: This package currently segfaults on non-Linux Julia v1.0!
+#### Note: This package currently segfaults on non-Linux Julia v1.0!
 
 GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
 Note that this setup is not automatically included with DifferentialEquaitons.jl.
@@ -1139,7 +1147,7 @@ using QuDiffEq
 ```
 
 - `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit).
-- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution. 
+- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution.
 
 ### NeuralNetDiffEq.jl
 
