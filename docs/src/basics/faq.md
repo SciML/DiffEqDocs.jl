@@ -301,11 +301,11 @@ We could use `get_tmp` and `dualcache` functions from `DiffEqBase` to solve this
 using LinearAlgebra, OrdinaryDiffEq
 using DiffEqBase: get_tmp, dualcache
 function foo(du, u, (A, tmp), t)
-    tmp = get_tmp(tmp, u)
+    tmp = DiffEqBase.get_tmp(tmp, u)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), dualcache(zeros(5,5))))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5))))
 solve(prob, TRBDF2())
 ```
