@@ -36,10 +36,10 @@ solve(prob, Rosenbrock23())</code></pre><p>Here we use a cached temporary array 
 sol = solve(prob,Rosenbrock23(autodiff=false))</code></pre><p>and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to calculate Jacobians.</p><p>We could use <code>get_tmp</code> and <code>dualcache</code> functions from <code>DiffEqBase</code> to solve this issue, e.g.,</p><pre><code class="language-julia">using LinearAlgebra, OrdinaryDiffEq
 using DiffEqBase: get_tmp, dualcache
 function foo(du, u, (A, tmp), t)
-    tmp = get_tmp(tmp, u)
+    tmp = DiffEqBase.get_tmp(tmp, u)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), dualcache(zeros(5,5))))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5))))
 solve(prob, TRBDF2())</code></pre><footer><hr/><a class="previous" href="problem.html"><span class="direction">Previous</span><span class="title">Problem interface</span></a><a class="next" href="compatibility_chart.html"><span class="direction">Next</span><span class="title">Solver Compatibility Chart</span></a></footer></article></body></html>
