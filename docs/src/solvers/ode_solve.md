@@ -367,7 +367,7 @@ methods have the additional argument:
 To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)
+alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch,threading=false)
 solve(prob,alg)
 ```
 
@@ -432,8 +432,8 @@ These methods require a choice of `dt`.
   preserving (SSP).
 - `ImplicitMidpoint` - A second order A-stable symplectic and symmetric implicit
   solver. Good for highly stiff equations which need symplectic integration.
-- `Trapezoid` - A second order A-L-stable symmetric ESDIRK method. "Almost
-  symplectic" without numerical dampening. Also known as Crank-Nicholson when
+- `Trapezoid` - A second order A-stable symmetric ESDIRK method. "Almost
+  symplectic" without numerical dampening. Also known as Crank-Nicolson when
   applied to PDEs. Adaptive timestepping via divided differences on the memory.
   Good for highly stiff equations which are non-oscillatory.
 - `TRBDF2` - A second order A-B-L-S-stable one-step ESDIRK method. Includes
@@ -445,7 +445,7 @@ These methods require a choice of `dt`.
   dogleg with full Newton, making it more robust to numerical instability at
   the cost of being less efficient.
 - `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
-  as Crank-Nicholson when applied to PDEs. Adaptive timestepping via divided
+  as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided
   differences on the memory. Good for highly stiff equations which are
   non-oscillatory.
   Uses an external nonlinear solver. Defaults to trust region
@@ -1138,8 +1138,8 @@ use QuDiffEq.jl:
 using QuDiffEq
 ```
 
-- `QuLDE(k,Δu)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `Δu` is the intial condition for the resulting linear differential equations which is to be set to a small number e.g. `Δu = [1e-5,1e-5]`.
-
+- `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit).
+- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution. 
 
 ### NeuralNetDiffEq.jl
 
