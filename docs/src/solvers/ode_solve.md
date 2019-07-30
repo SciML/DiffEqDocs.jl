@@ -461,6 +461,14 @@ These methods require a choice of `dt`.
 - `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
 - `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
 
+All of these methods have an option `nlsolve` which helps you specify the algorithm to use for solving non-linear equations that the algorithm comes across. You can set this as `NLNewton()`, `NLFunctional()` or `NLAnderson()`. Check out "[Specifying (Non)Linear Solvers](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html)" to know how to configure the nlsolver algorithm.
+
+#### Parallel Diagonally Implicit Runge-Kutta Methods
+
+- `PDIRK44` - A 2 processor 4th order diagonally non-adaptive implicit method.
+
+These methods also have option `nlsolve` same as SDIRK methods. These methods also need `f` to be thread safe. It parallelises the `nlsolve` calls inside the method.  
+
 ##### Fully-Implicit Runge-Kutta Methods (FIRK)
 
 - `Radau5` - An A-B-L stable fully implicit Runge-Kutta method with internal
@@ -626,6 +634,8 @@ Sundials CVODE integrator.
   method in Nordsieck form. In development.
 - `MEBDF2` - The second order Modified Extended BDF method, which has improved
   stability properties over the standard BDF. Fixed timestep only.
+
+All of these methods (except `JVODE_BDF`) have an option `nlsolve` which helps you specify the algorithm to use for solving non-linear equations that the algorithm comes across. You can set this as `NLNewton()`, `NLFunctional()` or `NLAnderson()`. Check out "[Specifying (Non)Linear Solvers](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html)" to know how to configure the nlsolver algorithm.
 
 ##### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
