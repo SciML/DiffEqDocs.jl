@@ -471,7 +471,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 
 ##### Fully-Implicit Runge-Kutta Methods (FIRK)
 
-- `Radau5` - An A-B-L stable fully implicit Runge-Kutta method with internal
+- `RadauIIA5` - An A-B-L stable fully implicit Runge-Kutta method with internal
   tableau complex basis transform for efficiency.
 
 ##### Rosenbrock Methods
