@@ -68,7 +68,7 @@ cb = ProbIntsUncertainty(0.2,1)
 ```
 
 This is akin to having an error of approximately 0.2 at each step. We now build
-and solve a [MonteCarloProblem](../features/monte_carlo.html) for 100 trajectories:
+and solve a [MonteCarloProblem](../../features/monte_carlo.html) for 100 trajectories:
 
 ```julia
 monte_prob = MonteCarloProblem(prob)
