@@ -16,7 +16,11 @@ events are necessary, then `FunctionMap` does well.
 If there is a `RegularJump`, then specific methods must be used. The current
 recommended method is `SimpleTauLeaping`.
 
-## Special Methods
+## Special Methods for Pure Jump Problems
+
+If you are using jumps with a differential equations, use the same methods
+as in the case of the differential equation solving. However, the following
+algorithms are optimized for pure jump problems.
 
 ### DiffEqJump.jl
 
