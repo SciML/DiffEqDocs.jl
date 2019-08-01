@@ -2665,11 +2665,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/jump_solve.html#Special-Methods-1",
+    "location": "solvers/jump_solve.html#Special-Methods-for-Pure-Jump-Problems-1",
     "page": "Jump Problem Solvers",
-    "title": "Special Methods",
+    "title": "Special Methods for Pure Jump Problems",
     "category": "section",
-    "text": ""
+    "text": "If you are using jumps with a differential equations, use the same methods as in the case of the differential equation solving. However, the following algorithms are optimized for pure jump problems."
 },
 
 {
