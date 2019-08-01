@@ -1773,7 +1773,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem(f::RODEFunction,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)\nRODEProblem{isinplace}(f,u0,tspan,noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "RODEProblem(f::RODEFunction,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)\nRODEProblem{isinplace}(f,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1781,7 +1781,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The optional parameters for the problem. Defaults to nothing.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
 },
 
 {
@@ -5501,7 +5501,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.addspecies!",
     "category": "function",
-    "text": "addspecies!(network, speciessym::Symbol)\n\nGiven an AbstractReaction network, add the species corresponding to the passed in symbol to the network (if it is not already defined). \n\n\n\n\n\naddspecies!(network, speciesname::String)\n\nGiven an AbstractReaction network, add the species with name given by the passed in string to the network (if it is not already defined.\n\n\n\n\n\n"
+    "text": "addspecies!(network, speciessym::Symbol)\n\nGiven an AbstractReaction network, add the species corresponding to the passed in symbol to the network (if it is not already defined).\n\n\n\n\n\naddspecies!(network, speciesname::String)\n\nGiven an AbstractReaction network, add the species with name given by the passed in string to the network (if it is not already defined.\n\n\n\n\n\n"
 },
 
 {
@@ -5517,7 +5517,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqBiological.jl API",
     "title": "DiffEqBiological.addreaction!",
     "category": "function",
-    "text": "addreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, rxexpr::Expr)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate and reaction expressions. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X) and rxexpr=:(2X + Y --> W), \n\n10.5, 0 --> X\n\nwould have rateex=10.5 and rxexpr=:(0 --> X), and\n\nk, X+X --> Z\n\nwould have rateex=:k and rxexpr=:(X+X --> Z).\n\nAll normal DSL reaction definition notation should be supported.\n\n\n\n\n\naddreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, substrates, products)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate, rateex, substrate stoichiometry, and product stoichiometry. Stoichiometries are represented as tuples of Pair{Symbol,Int}. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X), substrates=(:X=>2, :Y=>2)andproducts=(W=>2,)`, \n\n10.5, 0 --> X\n\nwould have rateex=10.5, substrates=() and products=(:X=>1,), and\n\nk, X+X --> Z\n\nwould have rateex=:k, substrates=(:X=>2,) and products=(:Z=>2,).\n\nAll normal DSL reaction definition notation should be supported for the rateex.\n\n\n\n\n\n"
+    "text": "addreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, rxexpr::Expr)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate and reaction expressions. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X) and rxexpr=:(2X + Y --> W),\n\n10.5, 0 --> X\n\nwould have rateex=10.5 and rxexpr=:(0 --> X), and\n\nk, X+X --> Z\n\nwould have rateex=:k and rxexpr=:(X+X --> Z). All normal DSL reaction definition notation should be supported.\n\n\n\n\n\naddreaction!(network, rateex::Union{Expr,Symbol,Int,Float64}, substrates, products)\n\nGiven an AbstractReaction network, add a reaction with the passed in rate, rateex, substrate stoichiometry, and product stoichiometry. Stoichiometries are represented as tuples of Pair{Symbol,Int}. i.e. a reaction of the form\n\nk*X, 2X + Y --> 2W\n\nwould have rateex=:(k*X), substrates=(:X=>2, :Y=>2)andproducts=(W=>2,)`,\n\n10.5, 0 --> X\n\nwould have rateex=10.5, substrates=() and products=(:X=>1,), and\n\nk, X+X --> Z\n\nwould have rateex=:k, substrates=(:X=>2,) and products=(:Z=>2,). All normal DSL reaction definition notation should be supported for the rateex.\n\n\n\n\n\n"
 },
 
 {
