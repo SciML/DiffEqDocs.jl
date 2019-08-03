@@ -728,7 +728,9 @@ method. The `stiffalg` can receive its estimate from the Jacobian calculation.
 `maxstiffstep` is the number of stiffness detects before switching to the stiff
 algorithm and `maxnonstiffstep` is vice versa. `nonstifftol` and `stifftol` are
 the tolerances associated with the stiffness comparison against the stability
-region. `dtfac` is the factor that `dt` is changed when switching: multiplied
+region. Decreasing `stifftol` makes switching to the non-stiff algorithm less
+likely. Decreasing `nonstifftol` makes switching to the stiff algorithm more
+likely. `dtfac` is the factor that `dt` is changed when switching: multiplied
 when going from non-stiff to stiff and divided when going stiff to non-stiff.
 `stiffalgfirst` denotes whether the first step should use the stiff algorithm.
 
