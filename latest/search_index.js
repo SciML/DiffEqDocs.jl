@@ -4017,9 +4017,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "features/ensemble.html#EnsembleAlgorihtms-1",
+    "location": "features/ensemble.html#EnsembleAlgorithms-1",
     "page": "Parallel Ensemble Simulations",
-    "title": "EnsembleAlgorihtms",
+    "title": "EnsembleAlgorithms",
     "category": "section",
     "text": "The choice of ensemble algorithm allows for control over how the multiple trajectories are handled. Currently, the ensemble algorithm types are:EnsembleSerial() - No parallelism\nEnsembleThreads() - This uses multithreading. It\'s local (single computer, shared memory) parallelism only. Fastest when the trajectories are quick.\nEnsembleDistributed() - The default. Uses pmap internally. It will use as many processors as you have Julia processes. To add more processes, use addprocs(n). See Julia\'s documentation for more details. Recommended for the case when each trajectory calculation isn\'t \"too quick\" (at least about a millisecond each?).\nEnsembleSplitThreads() - This uses threading on each process, splitting the problem into nprocs() even parts. This is for solving many quick trajectories on a multi-node machine. It\'s recommended you have one process on each node.For example, EnsembleThreads() is invoked by:solve(ensembleprob,alg,EnsembleThreads();trajectories=1000)Additionally, an experimental GPU-based ensembling method is provided by DiffEqGPU.jl. Add and import that package to get EnsembleGPUArray()."
 },
