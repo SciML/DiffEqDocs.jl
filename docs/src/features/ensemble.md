@@ -82,7 +82,7 @@ default to `EnsembleThreads()`. The special keyword arguments to note are:
 * `pmap_batch_size`: The size of the `pmap` batches. Default is
    `batch_size÷100 > 0 ? batch_size÷100 : 1`
 
-### EnsembleAlgorihtms
+### EnsembleAlgorithms
 
 The choice of ensemble algorithm allows for control over how the multiple trajectories
 are handled. Currently, the ensemble algorithm types are:
