@@ -68,11 +68,11 @@ cb = ProbIntsUncertainty(0.2,1)
 ```
 
 This is akin to having an error of approximately 0.2 at each step. We now build
-and solve a [MonteCarloProblem](../features/monte_carlo.html) for 100 trajectories:
+and solve a [EnsembleProblem](../../features/ensemble.html) for 100 trajectories:
 
 ```julia
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/10)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 ```
 
 Now we can plot the resulting Monte Carlo solution:
@@ -88,8 +88,8 @@ equation have less uncertainty than others. For example, at `σ=0.5`:
 
 ```julia
 cb = ProbIntsUncertainty(0.5,1)
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/10)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
@@ -100,8 +100,8 @@ decreasing `dt`:
 
 ```julia
 cb = ProbIntsUncertainty(0.5,1)
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Euler(),num_monte=100,callback=cb,dt=1/100)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/100)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
@@ -122,8 +122,8 @@ Let's try this with the order 5 `Tsit5()` method on the same problem as before:
 ```julia
 cb = AdaptiveProbIntsUncertainty(5)
 sol = solve(prob,Tsit5())
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
@@ -134,8 +134,8 @@ In this case, we see that the default tolerances give us a very good solution. H
 ```julia
 cb = AdaptiveProbIntsUncertainty(5)
 sol = solve(prob,Tsit5())
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb,abstol=1e-3,reltol=1e-1)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb,abstol=1e-3,reltol=1e-1)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
@@ -173,8 +173,8 @@ cb = AdaptiveProbIntsUncertainty(5)
 Then we solve the `MonteCarloProblem`
 
 ```julia
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Tsit5(),num_monte=100,callback=cb)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 
@@ -189,8 +189,8 @@ with stricter tolerances:
 tspan = (0.0,40.0)
 prob = ODEProblem(g,u0,tspan,p)
 cb = AdaptiveProbIntsUncertainty(7)
-monte_prob = MonteCarloProblem(prob)
-sim = solve(monte_prob,Vern7(),num_monte=100,callback=cb,reltol=1e-6)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Vern7(),trajectories=100,callback=cb,reltol=1e-6)
 using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 ```
 

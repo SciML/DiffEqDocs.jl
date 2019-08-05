@@ -27,8 +27,8 @@ with initial condition `u0`.
 
 ### Constructors
 
-- `SDEProblem(f::SDEFunction,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)`
-- `SDEProblem{isinplace}(f,g,u0,tspan,noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
+- `SDEProblem(f::SDEFunction,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing)`
+- `SDEProblem{isinplace}(f,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing)` :
   Defines the SDE with the specified functions. The default noise is `WHITE_NOISE`.
   `isinplace` optionally sets whether the function is inplace or not. This is
   determined automatically, but not inferred.
@@ -43,6 +43,7 @@ page.
 * `g`: The noise function in the SDE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
+* `p`: The optional parameters for the problem. Defaults to `nothing`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
   see [the noise process documentation page](../../features/noise_process.html)
