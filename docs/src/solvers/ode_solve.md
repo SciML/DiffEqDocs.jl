@@ -475,13 +475,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 
 #### Rosenbrock Methods
 
-- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
-  stiff equations with oscillations at low tolerances. 2nd order stiff-aware
-  interpolation.
-- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
-  stiff equations without oscillations at low tolerances. Note that this method
-  is prone to instability in the presence of oscillations, so use with caution.
-  2nd order stiff-aware interpolation.
+
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
   accuracy on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
@@ -492,11 +486,6 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 - `GRK4A` - An A-stable 4th order Rosenbrock method. Essentially "anti-L-stable"
   but efficient.
 - `Ros4LStab` - A 4th order L-stable Rosenbrock method.
-- `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
-- `ROS34PW1a` - A 4th order L-stable Rosenbrock-W method.
-- `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.
-- `ROS34PW2` - A 4th order stiffy accurate Rosenbrock-W method for PDAEs.
-- `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
 - `Rodas4` - A 4th order A-stable stiffly stable Rosenbrock method with a
   stiff-aware 3rd order interpolant
 - `Rodas42` - A 4th order A-stable stiffly stable Rosenbrock method with a
@@ -508,6 +497,21 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
+  
+##### Rosenbrock-W Methods
+
+- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
+  stiff equations with oscillations at low tolerances. 2nd order stiff-aware
+  interpolation.
+- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
+  stiff equations without oscillations at low tolerances. Note that this method
+  is prone to instability in the presence of oscillations, so use with caution.
+  2nd order stiff-aware interpolation.
+- `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
+- `ROS34PW1a` - A 4th order L-stable Rosenbrock-W method.
+- `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.
+- `ROS34PW2` - A 4th order stiffy accurate Rosenbrock-W method for PDAEs.
+- `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
 
 #### Stabilized Explicit Methods
 
