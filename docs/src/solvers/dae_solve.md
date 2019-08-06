@@ -22,7 +22,8 @@ These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
 
 #### Rosenbrock Methods
-
+- `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances. 2nd order stiff-aware interpolation.
+- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution. 2nd order stiff-aware interpolation.
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
   accuracy on discretizations of nonlinear parabolic PDEs.
 - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
