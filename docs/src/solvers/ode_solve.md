@@ -498,7 +498,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
   
-##### Rosenbrock-W Methods
+#### Rosenbrock-W Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
   stiff equations with oscillations at low tolerances. 2nd order stiff-aware
