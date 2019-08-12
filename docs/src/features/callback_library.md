@@ -229,7 +229,7 @@ StepsizeLimiter(dtFE;safety_factor=9//10,max_step=false,cached_dtcache=0.0)
 
 ## FunctionCallingCallback
 
-The function calling callback lets you define a function `func(u,p,t,integrator)`
+The function calling callback lets you define a function `func(u,t,integrator)`
 which gets calls at the time points of interest. The constructor is:
 
 ```julia
@@ -240,7 +240,7 @@ which gets calls at the time points of interest. The constructor is:
                  tdir=1)
 ```
 
-- `func(t, u, integrator)` is the function to be called.
+- `func(u, t, integrator)` is the function to be called.
 - `funcat` values that the function is sure to be evaluated at.
 - `func_everystep` whether to call the function after each integrator step.
 - `func_start` whether the function is called the initial condition.
@@ -263,7 +263,7 @@ SavingCallback(save_func, saved_values::SavedValues;
 - `save_func(u, t, integrator)` returns the quantities which shall be saved.
   Note that this should allocate the output (not as a view to `u`).
 - `saved_values::SavedValues` is the types that `save_func` will return, i.e.
-  `save_func(t, u, integrator)::savevalType`. It's specified via
+  `save_func(u, t, integrator)::savevalType`. It's specified via
   `SavedValues(typeof(t),savevalType)`, i.e. give the type for time and the
   type that `save_func` will output (or higher compatible type).
 - `saveat` mimicks `saveat` in `solve` from `solve`.
