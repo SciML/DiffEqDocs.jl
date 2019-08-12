@@ -2129,17 +2129,17 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#OrdinaryDiffEq.jl-1",
+    "location": "solvers/ode_solve.html#OrdinaryDiffEq.jl-for-Non-Stiff-Equations-1",
     "page": "ODE Solvers",
-    "title": "OrdinaryDiffEq.jl",
+    "title": "OrdinaryDiffEq.jl for Non-Stiff Equations",
     "category": "section",
     "text": "Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a 3rd order Hermite polynomial interpolation. The algorithms denoted as having a \"free\" interpolation means that no extra steps are required for the interpolation. For the non-free higher order interpolating functions, the extra steps are computed lazily (i.e. not during the solve).The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff equations while being the most generic: accepting the most Julia-based types, allow for sophisticated event handling, etc. On stiff ODEs these algorithms again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE problems."
 },
 
 {
-    "location": "solvers/ode_solve.html#Runge-Kutta-Methods-for-Non-Stiff-Equations-1",
+    "location": "solvers/ode_solve.html#Explicit-Runge-Kutta-Methods-1",
     "page": "ODE Solvers",
-    "title": "Runge-Kutta Methods for Non-Stiff Equations",
+    "title": "Explicit Runge-Kutta Methods",
     "category": "section",
     "text": "Euler- The canonical forward Euler method. Fixed timestep only.\nMidpoint - The second order midpoint method. Uses embedded Euler method for adaptivity.\nHeun - The second order Heun\'s method. Uses embedded Euler method for adaptivity.\nRalston - The optimized second order midpoint method. Uses embedded Euler. method for adaptivity.\nRK4 - The canonical Runge-Kutta Order 4 method. Uses a defect control for adaptive stepping using maximum error over the whole interval.\nBS3 - Bogacki-Shampine 3/2 method.\nOwrenZen3 - Owren-Zennaro optimized interpolantion 3/2 method (free 3th order interpolant).\nOwrenZen4 - Owren-Zennaro optimized interpolantion 4/3 method (free 4th order interpolant).\nOwrenZen5 - Owren-Zennaro optimized interpolantion 5/4 method (free 5th order interpolant).\nDP5 - Dormand-Prince\'s 5/4 Runge-Kutta method. (free 4th order interpolant).\nTsit5 - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).\nAnas5(w) - 4th order Runge-Kutta method designed for periodic problems. Requires a periodicity estimate w which when accurate the method becomes 5th order (and is otherwise 4th order with less error for better estimates).\nTanYam7 - Tanaka-Yamashita 7 Runge-Kutta method.\nDP8 - Hairer\'s 8/5/3 adaption of the Dormand-Prince Runge-Kutta method. (7th order interpolant).\nTsitPap8 - Tsitouras-Papakostas 8/7 Runge-Kutta method.\nFeagin10 - Feagin\'s 10th-order Runge-Kutta method.\nFeagin12 - Feagin\'s 12th-order Runge-Kutta method.\nFeagin14 - Feagin\'s 14th-order Runge-Kutta method.Example usage:alg = Tsit5()\nsolve(prob,alg)  Additionally, the following algorithms have a lazy interpolant:BS5 - Bogacki-Shampine 5/4 Runge-Kutta method. (lazy 5th order interpolant).\nVern6 - Verner\'s \"Most Efficient\" 6/5 Runge-Kutta method. (lazy 6th order interpolant).\nVern7 - Verner\'s \"Most Efficient\" 7/6 Runge-Kutta method. (lazy 7th order interpolant).\nVern8 - Verner\'s \"Most Efficient\" 8/7 Runge-Kutta method. (lazy 8th order interpolant)\nVern9 - Verner\'s \"Most Efficient\" 9/8 Runge-Kutta method. (lazy 9th order interpolant)These methods require a few extra steps in order to compute the high order interpolation, but these steps are only taken when the interpolation is used. These methods when lazy assume that the parameter vector p will be unchanged between the moment of the interval solving and the interpolation. If p is changed in a ContinuousCallback, or in a DiscreteCallback and the continuous solution is used after the full solution, then set lazy=false.Example:solve(prob,Vern7()) # lazy by default\nsolve(prob,Vern7(lazy=false))"
 },
@@ -2149,7 +2149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Parallel Explicit Runge-Kutta Methods",
     "category": "section",
-    "text": "KuttaPRK2p5 - A 5 parallel, 2 processor explicit Runge-Kutta method of 5th order.These methods utilize multithreading on the f calls to parallelize the problem. This requires that simultanious calls to f are thread-safe."
+    "text": "KuttaPRK2p5 - A 5 parallel, 2 processor explicit Runge-Kutta method of 5th order.These methods utilize multithreading on the f calls to parallelize the problem. This requires that simultaneous calls to f are thread-safe."
 },
 
 {
@@ -2169,11 +2169,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Extrapolation-Methods-1",
+    "location": "solvers/ode_solve.html#Parallelized-Explicit-Extrapolation-Methods-1",
     "page": "ODE Solvers",
-    "title": "Extrapolation Methods",
+    "title": "Parallelized Explicit Extrapolation Methods",
     "category": "section",
-    "text": "The following are adaptive order, adaptive step size extrapolation methods:AitkenNevillie - Euler extrapolation using Aitken-Neville with the Romberg Sequence.\nExtrapolationMidpointDeuflhard - Midpoint extrapolation using Barycentric coordinates\nExtrapolationMidpointHairerWanner - Midpoint extrapolation using Barycentric coordinates, following Hairer\'s ODEX in the adaptivity behavior.These methods have arguments for max_order, min_order, and init_order on the adaptive order algorithm. These methods also have an argument for enabling threading for calculation. The defaults are:max_order=10\nmin_order=1 except for ExtrapolationMidpointHairerWanner it\'s 2.\ninit_order=5\nthreading=trueAdditionally, the ExtrapolationMidpointDeuflhard and ExtrapolationMidpointHairerWanner methods have the additional argument:sequence: the step-number sequences, also called the subdividingsequence. Possible values are :harmonic, :romberg or :bulirsch. Default  is :harmonic.To override, utilize the keyword arguments. For example:alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch,threading=false)\nsolve(prob,alg)Note that the order that is referred to is the extrapolation order. For AitkenNevillie this is the order of the method, for the others an extrapolation order of n gives an order 2(n+1) method."
+    "text": "The following are adaptive order, adaptive step size extrapolation methods:AitkenNevillie - Euler extrapolation using Aitken-Neville with the Romberg Sequence.\nExtrapolationMidpointDeuflhard - Midpoint extrapolation using Barycentric coordinates\nExtrapolationMidpointHairerWanner - Midpoint extrapolation using Barycentric coordinates, following Hairer\'s ODEX in the adaptivity behavior.These methods have arguments for max_order, min_order, and init_order on the adaptive order algorithm. threading denotes whether to automatically multithread the f evaluations, allowing for a high degree of within-method parallelism. The defaults are:max_order=10\nmin_order=1 except for ExtrapolationMidpointHairerWanner it\'s 2.\ninit_order=5\nthreading=trueAdditionally, the ExtrapolationMidpointDeuflhard and ExtrapolationMidpointHairerWanner methods have the additional argument:sequence: the step-number sequences, also called the subdividingsequence. Possible values are :harmonic, :romberg or :bulirsch. Default  is :harmonic.To override, utilize the keyword arguments. For example:alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequence=:bulirsch,threading=false)\nsolve(prob,alg)Note that the order that is referred to is the extrapolation order. For AitkenNevillie this is the order of the method, for the others an extrapolation order of n gives an order 2(n+1) method."
 },
 
 {
@@ -2201,9 +2201,9 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "solvers/ode_solve.html#Methods-for-Stiff-Equations-1",
+    "location": "solvers/ode_solve.html#OrdinaryDiffEq.jl-for-Stiff-Equations-1",
     "page": "ODE Solvers",
-    "title": "Methods for Stiff Equations",
+    "title": "OrdinaryDiffEq.jl for Stiff Equations",
     "category": "section",
     "text": ""
 },
@@ -2213,15 +2213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "SDIRK Methods",
     "category": "section",
-    "text": "ImplicitEuler - A 1st order implicit solver. A-B-L-stable. Adaptive timestepping through a divided differences estimate via memory. Strong-stability preserving (SSP).\nImplicitMidpoint - A second order A-stable symplectic and symmetric implicit solver. Good for highly stiff equations which need symplectic integration.\nTrapezoid - A second order A-stable symmetric ESDIRK method. \"Almost symplectic\" without numerical dampening. Also known as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory.\nTRBDF2 - A second order A-B-L-S-stable one-step ESDIRK method. Includes stiffness-robust error estimates for accurate adaptive timestepping, smoothed derivatives for highly stiff and oscillatory problems.\nGenericImplicitEuler - A 1st order A-B-L-stable implicit solver with adaptive timestepping through a divided differences estimate via memory. Strong-stability preserving (SSP). Uses an external nonlinear solver. Defaults to trust region dogleg with full Newton, making it more robust to numerical instability at the cost of being less efficient.\nGenericTrapezoid - A second order A-stable symplectic implicit solver. Also known as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory. Uses an external nonlinear solver. Defaults to trust region dogleg with full Newton, making it more robust to numerical instability at the cost of being less efficient.\nSDIRK2 - An A-B-L stable 2nd order SDIRK method\nKvaerno3 - An A-L stable stiffly-accurate 3rd order ESDIRK method\nKenCarp3 - An A-L stable stiffly-accurate 3rd order ESDIRK method with splitting\nCash4 - An A-L stable 4th order SDIRK method\nHairer4 - An A-L stable 4rd order SDIRK method\nHairer42 - An A-L stable 4rd order SDIRK method\nKvaerno4 - An A-L stable stiffly-accurate 4rd order ESDIRK method\nKenCarp4 - An A-L stable stiffly-accurate 4rd order ESDIRK method with splitting\nKvaerno5 - An A-L stable stiffly-accurate 5rd order ESDIRK method\nKenCarp5 - An A-L stable stiffly-accurate 5rd order ESDIRK method with splittingAll of these methods have an option nlsolve which helps you specify the algorithm to use for solving non-linear equations that the algorithm comes across. You can set this as NLNewton(), NLFunctional() or NLAnderson(). Check out \"Specifying (Non)Linear Solvers\" to know how to configure the nlsolver algorithm."
-},
-
-{
-    "location": "solvers/ode_solve.html#Parallel-Diagonally-Implicit-Runge-Kutta-Methods-1",
-    "page": "ODE Solvers",
-    "title": "Parallel Diagonally Implicit Runge-Kutta Methods",
-    "category": "section",
-    "text": "PDIRK44 - A 2 processor 4th order diagonally non-adaptive implicit method.These methods also have option nlsolve same as SDIRK methods. These methods also need f to be thread safe. It parallelises the nlsolve calls inside the method.  "
+    "text": "ImplicitEuler - A 1st order implicit solver. A-B-L-stable. Adaptive timestepping through a divided differences estimate via memory. Strong-stability preserving (SSP).\nImplicitMidpoint - A second order A-stable symplectic and symmetric implicit solver. Good for highly stiff equations which need symplectic integration.\nTrapezoid - A second order A-stable symmetric ESDIRK method. \"Almost symplectic\" without numerical dampening. Also known as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory.\nTRBDF2 - A second order A-B-L-S-stable one-step ESDIRK method. Includes stiffness-robust error estimates for accurate adaptive timestepping, smoothed derivatives for highly stiff and oscillatory problems.\nGenericImplicitEuler - A 1st order A-B-L-stable implicit solver with adaptive timestepping through a divided differences estimate via memory. Strong-stability preserving (SSP). Uses an external nonlinear solver. Defaults to trust region dogleg with full Newton, making it more robust to numerical instability at the cost of being less efficient.\nGenericTrapezoid - A second order A-stable symplectic implicit solver. Also known as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided differences on the memory. Good for highly stiff equations which are non-oscillatory. Uses an external nonlinear solver. Defaults to trust region dogleg with full Newton, making it more robust to numerical instability at the cost of being less efficient.\nSDIRK2 - An A-B-L stable 2nd order SDIRK method\nKvaerno3 - An A-L stable stiffly-accurate 3rd order ESDIRK method\nKenCarp3 - An A-L stable stiffly-accurate 3rd order ESDIRK method with splitting\nCash4 - An A-L stable 4th order SDIRK method\nHairer4 - An A-L stable 4rd order SDIRK method\nHairer42 - An A-L stable 4rd order SDIRK method\nKvaerno4 - An A-L stable stiffly-accurate 4rd order ESDIRK method\nKenCarp4 - An A-L stable stiffly-accurate 4rd order ESDIRK method with splitting\nKvaerno5 - An A-L stable stiffly-accurate 5rd order ESDIRK method\nKenCarp5 - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting"
 },
 
 {
@@ -2230,6 +2222,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Fully-Implicit Runge-Kutta Methods (FIRK)",
     "category": "section",
     "text": "RadauIIA5 - An A-B-L stable fully implicit Runge-Kutta method with internal tableau complex basis transform for efficiency."
+},
+
+{
+    "location": "solvers/ode_solve.html#Parallel-Diagonally-Implicit-Runge-Kutta-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Parallel Diagonally Implicit Runge-Kutta Methods",
+    "category": "section",
+    "text": "PDIRK44 - A 2 processor 4th order diagonally non-adaptive implicit method.These methods also have option nlsolve same as SDIRK methods. These methods also need f to be thread safe. It parallelises the nlsolve calls inside the method.  "
 },
 
 {
@@ -2246,6 +2246,22 @@ var documenterSearchIndex = {"docs": [
     "title": "Stabilized Explicit Methods",
     "category": "section",
     "text": "ROCK2 - Second order stabilized Runge-Kutta method. Exhibits high stability for real eigenvalues and is smoothened to allow for moderate sized complex eigenvalues.\nROCK4 - Fourth order stabilized Runge-Kutta method. Exhibits high stability for real eigenvalues and is smoothened to allow for moderate sized complex eigenvalues.\nRKC - Second order stabilized Runge-Kutta method. Exhibits high stability for real eigenvalues and is smoothened to allow for moderate sized complex eigenvalues.\nSERK2v2 - Second order stabilized extrapolated Runge-Kutta method. Exhibits high stability for real eigenvalues and is smoothened to allow for moderate sized complex eigenvalues.\nESERK5 - Fifth order stabilized extrapolated Runge-Kutta method. Exhibits high stability for real eigenvalues and is smoothened to allow for moderate sized complex eigenvalues.ROCK methods offer a min_stages and max_stages functionality. SERK methods derive higher orders by Aitken-Neville algorithm. SERK2v2 is defaulted to Predictive control but has option of PI control."
+},
+
+{
+    "location": "solvers/ode_solve.html#Parallelized-Implicit-Extrapolation-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Parallelized Implicit Extrapolation Methods",
+    "category": "section",
+    "text": "The following are adaptive order, adaptive step size extrapolation methods:ImplicitEulerExtrapolation - Extrapolation of implicit Euler method with Romberg sequence. Similar to Hairer\'s SEULEX.\nImplicitDeuflhardExtrapolation - Midpoint extrapolation using Barycentric coordinates\nImplicitHairerWannerExtrapolation - Midpoint extrapolation using Barycentric coordinates, following Hairer\'s SODEX in the adaptivity behavior.These methods have arguments for max_order, min_order, and init_order on the adaptive order algorithm. threading denotes whether to automatically multithread the f evaluations and J/W instantiations+factorizations, allowing for a high degree of within-method parallelism. The defaults are:max_order=10\nmin_order=1 except for ImplicitHairerWannerExtrapolation it\'s 2.\ninit_order=5\nthreading=trueAdditionally, the ImplicitDeuflhardExtrapolation and ImplicitHairerWannerExtrapolation methods have the additional argument:sequence: the step-number sequences, also called the subdividingsequence. Possible values are :harmonic, :romberg or :bulirsch. Default  is :harmonic.To override, utilize the keyword arguments. For example:alg = ImplicitEulerExtrapolation(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)\nsolve(prob,alg)Note that the order that is referred to is the extrapolation order. For ImplicitEulerExtrapolation this is the order of the method, for the others an extrapolation order of n gives an order 2(n+1) method."
+},
+
+{
+    "location": "solvers/ode_solve.html#Parallelized-DIRK-Methods-1",
+    "page": "ODE Solvers",
+    "title": "Parallelized DIRK Methods",
+    "category": "section",
+    "text": "These methods parallelize the J/W instantiation and factorization, making them efficient on small highly stiff ODEs. Has an option threading=true to turn on/off multithreading.PDIRK44: a 4th order 2-processor DIRK method."
 },
 
 {
@@ -2285,7 +2301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "Multistep Methods",
     "category": "section",
-    "text": "Quasi-constant stepping is the time stepping strategy which matches the classic GEAR, LSODE,  and ode15s integrators. The variable-coefficient methods match the ideas of the classic EPISODE integrator and early VODE designs. The Fixed Leading Coefficient (FLC) methods match the behavior of the classic VODE and Sundials CVODE integrator.QNDF1 - An adaptive order 1 quasi-constant timestep L-stable numerical differentiation function (NDF) method. Optional parameter kappa defaults to Shampine\'s accuracy-optimal -0.1850.\nQBDF1 - An adaptive order 1 L-stable BDF method. This is equivalent to implicit Euler but using the BDF error estimator.\nABDF2 - An adaptive order 2 L-stable fixed leading coefficient multistep BDF method.\nQNDF - An adaptive order quasi-constant timestep NDF method. Utilizes Shampine\'s accuracy-optimal kappa values as defaults (has a keyword argument for a tuple of kappa coefficients).\nQBDF - An adaptive order quasi-constant timestep BDF method.\nJVODE_BDF - An adaptive time adaptive order fixed-leading coefficient BDF method in Nordsieck form. In development.\nMEBDF2 - The second order Modified Extended BDF method, which has improved stability properties over the standard BDF. Fixed timestep only.All of these methods (except JVODE_BDF) have an option nlsolve which helps you specify the algorithm to use for solving non-linear equations that the algorithm comes across. You can set this as NLNewton(), NLFunctional() or NLAnderson(). Check out \"Specifying (Non)Linear Solvers\" to know how to configure the nlsolver algorithm."
+    "text": "Quasi-constant stepping is the time stepping strategy which matches the classic GEAR, LSODE,  and ode15s integrators. The variable-coefficient methods match the ideas of the classic EPISODE integrator and early VODE designs. The Fixed Leading Coefficient (FLC) methods match the behavior of the classic VODE and Sundials CVODE integrator.QNDF1 - An adaptive order 1 quasi-constant timestep L-stable numerical differentiation function (NDF) method. Optional parameter kappa defaults to Shampine\'s accuracy-optimal -0.1850.\nQBDF1 - An adaptive order 1 L-stable BDF method. This is equivalent to implicit Euler but using the BDF error estimator.\nABDF2 - An adaptive order 2 L-stable fixed leading coefficient multistep BDF method.\nQNDF - An adaptive order quasi-constant timestep NDF method. Utilizes Shampine\'s accuracy-optimal kappa values as defaults (has a keyword argument for a tuple of kappa coefficients).\nQBDF - An adaptive order quasi-constant timestep BDF method.\nJVODE_BDF - An adaptive time adaptive order fixed-leading coefficient BDF method in Nordsieck form. In development.\nMEBDF2 - The second order Modified Extended BDF method, which has improved stability properties over the standard BDF. Fixed timestep only."
 },
 
 {
@@ -2413,7 +2429,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Solvers",
     "title": "QuDiffEq.jl",
     "category": "section",
-    "text": "QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use QuDiffEq.jl:]add https://github.com/QuantumBFS/QuDiffEq.jl\nusing QuDiffEqQuLDE(k) - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. k selects the order in the Taylor series aprroximation (for the quantum circuit).\nQuNLDE(k,ϵ)- Algorithm uses forward Euler to solve quadratc differential equations. k selects the order in the Taylor series aprroximation (for the quantum circuit). ϵ sets the precision for Hamiltonian evolution. "
+    "text": "QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.Note that this setup is not automatically included with DifferentialEquaitons.jl. To use the following algorithms, you must install and use QuDiffEq.jl:]add https://github.com/QuantumBFS/QuDiffEq.jl\nusing QuDiffEqQuLDE(k) - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. k selects the order in the Taylor series aprroximation (for the quantum circuit).\nQuNLDE(k,ϵ)- Algorithm uses forward Euler to solve quadratc differential equations. k selects the order in the Taylor series aprroximation (for the quantum circuit). ϵ sets the precision for Hamiltonian evolution."
 },
 
 {
