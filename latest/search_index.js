@@ -4477,7 +4477,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parameter Estimation and Bayesian Analysis",
     "title": "turing_inference",
     "category": "section",
-    "text": "turing_inference(prob::DEProblem,alg,t,data,priors = nothing;\n                 num_samples=1000, epsilon = 0.02, tau = 4, kwargs...)turing_inference uses Turing.jl to perform its parameter inference. prob can be any DEProblem with a corresponding alg choice. t is the array of time points and data[:,i] is the set of observations for the differential equation system at time point t[i] (or higher dimensional). priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. num_samples is the number of samples per MCMC chain. epsilon and tau are the HMC parameters. The extra kwargs are given to the internal differential equation solver."
+    "text": "function turing_inference(prob::DiffEqBase.DEProblem,alg,t,data,priors; \n                              likelihood_dist_priors, likelihood, num_samples=1000, \n                              sampler = Turing.NUTS(num_samples, 0.65), syms, kwargs...)turing_inference uses Turing.jl to perform its parameter inference. prob can be any DEProblem with a corresponding alg choice. t is the array of time points and data is the set of observations for the differential equation system at time point t[i] (or higher dimensional). priors is an array of prior distributions for each parameter, specified via a Distributions.jl type. num_samples is the number of samples per MCMC chain. The extra kwargs are given to the internal differential equation solver."
 },
 
 {
