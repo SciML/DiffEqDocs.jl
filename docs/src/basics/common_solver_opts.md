@@ -199,7 +199,7 @@ explanations of the timestepping algorithms, see the
   it returns true, it will cause the solver to exit and throw a warning. Defaults
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
 * `verbose`: Toggles whether warnings are thrown when the solver exits early.
-  Defualts to true.
+  Defaults to true.
 
 ## Progress Monitoring
 
