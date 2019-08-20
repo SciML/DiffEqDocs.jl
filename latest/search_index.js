@@ -797,7 +797,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Common Solver Options",
     "title": "Miscellaneous",
     "category": "section",
-    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(u,p,t) where, when it returns true, it will reject the timestep. Disabled by default.\nunstable_check: Specifies a function unstable_check(dt,u,p,t) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defualts to true."
+    "text": "maxiters: Maximum number of iterations before stopping. Defaults to 1e5.\ncallback: Specifies a callback. Defaults to a callback function which performs the saving routine. For more information, see the Event Handling and Callback Functions manual page.\nisoutofdomain: Specifies a function isoutofdomain(u,p,t) where, when it returns true, it will reject the timestep. Disabled by default.\nunstable_check: Specifies a function unstable_check(dt,u,p,t) where, when it returns true, it will cause the solver to exit and throw a warning. Defaults to any(isnan,u), i.e. checking if any value is a NaN.\nverbose: Toggles whether warnings are thrown when the solver exits early. Defaults to true."
 },
 
 {
