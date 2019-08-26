@@ -93,7 +93,7 @@ like the differential equation to treat directly. The other fields are treated
 as "discrete variables". For example:
 
 ```julia
-mutable struct MyDataArray{T,N} <: DEDataArray{T,N}
+mutable struct MyDataArray{T,1} <: DEDataArray{T,1}
     x::Array{T,1}
     a::T
     b::Symbol
