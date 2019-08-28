@@ -107,7 +107,7 @@ library methods are as follows:
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
 - `ode15s`/`vode` --> `QNDF()`, though in many cases `CVODE_BDF()`, `Rodas4()`
   or `radau()` are more efficient
-- `ode23t` --> `Trapezoid()` for efficiency and `GenericTrapezoid()` for robustness
+- `ode23t` --> `Trapezoid()`
 - `ode23tb` --> `TRBDF2`
 - `lsoda` --> `lsoda()` (requires `]add LSODA; using LSODA`)
 - `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
@@ -439,18 +439,6 @@ These methods require a choice of `dt`.
 - `TRBDF2` - A second order A-B-L-S-stable one-step ESDIRK method. Includes
   stiffness-robust error estimates for accurate adaptive timestepping, smoothed
   derivatives for highly stiff and oscillatory problems.
-- `GenericImplicitEuler` - A 1st order A-B-L-stable implicit solver with adaptive
-  timestepping through a divided differences estimate via memory. Strong-stability
-  preserving (SSP). Uses an external nonlinear solver. Defaults to trust region
-  dogleg with full Newton, making it more robust to numerical instability at
-  the cost of being less efficient.
-- `GenericTrapezoid` - A second order A-stable symplectic implicit solver. Also known
-  as Crank-Nicolson when applied to PDEs. Adaptive timestepping via divided
-  differences on the memory. Good for highly stiff equations which are
-  non-oscillatory.
-  Uses an external nonlinear solver. Defaults to trust region
-  dogleg with full Newton, making it more robust to numerical instability at
-  the cost of being less efficient.
 - `SDIRK2` - An A-B-L stable 2nd order SDIRK method
 - `Kvaerno3` - An A-L stable stiffly-accurate 3rd order ESDIRK method
 - `KenCarp3` - An A-L stable stiffly-accurate 3rd order ESDIRK method with splitting
@@ -700,12 +688,6 @@ All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
 solver, see
 [the manual page on solver specification](../../features/linear_nonlinear.html).
-
-The following methods allow for specification of `nlsolve`: the nonlinear
-solver which is used:
-
-- `GenericImplicitEuler`
-- `GenericTrapezoid`
 
 Note that performance overload information (Jacobians etc.) are not used in this
 mode. This can control autodifferentiation of the Jacobian as well.
