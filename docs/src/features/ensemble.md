@@ -129,6 +129,14 @@ you to pass a `zcolor` for each series. For details about `zcolor` see the
 Analysis tools are included for generating summary statistics and summary plots
 for a `EnsembleSimulation`.
 
+To use this functionality, import the analysis module via:
+
+```julia
+using DifferentialEquations.EnsembleAnalysis
+```
+
+(or more directly `DiffEqBase.EnsembleAnalysis`).
+
 ### Time steps vs time points
 
 For the summary statistics, there are two types. You can either summarize by
