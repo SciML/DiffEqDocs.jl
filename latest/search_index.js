@@ -4045,7 +4045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Parallel Ensemble Simulations",
     "title": "Analyzing an Ensemble Experiment",
     "category": "section",
-    "text": "Analysis tools are included for generating summary statistics and summary plots for a EnsembleSimulation."
+    "text": "Analysis tools are included for generating summary statistics and summary plots for a EnsembleSimulation.To use this functionality, import the analysis module via:using DifferentialEquations.EnsembleAnalysis(or more directly DiffEqBase.EnsembleAnalysis)."
 },
 
 {
