@@ -125,6 +125,7 @@ mean/var statistics and has an associated plot recipe. For example, we can get
 the statistics at every `0.01` timesteps and plot the average + error using:
 
 ```julia
+using DifferentialEquations.EnsembleAnalysis
 summ = EnsembleSummary(sol,0:0.01:1)
 plot(summ,labels="Middle 95%")
 summ = EnsembleSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
