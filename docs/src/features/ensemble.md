@@ -120,9 +120,9 @@ along. A useful argument to use is `linealpha` which will change the transparenc
 of the plots. An additional argument is `idxs` which allows you to choose which
 components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
-of the odd components. An other additional argument is `zcolors` which allows
+of the odd components. An other additional argument is `zcolors` (an alias of `marker_z`) which allows
 you to pass a `zcolor` for each series. For details about `zcolor` see the 
-[documentation for Plots.jl](http://docs.juliaplots.org/latest/attributes/).
+[Series documentation for Plots.jl](http://docs.juliaplots.org/latest/attributes/).
 
 ## Analyzing an Ensemble Experiment
 
