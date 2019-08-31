@@ -252,7 +252,7 @@ we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
 will be parallelized. This will use `pmap` as default, which means that the required
 functions must be made available to all processes. This can be achieved with [`@everywhere`
-macro](https://docs.julialang.org/en/stable/stdlib/parallel/#Base.Distributed.@everywhere):
+macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
 addprocs()
