@@ -255,6 +255,10 @@ functions must be made available to all processes. This can be achieved with [`@
 macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
+using Distributed
+using DifferentialEquations
+using plots
+
 addprocs()
 @everywhere using DifferentialEquations
 ```
@@ -288,7 +292,6 @@ sim = solve(ensemble_prob,Tsit5(),trajectories=100)
 We can use the plot recipe to plot what the 100 ODEs look like:
 
 ```julia
-using Plots
 plotly()
 plot(sim,linealpha=0.4)
 ```
