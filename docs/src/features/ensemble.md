@@ -257,7 +257,7 @@ macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@every
 ```julia
 using Distributed
 using DifferentialEquations
-using plots
+using Plots
 
 addprocs()
 @everywhere using DifferentialEquations
