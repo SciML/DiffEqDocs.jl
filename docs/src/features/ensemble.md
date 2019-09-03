@@ -322,7 +322,7 @@ sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
-the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](https://docs.julialang.org/en/stable/manual/environment-variables/#JULIA_NUM_THREADS-1) for details).
+the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](https://docs.julialang.org/en/v1.1/manual/environment-variables/#JULIA_NUM_THREADS-1) for details).
 
 
 ### Pre-Determined Initial Conditions
@@ -342,6 +342,8 @@ function prob_func(prob,i,repeat)
   prob
 end
 ```
+
+It's worth noting that if you run this code successfully, there will be no visible output. 
 
 ## Example 2: Solving an SDE with Different Parameters
 
