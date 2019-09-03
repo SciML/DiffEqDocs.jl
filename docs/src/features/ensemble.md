@@ -245,6 +245,8 @@ around the mean.
 
 ## Example 1: Solving an ODE With Different Initial Conditions
 
+_NOTE: For all examples provided below, you must be running at least Julia version 1.1.1 in order for them to work as intended._
+
 ### Random Initial Conditions
 
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
