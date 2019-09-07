@@ -18,7 +18,7 @@ using PyDSTool
 ## Calcium Bifurcation Tutorial
 
 In this tutorial we will show how to do some simple bifurcation plots. We will
-follow the PyDSTool tutorial [for the calcium channel model](http://www.ni.gsu.edu/~rclewley/PyDSTool/Tutorial/Tutorial_Calcium.html)
+follow the PyDSTool tutorial [for the calcium channel model](https://pydstool.github.io/PyDSTool/Tutorial/Tutorial_Calcium.html)
 and re-create the results using the wrapped functionality.
 
 ### Specification of a Model
