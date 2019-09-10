@@ -196,7 +196,7 @@ prob_coupled =  SplitCoupledJumpProblem(jump_prob,jump_prob_control,Direct(),cou
 Now `prob_coupled` will be dealt with like any other `JumpProblem`:
 
 ```julia
-sol = solve(coupled_prob,Tsit5())
+sol = solve(prob_coupled,Tsit5())
 ```
 
 ![jump_diffusion](../assets/splitcoupling.png)
