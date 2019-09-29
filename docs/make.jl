@@ -2,9 +2,8 @@ using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological
 
 makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological],
          doctest=false, clean=true,
-         format = Documenter.HTML(
-            assets = ["assets/favicon.ico"],
-         ),
+         format = :html,
+         assets = ["assets/favicon.ico"],
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[
