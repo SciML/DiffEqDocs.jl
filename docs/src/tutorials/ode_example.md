@@ -392,23 +392,24 @@ and bifurcation plotting. This makes DifferentialEquations.jl a full-stop soluti
 for differential equation analysis which also achieves high performance.
 
 ## Example 3: Solving Nonhomogeneous Equations via Parameterized Functions
-The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations (these are also refered to as ODEs with nonzero right-hand sides). They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)):
+The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations (these are also refered to as ODEs with nonzero right-hand sides). They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
-\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} + \frac{g}{l}\sin\theta(t) = M(t),
+\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} + \frac{3}{2}\frac{g}{l}\sin\theta(t) = \frac{3}{ml^2}M(t),
 ```
-where `θ` is the angular deviation of the pendulum from the vertical orientation, `l` is the pendulum length, `g` stands for gravitional acceleration and `M` on the right-hand side models an external torque (developed, say, by a wind or a motor).
+where `θ` is the angular deviation of the pendulum from the vertical (hanging) orientation, `g` stands for gravitional acceleration and `M` on the right-hand side models an external torque (developed, say, by a wind or a motor).
 
 ```julia
 using DifferentialEquations
 using Plots
 
 l = 1.0                             # length [m]
+m = 1.0                             # mass[m]
 g = 9.81                            # gravitational acceleration [m/s²]
 
 function pendulum!(du,u,p,t)
     du[1] = u[2]                    # θ'(t) = ω(t)
-    du[2] = -g/l*sin(u[1]) + p(t)   # ω'(t) = -g/l sin θ(t) + M(t)
+    du[2] = -3g/(2l)*sin(u[1]) + 3/(m*l^2)*p(t) # ω'(t) = -g/l sin θ(t) + M(t)
 end
 
 θ₀ = 0.01                           # initial angular deflection [rad]
