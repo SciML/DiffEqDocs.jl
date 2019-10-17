@@ -391,8 +391,8 @@ can also be used for sensitivity analysis, parameter estimation routines,
 and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution
 for differential equation analysis which also achieves high performance.
 
-## Example 3: Nonhomogeneous Equations via Parameterized Functions
-The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations. These are also refered to as ODEs with nonzero right-hand sides. They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)):
+## Example 3: Solving Nonhomogeneous Equations via Parameterized Functions
+The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations (these are also refered to as ODEs with nonzero right-hand sides). They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)):
 
 ```math
 \frac{\mathrm{d}\theta(t)}{\mathrm{d}t} + \frac{g}{l}\sin\theta(t) = M(t),
@@ -423,6 +423,10 @@ sol = solve(prob)
 
 plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
 ```
+
+![Pendulum response](../assets/pendulum_response.png)
+
+In particular, note how the external torque `M` is introduced as a *time-varying* parameter in the `pendulum!` function. Indeed, unlike the (vector of) state variables `u`, it must have the dependence on time explicitly expressed.
 
 ## Example 4: Using Other Types for Systems of Equations
 
