@@ -391,7 +391,40 @@ can also be used for sensitivity analysis, parameter estimation routines,
 and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution
 for differential equation analysis which also achieves high performance.
 
-## Example 3: Using Other Types for Systems of Equations
+## Example 3: Nonhomogeneous Equations via Parameterized Functions
+The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations. These are also refered to as ODEs with nonzero right-hand sides. They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)):
+
+```math
+\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} + \frac{g}{l}\sin\theta(t) = M(t),
+```
+where `θ` is the angular deviation of the pendulum from the vertical orientation, `l` is the pendulum length, `g` stands for gravitional acceleration and `M` on the right-hand side models an external torque (developed, say, by a wind or a motor).
+
+```julia
+using DifferentialEquations
+using Plots
+
+l = 1.0                             # length [m]
+g = 9.81                            # gravitational acceleration [m/s²]
+
+function pendulum!(du,u,p,t)
+    du[1] = u[2]                    # θ'(t) = ω(t)
+    du[2] = -g/l*sin(u[1]) + p(t)   # ω'(t) = -g/l sin θ(t) + M(t)
+end
+
+θ₀ = 0.01                           # initial angular deflection [rad]
+ω₀ = 0.0                            # initial angular velocity [rad/s]
+u₀ = [θ₀, ω₀]                       # initial state vector
+tspan = (0.0,10.0)                  # time interval
+
+M = t->0.1sin(t)                    # prescribed torque [Nm]
+
+prob = ODEProblem(pendulum!,u₀,tspan,M)
+sol = solve(prob)
+
+plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
+```
+
+## Example 4: Using Other Types for Systems of Equations
 
 DifferentialEquations.jl can handle many different dependent variable types
 (generally, anything with a linear index should work!). So instead of solving a
