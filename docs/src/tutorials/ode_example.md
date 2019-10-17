@@ -391,8 +391,8 @@ can also be used for sensitivity analysis, parameter estimation routines,
 and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution
 for differential equation analysis which also achieves high performance.
 
-## Example 3: Solving Nonhomogeneous Equations via Parameterized Functions
-The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations (these are also refered to as ODEs with nonzero right-hand sides). They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
+## Example 3: Solving Nonhomogeneous Equations using Parameterized Functions
+Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
 \begin{align*}
@@ -400,7 +400,7 @@ The support for parameterized functions can also be used for defining nonhomogen
 \frac{\mathrm{d}\omega(t)}{\mathrm{d}t} &= - \frac{3}{2}\frac{g}{l}\sin\theta(t) + \frac{3}{ml^2}M(t)
 \end{align*},
 ```
-where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and angular rate, respectively. `M` is an external torque (developed, say, by a wind or a motor), and finally `g` stands for gravitional acceleration.
+where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitional acceleration.
 
 ```julia
 using DifferentialEquations
