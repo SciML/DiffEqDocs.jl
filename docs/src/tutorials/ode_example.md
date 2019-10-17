@@ -395,9 +395,12 @@ for differential equation analysis which also achieves high performance.
 The support for parameterized functions can also be used for defining nonhomogeneous ordinary differential equations (these are also refered to as ODEs with nonzero right-hand sides). They are frequently used as models for dynamical systems with external (in general time-varying) inputs. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
-\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} + \frac{3}{2}\frac{g}{l}\sin\theta(t) = \frac{3}{ml^2}M(t),
+\begin{align*}
+\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} &= \omega(t)\\
+\frac{\mathrm{d}\omega(t)}{\mathrm{d}t} &= - \frac{3}{2}\frac{g}{l}\sin\theta(t) + \frac{3}{ml^2}M(t)
+\end{align*},
 ```
-where `θ` is the angular deviation of the pendulum from the vertical (hanging) orientation, `g` stands for gravitional acceleration and `M` on the right-hand side models an external torque (developed, say, by a wind or a motor).
+where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and angular rate, respectively. `M` is an external torque (developed, say, by a wind or a motor), and finally `g` stands for gravitional acceleration.
 
 ```julia
 using DifferentialEquations
