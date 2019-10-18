@@ -1,6 +1,7 @@
 # DifferentialEquations.jl Documentation
 
-This is a suite for numerically solving differential equations in Julia. The
+This is a suite for numerically solving differential equations written in Julia
+and available for use in Julia, Python, and R. The
 purpose of this package is to supply efficient Julia implementations of solvers
 for various differential equations. Equations within the realm of this package
 include:
@@ -69,6 +70,8 @@ be grateful if you could cite our work.
 
 ## Getting Started: Installation And First Steps
 
+### Installing from Julia
+
 To install the package, use the following command inside the Julia REPL:
 ```julia
 using Pkg
@@ -100,6 +103,67 @@ For the most up to date information on using the package, please join [the Gitte
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information on how to get to the bleeding edge is found in the
 [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html#Bleeding-Edge-1).
+
+### Installing from Python
+
+Use of DifferentialEquations.jl from the Python programming language is available through the
+[diffeqpy](https://github.com/JuliaDiffEq/diffeqpy) module. To install diffeqpy, use pip:
+
+```
+pip install diffeqpy
+```
+
+Using diffeqpy requires that Julia is installed and in the path, along
+with DifferentialEquations.jl and PyCall.jl. To install Julia,
+download a generic binary from
+[the JuliaLang site](https://julialang.org/downloads/) and add it to your path.
+To install Julia packages required for diffeqpy, open up Python
+interpreter then run:
+
+```pycon
+>>> import diffeqpy
+>>> diffeqpy.install()
+```
+
+and you're good! In addition, to improve the performance of your code it is
+recommended that you use Numba to JIT compile your derivative functions. To
+install Numba, use:
+
+```
+pip install numba
+```
+
+diffeqpy supports the majority of DifferentialEquations.jl with very similar
+syntax, see [the diffeqpy README for more details](https://github.com/JuliaDiffEq/diffeqpy).
+One important point to note is that Numba is generally an order of magnitude slower 
+than Julia in terms of  the generated differential equation solver code, and thus it is 
+recommended to use `julia.Main.eval` for Julia-side derivative function implementations
+for maximal efficiency. See [this blog post](http://juliadiffeq.org/2018/04/30/Jupyter.html)
+for more information.
+
+### Installing from R
+
+Use of DifferentialEquations.jl from the R programming language is available through the 
+[diffeqr](https://github.com/JuliaDiffEq/diffeqr) module. 
+[diffeqr is registered into CRAN](https://CRAN.R-project.org/package=diffeqr). 
+Thus to add the package, use:
+
+```R
+install.packages("diffeqr")
+```
+
+To install the master branch of the package (for developers), use:
+
+```R
+devtools::install_github('JuliaDiffEq/diffeqr', build_vignettes=T)
+```
+
+You will need a working installation of Julia in your path. To install Julia, download a generic binary
+from [the JuliaLang site](https://julialang.org/downloads/) and add it to your path. The download and
+installation of DifferentialEquations.jl will happen on the first invocation of `diffeqr::diffeq_setup()`.
+
+Currently, use from R supported a subset of DifferentialEquations.jl which is documented 
+[through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html)
 
 ### IJulia Notebook Tutorials
 
