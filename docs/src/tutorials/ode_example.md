@@ -268,7 +268,7 @@ The way we do this is we simply write the output to the 1st input of the functio
 For example, our Lorenz equation problem would be defined by the function:
 
 ```julia
-function lorenz(du,u,p,t)
+function lorenz!(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
  du[3] = u[1]*u[2] - (8/3)*u[3]
@@ -280,7 +280,7 @@ and then we can use this function in a problem:
 ```julia
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,100.0)
-prob = ODEProblem(lorenz,u0,tspan)
+prob = ODEProblem(lorenz!,u0,tspan)
 sol = solve(prob)
 ```
 
@@ -314,7 +314,7 @@ differential equations. This can be used by things like
 In this case, you use the `p` values via the syntax:
 
 ```julia
-function parameterized_lorenz(du,u,p,t)
+function parameterized_lorenz!(du,u,p,t)
  du[1] = p[1]*(u[2]-u[1])
  du[2] = u[1]*(p[2]-u[3]) - u[2]
  du[3] = u[1]*u[2] - p[3]*u[3]
@@ -327,13 +327,13 @@ and then we add the parameters to the `ODEProblem`:
 u0 = [1.0,0.0,0.0]
 tspan = (0.0,1.0)
 p = [10.0,28.0,8/3]
-prob = ODEProblem(parameterized_lorenz,u0,tspan,p)
+prob = ODEProblem(parameterized_lorenz!,u0,tspan,p)
 ```
 
 We can make our functions look nicer by doing a few tricks. For example:
 
 ```julia
-function parameterized_lorenz(du,u,p,t)
+function parameterized_lorenz!(du,u,p,t)
   x,y,z = u
   σ,ρ,β = p
   du[1] = dx = σ*(y-x)
