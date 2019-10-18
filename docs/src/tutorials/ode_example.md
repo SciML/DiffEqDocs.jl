@@ -430,7 +430,9 @@ plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
 
 ![Pendulum response](../assets/pendulum_response.png)
 
-In particular, note how the external torque `M` is introduced as a *time-varying* parameter in the `pendulum!` function. Indeed, unlike the (vector of) state variables `u`, it must have the dependence on time explicitly expressed.
+Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.  
+
+Note also that, in contrast with the time-varying parameter, the (vector of) state variables `u`, which is generally also time-varying, is always used without the explicit dependence on time `(t)`.
 
 ## Example 4: Using Other Types for Systems of Equations
 
