@@ -4789,7 +4789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Global Sensitivity Analysis",
     "title": "Installation",
     "category": "section",
-    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqSensitivty.jl:]add DiffEqSensitivity\nusing DiffEqSensitivty"
+    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install DiffEqSensitivty.jl:]add DiffEqSensitivity\nusing DiffEqSensitivity"
 },
 
 {
