@@ -78,7 +78,7 @@ by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
 `sobol_second_order = sobol_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,N,order=2)`
 
-Here `f` and `param_range` are the same as Morris's, providing a uniform interface. `N` is the number of samples to generate within the parameter space. The `order`-arguments specifies which order indices to compute. First-order and second-order Sobol indices will be computed as such, every other order will return the total-effect indices.
+Here `f` and `param_range` are the same as Morris's, providing a uniform interface. `N` is the number of samples to generate within the parameter space and the `order`-arguments specifies the order of Sobol indices to compute. First-order and second-order Sobol indices will be computed as such, every other order will return the total-effect indices.
 
 ## Regression Method
 
