@@ -1,6 +1,6 @@
-using Documenter,DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological
+using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological
 
-makedocs(modules=[DiffEqBase,DiffEqPDEBase,DiffEqProblemLibrary,DiffEqBiological],
+makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          doctest=false, clean=true,
          format = :html,
          assets = ["assets/favicon.ico"],
