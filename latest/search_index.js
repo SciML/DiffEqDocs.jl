@@ -3977,6 +3977,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "features/callback_library.html#PresetTimeCallback-1",
+    "page": "Callback Library",
+    "title": "PresetTimeCallback",
+    "category": "section",
+    "text": "PresetTimeCallback is a callback that adds callback affect! calls at preset times. No playing around with tstops or anything is required: this callback adds the triggers for you to make it automatic.PresetTimeCallback(tstops,user_affect!;\n                            initialize = DiffEqBase.INITIALIZE_DEFAULT,\n                            kwargs...)tstops: the times for the affect! to trigger at.\nuser_affect!: an affect!(integrator) function to use at the time points."
+},
+
+{
     "location": "features/callback_library.html#IterativeCallback-1",
     "page": "Callback Library",
     "title": "IterativeCallback",
