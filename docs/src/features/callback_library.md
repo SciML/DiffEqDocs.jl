@@ -314,6 +314,21 @@ Tuple{Float64,Float64}[(2.23186, 2.49102), (2.46659, 2.753), (2.726, 3.04254), (
 =#
 ```
 
+## PresetTimeCallback
+
+`PresetTimeCallback` is a callback that adds callback `affect!` calls at preset
+times. No playing around with `tstops` or anything is required: this callback
+adds the triggers for you to make it automatic.
+
+```julia
+PresetTimeCallback(tstops,user_affect!;
+                            initialize = DiffEqBase.INITIALIZE_DEFAULT,
+                            kwargs...)
+```
+
+- `tstops`: the times for the `affect!` to trigger at.
+- `user_affect!`: an `affect!(integrator)` function to use at the time points.
+
 ## IterativeCallback
 
 `IterativeCallback` is a callback to be used to iteratively apply some effect.
