@@ -94,7 +94,7 @@ page.
 
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
-[ODE tutorial](tutorials/ode_example.html)**. Example IJulia notebooks
+[ODE tutorial](tutorials/ode_example.md)**. Example IJulia notebooks
 [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
