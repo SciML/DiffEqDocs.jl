@@ -537,7 +537,7 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Monte Carlo experiments](../../features/monte_carlo.html)
+- [Handling, parallelizing, and analyzing large Ensemble experiments](../../features/ensemble.html)
 - [Saving the output to tabular formats like DataFrames and CSVs](../../features/io.html)
 - [Event handling](../../features/callback_functions.html)
 - [Parameter estimation (inverse problems)](../../analysis/parameter_estimation.html)
