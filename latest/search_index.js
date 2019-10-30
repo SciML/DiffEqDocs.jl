@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Ordinary Differential Equations",
     "title": "Additional Features and Analysis Tools",
     "category": "section",
-    "text": "In many cases, the common workflow only starts with solving the differential equation. Many common setups have built-in solutions in DifferentialEquations.jl. For example, check out the features for:Handling, parallelizing, and analyzing large Monte Carlo experiments\nSaving the output to tabular formats like DataFrames and CSVs\nEvent handling\nParameter estimation (inverse problems)\nQuantification of numerical uncertainty and errorMany more are defined in the relevant sections of the docs. Please explore the rest of the documentation, including tutorials for getting started with other types of equations. In addition, to get help, please either file an issue at the main repository or come have an informal discussion at our Gitter chatroom."
+    "text": "In many cases, the common workflow only starts with solving the differential equation. Many common setups have built-in solutions in DifferentialEquations.jl. For example, check out the features for:Handling, parallelizing, and analyzing large Ensemble experiments\nSaving the output to tabular formats like DataFrames and CSVs\nEvent handling\nParameter estimation (inverse problems)\nQuantification of numerical uncertainty and errorMany more are defined in the relevant sections of the docs. Please explore the rest of the documentation, including tutorials for getting started with other types of equations. In addition, to get help, please either file an issue at the main repository or come have an informal discussion at our Gitter chatroom."
 },
 
 {
