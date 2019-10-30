@@ -88,9 +88,9 @@ The choice of ensemble algorithm allows for control over how the multiple trajec
 are handled. Currently, the ensemble algorithm types are:
 
 * `EnsembleSerial()` - No parallelism
-* `EnsembleThreads()` - This uses multithreading. It's local (single computer, shared memory)
+* `EnsembleThreads()` - The default. This uses multithreading. It's local (single computer, shared memory)
   parallelism only. Fastest when the trajectories are quick.
-* `EnsembleDistributed()` - The default. Uses `pmap` internally. It will use as many processors as you
+* `EnsembleDistributed()` - Uses `pmap` internally. It will use as many processors as you
   have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
   documentation for more details. Recommended for the case when each trajectory
   calculation isn't "too quick" (at least about a millisecond each?).
