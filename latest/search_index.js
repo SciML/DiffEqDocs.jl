@@ -4597,39 +4597,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Bifurcation Analysis",
     "title": "Bifurcation Analysis",
     "category": "section",
-    "text": "Bifurcation analysis is provided by the wrapper package PyDSTool.jl, which wraps the functionality of PyDSTool. The the package has an interface for directly using PyDSTool itself, included is a higher level interface that makes these tools compatible with more standard JuliaDiffEq types."
-},
-
-{
-    "location": "analysis/bifurcation.html#Installation-1",
-    "page": "Bifurcation Analysis",
-    "title": "Installation",
-    "category": "section",
-    "text": "This functionality does not come standard with DifferentialEquations.jl. To use this functionality, you must install PyDSTool.jl:]add PyDSTool\nusing PyDSTool"
-},
-
-{
-    "location": "analysis/bifurcation.html#Calcium-Bifurcation-Tutorial-1",
-    "page": "Bifurcation Analysis",
-    "title": "Calcium Bifurcation Tutorial",
-    "category": "section",
-    "text": "In this tutorial we will show how to do some simple bifurcation plots. We will follow the PyDSTool tutorial for the calcium channel model and re-create the results using the wrapped functionality."
-},
-
-{
-    "location": "analysis/bifurcation.html#Specification-of-a-Model-1",
-    "page": "Bifurcation Analysis",
-    "title": "Specification of a Model",
-    "category": "section",
-    "text": "We will specify the model using a ParameterizedFunction:using ParameterizedFunctions\nf = @ode_def begin\n  dv = ( i + gl * (vl - v) - gca * 0.5 * (1 + tanh( (v-v1)/v2 )) * (v-vca) )/c\n  dw = v-w\nend vl vca i gl gca c v1 v2(Note that using PyDSTool requires use of the @ode_def macro). Next to build the ODE we need an initial condition and a starting timepoint.u0 = [0;0]\ntspan = [0;30]\np = [-60,120,0.0,2,4,20,-1.2,18]Then we use the following command to build the PyDSTool ODE:dsargs = build_ode(f,u0,tspan,p)Now we need to build the continuation type. Following the setup of PyDSTool\'s tutorial, we need to start near the steady state. The commands translate as:ode = ds[:Generator][:Vode_ODEsystem](dsargs)\node[:set](pars = Dict(\"i\"=>-220))\node[:set](ics  = Dict(\"v\"=>-170))\nPC = ds[:ContClass](ode)Once we have the continuation type, we can call the bifurcation_curve function. Instead of building the args into some object one-by-one, we simply make a function call with keyword arguments. Using the same arguments as the PyDSTool tutorial:bif = bifurcation_curve(PC,\"EP-C\",[\"i\"],\n                        max_num_points=450,\n                        max_stepsize=2,min_stepsize=1e-5,\n                        stepsize=2e-2,loc_bif_points=\"all\",\n                        save_eigen=true,name=\"EQ1\",\n                        print_info=true,calc_stab=true)This returns a BifurcationCurve type. Important fields of this type are:points: the values along the curve\nspecial_points: the values for the bifurcation points\nstab: an array which gives the stability of each point along the curve. \"S\" is for stable, N is for neutral, and U is for unstable.Instead of using the fields directly, we will use the plot recipe. The plot recipe requires you give the x,y coordinates to plot. Here we will plot it in the (i,v) plane:using Plots\nplot(bif,(:i,:v))(Image: bifurcation_plot)"
-},
-
-{
-    "location": "analysis/bifurcation.html#Bifucation-Curve-Function-Definition-1",
-    "page": "Bifurcation Analysis",
-    "title": "Bifucation Curve Function Definition",
-    "category": "section",
-    "text": "function bifurcation_curve(PC,bif_type,freepars;max_num_points=450,\n                          max_stepsize=2,min_stepsize=1e-5,\n                          stepsize=2e-2,loc_bif_points=\"all\",\n                          save_eigen=true,name=\"DefaultName\",\n                          print_info=true,calc_stab=true,\n                          var_tol = 1e-6, func_tol = 1e-6,\n                          test_tol = 1e-4,\n                          initpoint=nothing,solver_sequence=[:forward])"
+    "text": "Bifurcation analysis on DifferentialEquations.jl types can be performed by:Bifurcations.jl\nPseudoArcLengthContinuations.jl\nPyDSTool.jl\nDiffEqBiological.jlIf your system is a chemical reaction system, see the documentation at  DiffEqBiological.jl for quickly generating bifurcation plots. Bifurcations.jl can directly generate a BifurcationProblem from an ODEProblem. PyDSTool.jl is no longer recommended."
 },
 
 {
