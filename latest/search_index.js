@@ -321,11 +321,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/advanced_ode_example.html#This-tutorial-is-for-advanced-users-to-dive-into-advanced-features!-1",
+    "page": "Solving Stiff Equations",
+    "title": "This tutorial is for advanced users to dive into advanced features!",
+    "category": "section",
+    "text": ""
+},
+
+{
     "location": "tutorials/advanced_ode_example.html#Code-Optimization-for-Differential-Equations-1",
     "page": "Solving Stiff Equations",
     "title": "Code Optimization for Differential Equations",
     "category": "section",
-    "text": ""
+    "text": "Solving stiff differential equations requires speed. Here\'s a few things to keep in mind."
 },
 
 {
@@ -337,11 +345,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/advanced_ode_example.html#Choosing-a-Good-Solver-1",
+    "page": "Solving Stiff Equations",
+    "title": "Choosing a Good Solver",
+    "category": "section",
+    "text": "Choosing a good solver is required for getting top notch speed. General recommendations can be found on the solver page (for example, the ODE Solver Recommendations). The current recommendations can be simplified to a Rosenbrock method (Rosenbrock23 or Rodas5) for smaller (<50 ODEs) problems, ESDIRK methods for slightly larger (TRBDF2 or KenCarp4 for <2000 ODEs), and Sundials CVODE_BDF for even larger problems. lsoda from LSODA.jl is generally worth a try.More details on the solver to choose can be found by benchmarking. See the DiffEqBenchmarks to compare many solvers on many problems."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Check-Out-the-Speed-FAQ-1",
+    "page": "Solving Stiff Equations",
+    "title": "Check Out the Speed FAQ",
+    "category": "section",
+    "text": "See this FAQ for information on common pitfalls and how to improve performance."
+},
+
+{
     "location": "tutorials/advanced_ode_example.html#Setting-Up-Your-Julia-Installation-for-Speed-1",
     "page": "Solving Stiff Equations",
     "title": "Setting Up Your Julia Installation for Speed",
     "category": "section",
     "text": "Julia uses an underlying BLAS implementation for its matrix multiplications and factorizations. This library is automatically multithreaded and accelerates the internal linear algebra of DifferentialEquations.jl. However, for optimality, you should make sure that the number of BLAS threads that you are using matches the number of physical cores and not the number of logical cores. See this issue for more details.To check the number of BLAS threads, use:ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())If I want to set this directly to 4 threads, I would use:using LinearAlgebra\r\nLinearAlgebra.BLAS.set_num_threads(4)Additionally, in some cases Intel\'s MKL might be a faster BLAS than the standard BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you can use MKL.jl which will accelerate the linear algebra routines. Please see the package for the limitations."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Use-Accelerator-Hardware-1",
+    "page": "Solving Stiff Equations",
+    "title": "Use Accelerator Hardware",
+    "category": "section",
+    "text": "When possible, use GPUs. If your ODE system is small and you need to solve it with very many different parameters, see the ensembles interface and DiffEqGPU.jl. If your problem is large, consider using a CuArray for the state to allow for GPU-parallelism of the internal linear algebra."
 },
 
 {
