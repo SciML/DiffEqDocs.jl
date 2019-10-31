@@ -305,6 +305,142 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/advanced_ode_example.html#",
+    "page": "Solving Stiff Equations",
+    "title": "Solving Stiff Equations",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Solving-Stiff-Equations-1",
+    "page": "Solving Stiff Equations",
+    "title": "Solving Stiff Equations",
+    "category": "section",
+    "text": "This tutorial is for getting into the extra features for solving stiff ordinary differential equations in an efficient manner. Solving stiff ordinary differential equations requires specializing the linear solver on properties of the Jacobian in order to cut down on the O(n^3) linear solve and the O(n^2) back-solves. Note that these same functions and controls also extend to stiff SDEs, DDEs, DAEs, etc."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Code-Optimization-for-Differential-Equations-1",
+    "page": "Solving Stiff Equations",
+    "title": "Code Optimization for Differential Equations",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Writing-Efficient-Code-1",
+    "page": "Solving Stiff Equations",
+    "title": "Writing Efficient Code",
+    "category": "section",
+    "text": "For a detailed tutorial on how to optimize one\'s DifferentialEquations.jl code, please see the Optimizing DiffEq Code tutorial."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Setting-Up-Your-Julia-Installation-for-Speed-1",
+    "page": "Solving Stiff Equations",
+    "title": "Setting Up Your Julia Installation for Speed",
+    "category": "section",
+    "text": "Julia uses an underlying BLAS implementation for its matrix multiplications and factorizations. This library is automatically multithreaded and accelerates the internal linear algebra of DifferentialEquations.jl. However, for optimality, you should make sure that the number of BLAS threads that you are using matches the number of physical cores and not the number of logical cores. See this issue for more details.To check the number of BLAS threads, use:ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())If I want to set this directly to 4 threads, I would use:using LinearAlgebra\r\nLinearAlgebra.BLAS.set_num_threads(4)Additionally, in some cases Intel\'s MKL might be a faster BLAS than the standard BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you can use MKL.jl which will accelerate the linear algebra routines. Please see the package for the limitations."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Speeding-Up-Jacobian-Calculations-1",
+    "page": "Solving Stiff Equations",
+    "title": "Speeding Up Jacobian Calculations",
+    "category": "section",
+    "text": "When one is using an implicit or semi-implicit differential equation solver, the Jacobian must be built at many iterations and this can be one of the most expensive steps. There are two pieces that must be optimized in order to reach maximal efficiency when solving stiff equations: the sparsity pattern and the construction of the Jacobian. The construction is filling the matrix J with values, while the sparsity pattern is what J to use.The sparsity pattern is given by a prototype matrix, the jac_prototype, which will be copied to be used as J. The default is for J to be a Matrix, i.e. a dense matrix. However, if you know the sparsity of your problem, then you can pass a different matrix type. For example, a SparseMatrixCSC will give a sparse matrix. Additionally, structured matrix types like Tridiagonal, BandedMatrix (from BandedMatrices.jl), BlockBandedMatrix (from BlockBandedMatrices.jl), and more can be given. DifferentialEquations.jl will internally use this matrix type, making the factorizations faster by utilizing the specialized forms.For the construction, there are 3 ways to fill J:The default, which uses normal finite/automatic differentiation\nA function jac(J,u,p,t) which directly computes the values of J\nA colorvec which defines a sparse differentiation scheme.We will now showcase how to make use of this functionality with growing complexity."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Declaring-Jacobian-Functions-1",
+    "page": "Solving Stiff Equations",
+    "title": "Declaring Jacobian Functions",
+    "category": "section",
+    "text": "Let\'s solve the Rosenbrock equations:beginalign\r\ndy_1 = -004y₁ + 10^4 y_2 y_3 \r\ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \r\ndy_3 = 3*10^7 y_3^2 \r\nendalignIn order to reduce the Jacobian construction cost, one can describe a Jacobian function by using the jac argument for the ODEFunction. First, let\'s do a standard ODEProblem:using DifferentialEquations\r\nfunction rober(du,u,p,t)\r\n  y₁,y₂,y₃ = u\r\n  k₁,k₂,k₃ = p\r\n  du[1] = -k₁*y₁+k₃*y₂*y₃\r\n  du[2] =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃\r\n  du[3] =  k₂*y₂^2\r\n  nothing\r\nend\r\nprob = ODEProblem(rober,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))\r\nsol = solve(prob)\r\nplot(sol,tspan=(1e-2,1e5),xscale=:log10)(Image: IntroDAEPlot)using BenchmarkTools\r\n@btime solve(prob) # 415.800 μs (3053 allocations: 161.64 KiB)Now we want to add the Jacobian. First we have to derive the Jacobian fracdf_idu_j which is J[i,j]. From this we get:function rober_jac(J,u,p,t)\r\n  y₁,y₂,y₃ = u\r\n  k₁,k₂,k₃ = p\r\n  J[1,1] = k₁ * -1\r\n  J[2,1] = k₁\r\n  J[3,1] = 0\r\n  J[1,2] = y₃ * k₃\r\n  J[2,2] = y₂ * k₂ * -2 + y₃ * k₃ * -1\r\n  J[3,2] = y₂ * 2 * k₂\r\n  J[1,3] = k₃ * y₂\r\n  J[2,3] = k₃ * y₂ * -1\r\n  J[3,3] = 0\r\n  nothing\r\nend\r\nf = ODEFunction(rober, jac=rober_jac)\r\nprob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))\r\n\r\n@btime solve(prob_jac) # 305.400 μs (2599 allocations: 153.11 KiB)"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Automatic-Derivation-of-Jacobian-Functions-1",
+    "page": "Solving Stiff Equations",
+    "title": "Automatic Derivation of Jacobian Functions",
+    "category": "section",
+    "text": "But that was hard! If you want to take the symbolic Jacobian of numerical code, we can make use of ModelingToolkit.jl to symbolicify the numerical code and do the symbolic calculation and return the Julia code for this.using ModelingToolkit\r\nde = modelingtoolkitize(prob)\r\nModelingToolkit.generate_jacobian(de...)[2] # Second is in-placewhich outputs::((##MTIIPVar#376, u, p, t)->begin\r\n          #= C:\\Users\\accou\\.julia\\packages\\ModelingToolkit\\czHtj\\src\\utils.jl:65 =#\r\n          #= C:\\Users\\accou\\.julia\\packages\\ModelingToolkit\\czHtj\\src\\utils.jl:66 =#\r\n          let (x₁, x₂, x₃, α₁, α₂, α₃) = (u[1], u[2], u[3], p[1], p[2], p[3])\r\n              ##MTIIPVar#376[1] = α₁ * -1\r\n              ##MTIIPVar#376[2] = α₁\r\n              ##MTIIPVar#376[3] = 0\r\n              ##MTIIPVar#376[4] = x₃ * α₃\r\n              ##MTIIPVar#376[5] = x₂ * α₂ * -2 + x₃ * α₃ * -1\r\n              ##MTIIPVar#376[6] = x₂ * 2 * α₂\r\n              ##MTIIPVar#376[7] = α₃ * x₂\r\n              ##MTIIPVar#376[8] = α₃ * x₂ * -1\r\n              ##MTIIPVar#376[9] = 0\r\n          end\r\n          #= C:\\Users\\accou\\.julia\\packages\\ModelingToolkit\\czHtj\\src\\utils.jl:67 =#\r\n          nothing\r\n      end)Now let\'s use that to give the analytical solution Jacobian:jac = eval(ModelingToolkit.generate_jacobian(de...)[2])\r\nf = ODEFunction(rober, jac=jac)\r\nprob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Declaring-a-Sparse-Jacobian-1",
+    "page": "Solving Stiff Equations",
+    "title": "Declaring a Sparse Jacobian",
+    "category": "section",
+    "text": "Jacobian sparsity is declared by the jac_prototype argument in the ODEFunction. Note that you should only do this if the sparsity is high, for example, 0.1% of the matrix is zeros, otherwise the overhead of sparse matrices can be higher than the gains from sparse differentiation!But as a demonstration, let\'s build a sparse matrix for the Rober problem. We can do this by gathering the I and J pairs for the non-zero components, like:I = [1,2,1,2,3,1,2]\r\nJ = [1,1,2,2,2,3,3]\r\n\r\nusing SparseArrays\r\njac_prototype = sparse(I,J,1.0)Now this is the sparse matrix prototype that we want to use in our solver, which we then pass like:f = ODEFunction(rober, jac=jac, jac_prototype=jac_prototype)\r\nprob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Automatic-Sparsity-Detection-1",
+    "page": "Solving Stiff Equations",
+    "title": "Automatic Sparsity Detection",
+    "category": "section",
+    "text": "One of the useful companion tools for DifferentialEquations.jl is SparsityDetection.jl. This allows for automatic declaration of Jacobian sparsity types. To see this in action, let\'s look at the 2-dimensional Brusselator equation:const N = 32\r\nconst xyd_brusselator = range(0,stop=1,length=N)\r\nbrusselator_f(x, y, t) = (((x-0.3)^2 + (y-0.6)^2) <= 0.1^2) * (t >= 1.1) * 5.\r\nlimit(a, N) = a == N+1 ? 1 : a == 0 ? N : a\r\nfunction brusselator_2d_loop(du, u, p, t)\r\n  A, B, alpha, dx = p\r\n  alpha = alpha/dx^2\r\n  @inbounds for I in CartesianIndices((N, N))\r\n    i, j = Tuple(I)\r\n    x, y = xyd_brusselator[I[1]], xyd_brusselator[I[2]]\r\n    ip1, im1, jp1, jm1 = limit(i+1, N), limit(i-1, N), limit(j+1, N), limit(j-1, N)\r\n    du[i,j,1] = alpha*(u[im1,j,1] + u[ip1,j,1] + u[i,jp1,1] + u[i,jm1,1] - 4u[i,j,1]) +\r\n                B + u[i,j,1]^2*u[i,j,2] - (A + 1)*u[i,j,1] + brusselator_f(x, y, t)\r\n    du[i,j,2] = alpha*(u[im1,j,2] + u[ip1,j,2] + u[i,jp1,2] + u[i,jm1,2] - 4u[i,j,2]) +\r\n                A*u[i,j,1] - u[i,j,1]^2*u[i,j,2]\r\n    end\r\nend\r\np = (3.4, 1., 10., step(xyd_brusselator))Given this setup, we can give and example input and output and call sparsity! on our function with the example arguments and it will kick out a sparse matrix with our pattern, that we can turn into our jac_prototype.using SparsityDetection, SparseArrays\r\ninput = rand(32,32,2)\r\noutput = similar(input)\r\nsparsity_pattern = sparsity!(brusselator_2d_loop,output,input,p,0.0)\r\njac_sparsity = Float64.(sparse(sparsity_pattern))Let\'s double check what our sparsity pattern looks like:using Plots\r\nspy(jac_sparsity,markersize=1,colorbar=false,color=:deep)(Image: Bruss Sparsity)That\'s neat, and would be tedius to build by hand! Now we just pass it to the ODEFunction like as before:f = ODEFunction(brusselator_2d_loop;jac_prototype=jac_sparsity)Build the ODEProblem:function init_brusselator_2d(xyd)\r\n  N = length(xyd)\r\n  u = zeros(N, N, 2)\r\n  for I in CartesianIndices((N, N))\r\n    x = xyd[I[1]]\r\n    y = xyd[I[2]]\r\n    u[I,1] = 22*(y*(1-y))^(3/2)\r\n    u[I,2] = 27*(x*(1-x))^(3/2)\r\n  end\r\n  u\r\nend\r\nu0 = init_brusselator_2d(xyd_brusselator)\r\nprob_ode_brusselator_2d = ODEProblem(brusselator_2d_loop,\r\n                                     u0,(0.,11.5),p)\r\n\r\nprob_ode_brusselator_2d_sparse = ODEProblem(f,\r\n                                     u0,(0.,11.5),p)Now let\'s see how the version with sparsity compares to the version without:@btime solve(prob_ode_brusselator_2d,save_everystep=false) # 51.714 s (7317 allocations: 70.12 MiB)\r\n@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 36.374 s (367199 allocations: 896.99 MiB)"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Declaring-Color-Vectors-for-Fast-Construction-1",
+    "page": "Solving Stiff Equations",
+    "title": "Declaring Color Vectors for Fast Construction",
+    "category": "section",
+    "text": "If you cannot directly define a Jacobian function, you can use the colorvec to speed up the Jacobian construction. What the colorvec does is allows for calculating multiple columns of a Jacobian simultaniously by using the sparsity pattern. An explanation of matrix coloring can be found in the MIT 18.337 Lecture Notes.To perform general matrix coloring, we can use SparseDiffTools.jl. For example, for the Brusselator equation:using SparseDiffTools\r\ncolorvec = matrix_colors(jac_sparsity)\r\n@show maximum(colorvec) # maximum(colorvec) = 12This means that we can now calculate the Jacobian in 12 function calls. This is a nice reduction from 2048 using only automated tooling! To now make use of this inside of the ODE solver, you simply need to declare the colorvec:f = ODEFunction(brusselator_2d_loop;jac_prototype=jac_sparsity,\r\n                                    colorvec=colorvec)\r\nprob_ode_brusselator_2d_sparse = ODEProblem(f,\r\n                                     init_brusselator_2d(xyd_brusselator),\r\n                                     (0.,11.5),p)\r\n@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 5.519 s (19039 allocations: 881.07 MiB)Notice the massive speed enhancement!"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Defining-Linear-Solver-Routines-and-Jacobian-Free-Newton-Krylov-1",
+    "page": "Solving Stiff Equations",
+    "title": "Defining Linear Solver Routines and Jacobian-Free Newton-Krylov",
+    "category": "section",
+    "text": "A completely different way to optimize the linear solvers for large sparse matrices is to use a Krylov subpsace method. This requires choosing a linear solver for changing to a Krylov method. Optionally, one can use a Jacobian-free operator to reduce the memory requirements."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Declaring-a-Jacobian-Free-Newton-Krylov-Implementation-1",
+    "page": "Solving Stiff Equations",
+    "title": "Declaring a Jacobian-Free Newton-Krylov Implementation",
+    "category": "section",
+    "text": "To swap the linear solver out, we use the linsolve command and choose the GMRES linear solver.@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)\r\n@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)For more information on linear solver choices, see the linear solver documentation.We can also enhance this by using a Jacobian-Free implementation of f\'(x)*v. To define the Jacobian-Free operator, we can use DiffEqOperators.jl to generate an operator JacVecOperator such that Jv*v performs f\'(x)*v without building the Jacobian matrix.using DiffEqOperators\r\nJv = JacVecOperator(brusselator_2d_loop,u0,p,0.0)and then we can use this by making it our jac_prototype:f = ODEFunction(brusselator_2d_loop;jac_prototype=Jv)\r\nprob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p)\r\n@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Adding-a-Preconditioner-1",
+    "page": "Solving Stiff Equations",
+    "title": "Adding a Preconditioner",
+    "category": "section",
+    "text": "The linear solver documentation shows how you can add a preconditioner to the GMRES. For example, you can use packages like AlgebraicMultigrid.jl to add an algebraic multigrid (AMG) or IncompleteLU.jl for an incomplete LU-factorization (iLU).using AlgebraicMultigrid\r\npc = aspreconditioner(ruge_stuben(jac_sparsity))\r\n@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Using-Structured-Matrix-Types-1",
+    "page": "Solving Stiff Equations",
+    "title": "Using Structured Matrix Types",
+    "category": "section",
+    "text": "If your sparsity pattern follows a specific structure, for example a banded matrix, then you can declare jac_prototype to be of that structure and then additional optimizations will come for free. Note that in this case, it is not necessary to provide a colorvec since the color vector will be analytically derived from the structure of the matrix.The matrices which are allowed are those which satisfy the ArrayInterface.jl interface for automatically-colorable matrices. These include:Bidiagonal\nTridiagonal\nSymTridiagonal\nBandedMatrix (BandedMatrices.jl)\nBlockBandedMatrix (BlockBandedMatrices.jl)Matrices which do not satisfy this interface can still be used, but the matrix coloring will not be automatic, and an appropriate linear solver may need to be given (otherwise it will default to attempting an LU-decomposition)."
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Sundials-Specific-Handling-1",
+    "page": "Solving Stiff Equations",
+    "title": "Sundials-Specific Handling",
+    "category": "section",
+    "text": "While much of the setup makes the transition to using Sundials automatic, there are some differences between the pure Julia implementations and the Sundials implementations which must be taken note of. These are all detailed in the Sundials solver documentation, but here we will highlight the main details which one should make note of.Defining a sparse matrix and a Jacobian for Sundials works just like any other package. The core difference is in the choice of the linear solver. With Sundials, the linear solver choice is done with a Symbol in the linear_solver from a preset list. Particular choices of note are :Band for a banded matrix and :GMRES for using GMRES. If you are using Sundials, :GMRES will not require defining the JacVecOperator, and instead will always make use of a Jacobian-Free Newton Krylov (with numerical differentiation). Thus on this problem we could do:using Sundials\r\n# Sparse Version\r\n@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(),save_everystep=false) # 42.804 s (51388 allocations: 3.20 MiB)\r\n# GMRES Version: Doesn\'t require any extra stuff!\r\n@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 485.671 ms (61058 allocations: 3.63 MiB)"
+},
+
+{
+    "location": "tutorials/advanced_ode_example.html#Handling-Mass-Matrices-1",
+    "page": "Solving Stiff Equations",
+    "title": "Handling Mass Matrices",
+    "category": "section",
+    "text": "Instead of just defining an ODE as u = f(upt), it can be common to express the differential equation in the form with a mass matrix:Mu = f(upt)where M is known as the mass matrix. Let\'s solve the Robertson equation. At the top we wrote this equation as:beginalign\r\ndy_1 = -004y₁ + 10^4 y_2 y_3 \r\ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \r\ndy_3 = 3*10^7 y_3^2 \r\nendalignBut we can instead write this with a conservation relation:beginalign\r\ndy_1 = -004y₁ + 10^4 y_2 y_3 \r\ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \r\n1 =  y_1 + y_2 + y_3 \r\nendalignIn this form, we can write this as a mass matrix ODE where M is singular (this is another form of a differential-algebraic equation (DAE)). Here, the last row of M is just zero. We can implement this form as:using DifferentialEquations\r\nfunction rober(du,u,p,t)\r\n  y₁,y₂,y₃ = u\r\n  k₁,k₂,k₃ = p\r\n  du[1] = -k₁*y₁+k₃*y₂*y₃\r\n  du[2] =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃\r\n  du[3] =  y₁ + y₂ + y₃ - 1\r\n  nothing\r\nend\r\nM = [1. 0  0\r\n     0  1. 0\r\n     0  0  0]\r\nf = ODEFunction(rober,mass_matrix=M)\r\nprob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))\r\nsol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)\r\n\r\nplot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))(Image: IntroDAEPlot)Note that if your mass matrix is singular, i.e. your system is a DAE, then you need to make sure you choose a solver that is compatible with DAEs"
+},
+
+{
     "location": "tutorials/sde_example.html#",
     "page": "Stochastic Differential Equations",
     "title": "Stochastic Differential Equations",
@@ -5481,6 +5617,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/solutions.html#DiffEqBase.DESolution",
+    "page": "Solutions",
+    "title": "DiffEqBase.DESolution",
+    "category": "constant",
+    "text": "Union of all base solution types.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#DiffEqBase.AbstractNoTimeSolution",
+    "page": "Solutions",
+    "title": "DiffEqBase.AbstractNoTimeSolution",
+    "category": "type",
+    "text": "abstract type AbstractNoTimeSolution <: AbstractArray{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#DiffEqBase.AbstractTimeseriesSolution",
+    "page": "Solutions",
+    "title": "DiffEqBase.AbstractTimeseriesSolution",
+    "category": "type",
+    "text": "abstract type AbstractTimeseriesSolution <: RecursiveArrayTools.AbstractDiffEqArray{T,N}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/solutions.html#Base-types-1",
     "page": "Solutions",
     "title": "Base types",
@@ -5565,7 +5725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solvers",
     "title": "DiffEqBase.ImplicitRKTableau",
     "category": "type",
-    "text": "ImplicitRKTableau\n\nHolds a tableau which defines an implicit Runge-Kutta method.\n\n\n\n\n\n"
+    "text": "mutable struct ImplicitRKTableau{MType<:(AbstractArray{T,2} where T), VType<:(AbstractArray{T,1} where T)} <: DiffEqBase.ODERKTableau\n\nHolds a tableau which defines an implicit Runge-Kutta method.\n\n\n\n\n\n"
 },
 
 {
@@ -5573,7 +5733,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solvers",
     "title": "DiffEqBase.ExplicitRKTableau",
     "category": "type",
-    "text": "ExplicitRKTableau\n\nHolds a tableau which defines an explicit Runge-Kutta method.\n\n\n\n\n\n"
+    "text": "mutable struct ExplicitRKTableau{MType<:(AbstractArray{T,2} where T), VType<:(AbstractArray{T,1} where T), fsal} <: DiffEqBase.ODERKTableau\n\nHolds a tableau which defines an explicit Runge-Kutta method.\n\n\n\n\n\n"
 },
 
 {
@@ -5605,7 +5765,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.AbstractDiscreteFunction",
     "category": "type",
-    "text": "abstract type AbstractDiscreteFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\nTODO\n\n\n\n\n\n"
+    "text": "abstract type AbstractDiscreteFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
 },
 
 {
@@ -5613,7 +5773,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.DiscreteFunction",
     "category": "type",
-    "text": "struct DiscreteFunction{iip, F, Ta, S} <: DiffEqBase.AbstractDiscreteFunction{iip}\n\nTODO\n\n\n\n\n\n"
+    "text": "struct DiscreteFunction{iip, F, Ta, S} <: DiffEqBase.AbstractDiscreteFunction{iip}\n\n\n\n\n\n"
 },
 
 {
@@ -5641,6 +5801,78 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractODEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractODEFunction",
+    "category": "type",
+    "text": "abstract type AbstractODEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.ODEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.ODEFunction",
+    "category": "type",
+    "text": "struct ODEFunction{iip, F, TMM, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractODEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractODEProblem",
+    "category": "type",
+    "text": "abstract type AbstractODEProblem <: DiffEqBase.DEProblem\n\nBase for types which define ODE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.ODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.ODEProblem",
+    "category": "type",
+    "text": "struct ODEProblem{uType, tType, isinplace, P, F, K, PT} <: DiffEqBase.AbstractODEProblem{uType,tType,isinplace}\n\nDefines an ODE problem.\n\nFields\n\nf\nThe function in the ODE.\nu0\nThe initial condition.\ntspan\nThe timespan for the problem.\np\nThe parameter values of the ODE function.\nkwargs\nA callback to be applied to every solver which uses the problem.\nproblem_type\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.StandardODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.StandardODEProblem",
+    "category": "type",
+    "text": "struct StandardODEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractODESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractODESolution",
+    "category": "type",
+    "text": "abstract type AbstractODESolution <: DiffEqBase.AbstractTimeseriesSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.ODESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.ODESolution",
+    "category": "type",
+    "text": "struct ODESolution{T, N, uType, uType2, DType, tType, rateType, P, A, IType, DE} <: DiffEqBase.AbstractODESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractODEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractODEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractODEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractODEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractODEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractODEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#ODE-1",
     "page": "DE types",
     "title": "ODE",
@@ -5653,7 +5885,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.DynamicalODEFunction",
     "category": "type",
-    "text": "struct DynamicalODEFunction{iip, F1, F2, TMM, Ta} <: DiffEqBase.AbstractODEFunction{iip}\n\nTODO\n\n\n\n\n\n"
+    "text": "struct DynamicalODEFunction{iip, F1, F2, TMM, Ta} <: DiffEqBase.AbstractODEFunction{iip}\n\n\n\n\n\n"
 },
 
 {
@@ -5661,7 +5893,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.AbstractDynamicalODEProblem",
     "category": "type",
-    "text": "abstract type AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+    "text": "abstract type AbstractDynamicalODEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5669,7 +5901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.DynamicalODEProblem",
     "category": "type",
-    "text": "struct DynamicalODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+    "text": "struct DynamicalODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5693,7 +5925,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.SecondOrderODEProblem",
     "category": "type",
-    "text": "struct SecondOrderODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+    "text": "struct SecondOrderODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5725,7 +5957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.SplitFunction",
     "category": "type",
-    "text": "struct SplitFunction{iip, F1, F2, TMM, C, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractODEFunction{iip}\n\nTODO\n\n\n\n\n\n"
+    "text": "struct SplitFunction{iip, F1, F2, TMM, C, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractODEFunction{iip}\n\n\n\n\n\n"
 },
 
 {
@@ -5733,7 +5965,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.AbstractSplitODEProblem",
     "category": "type",
-    "text": "abstract type AbstractSplitODEProblem\n\nTODO\n\n\n\n\n\n"
+    "text": "abstract type AbstractSplitODEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5741,7 +5973,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DE types",
     "title": "DiffEqBase.SplitODEProblem",
     "category": "type",
-    "text": "struct SplitODEProblem{iip} <: DiffEqBase.AbstractSplitODEProblem\n\nTODO\n\n\n\n\n\n"
+    "text": "struct SplitODEProblem{iip} <: DiffEqBase.AbstractSplitODEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5753,11 +5985,99 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSteadyStateProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSteadyStateProblem",
+    "category": "type",
+    "text": "abstract type AbstractSteadyStateProblem <: DiffEqBase.DEProblem\n\nBase for types which define steady state problems for ODE systems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SteadyStateProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SteadyStateProblem",
+    "category": "type",
+    "text": "struct SteadyStateProblem{uType, isinplace, P, F, K} <: DiffEqBase.AbstractSteadyStateProblem{uType,isinplace}\n\nDefines a steady state problem.\n\nFields\n\nf\nf: The function in the ODE.\nu0\nThe initial guess for the steady state.\np\nParameter values for the ODE function.\nkwargs\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSteadyStateSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSteadyStateSolution",
+    "category": "type",
+    "text": "abstract type AbstractSteadyStateSolution <: DiffEqBase.AbstractNoTimeSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SteadyStateSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.SteadyStateSolution",
+    "category": "type",
+    "text": "struct SteadyStateSolution{T, N, uType, R, P, A} <: DiffEqBase.AbstractSteadyStateSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSteadyStateAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSteadyStateAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractSteadyStateAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSteadyStateIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSteadyStateIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractSteadyStateIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,Nothing}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Steady-state-problems-1",
     "page": "DE types",
     "title": "Steady state problems",
     "category": "section",
     "text": "DiffEqBase.AbstractSteadyStateProblem\nSteadyStateProblem\nDiffEqBase.AbstractSteadyStateSolution\nDiffEqBase.SteadyStateSolution\nDiffEqBase.AbstractSteadyStateAlgorithm\nDiffEqBase.AbstractSteadyStateIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.TwoPointBVPFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.TwoPointBVPFunction",
+    "category": "type",
+    "text": "struct TwoPointBVPFunction{bF}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractBVProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractBVProblem",
+    "category": "type",
+    "text": "abstract type AbstractBVProblem <: DiffEqBase.AbstractODEProblem{uType,tType,isinplace}\n\nBase for types which define BVP problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.StandardBVProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.StandardBVProblem",
+    "category": "type",
+    "text": "struct StandardBVProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.BVProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.BVProblem",
+    "category": "type",
+    "text": "struct BVProblem{uType, tType, isinplace, P, F, bF, PT, K} <: DiffEqBase.AbstractBVProblem{uType,tType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.TwoPointBVProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.TwoPointBVProblem",
+    "category": "type",
+    "text": "struct TwoPointBVProblem{iip}\n\n\n\n\n\n"
 },
 
 {
@@ -5769,11 +6089,91 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractAnalyticalProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractAnalyticalProblem",
+    "category": "type",
+    "text": "abstract type AbstractAnalyticalProblem <: DiffEqBase.AbstractODEProblem{uType,tType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AnalyticalProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AnalyticalProblem",
+    "category": "type",
+    "text": "struct AnalyticalProblem{uType, tType, isinplace, P, F, K} <: AbstractAnalyticalProblem{uType,tType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractAnalyticalSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractAnalyticalSolution",
+    "category": "type",
+    "text": "abstract type AbstractAnalyticalSolution <: DiffEqBase.AbstractTimeseriesSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Analytical-problems-1",
     "page": "DE types",
     "title": "Analytical problems",
     "category": "section",
     "text": "AbstractAnalyticalProblem\nAnalyticalProblem\nDiffEqBase.AbstractAnalyticalSolution"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDEFunction",
+    "category": "type",
+    "text": "abstract type AbstractSDEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.SDEFunction",
+    "category": "type",
+    "text": "struct SDEFunction{iip, F, G, TMM, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, GG, TCV} <: DiffEqBase.AbstractSDEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractSDEProblem <: DiffEqBase.AbstractRODEProblem{uType,tType,isinplace,ND}\n\nBase for types which define SDE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.StandardSDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.StandardSDEProblem",
+    "category": "type",
+    "text": "struct StandardSDEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SDEProblem",
+    "category": "type",
+    "text": "struct SDEProblem{uType, tType, isinplace, P, NP, F, G, K, ND} <: DiffEqBase.AbstractSDEProblem{uType,tType,isinplace,ND}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractSDEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractSDEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
 },
 
 {
@@ -5785,11 +6185,99 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SplitSDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.SplitSDEFunction",
+    "category": "type",
+    "text": "struct SplitSDEFunction{iip, F1, F2, G, TMM, C, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractSDEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSplitSDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSplitSDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractSplitSDEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SplitSDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SplitSDEProblem",
+    "category": "type",
+    "text": "struct SplitSDEProblem{iip} <: DiffEqBase.AbstractSplitSDEProblem\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Split-SDEs-1",
     "page": "DE types",
     "title": "Split SDEs",
     "category": "section",
     "text": "SplitSDEFunction\nDiffEqBase.AbstractSplitSDEProblem\nSplitSDEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractRODEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractRODEFunction",
+    "category": "type",
+    "text": "abstract type AbstractRODEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.RODEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.RODEFunction",
+    "category": "type",
+    "text": "struct RODEFunction{iip, F, TMM, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractRODEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractRODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractRODEProblem",
+    "category": "type",
+    "text": "abstract type AbstractRODEProblem <: DiffEqBase.DEProblem\n\nBase for types which define RODE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.RODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.RODEProblem",
+    "category": "type",
+    "text": "mutable struct RODEProblem{uType, tType, isinplace, P, NP, F, K, ND} <: DiffEqBase.AbstractRODEProblem{uType,tType,isinplace,ND}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractRODESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractRODESolution",
+    "category": "type",
+    "text": "abstract type AbstractRODESolution <: DiffEqBase.AbstractODESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.RODESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.RODESolution",
+    "category": "type",
+    "text": "struct RODESolution{T, N, uType, uType2, DType, tType, randType, P, A, IType, DE} <: DiffEqBase.AbstractRODESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractRODEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractRODEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractRODEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractRODEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractRODEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractRODEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
 },
 
 {
@@ -5801,11 +6289,139 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDDEFunction",
+    "category": "type",
+    "text": "abstract type AbstractDDEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.DDEFunction",
+    "category": "type",
+    "text": "struct DDEFunction{iip, F, TMM, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractDDEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractDDEProblem <: DiffEqBase.DEProblem\n\nBase for types which define DDE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.DDEProblem",
+    "category": "type",
+    "text": "struct DDEProblem{uType, tType, lType, lType2, isinplace, P, F, H, K} <: DiffEqBase.AbstractDDEProblem{uType,tType,lType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractConstantLagDDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractConstantLagDDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractConstantLagDDEProblem <: DiffEqBase.AbstractDDEProblem{uType,tType,lType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDDESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDDESolution",
+    "category": "type",
+    "text": "abstract type AbstractDDESolution <: DiffEqBase.AbstractODESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDDEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDDEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractDDEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDDEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDDEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractDDEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractHistoryFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractHistoryFunction",
+    "category": "type",
+    "text": "abstract type AbstractHistoryFunction <: Function\n\nBase for types which define the history of a delay differential equation.\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#DDE-1",
     "page": "DE types",
     "title": "DDE",
     "category": "section",
     "text": "DiffEqBase.AbstractDDEFunction\nDDEFunction\nDiffEqBase.AbstractDDEProblem\nDDEProblem\nDiffEqBase.AbstractConstantLagDDEProblem\nDiffEqBase.AbstractDDESolution\nDiffEqBase.AbstractDDEAlgorithm\nDiffEqBase.AbstractDDEIntegrator\nDiffEqBase.AbstractHistoryFunction"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDDEFunction",
+    "category": "type",
+    "text": "abstract type AbstractSDDEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SDDEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.SDDEFunction",
+    "category": "type",
+    "text": "struct SDDEFunction{iip, F, G, TMM, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, GG, TCV} <: DiffEqBase.AbstractSDDEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractSDDEProblem <: DiffEqBase.DEProblem\n\nBase for types which define SDDE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SDDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SDDEProblem",
+    "category": "type",
+    "text": "struct SDDEProblem{uType, tType, lType, lType2, isinplace, P, NP, F, G, H, K, ND} <: DiffEqBase.AbstractSDDEProblem{uType,tType,lType,isinplace,ND}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractConstantLagSDDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractConstantLagSDDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractConstantLagSDDEProblem <: DiffEqBase.AbstractSDDEProblem{uType,tType,lType,isinplace,ND}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDDEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDDEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractSDDEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSDDEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSDDEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractSDDEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
 },
 
 {
@@ -5817,11 +6433,91 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDAEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDAEFunction",
+    "category": "type",
+    "text": "abstract type AbstractDAEFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DAEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.DAEFunction",
+    "category": "type",
+    "text": "struct DAEFunction{iip, F, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractDAEFunction{iip}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDAEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDAEProblem",
+    "category": "type",
+    "text": "abstract type AbstractDAEProblem <: DiffEqBase.DEProblem\n\nBase for types which define DAE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DAEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.DAEProblem",
+    "category": "type",
+    "text": "struct DAEProblem{uType, duType, tType, isinplace, P, F, K, D} <: DiffEqBase.AbstractDAEProblem{uType,duType,tType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDAESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDAESolution",
+    "category": "type",
+    "text": "abstract type AbstractDAESolution <: DiffEqBase.AbstractODESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DAESolution",
+    "page": "DE types",
+    "title": "DiffEqBase.DAESolution",
+    "category": "type",
+    "text": "struct DAESolution{T, N, uType, duType, uType2, DType, tType, P, A, ID, DE} <: DiffEqBase.AbstractDAESolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDAEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDAEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractDAEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDAEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDAEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractDAEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#DAE-1",
     "page": "DE types",
     "title": "DAE",
     "category": "section",
     "text": "DiffEqBase.AbstractDAEFunction\nDAEFunction\nDiffEqBase.AbstractDAEProblem\nDAEProblem\nDiffEqBase.AbstractDAESolution\nDiffEqBase.DAESolution\nDiffEqBase.AbstractDAEAlgorithm\nDiffEqBase.AbstractDAEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractPDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractPDEProblem",
+    "category": "type",
+    "text": "abstract type AbstractPDEProblem <: DiffEqBase.DEProblem\n\nBase for types which define PDE problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.PDEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.PDEProblem",
+    "category": "type",
+    "text": "struct PDEProblem{P, E, S} <: DiffEqBase.AbstractPDEProblem\n\n\n\n\n\n"
 },
 
 {
@@ -5849,6 +6545,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractNoiseProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractNoiseProblem",
+    "category": "type",
+    "text": "abstract type AbstractNoiseProblem <: DiffEqBase.DEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.NoiseProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.NoiseProblem",
+    "category": "type",
+    "text": "struct NoiseProblem{N<:DiffEqBase.AbstractNoiseProcess, T, K} <: DiffEqBase.AbstractNoiseProblem\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Noise-problems-1",
     "page": "DE types",
     "title": "Noise problems",
@@ -5865,6 +6577,46 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractLinearProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractLinearProblem",
+    "category": "type",
+    "text": "abstract type AbstractLinearProblem <: DiffEqBase.DEProblem\n\nBase for types which define linear systems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.LinearProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.LinearProblem",
+    "category": "type",
+    "text": "struct LinearProblem{uType, isinplace, F, bType, P, K} <: DiffEqBase.AbstractLinearProblem{bType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractLinearSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractLinearSolution",
+    "category": "type",
+    "text": "abstract type AbstractLinearSolution <: DiffEqBase.AbstractNoTimeSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.LinearSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.LinearSolution",
+    "category": "type",
+    "text": "struct LinearSolution{T, N, uType, R, P, A} <: DiffEqBase.AbstractLinearSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractLinearAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractLinearAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractLinearAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Linear-1",
     "page": "DE types",
     "title": "Linear",
@@ -5873,11 +6625,75 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractNonlinearProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractNonlinearProblem",
+    "category": "type",
+    "text": "abstract type AbstractNonlinearProblem <: DiffEqBase.DEProblem\n\nBase for types which define nonlinear systems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.NonlinearProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.NonlinearProblem",
+    "category": "type",
+    "text": "struct NonlinearProblem{uType, isinplace, P, F, K} <: DiffEqBase.AbstractNonlinearProblem{uType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractNonlinearSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractNonlinearSolution",
+    "category": "type",
+    "text": "abstract type AbstractNonlinearSolution <: DiffEqBase.AbstractNoTimeSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractNonlinearAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractNonlinearAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractNonlinearAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/de_types.html#Nonlinear-1",
     "page": "DE types",
     "title": "Nonlinear",
     "category": "section",
     "text": "DiffEqBase.AbstractNonlinearProblem\nDiffEqBase.NonlinearProblem\nDiffEqBase.AbstractNonlinearSolution\nDiffEqBase.AbstractNonlinearAlgorithm"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractQuadratureProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractQuadratureProblem",
+    "category": "type",
+    "text": "abstract type AbstractQuadratureProblem <: DiffEqBase.DEProblem\n\nBase for types which define integrals suitable for quadrature.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.QuadratureProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.QuadratureProblem",
+    "category": "type",
+    "text": "struct QuadratureProblem{isinplace, P, F, L, U, K} <: DiffEqBase.AbstractQuadratureProblem{isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractQuadratureSolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractQuadratureSolution",
+    "category": "type",
+    "text": "abstract type AbstractQuadratureSolution <: DiffEqBase.AbstractNoTimeSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractQuadratureAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractQuadratureAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractQuadratureAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
 },
 
 {
@@ -5929,6 +6745,62 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.AbstractDiffEqOperator",
+    "page": "Operators",
+    "title": "DiffEqBase.AbstractDiffEqOperator",
+    "category": "type",
+    "text": "abstract type AbstractDiffEqOperator\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.AbstractDiffEqLinearOperator",
+    "page": "Operators",
+    "title": "DiffEqBase.AbstractDiffEqLinearOperator",
+    "category": "type",
+    "text": "abstract type AbstractDiffEqLinearOperator <: DiffEqBase.AbstractDiffEqOperator{T}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.FactorizedDiffEqArrayOperator",
+    "page": "Operators",
+    "title": "DiffEqBase.FactorizedDiffEqArrayOperator",
+    "category": "type",
+    "text": "FactorizedDiffEqArrayOperator(F)\n\nLike DiffEqArrayOperator, but stores a Factorization instead.\n\nSupports left division and ldiv! when applied to an array.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.DiffEqArrayOperator",
+    "page": "Operators",
+    "title": "DiffEqBase.DiffEqArrayOperator",
+    "category": "type",
+    "text": "DiffEqArrayOperator(A[; update_func])\n\nRepresents a time-dependent linear operator given by an AbstractMatrix. The update function is called by update_coefficients! and is assumed to have the following signature:\n\nupdate_func(A::AbstractMatrix,u,p,t) -> [modifies A]\n\nYou can also use setval!(α,A) to bypass the update_coefficients! interface and directly mutate the array\'s value.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.AffineDiffEqOperator",
+    "page": "Operators",
+    "title": "DiffEqBase.AffineDiffEqOperator",
+    "category": "type",
+    "text": "AffineDiffEqOperator{T} <: AbstractDiffEqOperator{T}\n\nEx: (A₁(t) + ... + Aₙ(t))*u + B₁(t) + ... + Bₙ(t)\n\nAffineDiffEqOperator{T}(As,Bs,du_cache=nothing)\n\nTakes in two tuples for split Affine DiffEqs\n\nupdate_coefficients! works by updating the coefficients of the component operators.\nFunction calls L(u, p, t) and L(du, u, p, t) are fallbacks interpretted in this form. This will allow them to work directly in the nonlinear ODE solvers without modification.\nf(du, u, p, t) is only allowed if a du_cache is given\nB(t) can be Union{Number,AbstractArray}, in which case they are constants. Otherwise they are interpreted they are functions v=B(t) and B(v,t)\n\nSolvers will see this operator from integrator.f and can interpret it by checking the internals of As and Bs. For example, it can check isconstant(As[1]) etc.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.DiffEqScalar",
+    "page": "Operators",
+    "title": "DiffEqBase.DiffEqScalar",
+    "category": "type",
+    "text": "DiffEqScalar(val[; update_func])\n\nRepresents a time-dependent scalar/scaling operator. The update function is called by update_coefficients! and is assumed to have the following signature:\n\nupdate_func(oldval,u,p,t) -> newval\n\nYou can also use setval!(α,val) to bypass the update_coefficients! interface and directly mutate the scalar\'s value.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#DiffEqBase.DiffEqIdentity",
+    "page": "Operators",
+    "title": "DiffEqBase.DiffEqIdentity",
+    "category": "type",
+    "text": "struct DiffEqIdentity{T, N} <: DiffEqBase.AbstractDiffEqLinearOperator{T}\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/operators.html#Types-1",
     "page": "Operators",
     "title": "Types",
@@ -5958,6 +6830,70 @@ var documenterSearchIndex = {"docs": [
     "title": "Callbacks",
     "category": "section",
     "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.DECallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.DECallback",
+    "category": "type",
+    "text": "abstract type DECallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.AbstractDiscreteCallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.AbstractDiscreteCallback",
+    "category": "type",
+    "text": "abstract type AbstractDiscreteCallback <: DiffEqBase.DECallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.DiscreteCallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.DiscreteCallback",
+    "category": "type",
+    "text": "struct DiscreteCallback{F1, F2, F3} <: DiffEqBase.AbstractDiscreteCallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.AbstractContinuousCallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.AbstractContinuousCallback",
+    "category": "type",
+    "text": "abstract type AbstractContinuousCallback <: DiffEqBase.DECallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.ContinuousCallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.ContinuousCallback",
+    "category": "type",
+    "text": "struct ContinuousCallback{F1, F2, F3, F4, T, T2, I} <: DiffEqBase.AbstractContinuousCallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.VectorContinuousCallback",
+    "page": "Callbacks",
+    "title": "DiffEqBase.VectorContinuousCallback",
+    "category": "type",
+    "text": "struct VectorContinuousCallback{F1, F2, F3, F4, T, T2, I} <: DiffEqBase.AbstractContinuousCallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.CallbackSet",
+    "page": "Callbacks",
+    "title": "DiffEqBase.CallbackSet",
+    "category": "type",
+    "text": "struct CallbackSet{T1<:Tuple, T2<:Tuple} <: DiffEqBase.DECallback\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#DiffEqBase.CallbackCache",
+    "page": "Callbacks",
+    "title": "DiffEqBase.CallbackCache",
+    "category": "type",
+    "text": "mutable struct CallbackCache{conditionType, signType}\n\n\n\n\n\n"
 },
 
 {
@@ -5993,6 +6929,38 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.AbstractDiffEqInterpolation",
+    "page": "Interpolation",
+    "title": "DiffEqBase.AbstractDiffEqInterpolation",
+    "category": "type",
+    "text": "abstract type AbstractDiffEqInterpolation <: Function\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.ConstantInterpolation",
+    "page": "Interpolation",
+    "title": "DiffEqBase.ConstantInterpolation",
+    "category": "type",
+    "text": "struct ConstantInterpolation{T1, T2} <: DiffEqBase.AbstractDiffEqInterpolation\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.LinearInterpolation",
+    "page": "Interpolation",
+    "title": "DiffEqBase.LinearInterpolation",
+    "category": "type",
+    "text": "struct LinearInterpolation{T1, T2} <: DiffEqBase.AbstractDiffEqInterpolation\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.HermiteInterpolation",
+    "page": "Interpolation",
+    "title": "DiffEqBase.HermiteInterpolation",
+    "category": "type",
+    "text": "struct HermiteInterpolation{T1, T2, T3} <: DiffEqBase.AbstractDiffEqInterpolation\n\n\n\n\n\n"
+},
+
+{
     "location": "apis/diffeqbase/interpolation.html#Types-1",
     "page": "Interpolation",
     "title": "Types",
@@ -6005,7 +6973,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Interpolation",
     "title": "DiffEqBase.interpolation",
     "category": "function",
-    "text": "interpolation(tval::Number,t,u,ks)\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
+    "text": "interpolation(tval, id, idxs, deriv, p)\ninterpolation(tval, id, idxs, deriv, p, continuity)\n\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
 },
 
 {
@@ -6013,7 +6981,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Interpolation",
     "title": "DiffEqBase.interpolation!",
     "category": "function",
-    "text": "interpolation(tvals,t,u,ks)\n\nGet the value at tvals where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\ninterpolation!(out,tval::Number,t,u,ks)\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
+    "text": "interpolation!(vals, tvals, id, idxs, deriv, p)\ninterpolation!(vals, tvals, id, idxs, deriv, p, continuity)\n\n\nGet the value at tvals where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\ninterpolation!(out, tval, id, idxs, deriv, p)\ninterpolation!(out, tval, id, idxs, deriv, p, continuity)\n\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
 },
 
 {
@@ -6046,6 +7014,110 @@ var documenterSearchIndex = {"docs": [
     "title": "Ensembles",
     "category": "section",
     "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.AbstractEnsembleProblem",
+    "page": "Ensembles",
+    "title": "DiffEqBase.AbstractEnsembleProblem",
+    "category": "type",
+    "text": "abstract type AbstractEnsembleProblem <: DiffEqBase.DEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleProblem",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleProblem",
+    "category": "type",
+    "text": "struct EnsembleProblem{T, T2, T3, T4, T5} <: DiffEqBase.AbstractEnsembleProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.AbstractEnsembleSolution",
+    "page": "Ensembles",
+    "title": "DiffEqBase.AbstractEnsembleSolution",
+    "category": "type",
+    "text": "abstract type AbstractEnsembleSolution <: RecursiveArrayTools.AbstractVectorOfArray{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleSolution",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleSolution",
+    "category": "type",
+    "text": "struct EnsembleSolution{T, N, S} <: DiffEqBase.AbstractEnsembleSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleTestSolution",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleTestSolution",
+    "category": "type",
+    "text": "struct EnsembleTestSolution{T, N, S} <: DiffEqBase.AbstractEnsembleSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleSummary",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleSummary",
+    "category": "type",
+    "text": "struct EnsembleSummary{T, N, Tt, S, S2, S3, S4} <: DiffEqBase.AbstractEnsembleSolution{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleAlgorithm",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleAlgorithm",
+    "category": "type",
+    "text": "abstract type EnsembleAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.BasicEnsembleAlgorithm",
+    "page": "Ensembles",
+    "title": "DiffEqBase.BasicEnsembleAlgorithm",
+    "category": "type",
+    "text": "abstract type BasicEnsembleAlgorithm <: DiffEqBase.EnsembleAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.AbstractEnsembleEstimator",
+    "page": "Ensembles",
+    "title": "DiffEqBase.AbstractEnsembleEstimator",
+    "category": "type",
+    "text": "abstract type AbstractEnsembleEstimator <: DiffEqBase.DEProblem\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleSerial",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleSerial",
+    "category": "type",
+    "text": "struct EnsembleSerial <: DiffEqBase.BasicEnsembleAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleDistributed",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleDistributed",
+    "category": "type",
+    "text": "struct EnsembleDistributed <: DiffEqBase.BasicEnsembleAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleThreads",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleThreads",
+    "category": "type",
+    "text": "struct EnsembleThreads <: DiffEqBase.BasicEnsembleAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#DiffEqBase.EnsembleSplitThreads",
+    "page": "Ensembles",
+    "title": "DiffEqBase.EnsembleSplitThreads",
+    "category": "type",
+    "text": "struct EnsembleSplitThreads <: DiffEqBase.BasicEnsembleAlgorithm\n\n\n\n\n\n"
 },
 
 {
@@ -6158,6 +7230,70 @@ var documenterSearchIndex = {"docs": [
     "title": "Utility",
     "category": "section",
     "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.num_types_in_tuple",
+    "page": "Utility",
+    "title": "DiffEqBase.num_types_in_tuple",
+    "category": "function",
+    "text": "num_types_in_tuple(sig)\n\n\nGet the number of parameters of a Tuple type, i.e. the number of fields.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.numargs",
+    "page": "Utility",
+    "title": "DiffEqBase.numargs",
+    "category": "function",
+    "text": "numargs(f)\n\n\nReturns the number of arguments of f for the method which has the most arguments.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.copy_fields",
+    "page": "Utility",
+    "title": "DiffEqBase.copy_fields",
+    "category": "function",
+    "text": "copy_fields(arr:AbstractArray, template::DEDataArray)\n\nCreate DEDataArray that wraps arr with all other fields set to a deep copy of the value in template.\n\ncopy_fields!(dest::T, src::T2) where {T<:DEDataArray,T2<:DEDataArray}\n\nReplace all fields of dest except of its wrapped array with a copy of the value in src. Arrays are recursively copied.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.undefined_exports",
+    "page": "Utility",
+    "title": "DiffEqBase.undefined_exports",
+    "category": "function",
+    "text": "undefined_exports(mod)\n\n\nList symbols export\'ed but not actually defined.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.warn_compat",
+    "page": "Utility",
+    "title": "DiffEqBase.warn_compat",
+    "category": "function",
+    "text": "warn_compat()\n\n\nEmit a warning with a link to the solver compatibility chart in the documenation.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.@def",
+    "page": "Utility",
+    "title": "DiffEqBase.@def",
+    "category": "macro",
+    "text": "@def name definition\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.@add_kwonly",
+    "page": "Utility",
+    "title": "DiffEqBase.@add_kwonly",
+    "category": "macro",
+    "text": "@add_kwonly function_definition\n\nDefine keyword-only version of the function_definition.\n\n@add_kwonly function f(x; y=1)\n    ...\nend\n\nexpands to:\n\nfunction f(x; y=1)\n    ...\nend\nfunction f(; x = error(\"No argument x\"), y=1)\n    ...\nend\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#DiffEqBase.@CSI_str",
+    "page": "Utility",
+    "title": "DiffEqBase.@CSI_str",
+    "category": "macro",
+    "text": "@CSI_str cmd\n\nCreate an ANSI escape sequence string for the CSI command cmd.\n\n\n\n\n\n"
 },
 
 {
