@@ -1,4 +1,47 @@
-# Problem interface
+# Problem Interface
+
+This page defines the common problem interface. There are certain rules that
+can be applied to any function definition, and this page defines those behaviors.
+
+## In-place vs Out-of-Place Function Definition Forms
+
+Every problem definition has an in-place and out-of-place form, commonly referred
+throughout DiffEq as IIP (`isinplace`) and OOP (out of place). The in-place form
+is a mutating form. For example, on ODEs, we have that `f!(du,u,p,t)` is the
+in-place form which, as its output, mutates `du`. Whatever is returned is simply
+ignored. Similarly, for OOP we have the form `du=f(u,p,t)` which uses the return.
+
+Each of the problem types have that the first argument is the option mutating
+argument. The DiffEqBase system will automatically determine the functional
+form and place a specifier `isinplace` on the function to carry as type information
+whether the function defined for this `DEProblem` is in-place. However, every
+constructor allows for manually specifying the in-placeness of the function.
+For example, this can be done at the problem level like:
+
+```julia
+ODEProblem{true}(f,u0,tspan,p)
+```
+
+which declares that `isinplace=true`. Similarly this can be done at the
+DEFunction level. For example:
+
+```julia
+ODEFunction{true}(f,jac=myjac)
+```
+
+## Type Specifications
+
+Throughout DifferentialEquations.jl, the types that are given in a problem are
+the types used for the solution. If an initial value `u0` is needed for a problem,
+then the state variable `u` will match the type of that `u0`. Similarly, if
+time exists in a problem the type for `t` will be derived from the types of the
+`tspan`. Parameters `p` can be any type and the type will be matching how it's
+defined in the problem.
+
+For internal matrices, such as Jacobians and Brownian caches, these also match
+the type specified by the user. `jac_prototype` and `rand_prototype` can thus
+be any Julia matrix type which is compatible with the operations that will be
+performed.
 
 ## Functional and Condensed Problem Inputs
 
