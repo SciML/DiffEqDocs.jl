@@ -1033,30 +1033,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "basics/integrator.html#DiffEqBase.step!",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.step!",
-    "category": "function",
-    "text": "step!(integ::DEIntegrator [, dt [, stop_at_tdt]])\n\nPerform one (successful) step on the integrator.\n\nAlternative, if a dt is given, then step! the integrator until there is a temporal difference ≥ dt in integ.t.  When true is passed to the optional third argument, the integrator advances exactly dt.\n\n\n\n\n\n"
-},
-
-{
-    "location": "basics/integrator.html#DiffEqBase.check_error",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.check_error",
-    "category": "function",
-    "text": "check_error(integrator)\n\nCheck state of integrator and return one of the Return Codes\n\n\n\n\n\n"
-},
-
-{
-    "location": "basics/integrator.html#DiffEqBase.check_error!",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.check_error!",
-    "category": "function",
-    "text": "check_error!(integrator)\n\nSame as check_error but also set solution\'s return code (integrator.sol.retcode) and run postamble!.\n\n\n\n\n\n"
-},
-
-{
     "location": "basics/integrator.html#Initialization-and-Stepping-1",
     "page": "Integrator Interface",
     "title": "Initialization and Stepping",
@@ -1069,31 +1045,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Integrator Interface",
     "title": "Handing Integrators",
     "category": "section",
-    "text": "The integrator<:DEIntegrator type holds all of the information for the intermediate solution of the differential equation. Useful fields are:t - time of the proposed step\nu - value at the proposed step\np - user-provided data\nopts - common solver options\nalg - the algorithm associated with the solution\nf - the function being solved\nsol - the current state of the solution\ntprev - the last timepoint\nuprev - the value at the last timepointThe p is the data which is provided by the user as a keyword arg in init. opts holds all of the common solver options, and can be mutated to change the solver characteristics. For example, to modify the absolute tolerance for the future timesteps, one can do:integrator.opts.abstol = 1e-9The sol field holds the current solution. This current solution includes the interpolation function if available, and thus integrator.sol(t) lets one interpolate efficiently over the whole current solution. Additionally, a a \"current interval interpolation function\" is provided on the integrator type via integrator(t). This uses only the solver information from the interval [tprev,t] to compute the interpolation, and is allowed to extrapolate beyond that interval."
-},
-
-{
-    "location": "basics/integrator.html#DiffEqBase.set_t!",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.set_t!",
-    "category": "function",
-    "text": "set_t!(integrator::DEIntegrator, t::Real)\n\nSet current time point of the integrator to t.\n\n\n\n\n\n"
-},
-
-{
-    "location": "basics/integrator.html#DiffEqBase.set_u!",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.set_u!",
-    "category": "function",
-    "text": "set_u!(integrator::DEIntegrator, u)\n\nSet current state of the integrator to u.\n\n\n\n\n\n"
-},
-
-{
-    "location": "basics/integrator.html#DiffEqBase.set_ut!",
-    "page": "Integrator Interface",
-    "title": "DiffEqBase.set_ut!",
-    "category": "function",
-    "text": "set_ut!(integrator::DEIntegrator, u, t)\n\nSet current state of the integrator to u and t\n\n\n\n\n\n"
+    "text": "The integrator<:DEIntegrator type holds all of the information for the intermediate solution of the differential equation. Useful fields are:t - time of the proposed step\nu - value at the proposed step\np - user-provided data\nopts - common solver options\nalg - the algorithm associated with the solution\nf - the function being solved\nsol - the current state of the solution\ntprev - the last timepoint\nuprev - the value at the last timepoint\ntdir - the sign for the direction of timeThe p is the data which is provided by the user as a keyword arg in init. opts holds all of the common solver options, and can be mutated to change the solver characteristics. For example, to modify the absolute tolerance for the future timesteps, one can do:integrator.opts.abstol = 1e-9The sol field holds the current solution. This current solution includes the interpolation function if available, and thus integrator.sol(t) lets one interpolate efficiently over the whole current solution. Additionally, a a \"current interval interpolation function\" is provided on the integrator type via integrator(t). This uses only the solver information from the interval [tprev,t] to compute the interpolation, and is allowed to extrapolate beyond that interval."
 },
 
 {
@@ -5326,6 +5278,846 @@ var documenterSearchIndex = {"docs": [
     "title": "QuantumOptics.jl",
     "category": "section",
     "text": "QunatumOptics.jl is a package for simulation of quantum systems."
+},
+
+{
+    "location": "apis/diffeqbase/overview.html#",
+    "page": "Overview",
+    "title": "Overview",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/overview.html#DiffEqBase-API-Overview-1",
+    "page": "Overview",
+    "title": "DiffEqBase API Overview",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/overview.html#DE-types-1",
+    "page": "Overview",
+    "title": "DE types",
+    "category": "section",
+    "text": "DiffEqBase.jl defines specialized types and functions for several categories of differential equation problems (ODEs, SDEs, etc.). Most categories have definitions for the following:Function types (<:AbstractDiffEqFunction), which wrap a Julia function along with additional data such as a mass matrix or additional functions for calculating Jacobians.\nProblem types (<:DEProblem), which represent a problem to be solved. They include a function of the corresponding type along with information such as initial conditions, parameter values, and the time span to solve.\nAlgorithm types (<:DEAlgorithm), which solve DEProblems.\nSolution types (<:DESolution), which are the result of an algorithm solving a DEProblem.See DE Types for documentation of specialized code for each problem type."
+},
+
+{
+    "location": "apis/diffeqbase/overview.html#Type-parameters-1",
+    "page": "Overview",
+    "title": "Type parameters",
+    "category": "section",
+    "text": "The following are common type parameters that appear throughout the package:uType - Element type of the state vector of a DE function or problem. Typically a subtype of Real.\ntType - Type of time variable used in a DE function or problem. Typically a subtype of Real.\nisinplace - Boolean value which indicates whether a DE function operates in-place (sets values of an array passed as its first argument rather than returning a new array). Also appears as iip.\nND"
+},
+
+{
+    "location": "apis/diffeqbase/overview.html#Index-1",
+    "page": "Overview",
+    "title": "Index",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/functions.html#",
+    "page": "DE functions",
+    "title": "DE functions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/functions.html#DE-functions-1",
+    "page": "DE functions",
+    "title": "DE functions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/functions.html#DiffEqBase.AbstractDiffEqFunction",
+    "page": "DE functions",
+    "title": "DiffEqBase.AbstractDiffEqFunction",
+    "category": "type",
+    "text": "abstract type AbstractDiffEqFunction <: Function\n\nBase for types defining differential equation functions.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/functions.html#Base-Types-1",
+    "page": "DE functions",
+    "title": "Base Types",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDiffEqFunction"
+},
+
+{
+    "location": "apis/diffeqbase/functions.html#Type-traits-1",
+    "page": "DE functions",
+    "title": "Type traits",
+    "category": "section",
+    "text": "isinplace\nDiffEqBase.is_diagonal_noise\nDiffEqBase.has_analytic\nDiffEqBase.has_jac\nDiffEqBase.has_tgrad\nDiffEqBase.has_Wfact\nDiffEqBase.has_Wfact_t\nDiffEqBase.has_paramjac\nDiffEqBase.has_syms"
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#",
+    "page": "Problems",
+    "title": "Problems",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#Problems-1",
+    "page": "Problems",
+    "title": "Problems",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#DiffEqBase.DEProblem",
+    "page": "Problems",
+    "title": "DiffEqBase.DEProblem",
+    "category": "type",
+    "text": "abstract type DEProblem\n\nBase type for all DifferentialEquations.jl problems. Concrete subtypes of DEProblem contain the necessary information to fully define a differential equation of the corresponding type.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#Base-types-1",
+    "page": "Problems",
+    "title": "Base types",
+    "category": "section",
+    "text": "DiffEqBase.DEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#DiffEqBase.remake",
+    "page": "Problems",
+    "title": "DiffEqBase.remake",
+    "category": "function",
+    "text": "remake(thing; <keyword arguments>)\n\nRe-construct thing with new field values specified by the keyword arguments.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#Interface-1",
+    "page": "Problems",
+    "title": "Interface",
+    "category": "section",
+    "text": "remake"
+},
+
+{
+    "location": "apis/diffeqbase/problems.html#Other-functions-1",
+    "page": "Problems",
+    "title": "Other functions",
+    "category": "section",
+    "text": "DiffEqBase.get_concrete_problem\nDiffEqBase.get_concrete_u0\nDiffEqBase.get_concrete_tspan\nDiffEqBase.promote_tspan\nDiffEqBase.eval_u0\nDiffEqBase.adaptive_warn\nDiffEqBase.adaptive_integer_warn"
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#",
+    "page": "Solutions",
+    "title": "Solutions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#Solutions-1",
+    "page": "Solutions",
+    "title": "Solutions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#Base-types-1",
+    "page": "Solutions",
+    "title": "Base types",
+    "category": "section",
+    "text": "The type alias DESolution is a union of the base problem types DiffEqBase.AbstractTimeseriesSolution, DiffEqBase.AbstractNoTimeSolution, DiffEqBase.AbstractEnsembleSolution, and DiffEqBase.AbstractNoiseProcess.DESolution\nDiffEqBase.AbstractNoTimeSolution\nDiffEqBase.AbstractTimeseriesSolution"
+},
+
+{
+    "location": "apis/diffeqbase/solutions.html#Interface-1",
+    "page": "Solutions",
+    "title": "Interface",
+    "category": "section",
+    "text": "TODO"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#",
+    "page": "Solvers",
+    "title": "Solvers",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#Solvers-1",
+    "page": "Solvers",
+    "title": "Solvers",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#DiffEqBase.DEAlgorithm",
+    "page": "Solvers",
+    "title": "DiffEqBase.DEAlgorithm",
+    "category": "type",
+    "text": "abstract type DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#Types-1",
+    "page": "Solvers",
+    "title": "Types",
+    "category": "section",
+    "text": "DiffEqBase.DEAlgorithm"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#Type-traits-1",
+    "page": "Solvers",
+    "title": "Type traits",
+    "category": "section",
+    "text": "DiffEqBase.isautodifferentiable\nDiffEqBase.isadaptive\nDiffEqBase.isdiscrete"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#Interface-1",
+    "page": "Solvers",
+    "title": "Interface",
+    "category": "section",
+    "text": "DiffEqBase.init_call\nDiffEqBase.init\nDiffEqBase.solve_call\nDiffEqBase.solve"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#DiffEqBase.Tableau",
+    "page": "Solvers",
+    "title": "DiffEqBase.Tableau",
+    "category": "type",
+    "text": "abstract type Tableau\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#DiffEqBase.ODERKTableau",
+    "page": "Solvers",
+    "title": "DiffEqBase.ODERKTableau",
+    "category": "type",
+    "text": "abstract type ODERKTableau <: DiffEqBase.Tableau\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#DiffEqBase.ImplicitRKTableau",
+    "page": "Solvers",
+    "title": "DiffEqBase.ImplicitRKTableau",
+    "category": "type",
+    "text": "ImplicitRKTableau\n\nHolds a tableau which defines an implicit Runge-Kutta method.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#DiffEqBase.ExplicitRKTableau",
+    "page": "Solvers",
+    "title": "DiffEqBase.ExplicitRKTableau",
+    "category": "type",
+    "text": "ExplicitRKTableau\n\nHolds a tableau which defines an explicit Runge-Kutta method.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/solvers.html#Tableaus-1",
+    "page": "Solvers",
+    "title": "Tableaus",
+    "category": "section",
+    "text": "DiffEqBase.Tableau\nDiffEqBase.ODERKTableau\nDiffEqBase.ImplicitRKTableau\nDiffEqBase.ExplicitRKTableau"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#",
+    "page": "DE types",
+    "title": "DE types",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#de_types-1",
+    "page": "DE types",
+    "title": "DE types",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDiscreteFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDiscreteFunction",
+    "category": "type",
+    "text": "abstract type AbstractDiscreteFunction <: DiffEqBase.AbstractDiffEqFunction{iip}\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DiscreteFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.DiscreteFunction",
+    "category": "type",
+    "text": "struct DiscreteFunction{iip, F, Ta, S} <: DiffEqBase.AbstractDiscreteFunction{iip}\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDiscreteProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDiscreteProblem",
+    "category": "type",
+    "text": "abstract type AbstractDiscreteProblem <: DiffEqBase.AbstractODEProblem{uType,tType,isinplace}\n\nBase for types which define discrete problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DiscreteProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.DiscreteProblem",
+    "category": "type",
+    "text": "struct DiscreteProblem{uType, tType, isinplace, P, F, K} <: DiffEqBase.AbstractDiscreteProblem{uType,tType,isinplace}\n\nDefines a discrete problem.\n\nFields\n\nf\nThe function in the map.\nu0\nThe initial condition.\ntspan\nThe timespan for the problem.\np\nThe parameter values of the function.\nkwargs\nA callback to be applied to every solver which uses the problem.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Discrete-1",
+    "page": "DE types",
+    "title": "Discrete",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDiscreteFunction\nDiscreteFunction\nDiffEqBase.AbstractDiscreteProblem\nDiscreteProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#ODE-1",
+    "page": "DE types",
+    "title": "ODE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractODEFunction\nODEFunction\nDiffEqBase.AbstractODEProblem\nODEProblem\nDiffEqBase.StandardODEProblem\nDiffEqBase.AbstractODESolution\nDiffEqBase.ODESolution\nDiffEqBase.AbstractODEAlgorithm\nDiffEqBase.AbstractODEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DynamicalODEFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.DynamicalODEFunction",
+    "category": "type",
+    "text": "struct DynamicalODEFunction{iip, F1, F2, TMM, Ta} <: DiffEqBase.AbstractODEFunction{iip}\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractDynamicalODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractDynamicalODEProblem",
+    "category": "type",
+    "text": "abstract type AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DynamicalODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.DynamicalODEProblem",
+    "category": "type",
+    "text": "struct DynamicalODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Dynamical-ODEs-1",
+    "page": "DE types",
+    "title": "Dynamical ODEs",
+    "category": "section",
+    "text": "DynamicalODEFunction\nDiffEqBase.AbstractDynamicalODEProblem\nDynamicalODEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSecondOrderODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSecondOrderODEProblem",
+    "category": "type",
+    "text": "abstract type AbstractSecondOrderODEProblem <: DiffEqBase.AbstractODEProblem{uType,tType,isinplace}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SecondOrderODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SecondOrderODEProblem",
+    "category": "type",
+    "text": "struct SecondOrderODEProblem{iip} <: DiffEqBase.AbstractDynamicalODEProblem\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSecondOrderODEAlgorithm",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSecondOrderODEAlgorithm",
+    "category": "type",
+    "text": "abstract type AbstractSecondOrderODEAlgorithm <: DiffEqBase.DEAlgorithm\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSecondOrderODEIntegrator",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSecondOrderODEIntegrator",
+    "category": "type",
+    "text": "abstract type AbstractSecondOrderODEIntegrator <: DiffEqBase.DEIntegrator{Alg,IIP,U,T}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Second-order-ODEs-1",
+    "page": "DE types",
+    "title": "Second-order ODEs",
+    "category": "section",
+    "text": "DiffEqBase.AbstractSecondOrderODEProblem\nSecondOrderODEProblem\nDiffEqBase.AbstractSecondOrderODEAlgorithm\nDiffEqBase.AbstractSecondOrderODEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SplitFunction",
+    "page": "DE types",
+    "title": "DiffEqBase.SplitFunction",
+    "category": "type",
+    "text": "struct SplitFunction{iip, F1, F2, TMM, C, Ta, Tt, TJ, JP, TW, TWt, TPJ, S, TCV} <: DiffEqBase.AbstractODEFunction{iip}\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSplitODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSplitODEProblem",
+    "category": "type",
+    "text": "abstract type AbstractSplitODEProblem\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.SplitODEProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.SplitODEProblem",
+    "category": "type",
+    "text": "struct SplitODEProblem{iip} <: DiffEqBase.AbstractSplitODEProblem\n\nTODO\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Split-ODEs-1",
+    "page": "DE types",
+    "title": "Split ODEs",
+    "category": "section",
+    "text": "SplitFunction\nDiffEqBase.AbstractSplitODEProblem\nSplitODEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Steady-state-problems-1",
+    "page": "DE types",
+    "title": "Steady state problems",
+    "category": "section",
+    "text": "DiffEqBase.AbstractSteadyStateProblem\nSteadyStateProblem\nDiffEqBase.AbstractSteadyStateSolution\nDiffEqBase.SteadyStateSolution\nDiffEqBase.AbstractSteadyStateAlgorithm\nDiffEqBase.AbstractSteadyStateIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Boundary-value-problems-1",
+    "page": "DE types",
+    "title": "Boundary value problems",
+    "category": "section",
+    "text": "DiffEqBase.TwoPointBVPFunction\nDiffEqBase.AbstractBVProblem\nDiffEqBase.StandardBVProblem\nBVProblem\nTwoPointBVProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Analytical-problems-1",
+    "page": "DE types",
+    "title": "Analytical problems",
+    "category": "section",
+    "text": "AbstractAnalyticalProblem\nAnalyticalProblem\nDiffEqBase.AbstractAnalyticalSolution"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#SDE-1",
+    "page": "DE types",
+    "title": "SDE",
+    "category": "section",
+    "text": "SDE problems are subtypes of RODE problems.DiffEqBase.AbstractSDEFunction\nSDEFunction\nDiffEqBase.AbstractSDEProblem\nDiffEqBase.StandardSDEProblem\nSDEProblem\nDiffEqBase.AbstractSDEAlgorithm\nDiffEqBase.AbstractSDEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Split-SDEs-1",
+    "page": "DE types",
+    "title": "Split SDEs",
+    "category": "section",
+    "text": "SplitSDEFunction\nDiffEqBase.AbstractSplitSDEProblem\nSplitSDEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#RODE-1",
+    "page": "DE types",
+    "title": "RODE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractRODEFunction\nRODEFunction\nDiffEqBase.AbstractRODEProblem\nRODEProblem\nDiffEqBase.AbstractRODESolution\nDiffEqBase.RODESolution\nDiffEqBase.AbstractRODEAlgorithm\nDiffEqBase.AbstractRODEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DDE-1",
+    "page": "DE types",
+    "title": "DDE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDDEFunction\nDDEFunction\nDiffEqBase.AbstractDDEProblem\nDDEProblem\nDiffEqBase.AbstractConstantLagDDEProblem\nDiffEqBase.AbstractDDESolution\nDiffEqBase.AbstractDDEAlgorithm\nDiffEqBase.AbstractDDEIntegrator\nDiffEqBase.AbstractHistoryFunction"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#SDDE-1",
+    "page": "DE types",
+    "title": "SDDE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractSDDEFunction\nSDDEFunction\nDiffEqBase.AbstractSDDEProblem\nSDDEProblem\nDiffEqBase.AbstractConstantLagSDDEProblem\nDiffEqBase.AbstractSDDEAlgorithm\nDiffEqBase.AbstractSDDEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DAE-1",
+    "page": "DE types",
+    "title": "DAE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDAEFunction\nDAEFunction\nDiffEqBase.AbstractDAEProblem\nDAEProblem\nDiffEqBase.AbstractDAESolution\nDiffEqBase.DAESolution\nDiffEqBase.AbstractDAEAlgorithm\nDiffEqBase.AbstractDAEIntegrator"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#PDE-1",
+    "page": "DE types",
+    "title": "PDE",
+    "category": "section",
+    "text": "DiffEqBase.AbstractPDEProblem\nPDEProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractJumpProblem",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractJumpProblem",
+    "category": "type",
+    "text": "abstract type AbstractJumpProblem <: DiffEqBase.DEProblem\n\nBase for types which define jump problems.\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Jump-problems-1",
+    "page": "DE types",
+    "title": "Jump problems",
+    "category": "section",
+    "text": "DiffEqBase.AbstractJumpProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Noise-problems-1",
+    "page": "DE types",
+    "title": "Noise problems",
+    "category": "section",
+    "text": "DiffEqBase.AbstractNoiseProblem\nNoiseProblem"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Basic-problems-(for-testing?)-1",
+    "page": "DE types",
+    "title": "Basic problems (for testing?)",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Linear-1",
+    "page": "DE types",
+    "title": "Linear",
+    "category": "section",
+    "text": "DiffEqBase.AbstractLinearProblem\nDiffEqBase.LinearProblem\nDiffEqBase.AbstractLinearSolution\nDiffEqBase.LinearSolution\nDiffEqBase.AbstractLinearAlgorithm"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Nonlinear-1",
+    "page": "DE types",
+    "title": "Nonlinear",
+    "category": "section",
+    "text": "DiffEqBase.AbstractNonlinearProblem\nDiffEqBase.NonlinearProblem\nDiffEqBase.AbstractNonlinearSolution\nDiffEqBase.AbstractNonlinearAlgorithm"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Quadrature-1",
+    "page": "DE types",
+    "title": "Quadrature",
+    "category": "section",
+    "text": "DiffEqBase.AbstractQuadratureProblem\nDiffEqBase.QuadratureProblem\nDiffEqBase.AbstractQuadratureSolution\nDiffEqBase.AbstractQuadratureAlgorithm"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.DESensitivity",
+    "page": "DE types",
+    "title": "DiffEqBase.DESensitivity",
+    "category": "type",
+    "text": "abstract type DESensitivity\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#DiffEqBase.AbstractSensitivitySolution",
+    "page": "DE types",
+    "title": "DiffEqBase.AbstractSensitivitySolution",
+    "category": "type",
+    "text": "abstract type AbstractSensitivitySolution\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/de_types.html#Sensitivity-problems-1",
+    "page": "DE types",
+    "title": "Sensitivity problems",
+    "category": "section",
+    "text": "DiffEqBase.DESensitivity\nDiffEqBase.AbstractSensitivitySolution"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#",
+    "page": "Operators",
+    "title": "Operators",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#Operators-1",
+    "page": "Operators",
+    "title": "Operators",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#Types-1",
+    "page": "Operators",
+    "title": "Types",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDiffEqOperator\nDiffEqBase.AbstractDiffEqLinearOperator\nDiffEqBase.FactorizedDiffEqArrayOperator\nDiffEqArrayOperator\nDiffEqBase.AffineDiffEqOperator\nDiffEqScalar\nDiffEqIdentity"
+},
+
+{
+    "location": "apis/diffeqbase/operators.html#Functions-1",
+    "page": "Operators",
+    "title": "Functions",
+    "category": "section",
+    "text": "update_coefficients!\nDiffEqBase.setval!\nisconstant\nDiffEqBase.islinear\nDiffEqBase.has_expmv\nDiffEqBase.has_exp\nDiffEqBase.has_mul\nDiffEqBase.has_ldiv"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#",
+    "page": "Callbacks",
+    "title": "Callbacks",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#Callbacks-1",
+    "page": "Callbacks",
+    "title": "Callbacks",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#Types-1",
+    "page": "Callbacks",
+    "title": "Types",
+    "category": "section",
+    "text": "DiffEqBase.DECallback\nDiffEqBase.AbstractDiscreteCallback\nDiscreteCallback\nDiffEqBase.AbstractContinuousCallback\nContinuousCallback\nVectorContinuousCallback\nCallbackSet\nDiffEqBase.CallbackCache"
+},
+
+{
+    "location": "apis/diffeqbase/callbacks.html#Functions-1",
+    "page": "Callbacks",
+    "title": "Functions",
+    "category": "section",
+    "text": "DiffEqBase.split_callbacks\nDiffEqBase.initialize!(cb::CallbackSet, u, t, integrator)"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#",
+    "page": "Interpolation",
+    "title": "Interpolation",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#Interpolation-1",
+    "page": "Interpolation",
+    "title": "Interpolation",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#Types-1",
+    "page": "Interpolation",
+    "title": "Types",
+    "category": "section",
+    "text": "DiffEqBase.AbstractDiffEqInterpolation\nDiffEqBase.ConstantInterpolation\nDiffEqBase.LinearInterpolation\nDiffEqBase.HermiteInterpolation"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.interpolation",
+    "page": "Interpolation",
+    "title": "DiffEqBase.interpolation",
+    "category": "function",
+    "text": "interpolation(tval::Number,t,u,ks)\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.interpolation!",
+    "page": "Interpolation",
+    "title": "DiffEqBase.interpolation!",
+    "category": "function",
+    "text": "interpolation(tvals,t,u,ks)\n\nGet the value at tvals where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\ninterpolation!(out,tval::Number,t,u,ks)\n\nGet the value at tval where the solution is known at the times t (sorted), with values u and derivatives ks\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#DiffEqBase.interpolant",
+    "page": "Interpolation",
+    "title": "DiffEqBase.interpolant",
+    "category": "function",
+    "text": "Hairer Norsett Wanner Solving Ordinary Differential Equations I - Nonstiff Problems Page 190\n\nHermite Interpolation\n\n\n\n\n\nHermite Interpolation\n\n\n\n\n\nHermite Interpolation\n\n\n\n\n\nHermite Interpolation\n\n\n\n\n\nLinear Interpolation\n\n\n\n\n\nConstant Interpolation\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/interpolation.html#Functions-1",
+    "page": "Interpolation",
+    "title": "Functions",
+    "category": "section",
+    "text": "DiffEqBase.interpolation\nDiffEqBase.interpolation!\nDiffEqBase.interpolant"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#",
+    "page": "Ensembles",
+    "title": "Ensembles",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#Ensembles-1",
+    "page": "Ensembles",
+    "title": "Ensembles",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#Types-1",
+    "page": "Ensembles",
+    "title": "Types",
+    "category": "section",
+    "text": "DiffEqBase.AbstractEnsembleProblem\nEnsembleProblem\nDiffEqBase.AbstractEnsembleSolution\nEnsembleSolution\nEnsembleTestSolution\nEnsembleSummary\nDiffEqBase.EnsembleAlgorithm\nDiffEqBase.BasicEnsembleAlgorithm\nDiffEqBase.AbstractEnsembleEstimator\nEnsembleSerial\nEnsembleDistributed\nEnsembleThreads\nEnsembleSplitThreads"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#Functions-1",
+    "page": "Ensembles",
+    "title": "Functions",
+    "category": "section",
+    "text": "DiffEqBase.calculate_ensemble_errors\nDiffEqBase.batch_func\nDiffEqBase.solve_batch\nDiffEqBase.thread_monte\nDiffEqBase.vector_batch_data_to_arr"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#Analysis-1",
+    "page": "Ensembles",
+    "title": "Analysis",
+    "category": "section",
+    "text": "EnsembleAnalysis.get_timestep\nEnsembleAnalysis.get_timepoint\nEnsembleAnalysis.timestep_mean\nEnsembleAnalysis.timestep_median\nEnsembleAnalysis.timestep_meancor\nEnsembleAnalysis.timestep_meancov\nEnsembleAnalysis.timestep_meanvar\nEnsembleAnalysis.timestep_quantile\nEnsembleAnalysis.timestep_weighted_meancov\nEnsembleAnalysis.timepoint_mean\nEnsembleAnalysis.timepoint_median\nEnsembleAnalysis.timepoint_meancor\nEnsembleAnalysis.timepoint_meancov\nEnsembleAnalysis.timepoint_meanvar\nEnsembleAnalysis.timepoint_quantile\nEnsembleAnalysis.timepoint_weighted_meancov\nEnsembleAnalysis.timeseries_steps_mean\nEnsembleAnalysis.timeseries_steps_median\nEnsembleAnalysis.timeseries_steps_meancor\nEnsembleAnalysis.timeseries_steps_meancov\nEnsembleAnalysis.timeseries_steps_meanvar\nEnsembleAnalysis.timeseries_steps_quantile\nEnsembleAnalysis.timeseries_steps_weighted_meancov\nEnsembleAnalysis.timeseries_point_mean\nEnsembleAnalysis.timeseries_point_median\nEnsembleAnalysis.timeseries_point_meancor\nEnsembleAnalysis.timeseries_point_meancov\nEnsembleAnalysis.timeseries_point_meanvar\nEnsembleAnalysis.timeseries_point_quantile\nEnsembleAnalysis.timeseries_point_weighted_meancov\nEnsembleAnalysis.componentwise_mean\nEnsembleAnalysis.componentwise_meancor\nEnsembleAnalysis.componentwise_meancov\nEnsembleAnalysis.componentwise_meanvar\nEnsembleAnalysis.componentwise_vectors_timestep\nEnsembleAnalysis.componentwise_weighted_meancov\nEnsembleAnalysis.componentwise_vectors_timepoint"
+},
+
+{
+    "location": "apis/diffeqbase/ensembles.html#Deprecated-\"Monte-Carlo\"-aliases-1",
+    "page": "Ensembles",
+    "title": "Deprecated \"Monte Carlo\" aliases",
+    "category": "section",
+    "text": "The following are deprecated and are just aliases to the Ensemble equivalents:AbstractMonteCarloProblem: AbstractEnsembleProblem\nMonteCarloProblem: EnsembleProblem\nMonteCarloAlgorithm: EnsembleAlgorithm\nAbstractMonteCarloSolution: AbstractEnsembleSolution\nMonteCarloSolution: EnsembleSolution\nMonteCarloSummary: EnsembleSummary\ncalculate_monte_errors: calculate_ensemble_errors"
+},
+
+{
+    "location": "apis/diffeqbase/data_arrays.html#",
+    "page": "Data arrays",
+    "title": "Data arrays",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/data_arrays.html#Data-arrays-1",
+    "page": "Data arrays",
+    "title": "Data arrays",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/data_arrays.html#DiffEqBase.DEDataArray",
+    "page": "Data arrays",
+    "title": "DiffEqBase.DEDataArray",
+    "category": "type",
+    "text": "abstract type DEDataArray <: AbstractArray{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/data_arrays.html#Types-1",
+    "page": "Data arrays",
+    "title": "Types",
+    "category": "section",
+    "text": "DEDataArray"
+},
+
+{
+    "location": "apis/diffeqbase/data_arrays.html#Aliases-1",
+    "page": "Data arrays",
+    "title": "Aliases",
+    "category": "section",
+    "text": "DEDataVector{T}: DEDataArray{T, 1}\nDEDataMatrix{T}: DEDataArray{T, 2}"
+},
+
+{
+    "location": "apis/diffeqbase/noise.html#",
+    "page": "Noise processes",
+    "title": "Noise processes",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/noise.html#DiffEqBase.AbstractNoiseProcess",
+    "page": "Noise processes",
+    "title": "DiffEqBase.AbstractNoiseProcess",
+    "category": "type",
+    "text": "abstract type AbstractNoiseProcess <: RecursiveArrayTools.AbstractDiffEqArray{T,N}\n\n\n\n\n\n"
+},
+
+{
+    "location": "apis/diffeqbase/noise.html#Noise-processes-1",
+    "page": "Noise processes",
+    "title": "Noise processes",
+    "category": "section",
+    "text": "DiffEqBase.AbstractNoiseProcess"
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#",
+    "page": "Utility",
+    "title": "Utility",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#Utility-1",
+    "page": "Utility",
+    "title": "Utility",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "apis/diffeqbase/utility.html#Functions-1",
+    "page": "Utility",
+    "title": "Functions",
+    "category": "section",
+    "text": "DiffEqBase.num_types_in_tuple\nDiffEqBase.numargs\nDiffEqBase.copy_fields\nDiffEqBase.undefined_exports\nDiffEqBase.warn_compat\nDiffEqBase.@def\nDiffEqBase.@add_kwonly\nDiffEqBase.@CSI_str"
 },
 
 {
