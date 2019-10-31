@@ -7,7 +7,7 @@ In this example we will solve the ODE that satisfies the boundary condition in t
 
 ```math
 \begin{align}
-\frac{d}{dt} &= f(t, u) \\
+\frac{du}{dt} &= f(t, u) \\
 g(u) &= \vec{0}
 \end{align}
 ```
