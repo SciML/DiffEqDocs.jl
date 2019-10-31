@@ -103,6 +103,7 @@ of the differential equation. Useful fields are:
 * `sol` - the current state of the solution
 * `tprev` - the last timepoint
 * `uprev` - the value at the last timepoint
+* `tdir` - the sign for the direction of time
 
 The `p` is the data which is provided by the user as a keyword arg in
 `init`. `opts` holds all of the common solver options, and can be mutated to
