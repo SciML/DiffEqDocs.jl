@@ -637,7 +637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Boundary Value Problems",
     "title": "Boundary Value Problems",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving BVPs. Other introductions can be found by checking out DiffEqTutorials.jl. This tutorial assumes you have read the Ordinary Differential Equations tutorial.In this example we will solve the ODE that satisfies the boundary condition in the form ofbeginalign\nfracddt = f(t u) \ng(u) = vec0\nendalign"
+    "text": "This tutorial will introduce you to the functionality for solving BVPs. Other introductions can be found by checking out DiffEqTutorials.jl. This tutorial assumes you have read the Ordinary Differential Equations tutorial.In this example we will solve the ODE that satisfies the boundary condition in the form ofbeginalign\nfracdudt = f(t u) \ng(u) = vec0\nendalign"
 },
 
 {
