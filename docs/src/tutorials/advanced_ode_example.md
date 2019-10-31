@@ -7,13 +7,38 @@ the Jacobian in order to cut down on the O(n^3) linear solve and the O(n^2)
 back-solves. Note that these same functions and controls also extend to stiff
 SDEs, DDEs, DAEs, etc.
 
+#### This tutorial is for advanced users to dive into advanced features!
+
 ## Code Optimization for Differential Equations
+
+Solving stiff differential equations requires speed. Here's a few things to
+keep in mind.
 
 ### Writing Efficient Code
 
 For a detailed tutorial on how to optimize one's DifferentialEquations.jl code,
 please see the
 [Optimizing DiffEq Code tutorial](http://tutorials.juliadiffeq.org/html/introduction/03-optimizing_diffeq_code.html).
+
+### Choosing a Good Solver
+
+Choosing a good solver is required for getting top notch speed. General
+recommendations can be found on the solver page (for example, the
+[ODE Solver Recommendations](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html)).
+The current recommendations can be simplified to a Rosenbrock method
+(`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
+for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and Sundials
+`CVODE_BDF` for even larger problems. `lsoda` from
+[LSODA.jl](https://github.com/rveltz/LSODA.jl) is generally worth a try.
+
+More details on the solver to choose can be found by benchmarking. See the
+[DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) to
+compare many solvers on many problems.
+
+### Check Out the Speed FAQ
+
+See [this FAQ](http://docs.juliadiffeq.org/latest/basics/faq.html#Performance-1)
+for information on common pitfalls and how to improve performance.
 
 ### Setting Up Your Julia Installation for Speed
 
@@ -41,6 +66,15 @@ Additionally, in some cases Intel's MKL might be a faster BLAS than the standard
 BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
 can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl) which will accelerate
 the linear algebra routines. Please see the package for the limitations.
+
+### Use Accelerator Hardware
+
+When possible, use GPUs. If your ODE system is small and you need to solve it
+with very many different parameters, see the
+[ensembles interface](http://docs.juliadiffeq.org/latest/features/ensemble.html)
+and [DiffEqGPU.jl](https://github.com/JuliaDiffEq/DiffEqGPU.jl). If your problem
+is large, consider using a [CuArray](https://github.com/JuliaGPU/CuArrays.jl)
+for the state to allow for GPU-parallelism of the internal linear algebra.
 
 ## Speeding Up Jacobian Calculations
 
