@@ -469,7 +469,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Differential Algebraic Equations",
     "title": "Differential Algebraic Equations",
     "category": "section",
-    "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out DiffEqTutorials.jl. This tutorial assumes you have read the Ordinary Differential Equations tutorial.In this example we will solve the implicit ODE equationf(duupt) = 0where f is the a variant of the Roberts equation. This equation is of the formbeginalign\ndu = f(upt) \n 0 = g(upt) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Roberts model can be written in the form:beginalign\ndy_1 = -004y₁ + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1 + y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(out,du,u,p,t) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:function f(out,du,u,p,t)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditionsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]\ntspan = (0.0,100000.0)and make the DAEProblem:using DifferentialEquations\ndifferential_vars = [true,true,false]\nprob = DAEProblem(f,du₀,u₀,tspan,differential_vars=differential_vars)differential_vars is an option which states which of the variables are differential, i.e. not purely algebraic (which means that their derivative shows up in the residual equations). This is required for the algorithm to be able to find consistant initial conditions. Notice that the first two variables are determined by their changes, but the last is simply determined by the conservation equation. Thus we use differential_vars = [true,true,false].As with the other DifferentialEquations problems, the commands are then to solve and plot. Here we will use the IDA solver from Sundials:using Sundials\nsol = solve(prob,IDA())In order to clearly see all the features of this solution, it should be plotted on a logarithmic scale. We\'ll also plot each on a different subplot to allow scaling the y-axis appropriately.using Plots; plotly() # Using the Plotly backend\nplot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))This gives the following plot:(Image: IntroDAEPlot)"
+    "text": "This tutorial will introduce you to the functionality for solving DAEs. Other introductions can be found by checking out DiffEqTutorials.jl. This tutorial assumes you have read the Ordinary Differential Equations tutorial.In this example we will solve the implicit ODE equationf(duupt) = 0where f is the a variant of the Roberts equation. This equation is of the formbeginalign\ndu = f(upt) \n 0 = g(upt) \n endalignor is also known as a constrained differential equation where g is the constraint equation. The Robertson model can be written in the form:beginalign\ndy_1 = -004y₁ + 10^4 y_2 y_3 \ndy_2 = 004 y_1 - 10^4 y_2 y_3 - 3*10^7 y_2^2 \n1 =  y_1 + y_2 + y_3 \nendalignwith initial conditions y_1(0) = 1, y_2(0) = 0, y_3(0) = 0, dy_1 = - 004, dy_2 = 004, and dy_3 = 00.The workflow for DAEs is the same as for the other types of equations, where all you need to know is how to define the problem. A DAEProblem is specified by defining an in-place update f(out,du,u,p,t) which uses the values to mutate out as the output. To makes this into a DAE, we move all of the variables to one side. Thus we can define the function:function f(out,du,u,p,t)\n  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]\n  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]\n  out[3] = u[1] + u[2] + u[3] - 1.0\nendwith initial conditionsu₀ = [1.0, 0, 0]\ndu₀ = [-0.04, 0.04, 0.0]\ntspan = (0.0,100000.0)and make the DAEProblem:using DifferentialEquations\ndifferential_vars = [true,true,false]\nprob = DAEProblem(f,du₀,u₀,tspan,differential_vars=differential_vars)differential_vars is an option which states which of the variables are differential, i.e. not purely algebraic (which means that their derivative shows up in the residual equations). This is required for the algorithm to be able to find consistant initial conditions. Notice that the first two variables are determined by their changes, but the last is simply determined by the conservation equation. Thus we use differential_vars = [true,true,false].As with the other DifferentialEquations problems, the commands are then to solve and plot. Here we will use the IDA solver from Sundials:using Sundials\nsol = solve(prob,IDA())In order to clearly see all the features of this solution, it should be plotted on a logarithmic scale. We\'ll also plot each on a different subplot to allow scaling the y-axis appropriately.using Plots; plotly() # Using the Plotly backend\nplot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))This gives the following plot:(Image: IntroDAEPlot)"
 },
 
 {
@@ -1194,23 +1194,39 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/problem.html#",
-    "page": "Problem interface",
-    "title": "Problem interface",
+    "page": "Problem Interface",
+    "title": "Problem Interface",
     "category": "page",
     "text": ""
 },
 
 {
-    "location": "basics/problem.html#Problem-interface-1",
-    "page": "Problem interface",
-    "title": "Problem interface",
+    "location": "basics/problem.html#Problem-Interface-1",
+    "page": "Problem Interface",
+    "title": "Problem Interface",
     "category": "section",
-    "text": ""
+    "text": "This page defines the common problem interface. There are certain rules that can be applied to any function definition, and this page defines those behaviors."
+},
+
+{
+    "location": "basics/problem.html#In-place-vs-Out-of-Place-Function-Definition-Forms-1",
+    "page": "Problem Interface",
+    "title": "In-place vs Out-of-Place Function Definition Forms",
+    "category": "section",
+    "text": "Every problem definition has an in-place and out-of-place form, commonly referred throughout DiffEq as IIP (isinplace) and OOP (out of place). The in-place form is a mutating form. For example, on ODEs, we have that f!(du,u,p,t) is the in-place form which, as its output, mutates du. Whatever is returned is simply ignored. Similarly, for OOP we have the form du=f(u,p,t) which uses the return.Each of the problem types have that the first argument is the option mutating argument. The DiffEqBase system will automatically determine the functional form and place a specifier isinplace on the function to carry as type information whether the function defined for this DEProblem is in-place. However, every constructor allows for manually specifying the in-placeness of the function. For example, this can be done at the problem level like:ODEProblem{true}(f,u0,tspan,p)which declares that isinplace=true. Similarly this can be done at the DEFunction level. For example:ODEFunction{true}(f,jac=myjac)"
+},
+
+{
+    "location": "basics/problem.html#Type-Specifications-1",
+    "page": "Problem Interface",
+    "title": "Type Specifications",
+    "category": "section",
+    "text": "Throughout DifferentialEquations.jl, the types that are given in a problem are the types used for the solution. If an initial value u0 is needed for a problem, then the state variable u will match the type of that u0. Similarly, if time exists in a problem the type for t will be derived from the types of the tspan. Parameters p can be any type and the type will be matching how it\'s defined in the problem.For internal matrices, such as Jacobians and Brownian caches, these also match the type specified by the user. jac_prototype and rand_prototype can thus be any Julia matrix type which is compatible with the operations that will be performed."
 },
 
 {
     "location": "basics/problem.html#Functional-and-Condensed-Problem-Inputs-1",
-    "page": "Problem interface",
+    "page": "Problem Interface",
     "title": "Functional and Condensed Problem Inputs",
     "category": "section",
     "text": "Note that the initial condition can be written as a function of parameters and initial time:u0(p,t0)and be resolved before going to the solver. Additionally, the initial condition can be a distribution from Distributions.jl, in which case a sample initial condition will be taken each time init or solve is called.In addition, tspan supports the following forms. The single value form t is equivalent to (zero(t),t). The functional form is allowed:tspan(p)which outputs a tuple."
@@ -1218,7 +1234,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/problem.html#Examples-1",
-    "page": "Problem interface",
+    "page": "Problem Interface",
     "title": "Examples",
     "category": "section",
     "text": "prob = ODEProblem((u,p,t)->u,(p,t0)->p[1],(p)->(0.0,p[2]),(2.0,1.0))\nusing Distributions\nprob = ODEProblem((u,p,t)->u,(p,t)->Normal(p,1),(0.0,1.0),1.0)"
@@ -1226,7 +1242,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/problem.html#Lower-Level-__init-and-__solve-1",
-    "page": "Problem interface",
+    "page": "Problem Interface",
     "title": "Lower Level __init and __solve",
     "category": "section",
     "text": "At the high level, known problematic problems will emit warnings before entering the solver to better clarify the error to the user. The following cases are checked if the solver is adaptive:Integer times warn\nDual numbers must be in the initial conditions and timespans\nMeasurements.jl values must be in the initial conditions and timespansIf there is an exception to these rules, please file an issue. If one wants to go around the high level solve interface and its warnings, one can call __init or __solve instead."
@@ -1234,7 +1250,7 @@ var documenterSearchIndex = {"docs": [
 
 {
     "location": "basics/problem.html#Modification-of-problem-types-1",
-    "page": "Problem interface",
+    "page": "Problem Interface",
     "title": "Modification of problem types",
     "category": "section",
     "text": "Problem-related types in DifferentialEquations.jl are immutable.  This helps, e.g., parallel solvers to efficiently handle problem types.However, you may want to modify the problem after it is created.  For example, to simulate it for longer timespan.  It can be done by the remake function:prob1 = ODEProblem((u,p,t) -> u/2, 1.0, (0.0,1.0))\nprob2 = remake(prob1; tspan=(0.0,2.0))A general syntax of remake ismodified_problem = remake(original_problem;\n  field_1 = value_1,\n  field_2 = value_2,\n  ...\n)where field_N and value_N are renamed to appropriate field names and new desired values."
@@ -1286,6 +1302,14 @@ var documenterSearchIndex = {"docs": [
     "title": "The stiff solver takes forever to take steps for my PDE discretization! Why?",
     "category": "section",
     "text": "The solvers for stiff solvers require solving a nonlinear equation each step. In order to do so, they have to do a few Newton steps. By default, these methods assume that the Jacobian is dense, automatically calculate the Jacobian for you, and do a dense factorization. However, in many cases you may want to use alternatives that are more tuned for your problem.First of all, when available, it\'s recommended that you pass a function for computing your Jacobian. This is discussed in the performance overloads section. Jacobians are especially helpful for Rosenbrock methods.Secondly, if your Jacobian isn\'t dense, you shouldn\'t use a dense Jacobian! In the Sundials algorithm you can set linear_solver=:Band for banded Jacobians for example. More support is coming for this soon.But lastly, you shouldn\'t use a dense factorization for large sparse matrices. Instead, if you\'re using  a *DiffEq library you should specify a linear solver. For Sundials.jl, you should change the linear_solver option. See the ODE solve Sundials portion for details on that. Right now, Sundials.jl is the recommended method for stiff problems with large sparse Jacobians. linear_solver=:Band should be used if your Jacobian is banded and you can specify the band sizes. If you only know the Jacobian is sparse, linear_solver=:GMRES is a good option. Once again, a good reference for how to handle PDE discretizations can be found at this blog post."
+},
+
+{
+    "location": "basics/faq.html#My-Problem-Has-Discontinuities-and-is-Unstable-/-Slow,-What-Do-I-Do?-1",
+    "page": "Frequently Asked Questions",
+    "title": "My Problem Has Discontinuities and is Unstable / Slow, What Do I Do?",
+    "category": "section",
+    "text": "This Discourse post goes into detail for how to handle discontinuities in your ODE function and how to use that extra information to speed up the solver."
 },
 
 {
@@ -1349,7 +1373,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Frequently Asked Questions",
     "title": "Are the native Julia solvers compatible with autodifferentiation?",
     "category": "section",
-    "text": "Yes! Take a look at the sensitivity analysis page for more details.If the algorithm does not have differentiation of parameter-depedendent events,  then you simply need to make the initial condition have elements of Dual numbers.  If the algorithm uses Dual numbers, you need to make sure that time is also given by Dual numbers. To show this in action, let\'s say we want to find the Jacobian of solution of the Lotka-Volterra equation at t=10 with respect to the parameters.function func(du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\nfunction f(p)\n  prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)\n  # Lower tolerances to show the methods converge to the same value\n  solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]\nendThis function takes in new parameters and spits out the solution at the end. We make the inital condition eltype(p).([1.0,1.0]) so that way it\'s typed to be Dual numbers whenever p is an array of Dual numbers, and we do the same for the timespan just to show what you\'d do if there was parameters-dependent events.  Then we can take the Jacobian via ForwardDiff.jl:using ForwardDiff\nForwardDiff.jacobian(f,[1.5,1.0])\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188and compare it to Calculus.jl:Calculus.jacobian(f,[1.5,1.0],:central)\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188"
+    "text": "Yes! Take a look at the sensitivity analysis page for more details.If the algorithm does not have differentiation of parameter-depedendent events, then you simply need to make the initial condition have elements of Dual numbers. If the algorithm uses Dual numbers, you need to make sure that time is also given by Dual numbers.To show this in action, let\'s say we want to find the Jacobian of solution of the Lotka-Volterra equation at t=10 with respect to the parameters.function func(du,u,p,t)\n  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]\n  du[2] = -3 * u[2] + u[1]*u[2]\nend\nfunction f(p)\n  prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)\n  # Lower tolerances to show the methods converge to the same value\n  solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]\nendThis function takes in new parameters and spits out the solution at the end. We make the inital condition eltype(p).([1.0,1.0]) so that way it\'s typed to be Dual numbers whenever p is an array of Dual numbers, and we do the same for the timespan just to show what you\'d do if there was parameters-dependent events. Then we can take the Jacobian via ForwardDiff.jl:using ForwardDiff\nForwardDiff.jacobian(f,[1.5,1.0])\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188and compare it to Calculus.jl:Calculus.jacobian(f,[1.5,1.0],:central)\n\n2×2 Array{Float64,2}:\n  2.20214   0.189782\n -6.2273   -0.700188"
 },
 
 {
@@ -1413,7 +1437,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DiscreteProblem{isinplace}(f::ODEFunction,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(f,u0,tspan) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(u0,tspan) : Defines the discrete problem with the identity map.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "DiscreteProblem{isinplace}(f::ODEFunction,u0,tspan,p=NullParameters();kwargs...) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(f,u0,tspan,p=NullParameters();kwargs...) : Defines the discrete problem with the specified functions.\nDiscreteProblem{isinplace}(u0,tspan,p=NullParameters();kwargs...) : Defines the discrete problem with the identity map.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1421,7 +1445,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Discrete Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the map.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect."
+    "text": "f: The function in the map.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1469,7 +1493,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "ODEProblem(f::ODEFunction,u0,tspan,callback=CallbackSet())\nODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet()) : Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "ODEProblem(f::ODEFunction,u0,tspan,p=NullParameters();kwargs...)\nODEProblem{isinplace}(f,u0,tspan,p=NullParameters();kwargs...) : Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1477,7 +1501,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The function in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters.\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1517,7 +1541,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Constructor",
     "category": "section",
-    "text": "DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,callback=CallbackSet())\nDynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet())Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred."
+    "text": "DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,p=NullParameters();kwargs...)\nDynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,p=NullParameters();kwargs...)Defines the ODE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call."
 },
 
 {
@@ -1525,7 +1549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Dynamical, Hamiltonian and 2nd Order ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1 and f2: The functions in the ODE.\nv0 and u0: The initial conditions.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f1 and f2: The functions in the ODE.\nv0 and u0: The initial conditions.\ntspan: The timespan for the problem.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1605,7 +1629,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SplitODEProblem(f::SplitFunction,u0,tspan,p=nothing;kwargs...)\nSplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)The isinplace parameter can be omitted and will be determined using the signature of f2. Note that both f1 and f2 should support the in-place style if isinplace is true or they should both support the out-of-place style if isinplace is false. You cannot mix up the two styles.Under the hood, a SplitODEProblem is just a regular ODEProblem whose f is a SplitFunction. Therefore you can solve a SplitODEProblem using the same solvers for ODEProblem. For solvers dedicated to split problems, see Split ODE Solvers.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "SplitODEProblem(f::SplitFunction,u0,tspan,p=nothing;kwargs...)\nSplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)The isinplace parameter can be omitted and will be determined using the signature of f2. Note that both f1 and f2 should support the in-place style if isinplace is true or they should both support the out-of-place style if isinplace is false. You cannot mix up the two styles.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.Under the hood, a SplitODEProblem is just a regular ODEProblem whose f is a SplitFunction. Therefore you can solve a SplitODEProblem using the same solvers for ODEProblem. For solvers dedicated to split problems, see Split ODE Solvers.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1613,7 +1637,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Split ODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f1, f2: The functions in the ODE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1653,7 +1677,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SteadyStateProblem(f::ODEFunction,u0)\nSteadyStateProblem{isinplace}(f,u0)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from ODEProblems is provided:SteadyStateProblem(prob::ODEProblem)For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "SteadyStateProblem(f::ODEFunction,u0,p=NullParameters();kwargs...)\nSteadyStateProblem{isinplace}(f,u0,p=NullParameters();kwargs...)isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred. Additionally, the constructor from ODEProblems is provided:SteadyStateProblem(prob::ODEProblem)Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1661,7 +1685,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Steady State Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\nu0: The initial guess for the steady state."
+    "text": "f: The function in the ODE.\nu0: The initial guess for the steady state.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1709,7 +1733,7 @@ var documenterSearchIndex = {"docs": [
     "page": "BVP Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)\nBVProblem{isinplace}(f,bc!,u0,tspan)For any BVP problem type, bc! is the inplace function:bc!(residual, u, p, t)where residual computed from the current u. u is an array of solution values where u[i] is at time t[i], while p are the parameters. For a TwoPointBVProblem, t = tspan. For the more general BVProblem, u can be all of the internal time points, and for shooting type methods u=sol the ODE solution. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition."
+    "text": "TwoPointBVProblem{isinplace}(f,bc!,u0,tspan,p=NullParameters();kwargs...)\nBVProblem{isinplace}(f,bc!,u0,tspan,p=NullParameters();kwargs...)For any BVP problem type, bc! is the inplace function:bc!(residual, u, p, t)where residual computed from the current u. u is an array of solution values where u[i] is at time t[i], while p are the parameters. For a TwoPointBVProblem, t = tspan. For the more general BVProblem, u can be all of the internal time points, and for shooting type methods u=sol the ODE solution. Note that all features of the ODESolution are present in this form. In both cases, the size of the residual matches the size of the initial condition.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call."
 },
 
 {
@@ -1717,7 +1741,7 @@ var documenterSearchIndex = {"docs": [
     "page": "BVP Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function for the ODE.\nbc: The boundary condition function.\nu0: The initial condition. Either the initial condition for the ODE as an initial value problem, or a Vector of values for u(t_i) for collocation methods\ntspan: The timespan for the problem."
+    "text": "f: The function for the ODE.\nbc: The boundary condition function.\nu0: The initial condition. Either the initial condition for the ODE as an initial value problem, or a Vector of values for u(t_i) for collocation methods\ntspan: The timespan for the problem.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1757,7 +1781,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "SDEProblem(f::SDEFunction,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing)\nSDEProblem{isinplace}(f,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "SDEProblem(f::SDEFunction,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing)\nSDEProblem{isinplace}(f,g,u0,tspan,p=nothing;noise=WHITE_NOISE,noise_rate_prototype=nothing) : Defines the SDE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1765,7 +1789,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The optional parameters for the problem. Defaults to nothing.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The drift function in the SDE.\ng: The noise function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The optional parameters for the problem. Defaults to NullParameters.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nnoise_rate_prototype: A prototype type instance for the noise rates, that is the output g. It can be any type which overloads A_mul_B! with itself being the middle argument. Commonly, this is a matrix or sparse matrix. If this is not given, it defaults to nothing, which means the problem should be interpreted as having diagonal noise.  \nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1805,7 +1829,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "RODEProblem(f::RODEFunction,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)\nRODEProblem{isinplace}(f,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "RODEProblem(f::RODEFunction,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)\nRODEProblem{isinplace}(f,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I) : Defines the RODE with the specified functions. The default noise is WHITE_NOISE. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1813,7 +1837,7 @@ var documenterSearchIndex = {"docs": [
     "page": "RODE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The optional parameters for the problem. Defaults to nothing.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The drift function in the SDE.\nu0: The initial condition.\ntspan: The timespan for the problem.\np: The optional parameters for the problem. Defaults to NullParameters.\nnoise: The noise process applied to the noise upon generation. Defaults to Gaussian white noise. For information on defining different noise processes, see the noise process documentation page\nrand_prototype: A prototype type instance for the noise vector. It defaults to nothing, which means the problem should be interpreted as having a noise vector whose size matches u0.\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1869,7 +1893,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DDEProblem(f[, u0], h, tspan[, p]; <keyword arguments>)\nDDEProblem{isinplace}(f[, u0], h, tspan[, p]; <keyword arguments>)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "DDEProblem(f[, u0], h, tspan[, p]; <keyword arguments>)\nDDEProblem{isinplace}(f[, u0], h, tspan[, p]; <keyword arguments>)Parameter isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1877,7 +1901,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DDE Problems",
     "title": "Arguments",
     "category": "section",
-    "text": "f: The function in the DDE.\nu0: The initial condition. Defaults to the value h(p, first(tspan)) of the history function evaluated at the initial time point.\nh: The history function for the DDE before t0.\ntspan: The timespan for the problem.\np: The parameters with which function f is called. Defaults to nothing.\nconstant_lags: A collection of constant lags used by the history function h. Defaults to ().\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h. Defaults to ().\nneutral: If the DDE is neutral, i.e., if delays appear in derivative terms.\norder_discontinuity_t0: The order of the discontinuity at the initial time point. Defaults to 0 if an initial condition u0 is provided. Otherwise it is forced to be greater or equal than 1.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to nothing."
+    "text": "f: The function in the DDE.\nu0: The initial condition. Defaults to the value h(p, first(tspan)) of the history function evaluated at the initial time point.\nh: The history function for the DDE before t0.\ntspan: The timespan for the problem.\np: The parameters with which function f is called. Defaults to NullParameters.\nconstant_lags: A collection of constant lags used by the history function h. Defaults to ().\ndependent_lags A tuple of functions (u, p, t) -> lag for the state-dependent lags used by the history function h. Defaults to ().\nneutral: If the DDE is neutral, i.e., if delays appear in derivative terms.\norder_discontinuity_t0: The order of the discontinuity at the initial time point. Defaults to 0 if an initial condition u0 is provided. Otherwise it is forced to be greater or equal than 1.\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -1917,7 +1941,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Constructors",
     "category": "section",
-    "text": "DAEProblem(f::DAEFunction,du0,u0,tspan)\nDAEProblem{isinplace}(f,du0,u0,tspan) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
+    "text": "DAEProblem(f::DAEFunction,du0,u0,tspan,p=NullParameters();kwargs...)\nDAEProblem{isinplace}(f,du0,u0,tspan,p=NullParameters();kwargs...) : Defines the DAE with the specified functions. isinplace optionally sets whether the function is inplace or not. This is determined automatically, but not inferred.Parameters are optional, and if not given then a NullParameters() singleton will be used which will throw nice errors if you try to index non-existent parameters. Any extra keyword arguments are passed on to the solvers. For example, if you set a callback in the problem, then that callback will be added in every solve call.For specifying Jacobians and mass matrices, see the DiffEqFunctions page."
 },
 
 {
@@ -1925,7 +1949,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Fields",
     "category": "section",
-    "text": "f: The function in the ODE.\ndu0: The initial condition for the derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ncallback: A callback to be applied to every solver which uses the problem. Defaults to a black CallbackSet, which will have no effect.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du\' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined."
+    "text": "f: The function in the ODE.\ndu0: The initial condition for the derivative.\nu0: The initial condition.\ntspan: The timespan for the problem.\ndifferential_vars: A logical array which declares which variables are the differential (non algebraic) vars (i.e. du\' is in the equations for this variable). Defaults to nothing. Some solvers may require this be set if an initial condition needs to be determined.\np: The parameters for the problem. Defaults to NullParameters\nkwargs: The keyword arguments passed onto the solves."
 },
 
 {
@@ -3133,7 +3157,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "Function Choice Definitions",
     "category": "section",
-    "text": "The full interface available to the solvers is as follows:jac: The Jacobian of the differential equation with respect to the state variable u at a time t with parameters p.\ntgrad: The gradient of the differential equation with respect to t at state u with parameters p.\nparamjac: The Jacobian of the differential equation with respect to p at state u at time t.\nanalytic: Defines an analytical solution using u0 at time t with p which will cause the solvers to return errors. Used for testing.\ninvW: The inverse of M - gamma*J where J is the jac.\ninvW_t: The inverse of M/gamma - J where J is the jac.\nggprime: See the definition in the SDEProblem page."
+    "text": "The full interface available to the solvers is as follows:jac: The Jacobian of the differential equation with respect to the state variable u at a time t with parameters p.\ntgrad: The gradient of the differential equation with respect to t at state u with parameters p.\nparamjac: The Jacobian of the differential equation with respect to p at state u at time t.\nanalytic: Defines an analytical solution using u0 at time t with p which will cause the solvers to return errors. Used for testing.\nWfact: The LU-factorization of M - gamma*J where J is the jac.\nWfact_t: The LU-factorization of M/gamma - J where J is the jac.\nggprime: See the definition in the SDEProblem page.\nsyms: Allows you to name your variables for automatic names in plots and other output."
 },
 
 {
@@ -3141,7 +3165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "ODEFunction",
     "category": "section",
-    "text": "function ODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing, # (u0,p,t)\n                 tgrad=nothing, # (dT,u,p,t) or (u,p,t)\n                 jac=nothing, # (J,u,p,t) or (u,p,t)\n                 jac_prototype=nothing, # Type for the Jacobian\n                 invW=nothing, # (iW,u,p,t) or (u,p,t)\n                 invW_t=nothing, # (iW,u,p,t) or (u,p,t)\n                 paramjac = nothing, # (pJ,u,p,t) or (u,p,t)\n                 syms = nothing) # collection of names for variables"
+    "text": "function ODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing, # (u0,p,t)\n                 tgrad=nothing, # (dT,u,p,t) or (u,p,t)\n                 jac=nothing, # (J,u,p,t) or (u,p,t)\n                 jac_prototype=nothing, # Type for the Jacobian\n                 Wfact=nothing, # (iW,u,p,gamma,t) or (u,p,gamma,t)\n                 Wfact_t=nothing, # (iW,u,p,gamma,t) or (u,p,gamma,t)\n                 paramjac = nothing, # (pJ,u,p,t) or (u,p,t)\n                 colorvec = nothing,\n                 syms = nothing) # collection of names for variables"
 },
 
 {
@@ -3165,7 +3189,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "SDEFunction",
     "category": "section",
-    "text": "function SDEFunction{iip,recompile}(f,g;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 ggprime = nothing,\n                 syms = nothing)"
+    "text": "function SDEFunction{iip,recompile}(f,g;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 Wfact=nothing,\n                 Wfact_t=nothing,\n                 paramjac = nothing,\n                 ggprime = nothing,\n                 colorvec = nothing,\n                 syms = nothing)"
 },
 
 {
@@ -3181,7 +3205,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "RODEFunction",
     "category": "section",
-    "text": "function RODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
+    "text": "function RODEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 Wfact=nothing,\n                 Wfact_t=nothing,\n                 paramjac = nothing,\n                 colorvec = nothing,\n                 syms = nothing)"
 },
 
 {
@@ -3189,7 +3213,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "DAEFunction",
     "category": "section",
-    "text": "function DAEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)Note that the Jacobian of a DAE is defined as gamma*dG/d(du) + dG/du where gamma is given by the solver."
+    "text": "function DAEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)\n                 jac_prototype=nothing,\n                 Wfact=nothing,\n                 Wfact_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)Note that the Jacobian of a DAE is defined as gamma*dG/d(du) + dG/du where gamma is given by the solver."
 },
 
 {
@@ -3197,7 +3221,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "DDEFunction",
     "category": "section",
-    "text": "function DDEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 invW=nothing,\n                 invW_t=nothing,\n                 paramjac = nothing,\n                 syms = nothing)"
+    "text": "function DDEFunction{iip,recompile}(f;\n                 mass_matrix=I,\n                 analytic=nothing,\n                 tgrad=nothing,\n                 jac=nothing,\n                 jac_prototype=nothing,\n                 Wfact=nothing,\n                 Wfact_t=nothing,\n                 paramjac = nothing,\n                 colorvec = nothing,\n                 syms = nothing)"
 },
 
 {
@@ -3237,7 +3261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "Declaring Explicit Jacobians for DAEs",
     "category": "section",
-    "text": "For fully implicit ODEs (DAEProblems), a slightly different Jacobian function is necessary. For the DAEG(duupt) = resThe Jacobian should be given in the form gamma*dG/d(du) + dG/du where gamma is given by the solver. This means that the signature is:f(::Type{Val{:jac}},J,du,u,p,gamma,t)For example, for the equationfunction testjac(res,du,u,p,t)\n  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]\n  res[2] = du[2] -3 * u[2] - u[1]*u[2]\nendwe would define the Jacobian as:function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)\n  J[1,1] = gamma - 2.0 + 1.2 * u[2]\n  J[1,2] = 1.2 * u[1]\n  J[2,1] = - 1 * u[2]\n  J[2,2] = gamma - 3 - u[1]\n  nothing\nend"
+    "text": "For fully implicit ODEs (DAEProblems), a slightly different Jacobian function is necessary. For the DAEG(duupt) = resThe Jacobian should be given in the form gamma*dG/d(du) + dG/du where gamma is given by the solver. This means that the signature is:f(J,du,u,p,gamma,t)For example, for the equationfunction testjac(res,du,u,p,t)\n  res[1] = du[1] - 2.0 * u[1] + 1.2 * u[1]*u[2]\n  res[2] = du[2] -3 * u[2] - u[1]*u[2]\nendwe would define the Jacobian as:function testjac(J,du,u,p,gamma,t)\n  J[1,1] = gamma - 2.0 + 1.2 * u[2]\n  J[1,2] = 1.2 * u[1]\n  J[2,1] = - 1 * u[2]\n  J[2,2] = gamma - 3 - u[1]\n  nothing\nend"
 },
 
 {
@@ -3245,7 +3269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types",
     "title": "Symbolically Calculating the Functions",
     "category": "section",
-    "text": "ParameterizedFunctions.jl automatically calculates as many of these functions as possible and generates the ODEFunction using SymEngine. Thus, for good performance with the least work, it is one can try ParameterizedFunctions.jl.Additionally, an up-and-coming effort in the JuliaDiffEq ecosystem is ModelingToolkit.jl for performing these calculations more generically."
+    "text": "See the modelingtoolkitize function from ModelingToolkit.jl for automatically symbolically calculating the Jacobian for numerically-defined functions."
 },
 
 {
