@@ -1461,7 +1461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "ODE Problems",
     "title": "Example Problems",
     "category": "section",
-    "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:#] add DiffEqProblemLibrary\nusing DiffEqProblemLibrary\nprob = prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.prob_ode_vanderpol_stiff\nDiffEqProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.prob_ode_rigidbody"
+    "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:#] add DiffEqProblemLibrary\nusing DiffEqProblemLibrary.ODEProblemLibrary\n# load problems\nODEProblemLibrary.importodeproblems()\nprob = ODEProblemLibrary.prob_ode_linear\nsol = solve(prob)DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_linear\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloatlinear\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloat2Dlinear\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_large2Dlinear\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear_notinplace\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_lotkavoltera\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_fitzhughnagumo\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_threebody\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pleides\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanderpol\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanstiff\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rober\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rigidbody\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_hires\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_orego\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pollution\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_nonlinchem\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_1d\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_2d\nDiffEqProblemLibrary.ODEProblemLibrary.prob_ode_filament"
 },
 
 {
@@ -1749,7 +1749,7 @@ var documenterSearchIndex = {"docs": [
     "page": "SDE Problems",
     "title": "Example Problems",
     "category": "section",
-    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_sde_linear, you can do something like:#]add DiffEqProblemLibrary\nusing DiffEqProblemLibrary\nprob = prob_sde_linear\nsol = solve(prob)DiffEqProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.prob_sde_additivesystem"
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_sde_linear, you can do something like:#] add DiffEqProblemLibrary\nusing DiffEqProblemLibrary.SDEProblemLibrary\n# load problems\nSDEProblemLibrary.importsdeproblems()\nprob = SDEProblemLibrary.prob_sde_linear\nsol = solve(prob)DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_linear\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_2Dlinear\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_wave\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_lorenz\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_cubic\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additive\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additivesystem\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_nltest\nDiffEqProblemLibrary.SDEProblemLibrary.oval2ModelExample\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadstrat\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadito\nDiffEqProblemLibrary.SDEProblemLibrary.generate_stiff_stoch_heat\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bistable\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bruss\nDiffEqProblemLibrary.SDEProblemLibrary.prob_sde_oscilreact"
 },
 
 {
@@ -1857,6 +1857,54 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "types/dde_types.html#Example-Problems-1",
+    "page": "DDE Problems",
+    "title": "Example Problems",
+    "category": "section",
+    "text": "Example problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_ode_linear, you can do something like:#] add DiffEqProblemLibrary\nusing DiffEqProblemLibrary.ODEProblemLibrary\n# load problems\nODEProblemLibrary.importodeproblems()\nprob = ODEProblemLibrary.prob_ode_linear\nsol = solve(prob)"
+},
+
+{
+    "location": "types/dde_types.html#DDEs-with-1-constant-delay-1",
+    "page": "DDE Problems",
+    "title": "DDEs with 1 constant delay",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_ip\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_oop\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_scalar\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_ip\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_oop\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_scalar"
+},
+
+{
+    "location": "types/dde_types.html#DDEs-with-2-constant-delays-1",
+    "page": "DDE Problems",
+    "title": "DDEs with 2 constant delays",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_ip\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_oop\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_scalar\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_ip\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_oop\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_scalar"
+},
+
+{
+    "location": "types/dde_types.html#DDETest-Problems-1",
+    "page": "DDE Problems",
+    "title": "DDETest Problems",
+    "category": "section",
+    "text": "Some details:# DDEs with time dependent delays\nprob_dde_DDETST_A1, prob_dde_DDETST_A2,\n# DDEs with vanishing time dependent delays\nprob_dde_DDETST_B1, prob_dde_DDETST_B2,\n# DDEs with state dependent delays\nprob_dde_DDETST_C1, prob_dde_DDETST_C2, prob_dde_DDETST_C3, prob_dde_DDETST_C4,\n# DDEs with vanishing state dependent delays\nprob_dde_DDETST_D1, prob_dde_DDETST_D2,\n# neutral DDEs with time dependent delays\nprob_dde_DDETST_E1, prob_dde_DDETST_E2,\n# neutral DDEs with vanishing time dependent delays\nprob_dde_DDETST_F1, prob_dde_DDETST_F2, prob_dde_DDETST_F3, prob_dde_DDETST_F4, prob_dde_DDETST_F5,\n# neutral DDEs with state dependent delays\nprob_dde_DDETST_G1, prob_dde_DDETST_G2,\n# neutral DDEs with vanishing state dependent delays\nprob_dde_DDETST_H1, prob_dde_DDETST_H2, prob_dde_DDETST_H3, prob_dde_DDETST_H4DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C3\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C4\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F3\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F4\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F5\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H1\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H2\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H3\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H4"
+},
+
+{
+    "location": "types/dde_types.html#Radar5-Test-Problems-1",
+    "page": "DDE Problems",
+    "title": "Radar5 Test Problems",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_oregonator\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_robertson\nDiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_waltman"
+},
+
+{
+    "location": "types/dde_types.html#QS-Example-1",
+    "page": "DDE Problems",
+    "title": "QS Example",
+    "category": "section",
+    "text": "DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_qs"
+},
+
+{
     "location": "types/dae_types.html#",
     "page": "DAE Problems",
     "title": "DAE Problems",
@@ -1909,7 +1957,7 @@ var documenterSearchIndex = {"docs": [
     "page": "DAE Problems",
     "title": "Example Problems",
     "category": "section",
-    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#]add DiffEqProblemLibrary\nusing DiffEqProblemLibrary, Sundials\nprob = prob_dae_resrob\nsol = solve(prob,IDA())"
+    "text": "Examples problems can be found in DiffEqProblemLibrary.jl.To use a sample problem, such as prob_dae_resrob, you can do something like:#] add DiffEqProblemLibrary\nusing DiffEqProblemLibrary.DAEProblemLibrary\n# load problems\nDAEProblemLibrary.importdaeproblems()\nprob = DAEProblemLibrary.prob_dae_resrob\nsol = solve(prob,IDA())DiffEqProblemLibrary.DAEProblemLibrary.prob_dae_resrob"
 },
 
 {
