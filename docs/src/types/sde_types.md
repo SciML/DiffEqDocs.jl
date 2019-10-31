@@ -67,18 +67,28 @@ Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/J
 To use a sample problem, such as `prob_sde_linear`, you can do something like:
 
 ```julia
-#]add DiffEqProblemLibrary
-using DiffEqProblemLibrary
-prob = prob_sde_linear
+#] add DiffEqProblemLibrary
+using DiffEqProblemLibrary.SDEProblemLibrary
+# load problems
+SDEProblemLibrary.importsdeproblems()
+prob = SDEProblemLibrary.prob_sde_linear
 sol = solve(prob)
 ```
 
 ```@docs
-DiffEqProblemLibrary.prob_sde_linear
-DiffEqProblemLibrary.prob_sde_2Dlinear
-DiffEqProblemLibrary.prob_sde_wave
-DiffEqProblemLibrary.prob_sde_lorenz
-DiffEqProblemLibrary.prob_sde_cubic
-DiffEqProblemLibrary.prob_sde_additive
-DiffEqProblemLibrary.prob_sde_additivesystem
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_linear
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_2Dlinear
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_wave
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_lorenz
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_cubic
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additive
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additivesystem
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_nltest
+DiffEqProblemLibrary.SDEProblemLibrary.oval2ModelExample
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadstrat
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadito
+DiffEqProblemLibrary.SDEProblemLibrary.generate_stiff_stoch_heat
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bistable
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bruss
+DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_oscilreact
 ```

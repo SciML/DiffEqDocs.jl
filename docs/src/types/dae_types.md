@@ -53,8 +53,14 @@ Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/J
 To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 
 ```julia
-#]add DiffEqProblemLibrary
-using DiffEqProblemLibrary, Sundials
-prob = prob_dae_resrob
+#] add DiffEqProblemLibrary
+using DiffEqProblemLibrary.DAEProblemLibrary
+# load problems
+DAEProblemLibrary.importdaeproblems()
+prob = DAEProblemLibrary.prob_dae_resrob
 sol = solve(prob,IDA())
+```
+
+```@docs
+DiffEqProblemLibrary.DAEProblemLibrary.prob_dae_resrob
 ```

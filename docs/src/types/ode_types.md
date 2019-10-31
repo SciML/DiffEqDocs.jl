@@ -49,22 +49,33 @@ To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
 ```julia
 #] add DiffEqProblemLibrary
-using DiffEqProblemLibrary
-prob = prob_ode_linear
+using DiffEqProblemLibrary.ODEProblemLibrary
+# load problems
+ODEProblemLibrary.importodeproblems()
+prob = ODEProblemLibrary.prob_ode_linear
 sol = solve(prob)
 ```
 
 ```@docs
-DiffEqProblemLibrary.prob_ode_linear
-DiffEqProblemLibrary.prob_ode_2Dlinear
-DiffEqProblemLibrary.prob_ode_bigfloatlinear
-DiffEqProblemLibrary.prob_ode_bigfloat2Dlinear
-DiffEqProblemLibrary.prob_ode_large2Dlinear
-DiffEqProblemLibrary.prob_ode_2Dlinear_notinplace
-DiffEqProblemLibrary.prob_ode_threebody
-DiffEqProblemLibrary.prob_ode_pleides
-DiffEqProblemLibrary.prob_ode_vanderpol
-DiffEqProblemLibrary.prob_ode_vanderpol_stiff
-DiffEqProblemLibrary.prob_ode_rober
-DiffEqProblemLibrary.prob_ode_rigidbody
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_linear
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloatlinear
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloat2Dlinear
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_large2Dlinear
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear_notinplace
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_lotkavoltera
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_fitzhughnagumo
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_threebody
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pleides
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanderpol
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanstiff
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rober
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rigidbody
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_hires
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_orego
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pollution
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_nonlinchem
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_1d
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_2d
+DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_filament
 ```

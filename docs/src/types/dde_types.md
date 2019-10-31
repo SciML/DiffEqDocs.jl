@@ -74,3 +74,103 @@ For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://doc
 * `neutral`: If the DDE is neutral, i.e., if delays appear in derivative terms.
 * `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
 * `kwargs`: The keyword arguments passed onto the solves.
+
+## Example Problems
+
+Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/dde).
+
+To use a sample problem, such as `prob_ode_linear`, you can do something like:
+
+```julia
+#] add DiffEqProblemLibrary
+using DiffEqProblemLibrary.ODEProblemLibrary
+# load problems
+ODEProblemLibrary.importodeproblems()
+prob = ODEProblemLibrary.prob_ode_linear
+sol = solve(prob)
+```
+
+### DDEs with 1 constant delay
+
+```@docs
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_ip
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_oop
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_scalar
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_ip
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_oop
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_scalar
+```
+
+### DDEs with 2 constant delays
+
+```@docs
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_ip
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_oop
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_scalar
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_ip
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_oop
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_scalar
+```
+
+### DDETest Problems
+
+Some details:
+
+```
+# DDEs with time dependent delays
+prob_dde_DDETST_A1, prob_dde_DDETST_A2,
+# DDEs with vanishing time dependent delays
+prob_dde_DDETST_B1, prob_dde_DDETST_B2,
+# DDEs with state dependent delays
+prob_dde_DDETST_C1, prob_dde_DDETST_C2, prob_dde_DDETST_C3, prob_dde_DDETST_C4,
+# DDEs with vanishing state dependent delays
+prob_dde_DDETST_D1, prob_dde_DDETST_D2,
+# neutral DDEs with time dependent delays
+prob_dde_DDETST_E1, prob_dde_DDETST_E2,
+# neutral DDEs with vanishing time dependent delays
+prob_dde_DDETST_F1, prob_dde_DDETST_F2, prob_dde_DDETST_F3, prob_dde_DDETST_F4, prob_dde_DDETST_F5,
+# neutral DDEs with state dependent delays
+prob_dde_DDETST_G1, prob_dde_DDETST_G2,
+# neutral DDEs with vanishing state dependent delays
+prob_dde_DDETST_H1, prob_dde_DDETST_H2, prob_dde_DDETST_H3, prob_dde_DDETST_H4
+```
+
+```@docs
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C3
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C4
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F3
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F4
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F5
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H1
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H2
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H3
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H4
+```
+
+### Radar5 Test Problems
+
+```@docs
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_oregonator
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_robertson
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_waltman
+```
+
+### QS Example
+
+```@docs
+DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_qs
+```
