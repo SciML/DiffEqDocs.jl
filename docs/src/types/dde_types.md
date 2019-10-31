@@ -53,6 +53,12 @@ DDEProblem{isinplace}(f[, u0], h, tspan[, p]; <keyword arguments>)
 Parameter `isinplace` optionally sets whether the function is inplace or not.
 This is determined automatically, but not inferred.
 
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
+
 For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html) page.
 
 ### Arguments
@@ -61,10 +67,10 @@ For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://doc
 * `u0`: The initial condition. Defaults to the value `h(p, first(tspan))` of the history function evaluated at the initial time point.
 * `h`: The history function for the DDE before `t0`.
 * `tspan`: The timespan for the problem.
-* `p`: The parameters with which function `f` is called. Defaults to `nothing`.
+* `p`: The parameters with which function `f` is called. Defaults to `NullParameters`.
 * `constant_lags`: A collection of constant lags used by the history function `h`. Defaults to `()`.
 * `dependent_lags` A tuple of functions `(u, p, t) -> lag` for the state-dependent lags
   used by the history function `h`. Defaults to `()`.
 * `neutral`: If the DDE is neutral, i.e., if delays appear in derivative terms.
 * `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
-* `callback`: A callback to be applied to every solver which uses the problem. Defaults to `nothing`.
+* `kwargs`: The keyword arguments passed onto the solves.

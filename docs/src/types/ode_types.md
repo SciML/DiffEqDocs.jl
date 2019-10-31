@@ -18,10 +18,16 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-- `ODEProblem(f::ODEFunction,u0,tspan,callback=CallbackSet())`
-- `ODEProblem{isinplace}(f,u0,tspan,callback=CallbackSet())` :
+- `ODEProblem(f::ODEFunction,u0,tspan,p=NullParameters();kwargs...)`
+- `ODEProblem{isinplace}(f,u0,tspan,p=NullParameters();kwargs...)` :
   Defines the ODE with the specified functions. `isinplace` optionally sets whether
   the function is inplace or not. This is determined automatically, but not inferred.
+
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
 
 For specifying Jacobians and mass matrices, see the
 [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
@@ -32,8 +38,8 @@ page.
 * `f`: The function in the ODE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+* `p`: The parameters.
+* `kwargs`: The keyword arguments passed onto the solves.
 
 ## Example Problems
 

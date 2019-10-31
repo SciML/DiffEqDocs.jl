@@ -25,8 +25,8 @@ fixing `t=0`.
 ### Constructors
 
 ```julia
-SteadyStateProblem(f::ODEFunction,u0)
-SteadyStateProblem{isinplace}(f,u0)
+SteadyStateProblem(f::ODEFunction,u0,p=NullParameters();kwargs...)
+SteadyStateProblem{isinplace}(f,u0,p=NullParameters();kwargs...)
 ```
 
 `isinplace` optionally sets whether the function is inplace or not. This is
@@ -37,6 +37,12 @@ determined automatically, but not inferred. Additionally, the constructor from
 SteadyStateProblem(prob::ODEProblem)
 ```
 
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
+
 For specifying Jacobians and mass matrices, see the
 [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
 page.
@@ -45,6 +51,8 @@ page.
 
 * `f`: The function in the ODE.
 * `u0`: The initial guess for the steady state.
+* `p`: The parameters for the problem. Defaults to `NullParameters`
+* `kwargs`: The keyword arguments passed onto the solves.
 
 ## Special Solution Fields
 

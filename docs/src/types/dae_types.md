@@ -17,10 +17,17 @@ provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
 ### Constructors
 
-- `DAEProblem(f::DAEFunction,du0,u0,tspan)`
-- `DAEProblem{isinplace}(f,du0,u0,tspan)` : Defines the DAE with the specified functions.
+- `DAEProblem(f::DAEFunction,du0,u0,tspan,p=NullParameters();kwargs...)`
+- `DAEProblem{isinplace}(f,du0,u0,tspan,p=NullParameters();kwargs...)` :
+  Defines the DAE with the specified functions.
   `isinplace` optionally sets whether the function is inplace or not. This is
   determined automatically, but not inferred.
+
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
 
 For specifying Jacobians and mass matrices, see the
 [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
@@ -32,12 +39,12 @@ page.
 * `du0`: The initial condition for the derivative.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to a black CallbackSet, which will have no effect.
 * `differential_vars`: A logical array which declares which variables are the
   differential (non algebraic) vars (i.e. `du'` is in the equations for this
   variable). Defaults to nothing. Some solvers may require this be set if an
   initial condition needs to be determined.
+* `p`: The parameters for the problem. Defaults to `NullParameters`
+* `kwargs`: The keyword arguments passed onto the solves.
 
 ## Example Problems
 

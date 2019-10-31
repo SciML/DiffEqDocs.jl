@@ -20,9 +20,11 @@ The full interface available to the solvers is as follows:
   state `u` at time `t`.
 - `analytic`: Defines an analytical solution using `u0` at time `t` with `p`
   which will cause the solvers to return errors. Used for testing.
-- `invW`: The inverse of `M - gamma*J` where `J` is the `jac`.
-- `invW_t`: The inverse of `M/gamma - J` where `J` is the `jac`.
+- `Wfact`: The LU-factorization of `M - gamma*J` where `J` is the `jac`.
+- `Wfact_t`: The LU-factorization of `M/gamma - J` where `J` is the `jac`.
 - `ggprime`: See the definition in the SDEProblem page.
+- `syms`: Allows you to name your variables for automatic names in plots and
+  other output.
 
 ### ODEFunction
 
@@ -33,9 +35,10 @@ function ODEFunction{iip,recompile}(f;
                  tgrad=nothing, # (dT,u,p,t) or (u,p,t)
                  jac=nothing, # (J,u,p,t) or (u,p,t)
                  jac_prototype=nothing, # Type for the Jacobian
-                 invW=nothing, # (iW,u,p,t) or (u,p,t)
-                 invW_t=nothing, # (iW,u,p,t) or (u,p,t)
+                 Wfact=nothing, # (iW,u,p,gamma,t) or (u,p,gamma,t)
+                 Wfact_t=nothing, # (iW,u,p,gamma,t) or (u,p,gamma,t)
                  paramjac = nothing, # (pJ,u,p,t) or (u,p,t)
+                 colorvec = nothing,
                  syms = nothing) # collection of names for variables
 ```
 
@@ -67,10 +70,11 @@ function SDEFunction{iip,recompile}(f,g;
                  tgrad=nothing,
                  jac=nothing,
                  jac_prototype=nothing,
-                 invW=nothing,
-                 invW_t=nothing,
+                 Wfact=nothing,
+                 Wfact_t=nothing,
                  paramjac = nothing,
                  ggprime = nothing,
+                 colorvec = nothing,
                  syms = nothing)
 ```
 
@@ -94,9 +98,10 @@ function RODEFunction{iip,recompile}(f;
                  tgrad=nothing,
                  jac=nothing,
                  jac_prototype=nothing,
-                 invW=nothing,
-                 invW_t=nothing,
+                 Wfact=nothing,
+                 Wfact_t=nothing,
                  paramjac = nothing,
+                 colorvec = nothing,
                  syms = nothing)
 ```
 
@@ -109,8 +114,8 @@ function DAEFunction{iip,recompile}(f;
                  tgrad=nothing,
                  jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)
                  jac_prototype=nothing,
-                 invW=nothing,
-                 invW_t=nothing,
+                 Wfact=nothing,
+                 Wfact_t=nothing,
                  paramjac = nothing,
                  syms = nothing)
 ```
@@ -127,9 +132,10 @@ function DDEFunction{iip,recompile}(f;
                  tgrad=nothing,
                  jac=nothing,
                  jac_prototype=nothing,
-                 invW=nothing,
-                 invW_t=nothing,
+                 Wfact=nothing,
+                 Wfact_t=nothing,
                  paramjac = nothing,
+                 colorvec = nothing,
                  syms = nothing)
 ```
 
@@ -240,7 +246,7 @@ The Jacobian should be given in the form `gamma*dG/d(du) + dG/du ` where `gamma`
 is given by the solver. This means that the signature is:
 
 ```julia
-f(::Type{Val{:jac}},J,du,u,p,gamma,t)
+f(J,du,u,p,gamma,t)
 ```
 
 For example, for the equation
@@ -255,7 +261,7 @@ end
 we would define the Jacobian as:
 
 ```julia
-function testjac(::Type{Val{:jac}},J,du,u,p,gamma,t)
+function testjac(J,du,u,p,gamma,t)
   J[1,1] = gamma - 2.0 + 1.2 * u[2]
   J[1,2] = 1.2 * u[1]
   J[2,1] = - 1 * u[2]
@@ -266,9 +272,7 @@ end
 
 ## Symbolically Calculating the Functions
 
-ParameterizedFunctions.jl automatically calculates as many of these functions as
-possible and generates the `ODEFunction` using SymEngine. Thus, for good performance
-with the least work, it is one can try ParameterizedFunctions.jl.
-
-Additionally, an up-and-coming effort in the JuliaDiffEq ecosystem is
-ModelingToolkit.jl for performing these calculations more generically.
+See the `modelingtoolkitize` function from
+[ModelingToolkit.jl](https://github.com/JuliaDiffEq/ModelingToolkit.jl) for
+automatically symbolically calculating the Jacobian for numerically-defined
+functions.

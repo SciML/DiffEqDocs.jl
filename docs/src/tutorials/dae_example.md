@@ -20,7 +20,7 @@ du &= f(u,p,t) \\
 ```
 
 or is also known as a constrained differential equation where `g` is the constraint
-equation. The Roberts model can be written in the form:
+equation. The Robertson model can be written in the form:
 
 ```math
 \begin{align}

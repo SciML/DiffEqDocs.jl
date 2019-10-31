@@ -28,8 +28,8 @@ u(t_f) = b
 ### Constructors
 
 ```julia
-TwoPointBVProblem{isinplace}(f,bc!,u0,tspan)
-BVProblem{isinplace}(f,bc!,u0,tspan)
+TwoPointBVProblem{isinplace}(f,bc!,u0,tspan,p=NullParameters();kwargs...)
+BVProblem{isinplace}(f,bc!,u0,tspan,p=NullParameters();kwargs...)
 ```
 
 For any BVP problem type, `bc!` is the inplace function:
@@ -45,6 +45,12 @@ time points, and for shooting type methods `u=sol` the ODE solution.
 Note that all features of the `ODESolution` are present in this form.
 In both cases, the size of the residual matches the size of the initial condition.
 
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
+
 ### Fields
 
 * `f`: The function for the ODE.
@@ -53,3 +59,5 @@ In both cases, the size of the residual matches the size of the initial conditio
   initial value problem, or a `Vector` of values for ``u(t_i)`` for collocation
   methods
 * `tspan`: The timespan for the problem.
+* `p`: The parameters for the problem. Defaults to `NullParameters`
+* `kwargs`: The keyword arguments passed onto the solves.

@@ -31,20 +31,26 @@ quadratic kinetic energy".
 ### Constructor
 
 ```julia
-DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,callback=CallbackSet())
-DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,callback=CallbackSet())
+DynamicalODEProblem(f::DynamicalODEFunction,v0,u0,tspan,p=NullParameters();kwargs...)
+DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,p=NullParameters();kwargs...)
 ```
 
 Defines the ODE with the specified functions. `isinplace` optionally sets whether
 the function is inplace or not. This is determined automatically, but not inferred.
+
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
 
 ### Fields
 
 * `f1` and `f2`: The functions in the ODE.
 * `v0` and `u0`: The initial conditions.
 * `tspan`: The timespan for the problem.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+* `p`: The parameters for the problem. Defaults to `NullParameters`
+* `kwargs`: The keyword arguments passed onto the solves.
 
 ## Mathematical Specification of a 2nd Order ODE Problem
 
