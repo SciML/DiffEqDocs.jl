@@ -10,6 +10,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          "Home" => "index.md",
          "Tutorials" => Any[
            "tutorials/ode_example.md",
+           "tutorials/advanced_ode_example.md",
            "tutorials/sde_example.md",
            "tutorials/rode_example.md",
            "tutorials/dde_example.md",

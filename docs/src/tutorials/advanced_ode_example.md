@@ -33,6 +33,7 @@ ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())
 If I want to set this directly to 4 threads, I would use:
 
 ```julia
+using LinearAlgebra
 LinearAlgebra.BLAS.set_num_threads(4)
 ```
 
@@ -101,11 +102,11 @@ sol = solve(prob)
 plot(sol,tspan=(1e-2,1e5),xscale=:log10)
 ```
 
-![ROBER Plot]()
+![IntroDAEPlot](../assets/intro_dae_plot.png)
 
 ```julia
 using BenchmarkTools
-@btime solve(prob) # 500.301 μs (3063 allocations: 161.83 KiB)
+@btime solve(prob) # 415.800 μs (3053 allocations: 161.64 KiB)
 ```
 
 Now we want to add the Jacobian. First we have to derive the Jacobian
@@ -129,7 +130,7 @@ end
 f = ODEFunction(rober, jac=rober_jac)
 prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 
-@btime solve(prob_jac) # 332.300 μs (2599 allocations: 153.11 KiB)
+@btime solve(prob_jac) # 305.400 μs (2599 allocations: 153.11 KiB)
 ```
 
 ### Automatic Derivation of Jacobian Functions
@@ -188,6 +189,8 @@ can do this by gathering the `I` and `J` pairs for the non-zero components, like
 ```julia
 I = [1,2,1,2,3,1,2]
 J = [1,1,2,2,2,3,3]
+
+using SparseArrays
 jac_prototype = sparse(I,J,1.0)
 ```
 
@@ -246,6 +249,8 @@ using Plots
 spy(jac_sparsity,markersize=1,colorbar=false,color=:deep)
 ```
 
+![Bruss Sparsity](../assets/bruss_sparsity.png)
+
 That's neat, and would be tedius to build by hand! Now we just pass it to the
 `ODEFunction` like as before:
 
@@ -278,8 +283,8 @@ prob_ode_brusselator_2d_sparse = ODEProblem(f,
 Now let's see how the version with sparsity compares to the version without:
 
 ```julia
-@btime solve(prob_ode_brusselator_2d,save_everystep=false)
-@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false)
+@btime solve(prob_ode_brusselator_2d,save_everystep=false) # 51.714 s (7317 allocations: 70.12 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 36.374 s (367199 allocations: 896.99 MiB)
 ```
 
 ### Declaring Color Vectors for Fast Construction
@@ -297,7 +302,7 @@ example, for the Brusselator equation:
 ```julia
 using SparseDiffTools
 colorvec = matrix_colors(jac_sparsity)
-@show maximum(colorvec)
+@show maximum(colorvec) # maximum(colorvec) = 12
 ```
 
 This means that we can now calculate the Jacobian in 12 function calls. This is
@@ -310,7 +315,7 @@ f = ODEFunction(brusselator_2d_loop;jac_prototype=jac_sparsity,
 prob_ode_brusselator_2d_sparse = ODEProblem(f,
                                      init_brusselator_2d(xyd_brusselator),
                                      (0.,11.5),p)
-@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false)
+@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 5.519 s (19039 allocations: 881.07 MiB)
 ```
 
 Notice the massive speed enhancement!
@@ -328,8 +333,8 @@ To swap the linear solver out, we use the `linsolve` command and choose the
 GMRES linear solver.
 
 ```julia
-@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
+@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
 ```
 
 For more information on linear solver choices, see the
@@ -351,7 +356,7 @@ and then we can use this by making it our `jac_prototype`:
 ```julia
 f = ODEFunction(brusselator_2d_loop;jac_prototype=Jv)
 prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p)
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
+@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)
 ```
 
 ### Adding a Preconditioner
@@ -365,7 +370,7 @@ for an incomplete LU-factorization (iLU).
 ```julia
 using AlgebraicMultigrid
 pc = aspreconditioner(ruge_stuben(jac_sparsity))
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false)
+@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)
 ```
 
 ## Using Structured Matrix Types
@@ -407,10 +412,11 @@ defining the JacVecOperator, and instead will always make use of a Jacobian-Free
 Newton Krylov (with numerical differentiation). Thus on this problem we could do:
 
 ```julia
+using Sundials
 # Sparse Version
-@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(),save_everystep=false)
+@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(),save_everystep=false) # 42.804 s (51388 allocations: 3.20 MiB)
 # GMRES Version: Doesn't require any extra stuff!
-@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 485.671 ms (61058 allocations: 3.63 MiB)
 ```
 
 ## Handling Mass Matrices
@@ -462,9 +468,12 @@ M = [1. 0  0
      0  0  0]
 f = ODEFunction(rober,mass_matrix=M)
 prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
-sol = DifferentialEquations.solve(prob_mm,Rodas5(),dt=0.1,reltol=1e-8,abstol=1e-8)
-plot(sol,tspan=(1e-2,1e5),xscale=:log10)
+sol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)
+
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 ```
+
+![IntroDAEPlot](../assets/intro_dae_plot.png)
 
 Note that if your mass matrix is singular, i.e. your system is a DAE, then you
 need to make sure you choose
