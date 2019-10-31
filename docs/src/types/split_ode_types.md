@@ -34,6 +34,12 @@ The `isinplace` parameter can be omitted and will be determined using the signat
 Note that both `f1` and `f2` should support the in-place style if `isinplace` is `true` or they
 should both support the out-of-place style if `isinplace` is `false`. You cannot mix up the two styles.
 
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
+
 Under the hood, a `SplitODEProblem` is just a regular `ODEProblem` whose `f` is a `SplitFunction`.
 Therefore you can solve a `SplitODEProblem` using the same solvers for `ODEProblem`. For solvers
 dedicated to split problems, see [Split ODE Solvers](../../solvers/split_ode_solve.html).
@@ -47,6 +53,5 @@ page.
 * `f1`, `f2`: The functions in the ODE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-* `p`: The parameters for the problem.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+* `p`: The parameters for the problem. Defaults to `NullParameters`
+* `kwargs`: The keyword arguments passed onto the solves.

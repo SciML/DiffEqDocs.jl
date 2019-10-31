@@ -23,6 +23,12 @@ to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary 
   `isinplace` optionally sets whether the function is inplace or not. This is
   determined automatically, but not inferred.
 
+Parameters are optional, and if not given then a `NullParameters()` singleton
+will be used which will throw nice errors if you try to index non-existent
+parameters. Any extra keyword arguments are passed on to the solvers. For example,
+if you set a `callback` in the problem, then that `callback` will be added in
+every solve call.
+  
 For specifying Jacobians and mass matrices, see the
 [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
 page.
@@ -32,12 +38,11 @@ page.
 * `f`: The drift function in the SDE.
 * `u0`: The initial condition.
 * `tspan`: The timespan for the problem.
-* `p`: The optional parameters for the problem. Defaults to nothing.
+* `p`: The optional parameters for the problem. Defaults to `NullParameters`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
   see [the noise process documentation page](../../features/noise_process.html)
 * `rand_prototype`: A prototype type instance for the noise vector. It defaults
   to `nothing`, which means the problem should be interpreted as having a noise
   vector whose size matches `u0`.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+* `kwargs`: The keyword arguments passed onto the solves.

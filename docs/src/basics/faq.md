@@ -121,6 +121,12 @@ know the Jacobian is sparse, `linear_solver=:GMRES` is a good option. Once
 again, a good reference for how to handle PDE discretizations can be found
 [at this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
 
+#### My Problem Has Discontinuities and is Unstable / Slow, What Do I Do?
+
+[This Discourse post](https://discourse.julialang.org/t/handling-instability-when-solving-ode-problems/9019/5)
+goes into detail for how to handle discontinuities in your ODE function and how
+to use that extra information to speed up the solver.
+
 ## Complicated Models
 
 #### Can I switch my ODE function in the middle of integration?
@@ -218,10 +224,10 @@ Yes! Take a look at the
 [sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity.html)
 page for more details.
 
-If the algorithm does not have differentiation of parameter-depedendent events, 
-then you simply need to make the initial condition have elements of Dual numbers. 
+If the algorithm does not have differentiation of parameter-depedendent events,
+then you simply need to make the initial condition have elements of Dual numbers.
 If the algorithm uses Dual numbers, you need to make sure that time is also
-given by Dual numbers. 
+given by Dual numbers.
 
 To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
@@ -241,7 +247,7 @@ end
 This function takes in new parameters and spits out the solution at the end.
 We make the inital condition `eltype(p).([1.0,1.0])` so that way it's typed to
 be Dual numbers whenever `p` is an array of `Dual` numbers, and we do the same
-for the timespan just to show what you'd do if there was parameters-dependent events. 
+for the timespan just to show what you'd do if there was parameters-dependent events.
 Then we can take the Jacobian via ForwardDiff.jl:
 
 ```julia
