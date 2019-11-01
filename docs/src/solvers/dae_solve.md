@@ -44,7 +44,7 @@ extra options for the solvers, see the ODE solver page.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
-  
+
 #### Rosenbrock-W Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances. 2nd order stiff-aware interpolation.
@@ -117,15 +117,41 @@ IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
     max_num_backs_ic = 100,
     use_linesearch_ic = true,
     max_convergence_failures = 10,
-    init_all = false)
+    init_all = false,
+    prec = nothing, psetup = nothing, prec_side = 0)
 ```
 
 See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf)
 for details on the additional options. The option `init_all` controls the initial condition
-consistancy routine. If the initial conditions are inconsistant (i.e. they do not satisfy the
+consistency routine. If the initial conditions are inconsistant (i.e. they do not satisfy the
 implicit equation), `init_all=false` means that the algebraic variables and derivatives will
 be modified in order to satisfy the DAE. If `init_all=true`, all initial conditions will be
 modified to satify the DAE.
+
+Note that here `prec` is a preconditioner function
+`prec(z,r,p,t,y,fy,gamma,delta,lr)` where:
+
+- `z`: the computed output vector
+- `r`: the right-hand side vector of the linear system
+- `p`: the parameters
+- `t`: the current independent variable
+- `du`: the current value of `f(u,p,t)`
+- `gamma`: the `gamma` of `W = M - gamma*J`
+- `delta`: the iterative method tolerance
+- `lr`: a flag for whether `lr=1` (left) or `lr=2` (right)
+  preconditioning
+
+and `psetup` is the preconditioner setup function for pre-computing Jacobian
+information. Where:
+
+- `p`: the parameters
+- `t`: the current independent variable
+- `resid`: the current residual
+- `u`: the current state
+- `du`: the current `f(u,p,t)`
+- `gamma`: the `gamma` of `W = M - gamma*J`
+
+`psetup` is optional when `prec` is set.
 
 ### DASKR.jl
 

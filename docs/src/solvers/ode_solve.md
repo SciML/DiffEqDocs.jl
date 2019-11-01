@@ -454,7 +454,7 @@ These methods require a choice of `dt`.
 
 - `RadauIIA5` - An A-B-L stable fully implicit Runge-Kutta method with internal
   tableau complex basis transform for efficiency.
- 
+
 #### Parallel Diagonally Implicit Runge-Kutta Methods
 
 - `PDIRK44` - A 2 processor 4th order diagonally non-adaptive implicit method.
@@ -485,7 +485,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented.
-  
+
 #### Rosenbrock-W Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
@@ -820,7 +820,7 @@ Note that the constructors for the Sundials algorithms take two main arguments:
     choices match the recommended pairing in the Sundials.jl manual. However,
     note that using the `:Newton` method may take less iterations but requires
     more memory than the `:Function` iteration approach.
-  - `linearsolver` - This is the linear solver which is used in the `:Newton` method.
+  - `linear_solver` - This is the linear solver which is used in the `:Newton` method.
 
   The choices for the linear solver are:
 
@@ -915,7 +915,8 @@ CVODE_BDF(;method=:Newton,linear_solver=:Dense,
           max_order = 5,
           max_error_test_failures = 7,
           max_nonlinear_iters = 3,
-          max_convergence_failures = 10)
+          max_convergence_failures = 10,
+          prec = nothing, prec_side = 0)
 
 CVODE_Adams(;method=:Functional,linear_solver=:None,
             jac_upper=0,jac_lower=0,
@@ -926,7 +927,8 @@ CVODE_Adams(;method=:Functional,linear_solver=:None,
             max_order = 12,
             max_error_test_failures = 7,
             max_nonlinear_iters = 3,
-            max_convergence_failures = 10)
+            max_convergence_failures = 10,
+            prec = nothing, psetup = nothing, prec_side = 0)
 
 ARKODE(stiffness=Sundials.Implicit();
       method=:Newton,linear_solver=:Dense,
@@ -945,13 +947,42 @@ ARKODE(stiffness=Sundials.Implicit();
       dgmax = 0.2,
       rdiv = 2.3,
       msbp = 20,
-      adaptivity_method = 0
+      adaptivity_method = 0,
+      prec = nothing, psetup = nothing, prec_side = 0
       )
 ```
 
 See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
 and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
 for details on the additional options.
+
+Note that here `prec` is a preconditioner function
+`prec(z,r,p,t,y,fy,gamma,delta,lr)` where:
+
+- `z`: the computed output vector
+- `r`: the right-hand side vector of the linear system
+- `p`: the parameters
+- `t`: the current independent variable
+- `du`: the current value of `f(u,p,t)`
+- `gamma`: the `gamma` of `W = M - gamma*J`
+- `delta`: the iterative method tolerance
+- `lr`: a flag for whether `lr=1` (left) or `lr=2` (right)
+  preconditioning
+
+and `psetup` is the preconditioner setup function for pre-computing Jacobian
+information. Where:
+
+- `p`: the parameters
+- `t`: the current independent variable
+- `u`: the current state
+- `du`: the current `f(u,p,t)`
+- `jok`: a bool indicating whether the Jacobian needs to be updated
+- `jcurPtr`: a reference to an Int for whether the Jacobian was updated.
+  `jcurPtr[]=true` should be set if the Jacobian was updated, and
+  `jcurPtr[]=false` should be set if the Jacobian was not updated.
+- `gamma`: the `gamma` of `W = M - gamma*J`
+
+`psetup` is optional when `prec` is set.
 
 ### ODEInterface.jl
 

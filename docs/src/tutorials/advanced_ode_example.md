@@ -453,6 +453,9 @@ using Sundials
 @btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 485.671 ms (61058 allocations: 3.63 MiB)
 ```
 
+Details for setting up a preconditioner with Sundials can be found at the
+[Sundials solver page](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Sundials.jl-1).
+
 ## Handling Mass Matrices
 
 Instead of just defining an ODE as ``u' = f(u,p,t)``, it can be common to express
