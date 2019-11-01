@@ -405,7 +405,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solving Stiff Equations",
     "title": "Declaring a Sparse Jacobian",
     "category": "section",
-    "text": "Jacobian sparsity is declared by the jac_prototype argument in the ODEFunction. Note that you should only do this if the sparsity is high, for example, 0.1% of the matrix is zeros, otherwise the overhead of sparse matrices can be higher than the gains from sparse differentiation!But as a demonstration, let\'s build a sparse matrix for the Rober problem. We can do this by gathering the I and J pairs for the non-zero components, like:I = [1,2,1,2,3,1,2]\r\nJ = [1,1,2,2,2,3,3]\r\n\r\nusing SparseArrays\r\njac_prototype = sparse(I,J,1.0)Now this is the sparse matrix prototype that we want to use in our solver, which we then pass like:f = ODEFunction(rober, jac=jac, jac_prototype=jac_prototype)\r\nprob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))"
+    "text": "Jacobian sparsity is declared by the jac_prototype argument in the ODEFunction. Note that you should only do this if the sparsity is high, for example, 0.1% of the matrix is non-zeros, otherwise the overhead of sparse matrices can be higher than the gains from sparse differentiation!But as a demonstration, let\'s build a sparse matrix for the Rober problem. We can do this by gathering the I and J pairs for the non-zero components, like:I = [1,2,1,2,3,1,2]\r\nJ = [1,1,2,2,2,3,3]\r\n\r\nusing SparseArrays\r\njac_prototype = sparse(I,J,1.0)Now this is the sparse matrix prototype that we want to use in our solver, which we then pass like:f = ODEFunction(rober, jac=jac, jac_prototype=jac_prototype)\r\nprob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))"
 },
 
 {
