@@ -250,9 +250,10 @@ around the mean.
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
 we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
-will be parallelized. This will use `pmap` as default, which means that the required
-functions must be made available to all processes. This can be achieved with [`@everywhere`
-macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
+will be parallelized. Here we will choose to use distributed parallelism which means 
+that the required functions must be made available to all processes. This can be 
+achieved with 
+[`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
 using Distributed
@@ -286,7 +287,7 @@ Now we build and solve the `EnsembleProblem` with this base problem and `prob_fu
 
 ```julia
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
-sim = solve(ensemble_prob,Tsit5(),trajectories=100)
+sim = solve(ensemble_prob,Tsit5(),EnsembleDistributed(),trajectories=100)
 ```
 
 We can use the plot recipe to plot what the 100 ODEs look like:
