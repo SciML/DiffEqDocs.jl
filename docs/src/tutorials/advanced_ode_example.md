@@ -214,7 +214,7 @@ prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 
 Jacobian sparsity is declared by the `jac_prototype` argument in the `ODEFunction`.
 Note that you should only do this if the sparsity is high, for example, 0.1%
-of the matrix is zeros, otherwise the overhead of sparse matrices can be higher
+of the matrix is non-zeros, otherwise the overhead of sparse matrices can be higher
 than the gains from sparse differentiation!
 
 But as a demonstration, let's build a sparse matrix for the Rober problem. We
