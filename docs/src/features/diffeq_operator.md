@@ -61,7 +61,7 @@ for it to work in the solvers.
 ### AbstractDiffEqOperator Interface Description
 
 1. Function call and multiplication: `L(du,u,p,t)` for inplace and `du = L(u,p,t)` for
-   out-of-place, meaning `L*u` and `A_mul_B!`.
+   out-of-place, meaning `L*u` and `mul!`.
 2. If the operator is not a constant, update it with `(u,p,t)`. A mutating form, i.e.
    `update_coefficients!(A,u,p,t)` that changes the internal coefficients, and a
    out-of-place form `B = update_coefficients(A,u,p,t)`.
@@ -73,11 +73,11 @@ for it to work in the solvers.
 2. Can absorb under multiplication by a scalar. In all algorithms things like
    `dt*L` show up all the time, so the linear operator must be able to absorb
    such constants.
-4. `is_constant(A)` trait for whether the operator is constant or not.
+4. `isconstant(A)` trait for whether the operator is constant or not.
 5. Optional: `diagonal`, `symmetric`, etc traits from LinearMaps.jl.
 6. Optional: `expm(A)`. Required for simple exponential integration.
 7. Optional: `expmv(A,u,t) = expm(t*A)*u` and `expmv!(v,A::DiffEqOperator,u,t)`
    Required for sparse-saving exponential integration.
-8. Optional: factorizations. `A_ldiv_B`, `factorize` et. al. This is only required
+8. Optional: factorizations. `ldiv!`, `factorize` et. al. This is only required
    for algorithms which use the factorization of the operator (Crank-Nicholson),
    and only for when the default linear solve is used.
