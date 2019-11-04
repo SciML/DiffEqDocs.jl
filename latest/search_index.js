@@ -317,7 +317,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Solving Stiff Equations",
     "title": "Solving Stiff Equations",
     "category": "section",
-    "text": "This tutorial is for getting into the extra features for solving stiff ordinary differential equations in an efficient manner. Solving stiff ordinary differential equations requires specializing the linear solver on properties of the Jacobian in order to cut down on the O(n^3) linear solve and the O(n^2) back-solves. Note that these same functions and controls also extend to stiff SDEs, DDEs, DAEs, etc."
+    "text": "This tutorial is for getting into the extra features for solving stiff ordinary differential equations in an efficient manner. Solving stiff ordinary differential equations requires specializing the linear solver on properties of the Jacobian in order to cut down on the mathcalO(n^3) linear solve and  the mathcalO(n^2) back-solves. Note that these same functions and  controls also extend to stiff SDEs, DDEs, DAEs, etc."
 },
 
 {
