@@ -3,9 +3,9 @@
 This tutorial is for getting into the extra features for solving stiff ordinary
 differential equations in an efficient manner. Solving stiff ordinary
 differential equations requires specializing the linear solver on properties of
-the Jacobian in order to cut down on the O(n^3) linear solve and the O(n^2)
-back-solves. Note that these same functions and controls also extend to stiff
-SDEs, DDEs, DAEs, etc.
+the Jacobian in order to cut down on the ``\mathcal{O}(n^3)`` linear solve and 
+the ``\mathcal{O}(n^2)`` back-solves. Note that these same functions and 
+controls also extend to stiff SDEs, DDEs, DAEs, etc.
 
 #### This tutorial is for advanced users to dive into advanced features!
 
