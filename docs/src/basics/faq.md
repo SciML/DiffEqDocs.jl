@@ -238,7 +238,7 @@ function func(du,u,p,t)
   du[2] = -3 * u[2] + u[1]*u[2]
 end
 function f(p)
-  prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
+  prob = ODEProblem(func,eltype(p).([1.0,1.0]),(0.0,10.0),p)
   # Lower tolerances to show the methods converge to the same value
   solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]
 end
@@ -255,8 +255,8 @@ using ForwardDiff
 ForwardDiff.jacobian(f,[1.5,1.0])
 
 2×2 Array{Float64,2}:
-  2.20214   0.189782
- -6.2273   -0.700188
+  2.16056   0.188569
+ -6.25677  -0.697978
 ```
 
 and compare it to Calculus.jl:
@@ -265,8 +265,8 @@ and compare it to Calculus.jl:
 Calculus.jacobian(f,[1.5,1.0],:central)
 
 2×2 Array{Float64,2}:
-  2.20214   0.189782
- -6.2273   -0.700188
+  2.16056   0.188569
+ -6.25677  -0.697978
 ```
 
 #### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?
