@@ -13,19 +13,19 @@ affect!(integrator) = integrator.prob.p = 1</code></pre><p>Then it will change b
   du[2] = -3 * u[2] + u[1]*u[2]
 end
 function f(p)
-  prob = ODEProblem(func,eltype(p).([1.0,1.0]),eltype(p).((0.0,10.0)),p)
+  prob = ODEProblem(func,eltype(p).([1.0,1.0]),(0.0,10.0),p)
   # Lower tolerances to show the methods converge to the same value
   solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]
 end</code></pre><p>This function takes in new parameters and spits out the solution at the end. We make the inital condition <code>eltype(p).([1.0,1.0])</code> so that way it&#39;s typed to be Dual numbers whenever <code>p</code> is an array of <code>Dual</code> numbers, and we do the same for the timespan just to show what you&#39;d do if there was parameters-dependent events. Then we can take the Jacobian via ForwardDiff.jl:</p><pre><code class="language-julia">using ForwardDiff
 ForwardDiff.jacobian(f,[1.5,1.0])
 
 2×2 Array{Float64,2}:
-  2.20214   0.189782
- -6.2273   -0.700188</code></pre><p>and compare it to Calculus.jl:</p><pre><code class="language-julia">Calculus.jacobian(f,[1.5,1.0],:central)
+  2.16056   0.188569
+ -6.25677  -0.697978</code></pre><p>and compare it to Calculus.jl:</p><pre><code class="language-julia">Calculus.jacobian(f,[1.5,1.0],:central)
 
 2×2 Array{Float64,2}:
-  2.20214   0.189782
- -6.2273   -0.700188</code></pre><h4><a class="nav-anchor" id="I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1" href="#I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1">I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?</a></h4><p>This is because you&#39;re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:</p><pre><code class="language-julia">using LinearAlgebra, OrdinaryDiffEq
+  2.16056   0.188569
+ -6.25677  -0.697978</code></pre><h4><a class="nav-anchor" id="I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1" href="#I-get-Dual-number-errors-when-I-solve-my-ODE-with-Rosenbrock-or-SDIRK-methods...?-1">I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?</a></h4><p>This is because you&#39;re using a cache which is not compatible with autodifferentiaion via ForwardDiff.jl. For example, if we use the ODE function:</p><pre><code class="language-julia">using LinearAlgebra, OrdinaryDiffEq
 function foo(du, u, (A, tmp), t)
     mul!(tmp, A, u)
     @. du = u + tmp
