@@ -19,6 +19,8 @@ using DifferentialEquations
 with
 
 ```julia
+#Add the OrdinaryDiffEq Package first!
+#using Pkg; Pkg.add("OrdinaryDiffEq")
 using OrdinaryDiffEq
 ```
 
