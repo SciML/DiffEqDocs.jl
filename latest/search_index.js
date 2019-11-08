@@ -4453,7 +4453,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low Dependency Usage",
     "title": "Common Example: Using only OrdinaryDiffEq.jl",
     "category": "section",
-    "text": "One common example is using only the ODE solvers OrdinaryDiffEq.jl. The solvers all reexport DiffEqBase.jl (which holds the problem and solution types) and so OrdinaryDiffEq.jl is all that\'s needed. Thus replacingusing DifferentialEquationswithusing OrdinaryDiffEqwill work if these are the only features you are using."
+    "text": "One common example is using only the ODE solvers OrdinaryDiffEq.jl. The solvers all reexport DiffEqBase.jl (which holds the problem and solution types) and so OrdinaryDiffEq.jl is all that\'s needed. Thus replacingusing DifferentialEquationswith#Add the OrdinaryDiffEq Package first!\n#using Pkg; Pkg.add(\"OrdinaryDiffEq\")\nusing OrdinaryDiffEqwill work if these are the only features you are using."
 },
 
 {
