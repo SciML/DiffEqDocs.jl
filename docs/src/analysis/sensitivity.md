@@ -156,7 +156,7 @@ Next we need to make our initial condition Dual numbers so that these propogate
 through the solution. We can do this manually like:
 
 ```julia
-u0dual = [Dual{MyTag}(1.0, (0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0))]
+u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0))]
 ```
 
 or use the same shorthand from before:
