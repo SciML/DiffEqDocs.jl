@@ -102,7 +102,7 @@ DiscreteCallback(condition,affect!;
 ### CallbackSet
 
 Multiple callbacks can be chained together to form a `CallbackSet`. A `CallbackSet`
-is constructed by passing the constructor `ContinuousCallback`, `DiscreteCallback`, 
+is constructed by passing the constructor `ContinuousCallback`, `DiscreteCallback`,
 `VectorContinuousCallback` or other `CallbackSet` instances:
 
 ```julia
@@ -135,7 +135,7 @@ VectorContinuousCallback(condition,affect!,len;
                    abstol=10eps(),reltol=0)
 ```
 
-`VectorContinuousCallback` is also a subtype of `AbstractContinuousCallback`. `CallbackSet` is not feasible when you have a large number of callbacks, as it doesn't scale well. For this reason, we have `VectorContinuousCallback` - it allows you to have a single callback for multiple events. 
+`VectorContinuousCallback` is also a subtype of `AbstractContinuousCallback`. `CallbackSet` is not feasible when you have a large number of callbacks, as it doesn't scale well. For this reason, we have `VectorContinuousCallback` - it allows you to have a single callback for multiple events.
 
 * `condition` - This is a function `condition(out, u, t, integrator)` which should save the condition value in the array `out` at the right index. Maximum index of `out` should be specified in the `len` property of callback. So this way you can have a chain of `len` events, which would cause the `i`th event to trigger when `out[i] = 0`.
 
@@ -168,7 +168,7 @@ be true for at least one callback.
 
 A common issue with callbacks is that they cause a large discontinuous change,
 and so it may be wise to pull down `dt` after such a change. To control the
-timestepping from a callback, please see [the timestepping controls in the integrator interface](../basics/integrator.html#Stepping-Controls-1). Specifically, `set_proposed_dt!` is used to set the next stepsize,
+timestepping from a callback, please see [the timestepping controls in the integrator interface](../basics/integrator#Stepping-Controls-1). Specifically, `set_proposed_dt!` is used to set the next stepsize,
 and `terminate!` can be used to cause the simulation to stop.
 
 ## DiscreteCallback Examples
@@ -251,7 +251,7 @@ a library of useful callbacks for JuliaDiffEq solvers.
 
 ### Example 2: A Control Problem
 
-Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/latest/features/diffeq_arrays.html#Example:-A-Control-Problem-1).
+Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/latest/features/diffeq_arrays#Example:-A-Control-Problem-1).
 
 ## ContinuousCallback Examples
 
@@ -509,7 +509,7 @@ This allows you to build sophisticated models of populations with births and dea
 
 ### Example 1: Bouncing Ball with multiple walls
 
-This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as - 
+This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as -
 
 ```julia
 function f(du,u,p,t)
@@ -520,7 +520,7 @@ function f(du,u,p,t)
 end
 ```
 
-where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `u[3]` denotes `x`-coordinate and `u[4]` denotes velocity in `x`-direction. We will make a `VectorContinuousCallback` of length 2 - one for `x` axis collision, one for walls parallel to `y` axis. 
+where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `u[3]` denotes `x`-coordinate and `u[4]` denotes velocity in `x`-direction. We will make a `VectorContinuousCallback` of length 2 - one for `x` axis collision, one for walls parallel to `y` axis.
 
 ```julia
 function condition(out,u,t,integrator) # Event when event_f(u,t) == 0
@@ -550,6 +550,6 @@ prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb,dt=1e-3,adaptive=false)
 plot(sol,vars=(1,3))
 ```
-And you get the following output: 
+And you get the following output:
 
 ![Cell1](../assets/ball2.png)

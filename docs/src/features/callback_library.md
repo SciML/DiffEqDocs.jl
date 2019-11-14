@@ -30,7 +30,7 @@ ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g
 - `g`: The residual function for the manifold. This is an inplace function of form
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the manifold components.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html).
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear).
 - `save`: Whether to do the save after the callback is applied. Standard saving is unchanged.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
 - `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
@@ -65,7 +65,7 @@ cb = ManifoldProjection(g)
 ```
 
 Using this callback, the Runge-Kutta method `Vern7` conserves energy. Note that the
-standard saving occurs after the step and before the callback, and thus we set 
+standard saving occurs after the step and before the callback, and thus we set
 `save_everystep=false` to turn off all standard saving and let the callback
 save after the projection is applied.
 
@@ -116,7 +116,7 @@ ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help
 show.
 
 In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
--> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html),
+-> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
 calculations might be repeated multiple times until a step is accepted, it can
@@ -187,7 +187,7 @@ function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
   copies of it are saved, and extrapolated values and residuals are written to them.
   If it is not specified every application of the callback allocates two new copies
   of the state vector.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear.html)
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear)
   which is passed to a `ManifoldProjection`.
 - `save`: Whether to do the standard saving (applied after the callback).
 - `abstol`: Tolerance up to which residuals are accepted. Element-wise tolerances
@@ -307,8 +307,8 @@ print(saved_values.saveval)
 print(saved_values.t)
 
 #=
-Tuple{Float64,Float64}[(2.23186, 2.49102), (2.46659, 2.753), (2.726, 3.04254), (3.0127, 3.36253), 
-(3.32955, 3.71617), (3.67972, 4.107), (4.06672, 4.53893), (4.49442, 5.0163), (4.9671, 5.54387), 
+Tuple{Float64,Float64}[(2.23186, 2.49102), (2.46659, 2.753), (2.726, 3.04254), (3.0127, 3.36253),
+(3.32955, 3.71617), (3.67972, 4.107), (4.06672, 4.53893), (4.49442, 5.0163), (4.9671, 5.54387),
 (5.48949, 6.12692), (6.06683, 6.77129)]
 [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 =#
@@ -344,8 +344,8 @@ function IterativeCallback(time_choice, user_affect!,tType = Float64;
 
 where `time_choice(integrator)` determines the time of the next callback and
 `user_affect!` is the effect applied to the integrator at the stopping points.
-If `nothing` is returned for the time choice then the iterator ends. `initial_affect` 
-is whether to apply the affect at `t=0` which defaults to `false`. `kwargs` are 
+If `nothing` is returned for the time choice then the iterator ends. `initial_affect`
+is whether to apply the affect at `t=0` which defaults to `false`. `kwargs` are
 keyword arguments accepted by the `DiscreteCallback` constructor.
 
 ## PeriodicCallback
@@ -362,7 +362,7 @@ a fixed rate.
 PeriodicCallback(f, Δt::Number; initial_affect = true, kwargs...)
 ```
 
-where `f` is the function to be called periodically, `Δt` is the period, 
+where `f` is the function to be called periodically, `Δt` is the period,
 `initial_affect` is whether to apply the affect at `t=0` which defaults to `true`,
 and `kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor
 (see the [DiscreteCallback](@ref) section).

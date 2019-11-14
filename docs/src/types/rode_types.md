@@ -28,9 +28,9 @@ will be used which will throw nice errors if you try to index non-existent
 parameters. Any extra keyword arguments are passed on to the solvers. For example,
 if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
-  
+
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads)
 page.
 
 ### Fields
@@ -41,7 +41,7 @@ page.
 * `p`: The optional parameters for the problem. Defaults to `NullParameters`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../../features/noise_process.html)
+  see [the noise process documentation page](../../../features/noise_process)
 * `rand_prototype`: A prototype type instance for the noise vector. It defaults
   to `nothing`, which means the problem should be interpreted as having a noise
   vector whose size matches `u0`.

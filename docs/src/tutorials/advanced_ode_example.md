@@ -3,8 +3,8 @@
 This tutorial is for getting into the extra features for solving stiff ordinary
 differential equations in an efficient manner. Solving stiff ordinary
 differential equations requires specializing the linear solver on properties of
-the Jacobian in order to cut down on the ``\mathcal{O}(n^3)`` linear solve and 
-the ``\mathcal{O}(n^2)`` back-solves. Note that these same functions and 
+the Jacobian in order to cut down on the ``\mathcal{O}(n^3)`` linear solve and
+the ``\mathcal{O}(n^2)`` back-solves. Note that these same functions and
 controls also extend to stiff SDEs, DDEs, DAEs, etc.
 
 #### This tutorial is for advanced users to dive into advanced features!
@@ -24,7 +24,7 @@ please see the
 
 Choosing a good solver is required for getting top notch speed. General
 recommendations can be found on the solver page (for example, the
-[ODE Solver Recommendations](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html)).
+[ODE Solver Recommendations](http://docs.juliadiffeq.org/latest/solvers/ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
 for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and Sundials
@@ -37,7 +37,7 @@ compare many solvers on many problems.
 
 ### Check Out the Speed FAQ
 
-See [this FAQ](http://docs.juliadiffeq.org/latest/basics/faq.html#Performance-1)
+See [this FAQ](http://docs.juliadiffeq.org/latest/basics/faq#Performance-1)
 for information on common pitfalls and how to improve performance.
 
 ### Setting Up Your Julia Installation for Speed
@@ -71,7 +71,7 @@ the linear algebra routines. Please see the package for the limitations.
 
 When possible, use GPUs. If your ODE system is small and you need to solve it
 with very many different parameters, see the
-[ensembles interface](http://docs.juliadiffeq.org/latest/features/ensemble.html)
+[ensembles interface](http://docs.juliadiffeq.org/latest/features/ensemble)
 and [DiffEqGPU.jl](https://github.com/JuliaDiffEq/DiffEqGPU.jl). If your problem
 is large, consider using a [CuArray](https://github.com/JuliaGPU/CuArrays.jl)
 for the state to allow for GPU-parallelism of the internal linear algebra.
@@ -372,7 +372,7 @@ GMRES linear solver.
 ```
 
 For more information on linear solver choices, see the
-[linear solver documentation](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html).
+[linear solver documentation](http://docs.juliadiffeq.org/latest/features/linear_nonlinear).
 
 We can also enhance this by using a Jacobian-Free implementation of `f'(x)*v`.
 To define the Jacobian-Free operator, we can use
@@ -395,7 +395,7 @@ prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p)
 
 ### Adding a Preconditioner
 
-The [linear solver documentation](http://docs.juliadiffeq.org/latest/features/linear_nonlinear.html#IterativeSolvers.jl-Based-Methods-1)
+The [linear solver documentation](http://docs.juliadiffeq.org/latest/features/linear_nonlinear#IterativeSolvers.jl-Based-Methods-1)
 shows how you can add a preconditioner to the GMRES. For example, you can
 use packages like [AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
 to add an algebraic multigrid (AMG) or [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
@@ -434,7 +434,7 @@ be given (otherwise it will default to attempting an LU-decomposition).
 While much of the setup makes the transition to using Sundials automatic, there
 are some differences between the pure Julia implementations and the Sundials
 implementations which must be taken note of. These are all detailed in the
-[Sundials solver documentation](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Sundials.jl-1),
+[Sundials solver documentation](http://docs.juliadiffeq.org/latest/solvers/ode_solve#Sundials.jl-1),
 but here we will highlight the main details which one should make note of.
 
 Defining a sparse matrix and a Jacobian for Sundials works just like any other
@@ -454,7 +454,7 @@ using Sundials
 ```
 
 Details for setting up a preconditioner with Sundials can be found at the
-[Sundials solver page](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html#Sundials.jl-1).
+[Sundials solver page](http://docs.juliadiffeq.org/latest/solvers/ode_solve#Sundials.jl-1).
 
 ## Handling Mass Matrices
 
@@ -514,4 +514,4 @@ plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 
 Note that if your mass matrix is singular, i.e. your system is a DAE, then you
 need to make sure you choose
-[a solver that is compatible with DAEs](http://docs.juliadiffeq.org/latest/solvers/dae_solve.html#Full-List-of-Methods-1)
+[a solver that is compatible with DAEs](http://docs.juliadiffeq.org/latest/solvers/dae_solve#Full-List-of-Methods-1)

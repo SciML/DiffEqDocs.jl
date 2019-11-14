@@ -573,7 +573,7 @@ on/off multithreading.
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
   Expects the right hand side function to be a
-  [`AbstractDiffEqOperator`](../../features/diffeq_operator.html).
+  [`AbstractDiffEqOperator`](../../../features/diffeq_operator).
 
 Options:
 
@@ -601,7 +601,7 @@ These methods are all fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4.
 
 The methods are intended for semilinear problems constructed by
-[`SplitODEProblem`](../../types/split_ode_types.html) or `SplitODEFunction`. They can
+[`SplitODEProblem`](../../../types/split_ode_types) or `SplitODEFunction`. They can
 also be used for a general nonlinear problem, in which case the jacobian of the right
 hand side is used as the linear operator in each time step.
 
@@ -687,12 +687,12 @@ Sundials CVODE integrator.
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
 solver, see
-[the manual page on solver specification](../../features/linear_nonlinear.html).
+[the manual page on solver specification](../../../features/linear_nonlinear).
 
 Note that performance overload information (Jacobians etc.) are not used in this
 mode. This can control autodifferentiation of the Jacobian as well.
 For more information on specifying the nonlinear solver, see
-[the manual page on solver specification](../../features/linear_nonlinear.html).
+[the manual page on solver specification](../../../features/linear_nonlinear).
 
 Additionally, the Rosenbrock and SDIRK methods have differentiation
 controls. In each of these, `autodiff` can be set to turn on/off
@@ -1072,7 +1072,7 @@ using ODE
 
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../../features/diffeq_arrays.html).
+detection, and [discrete variables need to be updated appropriately](../../../features/diffeq_arrays).
 
 ### MATLABDiffEq.jl
 

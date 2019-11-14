@@ -312,8 +312,8 @@ parameter list.
 ### turing_inference
 
 ```julia
-function turing_inference(prob::DiffEqBase.DEProblem,alg,t,data,priors; 
-                              likelihood_dist_priors, likelihood, num_samples=1000, 
+function turing_inference(prob::DiffEqBase.DEProblem,alg,t,data,priors;
+                              likelihood_dist_priors, likelihood, num_samples=1000,
                               sampler = Turing.NUTS(num_samples, 0.65), syms, kwargs...)
 ```
 
@@ -702,7 +702,7 @@ or MOSEK a try!
 
 ### Using JuMP with DiffEqParamEstim
 
-[JuMP](https://github.com/JuliaOpt/JuMP.jl) is a domain-specific modeling language 
+[JuMP](https://github.com/JuliaOpt/JuMP.jl) is a domain-specific modeling language
 for mathematical optimization embedded in Julia.
 
 ```julia
@@ -721,27 +721,27 @@ end
 ```
 
 Let's get a solution of the system with parameter values `σ=10.0` `ρ=28.0` `β=8/3` to use as our
-data. We define some convenience functions `model_ode` (to create an `ODEProblem`) and `solve_model`(to obtain 
+data. We define some convenience functions `model_ode` (to create an `ODEProblem`) and `solve_model`(to obtain
 solution of the `ODEProblem`) to use in a custom objective function later.
 
 ```julia
 u0 = [1.0;0.0;0.0]
 t = 0.0:0.01:1.0
 tspan = (0.0,1.0)
-model_ode(p_) = ODEProblem(g, u0, tspan,p_) 
+model_ode(p_) = ODEProblem(g, u0, tspan,p_)
 solve_model(mp_) = OrdinaryDiffEq.solve(model_ode(mp_), Tsit5(),saveat=0.01)
 mock_data = Array(solve_model([10.0,28.0,8/3]))
 ```
 Now we define a custom objective function to pass for optimization to JuMP using
-the `build_loss_objective` described above provided by DiffEqParamEstim that defines an objective 
+the `build_loss_objective` described above provided by DiffEqParamEstim that defines an objective
 function for the parameter estimation problem.
 
 ```julia
 loss_objective(mp_, dat) = build_loss_objective(model_ode(mp_), Tsit5(), L2Loss(t,dat))
 ```
 
-We create a JuMP model, variables, set the objective function and the choice of 
-optimization algorithm to be used in the JuMP syntax. You can read more about this in 
+We create a JuMP model, variables, set the objective function and the choice of
+optimization algorithm to be used in the JuMP syntax. You can read more about this in
 JuMP's [documentation](http://www.juliaopt.org/JuMP.jl/0.18/index.html).
 
 ```julia
@@ -763,7 +763,7 @@ Let's call the optimizer to obtain the fitted parameter values.
 sol = JuMP.solve(jumodel)
 best_mp = getvalue.(getindex.((jumodel,), Symbol.(jumodel.colNames)))
 ```
-Let's compare the solution at the obtained parameter values and our data. 
+Let's compare the solution at the obtained parameter values and our data.
 
 ```julia
 sol = OrdinaryDiffEq.solve(best_mp |> model_ode, Tsit5())
@@ -961,7 +961,7 @@ obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),
                                      parallel_type = :threads)
 result = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())
 ```
-Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html#First-differencing-1).
+Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation/#First-differencing-1).
 
 ```julia
 Results of Optimization Algorithm

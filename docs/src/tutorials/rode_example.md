@@ -28,7 +28,7 @@ sol = solve(prob,RandomEM(),dt=1/100)
 
 The random process defaults to a Gaussian/Wiener process, so there is nothing
 else required here! See the documentation on
-[`NoiseProcess`es](../../features/noise_process.html) for details on how to define
+[`NoiseProcess`es](../../../features/noise_process) for details on how to define
 other noise proceses.
 
 ## Example 2: Systems of RODEs
