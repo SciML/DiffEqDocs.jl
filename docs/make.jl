@@ -2,7 +2,7 @@ using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological
 
 makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          doctest=false, clean=true,
-         format = :html,
+         format = Dcoumenter.HTML(analytics = "UA-90474609-3"),
          assets = ["assets/favicon.ico"],
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
