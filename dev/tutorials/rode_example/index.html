@@ -13,7 +13,7 @@ end
 u0 = 1.00
 tspan = (0.0,5.0)
 prob = RODEProblem(f,u0,tspan)
-sol = solve(prob,RandomEM(),dt=1/100)</code></pre><p><img src="../../assets/intro_rode.png" alt="intro_rode"/></p><p>The random process defaults to a Gaussian/Wiener process, so there is nothing else required here! See the documentation on <a href="../features/noise_process.html"><code>NoiseProcess</code>es</a> for details on how to define other noise proceses.</p><h2><a class="nav-anchor" id="Example-2:-Systems-of-RODEs-1" href="#Example-2:-Systems-of-RODEs-1">Example 2: Systems of RODEs</a></h2><p>As with the other problem types, there is an in-place version which is more efficient for systems. The signature is <code>f(du,u,p,t,W)</code>. For example,</p><pre><code class="language-julia">using DifferentialEquations
+sol = solve(prob,RandomEM(),dt=1/100)</code></pre><p><img src="../../assets/intro_rode.png" alt="intro_rode"/></p><p>The random process defaults to a Gaussian/Wiener process, so there is nothing else required here! See the documentation on <a href="../../features/noise_process"><code>NoiseProcess</code>es</a> for details on how to define other noise proceses.</p><h2><a class="nav-anchor" id="Example-2:-Systems-of-RODEs-1" href="#Example-2:-Systems-of-RODEs-1">Example 2: Systems of RODEs</a></h2><p>As with the other problem types, there is an in-place version which is more efficient for systems. The signature is <code>f(du,u,p,t,W)</code>. For example,</p><pre><code class="language-julia">using DifferentialEquations
 function f(du,u,p,t,W)
   du[1] = 2u[1]*sin(W[1] - W[2])
   du[2] = -2u[2]*cos(W[1] + W[2])

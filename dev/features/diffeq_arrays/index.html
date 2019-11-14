@@ -32,7 +32,7 @@ end</code></pre><p>to update the discrete variables (unless the algorithm notes 
 end</code></pre><p>as our <code>DEDataVector</code>. It has an extra field <code>f1</code> which we will use as our control variable. Our ODE function will use this field as follows:</p><pre><code class="language-julia">function f(du,u,p,t)
     du[1] = -0.5*u[1] + u.f1
     du[2] = -0.5*u[2]
-end</code></pre><p>Now we will setup our control mechanism. It will be a simple setup which uses set timepoints at which we will change <code>f1</code>. At <code>t=5.0</code> we will want to increase the value of <code>f1</code>, and at <code>t=8.0</code> we will want to decrease the value of <code>f1</code>. Using the <a href="callback_functions.html"><code>DiscreteCallback</code> interface</a>, we code these conditions as follows:</p><pre><code class="language-julia">const tstop1 = [5.]
+end</code></pre><p>Now we will setup our control mechanism. It will be a simple setup which uses set timepoints at which we will change <code>f1</code>. At <code>t=5.0</code> we will want to increase the value of <code>f1</code>, and at <code>t=8.0</code> we will want to decrease the value of <code>f1</code>. Using the <a href="callback_functions"><code>DiscreteCallback</code> interface</a>, we code these conditions as follows:</p><pre><code class="language-julia">const tstop1 = [5.]
 const tstop2 = [8.]
 
 
