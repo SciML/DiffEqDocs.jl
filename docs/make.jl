@@ -111,9 +111,5 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          ])
 
 deploydocs(
-   repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git",
-   target = "build",
-   osname = "linux",
-   julia = "1.1",
-   deps = nothing,
-   make = nothing)
+   repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"
+)
