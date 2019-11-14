@@ -1,11 +1,14 @@
-# Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
-os:
-  - linux
-julia:
-  - 1.1
+
 notifications:
   email: false
-script:
-  - julia --color=yes -e 'using Pkg; Pkg.instantiate()'
-  - julia --color=yes docs/make.jl
+
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.1
+      os: linux
+      script:
+        - julia --color=yes --project=docs/ -e 'using Pkg; Pkg.instantiate()'
+        - julia --color=yes --project=docs/ docs/make.jl
+      after_success: skip
