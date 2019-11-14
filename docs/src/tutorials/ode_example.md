@@ -60,10 +60,10 @@ for more examples.
 The problem types include many other features, including the ability to define
 mass matrices and hold callbacks for events. Each problem type has a page which
 details its constructor and the available fields. For
-[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/latest/types/ode_types.html).
+[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/latest/types/ode_types).
 In addition, a user can specify additional functions to be associated with the
 function in order to speed up the solvers. These are detailed
-[at the performance overloads page](http://docs.juliadiffeq.org/latest/features/performance_overloads.html).
+[at the performance overloads page](http://docs.juliadiffeq.org/latest/features/performance_overloads).
 
 ### Step 2: Solving a Problem
 
@@ -76,7 +76,7 @@ sol = solve(prob)
 ```
 
 The solvers can be controlled using the available options are described on the
-[Common Solver Options manual page](../../basics/common_solver_opts.html). For example,
+[Common Solver Options manual page](../../../basics/common_solver_opts). For example,
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
@@ -149,7 +149,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `radau()` for really high accuracy stiff equations (requires installing ODEInterfaceDiffEq.jl)
 
 For a comprehensive list of the available algorithms and detailed recommendations,
-[Please see the solver documentation](../../solvers/ode_solve.html). Every problem
+[Please see the solver documentation](../../../solvers/ode_solve). Every problem
 type has an associated page detailing all of the solvers associated with the problem.
 
 ### Step 3: Analyzing the Solution
@@ -196,11 +196,11 @@ step, while `(t)` is an interpolation at time `t`!
 If in the solver `dense=true` (this is the default unless `saveat` is used), then
 this interpolation is a high order interpolation and thus usually matches the
 error of the solution time points. The interpolations associated with each solver
-is [detailed at the solver algorithm page](../../solvers/ode_solve.html). If `dense=false`
+is [detailed at the solver algorithm page](../../../solvers/ode_solve). If `dense=false`
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
-For details on more handling the output, see [the solution handling page](../../basics/solution.html).
+For details on more handling the output, see [the solution handling page](../../../basics/solution).
 
 #### Plotting Solutions
 
@@ -225,7 +225,7 @@ gui()
 ```
 
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
-Additional DiffEq-specific controls are documented [at the plotting page](../../basics/plot.html).
+Additional DiffEq-specific controls are documented [at the plotting page](../../../basics/plot).
 
 For example, from the Plots.jl attribute page we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
@@ -285,7 +285,7 @@ sol = solve(prob)
 ```
 
 Using the plot recipe tools
-[defined on the plotting page](http://docs.juliadiffeq.org/latest/basics/plot.html#Choosing-Variables-1),
+[defined on the plotting page](http://docs.juliadiffeq.org/latest/basics/plot#Choosing-Variables-1),
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
@@ -310,7 +310,7 @@ Note that here "variable 0" corresponds to the independent variable ("time").
 
 In many cases you may want to explicitly have parameters associated with your
 differential equations. This can be used by things like
-[parameter estimation routines](../../analysis/parameter_estimation.html).
+[parameter estimation routines](../../../analysis/parameter_estimation).
 In this case, you use the `p` values via the syntax:
 
 ```julia
@@ -367,7 +367,7 @@ DifferentialEquations.jl will automatically translate this to be exactly the
 same as `f`. The result is more legible code with no performance loss.
 For more information on the macro Domain Specific Language (DSL)
 and its limitations, please see
-[the parameterized function page](../../analysis/parameterized_functions.html)
+[the parameterized function page](../../../analysis/parameterized_functions)
 The result is that `g` is a function which you can now use to define the Lorenz
 problem.
 
@@ -537,11 +537,11 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Ensemble experiments](../../features/ensemble.html)
-- [Saving the output to tabular formats like DataFrames and CSVs](../../features/io.html)
-- [Event handling](../../features/callback_functions.html)
-- [Parameter estimation (inverse problems)](../../analysis/parameter_estimation.html)
-- [Quantification of numerical uncertainty and error](../../analysis/uncertainty_quantification.html)
+- [Handling, parallelizing, and analyzing large Ensemble experiments](../../../features/ensemble)
+- [Saving the output to tabular formats like DataFrames and CSVs](../../../features/io)
+- [Event handling](../../../features/callback_functions)
+- [Parameter estimation (inverse problems)](../../../analysis/parameter_estimation)
+- [Quantification of numerical uncertainty and error](../../../analysis/uncertainty_quantification)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types

@@ -1,7 +1,7 @@
 # Boundary Value Problems
 
 This tutorial will introduce you to the functionality for solving BVPs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). This tutorial assumes you have read the [Ordinary Differential Equations tutorial](ode_example.html).
+introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
 
 In this example we will solve the ODE that satisfies the boundary condition in the form of
 

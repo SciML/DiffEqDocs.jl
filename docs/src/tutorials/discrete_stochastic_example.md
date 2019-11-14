@@ -3,7 +3,7 @@
 In this tutorial we will describe how to define and simulate continuous-time
 jump processes, also known in biological fields as Gillespie-type models. This
 tutorial assumes you have read the [Ordinary Differential Equations
-tutorial](ode_example.html). The discrete stochastic simulations we consider are
+tutorial](../../ode_example). The discrete stochastic simulations we consider are
 a form of jump equation with a "trivial" (non-existent) differential equation.
 We will first demonstrate how to build these types of models using the
 biological modeling functionality, then describe how to build them directly and
@@ -185,7 +185,7 @@ jump = ConstantRateJump(rate,affect!)
 
 where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the integrator
 `affect!(integrator)` (for details on the integrator, see the
-[integrator interface docs](http://docs.juliadiffeq.org/latest/basics/integrator.html)).
+[integrator interface docs](http://docs.juliadiffeq.org/latest/basics/integrator)).
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
@@ -428,7 +428,7 @@ jump_prob = JumpProblem(prob,Direct(),rj)
 
 Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
 required. This is detailed on
-[the jump solvers page](http://docs.juliadiffeq.org/latest/solvers/jump_solve.html).
+[the jump solvers page](http://docs.juliadiffeq.org/latest/solvers/jump_solve).
 One such algorithm is `SimpleTauLeaping`, which we use as follows:
 
 ```julia

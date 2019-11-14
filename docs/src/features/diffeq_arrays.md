@@ -147,7 +147,7 @@ end
 Now we will setup our control mechanism. It will be a simple setup which uses
 set timepoints at which we will change `f1`. At `t=5.0` we will want to increase
 the value of `f1`, and at `t=8.0` we will want to decrease the value of `f1`. Using
-the [`DiscreteCallback` interface](../callback_functions.html), we code these conditions
+the [`DiscreteCallback` interface](../callback_functions), we code these conditions
 as follows:
 
 ```julia

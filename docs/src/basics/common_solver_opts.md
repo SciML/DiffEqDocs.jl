@@ -53,8 +53,8 @@ section at the end of this page for some example usage.
   most efficient manner available to the solver. Note that this
   can be used even if `dense=false`. If only `saveat` is given, then
   the arguments `save_everystep` and `dense` are `false` by default.   
-  If `saveat` is given a number, then it will automatically expand to 
-  `tspan[1]:saveat:tspan[2]`. For methods where interpolation is not possible, 
+  If `saveat` is given a number, then it will automatically expand to
+  `tspan[1]:saveat:tspan[2]`. For methods where interpolation is not possible,
   `saveat` may be equivalent to `tstops`. The default value is `[]`.
 * `save_idxs`: Denotes the indices for the components of the equation to save.
   Defaults to saving all indices. For example, if you are solving a 3-dimensional ODE,
@@ -87,7 +87,7 @@ section at the end of this page for some example usage.
 
 Note that `dense` requires `save_everystep=true` and `saveat=false`. If you need
 additional saving while keeping dense output, see
-[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/latest/features/callback_library.html).
+[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/latest/features/callback_library).
 
 ## Stepsize Control
 
@@ -147,7 +147,7 @@ Note that if a method does not have adaptivity, the following rules apply:
 These arguments control more advanced parts of the internals of adaptive timestepping
 and are mostly used to make it more efficient on specific problems. For detained
 explanations of the timestepping algorithms, see the
-[timestepping descriptions](../../extras/timestepping.html)
+[timestepping descriptions](../../../extras/timestepping/)
 
 * `internalnorm`: The norm function `internalnorm(u,t)` which error estimates
   are calculated. Required are two dispatches: one dispatch for the state variable
@@ -192,7 +192,7 @@ explanations of the timestepping algorithms, see the
 * `maxiters`: Maximum number of iterations before stopping. Defaults to 1e5.
 * `callback`: Specifies a callback. Defaults to a callback function which
   performs the saving routine. For more information, see the
-  [Event Handling and Callback Functions manual page](../../features/callback_functions.html).
+  [Event Handling and Callback Functions manual page](../../../features/callback_functions/).
 * `isoutofdomain`: Specifies a function `isoutofdomain(u,p,t)` where, when it
   returns true, it will reject the timestep. Disabled by default.
 * `unstable_check`: Specifies a function `unstable_check(dt,u,p,t)` where, when

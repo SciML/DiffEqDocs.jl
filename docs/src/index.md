@@ -23,35 +23,35 @@ implementations, using classic algorithms and ones from recent research which
 routinely outperform the "standard" C/Fortran methods, and include algorithms
 optimized for high-precision and HPC applications. At the same time, it wraps
 the classic C/Fortran methods, making it easy to switch over to them whenever
-necessary. Solving differential equations with different methods from 
-different languages and packages can be done by changing one line of code, 
+necessary. Solving differential equations with different methods from
+different languages and packages can be done by changing one line of code,
 allowing for easy benchmarking to ensure you are using the fastest method possible.
 
-DifferentialEquations.jl integrates with the Julia package sphere with: 
+DifferentialEquations.jl integrates with the Julia package sphere with:
 
 - GPU accleration through CUDAnative.jl and CuArrays.jl
 - Automated sparsity detection with [SparsityDetection.jl](https://github.com/JuliaDiffEq/SparsityDetection.jl)
 - Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/JuliaDiffEq/SparseDiffTools.jl), allowing for fast solutions
   to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
 - Allowing the specification of linear solvers for maximal efficiency
-- Progress meter integration with the Juno IDE for estimated time to solution 
-- Automatic plotting of time series and phase plots 
+- Progress meter integration with the Juno IDE for estimated time to solution
+- Automatic plotting of time series and phase plots
 - Built-in interpolations
 - Wraps for common C/Fortran methods like Sundials and Hairer's radau
 - Arbitrary precision with BigFloats and Arbfloats
-- Arbitrary array types, allowing the definition of differential equations on 
+- Arbitrary array types, allowing the definition of differential equations on
   matrices and distributed arrays
 - Unit checked arithmetic with Unitful
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Forward and adjoint local sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity.html) for fast gradient computations
-- [Optimization-based and Bayesian parameter estimation](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation.html)
+- [Forward and adjoint local sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity) for fast gradient computations
+- [Optimization-based and Bayesian parameter estimation](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation)
 - Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
-- [Automatic distributed, multithreaded, and GPU parallelism of ensemble trajectories](http://docs.juliadiffeq.org/latest/features/ensemble.html)
-- [Global sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/global_sensitivity.html)
-- [Uncertainty quantification](http://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification.html)
+- [Automatic distributed, multithreaded, and GPU parallelism of ensemble trajectories](http://docs.juliadiffeq.org/latest/features/ensemble)
+- [Global sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/global_sensitivity)
+- [Uncertainty quantification](http://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification)
 
 If you have any questions, or just want to chat about solvers/using the package,
 please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -89,12 +89,12 @@ for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Support
 Equations section below). If you are interested in only one type of equation
 solvers of `DifferentialEquations.jl` or simply want a more lightweight
 version, see the
-[Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep.html)
+[Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep)
 page.
 
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
-[ODE tutorial](tutorials/ode_example.html)**. Example IJulia notebooks
+[ODE tutorial](tutorials/ode_example)**. Example IJulia notebooks
 [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
@@ -135,17 +135,17 @@ pip install numba
 
 diffeqpy supports the majority of DifferentialEquations.jl with very similar
 syntax, see [the diffeqpy README for more details](https://github.com/JuliaDiffEq/diffeqpy).
-One important point to note is that Numba is generally an order of magnitude slower 
-than Julia in terms of  the generated differential equation solver code, and thus it is 
+One important point to note is that Numba is generally an order of magnitude slower
+than Julia in terms of  the generated differential equation solver code, and thus it is
 recommended to use `julia.Main.eval` for Julia-side derivative function implementations
 for maximal efficiency. See [this blog post](http://juliadiffeq.org/2018/04/30/Jupyter.html)
 for more information.
 
 ### Installing from R
 
-Use of DifferentialEquations.jl from the R programming language is available through the 
-[diffeqr](https://github.com/JuliaDiffEq/diffeqr) module. 
-[diffeqr is registered into CRAN](https://CRAN.R-project.org/package=diffeqr). 
+Use of DifferentialEquations.jl from the R programming language is available through the
+[diffeqr](https://github.com/JuliaDiffEq/diffeqr) module.
+[diffeqr is registered into CRAN](https://CRAN.R-project.org/package=diffeqr).
 Thus to add the package, use:
 
 ```R
@@ -162,7 +162,7 @@ You will need a working installation of Julia in your path. To install Julia, do
 from [the JuliaLang site](https://julialang.org/downloads/) and add it to your path. The download and
 installation of DifferentialEquations.jl will happen on the first invocation of `diffeqr::diffeq_setup()`.
 
-Currently, use from R supported a subset of DifferentialEquations.jl which is documented 
+Currently, use from R supported a subset of DifferentialEquations.jl which is documented
 [through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html)
 
 ### IJulia Notebook Tutorials

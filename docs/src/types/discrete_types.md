@@ -42,7 +42,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads.html)
+[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads)
 page.
 
 ### Fields
