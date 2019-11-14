@@ -109,7 +109,7 @@ constructor:
 ensembleprob = EnsembleProblem(prob)
 ```
 
-The solver commands are defined [at the Parallel Ensemble Simulations page](../../features/ensemble.html).
+The solver commands are defined [at the Parallel Ensemble Simulations page](../../../features/ensemble.html).
 For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
@@ -218,7 +218,7 @@ end α
 In this example we'll solve a system of SDEs with scalar noise. This means that
 the same noise process is applied to all SDEs. First we need to define a
 scalar noise process
-[using the Noise Process interface](../../features/noise_process.html).
+[using the Noise Process interface](../../../features/noise_process.html).
 Since we want a `WienerProcess` that starts at `0.0` at time `0.0`, we use the
 command `W = WienerProcess(0.0,0.0,0.0)` to define the Brownian motion we want,
 and then give this to the `noise` option in the `SDEProblem`. For a full example,
