@@ -115,7 +115,7 @@ deploydocs(
 )
 
 #Redirect old links
-cd("build/") do
+cd(@__DIR__) do
     for (root, dirs, files) in walkdir(".")
         for file in files
             path = relpath(joinpath(root, file), ".")
