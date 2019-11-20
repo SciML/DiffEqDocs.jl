@@ -111,7 +111,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          ])
 
 #Redirect old links
-cd(@__DIR__) do
+cd(joinpath(@__DIR__, "build")) do
     for (root, dirs, files) in walkdir(".")
         for file in files
             path = relpath(joinpath(root, file), ".")
