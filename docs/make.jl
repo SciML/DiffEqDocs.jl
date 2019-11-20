@@ -122,7 +122,7 @@ cd(joinpath(@__DIR__, "build")) do
             isfile(redirect) && (@warn "$redirect exists, skip"; continue)
             open(redirect, "w") do io
                 write(io, """
-                <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/index.html"/>
+                <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/"/>
                 """)
             end
         end
