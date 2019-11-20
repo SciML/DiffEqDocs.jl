@@ -110,10 +110,6 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          ]
          ])
 
-deploydocs(
-   repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"
-)
-
 #Redirect old links
 cd(@__DIR__) do
     for (root, dirs, files) in walkdir(".")
@@ -132,3 +128,7 @@ cd(@__DIR__) do
         end
     end
 end
+
+deploydocs(
+   repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"
+)
