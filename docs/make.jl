@@ -113,3 +113,22 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
 deploydocs(
    repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"
 )
+
+#Redirect old links
+cd("build/") do
+    for (root, dirs, files) in walkdir(".")
+        for file in files
+            path = relpath(joinpath(root, file), ".")
+            m = match(r"(.+)/index\.html$", path)
+            m === nothing && continue
+            redirect = "$(m[1]).html"
+            @info "Adding redirect for $(m[1]) from $(redirect)"
+            isfile(redirect) && (@warn "$redirect exists, skip"; continue)
+            open(redirect, "w") do io
+                write(io, """
+                <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/index.html"/>
+                """)
+            end
+        end
+    end
+end
