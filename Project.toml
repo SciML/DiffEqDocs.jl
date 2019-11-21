@@ -6,4 +6,5 @@ Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 
 [compat]
 DiffEqBiological = "4.0"
+DiffEqProblemLibrary = "4.5"
 Documenter = "0.23"
