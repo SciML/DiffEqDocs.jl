@@ -18,7 +18,7 @@ using DiffEqUncertainty
 
 ## ProbInts
 
-The [ProbInts](http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/girolami/probints)
+The [ProbInts](https://arxiv.org/abs/1506.04592)
 method for uncertainty quantification involves the transformation of an ODE
 into an associated SDE where the noise is related to the timesteps and the order
 of the algorithm. This is implemented into the DiffEq system via a callback function.
