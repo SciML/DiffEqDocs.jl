@@ -42,7 +42,7 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 - `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
   of available options, please see
-  [its ODE solver page](http://docs.juliadiffeq.org/latest/solvers/ode_solve#Sundials.jl-1)
+  [its ODE solver page](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1)
 
 ## Semilinear ODE
 
