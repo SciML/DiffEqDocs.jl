@@ -279,7 +279,7 @@ the same random number in the first and second SDEs.
 
 
 Note that this problem can only be solved my SDE methods which are compatible with non-diagonal
-noise. This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve).
+noise. This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/dev/solvers/sde_solve).
 
 The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
 constructor. This is a prototype for the type that `du` will be in `g`. This can
@@ -319,7 +319,7 @@ SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
 Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods.
-This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/latest/solvers/sde_solve).
+This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/dev/solvers/sde_solve).
 
 ### Example: Spatially-Colored Noise in the Heston Model
 
