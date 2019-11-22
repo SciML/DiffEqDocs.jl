@@ -185,7 +185,7 @@ jump = ConstantRateJump(rate,affect!)
 
 where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the integrator
 `affect!(integrator)` (for details on the integrator, see the
-[integrator interface docs](http://docs.juliadiffeq.org/latest/basics/integrator)).
+[integrator interface docs](http://docs.juliadiffeq.org/dev/basics/integrator)).
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
@@ -428,7 +428,7 @@ jump_prob = JumpProblem(prob,Direct(),rj)
 
 Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
 required. This is detailed on
-[the jump solvers page](http://docs.juliadiffeq.org/latest/solvers/jump_solve).
+[the jump solvers page](http://docs.juliadiffeq.org/dev/solvers/jump_solve).
 One such algorithm is `SimpleTauLeaping`, which we use as follows:
 
 ```julia
