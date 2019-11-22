@@ -698,7 +698,7 @@ Additionally, the Rosenbrock and SDIRK methods have differentiation
 controls. In each of these, `autodiff` can be set to turn on/off
 autodifferentiation, and `chunk_size` can be used to set the chunksize of the Dual
  numbers (see the
-[documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/advanced_usage.html#configuring-chunk-size)).
+[documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/stable/user/advanced/#Configuring-Chunk-Size-1)).
 In addition, the Rosenbrock and SDIRK methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
 disabled). The choices are `Val{:central}`, `Val{:forward}` or `Val{:complex}`.
