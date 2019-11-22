@@ -165,7 +165,7 @@ use an in-place function instead or only compute specific indices by passing
 an `idxs` keyword.
 
 The functional forms for the history function are discussed also
-[on the DDEProblem page](../../types/dde_types).
+[on the DDEProblem page](../../../types/dde_types).
 
 ### Undeclared Delays and State-Dependent Delays via Residual Control
 
