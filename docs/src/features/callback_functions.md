@@ -251,7 +251,7 @@ a library of useful callbacks for JuliaDiffEq solvers.
 
 ### Example 2: A Control Problem
 
-Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/latest/features/diffeq_arrays#Example:-A-Control-Problem-1).
+Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/dev/features/diffeq_arrays#Example:-A-Control-Problem-1).
 
 ## ContinuousCallback Examples
 
