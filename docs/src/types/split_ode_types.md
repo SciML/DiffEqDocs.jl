@@ -45,7 +45,7 @@ Therefore you can solve a `SplitODEProblem` using the same solvers for `ODEProbl
 dedicated to split problems, see [Split ODE Solvers](../../../solvers/split_ode_solve).
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads)
+[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
 page.
 
 ### Fields
