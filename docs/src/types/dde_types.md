@@ -59,7 +59,7 @@ parameters. Any extra keyword arguments are passed on to the solvers. For exampl
 if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
-For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/latest/features/performance_overloads) page.
+For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads) page.
 
 ### Arguments
 
