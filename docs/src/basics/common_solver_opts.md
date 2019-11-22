@@ -87,7 +87,7 @@ section at the end of this page for some example usage.
 
 Note that `dense` requires `save_everystep=true` and `saveat=false`. If you need
 additional saving while keeping dense output, see
-[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/latest/features/callback_library).
+[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/dev/features/callback_library).
 
 ## Stepsize Control
 
