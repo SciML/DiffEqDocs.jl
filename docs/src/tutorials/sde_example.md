@@ -2,7 +2,7 @@
 
 This tutorial will introduce you to the functionality for solving SDEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
-This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref Ordinary Differential Equations).
+This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
 
 ## Example 1: Scalar SDEs
 
