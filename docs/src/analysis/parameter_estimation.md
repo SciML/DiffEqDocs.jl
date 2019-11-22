@@ -1191,5 +1191,4 @@ In case of `dynamic_inference` the trace plots for the `i`th parameter can be ob
 plot(bayesian_result_hmc[1][i])
 ```
 
-For a better idea of the summary statistics and plotting you can take a look at the benchmark
-[notebooks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl/tree/master/ParameterEstimation)
+For a better idea of the summary statistics and plotting you can take a look at the [benchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl)
