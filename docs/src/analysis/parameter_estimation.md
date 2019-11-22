@@ -292,9 +292,9 @@ stan_inference(prob::ODEProblem,t,data,priors = nothing;alg=:rk45,
                vars=(StanODEData(),InverseGamma(2,3)))
 ```
 
-`stan_inference` uses [Stan.jl](http://goedman.github.io/Stan.jl/dev/INTRO.html)
+`stan_inference` uses [Stan.jl](https://stanjulia.github.io/CmdStan.jl/latest/INTRO/)
 to perform the Bayesian inference. The
-[Stan installation process](http://goedman.github.io/Stan.jl/dev/INSTALLATION.html)
+[Stan installation process](https://stanjulia.github.io/CmdStan.jl/latest/INSTALLATION/)
 is required to use this function. The input requires that the function is defined
 by a `ParameterizedFunction` with the `@ode_def` macro. `t` is the array of time
 and `data` is the array where the first dimension (columns) corresponds to the
