@@ -98,7 +98,7 @@ end
 ```
 
 What this function does is use the `remake` function
-[from the Problem Interface page](http://docs.juliadiffeq.org/latest/basics/problem/#Modification-of-problem-types-1)
+[from the Problem Interface page](http://docs.juliadiffeq.org/dev/basics/problem/#Modification-of-problem-types-1)
 to generate a new ODE problem with the new parameters, solves it, and returns
 the solution at the final time point. Notice that it takes care to make sure
 that the type of `u0` matches the type of `p`. This is because ForwardDiff.jl
