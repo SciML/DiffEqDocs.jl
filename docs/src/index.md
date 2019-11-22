@@ -45,19 +45,19 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Forward and adjoint local sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity) for fast gradient computations
-- [Optimization-based and Bayesian parameter estimation](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation)
+- [Forward and adjoint local sensitivity analysis](http://docs.juliadiffeq.org/dev/analysis/sensitivity) for fast gradient computations
+- [Optimization-based and Bayesian parameter estimation](http://docs.juliadiffeq.org/dev/analysis/parameter_estimation)
 - Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
-- [Automatic distributed, multithreaded, and GPU parallelism of ensemble trajectories](http://docs.juliadiffeq.org/latest/features/ensemble)
-- [Global sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/global_sensitivity)
-- [Uncertainty quantification](http://docs.juliadiffeq.org/latest/analysis/uncertainty_quantification)
+- [Automatic distributed, multithreaded, and GPU parallelism of ensemble trajectories](http://docs.juliadiffeq.org/dev/features/ensemble)
+- [Global sensitivity analysis](http://docs.juliadiffeq.org/dev/analysis/global_sensitivity)
+- [Uncertainty quantification](http://docs.juliadiffeq.org/dev/analysis/uncertainty_quantification)
 
 If you have any questions, or just want to chat about solvers/using the package,
 please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
 For bug reports, feature requests, etc., please submit an issue. If you're
 interested in contributing, please see the
-[Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/).
+[Developer Documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/).
 
 ## Supporting and Citing
 
@@ -102,7 +102,7 @@ For the most up to date information on using the package, please join [the Gitte
 
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information on how to get to the bleeding edge is found in the
-[developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/latest/index.html#Bleeding-Edge-1).
+[developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/index.html#Bleeding-Edge-1).
 
 ### Installing from Python
 
