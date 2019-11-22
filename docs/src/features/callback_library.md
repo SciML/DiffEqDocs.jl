@@ -30,7 +30,7 @@ ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g
 - `g`: The residual function for the manifold. This is an inplace function of form
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the manifold components.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear).
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](../../linear_nonlinear).
 - `save`: Whether to do the save after the callback is applied. Standard saving is unchanged.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
 - `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
