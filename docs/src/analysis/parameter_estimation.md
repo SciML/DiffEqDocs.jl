@@ -143,7 +143,7 @@ LogLikeLoss(t,distributions,diff_distributions=nothing)
 
 In this case, there are two forms. The simple case is where `distributions[i,j]`
 is the likelihood distributions from a `UnivariateDistribution` from
-[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/), where it
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/), where it
 corresponds to the likelihood at `t[i]` for component `j`. The second case is
 where `distributions[i]` is a `MultivariateDistribution` which corresponds to
 the likelihood at `t[i]` over the vector of components. This likelihood function
@@ -292,14 +292,14 @@ stan_inference(prob::ODEProblem,t,data,priors = nothing;alg=:rk45,
                vars=(StanODEData(),InverseGamma(2,3)))
 ```
 
-`stan_inference` uses [Stan.jl](http://goedman.github.io/Stan.jl/latest/INTRO.html)
+`stan_inference` uses [Stan.jl](http://goedman.github.io/Stan.jl/dev/INTRO.html)
 to perform the Bayesian inference. The
-[Stan installation process](http://goedman.github.io/Stan.jl/latest/INSTALLATION.html)
+[Stan installation process](http://goedman.github.io/Stan.jl/dev/INSTALLATION.html)
 is required to use this function. The input requires that the function is defined
 by a `ParameterizedFunction` with the `@ode_def` macro. `t` is the array of time
 and `data` is the array where the first dimension (columns) corresponds to the
 array of system values. `priors` is an array of prior distributions for each
-parameter, specified via a [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+parameter, specified via a [Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/)
 type. `alg` is a choice between `:rk45` and `:bdf`, the two internal integrators
 of Stan. `num_samples` is the number of samples to take per chain, and `num_warmup`
 is the number of MCMC warmup steps. `abstol` and `reltol` are the keyword
@@ -323,7 +323,7 @@ perform its parameter inference. `prob` can be any `DEProblem` with a correspond
 observations for the differential equation system at time point `t[i]` (or higher
 dimensional). `priors` is an array of prior distributions for each
 parameter, specified via a
-[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/)
 type. `num_samples` is the number of samples per MCMC chain. The extra `kwargs` are given to the internal differential
 equation solver.
 
@@ -338,7 +338,7 @@ dynamichmc_inference(prob::DEProblem,alg,t,data,priors,transformations;
  perform the bayesian parameter estimation. `prob` can be any `DEProblem`, `data` is the set
  of observations for our model which is to be used in the Bayesian Inference process. `priors` represent the
  choice of prior distributions for the parameters to be determined, passed as an array of [Distributions.jl]
- (https://juliastats.github.io/Distributions.jl/latest/) distributions. `t` is the array of time points. `transformations`
+ (https://juliastats.github.io/Distributions.jl/dev/) distributions. `t` is the array of time points. `transformations`
  is an array of [Tranformations](https://github.com/tpapp/ContinuousTransformations.jl) imposed for constraining the
  parameter values to specific domains. `initial` values for the parameters can be passed, if not passed the means of the
  `priors` are used. `ϵ` can be used as a kwarg to pass the initial step size for the NUTS algorithm.      
@@ -357,7 +357,7 @@ perform its parameter inference. `prob` can be any `DEProblem` with a correspond
 observations for the differential equation system at time point `t[i]` (or higher
 dimensional). `priors` is an array of prior distributions for each
 parameter, specified via a
-[Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+[Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/)
 type. `num_samples` is the number of posterior samples. `ϵ` is the target
 distance between the data and simulated data. `distancefunction` is a distance metric specified from the
 [Distances.jl](https://github.com/JuliaStats/Distances.jl)
@@ -463,9 +463,9 @@ result = optimize(cost_function, [1.42], BFGS())
 ```
 
 Note that some of the algorithms may be sensitive to the initial condition. For more
-details on using Optim.jl, see the [documentation for Optim.jl](http://julianlsolvers.github.io/Optim.jl/latest/).
+details on using Optim.jl, see the [documentation for Optim.jl](http://julianlsolvers.github.io/Optim.jl/dev/).
 We can improve our solution by noting that the Lotka-Volterra equation requires that
-the parameters are positive. Thus [following the Optim.jl documentation](http://julianlsolvers.github.io/Optim.jl/latest/user/minimization/#box-minimization)
+the parameters are positive. Thus [following the Optim.jl documentation](http://julianlsolvers.github.io/Optim.jl/dev/user/minimization/#box-minimization)
 we can add box constraints to ensure the optimizer only checks between 0.0 and 3.0
 which improves the efficiency of our algorithm:
 
@@ -961,7 +961,7 @@ obj = build_loss_objective(monte_prob,SOSRI(),L2Loss(t,aggregate_data),
                                      parallel_type = :threads)
 result = Optim.optimize(obj, [1.0,0.5], Optim.BFGS())
 ```
-Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/latest/analysis/parameter_estimation/#First-differencing-1).
+Parameter Estimation in case of SDE's with a regular `L2Loss` can have poor accuracy due to only fitting against the mean properties as mentioned in [First Differencing](http://docs.juliadiffeq.org/dev/analysis/parameter_estimation/#First-differencing-1).
 
 ```julia
 Results of Optimization Algorithm
@@ -1052,7 +1052,7 @@ bayesian_result = stan_inference(prob1,t,data,priors;
 
 `InverseGamma(4,1)` is our starting estimation for the variance hyperparameter
 of the default `Normal` distribution. The result is a
-[Mamba.jl](http://mambajl.readthedocs.io/en/latest/intro.html) chain object.
+[Mamba.jl](http://mambajl.readthedocs.io/en/dev/intro.html) chain object.
 We can pull out the parameter values via:
 
 ```julia
@@ -1159,7 +1159,7 @@ plot_chain(bayesian_result)
 
 We can use [DynamicHMC.jl](https://github.com/tpapp/DynamicHMC.jl) as the backend
 for sampling with the `dynamic_inference` function. It supports any `DEProblem`,
-`priors` can be passed as an array of [Distributions.jl](https://juliastats.github.io/Distributions.jl/latest/)
+`priors` can be passed as an array of [Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/)
 distributions, passing `initial` values is optional and in case where the user has a firm understanding of the
 domain the parameter values will lie in, `transformations` can be used to pass an array of constraints for the parameters
 as an array of [Transformations](https://github.com/tpapp/ContinuousTransformations.jl).
