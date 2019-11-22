@@ -116,7 +116,7 @@ ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help
 show.
 
 In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
--> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/latest/basics/common_solver_opts),
+-> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/dev/basics/common_solver_opts),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
 calculations might be repeated multiple times until a step is accepted, it can
