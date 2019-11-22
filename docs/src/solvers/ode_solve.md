@@ -1201,7 +1201,7 @@ using NeuralNetDiffEq
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
-The list of tableaus can be found in [the developer docs](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/internals/tableaus.html).
+The list of tableaus can be found in [the developer docs](https://devdocs.juliadiffeq.org/dev/internals/tableaus/).
 To use them, note you must install the library:
 
 ```julia
