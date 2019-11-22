@@ -60,10 +60,10 @@ for more examples.
 The problem types include many other features, including the ability to define
 mass matrices and hold callbacks for events. Each problem type has a page which
 details its constructor and the available fields. For
-[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/latest/types/ode_types).
+[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/dev/types/ode_types).
 In addition, a user can specify additional functions to be associated with the
 function in order to speed up the solvers. These are detailed
-[at the performance overloads page](http://docs.juliadiffeq.org/latest/features/performance_overloads).
+[at the performance overloads page](http://docs.juliadiffeq.org/dev/features/performance_overloads).
 
 ### Step 2: Solving a Problem
 
@@ -285,7 +285,7 @@ sol = solve(prob)
 ```
 
 Using the plot recipe tools
-[defined on the plotting page](http://docs.juliadiffeq.org/latest/basics/plot#Choosing-Variables-1),
+[defined on the plotting page](http://docs.juliadiffeq.org/dev/basics/plot#Choosing-Variables-1),
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
