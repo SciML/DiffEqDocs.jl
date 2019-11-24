@@ -1088,17 +1088,77 @@ using MATLABDiffEq
 
 This requires a licensed MATLAB installation. The available methods are:
 
-  - `ode23`
-  - `ode45`
-  - `ode113`
-  - `ode23s`
-  - `ode23t`
-  - `ode23tb`
-  - `ode15s`
-  - `ode15i`
+  - `MATLABDiffEq.ode23`
+  - `MATLABDiffEq.ode45`
+  - `MATLABDiffEq.ode113`
+  - `MATLABDiffEq.ode23s`
+  - `MATLABDiffEq.ode23t`
+  - `MATLABDiffEq.ode23tb`
+  - `MATLABDiffEq.ode15s`
+  - `MATLABDiffEq.ode15i`
 
 For more information on these algorithms, see
 [the MATLAB documentation](https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html).
+
+### SciPyDiffEq.jl
+
+[SciPyDiffEq.jl](https://github.com/JuliaDiffEq/SciPyDiffEq.jl) is a wrapper over SciPy for 
+easing the transition of new users (same exact results!)
+and benchmarking. This wrapper uses Julia's JIT acceleration to accelerate about 3x over SciPy+Numba,
+but it is still around 1000x slower than the pure-Julia methods and thus should probably be used
+sparingly. 
+
+Note that this setup is not automatically included
+with DifferentialEquaitons.jl. To use the following algorithms, you must install
+and use SciPyDiffEq.jl:
+
+```julia
+]add https://github.com/JuliaDiffEq/SciPyDiffEq.jl
+using SciPyDiffEq
+```
+
+The available methods are:
+
+- `SciPyDiffEq.RK45`
+- `SciPyDiffEq.RK23`
+- `SciPyDiffEq.Radau`
+- `SciPyDiffEq.BDF`
+- `SciPyDiffEq.LSODA`
+
+### deSolveDiffEq.jl
+
+[deSolveDiffEq.jl](https://github.com/JuliaDiffEq/deSolveDiffEq.jl) is a wrapper over R's deSolve for 
+easing the transition of new users (same exact results!)
+and benchmarking. This wrapper is around 1000x slower than the pure-Julia methods (~2x-3x overhead 
+from directly using R) and thus should probably be used sparingly. 
+
+Note that this setup is not automatically included
+with DifferentialEquaitons.jl. To use the following algorithms, you must install
+and use deSolveDiffEq.jl:
+
+```julia
+]add https://github.com/JuliaDiffEq/deSolveDiffEq.jl
+using deSolveDiffEq
+```
+
+The available methods are:
+
+- `deSolveDiffEq.lsoda`
+- `deSolveDiffEq.lsode`
+- `deSolveDiffEq.lsodes`
+- `deSolveDiffEq.lsodar`
+- `deSolveDiffEq.vode`
+- `deSolveDiffEq.daspk`
+- `deSolveDiffEq.euler`
+- `deSolveDiffEq.rk4`
+- `deSolveDiffEq.ode23`
+- `deSolveDiffEq.ode45`
+- `deSolveDiffEq.radau`
+- `deSolveDiffEq.bdf`
+- `deSolveDiffEq.bdf_d`
+- `deSolveDiffEq.adams`
+- `deSolveDiffEq.impAdams`
+- `deSolveDiffEq.impAdams_d`
 
 ### GeometricIntegrators.jl
 
