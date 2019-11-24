@@ -121,9 +121,9 @@ This section describes the available `NoiseProcess` types. Note that all
 keyword arguments are splatted into the `NoiseProcess` constructor, and thus
 options like `reset` are available on the pre-built processes.
 
-### Wiener Process (White Noise)
+### Wiener Process (Red Noise)
 
-The `WienerProcess`, also known as Gaussian white noise, Brownian motion, or
+The `WienerProcess`, also known as red noise, Brownian motion, or
 the noise in the Langevin equation, is the stationary process with distribution
 `N(0,t)`. The constructor is:
 
