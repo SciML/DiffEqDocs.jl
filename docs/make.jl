@@ -86,6 +86,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
          "Analysis Tools" => Any[
            "analysis/parameterized_functions.md",
            "analysis/parameter_estimation.md",
+           "analysis/structural_estimation.md",
            "analysis/bifurcation.md",
            "analysis/sensitivity.md",
            "analysis/global_sensitivity.md",
