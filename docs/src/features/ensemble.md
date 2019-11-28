@@ -97,15 +97,16 @@ are handled. Currently, the ensemble algorithm types are:
 * `EnsembleSplitThreads()` - This uses threading on each process, splitting the problem
   into `nprocs()` even parts. This is for solving many quick trajectories on a
   multi-node machine. It's recommended you have one process on each node.
+* `EnsembleGPUArray()` - Requires installing and `using DiffEqGPU`. This uses a GPU for computing the ensemble 
+  with hyperparallelism. It will automatically recompile your Julia functions to the GPU. A standard GPU sees 
+  a 5x performance increase over a 16 core Xeon CPU. However, there are limitations on what functions can
+  auto-compile in this fashion, please see the [DiffEqGPU README for more details](https://github.com/JuliaDiffEq/DiffEqGPU.jl)
 
 For example, `EnsembleThreads()` is invoked by:
 
 ```julia
 solve(ensembleprob,alg,EnsembleThreads();trajectories=1000)
 ```
-
-Additionally, an experimental GPU-based ensembling method is provided by DiffEqGPU.jl. Add and
-import that package to get `EnsembleGPUArray()`.
 
 ### Solution Type
 
