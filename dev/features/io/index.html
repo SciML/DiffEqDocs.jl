@@ -71,7 +71,7 @@ using BSON
 bson(&quot;test.bson&quot;,Dict(:sol1=&gt;sol1))
 
 # New session
-using OrdinaryDiffEq
+using OrdinaryDiffEq, LinearAlgebra
 using BSON
 BSON.load(&quot;test.bson&quot;)</code></pre><p>If you load it without the DE function then for some algorithms the interpolation may not work, and for all algorithms you&#39;ll need at least a solver package or DiffEqBase.jl in scope in order for the solution interface (plot recipes, array indexing, etc.) to work. If none of these are put into scope, the solution type will still load and hold all of the values (so <code>sol.u</code> and <code>sol.t</code> will work), but none of the interface will be available.</p><h2><a class="nav-anchor" id="JLD-1" href="#JLD-1">JLD</a></h2><p>Don&#39;t use JLD. It&#39;s dead. Julia types can be saved via JLD.jl. However, they cannot save types which have functions, which means that the solution type is currently not compatible with JLD.</p><pre><code class="language-julia">using JLD
 JLD.save(&quot;out.jld&quot;,&quot;sol&quot;,sol)</code></pre><footer><hr/><a class="previous" href="../ensemble/"><span class="direction">Previous</span><span class="title">Parallel Ensemble Simulations</span></a><a class="next" href="../low_dep/"><span class="direction">Next</span><span class="title">Low Dependency Usage</span></a></footer></article></body></html>
