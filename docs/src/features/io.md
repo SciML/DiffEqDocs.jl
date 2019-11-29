@@ -120,7 +120,7 @@ using BSON
 bson("test.bson",Dict(:sol1=>sol1))
 
 # New session
-using OrdinaryDiffEq
+using OrdinaryDiffEq, LinearAlgebra
 using BSON
 BSON.load("test.bson")
 ```
