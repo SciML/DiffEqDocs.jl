@@ -32,21 +32,14 @@ no delays are written as in the ODE.
 Thus, the function for this model is given by:
 
 ```julia
-const p0 = 0.2; const q0 = 0.3; const v0 = 1; const d0 = 5
-const p1 = 0.2; const q1 = 0.3; const v1 = 1; const d1 = 1
-const d2 = 1; const beta0 = 1; const beta1 = 1; const tau = 1
 function bc_model(du,u,h,p,t)
-  du[1] = (v0/(1+beta0*(h(p, t-tau)[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
-  du[2] = (v0/(1+beta0*(h(p, t-tau)[3]^2))) * (1 - p0 + q0)*u[1] +
-          (v1/(1+beta1*(h(p, t-tau)[3]^2))) * (p1 - q1)*u[2] - d1*u[2]
-  du[3] = (v1/(1+beta1*(h(p, t-tau)[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
+  p0,q0,v0,d0,p1,q1,v1,d1,d2,beta0,beta1,tau = p
+  hist3 = h(p, t-tau)[3]
+  du[1] = (v0/(1+beta0*(hist3^2))) * (p0 - q0)*u[1] - d0*u[1]
+  du[2] = (v0/(1+beta0*(hist3^2))) * (1 - p0 + q0)*u[1] +
+          (v1/(1+beta1*(hist3^2))) * (p1 - q1)*u[2] - d1*u[2]
+  du[3] = (v1/(1+beta1*(hist3^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
 end
-```
-
-To use the constant lag model, we have to declare the lags. Here we will use `tau=1`.
-
-```julia
-lags = [tau]
 ```
 
 Now we build a `DDEProblem`. The signature
@@ -65,13 +58,25 @@ and define `h` as an out-of-place function:
 h(p, t) = ones(3)
 ```
 
+To use the constant lag model, we have to declare the lags. Here we will use `tau=1`.
+
+```julia
+tau = 1
+lags = [tau]
+```
+
 Next, we choose to solve on the timespan `(0.0,10.0)` and create the problem type:
 
 
 ```julia
+p0 = 0.2; q0 = 0.3; v0 = 1; d0 = 5
+p1 = 0.2; q1 = 0.3; v1 = 1; d1 = 1
+d2 = 1; beta0 = 1; beta1 = 1
+p = (p0,q0,v0,d0,p1,q1,v1,d1,d2,beta0,beta1,tau)
 tspan = (0.0,10.0)
 u0 = [1.0,1.0,1.0]
-prob = DDEProblem(bc_model,u0,h,tspan; constant_lags=lags)
+
+prob = DDEProblem(bc_model,u0,h,tspan,p; constant_lags=lags)
 ```
 
 An efficient way to solve this problem (given the constant lags) is with the
