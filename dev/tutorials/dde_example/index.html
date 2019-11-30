@@ -18,7 +18,7 @@ dx_{2} ={}&amp; \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p
   du[2] = (v0/(1+beta0*(hist3^2))) * (1 - p0 + q0)*u[1] +
           (v1/(1+beta1*(hist3^2))) * (p1 - q1)*u[2] - d1*u[2]
   du[3] = (v1/(1+beta1*(hist3^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
-end</code></pre><p>Now we build a <code>DDEProblem</code>. The signature</p><pre><code class="language-julia">prob = DDEProblem(f, u0, h, tspan, p=nothing;
+end</code></pre><p>Now we build a <code>DDEProblem</code>. The signature</p><pre><code class="language-julia">prob = DDEProblem(f, u0, h, tspan, p=DiffEqBase.NullParameters();
                   constant_lags=[], dependent_lags=[], kwargs...)</code></pre><p>is very similar to ODEs, where we now have to give the lags and a function <code>h</code>. <code>h</code> is the history function that declares what the values were before the time the model starts. Here we will assume that for all time before <code>t0</code> the values were 1 and define <code>h</code> as an out-of-place function:</p><pre><code class="language-julia">h(p, t) = ones(3)</code></pre><p>To use the constant lag model, we have to declare the lags. Here we will use <code>tau=1</code>.</p><pre><code class="language-julia">tau = 1
 lags = [tau]</code></pre><p>Next, we choose to solve on the timespan <code>(0.0,10.0)</code> and create the problem type:</p><pre><code class="language-julia">p0 = 0.2; q0 = 0.3; v0 = 1; d0 = 5
 p1 = 0.2; q1 = 0.3; v1 = 1; d1 = 1
