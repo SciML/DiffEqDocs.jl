@@ -45,7 +45,7 @@ end
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDEProblem(f, u0, h, tspan, p=nothing;
+prob = DDEProblem(f, u0, h, tspan, p=DiffEqBase.NullParameters();
                   constant_lags=[], dependent_lags=[], kwargs...)
 ```
 
