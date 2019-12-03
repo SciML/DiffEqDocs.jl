@@ -190,14 +190,18 @@ sol = solve(prob,Tsit5())
 using Plots; plot(sol)
 ```
 
-Now assume we wish to give the patient a dose of 10 at time `t==4`. For this, we can use a `DiscreteCallback` which will
-only be true at `t==4`:
+![Linear Decay](../assets/lineardecay.png)
+
+Now assume we wish to give the patient a dose of 10 at time `t==4`. For this,
+we can use a `DiscreteCallback` which will only be true at `t==4`:
 
 ```julia
 condition(u,t,integrator) = t==4
 affect!(integrator) = integrator.u[1] += 10
 cb = DiscreteCallback(condition,affect!)
 ```
+
+
 
 If we then solve with this callback enabled, we see no change:
 
@@ -206,8 +210,12 @@ sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
 
-The reason there is no change is because the `DiscreteCallback` only applies at a specific time, and the integrator never
-hit that time. Thus we would like to force the ODE solver to step exactly at `t=4` so that the condition can be applied.
+![Linear Decay](../assets/lineardecay.png)
+
+
+The reason there is no change is because the `DiscreteCallback` only applies at
+a specific time, and the integrator never hit that time. Thus we would like to
+force the ODE solver to step exactly at `t=4` so that the condition can be applied.
 We can do that with the `tstops` argument:
 
 ```julia
@@ -217,28 +225,53 @@ plot(sol)
 
 and thus we achieve the desired result.
 
-Performing multiple doses then just requires that we have multiple points which are hit. For example, to dose at time `t=4`
-and `t=8`, we can do the following:
+Performing multiple doses then just requires that we have multiple points which
+are hit. For example, to dose at time `t=4` and `t=8`, we can do the following:
 
 ```julia
 dosetimes = [4.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
-sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes);
+sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
 
-We can then use this mechanism to make the model arbitrarily complex. For example, let's say there's now 3 dose times, but
-the dose only triggers if the current concentration is below 1.0. Additionally, the dose is now `10t` instead of just `10`.
-This model is implemented as simply:
+![Linear Decay Dose](../assets/lineardecay_2dose.png)
+
+We can then use this mechanism to make the model arbitrarily complex. For
+example, let's say there's now 3 dose times, but the dose only triggers if the
+current concentration is below 1.0. Additionally, the dose is now `10t` instead
+of just `10`. This model is implemented as simply:
 
 ```julia
 dosetimes = [4.0,6.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes && (u[1] < 1.0)
 affect!(integrator) = integrator.u[1] += 10integrator.t
-sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes);
+sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
+
+![Linear Decay Dose](../assets/lineardecay_2dose_complex.png)
+
+#### PresetTimeCallback
+
+Because events at preset times is a very common occurrence,
+DifferentialEquations.jl provides a pre-built callback in the [Callback Library](@ref).
+The `PresetTimeCallback(tstops,affect!)` takes an array of times and an `affect!`
+function to apply. Thus to do the simple 2 dose example with this callback, we
+could do the following:
+
+```julia
+dosetimes = [4.0,8.0]
+affect!(integrator) = integrator.u[1] += 10
+cb = PresetTimeCallback(dosetimes,affect!)
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol)
+```
+
+![Linear Decay Dose](../assets/lineardecay_2dose.png)
+
+Notice that this version will automatically set the `tstops` for you.
 
 ### Example 2: A Control Problem
 
@@ -317,7 +350,7 @@ at3 = integrator.opts.abstol
 @test at2 < at3
 ```
 
-Note that this example is contained in [DiffEqCallbacks.jl](https://github.com/JuliaDiffEq/DiffEqCallbacks.jl),
+Note that this example is contained in the [Callback Library](@ref),
 a library of useful callbacks for JuliaDiffEq solvers.
 
 ## ContinuousCallback Examples
