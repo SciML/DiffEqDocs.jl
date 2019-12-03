@@ -223,6 +223,8 @@ sol = solve(prob,Tsit5(),callback=cb,tstops=[4.0])
 plot(sol)
 ```
 
+![Linear Decay Dose](../assets/lineardecay_dose.png)
+
 and thus we achieve the desired result.
 
 Performing multiple doses then just requires that we have multiple points which
