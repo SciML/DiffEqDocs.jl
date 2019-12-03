@@ -33,7 +33,7 @@ using Plots; plot(sol)</code></pre><p><img src="../../assets/lineardecay.png" al
 affect!(integrator) = integrator.u[1] += 10
 cb = DiscreteCallback(condition,affect!)</code></pre><p>If we then solve with this callback enabled, we see no change:</p><pre><code class="language-julia">sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)</code></pre><p><img src="../../assets/lineardecay.png" alt="Linear Decay"/></p><p>The reason there is no change is because the <code>DiscreteCallback</code> only applies at a specific time, and the integrator never hit that time. Thus we would like to force the ODE solver to step exactly at <code>t=4</code> so that the condition can be applied. We can do that with the <code>tstops</code> argument:</p><pre><code class="language-julia">sol = solve(prob,Tsit5(),callback=cb,tstops=[4.0])
-plot(sol)</code></pre><p>and thus we achieve the desired result.</p><p>Performing multiple doses then just requires that we have multiple points which are hit. For example, to dose at time <code>t=4</code> and <code>t=8</code>, we can do the following:</p><pre><code class="language-julia">dosetimes = [4.0,8.0]
+plot(sol)</code></pre><p><img src="../../assets/lineardecay_dose.png" alt="Linear Decay Dose"/></p><p>and thus we achieve the desired result.</p><p>Performing multiple doses then just requires that we have multiple points which are hit. For example, to dose at time <code>t=4</code> and <code>t=8</code>, we can do the following:</p><pre><code class="language-julia">dosetimes = [4.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
 sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
