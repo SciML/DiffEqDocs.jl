@@ -173,7 +173,78 @@ and `terminate!` can be used to cause the simulation to stop.
 
 ## DiscreteCallback Examples
 
-### Example 1: AutoAbstol
+### Example 1: Interventions at Preset Times
+
+Assume we have a patient whose internal drug concentration follows exponential decay, i.e. the linear ODE with
+a negative coefficient:
+
+```julia
+using DifferentialEquations
+function f(du,u,p,t)
+    du[1] = -u[1]
+end
+u0 = [10.0]
+const V = 1
+prob = ODEProblem(f,u0,(0.0,10.0))
+sol = solve(prob,Tsit5())
+using Plots; plot(sol)
+```
+
+Now assume we wish to give the patient a dose of 10 at time `t==4`. For this, we can use a `DiscreteCallback` which will
+only be true at `t==4`:
+
+```julia
+condition(u,t,integrator) = t==4
+affect!(integrator) = integrator.u[1] += 10
+cb = DiscreteCallback(condition,affect!)
+```
+
+If we then solve with this callback enabled, we see no change:
+
+```julia
+sol = solve(prob,Tsit5(),callback=cb)
+plot(sol)
+```
+
+The reason there is no change is because the `DiscreteCallback` only applies at a specific time, and the integrator never
+hit that time. Thus we would like to force the ODE solver to step exactly at `t=4` so that the condition can be applied.
+We can do that with the `tstops` argument:
+
+```julia
+sol = solve(prob,Tsit5(),callback=cb,tstops=[4.0])
+plot(sol)
+```
+
+and thus we achieve the desired result.
+
+Performing multiple doses then just requires that we have multiple points which are hit. For example, to dose at time `t=4`
+and `t=8`, we can do the following:
+
+```julia
+dosetimes = [4.0,8.0]
+condition(u,t,integrator) = t ∈ dosetimes
+affect!(integrator) = integrator.u[1] += 10
+sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes);
+plot(sol)
+```
+
+We can then use this mechanism to make the model arbitrarily complex. For example, let's say there's now 3 dose times, but
+the dose only triggers if the current concentration is below 1.0. Additionally, the dose is now `10t` instead of just `10`.
+This model is implemented as simply:
+
+```julia
+dosetimes = [4.0,6.0,8.0]
+condition(u,t,integrator) = t ∈ dosetimes && (u[1] < 1.0)
+affect!(integrator) = integrator.u[1] += 10integrator.t
+sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes);
+plot(sol)
+```
+
+### Example 2: A Control Problem
+
+Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/dev/features/diffeq_arrays#Example:-A-Control-Problem-1).
+
+### Example 3: AutoAbstol
 
 MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
 In this example we will implement a callback which will add this behavior to
@@ -248,10 +319,6 @@ at3 = integrator.opts.abstol
 
 Note that this example is contained in [DiffEqCallbacks.jl](https://github.com/JuliaDiffEq/DiffEqCallbacks.jl),
 a library of useful callbacks for JuliaDiffEq solvers.
-
-### Example 2: A Control Problem
-
-Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/dev/features/diffeq_arrays#Example:-A-Control-Problem-1).
 
 ## ContinuousCallback Examples
 
