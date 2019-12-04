@@ -90,10 +90,10 @@ sol(t)
 Note that the interpolating function allows for `t` to be a vector and uses this to speed up the interpolation calculations. The full API for the interpolations is
 
 ```julia
-sol(t,deriv=Val{0};idxs=nothing)
+sol(t,deriv=Val{0};idxs=nothing,continuity=:left)
 ```
 
-The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done by hand for each algorithm. Open an issue if there's a specific one you need). `idxs` allows you to choose the indices the interpolation should solve for. For example,
+The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done by hand for each algorithm. Open an issue if there's a specific one you need). `continuity` describes whether to satisfy left or right continuity when a discontinuity is saved. The default is `:left`, i.e. grab the value before the callback's change, but can be changed to `:right`. `idxs` allows you to choose the indices the interpolation should solve for. For example,
 
 ```julia
 sol(t,idxs=1:2:5)
@@ -110,7 +110,7 @@ and it will return a `Number` for the interpolation of the single value. Note th
 In addition, there is an inplace form:
 
 ```julia
-sol(out,t,deriv=Val{0};idxs=nothing)
+sol(out,t,deriv=Val{0};idxs=nothing,continuity=:left)
 ```
 
 which will write the output to `out`. This allows one to use pre-allocated vectors for the output to improve the speed even more.
