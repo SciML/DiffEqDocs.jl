@@ -118,7 +118,8 @@ The `sol` field holds the current solution. This current solution includes the
 interpolation function if available, and thus `integrator.sol(t)` lets one
 interpolate efficiently over the whole current solution. Additionally, a
 a "current interval interpolation function" is provided on the `integrator` type
-via `integrator(t)`. This uses only the solver information from the interval
+via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`. 
+This uses only the solver information from the interval
 `[tprev,t]` to compute the interpolation, and is allowed to extrapolate beyond
 that interval.
 
