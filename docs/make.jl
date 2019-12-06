@@ -3,8 +3,8 @@ using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological
 makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          doctest=false, clean=true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
+                                  assets = ["assets/favicon.ico"],
                                   canonical="https://docs.juliadiffeq.org/stable/"),
-         assets = ["assets/favicon.ico"],
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[

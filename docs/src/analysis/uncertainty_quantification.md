@@ -68,7 +68,7 @@ cb = ProbIntsUncertainty(0.2,1)
 ```
 
 This is akin to having an error of approximately 0.2 at each step. We now build
-and solve a [EnsembleProblem](../../../features/ensemble/) for 100 trajectories:
+and solve a [EnsembleProblem](@ref ensemble) for 100 trajectories:
 
 ```julia
 ensemble_prob = EnsembleProblem(prob)

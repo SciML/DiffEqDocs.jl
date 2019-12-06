@@ -1,5 +1,8 @@
 # Callbacks
 
+```@meta
+CurrentModule = DiffEqBase
+```
 
 ## Types
 
@@ -19,5 +22,5 @@ DiffEqBase.CallbackCache
 
 ```@docs
 DiffEqBase.split_callbacks
-DiffEqBase.initialize!(cb::CallbackSet, u, t, integrator)
+DiffEqBase.initialize!(cb::CallbackSet, u, t, integrator::DEIntegrator)
 ```

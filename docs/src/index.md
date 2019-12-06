@@ -45,13 +45,13 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Forward and adjoint local sensitivity analysis](http://docs.juliadiffeq.org/dev/analysis/sensitivity) for fast gradient computations
-- [Optimization-based and Bayesian parameter estimation](http://docs.juliadiffeq.org/dev/analysis/parameter_estimation)
+- [Local Sensitivity Analysis (Automatic Differentiation)](@ref) for fast gradient computations
+- [Parameter Estimation and Bayesian Analysis](@ref)
 - Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
-- [Automatic distributed, multithreaded, and GPU parallelism of ensemble trajectories](http://docs.juliadiffeq.org/dev/features/ensemble)
-- [Global sensitivity analysis](http://docs.juliadiffeq.org/dev/analysis/global_sensitivity)
-- [Uncertainty quantification](http://docs.juliadiffeq.org/dev/analysis/uncertainty_quantification)
+- Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref)
+- [Global Sensitivity Analysis](@ref)
+- [Uncertainty Quantification](@ref)
 
 If you have any questions, or just want to chat about solvers/using the package,
 please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -89,7 +89,7 @@ for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Support
 Equations section below). If you are interested in only one type of equation
 solvers of `DifferentialEquations.jl` or simply want a more lightweight
 version, see the
-[Low Dependency Usage](http://docs.juliadiffeq.org/stable/features/low_dep)
+[Low Dependency Usage](@ref)
 page.
 
 To understand the package in more detail, check out the following tutorials in
@@ -333,6 +333,7 @@ Depth = 2
 ### APIs
 
 Some DifferentialEquations.jl packages provide documented APIs, these include:
+
 ```@contents
 Pages = [
     "apis/diffeqbio.md"
