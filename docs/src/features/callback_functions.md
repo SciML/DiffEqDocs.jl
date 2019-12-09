@@ -277,11 +277,11 @@ Notice that this version will automatically set the `tstops` for you.
 
 ### Example 2: A Control Problem
 
-Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](http://docs.juliadiffeq.org/dev/features/diffeq_arrays#Example:-A-Control-Problem-1).
+Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](@ref).
 
 ### Example 3: AutoAbstol
 
-MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
+MATLAB's Simulink has the option for [an automatic absolute tolerance](@ref).
 In this example we will implement a callback which will add this behavior to
 any JuliaDiffEq solver which implments the `integrator` and callback interface.
 

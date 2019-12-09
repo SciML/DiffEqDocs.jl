@@ -30,7 +30,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref)
 page.
 
 ### Fields
@@ -41,7 +41,7 @@ page.
 * `p`: The optional parameters for the problem. Defaults to `NullParameters`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../../../features/noise_process)
+  see [the noise process documentation page](@ref noise_process)
 * `rand_prototype`: A prototype type instance for the noise vector. It defaults
   to `nothing`, which means the problem should be interpreted as having a noise
   vector whose size matches `u0`.

@@ -60,7 +60,7 @@ and a good high order choice is `KahanLi8`.
 ## Standard ODE Integrators
 
 The standard ODE integrators will work on Dynamical ODE problems via a
-transformation to a first-order ODE. See the [ODE solvers](../../ode_solve)
+transformation to a first-order ODE. See the [ODE solvers](@ref ode_solve)
 page for more details.
 
 ## Specialized OrdinaryDiffEq.jl Integrators

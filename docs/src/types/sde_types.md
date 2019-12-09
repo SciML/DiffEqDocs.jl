@@ -40,7 +40,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref)
 page.
 
 ### Fields
@@ -52,7 +52,7 @@ page.
 * `p`: The optional parameters for the problem. Defaults to `NullParameters`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../../../features/noise_process)
+  see [the noise process documentation page](@ref features/noise_process)
 * `noise_rate_prototype`: A prototype type instance for the noise rates, that
   is the output `g`. It can be any type which overloads `A_mul_B!` with itself
   being the middle argument. Commonly, this is a matrix or sparse matrix. If
@@ -62,7 +62,7 @@ page.
 
 ## Example Problems
 
-Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/sde_premade_problems.jl).
+Examples problems can be found in [DiffEqProblemLibrary.jl](@ref).
 
 To use a sample problem, such as `prob_sde_linear`, you can do something like:
 

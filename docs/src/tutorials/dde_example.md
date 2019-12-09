@@ -1,7 +1,7 @@
 # Delay Differential Equations
 
 This tutorial will introduce you to the functionality for solving delay differential
-equations. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
+equations. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 Delay differential equations are equations which have a delayed argument. To allow
 for specifying the delayed argument, the function definition for a delay differential
@@ -11,7 +11,7 @@ past and depends on parameters `p` and time `t`. The function signature for a de
 differential equation is `f(u, h, p, t)` for not in-place computations, and
 `f(du, u, h, p, t)` for in-place computations.
 
-In this example we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
+In this example we will solve [a model of breast cancer growth kinetics](@ref):
 
 ```math
 \begin{align}
@@ -170,7 +170,7 @@ use an in-place function instead or only compute specific indices by passing
 an `idxs` keyword.
 
 The functional forms for the history function are discussed also
-[on the DDEProblem page](../../../types/dde_types).
+[on the DDEProblem page](@ref dde_types).
 
 ### Undeclared Delays and State-Dependent Delays via Residual Control
 

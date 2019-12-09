@@ -1,8 +1,8 @@
 # Ordinary Differential Equations
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
-Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
+introductions can be found by [checking out DiffEqTutorials.jl](@ref).
+Additionally, a [video tutorial](@ref) walks through
 this material.
 
 ## Example 1 : Solving Scalar Equations
@@ -54,16 +54,16 @@ Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent vari
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
 unitful numbers, etc. Please see the
-[notebook tutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
+[notebook tutorials](@ref)
 for more examples.
 
 The problem types include many other features, including the ability to define
 mass matrices and hold callbacks for events. Each problem type has a page which
 details its constructor and the available fields. For
-[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/dev/types/ode_types).
+[ODEs, the appropriate page is here](@ref).
 In addition, a user can specify additional functions to be associated with the
 function in order to speed up the solvers. These are detailed
-[at the performance overloads page](http://docs.juliadiffeq.org/dev/features/performance_overloads).
+[at the performance overloads page](@ref).
 
 ### Step 2: Solving a Problem
 
@@ -76,7 +76,7 @@ sol = solve(prob)
 ```
 
 The solvers can be controlled using the available options are described on the
-[Common Solver Options manual page](../../../basics/common_solver_opts). For example,
+[Common Solver Options manual page](@ref common_solver_opts). For example,
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
@@ -224,8 +224,8 @@ If you are in Juno, this will plot to the plot pane. To open an interactive GUI
 gui()
 ```
 
-The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
-Additional DiffEq-specific controls are documented [at the plotting page](../../../basics/plot).
+The plot function can be formatted using [the attributes available in Plots.jl](@ref).
+Additional DiffEq-specific controls are documented [at the plotting page](@ref plot).
 
 For example, from the Plots.jl attribute page we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
@@ -285,7 +285,7 @@ sol = solve(prob)
 ```
 
 Using the plot recipe tools
-[defined on the plotting page](http://docs.juliadiffeq.org/dev/basics/plot#Choosing-Variables-1),
+[defined on the plotting page](@ref),
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
@@ -383,7 +383,7 @@ pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed u
 calculations. Thus not only will this lead to legible ODE definitions, but
 "unfairly fast" code! We can turn off some of the calculations by using a more
 specific macro, like `@ode_def_bare`. See
-[ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
+[ParameterizedFunctions.jl](@ref)
 for more details.
 
 Since the parameters exist within the function, functions defined in this manner
@@ -392,7 +392,7 @@ and bifurcation plotting. This makes DifferentialEquations.jl a full-stop soluti
 for differential equation analysis which also achieves high performance.
 
 ## Example 3: Solving Nonhomogeneous Equations using Parameterized Functions
-Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
+Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](@ref) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
 \begin{align*}
@@ -537,14 +537,14 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Ensemble experiments](../../../features/ensemble)
-- [Saving the output to tabular formats like DataFrames and CSVs](../../../features/io)
+- [Handling, parallelizing, and analyzing large Ensemble experiments](@ref ensemble)
+- [Saving the output to tabular formats like DataFrames and CSVs](@ref io)
 - [Event handling](../../../features/callback_functions)
-- [Parameter estimation (inverse problems)](../../../analysis/parameter_estimation)
-- [Quantification of numerical uncertainty and error](../../../analysis/uncertainty_quantification)
+- [Parameter estimation (inverse problems)](@ref parameter_estimation)
+- [Quantification of numerical uncertainty and error](@ref uncertainty_quantification)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types
 of equations. In addition, to get help, please either
-[file an issue at the main repository](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
-or [come have an informal discussion at our Gitter chatroom](https://gitter.im/JuliaDiffEq/Lobby).
+[file an issue at the main repository](@ref)
+or [come have an informal discussion at our Gitter chatroom](@ref).

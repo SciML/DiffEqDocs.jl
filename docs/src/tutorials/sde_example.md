@@ -1,8 +1,8 @@
 # Stochastic Differential Equations
 
 This tutorial will introduce you to the functionality for solving SDEs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
-This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
+introductions can be found by [checking out DiffEqTutorials.jl](@ref).
+This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 ## Example 1: Scalar SDEs
 
@@ -109,7 +109,7 @@ constructor:
 ensembleprob = EnsembleProblem(prob)
 ```
 
-The solver commands are defined [at the Parallel Ensemble Simulations page](../../../features/ensemble).
+The solver commands are defined [at the Parallel Ensemble Simulations page](@ref ensemble).
 For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
@@ -218,7 +218,7 @@ end α
 In this example we'll solve a system of SDEs with scalar noise. This means that
 the same noise process is applied to all SDEs. First we need to define a
 scalar noise process
-[using the Noise Process interface](../../../features/noise_process).
+[using the Noise Process interface](@ref noise_process).
 Since we want a `WienerProcess` that starts at `0.0` at time `0.0`, we use the
 command `W = WienerProcess(0.0,0.0,0.0)` to define the Brownian motion we want,
 and then give this to the `noise` option in the `SDEProblem`. For a full example,
@@ -246,7 +246,7 @@ being a matrix.
 
 (Note that nonlinear mixings are not SDEs but fall under the more general class of
 random ordinary differential equations (RODEs) which have a
-[separate set of solvers](../../rode_example).
+[separate set of solvers](@ref rode_example).
 
 Let's define a problem with four Wiener processes and two dependent random variables.
 In this case, we will want the output of `g` to be a 2x4 matrix, such that the solution
@@ -279,7 +279,7 @@ the same random number in the first and second SDEs.
 
 
 Note that this problem can only be solved my SDE methods which are compatible with non-diagonal
-noise. This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/dev/solvers/sde_solve).
+noise. This is discussed [in the SDE solvers page](@ref).
 
 The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
 constructor. This is a prototype for the type that `du` will be in `g`. This can
@@ -310,7 +310,7 @@ multiplication.
 
 ## Example 4: Colored Noise
 
-Colored noise can be defined [using the Noise Process interface](../../../features/noise_process).
+Colored noise can be defined [using the Noise Process interface](@ref noise_process).
 In that portion of the docs, it is shown how to define your own noise process
 `my_noise`, which can be passed to the SDEProblem
 
@@ -319,7 +319,7 @@ SDEProblem(f,g,u0,tspan,noise=my_noise)
 ```
 
 Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods.
-This is discussed [in the SDE solvers page](http://docs.juliadiffeq.org/dev/solvers/sde_solve).
+This is discussed [in the SDE solvers page](@ref).
 
 ### Example: Spatially-Colored Noise in the Heston Model
 
@@ -366,4 +366,4 @@ SDEProblem(f,g,u0,tspan,noise=heston_noise)
 Of course, to fully define this problem we need to define our constants. Constructors
 for making common models like this easier to define can be found in the modeling
 toolkits. For example, the `HestonProblem` is pre-defined as part of the
-[financial modeling tools](../../../models/financial).
+[financial modeling tools](@ref financial).

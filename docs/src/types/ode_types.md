@@ -30,7 +30,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref)
 page.
 
 ### Fields
@@ -43,7 +43,7 @@ page.
 
 ## Example Problems
 
-Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/ode).
+Example problems can be found in [DiffEqProblemLibrary.jl](@ref).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 

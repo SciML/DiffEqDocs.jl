@@ -3,7 +3,7 @@
 In this tutorial we will describe how to define and simulate continuous-time
 jump processes, also known in biological fields as Gillespie-type models. This
 tutorial assumes you have read the [Ordinary Differential Equations
-tutorial](../../ode_example). The discrete stochastic simulations we consider are
+tutorial](@ref ode_example). The discrete stochastic simulations we consider are
 a form of jump equation with a "trivial" (non-existent) differential equation.
 We will first demonstrate how to build these types of models using the
 biological modeling functionality, then describe how to build them directly and
@@ -13,7 +13,7 @@ simulations to differential equation models.
 ## Defining a Model using Reactions
 
 For our example, we will build an SIR model which matches the tutorial from
-[Gillespie.jl](https://github.com/sdwfrost/Gillespie.jl). SIR stands for
+[Gillespie.jl](@ref). SIR stands for
 susceptible, infected, and recovered, and is a model of disease spread. When a
 susceptible person comes in contact with an infected person, the disease has a
 chance of infecting the susceptible person. This "chance" is determined by the
@@ -31,7 +31,7 @@ infected people encounter each other, with the susceptible person becoming sick.
 The overall rate (i.e. probability per time) that some susceptible person gets
 sick is then given by the rate constant multiplied by the number of possible
 pairs of susceptible and infected people. This formulation is known as the [law
-of mass action](https://en.wikipedia.org/wiki/Law_of_mass_action).
+of mass action](@ref).
 
 
 Let `s` be the number of susceptible persons, `i` be the number of infected
@@ -185,7 +185,7 @@ jump = ConstantRateJump(rate,affect!)
 
 where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the integrator
 `affect!(integrator)` (for details on the integrator, see the
-[integrator interface docs](http://docs.juliadiffeq.org/dev/basics/integrator)).
+[integrator interface docs](@ref)).
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
@@ -428,7 +428,7 @@ jump_prob = JumpProblem(prob,Direct(),rj)
 
 Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
 required. This is detailed on
-[the jump solvers page](http://docs.juliadiffeq.org/dev/solvers/jump_solve).
+[the jump solvers page](@ref jump_solve).
 One such algorithm is `SimpleTauLeaping`, which we use as follows:
 
 ```julia

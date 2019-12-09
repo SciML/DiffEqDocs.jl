@@ -4,7 +4,7 @@ This is a list of modeling packages built upon the JuliaDiffEq ecosystem.
 
 ## DynamicalSystems.jl
 
-[DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/stable/)
+[DynamicalSystems.jl](@ref)
 is a package for the exploration of continuous and discrete dynamical systems,
 with focus on nonlinear dynamics and chaos.
 
@@ -18,27 +18,27 @@ exponents of a numerical timeseries, finding periodic orbits of any order for ma
 
 ## BioEnergeticFoodWebs.jl
 
-[BioEnergeticFoodWebs.jl](https://github.com/PoisotLab/BioEnergeticFoodWebs.jl)
+[BioEnergeticFoodWebs.jl](@ref)
 is a package for simulations of biomass flows in food webs.
 
 ## SwitchTimeOpt.jl
 
-[SwitchTimeOpt.jl](https://github.com/oxfordcontrol/SwitchTimeOpt.jl) is a Julia
+[SwitchTimeOpt.jl](@ref) is a Julia
 package to easily define and efficiently solve switching time optimization (STO)
 problems for linear and nonlinear systems.
 
 ## VehicleModels.jl
 
-[VehicleModels.jl](https://github.com/JuliaMPC/VehicleModels.jl) is a package for
+[VehicleModels.jl](@ref) is a package for
 simulating vehicle models.
 
 ## MADS.jl
 
-[MADS.jl](https://github.com/madsjulia/Mads.jl) is a package data and model
+[MADS.jl](@ref) is a package data and model
 analysis. It adds many sensitivity analysis, uncertainty quantification,
 and model selection routines.
 
 ## QuantumOptics.jl
 
-[QunatumOptics.jl](https://github.com/qojulia/QuantumOptics.jl) is a package
+[QunatumOptics.jl](@ref) is a package
 for simulation of quantum systems.

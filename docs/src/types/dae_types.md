@@ -30,7 +30,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref)
 page.
 
 ### Fields
@@ -48,7 +48,7 @@ page.
 
 ## Example Problems
 
-Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/dae_premade_problems.jl).
+Examples problems can be found in [DiffEqProblemLibrary.jl](@ref).
 
 To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 

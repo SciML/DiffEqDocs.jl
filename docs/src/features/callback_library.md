@@ -30,10 +30,10 @@ ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g
 - `g`: The residual function for the manifold. This is an inplace function of form
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the manifold components.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](../../linear_nonlinear).
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](@ref linear_nonlinear).
 - `save`: Whether to do the save after the callback is applied. Standard saving is unchanged.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
-- `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
+- `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](@ref).
 
 ### Example
 
@@ -89,7 +89,7 @@ but this is guerenteed to match the order of the integrator even with the Manifo
 
 ## AutoAbstol
 
-Many problem solving environments [such as MATLAB](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html)
+Many problem solving environments [such as MATLAB](@ref)
 provide a way to automatically adapt the absolute tolerance to the problem. This
 helps the solvers automatically "learn" what appropriate limits are. Via the
 callback interface, DiffEqCallbacks.jl implements a callback `AutoAbstol` which
@@ -112,11 +112,11 @@ dynamical systems is the positive invariance of the positive cone, i.e.
 non-negativity of variables at time $t_0$ ensures their non-negativity at times
 $t \geq t_0$ for which the solution is defined. However, even if a system
 satisfies this property mathematically it can be difficult for ODE solvers to
-ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html)
+ensure it numerically, as these [MATLAB examples](@ref)
 show.
 
 In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
--> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/dev/basics/common_solver_opts),
+-> x < 0, u)` as additional [solver option](@ref),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
 calculations might be repeated multiple times until a step is accepted, it can
@@ -124,7 +124,7 @@ be computationally expensive.
 
 Another approach is taken by a `PositiveDomain` callback in
 DiffEqCallbacks.jl, which is inspired by
-[Shampine's et al. paper about non-negative ODE solutions](http://www.sciencedirect.com/science/article/pii/S0096300304009683).
+[Shampine's et al. paper about non-negative ODE solutions](@ref).
 It reduces the next step by a certain scale factor until the extrapolated value
 at the next time point is non-negative with a certain tolerance. Extrapolations
 are cheap to compute but might be inaccurate, so if a time step is changed it
@@ -197,7 +197,7 @@ function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
   specified time steps are halved.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
 - `nlopts`: Optional arguments to nonlinear solver of a `ManifoldProjection` which
-  can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
+  can be any of the [NLsolve keywords](@ref).
   The default value of `ftol = 10*eps()` ensures that convergence is only declared
   if the infinite norm of residuals is very small and hence the state vector is very
   close to the domain.

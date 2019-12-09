@@ -17,7 +17,7 @@ defining your differential equations. It exploits the standard notation for
 mathematically writing differential equations and the notation for "punching
 differential equations into the computer"; effectively doing the translation
 step for you. This is best shown by an example. Say we want to solve the
-[ROBER model](http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Single/DemoRobertson/demorobertson.pdf).
+[ROBER model](@ref).
 Using the `@ode_def` macro from ParameterizedFunctions.jl, we can do this by writing:
 
 ```julia
@@ -73,4 +73,4 @@ Jacobians are also used.
 Normally these will be computed fast enough that the user doesn't have to worry.
 However, in some cases you may want to restrict the number of functions (or get rid
 of a warning). For more information,
-please see the [ParameterizedFunctions.jl documentation](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
+please see the [ParameterizedFunctions.jl documentation](@ref).

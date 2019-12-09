@@ -7,7 +7,7 @@ Bifurcation analysis on DifferentialEquations.jl types can be performed by:
 - PyDSTool.jl
 - DiffEqBiological.jl
 
-If your system is a chemical reaction system, see the documentation at 
-[DiffEqBiological.jl](https://github.com/JuliaDiffEq/DiffEqBiological.jl#making-bifurcation-diagram)
+If your system is a chemical reaction system, see the documentation at
+[DiffEqBiological.jl](@ref)
 for quickly generating bifurcation plots. Bifurcations.jl can directly generate a `BifurcationProblem`
 from an `ODEProblem`. PyDSTool.jl is no longer recommended.

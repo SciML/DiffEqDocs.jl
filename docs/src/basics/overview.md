@@ -47,7 +47,7 @@ sol = solve(prob,alg;kwargs)
 Into the command, one passes the differential equation problem that they defined
 `prob`, optionally choose an algorithm `alg` (a default is given if not
 chosen), and change the properties of the solver using keyword arguments. The common
-arguments which are accepted by most methods is defined in [the common solver options manual page](../../common_solver_opts).
+arguments which are accepted by most methods is defined in [the common solver options manual page](@ref common_solver_opts).
 The solver returns a solution object `sol` which hold all of the details for the solution.
 
 ## Analyzing the Solution
@@ -56,7 +56,7 @@ With the solution object, you do the analysis as you please! The solution type
 has a common interface which makes handling the solution similar between the
 different types of differential equations. Tools such as interpolations
 are seamlessly built into the solution interface to make analysis easy. This
-interface is described in the [solution handling manual page](../../solution).
+interface is described in the [solution handling manual page](@ref solution).
 
 Plotting functionality is provided by a recipe to Plots.jl. To
 use plot solutions, simply call the `plot(sol)` and the plotter will generate
@@ -86,10 +86,10 @@ finalized results to large audiences. The tools for algorithm development allow 
 easy convergence testing, benchmarking, and higher order analysis (stability plotting,
 etc.). This is one of the reasons why DifferentialEquations.jl contains many algorithms
 which are unique and the results of recent publications! Please check out the
-[developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/)
+[developer documentation](@ref)
 for more information on using the development tools.
 
 Note that DifferentialEquations.jl allows for distributed development, meaning that
 algorithms which "plug-into ecosystem" don't have to be a part of the major packages.
-If you are interested in adding your work to the ecosystem, checkout the [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/index.html)
+If you are interested in adding your work to the ecosystem, checkout the [developer documentation](@ref)
 for more information.

@@ -18,26 +18,26 @@ keep in mind.
 
 For a detailed tutorial on how to optimize one's DifferentialEquations.jl code,
 please see the
-[Optimizing DiffEq Code tutorial](http://tutorials.juliadiffeq.org/html/introduction/03-optimizing_diffeq_code.html).
+[Optimizing DiffEq Code tutorial](@ref).
 
 ### Choosing a Good Solver
 
 Choosing a good solver is required for getting top notch speed. General
 recommendations can be found on the solver page (for example, the
-[ODE Solver Recommendations](http://docs.juliadiffeq.org/dev/solvers/ode_solve)).
+[ODE Solver Recommendations](@ref)).
 The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
 for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and Sundials
 `CVODE_BDF` for even larger problems. `lsoda` from
-[LSODA.jl](https://github.com/rveltz/LSODA.jl) is generally worth a try.
+[LSODA.jl](@ref) is generally worth a try.
 
 More details on the solver to choose can be found by benchmarking. See the
-[DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) to
+[DiffEqBenchmarks](@ref) to
 compare many solvers on many problems.
 
 ### Check Out the Speed FAQ
 
-See [this FAQ](http://docs.juliadiffeq.org/dev/basics/faq#Performance-1)
+See [this FAQ](@ref)
 for information on common pitfalls and how to improve performance.
 
 ### Setting Up Your Julia Installation for Speed
@@ -47,7 +47,7 @@ and factorizations. This library is automatically multithreaded and accelerates
 the internal linear algebra of DifferentialEquations.jl. However, for optimality,
 you should make sure that the number of BLAS threads that you are using matches
 the number of physical cores and not the number of logical cores. See
-[this issue for more details](https://github.com/JuliaLang/julia/issues/33409).
+[this issue for more details](@ref).
 
 To check the number of BLAS threads, use:
 
@@ -64,16 +64,16 @@ LinearAlgebra.BLAS.set_num_threads(4)
 
 Additionally, in some cases Intel's MKL might be a faster BLAS than the standard
 BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
-can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl) which will accelerate
+can use [MKL.jl](@ref) which will accelerate
 the linear algebra routines. Please see the package for the limitations.
 
 ### Use Accelerator Hardware
 
 When possible, use GPUs. If your ODE system is small and you need to solve it
 with very many different parameters, see the
-[ensembles interface](http://docs.juliadiffeq.org/dev/features/ensemble)
-and [DiffEqGPU.jl](https://github.com/JuliaDiffEq/DiffEqGPU.jl). If your problem
-is large, consider using a [CuArray](https://github.com/JuliaGPU/CuArrays.jl)
+[ensembles interface](@ref)
+and [DiffEqGPU.jl](@ref). If your problem
+is large, consider using a [CuArray](@ref)
 for the state to allow for GPU-parallelism of the internal linear algebra.
 
 ## Speeding Up Jacobian Calculations
@@ -91,9 +91,9 @@ i.e. a dense matrix. However, if you know the sparsity of your problem, then
 you can pass a different matrix type. For example, a `SparseMatrixCSC` will
 give a sparse matrix. Additionally, structured matrix types like `Tridiagonal`,
 `BandedMatrix` (from
-[BandedMatrices.jl](https://github.com/JuliaMatrices/BandedMatrices.jl)),
+[BandedMatrices.jl](@ref)),
 `BlockBandedMatrix` (from
-[BlockBandedMatrices.jl](https://github.com/JuliaMatrices/BlockBandedMatrices.jl)),
+[BlockBandedMatrices.jl](@ref)),
 and more can be given. DifferentialEquations.jl will internally use this matrix
 type, making the factorizations faster by utilizing the specialized forms.
 
@@ -170,7 +170,7 @@ prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ### Automatic Derivation of Jacobian Functions
 
 But that was hard! If you want to take the symbolic Jacobian of numerical
-code, we can make use of [ModelingToolkit.jl](https://github.com/JuliaDiffEq/ModelingToolkit.jl)
+code, we can make use of [ModelingToolkit.jl](@ref)
 to symbolicify the numerical code and do the symbolic calculation and return
 the Julia code for this.
 
@@ -239,7 +239,7 @@ prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ### Automatic Sparsity Detection
 
 One of the useful companion tools for DifferentialEquations.jl is
-[SparsityDetection.jl](https://github.com/JuliaDiffEq/SparsityDetection.jl).
+[SparsityDetection.jl](@ref).
 This allows for automatic declaration of Jacobian sparsity types. To see this
 in action, let's look at the 2-dimensional Brusselator equation:
 
@@ -327,10 +327,10 @@ If you cannot directly define a Jacobian function, you can use the `colorvec`
 to speed up the Jacobian construction. What the `colorvec` does is allows for
 calculating multiple columns of a Jacobian simultaniously by using the sparsity
 pattern. An explanation of matrix coloring can be found in the
-[MIT 18.337 Lecture Notes](https://mitmath.github.io/18337/lecture9/stiff_odes).
+[MIT 18.337 Lecture Notes](@ref).
 
 To perform general matrix coloring, we can use
-[SparseDiffTools.jl](https://github.com/JuliaDiffEq/SparseDiffTools.jl). For
+[SparseDiffTools.jl](@ref). For
 example, for the Brusselator equation:
 
 ```julia
@@ -372,11 +372,11 @@ GMRES linear solver.
 ```
 
 For more information on linear solver choices, see the
-[linear solver documentation](http://docs.juliadiffeq.org/dev/features/linear_nonlinear).
+[linear solver documentation](@ref).
 
 We can also enhance this by using a Jacobian-Free implementation of `f'(x)*v`.
 To define the Jacobian-Free operator, we can use
-[DiffEqOperators.jl](https://github.com/JuliaDiffEq/DiffEqOperators.jl) to generate
+[DiffEqOperators.jl](@ref) to generate
 an operator `JacVecOperator` such that `Jv*v` performs `f'(x)*v` without building
 the Jacobian matrix.
 
@@ -395,10 +395,10 @@ prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p)
 
 ### Adding a Preconditioner
 
-The [linear solver documentation](http://docs.juliadiffeq.org/dev/features/linear_nonlinear#IterativeSolvers.jl-Based-Methods-1)
+The [linear solver documentation](@ref)
 shows how you can add a preconditioner to the GMRES. For example, you can
-use packages like [AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
-to add an algebraic multigrid (AMG) or [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
+use packages like [AlgebraicMultigrid.jl](@ref)
+to add an algebraic multigrid (AMG) or [IncompleteLU.jl](@ref)
 for an incomplete LU-factorization (iLU).
 
 ```julia
@@ -416,14 +416,14 @@ not necessary to provide a `colorvec` since the color vector will be analyticall
 derived from the structure of the matrix.
 
 The matrices which are allowed are those which satisfy the
-[ArrayInterface.jl](https://github.com/JuliaDiffEq/ArrayInterface.jl) interface
+[ArrayInterface.jl](@ref) interface
 for automatically-colorable matrices. These include:
 
 - Bidiagonal
 - Tridiagonal
 - SymTridiagonal
-- BandedMatrix ([BandedMatrices.jl](https://github.com/JuliaMatrices/BandedMatrices.jl))
-- BlockBandedMatrix ([BlockBandedMatrices.jl](https://github.com/JuliaMatrices/BlockBandedMatrices.jl))
+- BandedMatrix ([BandedMatrices.jl](@ref))
+- BlockBandedMatrix ([BlockBandedMatrices.jl](@ref))
 
 Matrices which do not satisfy this interface can still be used, but the matrix
 coloring will not be automatic, and an appropriate linear solver may need to
@@ -434,7 +434,7 @@ be given (otherwise it will default to attempting an LU-decomposition).
 While much of the setup makes the transition to using Sundials automatic, there
 are some differences between the pure Julia implementations and the Sundials
 implementations which must be taken note of. These are all detailed in the
-[Sundials solver documentation](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1),
+[Sundials solver documentation](@ref),
 but here we will highlight the main details which one should make note of.
 
 Defining a sparse matrix and a Jacobian for Sundials works just like any other
@@ -454,7 +454,7 @@ using Sundials
 ```
 
 Details for setting up a preconditioner with Sundials can be found at the
-[Sundials solver page](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1).
+[Sundials solver page](@ref).
 
 ## Handling Mass Matrices
 
@@ -514,4 +514,4 @@ plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 
 Note that if your mass matrix is singular, i.e. your system is a DAE, then you
 need to make sure you choose
-[a solver that is compatible with DAEs](http://docs.juliadiffeq.org/dev/solvers/dae_solve#Full-List-of-Methods-1)
+[a solver that is compatible with DAEs](@ref)

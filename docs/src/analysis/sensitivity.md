@@ -40,7 +40,7 @@ using DiffEqSensitivity
 
 For an analysis of which methods will be most efficient for computing the
 solution derivatives for a given problem, consult our analysis
-[in this arxiv paper](https://arxiv.org/abs/1812.01892). A general rule of thumb
+[in this arxiv paper](@ref). A general rule of thumb
 is:
 
 - Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for
@@ -98,7 +98,7 @@ end
 ```
 
 What this function does is use the `remake` function
-[from the Problem Interface page](http://docs.juliadiffeq.org/dev/basics/problem/#Modification-of-problem-types-1)
+[from the Problem Interface page](@ref)
 to generate a new ODE problem with the new parameters, solves it, and returns
 the solution at the final time point. Notice that it takes care to make sure
 that the type of `u0` matches the type of `p`. This is because ForwardDiff.jl
@@ -113,7 +113,7 @@ fd_res = ForwardDiff.jacobian(test_f,p)
 ```
 
 If we would like to get the solution and the value at the time point at the
-same time, we can use [DiffResults.jl](https://github.com/JuliaDiff/DiffResults.jl).
+same time, we can use [DiffResults.jl](@ref).
 For example, the following uses a single ODE solution to calculate the value
 at the end point and its parameter Jacobian:
 
@@ -243,7 +243,7 @@ f(d) = f(x) + Jv \epsilon
 
 as a fast way to calcuate ``Jv``. Thus, except when a sufficiently good function for `J` is given
 by the user, the Jacobian is never formed. For more details, consult the 
-[MIT 18.337 lecture notes on forward mode AD](https://mitmath.github.io/18337/lecture9/autodiff_dimensions).
+[MIT 18.337 lecture notes on forward mode AD](@ref).
 
 #### Syntax
 
@@ -445,7 +445,7 @@ We note that
 is a vector-transpose Jacobian product, also known as a `vjp`, which can be efficiently computed 
 using the pullback of backpropogation on the user function `f` with a forward pass at `u` with a
 pullback vector ``\lambda^{\star}``. For more information, consult the
-[MIT 18.337 lecture notes on reverse mode AD](https://mitmath.github.io/18337/lecture10/estimation_identification)
+[MIT 18.337 lecture notes on reverse mode AD](@ref)
 
 #### Syntax
 

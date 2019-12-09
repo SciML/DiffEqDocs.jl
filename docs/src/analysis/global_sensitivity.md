@@ -67,7 +67,7 @@ the interaction between the parameters.
  Var(Y) = \sum_{i=1}^d V_i + \sum_{i < j}^d V_{ij} + ... + V_{1,2...,d}
 ```
 
-The Sobol Indices are "order"ed, the first order indices given by ``S_i = \frac{V_i}{Var(Y)}``
+The Sobol Indices are "ordered", the first order indices given by ``S_i = \frac{V_i}{Var(Y)}``
 the contribution to the output variance of the main effect of `` X_i ``, therefore it
 measures the effect of varying `` X_i `` alone, but averaged over variations
 in other input parameters. It is standardised by the total variance to provide a fractional contribution.

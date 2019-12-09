@@ -100,7 +100,7 @@ are handled. Currently, the ensemble algorithm types are:
 * `EnsembleGPUArray()` - Requires installing and `using DiffEqGPU`. This uses a GPU for computing the ensemble 
   with hyperparallelism. It will automatically recompile your Julia functions to the GPU. A standard GPU sees 
   a 5x performance increase over a 16 core Xeon CPU. However, there are limitations on what functions can
-  auto-compile in this fashion, please see the [DiffEqGPU README for more details](https://github.com/JuliaDiffEq/DiffEqGPU.jl)
+  auto-compile in this fashion, please see the [DiffEqGPU README for more details](@ref)
 
 For example, `EnsembleThreads()` is invoked by:
 
@@ -123,7 +123,7 @@ components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
 of the odd components. An other additional argument is `zcolors` (an alias of `marker_z`) which allows
 you to pass a `zcolor` for each series. For details about `zcolor` see the 
-[Series documentation for Plots.jl](http://docs.juliaplots.org/dev/attributes/).
+[Series documentation for Plots.jl](@ref).
 
 ## Analyzing an Ensemble Experiment
 
@@ -254,7 +254,7 @@ look like. Let's start by opening up some extra processes so that way the comput
 will be parallelized. Here we will choose to use distributed parallelism which means 
 that the required functions must be made available to all processes. This can be 
 achieved with 
-[`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
+[`@everywhere` macro](@ref):
 
 ```julia
 using Distributed
@@ -327,7 +327,7 @@ sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
-the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](https://docs.julialang.org/en/v1.1/manual/environment-variables/#JULIA_NUM_THREADS-1) for details).
+the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](@ref).
 
 
 ### Pre-Determined Initial Conditions

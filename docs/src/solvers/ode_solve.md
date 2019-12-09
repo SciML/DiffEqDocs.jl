@@ -68,8 +68,8 @@ At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
 `Rodas4P` (the former is more efficient but the later is more reliable),
 `Kvaerno5`, or `KenCarp4`. As native DifferentialEquations.jl solvers,
 many Julia numeric types (such as BigFloats,
-[ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
-[DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
+[ArbFloats](@ref), or
+[DecFP](@ref)) will work. When the equation is
 defined via the `@ode_def` macro, these will be the most efficient.
 
 For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
@@ -573,7 +573,7 @@ on/off multithreading.
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
   Expects the right hand side function to be a
-  [`AbstractDiffEqOperator`](../../../features/diffeq_operator).
+  [`AbstractDiffEqOperator`](@ref diffeq_operator).
 
 Options:
 
@@ -601,7 +601,7 @@ These methods are all fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4.
 
 The methods are intended for semilinear problems constructed by
-[`SplitODEProblem`](../../../types/split_ode_types) or `SplitODEFunction`. They can
+[`SplitODEProblem`](@ref split_ode_types) or `SplitODEFunction`. They can
 also be used for a general nonlinear problem, in which case the jacobian of the right
 hand side is used as the linear operator in each time step.
 
@@ -615,7 +615,7 @@ constructor:
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
 - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
-  is not given. See [Extra Options](#Extra-Options-1) for more details.
+  is not given. See [Extra Options](@ref) for more details.
 
 #### Adaptive Exponential Rosenbrock Methods
 
@@ -623,7 +623,7 @@ constructor:
 - `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
 
 The exponential rosenbrock methods cannot be applied to semilinear problems. Options for the
-solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1)
+solvers are the same as [Exponential Runge-Kutta Methods](@ref)
 except that Krylov approximation is always used.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
@@ -648,7 +648,7 @@ Options:
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
 - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
-  is not given. See [Extra Options](#Extra-Options-1) for more details.
+  is not given. See [Extra Options](@ref) for more details.
 
 It should be noted that many of the methods are still at an experimental stage of development,
 and thus should be used with caution.
@@ -687,18 +687,18 @@ Sundials CVODE integrator.
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
 solver, see
-[the manual page on solver specification](../../../features/linear_nonlinear).
+[the manual page on solver specification](@ref linear_nonlinear).
 
 Note that performance overload information (Jacobians etc.) are not used in this
 mode. This can control autodifferentiation of the Jacobian as well.
 For more information on specifying the nonlinear solver, see
-[the manual page on solver specification](../../../features/linear_nonlinear).
+[the manual page on solver specification](@ref linear_nonlinear).
 
 Additionally, the Rosenbrock and SDIRK methods have differentiation
 controls. In each of these, `autodiff` can be set to turn on/off
 autodifferentiation, and `chunk_size` can be used to set the chunksize of the Dual
  numbers (see the
-[documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/stable/user/advanced/#Configuring-Chunk-Size-1)).
+[documentation for ForwardDiff.jl for details](@ref)).
 In addition, the Rosenbrock and SDIRK methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
 disabled). The choices are `Val{:central}`, `Val{:forward}` or `Val{:complex}`.
@@ -952,8 +952,8 @@ ARKODE(stiffness=Sundials.Implicit();
       )
 ```
 
-See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
-and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
+See [the CVODE manual](@ref)
+and the [ARKODE manual](@ref)
 for details on the additional options.
 
 Note that here `prec` is a preconditioner function
@@ -1072,7 +1072,7 @@ using ODE
 
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../../../features/diffeq_arrays).
+detection, and [discrete variables need to be updated appropriately](@ref features/diffeq_arrays).
 
 ### MATLABDiffEq.jl
 
@@ -1098,11 +1098,11 @@ This requires a licensed MATLAB installation. The available methods are:
   - `MATLABDiffEq.ode15i`
 
 For more information on these algorithms, see
-[the MATLAB documentation](https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html).
+[the MATLAB documentation](@ref).
 
 ### SciPyDiffEq.jl
 
-[SciPyDiffEq.jl](https://github.com/JuliaDiffEq/SciPyDiffEq.jl) is a wrapper over SciPy for 
+[SciPyDiffEq.jl](@ref) is a wrapper over SciPy for 
 easing the transition of new users (same exact results!)
 and benchmarking. This wrapper uses Julia's JIT acceleration to accelerate about 3x over SciPy+Numba,
 but it is still around 1000x slower than the pure-Julia methods and thus should probably be used
@@ -1127,7 +1127,7 @@ The available methods are:
 
 ### deSolveDiffEq.jl
 
-[deSolveDiffEq.jl](https://github.com/JuliaDiffEq/deSolveDiffEq.jl) is a wrapper over R's deSolve for 
+[deSolveDiffEq.jl](@ref) is a wrapper over R's deSolve for 
 easing the transition of new users (same exact results!)
 and benchmarking. This wrapper is around 1000x slower than the pure-Julia methods (~2x-3x overhead 
 from directly using R) and thus should probably be used sparingly. 
@@ -1261,7 +1261,7 @@ using NeuralNetDiffEq
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
-The list of tableaus can be found in [the developer docs](https://devdocs.juliadiffeq.org/dev/internals/tableaus/).
+The list of tableaus can be found in [the developer docs](@ref).
 To use them, note you must install the library:
 
 ```julia
@@ -1275,7 +1275,7 @@ instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
 serve as a good method for comparing between tableaus and understanding the
 pros/cons of the methods. Implemented are every published tableau (that I know
 exists). Note that user-defined tableaus also are accepted. To see how to define
-a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
+a tableau, checkout the [premade tableau source code](@ref).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.

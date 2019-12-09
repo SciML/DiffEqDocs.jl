@@ -190,7 +190,7 @@ In general the jacobian prototype can be anything that has `mul!` defined, in
 particular sparse matrices or custom lazy types that support `mul!`. A special case
 is when the `jac_prototype` is a `AbstractDiffEqLinearOperator`, in which case you
 do not need to supply `jac` as it is automatically set to `update_coefficients!`.
-Refer to the [DiffEqOperators](../../diffeq_operator) section for more information
+Refer to the [DiffEqOperators](@ref diffeq_operator) section for more information
 on setting up time/parameter dependent operators.
 
 ## Examples
@@ -273,6 +273,6 @@ end
 ## Symbolically Calculating the Functions
 
 See the `modelingtoolkitize` function from
-[ModelingToolkit.jl](https://github.com/JuliaDiffEq/ModelingToolkit.jl) for
+[ModelingToolkit.jl](@ref) for
 automatically symbolically calculating the Jacobian for numerically-defined
 functions.

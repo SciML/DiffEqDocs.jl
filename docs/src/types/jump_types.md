@@ -242,4 +242,4 @@ For representing and aggregating constant rate jumps
 - For large number of jumps with sparse chain like structures and similar jump rates, for example continuous time random walks, `DirectCR` and then `NRM` often have the best performance.
 - For very large networks, with many updates per jump, `RSSA` will often substantially outperform the other methods.
 
-In general, for systems with sparse dependency graphs if `Direct` is slow, one of `SortingDirect`, `DirectCR` or `RSSA` will usually offer substantially better performance. See [DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) for benchmarks on several example networks.
+In general, for systems with sparse dependency graphs if `Direct` is slow, one of `SortingDirect`, `DirectCR` or `RSSA` will usually offer substantially better performance. See [DiffEqBenchmarks.jl](@ref) for benchmarks on several example networks.

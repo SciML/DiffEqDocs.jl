@@ -1,7 +1,7 @@
 # Random Ordinary Differential Equations
 
 This tutorial will introduce you to the functionality for solving RODEs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+introductions can be found by [checking out DiffEqTutorials.jl](@ref).
 
 ## Example 1: Scalar RODEs
 
@@ -28,7 +28,7 @@ sol = solve(prob,RandomEM(),dt=1/100)
 
 The random process defaults to a Gaussian/Wiener process, so there is nothing
 else required here! See the documentation on
-[`NoiseProcess`es](../../../features/noise_process) for details on how to define
+[`NoiseProcess`es](@ref noise_process) for details on how to define
 other noise proceses.
 
 ## Example 2: Systems of RODEs

@@ -42,7 +42,7 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 - `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
   of available options, please see
-  [its ODE solver page](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1)
+  [its ODE solver page](@ref)
 
 ## Semilinear ODE
 
@@ -52,7 +52,7 @@ The Semilinear ODE is a `SplitODEProblem` with one linear operator and one nonli
 \frac{du}{dt} =  Au + f(t,u)
 ```
 
-See the documentation page for [DiffEqOperator](../../../features/diffeq_operator)
+See the documentation page for [DiffEqOperator](@ref diffeq_operator)
 for details about how to define linear operators from a matrix or finite difference
 discretization of derivative operators.
 

@@ -15,7 +15,7 @@ plot(sol) # Plots the solution
 Many of the types defined in the DiffEq universe, such as
 `ODESolution`, `ConvergenceSimulation` `WorkPrecision`, etc. have plot recipes
 to handle the default plotting behavior. Plots can be customized using
-[all of the keyword arguments provided by Plots.jl](http://docs.juliaplots.org/dev/supported/).
+[all of the keyword arguments provided by Plots.jl](@ref).
 For example, we can change the plotting backend to the GR package and put a title
 on the plot by doing:
 
@@ -122,7 +122,7 @@ vars = [(1,2), (1,3), (1,4)]
 
 The recipe library DimensionalPlotRecipes.jl is provided for extra functionality
 on high dimensional numbers (complex numbers) and other high dimensional plots.
-See [the README](https://github.com/JuliaDiffEq/DimensionalPlotRecipes.jl) for
+See [the README](@ref) for
 more details on the extra controls that exist.
 
 ### Timespan
@@ -187,7 +187,7 @@ saves every 4th frame via:
 animate(sol,lw=3,every=4)
 ```
 
-Please see [Plots.jl's documentation](https://juliaplots.github.io/) for more information
+Please see [Plots.jl's documentation](@ref) for more information
 on the available attributes.
 
 ## Plotting Without the Plot Recipe

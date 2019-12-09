@@ -72,7 +72,7 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
   is saved. Defaults to true.
 * `delta`: The `delta` adaptivity parameter for the natural error estimator.
   Determines the balance between drift and diffusion error. For more details, see
-  [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
+  [the publication](@ref).
 * `seed`: Sets the seed for the random number generator. This overrides any seed
   set in the `SDEProblem`.
 
@@ -293,6 +293,6 @@ using BridgeDiffEq
 ##### Notes
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../../../features/diffeq_arrays).
+detection, and [discrete variables need to be updated appropriately](@ref features/diffeq_arrays).
 
 \*:  Note that although `SKenCarp` uses the same table as `KenCarp3`, solving a ODE problem using `SKenCarp` by setting `g(du,u,p,t) = du .= 0` will take much more steps than `KenCarp3` because error estimator of `SKenCarp` is different (because of noise terms) and default value of `qmax` (maximum permissible ratio of relaxing/tightening `dt` for adaptive steps) is smaller for StochasticDiffEq algorithms.

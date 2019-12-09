@@ -59,7 +59,7 @@ parameters. Any extra keyword arguments are passed on to the solvers. For exampl
 if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
-For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads) page.
+For specifying Jacobians and mass matrices, see the [DiffEqFunctions](@ref) page.
 
 ### Arguments
 
@@ -77,7 +77,7 @@ For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://doc
 
 ## Example Problems
 
-Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/dde).
+Example problems can be found in [DiffEqProblemLibrary.jl](@ref).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 

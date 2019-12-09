@@ -18,7 +18,7 @@ using DiffEqUncertainty
 
 ## ProbInts
 
-The [ProbInts](https://arxiv.org/abs/1506.04592)
+The [ProbInts](@ref)
 method for uncertainty quantification involves the transformation of an ODE
 into an associated SDE where the noise is related to the timesteps and the order
 of the algorithm. This is implemented into the DiffEq system via a callback function.
@@ -68,7 +68,7 @@ cb = ProbIntsUncertainty(0.2,1)
 ```
 
 This is akin to having an error of approximately 0.2 at each step. We now build
-and solve a [EnsembleProblem](../../../features/ensemble/) for 100 trajectories:
+and solve a [EnsembleProblem](@ref ensemble) for 100 trajectories:
 
 ```julia
 ensemble_prob = EnsembleProblem(prob)
@@ -200,7 +200,7 @@ we see that we can extend the amount of time until we deviate strongly from the 
 Of course, for a chaotic system like the Lorenz one presented here, it is impossible to follow the true solution
 for long times, due to the fact that the system is chaotic and unavoidable deviations due to the numerical precision of a cumputer get amplified exponentially.
 
-However, not all hope is lost. The [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) is a strong statement for having confidence in numerical evolution of chaotic systems:
+However, not all hope is lost. The [shadowing theorem](@ref) is a strong statement for having confidence in numerical evolution of chaotic systems:
 
 > Although a numerically computed chaotic trajectory diverges exponentially from the true trajectory with the same initial coordinates, there exists an errorless trajectory with a slightly different initial condition that stays near ("shadows") the numerically computed one.
 
