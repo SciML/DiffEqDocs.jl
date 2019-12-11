@@ -1,6 +1,4 @@
 name: PreviewPR
-author: Kanav Gupta
-description: Deploy Julia Documentation for a PR to a temporary Netlify link
 
 on:
   push:
