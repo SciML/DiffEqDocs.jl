@@ -1,4 +1,6 @@
 name: PreviewPR
+author: Kanav Gupta
+description: Deploy Julia Documentation for a PR to a temporary Netlify link
 
 on:
   push:
@@ -30,4 +32,8 @@ jobs:
       - name: Push to netlify
         env:
           NETLIFY_SECRET: ${{ secrets.NETLIFY_SECRET }}
-        run: "curl -H \"Content-Type: application/zip\" -H \"Authorization: Bearer $NETLIFY_SECRET\" --data-binary \"@docs/build/website.zip\" https://api.netlify.com/api/v1/sites"
+        run: "curl -H \"Content-Type: application/zip\" -H \"Authorization: Bearer $NETLIFY_SECRET\" --data-binary \"@docs/build/website.zip\" https://api.netlify.com/api/v1/sites | python -c \"import sys, json; print json.load(sys.stdin)['name']\" > link && cat link"
+      - name: Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .netlify
