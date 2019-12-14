@@ -36,20 +36,27 @@ a parameter is important, a high variance implies that its effects are
 non-linear or the result of interactions with other inputs. This method
 does not evaluate separately the contribution from the
 interaction and the contribution of the parameters individually and gives the
-effects for each parameter which takes into cpnsideration all the interactions and its
+effects for each parameter which takes into consideration all the interactions and its
 individual contribution.
 
-`morris_effects = morris_sensitivity(f,param_range,param_steps;relative_scale=false,kwargs...)`
+`morris_effects = gsa(f,Morris(),param_range)`
 
-`morris_effects = morris_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_steps;kwargs...)`
 
 Here, `f` is just the model (as a julia function 
 `f(input_vector) -> output_vector` or a `DEProblem`) you want to
-run the analysis on, `param_range` requires an array of 2-tuples with the lower bound
-and the upper bound, `param_steps` decides the value of ``\Delta`` in the equation
-above and `relative_scale`, the above equation takes the assumption that
+run the analysis on. The `Morris` object signifies the method to be used and contains
+the following fields that can be passed by user to adjust the parameter sampling:
+
+  1. `p_steps` - Decides the value of ``\Delta`` in the elementary effects calculation.
+  2. `relative_scale` - The elementary effects are calculated with the assumption that
 the parameters lie in the range `[0,1]` but as this is not always the case
 scaling is used to get more informative, scaled effects.
+  3. `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are 
+  generated out of which `num_trajectory` matrices with the highest spread are used in calculation.
+  4. `len_design_mat` - The size of a design matrix.
+
+  `param_range` requires an array of 2-tuples with the lower bound
+and the upper bound.
 
 ## Sobol Method
 
@@ -74,11 +81,11 @@ in other input parameters. It is standardised by the total variance to provide a
 Higher-order interaction indices `` S_{i,j}, S_{i,j,k} `` and so on can be formed
 by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
-`sobol_second_order = sobol_sensitivity(f,param_range,N,order=2)`
+`sobol_indices = gsa(f,Sobol(),A,B;batch=false,Ei_estimator = :Jansen1999)`
 
-`sobol_second_order = sobol_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,N,order=2)`
-
-Here `f` and `param_range` are the same as Morris's, providing a uniform interface.
+The `Sobol` object has as its fields the `order` of the indices to be estimated. 
+The `Ei_estimator` kwarg can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` 
+which signify the different ways of estimating the indices.   
 
 ## Regression Method
 
@@ -141,22 +148,24 @@ t = collect(range(0, stop=10, length=200))
 For Morris Method
 
 ```julia
-m = DiffEqSensitivity.morris_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],[10,10],len_trajectory=1500,total_num_trajectory=1000,num_trajectory=150)
+f1 = function (p)
+        prob1 = remake(prob;p=p)
+        Array(solve(prob1,Tsit5();saveat=t))
+    end
+m = gsa(f1,Morris(total_num_trajectory=1000,num_trajectory=150),[[1,5],[0.5,5]])
 ```
-Let's get the means and variances from the `MorrisSensitivity` struct.
+Let's get the means and variances from the `MorrisResult` struct.
 
 ```julia
 m.means
-
-Out[9]: 2-element Array{Array{Float64,2},1}:
- [0.0 0.0513678 … 7.91336 7.93783; 0.0 0.00115769 … 3.66156 3.67284]
- [0.0 0.0488899 … 2.50728 2.359; 0.0 0.00112006 … 2.23431 2.44946]
+2-element Array{Array{Float64,2},1}:
+ [0.0 0.051096 … 12.5698 12.401; 0.0 0.00115346 … 5.34451 5.63429]
+ [0.0 0.048616 … 2.31299 2.39601; 0.0 0.00111577 … 2.5087 2.4553] 
 
 m.variances
-
-Out[10]: 2-element Array{Array{Float64,2},1}:
- [0.0 1.94672e-5 … 26.4223 24.8513; 0.0 4.81347e-9 … 37.4061 30.3068]
- [0.0 1.77615e-5 … 17.9555 14.9231; 0.0 4.47931e-9 … 48.074 51.9312]
+2-element Array{Array{Float64,2},1}:
+ [0.0 1.92803e-5 … 160.412 157.503; 0.0 4.77857e-9 … 84.1636 88.2436]
+ [0.0 1.70976e-5 … 21.9696 27.3176; 0.0 4.3237e-9 … 86.6352 77.7245] 
 ```
 This gives the means of the effects and it's variances over the entire timespan and thus we get 200-length
 arrays for each paramter and dependent variable pair.
@@ -179,35 +188,28 @@ p = plot(m.means[2]', yerror=stdv2)
 For Sobol Method
 
 ```julia
+f1 = function (p)
+        prob1 = remake(prob;p=p)
+        Array(solve(prob1,Tsit5();saveat=t))[end]
+    end
 
-s0 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,0)
-Out[8]: 2-element Array{Array{Float64,2},1}:
- [NaN 0.507831 … 1.00731 1.00436; NaN 1.92336 … 0.732384 0.730945]
- [NaN 0.47214 … 0.676224 0.681525; NaN -1.68656 … 0.879557 0.877603]
-
-s1 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,1)
-Out[9]: 2-element Array{Array{Float64,2},1}:
- [NaN 0.39537 … 0.341697 0.343645; NaN -2.06101 … 0.10922 0.106976]
- [NaN 0.652815 … 0.00910675 0.00815206; NaN 5.24832 … 0.296978 0.296639]
-
-s2 = sobol_sensitivity(prob,Tsit5(),t,[[1,5],[0.5,5]],N,2)
-Out[10]: 1-element Array{Array{Float64,2},1}:
- [NaN -0.0596478 … 0.652303 0.657847; NaN -1.84504 … 0.645139 0.620036]
+N = 10000
+lb = [1.0, 0.5]
+ub = [5.0, 5.0]
+sampler = SobolSample()
+A,B = QuasiMonteCarlo.generate_design_matrices(N,lb,ub,sampler)
+sobol_result = gsa(f1,Sobol(),A,B)
 ```
-We can decide which order of Sobol Indices we are interested in my passing an argument for it,
-by default it gives the second order indices. Again the result is obtained over the entire `timespan`
 
 We plot the first order and total order Sobol Indices for some timepoints for each of the parameters (`a` and `b`).
 
 ```julia
 
-p1 = bar(["a","b"],[s0[1][end-2],s0[2][end-2]],color=[:red,:blue],title="Total Order Indices at t=9.949748743718592",legend=false)
-p2 = bar(["a","b"],[s1[1][end-2],s1[2][end-2]],color=[:red,:blue],title="First Order Indices at t=9.949748743718592",legend=false)
-p3 = bar(["a","b"],[s0[1][3],s0[2][3]],color=[:red,:blue],title="Total Order Indices at t=0.05025125628140704",legend=false)
-p4 = bar(["a","b"],[s1[1][3],s1[2][3]],color=[:red,:blue],title="First Order Indices at t=0.05025125628140704",legend=false)
-plo = plot(p1,p2,p3,p4,layout=(4,1),size=(600,500))
+p1 = bar(["a","b"],[sobol_result.ST[1],sobol_result.ST[2]],color=[:red,:blue],title="Total Order Indices",legend=false)
+p2 = bar(["a","b"],[sobol_result.S1[1],sobol_result.S1[2]],color=[:red,:blue],title="First Order Indices",legend=false)
+plo = plot(p1,p2,layout=(2,1),size=(600,500))
 
 ```
 ![sobolplot](../assets/sobolbars.png)
 
-Here we plot the Sobol indices of first order and the total Sobol indices for the parameters `a` and `b`. The plots are obtained by getting the Sobol Indices at the `t = 9.949748743718592` and the `t = 0.05025125628140704` time point of the first dependent variable `x(t)` from the 200-length sensitivities over the entire time span. The length of the bar represents the quantification of the sensitivity of the output to that parameter and hence for the 199th time point you can say that `x(t)` is more sensitive to `b`, also you can observe how the relative difference between `a` and `b` is larger in the first order than the total order indices, this tells us that most of the contribution of `a` to `x(t)` arises from interactions and it's individual non-interaction contribution is significantly lesser than `b` and vice-versa for `b` as it's first order plot indicates quite high value.
+Here we plot the Sobol indices of first order and the total Sobol indices for the parameters `a` and `b`. The plots are obtained by getting the Sobol Indices at the final time point of the second dependent variable `y(t)` from the 200-length sensitivities over the entire time span. The length of the bar represents the quantification of the sensitivity of the output to that parameter and hence for the final time point you can say that `y(t)` is more sensitive to `b`, also you can observe how the relative difference between `a` and `b` is larger in the first order than the total order indices, this tells us that most of the contribution of `a` to `y(t)` arises from interactions and it's individual non-interaction contribution is significantly lesser than `b` and vice-versa for `b` as it's first order plot indicates quite high value.
