@@ -13,7 +13,7 @@ To initialize an integrator, use the syntax:
 integrator = init(prob,alg;kwargs...)
 ```
 
-The keyword args which are accepted are the same [Common Solver Options](@ref)
+The keyword args which are accepted are the same as the [solver options](@ref solver_options)
 used by `solve` and the returned value is an `integrator` which satisfies
 `typeof(integrator)<:DEIntegrator`. One can manually choose to step via the `step!` command:
 
@@ -32,7 +32,7 @@ setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator
 
 To check whether or not the integration step was successful, you can
 call `check_error(integrator)` which returns one of the
-[Return Codes (RetCodes)](@ref).
+[return codes](@ref retcodes).
 
 This type also implements an iterator interface, so one can step `n` times
 (or to the last `tstop`) using the `take` iterator:
@@ -128,7 +128,7 @@ that interval.
 Be cautious: one should not directly mutate the `t` and `u` fields of the integrator.
 Doing so will destroy the accuracy of the interpolator and can harm certain algorithms.
 Instead if one wants to introduce discontinuous changes, one should use the
-[Event Handling and Callback Functions](@ref). Modifications within a callback
+[callbacks](@ref callbacks). Modifications within a callback
 `affect!` surrounded by saves provides an error-free handling of the discontinuity.
 
 As low-level alternative to the callbacks, one can use `set_t!`, `set_u!` and
@@ -173,110 +173,59 @@ The following functions make up the interface:
 
 ### Saving Controls
 
-* `savevalues!(integrator)`: Adds the current state to the `sol`.
+```@docs
+savevalues!
+```
 
 ### Caches
 
-* `get_tmp_cache(integrator)`: Returns a tuple of internal cache vectors which are
-  safe to use as temporary arrays. This should be used for integrator interface
-  and callbacks which need arrays to write into in order to be non-allocating.
-  The length of the tuple is dependent on the method.
-* `full_cache(integrator)`:  Returns an iterator over the cache arrays of the method.
-  This can be used to change internal values as needed.
+```@docs
+get_tmp_cache
+full_cache
+```
 
-### Stepping Controls
+### [Stepping Controls](@id stepping_controls)
 
-* `u_modified!(integrator,bool)`: Bool which states whether a change to `u` occurred,
-  allowing the solver to handle the discontinuity. By default, this is assumed
-  to be true if a callback is used. This will result in the re-calculation of
-  the derivative at `t+dt`, which is not necessary if the algorithm is FSAL
-  and `u` does not experience a discontinuous change at the end of the interval.
-  Thus if `u` is unmodified in a callback, a single call to the derivative calculation
-  can be eliminated by `u_modified!(integrator,false)`.
-* `get_proposed_dt(integrator)`:  Gets the proposed `dt` for the
-  next timestep.
-* `set_proposed_dt!(integrator,dt)`:  Sets the proposed `dt` for the
-  next timestep.
-* `set_proposed_dt!(integrator,integrator2)`:  Sets the timestepping of
-  `integrator` to match that of `integrator2`. Note that due to PI control and
-  step acceleration this is more than matching the factors in most cases.
-* `proposed_dt(integrator)`: Returns the `dt` of the proposed step.
-* `terminate!(integrator[, retcode = :Terminated])`: Terminates the integrator
-  by emptying `tstops`. This can be used in events and callbacks to immediately
-  end the solution process.  Optionally, `retcode` may be specified (see:
-  [Return Codes (RetCodes)](@ref)).
-* `change_t_via_interpolation!(integrator,t,modify_save_endpoint=Val{false})`: This
-  option lets one modify the current `t` and changes all of the corresponding
-  values using the local interpolation. If the current solution has already
-  been saved, one can provide the optional value `modify_save_endpoint` to also
-  modify the endpoint of `sol` in the same manner.
-* `add_tstop!(integrator,t)`: Adds a `tstop` at time `t`.
-* `add_saveat!(integrator,t)`: Adds a `saveat` time point at `t`.
+```@docs
+u_modified!
+get_proposed_dt
+set_proposed_dt!
+terminate!
+change_t_via_interpolation!
+add_tstop!
+add_saveat!
+```
 
 ### Resizing
 
-* `resize!(integrator,k)`: Resizes the DE to a size `k`. This chops off the end
-  of the array, or adds blank values at the end, depending on whether `k>length(integrator.u)`.
-* `deleteat!(integrator,idxs)`: Shrinks the ODE by deleting the `idxs` components.
-* `addat!(integrator,idxs)`: Grows the ODE by adding the `idxs` components.
-  Must be contiguous indices.
-* `resize_non_user_cache!(integrator,k)`: Resizes the non-user facing caches to be
-  compatible with a DE of size `k`. This includes resizing Jacobian caches. Note
-  that in many cases, `resize!` simply resizes `full_cache` variables and then
-  calls this function. This finer control is required for some `AbstractArray`
-  operations.
-* `deleteat_non_user_cache!(integrator,idxs)`: `deleteat!`s the non-user facing caches
-  at indices `idxs`. This includes resizing Jacobian caches. Note
-  that in many cases, `deleteat!` simply `deleteat!`s `full_cache` variables and then
-  calls this function. This finer control is required for some `AbstractArray`
-  operations.
-* `addat_non_user_cache!(integrator,idxs)`: `addat!`s the non-user facing caches
-  at indices `idxs`. This includes resizing Jacobian caches. Note
-  that in many cases, `addat!` simply `addat!`s `full_cache` variables and then
-  calls this function. This finer control is required for some `AbstractArray`
-  operations.
-
-### Reinit
-
-The reinit function lets you restart the integration at a new value. The full
-function is of the form:
-
-```julia
-reinit!(integrator::ODEIntegrator,u0 = integrator.sol.prob.u0;
-  t0 = integrator.sol.prob.tspan[1], tf = integrator.sol.prob.tspan[2],
-  erase_sol = true,
-  tstops = integrator.opts.tstops_cache,
-  saveat = integrator.opts.saveat_cache,
-  d_discontinuities = integrator.opts.d_discontinuities_cache,
-  reset_dt = (integrator.dtcache == zero(integrator.dt)) && integrator.opts.adaptive,
-  reinit_callbacks = true, initialize_save = true,
-  reinit_cache = true)
+```@docs
+resize!
+deleteat!
+addat!
+resize_non_user_cache!
+deleteat_non_user_cache!
+addat_non_user_cache!
 ```
 
-`u0` is the value to start at. The starting time point and end point can be changed
-via `t0` and `tf`. `erase_sol` allows one to start with no other values in the
-solution, or keep the previous solution. `tstops`, `d_discontinuities`, and
-`saveat` are reset as well, but can be ignored. `reset_dt` is a boolean for
-whether to reset the current value of `dt` using the automatic `dt` determination
-algorithm. `reinit_callbacks` is whether to run the callback initializations
-again (and `initialize_save` is for that). `reinit_cache` is whether to re-run
-the cache initialization function (i.e. resetting FSAL, not allocating vectors)
-which should usually be true for correctness.
+### Reinitialization
 
-Additionally, once can access `auto_dt_reset!(integrator::ODEIntegrator)` which
-will run the auto `dt` initialization algorithm.
+```@docs
+reinit!
+auto_dt_reset!
+```
 
 ### Misc
 
-* `get_du(integrator)`: Returns the derivative at `t`.
-* `get_du!(out,integrator)`: Write the current derivative at `t` into `out`.
-* `check_error(integrator)`: Checks error conditions and updates the retcode.
+```@docs
+get_du
+get_du!
+```
 
-#### Note
+!!! warning
 
-Note that not all of these functions will be implemented for every algorithm.
-Some have hard limitations. For example, Sundials.jl cannot resize problems.
-When a function is not limited, an error will be thrown.
+    Note that not all of these functions will be implemented for every algorithm.
+    Some have hard limitations. For example, Sundials.jl cannot resize problems.
+    When a function is not limited, an error will be thrown.
 
 ## Additional Options
 

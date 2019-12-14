@@ -1,4 +1,4 @@
-# Common Solver Options
+# [Common Solver Options](@id solver_options)
 
 The DifferentialEquations.jl universe has a large set of common arguments available
 for the `solve` function. These arguments apply to `solve` on any problem type and

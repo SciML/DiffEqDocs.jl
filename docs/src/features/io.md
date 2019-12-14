@@ -11,19 +11,17 @@ is provided. This IterableTables link allows you to use a solution
 type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs:
 
-```julia
-f_2dlinear = (du,u,p,t) -> du.=1.01u
-prob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0))
-sol1 =solve(prob,Euler();dt=1//2^(4))
+```julia-repl
+julia> f_2dlinear = (du,u,p,t) -> du.=1.01u;
+julia> prob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0));
+julia> sol1 =solve(prob,Euler();dt=1//2^(4));
 ```
 
 then we can convert this to a dataframe using `DataFrame`:
 
-```julia
-using IterableTables, DataFrames
-df = DataFrame(sol1)
-
-# Result
+```julia-repl
+julia> using IterableTables, DataFrames
+julia> df = DataFrame(sol1)
 17×5 DataFrames.DataFrame
 │ Row │ timestamp │ value 1  │ value 2  │ value 3  │ value 4  │
 ├─────┼───────────┼──────────┼──────────┼──────────┼──────────┤
@@ -48,19 +46,16 @@ df = DataFrame(sol1)
 
 If a `ParameterizedFunction` is used, the output will use the variable names:
 
-```julia
-using ParameterizedFunctions
+```julia-repl
+julia> using ParameterizedFunctions
 
-f = @ode_def begin
-  dx = a*x - b*x*y
-  dy = -3y + x*y
-end a b
-
-prob = ODEProblem(f,[1.0,1.0],(0.0,1.0),[1.5,1.0])
-sol2 =solve(prob,Tsit5())
-
-df = DataFrame(sol2)
-
+julia> f = @ode_def begin
+          dx = a*x - b*x*y
+          dy = -3y + x*y
+        end a b
+julia> prob = ODEProblem(f,[1.0,1.0],(0.0,1.0),[1.5,1.0]);
+julia> sol2 = solve(prob,Tsit5());
+julia> df = DataFrame(sol2)
 7×3 DataFrames.DataFrame
 │ Row │ timestamp │ x       │ y        │
 ├─────┼───────────┼─────────┼──────────┤

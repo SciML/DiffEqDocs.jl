@@ -1,4 +1,4 @@
-# Specifying (Non)Linear Solvers
+# [Specifying (Non)Linear Solvers](@id linear_nonlinear)
 
 One of the key features of DifferentialEquations.jl is its flexibility. Keeping
 with this trend, many of the native Julia solvers provided by DifferentialEquations.jl

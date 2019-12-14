@@ -157,7 +157,7 @@ will default to plotting the surface at the final timepoint. The iterator interf
 simply iterates the value of `tslocation`, and the `animate` function iterates
 the solution calling solve at each step.
 
-## Return Codes (RetCodes)
+## [Return Codes (RetCodes)](@id retcodes)
 
 The solution types have a `retcode` field which returns a symbol signifying the
 error state of the solution. The retcodes are as follows:

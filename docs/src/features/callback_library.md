@@ -30,7 +30,7 @@ ManifoldProjection(g; nlsolve=NLSOLVEJL_SETUP(), save=true, autonomous=numargs(g
 - `g`: The residual function for the manifold. This is an inplace function of form
   `g(u, resid)` or `g(t, u, resid)` which writes to the residual the difference from
   the manifold components.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](../../linear_nonlinear).
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](@ref linear_nonlinear).
 - `save`: Whether to do the save after the callback is applied. Standard saving is unchanged.
 - `autonomous`: Whether `g` is an autonomous function of the form `g(u, resid)`.
 - `nlopts`: Optional arguments to nonlinear solver which can be any of the [NLsolve keywords](https://github.com/JuliaNLSolvers/NLsolve.jl#fine-tunings).
@@ -116,7 +116,7 @@ ensure it numerically, as these [MATLAB examples](https://www.mathworks.com/help
 show.
 
 In order to deal with this problem one can specify `isoutofdomain=(u,p,t) -> any(x
--> x < 0, u)` as additional [solver option](http://docs.juliadiffeq.org/dev/basics/common_solver_opts),
+-> x < 0, u)` as additional [solver option](@ref solver_options),
 which will reject any step that leads to non-negative values and reduce the next
 time step. However, since this approach only rejects steps and hence
 calculations might be repeated multiple times until a step is accepted, it can
@@ -187,7 +187,7 @@ function GeneralDomain(g, u=nothing; nlsolve=NLSOLVEJL_SETUP(), save=true,
   copies of it are saved, and extrapolated values and residuals are written to them.
   If it is not specified every application of the callback allocates two new copies
   of the state vector.
-- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](linear_nonlinear)
+- `nlsolve`: A nonlinear solver as defined [in the nlsolve format](@ref linear_nonlinear)
   which is passed to a `ManifoldProjection`.
 - `save`: Whether to do the standard saving (applied after the callback).
 - `abstol`: Tolerance up to which residuals are accepted. Element-wise tolerances
