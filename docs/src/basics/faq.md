@@ -4,7 +4,7 @@ This page is a compilation of frequently asked questions and answers.
 
 ## [Performance](@id faq_performance)
 
-#### Do you support GPUs? Multithreading? Distributed computation?
+#### GPUs, multithreading and distributed computation support
 
 Yes. The `*`DiffEq.jl libraries (OrdinaryDiffEq.jl, StochasticDiffEq.jl, and
 DelayDiffEq.jl) are all written to be generic to the array and number types.
@@ -39,7 +39,7 @@ DistributedArrays require parallel linear solves to really matter, and thus are
 only recommended when you have a problem that cannot fit into memory or are using
 a stiff solver with a Krylov method for the linear solves.
 
-#### My ODE is solving really slow... what do I do?
+#### My ODE is solving really slow
 
 First, check for bugs. These solvers go through a ton of convergence tests and
 so if there's a solver issue, it's either just something to do with how numerical
@@ -93,7 +93,7 @@ are:
 For an example of optimizing a function resulting from a PDE discretization, see
 [this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
 
-#### The stiff solver takes forever to take steps for my PDE discretization! Why?
+#### The stiff solver takes forever to take steps for my PDE discretization
 
 The solvers for stiff solvers require solving a nonlinear equation each step.
 In order to do so, they have to do a few Newton steps. By default, these methods
@@ -121,7 +121,7 @@ know the Jacobian is sparse, `linear_solver=:GMRES` is a good option. Once
 again, a good reference for how to handle PDE discretizations can be found
 [at this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
 
-#### My Problem Has Discontinuities and is Unstable / Slow, What Do I Do?
+#### My Problem Has Discontinuities and is Unstable / Slow
 
 [This Discourse post](https://discourse.julialang.org/t/handling-instability-when-solving-ode-problems/9019/5)
 goes into detail for how to handle discontinuities in your ODE function and how
@@ -129,7 +129,7 @@ to use that extra information to speed up the solver.
 
 ## Complicated Models
 
-#### Can I switch my ODE function in the middle of integration?
+#### Switching ODE functions in the middle of integration
 
 There are a few ways to do this. The simplest way is to just have a parameter to
 switch between the two. For example:
@@ -189,7 +189,7 @@ Another thing you can do is use a callback. There are some
 [premade callbacks in the callback library](@ref callback_library) which
 handle these sorts of things like projecting to manifolds and preserving positivity.
 
-##### The symplectic integrator doesn't conserve energy?
+##### Symplectic integrators don't conserve energy
 
 Yes, symplectic integrators do not exactly conserve energy. It is a common
 misconception that they do. What symplectic integrators actually do is solve
@@ -210,7 +210,7 @@ that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
 [the ManifoldProjection callback from the callback library](@ref callback_library).
 
-#### How do I get to zero error?
+#### How to get to zero error
 
 You can't. For floating point numbers, you shouldn't use below `abstol=1e-14`
 and `reltol=1e-14`. If you need lower than that, use arbitrary precision numbers
@@ -218,9 +218,10 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 ## Autodifferentiation and Dual Numbers
 
-#### Are the native Julia solvers compatible with autodifferentiation?
+#### Native Julia solvers compatibility with autodifferentiation
 
-Yes! Take a look at the
+
+Yes, they are compatible with automatic differentiation! Take a look at the
 [sensitivity analysis](@ref sensitivity)
 page for more details.
 
@@ -269,7 +270,7 @@ Calculus.jacobian(f,[1.5,1.0],:central)
  -6.25677  -0.697978
 ```
 
-#### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods...?
+#### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods
 
 This is because you're using a cache which is not compatible with autodifferentiaion
 via ForwardDiff.jl. For example, if we use the ODE function:
