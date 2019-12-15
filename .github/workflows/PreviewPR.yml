@@ -30,7 +30,7 @@ jobs:
       - name: Push to netlify
         env:
           NETLIFY_SECRET: ${{ secrets.NETLIFY_SECRET }}
-        run: "curl -H \"Content-Type: application/zip\" -H \"Authorization: Bearer $NETLIFY_SECRET\" --data-binary \"@docs/build/website.zip\" https://api.netlify.com/api/v1/sites | python -c \"import sys, json; x = json.load(sys.stdin); print x; f = open("link", "w"); f.write(x['url]); f.close()\" && cat link"
+        run: "curl -H \"Content-Type: application/zip\" -H \"Authorization: Bearer $NETLIFY_SECRET\" --data-binary \"@docs/build/website.zip\" https://api.netlify.com/api/v1/sites | python -c \"import sys, json; x = json.load(sys.stdin); print x; f = open('link', 'w'); f.write(x['url']); f.close()\" && cat link"
       - name: Comment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
