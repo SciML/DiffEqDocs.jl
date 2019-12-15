@@ -1,4 +1,4 @@
-# Specifying (Non)Linear Solvers
+# [Specifying (Non)Linear Solvers](@id linear_nonlinear)
 
 One of the key features of DifferentialEquations.jl is its flexibility. Keeping
 with this trend, many of the native Julia solvers provided by DifferentialEquations.jl
@@ -90,7 +90,7 @@ Note that this method requires that you have done `using CuArrays` in your
 script. A working installation of CuArrays.jl is required, which requires
 an installation of CUDA Toolkit.
 
-### IterativeSolvers.jl-Based Methods
+### [IterativeSolvers.jl-Based Methods](@id iterativesolvers-jl)
 
 The signature for `LinSolveIterativeSolvers` is:
 

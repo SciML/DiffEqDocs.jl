@@ -12,9 +12,9 @@ u_{n+1} = f(u,p,t_{n+1})
 `f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
-provide `u₀` as arbitrary matrices / higher dimension tensors as well. `t_{n+1}` is the
+provide `u₀` as arbitrary matrices / higher dimension tensors as well. ``t_{n+1}`` is the
 current time at which the map is applied. For a `FunctionMap` with defaults,
-`t_n = t0 + n*dt` (with `dt=1` being the default). For continuous-time Markov chains
+``t_n = t_0 + n*dt`` (with `dt=1` being the default). For continuous-time Markov chains
 this is the time at which the change is occuring.
 
 Note that if the discrete solver is set to have `scale_by_time=true`, then the problem
@@ -42,7 +42,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref performance_overloads)
 page.
 
 ### Fields

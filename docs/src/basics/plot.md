@@ -1,4 +1,4 @@
-# Plot Functions
+# [Plot Functions](@id plot)
 
 ## Standard Plots Using the Plot Recipe
 
@@ -43,7 +43,7 @@ plot(sol,plotdensity=1000)
 means to plot 1000 points using the dense function (since `denseplot=true` by
 default).
 
-## Choosing Variables
+## [Choosing Variables](@id plot_vars)
 
 In the plot command, one can choose the variables to be plotted in each plot. The
 master form is:

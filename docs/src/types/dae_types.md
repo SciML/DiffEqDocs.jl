@@ -30,7 +30,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref performance_overloads)
 page.
 
 ### Fields
@@ -61,6 +61,10 @@ prob = DAEProblemLibrary.prob_dae_resrob
 sol = solve(prob,IDA())
 ```
 
+```@meta
+CurrentModule = DAEProblemLibrary
+```
+
 ```@docs
-DiffEqProblemLibrary.DAEProblemLibrary.prob_dae_resrob
+prob_dae_resrob
 ```

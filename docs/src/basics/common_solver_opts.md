@@ -1,4 +1,4 @@
-# Common Solver Options
+# [Common Solver Options](@id solver_options)
 
 The DifferentialEquations.jl universe has a large set of common arguments available
 for the `solve` function. These arguments apply to `solve` on any problem type and
@@ -87,7 +87,7 @@ section at the end of this page for some example usage.
 
 Note that `dense` requires `save_everystep=true` and `saveat=false`. If you need
 additional saving while keeping dense output, see
-[the SavingCallback in the Callback Library](http://docs.juliadiffeq.org/dev/features/callback_library).
+[the SavingCallback in the Callback Library](@ref saving_callback).
 
 ## Stepsize Control
 
@@ -142,12 +142,12 @@ Note that if a method does not have adaptivity, the following rules apply:
   each value in `tstops`
 * If neither `dt` nor `tstops` are set, the solver will throw an error.
 
-#### Advanced Adaptive Stepsize Control
+#### [Advanced Adaptive Stepsize Control](@id advanced_adaptive_stepsize_control)
 
 These arguments control more advanced parts of the internals of adaptive timestepping
 and are mostly used to make it more efficient on specific problems. For detained
 explanations of the timestepping algorithms, see the
-[timestepping descriptions](../../../extras/timestepping/)
+[timestepping descriptions](@ref timestepping)
 
 * `internalnorm`: The norm function `internalnorm(u,t)` which error estimates
   are calculated. Required are two dispatches: one dispatch for the state variable
@@ -192,7 +192,7 @@ explanations of the timestepping algorithms, see the
 * `maxiters`: Maximum number of iterations before stopping. Defaults to 1e5.
 * `callback`: Specifies a callback. Defaults to a callback function which
   performs the saving routine. For more information, see the
-  [Event Handling and Callback Functions manual page](../../../features/callback_functions/).
+  [Event Handling and Callback Functions manual page](@ref callbacks).
 * `isoutofdomain`: Specifies a function `isoutofdomain(u,p,t)` where, when it
   returns true, it will reject the timestep. Disabled by default.
 * `unstable_check`: Specifies a function `unstable_check(dt,u,p,t)` where, when

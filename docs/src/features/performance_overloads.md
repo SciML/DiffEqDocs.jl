@@ -1,4 +1,4 @@
-# DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types
+# [DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types](@id performance_overloads)
 
 The DiffEq ecosystem provides an extensive interface for declaring extra functions
 associated with the differential equation's data. In traditional libraries there
@@ -190,12 +190,12 @@ In general the jacobian prototype can be anything that has `mul!` defined, in
 particular sparse matrices or custom lazy types that support `mul!`. A special case
 is when the `jac_prototype` is a `AbstractDiffEqLinearOperator`, in which case you
 do not need to supply `jac` as it is automatically set to `update_coefficients!`.
-Refer to the [DiffEqOperators](../../diffeq_operator) section for more information
+Refer to the [DiffEqOperators](@ref) section for more information
 on setting up time/parameter dependent operators.
 
 ## Examples
 
-### Declaring Explicit Jacobians for ODEs
+### [Declaring Explicit Jacobians for ODEs](@id ode_explicit_jac)
 
 The most standard case, declaring a function for a Jacobian is done by overloading
 the function `f(du,u,p,t)` with an in-place updating function for the Jacobian:

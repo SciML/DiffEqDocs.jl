@@ -1,4 +1,4 @@
-# Financial Models
+# [Financial Models](@id financial_models)
 
 The financial models functionality is provided by DiffEqFinancial.jl and helps
 the user build and solve the differential equation based financial models.

@@ -1,0 +1,37 @@
+name: PreviewPR
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        julia-version: [1.2.0]
+        julia-arch: [x86]
+        os: [ubuntu-latest]
+    steps:
+      - uses: julia-actions/setup-julia@latest
+      - uses: actions/checkout@v1
+        with:
+          version: ${{ matrix.julia-version }}
+      - name: Add Documenter
+        run: julia --project=docs/ -e 'using Pkg; Pkg.instantiate()'
+      - name: Build
+        run: julia --project=docs/ docs/make.jl
+      - name: Zip
+        run: cd docs/build/ && zip -r website.zip *
+      - name: Push to netlify
+        env:
+          NETLIFY_SECRET: ${{ secrets.NETLIFY_SECRET }}
+        run: "curl -H \"Content-Type: application/zip\" -H \"Authorization: Bearer $NETLIFY_SECRET\" --data-binary \"@docs/build/website.zip\" https://api.netlify.com/api/v1/sites | python -c \"import sys, json; x = json.load(sys.stdin); print x; f = open('link', 'w'); f.write(x['url']); f.close()\" && cat link"
+      - name: Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .netlify

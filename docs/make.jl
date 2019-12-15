@@ -1,10 +1,22 @@
 using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological
 
-makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
+ODEProblemLibrary = DiffEqProblemLibrary.ODEProblemLibrary
+ODEProblemLibrary.importodeproblems()
+
+SDEProblemLibrary = DiffEqProblemLibrary.SDEProblemLibrary
+SDEProblemLibrary.importsdeproblems()
+
+DDEProblemLibrary = DiffEqProblemLibrary.DDEProblemLibrary
+DDEProblemLibrary.importddeproblems()
+
+DAEProblemLibrary = DiffEqProblemLibrary.DAEProblemLibrary
+DAEProblemLibrary.importdaeproblems()
+
+makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary],
          doctest=false, clean=true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
+                                  assets = ["assets/favicon.ico"],
                                   canonical="https://docs.juliadiffeq.org/stable/"),
-         assets = ["assets/favicon.ico"],
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[
@@ -89,21 +101,6 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
              "models/external_modeling.md"
          ],
          "APIs" => Any[
-             "DiffEqBase API" => [
-                 "Overview" => "apis/diffeqbase/overview.md",
-                 "apis/diffeqbase/functions.md",
-                 "apis/diffeqbase/problems.md",
-                 "apis/diffeqbase/solutions.md",
-                 "apis/diffeqbase/solvers.md",
-                 "apis/diffeqbase/de_types.md",
-                 "apis/diffeqbase/operators.md",
-                 "apis/diffeqbase/callbacks.md",
-                 "apis/diffeqbase/interpolation.md",
-                 "apis/diffeqbase/ensembles.md",
-                 "apis/diffeqbase/data_arrays.md",
-                 "apis/diffeqbase/noise.md",
-                 "apis/diffeqbase/utility.md",
-             ],
              "apis/diffeqbio.md"
          ],
          "Extra Details" => Any[
@@ -112,23 +109,23 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological],
          ])
 
 #Redirect old links
-cd(joinpath(@__DIR__, "build")) do
-    for (root, dirs, files) in walkdir(".")
-        for file in files
-            path = relpath(joinpath(root, file), ".")
-            m = match(r"(.+)/index\.html$", path)
-            m === nothing && continue
-            redirect = "$(m[1]).html"
-            @info "Adding redirect for $(m[1]) from $(redirect)"
-            isfile(redirect) && (@warn "$redirect exists, skip"; continue)
-            open(redirect, "w") do io
-                write(io, """
-                <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/"/>
-                """)
-            end
-        end
-    end
-end
+# cd(joinpath(@__DIR__, "build")) do
+#     for (root, dirs, files) in walkdir(".")
+#         for file in files
+#             path = relpath(joinpath(root, file), ".")
+#             m = match(r"(.+)/index\.html$", path)
+#             m === nothing && continue
+#             redirect = "$(m[1]).html"
+#             @info "Adding redirect for $(m[1]) from $(redirect)"
+#             isfile(redirect) && (@warn "$redirect exists, skip"; continue)
+#             open(redirect, "w") do io
+#                 write(io, """
+#                 <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/"/>
+#                 """)
+#             end
+#         end
+#     end
+# end
 
 deploydocs(
    repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"

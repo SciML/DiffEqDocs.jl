@@ -1,4 +1,4 @@
-# Solving Stiff Equations
+# [Solving Stiff Equations](@id stiff)
 
 This tutorial is for getting into the extra features for solving stiff ordinary
 differential equations in an efficient manner. Solving stiff ordinary
@@ -7,7 +7,9 @@ the Jacobian in order to cut down on the ``\mathcal{O}(n^3)`` linear solve and
 the ``\mathcal{O}(n^2)`` back-solves. Note that these same functions and
 controls also extend to stiff SDEs, DDEs, DAEs, etc.
 
-#### This tutorial is for advanced users to dive into advanced features!
+!!! note
+
+    This tutorial is for advanced users to dive into advanced features!
 
 ## Code Optimization for Differential Equations
 
@@ -24,7 +26,7 @@ please see the
 
 Choosing a good solver is required for getting top notch speed. General
 recommendations can be found on the solver page (for example, the
-[ODE Solver Recommendations](http://docs.juliadiffeq.org/dev/solvers/ode_solve)).
+[ODE Solver Recommendations](@ref ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
 for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and Sundials
@@ -37,7 +39,7 @@ compare many solvers on many problems.
 
 ### Check Out the Speed FAQ
 
-See [this FAQ](http://docs.juliadiffeq.org/dev/basics/faq#Performance-1)
+See [this FAQ](@ref faq_performance)
 for information on common pitfalls and how to improve performance.
 
 ### Setting Up Your Julia Installation for Speed
@@ -71,7 +73,7 @@ the linear algebra routines. Please see the package for the limitations.
 
 When possible, use GPUs. If your ODE system is small and you need to solve it
 with very many different parameters, see the
-[ensembles interface](http://docs.juliadiffeq.org/dev/features/ensemble)
+[ensembles interface](@ref ensemble)
 and [DiffEqGPU.jl](https://github.com/JuliaDiffEq/DiffEqGPU.jl). If your problem
 is large, consider using a [CuArray](https://github.com/JuliaGPU/CuArrays.jl)
 for the state to allow for GPU-parallelism of the internal linear algebra.
@@ -138,9 +140,10 @@ plot(sol,tspan=(1e-2,1e5),xscale=:log10)
 
 ![IntroDAEPlot](../assets/intro_dae_plot.png)
 
-```julia
-using BenchmarkTools
-@btime solve(prob) # 415.800 μs (3053 allocations: 161.64 KiB)
+```julia-repl
+julia> using BenchmarkTools
+julia> @btime solve(prob)
+415.800 μs (3053 allocations: 161.64 KiB)
 ```
 
 Now we want to add the Jacobian. First we have to derive the Jacobian
@@ -163,8 +166,10 @@ function rober_jac(J,u,p,t)
 end
 f = ODEFunction(rober, jac=rober_jac)
 prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
-
-@btime solve(prob_jac) # 305.400 μs (2599 allocations: 153.11 KiB)
+```
+```julia-repl
+julia> @btime solve(prob_jac)
+305.400 μs (2599 allocations: 153.11 KiB)
 ```
 
 ### Automatic Derivation of Jacobian Functions
@@ -366,13 +371,15 @@ operator to reduce the memory requirements.
 To swap the linear solver out, we use the `linsolve` command and choose the
 GMRES linear solver.
 
-```julia
-@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
+```julia-repl
+julia> @btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
+469.174 s (1266049 allocations: 120.80 MiB)
+julia> @btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
+10.928 s (1327264 allocations: 59.92 MiB)
 ```
 
 For more information on linear solver choices, see the
-[linear solver documentation](http://docs.juliadiffeq.org/dev/features/linear_nonlinear).
+[linear solver documentation](@ref linear_nonlinear).
 
 We can also enhance this by using a Jacobian-Free implementation of `f'(x)*v`.
 To define the Jacobian-Free operator, we can use
@@ -387,24 +394,26 @@ Jv = JacVecOperator(brusselator_2d_loop,u0,p,0.0)
 
 and then we can use this by making it our `jac_prototype`:
 
-```julia
-f = ODEFunction(brusselator_2d_loop;jac_prototype=Jv)
-prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p)
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)
+```julia-repl
+julia> f = ODEFunction(brusselator_2d_loop;jac_prototype=Jv);
+julia> prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p);
+julia> @btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
+8.352 s (1875298 allocations: 78.86 MiB)
 ```
 
 ### Adding a Preconditioner
 
-The [linear solver documentation](http://docs.juliadiffeq.org/dev/features/linear_nonlinear#IterativeSolvers.jl-Based-Methods-1)
+The [linear solver documentation](@ref iterativesolvers-jl)
 shows how you can add a preconditioner to the GMRES. For example, you can
 use packages like [AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
 to add an algebraic multigrid (AMG) or [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
 for an incomplete LU-factorization (iLU).
 
-```julia
-using AlgebraicMultigrid
-pc = aspreconditioner(ruge_stuben(jac_sparsity))
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)
+```julia-repl
+julia> using AlgebraicMultigrid
+julia> pc = aspreconditioner(ruge_stuben(jac_sparsity));
+julia> @btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false)
+5.247 s (233048 allocations: 139.27 MiB)
 ```
 
 ## Using Structured Matrix Types
@@ -454,7 +463,7 @@ using Sundials
 ```
 
 Details for setting up a preconditioner with Sundials can be found at the
-[Sundials solver page](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1).
+[Sundials solver page](@ref ode_solve_sundials).
 
 ## Handling Mass Matrices
 
@@ -512,6 +521,7 @@ plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 
 ![IntroDAEPlot](../assets/intro_dae_plot.png)
 
-Note that if your mass matrix is singular, i.e. your system is a DAE, then you
-need to make sure you choose
-[a solver that is compatible with DAEs](http://docs.juliadiffeq.org/dev/solvers/dae_solve#Full-List-of-Methods-1)
+!!! note
+    If your mass matrix is singular, i.e. your system is a DAE, then you
+    need to make sure you choose
+    [a solver that is compatible with DAEs](@ref dae_solve_full)

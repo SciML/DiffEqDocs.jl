@@ -1,4 +1,4 @@
-# Noise Processes
+# [Noise Processes](@id noise_process)
 
 Noise processes are essential in continuous stochastic modeling. The `NoiseProcess`
 types are distributionally-exact, meaning they are not solutions of

@@ -1,4 +1,4 @@
-# Ordinary Differential Equations
+# [Ordinary Differential Equations](@id ode_example)
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
@@ -22,10 +22,11 @@ the solution. The full code for solving this problem is:
 ```julia
 using DifferentialEquations
 f(u,p,t) = 1.01*u
-u0=1/2
+u0 = 1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
-sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
+sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8)
+
 using Plots
 plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
      xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
@@ -42,7 +43,7 @@ the initial condition, and the timespan to solve over:
 ```julia
 using DifferentialEquations
 f(u,p,t) = 1.01*u
-u0=1/2
+u0 = 1/2
 tspan = (0.0,1.0)
 prob = ODEProblem(f,u0,tspan)
 ```
@@ -60,10 +61,10 @@ for more examples.
 The problem types include many other features, including the ability to define
 mass matrices and hold callbacks for events. Each problem type has a page which
 details its constructor and the available fields. For
-[ODEs, the appropriate page is here](http://docs.juliadiffeq.org/dev/types/ode_types).
+[ODEs, the appropriate page is here](@ref ode_prob).
 In addition, a user can specify additional functions to be associated with the
 function in order to speed up the solvers. These are detailed
-[at the performance overloads page](http://docs.juliadiffeq.org/dev/features/performance_overloads).
+[at the performance overloads page](@ref performance_overloads).
 
 ### Step 2: Solving a Problem
 
@@ -76,7 +77,7 @@ sol = solve(prob)
 ```
 
 The solvers can be controlled using the available options are described on the
-[Common Solver Options manual page](../../../basics/common_solver_opts). For example,
+[Common Solver Options manual page](@ref solver_options). For example,
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
@@ -149,7 +150,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `radau()` for really high accuracy stiff equations (requires installing ODEInterfaceDiffEq.jl)
 
 For a comprehensive list of the available algorithms and detailed recommendations,
-[Please see the solver documentation](../../../solvers/ode_solve). Every problem
+[Please see the solver documentation](@ref ode_solve). Every problem
 type has an associated page detailing all of the solvers associated with the problem.
 
 ### Step 3: Analyzing the Solution
@@ -159,14 +160,16 @@ type has an associated page detailing all of the solvers associated with the pro
 The result of `solve` is a solution object. We can access the 5th value of the
 solution with:
 
-```julia
-sol[5] #.637
+```julia-repl
+julia> sol[5] 
+0.637
 ```
 
 or get the time of the 8th timestep by:
 
 ```julia
-sol.t[8] #.438
+julia> sol.t[8]
+0.438
 ```
 
 Convenience features are also included. We can build an array using a
@@ -196,11 +199,11 @@ step, while `(t)` is an interpolation at time `t`!
 If in the solver `dense=true` (this is the default unless `saveat` is used), then
 this interpolation is a high order interpolation and thus usually matches the
 error of the solution time points. The interpolations associated with each solver
-is [detailed at the solver algorithm page](../../../solvers/ode_solve). If `dense=false`
+is [detailed at the solver algorithm page](@ref ode_solve). If `dense=false`
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
-For details on more handling the output, see [the solution handling page](../../../basics/solution).
+For details on more handling the output, see [the solution handling page](@ref solution).
 
 #### Plotting Solutions
 
@@ -225,7 +228,7 @@ gui()
 ```
 
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
-Additional DiffEq-specific controls are documented [at the plotting page](../../../basics/plot).
+Additional DiffEq-specific controls are documented [at the plotting page](@ref plot).
 
 For example, from the Plots.jl attribute page we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
@@ -285,7 +288,7 @@ sol = solve(prob)
 ```
 
 Using the plot recipe tools
-[defined on the plotting page](http://docs.juliadiffeq.org/dev/basics/plot#Choosing-Variables-1),
+[defined on the plotting page](@ref plot_vars),
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
@@ -310,7 +313,7 @@ Note that here "variable 0" corresponds to the independent variable ("time").
 
 In many cases you may want to explicitly have parameters associated with your
 differential equations. This can be used by things like
-[parameter estimation routines](../../../analysis/parameter_estimation).
+[parameter estimation routines](@ref parameter_estimation).
 In this case, you use the `p` values via the syntax:
 
 ```julia
@@ -367,7 +370,7 @@ DifferentialEquations.jl will automatically translate this to be exactly the
 same as `f`. The result is more legible code with no performance loss.
 For more information on the macro Domain Specific Language (DSL)
 and its limitations, please see
-[the parameterized function page](../../../analysis/parameterized_functions)
+[the parameterized function page](@ref paremeterized_functions)
 The result is that `g` is a function which you can now use to define the Lorenz
 problem.
 
@@ -434,7 +437,7 @@ Note how the external **time-varying** torque `M` is introduced as a **parameter
 
 Note also that, in contrast with the time-varying parameter, the (vector of) state variables `u`, which is generally also time-varying, is always used without the explicit dependence on time `(t)`.
 
-## Example 4: Using Other Types for Systems of Equations
+## [Example 4: Using Other Types for Systems of Equations](@id ode_other_types)
 
 DifferentialEquations.jl can handle many different dependent variable types
 (generally, anything with a linear index should work!). So instead of solving a
@@ -537,11 +540,11 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Ensemble experiments](../../../features/ensemble)
-- [Saving the output to tabular formats like DataFrames and CSVs](../../../features/io)
-- [Event handling](../../../features/callback_functions)
-- [Parameter estimation (inverse problems)](../../../analysis/parameter_estimation)
-- [Quantification of numerical uncertainty and error](../../../analysis/uncertainty_quantification)
+- [Handling, parallelizing, and analyzing large Ensemble experiments](@ref ensemble)
+- [Saving the output to tabular formats like DataFrames and CSVs](@ref io)
+- [Event handling](@ref callbacks)
+- [Parameter estimation (inverse problems)](@ref parameter_estimation)
+- [Quantification of numerical uncertainty and error](@ref uncertainty_quantification)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types

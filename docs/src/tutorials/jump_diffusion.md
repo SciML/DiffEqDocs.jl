@@ -1,6 +1,8 @@
 # Jump Diffusion Equations
 
-This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
+!!! note
+
+    This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 Jump Diffusion equations are stochastic diffeential equations with discontinuous
 jumps. These can be written as:

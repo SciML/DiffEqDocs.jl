@@ -40,7 +40,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref performance_overloads)
 page.
 
 ### Fields
@@ -52,7 +52,7 @@ page.
 * `p`: The optional parameters for the problem. Defaults to `NullParameters`.
 * `noise`: The noise process applied to the noise upon generation. Defaults to
   Gaussian white noise. For information on defining different noise processes,
-  see [the noise process documentation page](../../../features/noise_process)
+  see [the noise process documentation page](@ref noise_process)
 * `noise_rate_prototype`: A prototype type instance for the noise rates, that
   is the output `g`. It can be any type which overloads `A_mul_B!` with itself
   being the middle argument. Commonly, this is a matrix or sparse matrix. If
@@ -75,20 +75,24 @@ prob = SDEProblemLibrary.prob_sde_linear
 sol = solve(prob)
 ```
 
+```@meta
+CurrentModule = SDEProblemLibrary
+```
+
 ```@docs
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_linear
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_2Dlinear
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_wave
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_lorenz
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_cubic
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additive
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_additivesystem
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_nltest
-DiffEqProblemLibrary.SDEProblemLibrary.oval2ModelExample
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadstrat
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_stiffquadito
-DiffEqProblemLibrary.SDEProblemLibrary.generate_stiff_stoch_heat
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bistable
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_bruss
-DiffEqProblemLibrary.SDEProblemLibrary.prob_sde_oscilreact
+prob_sde_linear
+prob_sde_2Dlinear
+prob_sde_wave
+prob_sde_lorenz
+prob_sde_cubic
+prob_sde_additive
+prob_sde_additivesystem
+prob_sde_nltest
+oval2ModelExample
+prob_sde_stiffquadstrat
+prob_sde_stiffquadito
+generate_stiff_stoch_heat
+prob_sde_bistable
+prob_sde_bruss
+prob_sde_oscilreact
 ```

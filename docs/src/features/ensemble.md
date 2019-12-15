@@ -1,4 +1,4 @@
-# Parallel Ensemble Simulations
+# [Parallel Ensemble Simulations](@id ensemble)
 
 Performing Monte Carlo simulations, solving with a predetermined set of initial conditions, and
 GPU-parallelizing a parameter search all fall under the ensemble simulation interface. This

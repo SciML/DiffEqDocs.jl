@@ -1,4 +1,4 @@
-# DiffEq-Specific Array Types
+# [DiffEq-Specific Array Types](@id diffeq_arrays)
 
 In many cases, a standard array may not be enough to fully hold the data for a
 model. Many of the solvers in DifferentialEquations.jl (only the native Julia
@@ -122,7 +122,7 @@ step to the endpoint, in which case a callback must be used to update appropriat
 Note that the aliases `DEDataVector` and `DEDataMatrix` cover the one and two
 dimensional cases.
 
-### Example: A Control Problem
+### [Example: A Control Problem](@id control_problem)
 
 In this example we will use a `DEDataArray` to solve a problem where control parameters
 change at various timepoints. First we will build
@@ -147,7 +147,7 @@ end
 Now we will setup our control mechanism. It will be a simple setup which uses
 set timepoints at which we will change `f1`. At `t=5.0` we will want to increase
 the value of `f1`, and at `t=8.0` we will want to decrease the value of `f1`. Using
-the [`DiscreteCallback` interface](../../callback_functions), we code these conditions
+the [`DiscreteCallback` interface](@ref discrete_callback), we code these conditions
 as follows:
 
 ```julia

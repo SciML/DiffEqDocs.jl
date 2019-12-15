@@ -1,4 +1,4 @@
-# DDE Problems
+# [DDE Problems](@id dde_prob)
 
 ## Mathematical Specification of a DDE Problem
 
@@ -7,11 +7,13 @@ condition ``u_0`` at time point ``t_0``, and the history function ``h``
 which together define a DDE:
 
 ```math
-\begin{align*}
-    \frac{du}{dt} &= f(u,h,p,t) \qquad & (t \geq t_0), \\
-    u(t_0) &= u_0, \\
-    u(t) &= h(t) \qquad &(t < t_0).
-\end{align*}
+\frac{du}{dt} = f(u,h,p,t) \qquad & (t \geq t_0)
+```
+```math
+u(t_0) = u_0,
+```
+```math
+u(t) = h(t) \qquad &(t < t_0).
 ```
 
 ``f`` should be specified as `f(u, h, p, t)` (or in-place as `f(du, u, h, p, t)`),
@@ -59,7 +61,7 @@ parameters. Any extra keyword arguments are passed on to the solvers. For exampl
 if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
-For specifying Jacobians and mass matrices, see the [DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads) page.
+For specifying Jacobians and mass matrices, see the [DiffEqFunctions](@ref performance_overloads) page.
 
 ### Arguments
 
@@ -92,24 +94,28 @@ sol = solve(prob)
 
 ### DDEs with 1 constant delay
 
+```@meta
+CurrentModule = DDEProblemLibrary
+```
+
 ```@docs
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_ip
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_oop
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_scalar
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_ip
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_oop
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_1delay_long_scalar
+prob_dde_constant_1delay_ip
+prob_dde_constant_1delay_oop
+prob_dde_constant_1delay_scalar
+prob_dde_constant_1delay_long_ip
+prob_dde_constant_1delay_long_oop
+prob_dde_constant_1delay_long_scalar
 ```
 
 ### DDEs with 2 constant delays
 
 ```@docs
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_ip
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_oop
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_scalar
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_ip
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_oop
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_2delays_long_scalar
+prob_dde_constant_2delays_ip
+prob_dde_constant_2delays_oop
+prob_dde_constant_2delays_scalar
+prob_dde_constant_2delays_long_ip
+prob_dde_constant_2delays_long_oop
+prob_dde_constant_2delays_long_scalar
 ```
 
 ### DDETest Problems
@@ -136,41 +142,41 @@ prob_dde_DDETST_H1, prob_dde_DDETST_H2, prob_dde_DDETST_H3, prob_dde_DDETST_H4
 ```
 
 ```@docs
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_A2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_B2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C3
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_C4
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_D2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_E2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F3
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F4
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_F5
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_G2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H1
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H2
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H3
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_DDETST_H4
+prob_dde_DDETST_A1
+prob_dde_DDETST_A2
+prob_dde_DDETST_B1
+prob_dde_DDETST_B2
+prob_dde_DDETST_C1
+prob_dde_DDETST_C2
+prob_dde_DDETST_C3
+prob_dde_DDETST_C4
+prob_dde_DDETST_D1
+prob_dde_DDETST_D2
+prob_dde_DDETST_E1
+prob_dde_DDETST_E2
+prob_dde_DDETST_F1
+prob_dde_DDETST_F2
+prob_dde_DDETST_F3
+prob_dde_DDETST_F4
+prob_dde_DDETST_F5
+prob_dde_DDETST_G1
+prob_dde_DDETST_G2
+prob_dde_DDETST_H1
+prob_dde_DDETST_H2
+prob_dde_DDETST_H3
+prob_dde_DDETST_H4
 ```
 
 ### Radar5 Test Problems
 
 ```@docs
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_oregonator
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_robertson
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_RADAR5_waltman
+prob_dde_RADAR5_oregonator
+prob_dde_RADAR5_robertson
+prob_dde_RADAR5_waltman
 ```
 
 ### QS Example
 
 ```@docs
-DiffEqProblemLibrary.DDEProblemLibrary.prob_dde_qs
+prob_dde_qs
 ```

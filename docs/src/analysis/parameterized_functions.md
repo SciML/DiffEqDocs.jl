@@ -1,4 +1,4 @@
-# ParameterizedFunctions
+# [ParameterizedFunctions](@id paremeterized_functions)
 
 ## Installation
 

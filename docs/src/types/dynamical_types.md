@@ -1,4 +1,4 @@
-# Dynamical, Hamiltonian and 2nd Order ODE Problems
+# [Dynamical, Hamiltonian and 2nd Order ODE Problems](@id dynamical_prob)
 
 Dynamical ordinary differential equations, such as those arising from the definition
 of a Hamiltonian system or a second order ODE, have a special structure that can be
