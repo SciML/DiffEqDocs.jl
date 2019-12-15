@@ -1,4 +1,4 @@
-# Local Sensitivity Analysis (Automatic Differentiation)
+# [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
 
 Sensitivity analysis for ODE models is provided by the DiffEq suite. The model
 sensitivities are the derivatives of the solution with respect to the

@@ -1,4 +1,4 @@
-# Uncertainty Quantification
+# [Uncertainty Quantification](@id uncertainty_quantification)
 
 Uncertainty quantification allows a user to identify the uncertainty
 associated with the numerical approximation given by DifferentialEquations.jl.

@@ -1,7 +1,11 @@
 # Delay Differential Equations
 
 This tutorial will introduce you to the functionality for solving delay differential
-equations. This tutorial assumes you have read the [Ordinary Differential Equations tutorial](../../ode_example).
+equations. 
+
+!!! note
+
+    This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 Delay differential equations are equations which have a delayed argument. To allow
 for specifying the delayed argument, the function definition for a delay differential
@@ -170,7 +174,7 @@ use an in-place function instead or only compute specific indices by passing
 an `idxs` keyword.
 
 The functional forms for the history function are discussed also
-[on the DDEProblem page](../../../types/dde_types).
+[on the DDEProblem page](@ref dde_prob).
 
 ### Undeclared Delays and State-Dependent Delays via Residual Control
 

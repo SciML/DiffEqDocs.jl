@@ -90,7 +90,7 @@ Note that this method requires that you have done `using CuArrays` in your
 script. A working installation of CuArrays.jl is required, which requires
 an installation of CUDA Toolkit.
 
-### IterativeSolvers.jl-Based Methods
+### [IterativeSolvers.jl-Based Methods](@id iterativesolvers-jl)
 
 The signature for `LinSolveIterativeSolvers` is:
 

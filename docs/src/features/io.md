@@ -1,4 +1,4 @@
-# I/O: Saving and Loading Solution Data
+# [I/O: Saving and Loading Solution Data](@id io)
 
 The ability to save and load solutions is important for handling large datasets
 and analyzing the results over multiple Julia sessions. This page explains the

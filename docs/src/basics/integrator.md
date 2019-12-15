@@ -1,4 +1,4 @@
-# Integrator Interface
+# [Integrator Interface](@id integrator)
 
 The integrator interface gives one the ability to interactively step through
 the numerical solving of a differential equation. Through this interface,

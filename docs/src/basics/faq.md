@@ -1,8 +1,8 @@
-# Frequently Asked Questions
+# [Frequently Asked Questions](@id faq)
 
 This page is a compilation of frequently asked questions and answers.
 
-## Performance
+## [Performance](@id faq_performance)
 
 #### Do you support GPUs? Multithreading? Distributed computation?
 
@@ -16,9 +16,9 @@ algorithms utilize standard arithmetical functions. Both additionally utilize
 the user's norm specified via the common interface options and, if a stiff
 solver, ForwardDiff/DiffEqDiffTools for the Jacobian calculation, and Base linear
 factorizations for the linear solve. For your type, you may likely need to give
-a [better form of the norm](http://docs.juliadiffeq.org/latest/basics/common_solver_opts#Advanced-Adaptive-Stepsize-Control-1),
-[Jacobian](http://docs.juliadiffeq.org/latest/features/performance_overloads),
-or [linear solve calculations](http://docs.juliadiffeq.org/latest/features/linear_nonlinear)
+a [better form of the norm](@ref advanced_adaptive_stepsize_control),
+[Jacobian](@ref performance_overloads),
+or [linear solve calculations](@ref linear_nonlinear)
 to fully utilize parallelism.
 
 GPUArrays.jl (CuArrays.jl), ArrayFire.jl, DistributedArrays.jl have been tested and work in
@@ -53,7 +53,7 @@ apply. What you want to do first is make sure your function does not allocate.
 If your system is small (`<=100` ODEs/SDEs/DDEs/DAEs?), then you should set your
 system up to use [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl).
 This is demonstrated
-[in the ODE tutorial](http://docs.juliadiffeq.org/latest/tutorials/ode_example#Example-3:-Using-Other-Types-for-Systems-of-Equations-1)
+[in the ODE tutorial](@ref ode_other_types)
 with static matrices. Static vectors/arrays are stack-allocated, and thus creating
 new arrays is free and the compiler doesn't have to heap-allocate any of the
 temporaries (that's the expensive part!). These have specialized super fast
@@ -102,7 +102,7 @@ and do a dense factorization. However, in many cases you may want to use alterna
 that are more tuned for your problem.
 
 First of all, when available, it's recommended that you pass a function for computing
-your Jacobian. This is discussed in the [performance overloads](http://docs.juliadiffeq.org/latest/features/performance_overloads#Declaring-Explicit-Jacobians-1)
+your Jacobian. This is discussed in the [performance overloads](@ref ode_explicit_jac)
 section. Jacobians are especially helpful for Rosenbrock methods.
 
 Secondly, if your Jacobian isn't dense, you shouldn't use a dense Jacobian! In
@@ -111,9 +111,9 @@ for example. More support is coming for this soon.
 
 But lastly, you shouldn't use a dense factorization for large sparse matrices.
 Instead, if you're using  a `*DiffEq` library you should
-[specify a linear solver](http://docs.juliadiffeq.org/latest/features/linear_nonlinear).
+[specify a linear solver](@ref linear_nonlinear).
 For Sundials.jl, you should change the `linear_solver` option. See
-[the ODE solve Sundials portion](http://docs.juliadiffeq.org/latest/solvers/ode_solve#Sundials.jl-1)
+[the ODE solve Sundials portion](@ref ode_solve_sundials)
 for details on that. Right now, Sundials.jl is the recommended method for stiff
 problems with large sparse Jacobians. `linear_solver=:Band` should be used
 if your Jacobian is banded and you can specify the band sizes. If you only
@@ -186,7 +186,7 @@ Of course, there's always a tradeoff between accuracy and efficiency, so play
 around to find out what's right for your problem.
 
 Another thing you can do is use a callback. There are some
-[premade callbacks in the callback library](http://docs.juliadiffeq.org/latest/features/callback_library) which
+[premade callbacks in the callback library](@ref callback_library) which
 handle these sorts of things like projecting to manifolds and preserving positivity.
 
 ##### The symplectic integrator doesn't conserve energy?
@@ -208,7 +208,7 @@ will reduce the error. The results in the
 [DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) show
 that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
-[the ManifoldProjection callback from the callback library](http://docs.juliadiffeq.org/latest/features/callback_library).
+[the ManifoldProjection callback from the callback library](@ref callback_library).
 
 #### How do I get to zero error?
 
@@ -221,7 +221,7 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 #### Are the native Julia solvers compatible with autodifferentiation?
 
 Yes! Take a look at the
-[sensitivity analysis](http://docs.juliadiffeq.org/latest/analysis/sensitivity)
+[sensitivity analysis](@ref sensitivity)
 page for more details.
 
 If the algorithm does not have differentiation of parameter-depedendent events,

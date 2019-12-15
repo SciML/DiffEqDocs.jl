@@ -1,4 +1,4 @@
-# Callback Library
+# [Callback Library](@id callback_library)
 
 DiffEqCallbacks.jl provides a library of various helpful callbacks which
 can be used with any component solver which implements the callback interface.
@@ -247,7 +247,7 @@ which gets calls at the time points of interest. The constructor is:
 - `tdir` should be `sign(tspan[end]-tspan[1])`. It defaults to `1` and should
     be adapted if `tspan[1] > tspan[end]`.
 
-## SavingCallback
+## [SavingCallback](@id saving_callback)
 
 The saving callback lets you define a function `save_func(u, t, integrator)` which
 returns quantities of interest that shall be saved.
@@ -365,7 +365,7 @@ PeriodicCallback(f, Δt::Number; initial_affect = true, kwargs...)
 where `f` is the function to be called periodically, `Δt` is the period,
 `initial_affect` is whether to apply the affect at `t=0` which defaults to `true`,
 and `kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor
-(see the [DiscreteCallback](@ref) section).
+(see the [DiscreteCallback](@ref discrete_callback) section).
 
 ## TerminateSteadyState
 
@@ -384,5 +384,5 @@ as the states of the problem. `test` represents the function that evaluates the
 condition for termination. The default condition is that all derivatives should
 become smaller than `abstol` and the states times `reltol`. The user
 can pass any other function to implement a different termination condition. Such
-function should take four arguments: `integrator` (see [Integrator Interface](@ref)
+function should take four arguments: `integrator` (see [Integrator Interface](@ref integrator)
 for details), `abstol` and `reltol`.

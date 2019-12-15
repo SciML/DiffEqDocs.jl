@@ -45,13 +45,13 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Local Sensitivity Analysis (Automatic Differentiation)](@ref) for fast gradient computations
-- [Parameter Estimation and Bayesian Analysis](@ref)
+- [Local Sensitivity Analysis (Automatic Differentiation)](@ref sensitivity) for fast gradient computations
+- [Parameter Estimation and Bayesian Analysis](@ref parameter_estimation)
 - Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
-- Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref)
+- Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
 - [Global Sensitivity Analysis](@ref)
-- [Uncertainty Quantification](@ref)
+- [Uncertainty Quantification](@ref uncertainty_quantification)
 
 If you have any questions, or just want to chat about solvers/using the package,
 please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -94,7 +94,7 @@ page.
 
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
-[ODE tutorial](tutorials/ode_example)**. Example IJulia notebooks
+[ODE tutorial](@ref ode_example)**. Example IJulia notebooks
 [can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 

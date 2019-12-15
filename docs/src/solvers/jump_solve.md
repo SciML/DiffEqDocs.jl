@@ -1,4 +1,4 @@
-# Jump Problem Solvers
+# [Jump Problem Solvers](@id jump_solve)
 
 `solve(prob::JumpProblem,alg;kwargs)`
 

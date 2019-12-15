@@ -1,4 +1,4 @@
-# ODE Problems
+# [ODE Problems](@id ode_prob)
 
 ## Mathematical Specification of an ODE Problem
 
@@ -30,7 +30,7 @@ if you set a `callback` in the problem, then that `callback` will be added in
 every solve call.
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref performance_overloads)
 page.
 
 ### Fields
@@ -56,26 +56,30 @@ prob = ODEProblemLibrary.prob_ode_linear
 sol = solve(prob)
 ```
 
+```@meta
+CurrentModule = ODEProblemLibrary
+```
+
 ```@docs
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_linear
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloatlinear
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_bigfloat2Dlinear
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_large2Dlinear
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_2Dlinear_notinplace
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_lotkavoltera
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_fitzhughnagumo
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_threebody
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pleides
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanderpol
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_vanstiff
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rober
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_rigidbody
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_hires
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_orego
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_pollution
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_nonlinchem
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_1d
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_brusselator_2d
-DiffEqProblemLibrary.ODEProblemLibrary.prob_ode_filament
+prob_ode_linear
+prob_ode_2Dlinear
+prob_ode_bigfloatlinear
+prob_ode_bigfloat2Dlinear
+prob_ode_large2Dlinear
+prob_ode_2Dlinear_notinplace
+prob_ode_lotkavoltera
+prob_ode_fitzhughnagumo
+prob_ode_threebody
+prob_ode_pleiades
+prob_ode_vanderpol
+prob_ode_vanstiff
+prob_ode_rober
+prob_ode_rigidbody
+prob_ode_hires
+prob_ode_orego
+prob_ode_pollution
+prob_ode_nonlinchem
+prob_ode_brusselator_1d
+prob_ode_brusselator_2d
+prob_ode_filament
 ```

@@ -1,4 +1,4 @@
-# ODE Solvers
+# [ODE Solvers](@id ode_solve)
 
 `solve(prob::ODEProblem,alg;kwargs)`
 
@@ -573,7 +573,7 @@ on/off multithreading.
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
   Expects the right hand side function to be a
-  [`AbstractDiffEqOperator`](../../../features/diffeq_operator).
+  [`AbstractDiffEqOperator`](@ref).
 
 Options:
 
@@ -601,7 +601,7 @@ These methods are all fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4.
 
 The methods are intended for semilinear problems constructed by
-[`SplitODEProblem`](../../../types/split_ode_types) or `SplitODEFunction`. They can
+[`SplitODEProblem`](@ref split_ode_prob) or `SplitODEFunction`. They can
 also be used for a general nonlinear problem, in which case the jacobian of the right
 hand side is used as the linear operator in each time step.
 
@@ -687,12 +687,12 @@ Sundials CVODE integrator.
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
 solver, see
-[the manual page on solver specification](../../../features/linear_nonlinear).
+[the manual page on solver specification](@ref linear_nonlinear).
 
 Note that performance overload information (Jacobians etc.) are not used in this
 mode. This can control autodifferentiation of the Jacobian as well.
 For more information on specifying the nonlinear solver, see
-[the manual page on solver specification](../../../features/linear_nonlinear).
+[the manual page on solver specification](@ref linear_nonlinear).
 
 Additionally, the Rosenbrock and SDIRK methods have differentiation
 controls. In each of these, `autodiff` can be set to turn on/off
@@ -743,7 +743,7 @@ alg_switch = CompositeAlgorithm((Tsit5(),Vern7()),choice_function)
 ```
 
 The `choice_function` takes in an `integrator` and thus all of the features
-available in the [Integrator Interface](@ref) can be used in the choice
+available in the [Integrator Interface](@ref integrator) can be used in the choice
 function.
 
 A helper algorithm was created for building 2-method automatic switching for
@@ -792,7 +792,7 @@ tsidas_alg = AutoTsit5(Rodas5(),nonstifftol = 11/10)
 
 Is the `Tsit5` method with automatic switching to `Rodas5`.
 
-### Sundials.jl
+### [Sundials.jl](@id ode_solve_sundials)
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use Sundials.jl:
@@ -1072,7 +1072,7 @@ using ODE
 
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../../../features/diffeq_arrays).
+detection, and [discrete variables need to be updated appropriately](@ref diffeq_arrays).
 
 ### MATLABDiffEq.jl
 

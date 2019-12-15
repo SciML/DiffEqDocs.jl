@@ -1,9 +1,13 @@
 # Discrete Stochastic (Gillespie) Equations
 
 In this tutorial we will describe how to define and simulate continuous-time
-jump processes, also known in biological fields as Gillespie-type models. This
-tutorial assumes you have read the [Ordinary Differential Equations
-tutorial](../../ode_example). The discrete stochastic simulations we consider are
+jump processes, also known in biological fields as Gillespie-type models. 
+
+!!! note
+
+    This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example). 
+
+The discrete stochastic simulations we consider are
 a form of jump equation with a "trivial" (non-existent) differential equation.
 We will first demonstrate how to build these types of models using the
 biological modeling functionality, then describe how to build them directly and
@@ -39,7 +43,7 @@ persons, and `r` be the number of recovered persons. In this case, we can
 re-write our overall rate as:
 
 ```julia
-rate_constant*s*i
+rate_constant * s * i
 ```
 
 Thus we have that our "reactants" are components 1 and 2. When this "reaction"
@@ -70,7 +74,7 @@ on the number of people who are infected. Thus the rate at which infected people
 turn into recovered people is
 
 ```julia
-rate_constant*i
+rate_constant * i
 ```
 
 When this happens, we lose one infected person and gain a recovered person. This
@@ -185,7 +189,7 @@ jump = ConstantRateJump(rate,affect!)
 
 where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the integrator
 `affect!(integrator)` (for details on the integrator, see the
-[integrator interface docs](http://docs.juliadiffeq.org/dev/basics/integrator)).
+[integrator interface docs](@ref integrator)).
 Thus, to define the jump equivalents to the above reactions, we can use:
 
 ```julia
@@ -428,7 +432,7 @@ jump_prob = JumpProblem(prob,Direct(),rj)
 
 Note that when a `JumpProblem` has a `RegularJump`, special algorithms are
 required. This is detailed on
-[the jump solvers page](http://docs.juliadiffeq.org/dev/solvers/jump_solve).
+[the jump solvers page](@ref jump_solve).
 One such algorithm is `SimpleTauLeaping`, which we use as follows:
 
 ```julia

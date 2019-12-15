@@ -1,4 +1,4 @@
-# DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types
+# [DiffEqFunctions (Jacobians, Gradients, etc.) and Jacobian Types](@id performance_overloads)
 
 The DiffEq ecosystem provides an extensive interface for declaring extra functions
 associated with the differential equation's data. In traditional libraries there
@@ -195,7 +195,7 @@ on setting up time/parameter dependent operators.
 
 ## Examples
 
-### Declaring Explicit Jacobians for ODEs
+### [Declaring Explicit Jacobians for ODEs](@id ode_explicit_jac)
 
 The most standard case, declaring a function for a Jacobian is done by overloading
 the function `f(du,u,p,t)` with an in-place updating function for the Jacobian:

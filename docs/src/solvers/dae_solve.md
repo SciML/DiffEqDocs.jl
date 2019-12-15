@@ -14,7 +14,7 @@ performance is `IDA` from the Sundials.jl package if you are solving problems wi
 control over the linear solver to better tailor it to your problem. A similar
 algorithm is `daskr`. Which one is more efficient is problem-dependent.
 
-## Full List of Methods
+## [Full List of Methods](@id dae_solve_full)
 
 ### OrdinaryDiffEq.jl
 

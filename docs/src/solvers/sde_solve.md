@@ -1,4 +1,4 @@
-# SDE Solvers
+# [SDE Solvers](@id sde_solve)
 
 ## Recommended Methods
 
@@ -252,7 +252,7 @@ alg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)
 ```
 
 The `choice_function` takes in an `integrator` and thus all of the features
-available in the [Integrator Interface](@ref)
+available in the [Integrator Interface](@ref integrator)
 can be used in the choice function.
 
 ### SimpleDiffEq.jl
@@ -293,6 +293,6 @@ using BridgeDiffEq
 ##### Notes
 
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
-detection, and [discrete variables need to be updated appropriately](../../../features/diffeq_arrays).
+detection, and [discrete variables need to be updated appropriately](@ref diffeq_arrays).
 
 \*:  Note that although `SKenCarp` uses the same table as `KenCarp3`, solving a ODE problem using `SKenCarp` by setting `g(du,u,p,t) = du .= 0` will take much more steps than `KenCarp3` because error estimator of `SKenCarp` is different (because of noise terms) and default value of `qmax` (maximum permissible ratio of relaxing/tightening `dt` for adaptive steps) is smaller for StochasticDiffEq algorithms.

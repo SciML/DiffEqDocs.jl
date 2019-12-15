@@ -1,4 +1,4 @@
-# Split ODE Problems
+# [Split ODE Problems](@id split_ode_prob)
 
 ## Mathematical Specification of a Split ODE Problem
 
@@ -21,7 +21,7 @@ Many splits are at least partially linear. That is the equation:
 \frac{du}{dt} =  Au + f_2(u,p,t)
 ```
 
-For how to define a linear function `A`, see the documentation for the [DiffEqOperators](../../../features/diffeq_operator).
+For how to define a linear function `A`, see the documentation for the [DiffEqOperators](@ref).
 
 ### Constructors
 
@@ -42,10 +42,10 @@ every solve call.
 
 Under the hood, a `SplitODEProblem` is just a regular `ODEProblem` whose `f` is a `SplitFunction`.
 Therefore you can solve a `SplitODEProblem` using the same solvers for `ODEProblem`. For solvers
-dedicated to split problems, see [Split ODE Solvers](../../../solvers/split_ode_solve).
+dedicated to split problems, see [Split ODE Solvers](@ref split_ode_solve).
 
 For specifying Jacobians and mass matrices, see the
-[DiffEqFunctions](http://docs.juliadiffeq.org/dev/features/performance_overloads)
+[DiffEqFunctions](@ref performance_overloads)
 page.
 
 ### Fields

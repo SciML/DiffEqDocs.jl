@@ -151,7 +151,7 @@ plot(sol)
 #### PresetTimeCallback
 
 Because events at preset times is a very common occurrence,
-DifferentialEquations.jl provides a pre-built callback in the [Callback Library](@ref).
+DifferentialEquations.jl provides a pre-built callback in the [Callback Library](@ref callback_library).
 The `PresetTimeCallback(tstops,affect!)` takes an array of times and an `affect!`
 function to apply. Thus to do the simple 2 dose example with this callback, we
 could do the following:
@@ -245,7 +245,7 @@ at3 = integrator.opts.abstol
 @test at2 < at3
 ```
 
-Note that this example is contained in the [Callback Library](@ref),
+Note that this example is contained in the [Callback Library](@ref callback_library),
 a library of useful callbacks for JuliaDiffEq solvers.
 
 ## ContinuousCallback Examples
@@ -452,7 +452,7 @@ function affect!(integrator)
 end
 ```
 
-As noted in the [Integrator Interface](@ref), `resize!(integrator,length(integrator.u)+1)`
+As noted in the [Integrator Interface](@ref integrator), `resize!(integrator,length(integrator.u)+1)`
 is used to change the length of all of the internal caches (which includes `u`)
 to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:

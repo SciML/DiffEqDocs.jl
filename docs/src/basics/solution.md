@@ -1,4 +1,4 @@
-# Solution Handling
+# [Solution Handling](@id solution)
 
 ## Accessing the Values
 

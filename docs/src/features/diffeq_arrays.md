@@ -1,4 +1,4 @@
-# DiffEq-Specific Array Types
+# [DiffEq-Specific Array Types](@id diffeq_arrays)
 
 In many cases, a standard array may not be enough to fully hold the data for a
 model. Many of the solvers in DifferentialEquations.jl (only the native Julia
