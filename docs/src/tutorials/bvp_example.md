@@ -10,10 +10,10 @@ introductions can be found by [checking out DiffEqTutorials.jl](https://github.c
 In this example we will solve the ODE that satisfies the boundary condition in the form of
 
 ```math
-\begin{align}
+\begin{aligned}
 \frac{du}{dt} &= f(t, u) \\
 g(u) &= \vec{0}
-\end{align}
+\end{aligned}
 ```
 
 ## Example 1: Simple Pendulum
