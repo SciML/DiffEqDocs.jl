@@ -3,6 +3,10 @@
 This tutorial will introduce you to the functionality for solving RODEs. Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
 
+!!! note
+
+    This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
+
 ## Example 1: Scalar RODEs
 
 In this example we will solve the equation
