@@ -588,10 +588,10 @@ for ``t_i = 0.5i``. This is the assumption that the data is `data[i]=1.0`.
 For this function, notice we have that:
 
 ```math
-\begin{align}
+\begin{aligned}
 dg_{1}&=1-u_{1} \\
 dg_{2}&=1-u_{2}
-\end{align}
+\end{aligned}
 ```
 
 and thus:
