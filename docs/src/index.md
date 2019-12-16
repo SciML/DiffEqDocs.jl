@@ -163,7 +163,7 @@ from [the JuliaLang site](https://julialang.org/downloads/) and add it to your p
 installation of DifferentialEquations.jl will happen on the first invocation of `diffeqr::diffeq_setup()`.
 
 Currently, use from R supported a subset of DifferentialEquations.jl which is documented
-[through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html)
+[through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html).
 
 ### IJulia Notebook Tutorials
 
