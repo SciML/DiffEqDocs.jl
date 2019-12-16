@@ -254,11 +254,11 @@ plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 In this example we will solve the Lorenz equations:
 
 ```math
-\begin{align}
+\begin{aligned}
 \frac{dx}{dt} &= σ(y-x) \\
 \frac{dy}{dt} &= x(ρ-z) - y \\
 \frac{dz}{dt} &= xy - βz \\
-\end{align}
+\end{aligned}
 ```
 
 Defining your ODE function to be in-place updating can have performance benefits.
@@ -398,10 +398,10 @@ for differential equation analysis which also achieves high performance.
 Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
-\begin{align*}
+\begin{aligned}
 \frac{\mathrm{d}\theta(t)}{\mathrm{d}t} &= \omega(t)\\
 \frac{\mathrm{d}\omega(t)}{\mathrm{d}t} &= - \frac{3}{2}\frac{g}{l}\sin\theta(t) + \frac{3}{ml^2}M(t)
-\end{align*},
+\end{aligned},
 ```
 where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitional acceleration.
 
