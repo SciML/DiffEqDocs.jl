@@ -17,21 +17,21 @@ where `f` is the a variant of the Roberts equation. This equation is of
 the form
 
 ```math
-\begin{align}
+\begin{aligned}
 du &= f(u,p,t) \\
  0 &= g(u,p,t) \\
- \end{align}
+ \end{aligned}
 ```
 
 or is also known as a constrained differential equation where `g` is the constraint
 equation. The Robertson model can be written in the form:
 
 ```math
-\begin{align}
+\begin{aligned}
 dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &=  y_{1} + y_{2} + y_{3} \\
-\end{align}
+\end{aligned}
 ```
 
 with initial conditions ``y_1(0) = 1``, ``y_2(0) = 0``, ``y_3(0) = 0``,
