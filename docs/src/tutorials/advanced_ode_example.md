@@ -112,11 +112,11 @@ We will now showcase how to make use of this functionality with growing complexi
 Let's solve the Rosenbrock equations:
 
 ```math
-\begin{align}
+\begin{aligned}
 dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 dy_3 &= 3*10^7 y_{3}^2 \\
-\end{align}
+\end{aligned}
 ```
 
 In order to reduce the Jacobian construction cost, one can describe a Jacobian
@@ -478,21 +478,21 @@ where ``M`` is known as the mass matrix. Let's solve the Robertson equation.
 At the top we wrote this equation as:
 
 ```math
-\begin{align}
+\begin{aligned}
 dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 dy_3 &= 3*10^7 y_{3}^2 \\
-\end{align}
+\end{aligned}
 ```
 
 But we can instead write this with a conservation relation:
 
 ```math
-\begin{align}
+\begin{aligned}
 dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
 dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &=  y_{1} + y_{2} + y_{3} \\
-\end{align}
+\end{aligned}
 ```
 
 In this form, we can write this as a mass matrix ODE where ``M`` is singular
