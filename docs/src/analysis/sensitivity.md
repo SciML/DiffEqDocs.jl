@@ -82,9 +82,10 @@ function f(du,u,p,t)
   du[2] = dy = -p[3]*u[2] + u[1]*u[2]
 end
 
-p = [1.5,1.0,3.0,1.0]
+p = [1.5,1.0,3.0]
 u0 = [1.0;1.0]
-prob = ODEProblem(f,u0,(0.0,10.0),p)
+tspan = (0.0, 10.0)
+prob = ODEProblem(f,u0,tspan,p)
 ```
 
 Let's say we wanted to get the derivative of the final value w.r.t. each of
@@ -134,11 +135,10 @@ each value we want to take the derivative by, we seed a derivative with a
 ```julia
 using ForwardDiff: Dual
 struct MyTag end
-p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))
-p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))
-p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))
-p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 1.0))
-pdual = [p1dual, p2dual, p3dual, p4dual]
+p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0))
+p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0))
+p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0))
+pdual = [p1dual, p2dual, p3dual]
 ```
 
 or equivalently using the `seed_duals` convenience function:
@@ -156,7 +156,7 @@ Next we need to make our initial condition Dual numbers so that these propogate
 through the solution. We can do this manually like:
 
 ```julia
-u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0))]
+u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0))]
 ```
 
 or use the same shorthand from before:
@@ -168,7 +168,7 @@ u0dual = convert.(eltype(pdual),u0)
 Now we just use these Dual numbers to solve:
 
 ```julia
-prob_dual = ODEProblem(f,u0,tspan,pdual)
+prob_dual = ODEProblem(f,u0dual,tspan,pdual)
 sol_dual = solve(prob_dual,Tsit5(), saveat=0.2)
 ```
 
