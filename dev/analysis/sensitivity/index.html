@@ -12,9 +12,10 @@ using DiffEqSensitivity</code></pre><h2 id="Efficiency-of-the-Different-Methods-
   du[2] = dy = -p[3]*u[2] + u[1]*u[2]
 end
 
-p = [1.5,1.0,3.0,1.0]
+p = [1.5,1.0,3.0]
 u0 = [1.0;1.0]
-prob = ODEProblem(f,u0,(0.0,10.0),p)</code></pre><p>Let&#39;s say we wanted to get the derivative of the final value w.r.t. each of the parameters. We can define the following function:</p><pre><code class="language-julia">function test_f(p)
+tspan = (0.0, 10.0)
+prob = ODEProblem(f,u0,tspan,p)</code></pre><p>Let&#39;s say we wanted to get the derivative of the final value w.r.t. each of the parameters. We can define the following function:</p><pre><code class="language-julia">function test_f(p)
   _prob = remake(prob;u0=convert.(eltype(p),prob.u0),p=p)
   solve(_prob,Vern9(),save_everystep=false)[end]
 end</code></pre><p>What this function does is use the <code>remake</code> function <a href="http://docs.juliadiffeq.org/dev/basics/problem/#Modification-of-problem-types-1">from the Problem Interface page</a> to generate a new ODE problem with the new parameters, solves it, and returns the solution at the final time point. Notice that it takes care to make sure that the type of <code>u0</code> matches the type of <code>p</code>. This is because ForwardDiff.jl will want to use Dual numbers, and thus to propagate the Duals throughout the solver we need to make sure the initial condition is also of the type of Dual number. On this function we can call ForwardDiff.jl and it will return the derivatives we wish to calculate:</p><pre><code class="language-julia">using ForwardDiff
@@ -24,16 +25,15 @@ DiffResults.jacobian!(res,p) # Populate it with the results
 val = DiffResults.value(res) # This is the sol[end]
 jac = DiffResults.jacobian(res) # This is dsol/dp</code></pre><p>If we would like to get the time series, we can do so by seeding the dual numbers directly. To do this, we use the <code>Dual</code> constructor. The first value is the value of the parameter. The second is a tuple of the derivatives. For each value we want to take the derivative by, we seed a derivative with a 1 in a unique index. For example, we can build our parameter vector like:</p><pre><code class="language-julia">using ForwardDiff: Dual
 struct MyTag end
-p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0, 0.0))
-p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0, 0.0))
-p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0, 0.0))
-p4dual = Dual{MyTag}(3.0, (0.0, 0.0, 0.0, 1.0))
-pdual = [p1dual, p2dual, p3dual, p4dual]</code></pre><p>or equivalently using the <code>seed_duals</code> convenience function:</p><pre><code class="language-julia">function seed_duals(x::AbstractArray{V},::Type{T},
+p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0))
+p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0))
+p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0))
+pdual = [p1dual, p2dual, p3dual]</code></pre><p>or equivalently using the <code>seed_duals</code> convenience function:</p><pre><code class="language-julia">function seed_duals(x::AbstractArray{V},::Type{T},
                     ::ForwardDiff.Chunk{N} = ForwardDiff.Chunk(x)) where {V,T,N}
   seeds = ForwardDiff.construct_seeds(ForwardDiff.Partials{N,V})
   duals = [Dual{T}(x[i],seeds[i]) for i in eachindex(x)]
 end
-pdual = seed_duals(p,MyTag)</code></pre><p>Next we need to make our initial condition Dual numbers so that these propogate through the solution. We can do this manually like:</p><pre><code class="language-julia">u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0, 0.0))]</code></pre><p>or use the same shorthand from before:</p><pre><code class="language-julia">u0dual = convert.(eltype(pdual),u0)</code></pre><p>Now we just use these Dual numbers to solve:</p><pre><code class="language-julia">prob_dual = ODEProblem(f,u0,tspan,pdual)
+pdual = seed_duals(p,MyTag)</code></pre><p>Next we need to make our initial condition Dual numbers so that these propogate through the solution. We can do this manually like:</p><pre><code class="language-julia">u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0))]</code></pre><p>or use the same shorthand from before:</p><pre><code class="language-julia">u0dual = convert.(eltype(pdual),u0)</code></pre><p>Now we just use these Dual numbers to solve:</p><pre><code class="language-julia">prob_dual = ODEProblem(f,u0dual,tspan,pdual)
 sol_dual = solve(prob_dual,Tsit5(), saveat=0.2)</code></pre><p>The solution is now in terms of Dual numbers. We can extract the derivatives by looking at the partials of the duals in the solution. For example, <code>sol[1,end]</code> is the Dual number for the <code>x</code> component at the end of the integration, and so <code>sol[1,end].partial[i]</code> is <code>dx(t_end)/dp_i</code>.</p><h3 id="Local-Forward-Sensitivity-Analysis-via-ODELocalSensitivityProblem-1"><a class="docs-heading-anchor" href="#Local-Forward-Sensitivity-Analysis-via-ODELocalSensitivityProblem-1">Local Forward Sensitivity Analysis via ODELocalSensitivityProblem</a><a class="docs-heading-anchor-permalink" href="#Local-Forward-Sensitivity-Analysis-via-ODELocalSensitivityProblem-1" title="Permalink"></a></h3><p>For this method local sensitivity is computed using the sensitivity ODE:</p><div>\[\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial u}\frac{\partial u}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}\]</div><p>where</p><div>\[J=\left(\begin{array}{cccc}
 \frac{\partial f_{1}}{\partial u_{1}} &amp; \frac{\partial f_{1}}{\partial u_{2}} &amp; \cdots &amp; \frac{\partial f_{1}}{\partial u_{k}}\\
 \frac{\partial f_{2}}{\partial u_{1}} &amp; \frac{\partial f_{2}}{\partial u_{2}} &amp; \cdots &amp; \frac{\partial f_{2}}{\partial u_{k}}\\
@@ -120,4 +120,4 @@ end</code></pre><p>To get the adjoint sensitivities, we call:</p><pre><code clas
   res
 end
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
-res3 = Calculus.gradient(G,[1.5,1.0,3.0])</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 16 December 2019 04:52">Monday 16 December 2019</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+res3 = Calculus.gradient(G,[1.5,1.0,3.0])</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 17 December 2019 12:58">Tuesday 17 December 2019</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
