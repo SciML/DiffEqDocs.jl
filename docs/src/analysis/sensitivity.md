@@ -173,9 +173,9 @@ sol_dual = solve(prob_dual,Tsit5(), saveat=0.2)
 ```
 
 The solution is now in terms of Dual numbers. We can extract the derivatives
-by looking at the partials of the duals in the solution. For example, `sol[1,end]`
-is the Dual number for the `x` component at the end of the integration, and so
-`sol[1,end].partial[i]` is `dx(t_end)/dp_i`.
+by looking at the partials of the duals in the solution. For example, `sol_dual[1,end]`
+contains the`x` component of the solution and the Dual number for this component at the
+end of the integration, and so `sol_dual[1,end][i+1]` is `dx(t_end)/dp_i`.
 
 ### Local Forward Sensitivity Analysis via ODELocalSensitivityProblem
 
