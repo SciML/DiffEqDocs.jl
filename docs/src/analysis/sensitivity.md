@@ -1,11 +1,11 @@
 # [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
 
 Sensitivity analysis for ODE models is provided by the DiffEq suite. The model
-sensitivities are the derivatives of the solution with respect to the
+sensitivities are the derivatives of the solution `u(t)` with respect to the
 parameters. Specifically, the local sensitivity of the solution to a parameter
 is defined by how much the solution would change by changes in the parameter,
 i.e. the sensitivity of the ith independent variable to the jth parameter is
-`` \frac{\partial u}{\partial p_{j}}``.
+`` \frac{\partial u_i}{\partial p_{j}}``.
 
 Sensitivity analysis serves two major purposes. On one hand, the sensitivities
 are diagnostics of the model which are useful for understand how
@@ -211,10 +211,10 @@ are the parameter derivatives, and
 
 ```math
 S_{j}=\left(\begin{array}{c}
-\frac{\partial y_{1}}{\partial p_{j}}\\
-\frac{\partial y_{2}}{\partial p_{j}}\\
+\frac{\partial u_{1}}{\partial p_{j}}\\
+\frac{\partial u_{2}}{\partial p_{j}}\\
 \vdots\\
-\frac{\partial y_{k}}{\partial p_{j}}
+\frac{\partial u_{k}}{\partial p_{j}}
 \end{array}\right)
 ```
 
@@ -222,20 +222,21 @@ is the vector of sensitivities. Since this ODE is dependent on the values of the
 independent variables themselves, this ODE is computed simultaneously with the
 actual ODE system.
 
-Note that the Jacobian-vector product:
+Note that the Jacobian-vector product
 
 ```math
 \frac{\partial f}{\partial u}\frac{\partial u}{\partial p_{j}}
 ```
 
 can be computed without forming the Jacobian. With finite differences, this through using the following
-formula for the directional derivative:
+formula for the directional derivative
 
 ```math
-Jv \approx \frac{f(x+v \epsilon) - f(x)}{\epsilon}
+Jv \approx \frac{f(x+v \epsilon) - f(x)}{\epsilon},
 ```
 
-or by using a dual number with a single partial dimension, ``d = x + v \epsilon`` we get that
+or, alternatively and without truncation error, 
+by using a dual number with a single partial dimension, ``d = x + v \epsilon`` we get that
 
 ```math
 f(d) = f(x) + Jv \epsilon
