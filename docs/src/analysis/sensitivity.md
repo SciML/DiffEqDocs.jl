@@ -301,14 +301,13 @@ We can use the following helper functions to extract the sensitivity information
 
 ```julia
 x,dp = extract_local_sensitivities(sol)
-x,dp = extract_local_sensitivities(sol,i)
 x,dp = extract_local_sensitivities(sol,t)
 ```
 
 In each case, `x` is the ODE values and `dp` is the matrix of sensitivities
 where `dp[i]` is the gradient of component `i` by the parameters. The first gives
-the full timeseries of values. The second returns the `i`th values, while the third
-interpolates to calculate the sensitivities at time `t`. For example, if we do:
+the full timeseries of values. The second interpolates to calculate the sensitivities at time `t`.
+For example, if we do:
 
 ```julia
 x,dp = extract_local_sensitivities(sol)
