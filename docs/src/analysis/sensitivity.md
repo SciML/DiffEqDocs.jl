@@ -239,7 +239,7 @@ or, alternatively and without truncation error,
 by using a dual number with a single partial dimension, ``d = x + v \epsilon`` we get that
 
 ```math
-f(d) \approx f(x) + Jv \epsilon
+f(d) = f(x) + Jv \epsilon
 ```
 
 as a fast way to calcuate ``Jv``. Thus, except when a sufficiently good function for `J` is given
