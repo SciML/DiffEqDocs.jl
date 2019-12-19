@@ -158,32 +158,15 @@ Let's get the means and variances from the `MorrisResult` struct.
 
 ```julia
 m.means
-2-element Array{Array{Float64,2},1}:
- [0.0 0.051096 … 12.5698 12.401; 0.0 0.00115346 … 5.34451 5.63429]
- [0.0 0.048616 … 2.31299 2.39601; 0.0 0.00111577 … 2.5087 2.4553] 
+2×2 Array{Float64,2}:
+ 7.04345  6.91096
+ 3.21794  3.01227
 
 m.variances
-2-element Array{Array{Float64,2},1}:
- [0.0 1.92803e-5 … 160.412 157.503; 0.0 4.77857e-9 … 84.1636 88.2436]
- [0.0 1.70976e-5 … 21.9696 27.3176; 0.0 4.3237e-9 … 86.6352 77.7245] 
+2×2 Array{Float64,2}:
+ 33.0351   28.2267
+  6.65526   5.483 
 ```
-This gives the means of the effects and it's variances over the entire timespan and thus we get 200-length
-arrays for each paramter and dependent variable pair.
-
-We can plot the trajectory of the sensitivity with the standard deviation bars.
-```julia
-# For the first parameter (a)
-stdv1 = sqrt.(m.variances[1])
-p = plot(m.means[1]', yerror=stdv1)
-```
-![morrisparameter1](../assets/morris1.png)
-
-```julia
-# For the second parameter (b)
-stdv2 = sqrt.(m.variances[2])
-p = plot(m.means[2]', yerror=stdv2)
-```
-![morrisparameter2](../assets/morris2.png)
 
 For Sobol Method
 
