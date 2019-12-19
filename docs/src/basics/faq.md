@@ -166,6 +166,18 @@ this is probably the cheapest part of the computation...).
 
 ## Numerical Error
 
+#### What does tolerance mean and how much error should I expect
+
+The most useful options are the tolerances `abstol` and `reltol`. These tell the 
+internal adaptive time stepping engine how precise of a solution you want. 
+Generally, `reltol` is the relative accuracy while `abstol` is the accuracy when 
+`u` is near zero. *These tolerances are local tolerances and thus are not global 
+guarantees*. However, a good rule of thumb is that the total solution accuracy 
+is 1-2 digits less than the relative tolerances. Thus for the defaults 
+`abstol=1e-6` and `reltol=1e-3`, you can expect a global accuracy of about 1-2 
+digits. This is standard across the board and applies to the native Julia methods, 
+the wrapped Fortran and C++ methods, the calls to MATLAB/Python/R, etc.
+
 #### The solver doesn't obey physical law X (e.g. conservation of energy)
 
 Yes, this is because the numerical solution of the ODE is not the exact solution.
