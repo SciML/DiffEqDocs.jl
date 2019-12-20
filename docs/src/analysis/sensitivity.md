@@ -1,7 +1,7 @@
 # [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
 
 Sensitivity analysis for ODE models is provided by the DiffEq suite. The model
-sensitivities are the derivatives of the solution `u(t)` with respect to the
+sensitivities are the derivatives of the solution ``u(t)`` with respect to the
 parameters. Specifically, the local sensitivity of the solution to a parameter
 is defined by how much the solution would change by changes in the parameter,
 i.e. the sensitivity of the ith independent variable to the jth parameter is
@@ -44,11 +44,11 @@ solution derivatives for a given problem, consult our analysis
 is:
 
 - Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for
-  ODEs with small numbers of parameters (<100)
+  ODEs with small numbers of parameters (<100).
 - Adjoint senstivity analysis is the fastest when the number of parameters is
   sufficiently large. There are three configurations of note. Using
   `backsolve` is the fastest and uses the least memory, but is not
-  guerenteed to be stable. Checkpointing is the slowest but uses O(1)
+  guaranteed to be stable. Checkpointing is the slowest but uses O(1)
   memory and is stable. Interpolating is the second fastest, is stable,
   but requires the ability to hold the full forward solution and its
   interpolation in memory.
@@ -174,7 +174,7 @@ sol_dual = solve(prob_dual,Tsit5(), saveat=0.2)
 
 The solution is now in terms of Dual numbers. We can extract the derivatives
 by looking at the partials of the duals in the solution. For example, `sol_dual[1,end]`
-contains the`x` component of the solution and the Dual number for this component at the
+contains the `x` component of the solution and the Dual number for this component at the
 end of the integration, and so `sol_dual[1,end][i+1]` is `dx(t_end)/dp_i`.
 
 ### Local Forward Sensitivity Analysis via ODELocalSensitivityProblem
@@ -307,8 +307,9 @@ x,dp = extract_local_sensitivities(sol,t)
 ```
 
 In each case, `x` is the ODE values and `dp` is the matrix of sensitivities
-where `dp[i]` is the gradient of component `i` by the parameters. The first gives
-the full timeseries of values. The second returns the `i`th values, while the third
+The first gives the full timeseries of values and `dp[i]` contains the time series of the 
+sensitivities of all components of the ODE with respect to `i`th parameter. 
+The second returns the `i`th time step, while the third
 interpolates to calculate the sensitivities at time `t`. For example, if we do:
 
 ```julia
