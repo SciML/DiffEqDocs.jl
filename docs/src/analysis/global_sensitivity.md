@@ -1,4 +1,4 @@
-# Global Sensitivity Analysis
+# [Global Sensitivity Analysis] (@id gsa)
 
 Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainty in
 output of a model w.r.t. the parameters, their individual contributions, or the
