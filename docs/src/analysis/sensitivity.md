@@ -380,26 +380,27 @@ will plot the expanded system).
 Adjoint sensitivity analysis is used to find the gradient of the solution
 with respect to some functional of the solution. In many cases this is used
 in an optimization problem to return the gradient with respect to some cost
-function. It is equivalent to "backpropogation" or reverse-mode automatic
+function. It is equivalent to "backpropagation" or reverse-mode automatic
 differentiation of a differential equation.
 
 ### Adjoint Sensitivity Analysis via adjoint_sensitivities
 
-This adjoint requires the definition of some scalar functional ``g(u,p,t)``
-where ``u`` is the (numerical) solution to the differential equation.
+This adjoint requires the definition of some scalar functional ``g(u,p)``
+where ``u(t,p)`` is the (numerical) solution to the differential equation
+``d/dt u(t,p)=f(t,u,p)`` with ``t\in [0,T]`` and ``u(t_0,p)=u_0``.
 Adjoint sensitivity analysis finds the gradient of
 
 ```math
-G(u,p)=G(u(p))=\int_{t_{0}}^{T}g(u(t,p))dt
+G(u,p)=G(u(\cdot,p))=\int_{t_{0}}^{T}g(u(t,p),p)dt
 ```
 
 some integral of the solution. It does so by solving the adjoint problem
 
 ```math
-\frac{d\lambda^{\star}}{dt}=g_{u}(t)-\lambda^{\star}(t)f_{u}(t),\thinspace\thinspace\thinspace\lambda^{\star}(T)=0
+\frac{d\lambda^{\star}}{dt}=g_{u}(u(t,p),p)-\lambda^{\star}(t)f_{u}(t,u(t,p),p),\thinspace\thinspace\thinspace\lambda^{\star}(T)=0
 ```
 
-where ``f_u`` is the Jacobian of the system with respect to the state `u` while
+where ``f_u`` is the Jacobian of the system with respect to the state ``u`` while
 ``f_p`` is the Jacobian with respect to the parameters. The adjoint problem's
 solution gives the sensitivities through the integral:
 
@@ -418,7 +419,7 @@ the adjoint sensitivity of some discontinuous functional of the solution. One
 canonical function is the L2 loss against some data points, that is:
 
 ```math
-L(u,p,t)=\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}
+L(u,p)=\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}
 ```
 
 In this case, we can reinterpret our summation as the distribution integral:
@@ -432,11 +433,11 @@ except at finitely many points. Thus it can be calculated between each ``t_i``.
 At a given ``t_i``, given that the ``t_i`` are unique, we have that
 
 ```math
-g_{y}(t_{i})=2\left(\tilde{u}(t_{i})-u(t_{i},p)\right)
+g_{u}(t_{i})=2\left(\tilde{u}(t_{i})-u(t_{i},p)\right)
 ```
 
-Thus the adjoint solution is given by integrating between the integrals and
-applying the jump function ``g_y`` at every data point.
+Thus the adjoint solution ``\lambda^{\star}(t)`` is given by integrating between the integrals and
+applying the jump function ``g_u`` at every data point ``t_i``.
 
 We note that
 
