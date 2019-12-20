@@ -87,7 +87,7 @@ The `Sobol` object has as its fields the `order` of the indices to be estimated.
 The `Ei_estimator` kwarg can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` 
 which signify the different ways of estimating the indices.   
 
-## Regression Method
+<!-- ## Regression Method
 
 If a sample of inputs and outputs `` (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} ``􏰁
 is available, it is possible to fit a linear model explaining the behavior of Y given the
@@ -128,71 +128,77 @@ Again, `f` and `param_range` are the same as above. An array of the true paramet
 that lie within the `param_range` bounds are passed through the `param_fixed` argument.
 `n` determines the number of simulations of the model run to generate the data points
 of the solution and parameter values and the `coeffs` kwarg lets you decide the
-coefficients you want.
+coefficients you want. -->
 
 ## GSA example
 
-Let's create the ODE problem to run our GSA on.
+Let's run GSA on the Lotka-Volterra model to and study the sensitivity of the maximum of predator population and the average prey population.
+
+```julia
+using DiffEqSensitivity, Statistics, OrdinaryDiffEq #load packages
+```
 
 ```julia
 function f(du,u,p,t)
-  du[1] = p[1]*u[1] - p[2]*u[1]*u[2]
-  du[2] = -3*u[2] + u[1]*u[2]
+  du[1] = p[1]*u[1] - p[2]*u[1]*u[2] #prey
+  du[2] = -p[3]*u[2] + p[4]*u[1]*u[2] #predator
 end
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
-p = [1.5,1.0]
-prob = ODEProblem(f,u0,tspan,p)
+p = [1.5,1.0,3.0,1.0]
+prob = ODEProblem(f,u0,tspan,p) 
 t = collect(range(0, stop=10, length=200))
 ```
 For Morris Method
 
 ```julia
 f1 = function (p)
-        prob1 = remake(prob;p=p)
-        Array(solve(prob1,Tsit5();saveat=t))
-    end
-m = gsa(f1,Morris(total_num_trajectory=1000,num_trajectory=150),[[1,5],[0.5,5]])
+  prob1 = remake(prob;p=p)
+  sol = solve(prob1,Tsit5();saveat=t)
+  [mean(sol[1,:]), maximum(sol[2,:])]
+end
+m = gsa(f1,Morris(total_num_trajectory=1000,num_trajectory=150),[[1,5],[1,5],[1,5],[1,5]])
 ```
 Let's get the means and variances from the `MorrisResult` struct.
 
 ```julia
 m.means
 2×2 Array{Float64,2}:
- 7.04345  6.91096
- 3.21794  3.01227
+ 0.474053  0.114922
+ 1.38542   5.26094 
 
 m.variances
 2×2 Array{Float64,2}:
- 33.0351   28.2267
-  6.65526   5.483 
+ 0.208271    0.0317397
+ 3.07475   118.103    
+```
+
+Let's plot the result
+
+```julia
+scatter(m.means[1,:], m.variances[1,:],series_annotations=[:a,:b,:c,:d],color=:gray)
+scatter(m.means[2,:], m.variances[2,:],series_annotations=[:a,:b,:c,:d],color=:gray)
 ```
 
 For Sobol Method
 
 ```julia
-f1 = function (p)
-        prob1 = remake(prob;p=p)
-        Array(solve(prob1,Tsit5();saveat=t))[end]
-    end
-
 N = 10000
-lb = [1.0, 0.5]
-ub = [5.0, 5.0]
+lb = [1.0, 1.0, 1.0, 1.0]
+ub = [5.0, 5.0, 5.0, 5.0]
 sampler = SobolSample()
 A,B = QuasiMonteCarlo.generate_design_matrices(N,lb,ub,sampler)
 sobol_result = gsa(f1,Sobol(),A,B)
 ```
 
-We plot the first order and total order Sobol Indices for some timepoints for each of the parameters (`a` and `b`).
+We plot the first order and total order Sobol Indices for the parameters (`a` and `b`).
 
 ```julia
 
-p1 = bar(["a","b"],[sobol_result.ST[1],sobol_result.ST[2]],color=[:red,:blue],title="Total Order Indices",legend=false)
-p2 = bar(["a","b"],[sobol_result.S1[1],sobol_result.S1[2]],color=[:red,:blue],title="First Order Indices",legend=false)
-plo = plot(p1,p2,layout=(2,1),size=(600,500))
-
+p1 = bar(["a","b","c","d"],sobol_result.ST[1,:],title="Total Order Indices prey",legend=false)
+p2 = bar(["a","b","c","d"],sobol_result.S1[1,:],title="First Order Indices prey",legend=false)
+p1_ = bar(["a","b","c","d"],sobol_result.ST[2,:],title="Total Order Indices predator",legend=false)
+p2_ = bar(["a","b","c","d"],sobol_result.S1[2,:],title="First Order Indices predator",legend=false)
+plot(p1,p2,p1_,p2_)
 ```
 ![sobolplot](../assets/sobolbars.png)
-
-Here we plot the Sobol indices of first order and the total Sobol indices for the parameters `a` and `b`. The plots are obtained by getting the Sobol Indices at the final time point of the second dependent variable `y(t)` from the 200-length sensitivities over the entire time span. The length of the bar represents the quantification of the sensitivity of the output to that parameter and hence for the final time point you can say that `y(t)` is more sensitive to `b`, also you can observe how the relative difference between `a` and `b` is larger in the first order than the total order indices, this tells us that most of the contribution of `a` to `y(t)` arises from interactions and it's individual non-interaction contribution is significantly lesser than `b` and vice-versa for `b` as it's first order plot indicates quite high value.
