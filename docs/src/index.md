@@ -50,7 +50,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
 - Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
 - Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
-- [Global Sensitivity Analysis](@ref)
+- [Global Sensitivity Analysis](@ref gsa)
 - [Uncertainty Quantification](@ref uncertainty_quantification)
 
 If you have any questions, or just want to chat about solvers/using the package,
