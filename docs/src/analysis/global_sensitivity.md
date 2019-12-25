@@ -2,22 +2,59 @@
 
 Global Sensitivity Analysis (GSA) methods are used to quantify the uncertainty in
 output of a model w.r.t. the parameters, their individual contributions, or the
-contribution of their interactions. The type of GSA method to use depends on
-the interest of the user, below we describe the methods available in the suite
-at the moment (some more are already in development) and explain what is
-the output of each of the methods and what it represents.
+contribution of their interactions. The GSA interface allows for utilizing batched
+functions for parallel computation of GSA quantities.
 
 ## Installation
 
 This functionality does not come standard with DifferentialEquations.jl.
-To use this functionality, you must install DiffEqSensitivty.jl:
+To use this functionality, you must install DiffEqSensitivity.jl:
 
 ```julia
 ]add DiffEqSensitivity
 using DiffEqSensitivity
 ```
 
-## Morris Method
+## General Interface
+
+The general interface for calling a global sensitivity analysis is either:
+
+```julia
+effects = gsa(f,method,param_range;N,batch=false)
+```
+
+where:
+
+- `y=f(x)` is a function that takes in a single vector and spits out a single vector or scalar.
+  If `batch=true`, then `f` takes in a matrix where each row is a set of parameters,
+  and returns a matrix where each row is a the output for the corresponding row of parameters.
+- `method` is one of the GSA methods below.
+- `param_range` is a vector of tuples for the upper and lower bound for the given parameter `i`.
+- `N` is a required keyword argument for the number of samples to take in the trajectories/design.
+
+Note that for some methods there is a second interface where one can directly pass the design matrices:
+
+```julia
+effects = gsa(f,method,A,B;batch=false)
+```
+
+where `A` and `B` are design matrices with each row being a set of parameters. Note that `generate_design_matrices`
+from [QuasiMonteCarlo.jl](https://github.com/JuliaDiffEq/QuasiMonteCarlo.jl) can be used to generate the design
+matrices.
+
+### Morris Method
+
+`Morris` has the following keyword arguments:
+
+- `p_steps` - Vector of ``\Delta`` for the step sizes in each direction. Required.
+- `relative_scale` - The elementary effects are calculated with the assumption that
+  the parameters lie in the range `[0,1]` but as this is not always the case
+  scaling is used to get more informative, scaled effects. Defaults to `false`.
+- `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are 
+  generated out of which `num_trajectory` matrices with the highest spread are used in calculation.
+- len_design_mat` - The size of a design matrix.
+
+#### Morris Method Details
 
 The Morris method also known as Morris’s OAT method where OAT stands for
 One At a Time can be described in the following steps:
@@ -39,26 +76,16 @@ interaction and the contribution of the parameters individually and gives the
 effects for each parameter which takes into consideration all the interactions and its
 individual contribution.
 
-`morris_effects = gsa(f,Morris(),param_range)`
+### Sobol Method
 
+The `Sobol` object has as its fields the `order` of the indices to be estimated. 
 
-Here, `f` is just the model (as a julia function 
-`f(input_vector) -> output_vector` or a `DEProblem`) you want to
-run the analysis on. The `Morris` object signifies the method to be used and contains
-the following fields that can be passed by user to adjust the parameter sampling:
-
-  1. `p_steps` - Decides the value of ``\Delta`` in the elementary effects calculation.
-  2. `relative_scale` - The elementary effects are calculated with the assumption that
-the parameters lie in the range `[0,1]` but as this is not always the case
-scaling is used to get more informative, scaled effects.
-  3. `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are 
-  generated out of which `num_trajectory` matrices with the highest spread are used in calculation.
-  4. `len_design_mat` - The size of a design matrix.
-
-  `param_range` requires an array of 2-tuples with the lower bound
-and the upper bound.
-
-## Sobol Method
+- `order` - the order of the indices to calculate. Defaults to `[0,1]`, which means the
+  Total and first order indices. Currently only these are allowed.
+- `Ei_estimator` - Can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` for which
+  Monte Carlo estimator is used for the Ei term. Defaults to `:Jansen1999`.
+  
+#### Sobol Method Details
 
 Sobol is a variance-based method and it decomposes the variance of the output of
 the model or system into fractions which can be attributed to inputs or sets
@@ -81,16 +108,15 @@ in other input parameters. It is standardised by the total variance to provide a
 Higher-order interaction indices `` S_{i,j}, S_{i,j,k} `` and so on can be formed
 by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
-`sobol_indices = gsa(f,Sobol(),A,B;batch=false,Ei_estimator = :Jansen1999)`
+### Regression Method
 
-The `Sobol` object has as its fields the `order` of the indices to be estimated. 
-The `Ei_estimator` kwarg can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` 
-which signify the different ways of estimating the indices.   
+`RegressionGSA` has the following keyword arguments:
 
-<!-- ## Regression Method
+- `coeffs` for which coefficients to calculate. Defaults to `:rank`.
 
-If a sample of inputs and outputs `` (X^n, Y^n) = 􏰀(X^{i}_1, . . . , X^{i}_d, Y_i)_{i=1..n} ``􏰁
-is available, it is possible to fit a linear model explaining the behavior of Y given the
+#### Regression Details
+
+It is possible to fit a linear model explaining the behavior of Y given the
 values of X, provided that the sample size n is sufficiently large (at least n > d).
 
 The measures provided for this analysis by us in DiffEqSensitivity.jl are
@@ -107,7 +133,7 @@ r = \frac{\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}{\sqrt{\sum_{i
 SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}}
 ```
 
-  where ``\beta_j`` is the linear regression coefficient associated to $X_j$.
+where ``\beta_j`` is the linear regression coefficient associated to $X_j$.
 
   c) Partial Correlation Coefficient (PCC):
 
@@ -115,28 +141,22 @@ SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}}
 PCC_j = \rho(X_j - \hat{X_{-j}},Y_j - \hat{Y_{-j}})
 ```
 
-  where ``\hat{X_{-j}}``􏰈 is the prediction of the linear model, expressing ``X_{j}``
-  with respect to the other inputs and ``\hat{Y􏰈_{-j}}`` is the prediction of the
-  linear model where ``X_j`` is absent. PCC measures the sensitivity of ``Y`` to
-  ``X_j`` when the effects of the other inputs have been canceled.
+where ``\hat{X_{-j}}`` is the prediction of the linear model, expressing ``X_{j}``
+with respect to the other inputs and ``\hat{Y_{-j}}`` is the prediction of the
+linear model where ``X_j`` is absent. PCC measures the sensitivity of ``Y`` to
+``X_j`` when the effects of the other inputs have been canceled.
 
-`regre_sensitivity = regression_sensitivity(f,param_range,param_fixed,n;coeffs=:rank)`
+## GSA examples
 
-`regre_sensitivity = regression_sensitivity(prob::DiffEqBase.DEProblem,alg,t,param_range,param_fixed,n;coeffs=:rank)`
-
-Again, `f` and `param_range` are the same as above. An array of the true parameter values
-that lie within the `param_range` bounds are passed through the `param_fixed` argument.
-`n` determines the number of simulations of the model run to generate the data points
-of the solution and parameter values and the `coeffs` kwarg lets you decide the
-coefficients you want. -->
-
-## GSA example
+### Lotka-Volterra Global Sensitivities
 
 Let's run GSA on the Lotka-Volterra model to and study the sensitivity of the maximum of predator population and the average prey population.
 
 ```julia
 using DiffEqSensitivity, Statistics, OrdinaryDiffEq #load packages
 ```
+
+First let's define our model:
 
 ```julia
 function f(du,u,p,t)
@@ -149,7 +169,10 @@ p = [1.5,1.0,3.0,1.0]
 prob = ODEProblem(f,u0,tspan,p) 
 t = collect(range(0, stop=10, length=200))
 ```
-For Morris Method
+
+Now let's create a function that takes in a parameter set and calculates the maximum of the predator population and the
+average of the prey population for those parameter values. To do this, we will make use of the `remake` function which
+creates a new `ODEProblem`, and use the `p` keyword argument to set the new parameters:
 
 ```julia
 f1 = function (p)
@@ -157,6 +180,13 @@ f1 = function (p)
   sol = solve(prob1,Tsit5();saveat=t)
   [mean(sol[1,:]), maximum(sol[2,:])]
 end
+```
+
+Now let's perform a Morris global sensitivity analysis on this model. We specify that the parameter range is
+`[1,5]` for each of the parameters, and thus call:
+
+```julia
+
 m = gsa(f1,Morris(total_num_trajectory=1000,num_trajectory=150),[[1,5],[1,5],[1,5],[1,5]])
 ```
 Let's get the means and variances from the `MorrisResult` struct.
@@ -180,7 +210,18 @@ scatter(m.means[1,:], m.variances[1,:],series_annotations=[:a,:b,:c,:d],color=:g
 scatter(m.means[2,:], m.variances[2,:],series_annotations=[:a,:b,:c,:d],color=:gray)
 ```
 
-For Sobol Method
+For the Sobol method we can similarly do:
+
+```julia
+m = gsa(f1,Sobol(),[[1,5],[1,5],[1,5],[1,5]])
+```
+
+### Design Matrices
+
+For the Sobol Method, we can have more control over the sampled points by generating design matrices. 
+Doing it in this manner lets us directly specify a quasi-Monte Carlo sampling method for the parameter space. Here
+we use [QuasiMonteCarlo.jl](https://github.com/JuliaDiffEq/QuasiMonteCarlo.jl) to generate the design matrices
+as follows:
 
 ```julia
 N = 10000
@@ -188,6 +229,11 @@ lb = [1.0, 1.0, 1.0, 1.0]
 ub = [5.0, 5.0, 5.0, 5.0]
 sampler = SobolSample()
 A,B = QuasiMonteCarlo.generate_design_matrices(N,lb,ub,sampler)
+```
+
+and now we tell it to calculate the Sobol indices on these designs:
+
+```julia
 sobol_result = gsa(f1,Sobol(),A,B)
 ```
 
@@ -202,3 +248,35 @@ p2_ = bar(["a","b","c","d"],sobol_result.S1[2,:],title="First Order Indices pred
 plot(p1,p2,p1_,p2_)
 ```
 ![sobolplot](../assets/sobolbars.png)
+
+### Parallelized GSA Example
+
+In all of the previous examples, `f(p)` was calculated serially. However, we can parallelize our computations
+by using the batch interface. In the batch interface, each row `p[i,:]` is a set of parameters, and we output
+a row for each set of parameters. Here we showcase using the [Ensemble Interface](@ref ensemble) to use
+`EnsembleGPUArray` to perform automatic multithreaded-parallelization of the ODE solves.
+
+```julia
+f1 = function (p)
+  prob_func(prob,i,repeat) = remake(prob;p=p[i,:])
+  ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
+  sol = solve(ensemble_prob,Tsit5(),EnsembleThreads();saveat=t)
+  # Now sol[i] is the solution for the ith set of parameters
+  out = zeros(size(p,1),2)
+  for i in 1:size(p,1)
+    out[i,1] = mean(sol[i][1,:])
+    out[i,2] = maximum(sol[i][2,:])
+  end
+  out
+end
+```
+
+And now to do the parallelized calls we simply add the `batch=true` keyword argument:
+
+```julia
+sobol_result = gsa(f1,Sobol(),A,B,batch=true)
+```
+
+This user-side parallelism thus allows you to take control, and thus for example you can use
+[DiffEqGPU.jl](https://github.com/JuliaDiffEq/DiffEqGPU.jl) for automated GPU-parallelism of
+the ODE-based global sensitivity analysis!
