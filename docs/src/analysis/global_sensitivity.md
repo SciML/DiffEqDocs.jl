@@ -81,7 +81,7 @@ individual contribution.
 The `Sobol` object has as its fields the `order` of the indices to be estimated. 
 
 - `order` - the order of the indices to calculate. Defaults to `[0,1]`, which means the
-  Total and first order indices. Currently only these are allowed.
+  Total and First order indices. Passing `2` enables calculation of the Second order indices as well.
 - `Ei_estimator` - Can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` for which
   Monte Carlo estimator is used for the Ei term. Defaults to `:Jansen1999`.
   
