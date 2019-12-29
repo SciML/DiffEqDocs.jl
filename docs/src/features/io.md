@@ -9,20 +9,17 @@ existing functionality for doing so.
 An interface to [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl)
 is provided. This IterableTables link allows you to use a solution
 type as the data source to convert to other tabular data formats. For example,
-let's solve a 4x2 system of ODEs:
+let's solve a 4x2 system of ODEs and get the DataFrame:
 
 ```julia-repl
-julia> f_2dlinear = (du,u,p,t) -> du.=1.01u;
-julia> prob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0));
-julia> sol1 =solve(prob,Euler();dt=1//2^(4));
+using OrdinaryDiffEq, DataFrames
+f_2dlinear = (du,u,p,t) -> du.=1.01u;
+prob = ODEProblem(f_2dlinear,rand(2,2),(0.0,1.0));
+sol1 =solve(prob,Euler();dt=1//2^(4));
+df = DataFrame(sol1)
 ```
 
-then we can convert this to a dataframe using `DataFrame`:
-
-```julia-repl
-julia> using IterableTables, DataFrames
-julia> df = DataFrame(sol1)
-17×5 DataFrames.DataFrame
+```
 │ Row │ timestamp │ value 1  │ value 2  │ value 3  │ value 4  │
 ├─────┼───────────┼──────────┼──────────┼──────────┼──────────┤
 │ 1   │ 0.0       │ 0.110435 │ 0.569561 │ 0.918336 │ 0.508044 │
@@ -44,39 +41,33 @@ julia> df = DataFrame(sol1)
 │ 17  │ 1.0       │ 0.294072 │ 1.51667  │ 2.44541  │ 1.35285  │
 ```
 
-If a `ParameterizedFunction` is used, the output will use the variable names:
+If we set `syms` in the DiffEqFunction, then those names will be used:
 
 ```julia-repl
-julia> using ParameterizedFunctions
-
-julia> f = @ode_def begin
-          dx = a*x - b*x*y
-          dy = -3y + x*y
-        end a b
-julia> prob = ODEProblem(f,[1.0,1.0],(0.0,1.0),[1.5,1.0]);
-julia> sol2 = solve(prob,Tsit5());
-julia> df = DataFrame(sol2)
-7×3 DataFrames.DataFrame
-│ Row │ timestamp │ x       │ y        │
-├─────┼───────────┼─────────┼──────────┤
-│ 1   │ 0.0       │ 1.0     │ 1.0      │
-│ 2   │ 0.0776085 │ 1.04549 │ 0.857668 │
-│ 3   │ 0.232645  │ 1.17587 │ 0.63946  │
-│ 4   │ 0.429118  │ 1.41968 │ 0.456996 │
-│ 5   │ 0.679082  │ 1.87672 │ 0.324733 │
-│ 6   │ 0.944406  │ 2.58825 │ 0.263362 │
-│ 7   │ 1.0       │ 2.77285 │ 0.25871  │
+f = ODEFunction(f_2dlinear,syms=[:a,:b,:c,:d])
+prob = ODEProblem(f,rand(2,2),(0.0,1.0));
+sol1 =solve(prob,Euler();dt=1//2^(4));
+df = DataFrame(sol1)
 ```
 
+```
+17×5 DataFrame
+│ Row │ timestamp │ a        │ b        │ c       │ d          │
+│     │ Float64   │ Float64  │ Float64  │ Float64 │ Float64    │
+├─────┼───────────┼──────────┼──────────┼─────────┼────────────┤
+│ 1   │ 0.0       │ 0.203202 │ 0.348326 │ 0.58971 │ 0.00606127 │
+⋮
+│ 16  │ 0.9375    │ 0.508972 │ 0.87247  │ 1.47708 │ 0.015182   │
+│ 17  │ 1.0       │ 0.541101 │ 0.927544 │ 1.57032 │ 0.0161403  │
+```
+
+Many modeling frameworks will automatically set `syms` for this feature.
 Additionally, this data can be saved to a CSV:
 
 ```julia
 using CSV
 CSV.write("out.csv",df)
 ```
-
-For more information on using the IterableTables interface and other output
-formats, see [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl).
 
 ## JLD2 and BSON.jl
 
