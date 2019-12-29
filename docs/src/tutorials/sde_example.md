@@ -196,25 +196,6 @@ end
 ```
 
 is a valid noise function, which will once again give diagonal noise by `du2.*W`.
-Note also that in this format, it is fine to use ParameterizedFunctions. For example,
-the Lorenz equation could have been defined as:
-
-```julia
-#]add ParameterizedFunctions
-using ParameterizedFunctions
-
-f = @ode_def begin
-  dx = σ*(y-x)
-  dy = x*(ρ-z) - y
-  dz = x*y - β*z
-end σ ρ β
-
-g = @ode_def begin
-  dx = α
-  dy = α
-  dz = α
-end α
-```
 
 ## Example 3: Systems of SDEs with Scalar Noise
 
