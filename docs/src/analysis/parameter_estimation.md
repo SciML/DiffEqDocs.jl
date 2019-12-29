@@ -371,7 +371,7 @@ equation solver.
 ### Simple Local Optimization
 
 We choose to optimize the parameters on the Lotka-Volterra equation. We do so
-by defining the function as a [ParameterizedFunction](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl):
+by defining the function as a function with parameters:
 
 ```julia
 function f(du,u,p,t)
