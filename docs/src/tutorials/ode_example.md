@@ -353,46 +353,6 @@ Note that the type for the parameters `p` can be anything: you can use arrays,
 static arrays, named tuples, etc. to enclose your parameters in a way that is
 sensible for your problem.
 
-Additionally, there exists a `@ode_def` macro allows for "defining your ODE in
-pseudocode" and getting a function which is efficient and runnable. To use the macro,
-you write out your system of equations with the left-hand side
-being `d_` and those variables will be parsed as the dependent variables. The
-independent variable is `t`, and the other variables are parameters which you pass
-at the end. For example, we can write the Lorenz system as:
-
-```julia
-#]add ParameterizedFunctions
-using ParameterizedFunctions
-g = @ode_def begin
-  dx = σ*(y-x)
-  dy = x*(ρ-z) - y
-  dz = x*y - β*z
-end σ ρ β
-```
-
-DifferentialEquations.jl will automatically translate this to be exactly the
-same as `f`. The result is more legible code with no performance loss.
-For more information on the macro Domain Specific Language (DSL)
-and its limitations, please see
-[the parameterized function page](@ref paremeterized_functions)
-The result is that `g` is a function which you can now use to define the Lorenz
-problem.
-
-```julia
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,1.0)
-p = [10.0,28.0,8/3]
-prob = ODEProblem(g,u0,tspan,p)
-```
-
-The macro does "behind-the-scenes" symbolic calculations to
-pre-compute things like the Jacobian, inverse Jacobian, etc. in order to speed up
-calculations. Thus not only will this lead to legible ODE definitions, but
-"unfairly fast" code! We can turn off some of the calculations by using a more
-specific macro, like `@ode_def_bare`. See
-[ParameterizedFunctions.jl](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl)
-for more details.
-
 Since the parameters exist within the function, functions defined in this manner
 can also be used for sensitivity analysis, parameter estimation routines,
 and bifurcation plotting. This makes DifferentialEquations.jl a full-stop solution
