@@ -142,12 +142,16 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 
 - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
   is a good algorithm to use if you know nothing about the equation.
-- `BS3()` for fast low accuracy non-stiff.
+- `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
+  efficiency for high accuracy.
 - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
   most cases.
+- `BS3()` for fast low accuracy non-stiff.
 - `Vern7()` for high accuracy non-stiff.
-- `Rodas4()` for stiff equations with Julia-defined types, events, etc.
-- `radau()` for really high accuracy stiff equations (requires installing ODEInterfaceDiffEq.jl)
+- `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
+- `KenCarp4()` or `TRBDF2()` for medium sized (100-2000 ODEs) stiff equations
+- `RadauIIA()` for really high accuracy stiff equations
+- `CVODE_BDF()` for large stiff equations
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](@ref ode_solve). Every problem
