@@ -113,9 +113,9 @@ Let's solve the Rosenbrock equations:
 
 ```math
 \begin{aligned}
-dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
-dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
-dy_3 &= 3*10^7 y_{3}^2 \\
+\frac{dy_1}{dt} &= -0.04y₁ + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+\frac{dy_3}{dt} &= 3*10^7 y_{3}^2 \\
 \end{aligned}
 ```
 
@@ -489,8 +489,8 @@ But we can instead write this with a conservation relation:
 
 ```math
 \begin{aligned}
-dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
-dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+\frac{dy_1}{dt} &= -0.04y₁ + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &=  y_{1} + y_{2} + y_{3} \\
 \end{aligned}
 ```
