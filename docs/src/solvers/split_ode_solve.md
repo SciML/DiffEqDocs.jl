@@ -60,8 +60,6 @@ The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
-- `GenericIIF1` - First order Implicit Integrating Factor method. Fixed timestepping only. Doesn't support Krylov approximation.
-- `GenericIIF2` - Second order Implicit Integrating Factor method. Fixed timestepping only. Doesn't support Krylov approximation.
 - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
 - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
 - `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
@@ -70,8 +68,6 @@ The appropriate algorithms for this form are:
 - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
 - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
   timestepping only.
-- `Exprb32` - 3rd order adaptive Exponential Rosenbrock scheme (in development).
-- `Exprb43` - 4th order adaptive Exponential Rosenbrock scheme (in development).
 
 Note that the generic algorithms `GenericIIF1` and `GenericIIF2` allow for a choice of `nlsolve`.
 
