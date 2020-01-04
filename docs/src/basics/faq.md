@@ -328,3 +328,5 @@ end
 prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5))))
 solve(prob, TRBDF2())
 ```
+
+Note that one can adjust the chunk size by `DiffEqBase.dualcache(du, Val{N})`, where `N` is the chunk size.
