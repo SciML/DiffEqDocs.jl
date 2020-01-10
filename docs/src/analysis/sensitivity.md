@@ -1,4 +1,4 @@
-simultaneously# [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
+# [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
 
 Sensitivity analysis, or automatic differentiation of the solver, is provided
 by the DiffEq suite. The model sensitivities are the derivatives of the
@@ -42,7 +42,9 @@ using DiffEqSensitivity
 The highest level interface is provided by the function `concrete_solve`:
 
 ```julia
-concrete_solve(prob,alg,u0=prob.u0,p=prob.p,args...;sensealg=InterpolatingAdjoint(),kwargs...)
+concrete_solve(prob,alg,u0=prob.u0,p=prob.p,args...;
+               sensealg=InterpolatingAdjoint(),
+               checkpoints=sol.t,kwargs...)
 ```
 
 This function is fully compatible with automatic differentiation libraries
@@ -51,13 +53,71 @@ replace any calculations of the solution's derivative with a fast method.
 The return of `concrete_solve` is a concretized version of `solve`, i.e. no
 interpolations are possible but it has the same array-like semantics of the
 full solution object. The keyword argument `sensealg` controls the dispatch
-to the algorithm used for the sensitivity calculation. The choices are as follows:
-
-- `InterpolatingAdjoint`: The default.
+to the `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
 
 ## Sensitivity Algorithms
 
-## Efficiency of the Different Methods
+The following algorithm choices exist for `sensealg`. See
+[the sensitivity mathematics page](@ref sensitivity_math) for more details on
+the definition of the methods.
+
+- `ForwardSensitivity(;ADKwargs...)`: An implementation of continuous forward
+  sensitivity analysis for propagating derivatives by solving the extended ODE.
+  Only supports ODEs.
+- `ForwardDiffSensitivity(;chunk_size=0,convert_tspan=true)`: An implementation
+  of discrete forward sensitivity analysis through ForwardDiff.jl. This algorithm
+  can differentiate code with callbacks when `convert_tspan=true`, but will be
+  faster when `convert_tspan=false`.
+- `BacksolveAdjoint(;checkpointing=true,ADKwargs...)`: An implementation of
+  adjoint sensitivity analysis using a backwards solution of the ODE. By default
+  this algorithm will use the values from the forward pass to perturb the backwards
+  solution to the correct spot, allowing reduced memory with stabilization.
+  Only supports ODEs.
+- `InterpolatingAdjoint(;checkpointing=false;ADKwargs...)`: The default. An
+  implementation of adjoint sensitivity analysis which uses the interpolation of
+  the forward solution for the reverse solve vector-Jacobian products. By
+  default it requires a dense solution of the forward pass and will internally
+  ignore saving arguments during the gradient calculation. When checkpointing is
+  enabled it will only require the memory to interpolate between checkpoints.
+  Only supports ODEs.
+- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,ADKwargs...)`: An implementation of adjoint
+  sensitivity analysis which develops a full continuous solution of the reverse
+  solve in order to perform a post-ODE quadrature. This method requires the
+  the dense solution and will ignore saving arguments during the gradient
+  calculation. The tolerances in the constructor control the inner quadrature.
+  Only supports ODEs.
+- `TrackerAdjoint()`: An implementation of discrete adjoint sensitivity analysis
+  using the Tracker.jl tracing-based AD. Supports in-place functions through
+  an Array of Structs formulation, and supports out of place through struct of
+  arrays.
+- `ZygoteAdjoint()`: An implementation of discrete adjoint sensitivity analysis
+  using the Zygote.jl source-to-source AD directly on the differential equation
+  solver. Currently fails.
+
+### Internal Automatic Differentiation Options (ADKwargs)
+
+Many sensitivity algorithms share the same options for controlling internal
+use of automatic differentiation. The following arguments constitute the
+`ADKwargs`:
+
+* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
+  computations. Default is `true`.
+* `chunk_size`: Chunk size for forward mode differentiation if full Jacobians are
+  built (`autojacvec=false` and `autodiff=true`). Default is `0` for automatic
+  choice of chunk size.
+* `autojacvec`: Calculate the Jacobian-vector (forward sensitivity) or
+  vector-Jacobian (adjoint sensitivity analysis) product via automatic
+  differentiation with special seeding. For adjoint methods this option requires
+  `autodiff=true`. If `autojacvec=false`, then a full Jacobian has to be
+  computed, and this will default to using a `f.jac` function provided by the
+  user from the problem of the forward pass. Otherwise, if `autodiff=true`
+  and `autojacvec=false` then it will use forward-mode AD for the Jacobian,
+  otherwise it will fall back to using a numerical approximation to the Jacobian.
+
+Note that the Jacobian-vector products and vector-Jacobian products can be
+directly specified by the user using the [performance overloads](@ref performance_overloads).
+
+### Choosing a Sensitivity Algorithm
 
 For an analysis of which methods will be most efficient for computing the
 solution derivatives for a given problem, consult our analysis
@@ -68,81 +128,16 @@ is:
   ODEs with small numbers of parameters (<100).
 - Adjoint senstivity analysis is the fastest when the number of parameters is
   sufficiently large. There are three configurations of note. Using
-  `backsolve` is the fastest and uses the least memory, but is not
-  guaranteed to be stable. Checkpointing is the slowest but uses O(1)
-  memory and is stable. Interpolating is the second fastest, is stable,
-  but requires the ability to hold the full forward solution and its
-  interpolation in memory.
+  `QuadratureAdjoint` is the fastest for small systems, `BacksolveAdjoint`
+  uses the least memory but on very stiff problems it may be unstable and
+  require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
+  allowing checkpointing to control total memory use.
 - The methods which use automatic differentiation support the full range of
   DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
-  on native Julia solvers. The methods which utilize altered ODE systems only
-  work on ODEs (without events), but work on any ODE solver.
+  on native Julia solvers. The methods which utilize altered differential
+  equation systems only work on ODEs (without events), but work on any ODE solver.
 
-#### Options
-
-Options for handling the adjoint computation are set by passing a `SensitivityAlg`
-type, e.g. `SensitivityAlg(backsolve=true)`. Additionally, if Gauss-Kronrod quadrature
-is used, the options `ireltol` and `iabstol` into `adjoint_sensitivities` controls
-the behavior of the quadrature. Example calls:
-
-```julia
-res = adjoint_sensitivities(sol,Rodas4(),dg,t,ireltol=1e-8)
-
-res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
-                            sensealg=SensitivityAlg(backsolve=true))
-```
-
-* `checkpointing`: When enabled, the adjoint solutions compute the Jacobians
-  by starting from the nearest saved value in `sol` and computing forward.
-  By default, this is false if `sol.dense==true`, i.e. if `sol` has
-  its higher order interpolation then this is by default disabled.
-* `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
-  integral. Disabling it can decrease memory usage but increase computation
-  time, since post-solution quadrature can be more accurate with less points
-  using the continuous function. Default is `true`.
-* `backsolve`: Solve the differential equation backward to get the past values.
-  Note that for chaotic or non-reversible systems, such as though that solve to
-  a steady state, enabling this option can lead to wildly incorrect results.
-  Enabling it can decrease memory usage but increase computation time. When it
-  is set to `true`, `quad` will be automatically set to `false`. Default is `false`.
-* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
-  computations. This is the only option that is passed, this will flip `autojacvec`
-  to false, since that requires reverse-mode AD, and thus finite differencing for the
-  full Jacobian will be used. Default is `true`.
-* `chunk_size`: Chunk size for forward mode differentiation if full Jacobians are
-  built (`autojacvec=false` and `autodiff=true`). Default is `0` for automatic
-  choice of chunk size.
-* `autojacvec`: Calculate the vector-Jacobian (adjoint sensitivity analysis) product
-  via automatic differentiation with special seeding. Due to being a `vjp` function,
-  this option requires using automatic differentiation, currently implemented with
-  Tracker.jl. Default is `true` if `autodiff` is true, and otherwise is false. If
-  `autojacvec=false`, then a full Jacobian has to be computed, and this will default
-  to using a `f.jac` function provided by the user from the problem of the forward pass.
-  Otherwise, if `autodiff=true` then it will use forward-mode AD for the Jacobian, otherwise
-  it will fall back to using a numerical approximation to the Jacobian.
-
-A way to understand these options at a higher level is as follows:
-
-* For the choice of the overall sensitivity calculation algorithm, using interpolation is
-  preferred if the `sol` is continuous. Otherwise it will use checkpointed adjoints by default
-  if the user passes in a `sol` without a good interpolation. Using `backsolve` is unstable
-  except in specific conditions, and thus is only used when chosen by the user.
-* In any of these cases `quad=false` is the default, which enlarges the ODE system to calculate
-  the integral simultaniously to the ODE solution. This reduces the memory cost, though in some
-  cases solving the reverse problem with a continuous solution and then using QuadGK.jl to
-  perform the quadrature can use less reverse-pass points and thus decrease the computation
-  time, though this is rare when the number of parameters is large.
-* Using automatic differentiation everywhere is the preferred default. This means the `vjp`
-  will be performed using reverse-mode AD with Tracker.jl and no Jacobian will be formed.
-  If `autodiff=false`, then `autojacvec=false` is set since it assumes that user function
-  is not compatible with any automatic differentiation. In this case, if a user-defined
-  Jacobian function exists, this will be used. Otherwise this means that the
-  `vjp` will be computed by forming the Jacobian with finite differences and then doing
-  the matrix-vector product. As an intermediate option, one can set `autodiff=true` with
-  `autojacvec=false` to compute the Jacobian with forward-mode AD and then perform the
-  vector-Jacobian product using that matrix.
-
-## Lower Level Sensitivity Analysis Interfaces
+# Lower Level Sensitivity Analysis Interfaces
 
 While the high level interface is sufficient for interfacing with automatic
 differentiation, for example allowing compatibility with neural network libraries,
