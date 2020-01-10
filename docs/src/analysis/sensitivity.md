@@ -1,10 +1,11 @@
 # [Local Sensitivity Analysis (Automatic Differentiation)](@id sensitivity)
 
-Sensitivity analysis for ODE models is provided by the DiffEq suite. The model
-sensitivities are the derivatives of the solution ``u(t)`` with respect to the
-parameters. Specifically, the local sensitivity of the solution to a parameter
-is defined by how much the solution would change by changes in the parameter,
-i.e. the sensitivity of the ith independent variable to the jth parameter is
+Sensitivity analysis, or automatic differentiation of the solver, is provided
+by the DiffEq suite. The model sensitivities are the derivatives of the
+solution ``u(t)`` with respect to the parameters. Specifically, the local
+sensitivity of the solution to a parameter is defined by how much the solution
+would change by changes in the parameter, i.e. the sensitivity of the ith
+independent variable to the jth parameter is
 `` \frac{\partial u_i}{\partial p_{j}}``.
 
 Sensitivity analysis serves two major purposes. On one hand, the sensitivities
@@ -36,7 +37,87 @@ To use this functionality, you must install DiffEqSensitivty.jl:
 using DiffEqSensitivity
 ```
 
-## Efficiency of the Different Methods
+## High Level Interface: `concrete_solve`
+
+The highest level interface is provided by the function `concrete_solve`:
+
+```julia
+concrete_solve(prob,alg,u0=prob.u0,p=prob.p,args...;
+               sensealg=InterpolatingAdjoint(),
+               checkpoints=sol.t,kwargs...)
+```
+
+This function is fully compatible with automatic differentiation libraries
+like [Zygote.jl](https://github.com/FluxML/Zygote.jl) and will automatically
+replace any calculations of the solution's derivative with a fast method.
+The return of `concrete_solve` is a concretized version of `solve`, i.e. no
+interpolations are possible but it has the same array-like semantics of the
+full solution object. The keyword argument `sensealg` controls the dispatch
+to the `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
+
+## Sensitivity Algorithms
+
+The following algorithm choices exist for `sensealg`. See
+[the sensitivity mathematics page](@ref sensitivity_math) for more details on
+the definition of the methods.
+
+- `ForwardSensitivity(;ADKwargs...)`: An implementation of continuous forward
+  sensitivity analysis for propagating derivatives by solving the extended ODE.
+  Only supports ODEs.
+- `ForwardDiffSensitivity(;chunk_size=0,convert_tspan=true)`: An implementation
+  of discrete forward sensitivity analysis through ForwardDiff.jl. This algorithm
+  can differentiate code with callbacks when `convert_tspan=true`, but will be
+  faster when `convert_tspan=false`.
+- `BacksolveAdjoint(;checkpointing=true,ADKwargs...)`: An implementation of
+  adjoint sensitivity analysis using a backwards solution of the ODE. By default
+  this algorithm will use the values from the forward pass to perturb the backwards
+  solution to the correct spot, allowing reduced memory with stabilization.
+  Only supports ODEs.
+- `InterpolatingAdjoint(;checkpointing=false;ADKwargs...)`: The default. An
+  implementation of adjoint sensitivity analysis which uses the interpolation of
+  the forward solution for the reverse solve vector-Jacobian products. By
+  default it requires a dense solution of the forward pass and will internally
+  ignore saving arguments during the gradient calculation. When checkpointing is
+  enabled it will only require the memory to interpolate between checkpoints.
+  Only supports ODEs.
+- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,ADKwargs...)`: An implementation of adjoint
+  sensitivity analysis which develops a full continuous solution of the reverse
+  solve in order to perform a post-ODE quadrature. This method requires the
+  the dense solution and will ignore saving arguments during the gradient
+  calculation. The tolerances in the constructor control the inner quadrature.
+  Only supports ODEs.
+- `TrackerAdjoint()`: An implementation of discrete adjoint sensitivity analysis
+  using the Tracker.jl tracing-based AD. Supports in-place functions through
+  an Array of Structs formulation, and supports out of place through struct of
+  arrays.
+- `ZygoteAdjoint()`: An implementation of discrete adjoint sensitivity analysis
+  using the Zygote.jl source-to-source AD directly on the differential equation
+  solver. Currently fails.
+
+### Internal Automatic Differentiation Options (ADKwargs)
+
+Many sensitivity algorithms share the same options for controlling internal
+use of automatic differentiation. The following arguments constitute the
+`ADKwargs`:
+
+* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
+  computations. Default is `true`.
+* `chunk_size`: Chunk size for forward mode differentiation if full Jacobians are
+  built (`autojacvec=false` and `autodiff=true`). Default is `0` for automatic
+  choice of chunk size.
+* `autojacvec`: Calculate the Jacobian-vector (forward sensitivity) or
+  vector-Jacobian (adjoint sensitivity analysis) product via automatic
+  differentiation with special seeding. For adjoint methods this option requires
+  `autodiff=true`. If `autojacvec=false`, then a full Jacobian has to be
+  computed, and this will default to using a `f.jac` function provided by the
+  user from the problem of the forward pass. Otherwise, if `autodiff=true`
+  and `autojacvec=false` then it will use forward-mode AD for the Jacobian,
+  otherwise it will fall back to using a numerical approximation to the Jacobian.
+
+Note that the Jacobian-vector products and vector-Jacobian products can be
+directly specified by the user using the [performance overloads](@ref performance_overloads).
+
+### Choosing a Sensitivity Algorithm
 
 For an analysis of which methods will be most efficient for computing the
 solution derivatives for a given problem, consult our analysis
@@ -47,235 +128,64 @@ is:
   ODEs with small numbers of parameters (<100).
 - Adjoint senstivity analysis is the fastest when the number of parameters is
   sufficiently large. There are three configurations of note. Using
-  `backsolve` is the fastest and uses the least memory, but is not
-  guaranteed to be stable. Checkpointing is the slowest but uses O(1)
-  memory and is stable. Interpolating is the second fastest, is stable,
-  but requires the ability to hold the full forward solution and its
-  interpolation in memory.
+  `QuadratureAdjoint` is the fastest for small systems, `BacksolveAdjoint`
+  uses the least memory but on very stiff problems it may be unstable and
+  require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
+  allowing checkpointing to control total memory use.
 - The methods which use automatic differentiation support the full range of
   DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
-  on native Julia solvers. The methods which utilize altered ODE systems only
-  work on ODEs (without events), but work on any ODE solver.
+  on native Julia solvers. The methods which utilize altered differential
+  equation systems only work on ODEs (without events), but work on any ODE solver.
+- `TrackerAdjoint` is able to use a `TrackedArray` form with out-of-place
+  functions `du = f(u,p,t)` but requires an `Array{TrackedReal}` form for
+  `f(du,u,p,t)` mutating `du`. The latter has much more overhead, and should be
+  avoided if possible. Thus if solving non-ODEs with lots of parameters, using
+  `TrackerAdjoint` with an out-of-place definition may be the current best
+  option.
 
-## Local Forward Sensitivity Analysis
+# Lower Level Sensitivity Analysis Interfaces
+
+While the high level interface is sufficient for interfacing with automatic
+differentiation, for example allowing compatibility with neural network libraries,
+in some cases one may want more control over the way the sensitivities are
+calculated in order to squeeze out every ounce of optimization. If you're that
+user, then this section of the docs is for you.
+
+## Local Forward Sensitivity Analysis via ODELocalSensitivityProblem
 
 Local forward sensitivity analysis gives a solution along with a timeseries of
-the sensitivities along the solution.
+the sensitivities. Thus if one wishes to have a derivative at every possible
+time point, directly utilizing the `ODELocalSensitivityProblem` can be more
+efficient.
 
-### Discrete Local Forward Sensitivity Analysis via ForwardDiff.jl
+### ODELocalSensitivityProblem Syntax
 
-This method is the application of ForwardDiff.jl numbers to the ODE solver. This
-is done simply by making the `u0` state vector a vector of Dual numbers, and
-multiple dispatch then allows the internals of the solver to propagate the
-derivatives along the solution.
-
-#### Examples using ForwardDiff.jl
-
-The easiest way to use ForwardDiff.jl for local forward sensitivity analysis
-is to simply put the ODE solve inside of a function which you would like to
-differentiate. For example, let's define the ODE system for the Lotka-Volterra
-equations:
+`ODELocalSensitivityProblem` is similar to an `ODEProblem`, but takes an
+`AbstractSensitivityAlgorithm` that describes how to append the forward sensitivity
+equation calculation to the time evolution to simultaneously compute the derivative
+of the solution with respect to parameters.
 
 ```julia
-function f(du,u,p,t)
-  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  du[2] = dy = -p[3]*u[2] + u[1]*u[2]
-end
-
-p = [1.5,1.0,3.0]
-u0 = [1.0;1.0]
-tspan = (0.0, 10.0)
-prob = ODEProblem(f,u0,tspan,p)
+ODEForwardSensitivityProblem(f::DiffEqBase.AbstractODEFunction,u0,
+                             tspan,p=nothing,
+                             sensealg::AbstractForwardSensitivityAlgorithm = ForwardSensitivity();
+                             kwargs...)
 ```
 
-Let's say we wanted to get the derivative of the final value w.r.t. each of
-the parameters. We can define the following function:
+Once constructed, this problem can be used in `solve`. The solution can be
+deconstructed into the ODE solution and sensitivities parts using the
+`extract_local_sensitivities` function, with the following dispatches:
 
 ```julia
-function test_f(p)
-  _prob = remake(prob;u0=convert.(eltype(p),prob.u0),p=p)
-  solve(_prob,Vern9(),save_everystep=false)[end]
-end
+extract_local_sensitivities(sol, asmatrix::Val=Val(false)) # Decompose the entire time series
+extract_local_sensitivities(sol, i::Integer, asmatrix::Val=Val(false)) # Decompose sol[i]
+extract_local_sensitivities(sol, t::Union{Number,AbstractVector}, asmatrix::Val=Val(false)) # Decompose sol(t)
 ```
 
-What this function does is use the `remake` function
-[from the Problem Interface page](http://docs.juliadiffeq.org/dev/basics/problem/#Modification-of-problem-types-1)
-to generate a new ODE problem with the new parameters, solves it, and returns
-the solution at the final time point. Notice that it takes care to make sure
-that the type of `u0` matches the type of `p`. This is because ForwardDiff.jl
-will want to use Dual numbers, and thus to propagate the Duals throughout
-the solver we need to make sure the initial condition is also of the type of
-Dual number. On this function we can call ForwardDiff.jl and it will return
-the derivatives we wish to calculate:
+For information on the mathematics behind these calculations, consult
+[the sensitivity math page](@ref sensitivity_math)
 
-```julia
-using ForwardDiff
-fd_res = ForwardDiff.jacobian(test_f,p)
-```
-
-If we would like to get the solution and the value at the time point at the
-same time, we can use [DiffResults.jl](https://github.com/JuliaDiff/DiffResults.jl).
-For example, the following uses a single ODE solution to calculate the value
-at the end point and its parameter Jacobian:
-
-```julia
-using DiffResults
-res = DiffResults.JacobianResult(u0,p) # Build the results object
-DiffResults.jacobian!(res,p) # Populate it with the results
-val = DiffResults.value(res) # This is the sol[end]
-jac = DiffResults.jacobian(res) # This is dsol/dp
-```
-
-If we would like to get the time series, we can do so by seeding the dual
-numbers directly. To do this, we use the `Dual` constructor. The first value
-is the value of the parameter. The second is a tuple of the derivatives. For
-each value we want to take the derivative by, we seed a derivative with a
-1 in a unique index. For example, we can build our parameter vector like:
-
-```julia
-using ForwardDiff: Dual
-struct MyTag end
-p1dual = Dual{MyTag}(1.5, (1.0, 0.0, 0.0))
-p2dual = Dual{MyTag}(1.0, (0.0, 1.0, 0.0))
-p3dual = Dual{MyTag}(3.0, (0.0, 0.0, 1.0))
-pdual = [p1dual, p2dual, p3dual]
-```
-
-or equivalently using the `seed_duals` convenience function:
-
-```julia
-function seed_duals(x::AbstractArray{V},::Type{T},
-                    ::ForwardDiff.Chunk{N} = ForwardDiff.Chunk(x)) where {V,T,N}
-  seeds = ForwardDiff.construct_seeds(ForwardDiff.Partials{N,V})
-  duals = [Dual{T}(x[i],seeds[i]) for i in eachindex(x)]
-end
-pdual = seed_duals(p,MyTag)
-```
-
-Next we need to make our initial condition Dual numbers so that these propogate
-through the solution. We can do this manually like:
-
-```julia
-u0dual = [Dual{MyTag}(1.0, (0.0, 0.0, 0.0)),Dual{MyTag}(1.0, (0.0, 0.0, 0.0))]
-```
-
-or use the same shorthand from before:
-
-```julia
-u0dual = convert.(eltype(pdual),u0)
-```
-
-Now we just use these Dual numbers to solve:
-
-```julia
-prob_dual = ODEProblem(f,u0dual,tspan,pdual)
-sol_dual = solve(prob_dual,Tsit5(), saveat=0.2)
-```
-
-The solution is now in terms of Dual numbers. We can extract the derivatives
-by looking at the partials of the duals in the solution. For example, `sol_dual[1,end]`
-contains the `x` component of the solution and the Dual number for this component at the
-end of the integration, and so `sol_dual[1,end][i+1]` is `dx(t_end)/dp_i`.
-
-### Local Forward Sensitivity Analysis via ODELocalSensitivityProblem
-
-For this method local sensitivity is computed using the sensitivity ODE:
-
-```math
-\frac{d}{dt}\frac{\partial u}{\partial p_{j}}=\frac{\partial f}{\partial u}\frac{\partial u}{\partial p_{j}}+\frac{\partial f}{\partial p_{j}}=J\cdot S_{j}+F_{j}
-```
-
-where
-
-```math
-J=\left(\begin{array}{cccc}
-\frac{\partial f_{1}}{\partial u_{1}} & \frac{\partial f_{1}}{\partial u_{2}} & \cdots & \frac{\partial f_{1}}{\partial u_{k}}\\
-\frac{\partial f_{2}}{\partial u_{1}} & \frac{\partial f_{2}}{\partial u_{2}} & \cdots & \frac{\partial f_{2}}{\partial u_{k}}\\
-\cdots & \cdots & \cdots & \cdots\\
-\frac{\partial f_{k}}{\partial u_{1}} & \frac{\partial f_{k}}{\partial u_{2}} & \cdots & \frac{\partial f_{k}}{\partial u_{k}}
-\end{array}\right)
-```
-
-is the Jacobian of the system,
-
-```math
-F_{j}=\left(\begin{array}{c}
-\frac{\partial f_{1}}{\partial p_{j}}\\
-\frac{\partial f_{2}}{\partial p_{j}}\\
-\vdots\\
-\frac{\partial f_{k}}{\partial p_{j}}
-\end{array}\right)
-```
-
-are the parameter derivatives, and
-
-```math
-S_{j}=\left(\begin{array}{c}
-\frac{\partial u_{1}}{\partial p_{j}}\\
-\frac{\partial u_{2}}{\partial p_{j}}\\
-\vdots\\
-\frac{\partial u_{k}}{\partial p_{j}}
-\end{array}\right)
-```
-
-is the vector of sensitivities. Since this ODE is dependent on the values of the
-independent variables themselves, this ODE is computed simultaneously with the
-actual ODE system.
-
-Note that the Jacobian-vector product
-
-```math
-\frac{\partial f}{\partial u}\frac{\partial u}{\partial p_{j}}
-```
-
-can be computed without forming the Jacobian. With finite differences, this through using the following
-formula for the directional derivative
-
-```math
-Jv \approx \frac{f(x+v \epsilon) - f(x)}{\epsilon},
-```
-
-or, alternatively and without truncation error, 
-by using a dual number with a single partial dimension, ``d = x + v \epsilon`` we get that
-
-```math
-f(d) = f(x) + Jv \epsilon
-```
-
-as a fast way to calcuate ``Jv``. Thus, except when a sufficiently good function for `J` is given
-by the user, the Jacobian is never formed. For more details, consult the 
-[MIT 18.337 lecture notes on forward mode AD](https://mitmath.github.io/18337/lecture9/autodiff_dimensions).
-
-#### Syntax
-
-`ODELocalSensitivityProblem` is similar to an `ODEProblem`:
-
-```julia
-function ODELocalSensitivityProblem(f::DiffEqBase.AbstractODEFunction,u0,
-                                    tspan,p=nothing,
-                                    SensitivityAlg();
-                                    kwargs...)
-```
-
-The `SensitivityAlg` is used to mirror the definition of the derivative options seen generally
-throughout OrdinaryDiffEq.jl. The keyword options on the `SensitivityAlg` are as follows:
-
-* `autojacvec`: Calculate Jacobian-vector (local sensitivity analysis) product 
-  via automatic differentiation with special seeding to avoid building the Jacobian. 
-  Default is `true`. If `autodiff=false`, it will use the Jacobian-free forward
-  differencing approximation. If `false`, the Jacobian will prefer to use any 
-  `f.jac` function provided by the user. If none is provided by the user, then it 
-  will fall back to automatic or finite differentiation, though this choice is 
-  not recommended.
-* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
-  computations. Default is `true`.
-* `chunk_size`: Chunk size for forward mode differentiation. Default is `0` for
-  automatic chunk size choice. Only used when `autojacvec=false`.
-* `diff_type`: Choice of differencing used to build the Jacobian when `autojacvec=false`
-  and `autodiff=false`. Defaults to `Val{:central}` for central differencing with
-  DiffEqDiffTools.jl.
-
-#### Example solving an ODELocalSensitivityProblem
+#### Example using an ODELocalSensitivityProblem
 
 To define a sensitivity problem, simply use the `ODELocalSensitivityProblem` type
 instead of an ODE type. For example, we generate an ODE with the sensitivity
@@ -307,8 +217,8 @@ x,dp = extract_local_sensitivities(sol,t)
 ```
 
 In each case, `x` is the ODE values and `dp` is the matrix of sensitivities
-The first gives the full timeseries of values and `dp[i]` contains the time series of the 
-sensitivities of all components of the ODE with respect to `i`th parameter. 
+The first gives the full timeseries of values and `dp[i]` contains the time series of the
+sensitivities of all components of the ODE with respect to `i`th parameter.
 The second returns the `i`th time step, while the third
 interpolates to calculate the sensitivities at time `t`. For example, if we do:
 
@@ -334,7 +244,7 @@ sensitivity increases. This matches the analysis of Wilkins in Sensitivity
 Analysis for Oscillating Dynamical Systems.
 
 We can also quickly see that these values are equivalent to those given by
-autodifferentiation and numerical differentiation through the ODE solver:
+automatic differentiation and numerical differentiation through the ODE solver:
 
 ```julia
 using ForwardDiff, Calculus
@@ -352,9 +262,15 @@ Here we just checked the derivative at the end point.
 
 #### Internal representation
 
-For completeness, we detail the internal representation. Therefore, the solution
-to the ODE are the first `n` components of the solution. This means we can grab
-the matrix of solution values like:
+For completeness, we detail the internal representation. When using
+ForwardDiffSensitivity, the representation is with `Dual` numbers under the
+standard interpretation. The values for the ODE's solution at time `i` are the
+`ForwardDiff.value.(sol[i])` portions, and the derivative with respect to
+parameter `j` is given by `ForwardDiff.partials.(sol[i])[j]`.
+
+When using ForwardSensitivity, the solution to the ODE are the first `n`
+components of the solution. This means we can grab the matrix of solution
+values like:
 
 ```julia
 x = sol[1:sol.prob.indvars,:]
@@ -375,7 +291,7 @@ at time `sol.t[i]`. Note that all of the functionality available to ODE solution
 is available in this case, including interpolations and plot recipes (the recipes
 will plot the expanded system).
 
-## Adjoint Sensitivity Analysis
+## Adjoint Sensitivity Analysis via adjoint_sensitivities
 
 Adjoint sensitivity analysis is used to find the gradient of the solution
 with respect to some functional of the solution. In many cases this is used
@@ -383,83 +299,26 @@ in an optimization problem to return the gradient with respect to some cost
 function. It is equivalent to "backpropagation" or reverse-mode automatic
 differentiation of a differential equation.
 
-### Adjoint Sensitivity Analysis via adjoint_sensitivities
+Using `adjoint_sensitivities` directly let's you do three things. One it can
+allow you to be more efficient, since the sensitivity calculation can be done
+directly on a cost function, avoiding the overhead of building the derivative
+of the full concretized solution. It can also allow you to be more efficient
+by directly controlling the forward solve that is then reversed over. Lastly,
+it allows one to define a continuous cost function on the continuous solution,
+instead of just at discrete data points.
 
-This adjoint requires the definition of some scalar functional ``g(u,p)``
-where ``u(t,p)`` is the (numerical) solution to the differential equation
-``d/dt u(t,p)=f(t,u,p)`` with ``t\in [0,T]`` and ``u(t_0,p)=u_0``.
-Adjoint sensitivity analysis finds the gradient of
-
-```math
-G(u,p)=G(u(\cdot,p))=\int_{t_{0}}^{T}g(u(t,p),p)dt
-```
-
-some integral of the solution. It does so by solving the adjoint problem
-
-```math
-\frac{d\lambda^{\star}}{dt}=g_{u}(u(t,p),p)-\lambda^{\star}(t)f_{u}(t,u(t,p),p),\thinspace\thinspace\thinspace\lambda^{\star}(T)=0
-```
-
-where ``f_u`` is the Jacobian of the system with respect to the state ``u`` while
-``f_p`` is the Jacobian with respect to the parameters. The adjoint problem's
-solution gives the sensitivities through the integral:
-
-```math
-\frac{dG}{dp}=\int_{t_{0}}^{T}\lambda^{\star}(t)f_{p}(t)+g_{p}(t)dt+\lambda^{\star}(t_{0})u_{p}(t_{0})
-```
-
-Notice that since the adjoints require the Jacobian of the system at the state,
-it requires the ability to evaluate the state at any point in time. Thus it
-requires the continuous forward solution in order to solve the adjoint solution,
-and the adjoint solution is required to be continuous in order to calculate the
-resulting integral.
-
-There is one extra detail to consider. In many cases we would like to calculate
-the adjoint sensitivity of some discontinuous functional of the solution. One
-canonical function is the L2 loss against some data points, that is:
-
-```math
-L(u,p)=\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}
-```
-
-In this case, we can reinterpret our summation as the distribution integral:
-
-```math
-G(u,p)=\int_{0}^{T}\sum_{i=1}^{n}\Vert\tilde{u}(t_{i})-u(t_{i},p)\Vert^{2}\delta(t_{i}-t)dt
-```
-
-where ``δ`` is the Dirac distribution. In this case, the integral is continuous
-except at finitely many points. Thus it can be calculated between each ``t_i``.
-At a given ``t_i``, given that the ``t_i`` are unique, we have that
-
-```math
-g_{u}(t_{i})=2\left(\tilde{u}(t_{i})-u(t_{i},p)\right)
-```
-
-Thus the adjoint solution ``\lambda^{\star}(t)`` is given by integrating between the integrals and
-applying the jump function ``g_u`` at every data point ``t_i``.
-
-We note that
-
-```math
-\lambda^{\star}(t)f_{u}(t)
-```
-
-is a vector-transpose Jacobian product, also known as a `vjp`, which can be efficiently computed 
-using the pullback of backpropogation on the user function `f` with a forward pass at `u` with a
-pullback vector ``\lambda^{\star}``. For more information, consult the
-[MIT 18.337 lecture notes on reverse mode AD](https://mitmath.github.io/18337/lecture10/estimation_identification)
-
-#### Syntax
+### Syntax
 
 There are two forms. For discrete adjoints, the form is:
 
 ```julia
-s = adjoint_sensitivities(sol,alg,dg,ts;kwargs...)
+du0,dp = adjoint_sensitivities(sol,alg,dg,ts;sensealg=InterpolatingAdjoint(),
+                               checkpoints=sol.t,kwargs...)
 ```
 
 where `alg` is the ODE algorithm to solve the adjoint problem, `dg` is the jump
-function, and `ts` is the time points for data. `dg` is given by:
+function, `sensealg` is the sensitivity algorithm, and `ts` is the time points
+for data. `dg` is given by:
 
 ```julia
 dg(out,u,p,t,i)
@@ -471,7 +330,8 @@ with `u=u(t)`.
 For continuous functionals, the form is:
 
 ```julia
-s = adjoint_sensitivities(sol,alg,g,nothing,dg;kwargs...)
+du0,dp = adjoint_sensitivities(sol,alg,g,nothing,dg;sensealg=InterpolatingAdjoint(),
+                               checkpoints=sol.t,,kwargs...)
 ```
 
 for the cost functional
@@ -489,81 +349,15 @@ dg(out,u,p,t)
 If the gradient is omitted, i.e.
 
 ```julia
-s = adjoint_sensitivities(sol,alg,g,nothing;kwargs...)
+du0,dp = adjoint_sensitivities(sol,alg,g,nothing;kwargs...)
 ```
 
 then it will be computed automatically using ForwardDiff or finite
-differencing, depending on the `autodiff` setting in the `SensitivityAlg`.
-Note that the keyword arguments are passed to the internal ODE solver for 
-solving the adjoint problem. Two special keyword arguments are `iabstol` and 
-`ireltol` which are the tolerances for the internal quadrature via QuadGK for 
-the resulting functional.
+differencing, depending on the `autodiff` setting in the `AbstractSensitivityAlgorithm`.
+Note that the keyword arguments are passed to the internal ODE solver for
+solving the adjoint problem.
 
-#### Options
-
-Options for handling the adjoint computation are set by passing a `SensitivityAlg`
-type, e.g. `SensitivityAlg(backsolve=true)`. Additionally, if Gauss-Kronrod quadrature
-is used, the options `ireltol` and `iabstol` into `adjoint_sensitivities` controls
-the behavior of the quadrature. Example calls:
-
-```julia
-res = adjoint_sensitivities(sol,Rodas4(),dg,t,ireltol=1e-8)
-
-res = adjoint_sensitivities(sol,Vern9(),dg,t,reltol=1e-8,
-                            sensealg=SensitivityAlg(backsolve=true))
-```
-
-* `checkpointing`: When enabled, the adjoint solutions compute the Jacobians
-  by starting from the nearest saved value in `sol` and computing forward.
-  By default, this is false if `sol.dense==true`, i.e. if `sol` has
-  its higher order interpolation then this is by default disabled.
-* `quad`: Use Gauss-Kronrod quadrature to integrate the adjoint sensitivity
-  integral. Disabling it can decrease memory usage but increase computation
-  time, since post-solution quadrature can be more accurate with less points
-  using the continuous function. Default is `true`.
-* `backsolve`: Solve the differential equation backward to get the past values.
-  Note that for chaotic or non-reversible systems, such as though that solve to
-  a steady state, enabling this option can lead to wildly incorrect results. 
-  Enabling it can decrease memory usage but increase computation time. When it 
-  is set to `true`, `quad` will be automatically set to `false`. Default is `false`.
-* `autodiff`: Use automatic differentiation in the internal sensitivity algorithm
-  computations. This is the only option that is passed, this will flip `autojacvec`
-  to false, since that requires reverse-mode AD, and thus finite differencing for the
-  full Jacobian will be used. Default is `true`.
-* `chunk_size`: Chunk size for forward mode differentiation if full Jacobians are
-  built (`autojacvec=false` and `autodiff=true`). Default is `0` for automatic
-  choice of chunk size.
-* `autojacvec`: Calculate the vector-Jacobian (adjoint sensitivity analysis) product 
-  via automatic differentiation with special seeding. Due to being a `vjp` function,
-  this option requires using automatic differentiation, currently implemented with
-  Tracker.jl. Default is `true` if `autodiff` is true, and otherwise is false. If
-  `autojacvec=false`, then a full Jacobian has to be computed, and this will default
-  to using a `f.jac` function provided by the user from the problem of the forward pass.
-  Otherwise, if `autodiff=true` then it will use forward-mode AD for the Jacobian, otherwise
-  it will fall back to using a numerical approximation to the Jacobian.
-
-A way to understand these options at a higher level is as follows:
-
-* For the choice of the overall sensitivity calculation algorithm, using interpolation is
-  preferred if the `sol` is continuous. Otherwise it will use checkpointed adjoints by default
-  if the user passes in a `sol` without a good interpolation. Using `backsolve` is unstable 
-  except in specific conditions, and thus is only used when chosen by the user.
-* In any of these cases `quad=false` is the default, which enlarges the ODE system to calculate
-  the integral simultaniously to the ODE solution. This reduces the memory cost, though in some
-  cases solving the reverse problem with a continuous solution and then using QuadGK.jl to
-  perform the quadrature can use less reverse-pass points and thus decrease the computation
-  time, though this is rare when the number of parameters is large.
-* Using automatic differentiation everywhere is the preferred default. This means the `vjp`
-  will be performed using reverse-mode AD with Tracker.jl and no Jacobian will be formed.
-  If `autodiff=false`, then `autojacvec=false` is set since it assumes that user function 
-  is not compatible with any automatic differentiation. In this case, if a user-defined
-  Jacobian function exists, this will be used. Otherwise this means that the 
-  `vjp` will be computed by forming the Jacobian with finite differences and then doing 
-  the matrix-vector product. As an intermediate option, one can set `autodiff=true` with
-  `autojacvec=false` to compute the Jacobian with forward-mode AD and then perform the
-  vector-Jacobian product using that matrix. 
-
-#### Example discrete adjoints on a cost function
+### Example discrete adjoints on a cost function
 
 In this example we will show solving for the adjoint sensitivities of a discrete
 cost functional. First let's solve the ODE and get a high quality continuous
@@ -608,7 +402,7 @@ sensitivities, call:
 
 ```julia
 res = adjoint_sensitivities(sol,Vern9(),dg,t,abstol=1e-14,
-                            reltol=1e-14,iabstol=1e-14,ireltol=1e-12)
+                            reltol=1e-14)
 ```
 
 This is super high accuracy. As always, there's a tradeoff between accuracy
@@ -632,43 +426,40 @@ res5 = ReverseDiff.gradient(G,[1.5,1.0,3.0])
 
 and see this gives the same values.
 
-#### Example controlling adjoint method choices and checkpointing
+### Example controlling adjoint method choices and checkpointing
 
 In the previous examples, all calculations were done using the interpolating
 method. This maximizes speed but at a cost of requiring a dense `sol`. If it
 is not possible to hold a dense forward solution in memory, then one can use
-checkpointing. This is enabled by default if `sol` is not dense, so for
-example
+checkpointing. For example:
 
 ```julia
-sol = solve(prob,Vern9(),saveat=[0.0,0.2,0.5,0.7])
+ts = [0.0,0.2,0.5,0.7]
+sol = solve(prob,Vern9(),saveat=ts)
 ```
 
 Creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
-can do
+can do:
 
 ```julia
-res = adjoint_sensitivities(sol,Vern9(),dg,t)
+res = adjoint_sensitivities(sol,Vern9(),dg,t,
+                            sensealg=InterpolatingAdjoint(checkpointing=true))
 ```
 
 When grabbing a Jacobian value during the backwards solution, it will no longer
 interpolate to get the value. Instead, it will start a forward solution at the
-nearest checkpoint and solve until the necessary time.
-
-To eliminate the extra forward solutions, one can instead pass the `SensitivityAlg`
-with the `backsolve=true` option:
+nearest checkpoint to build local interpolants in a way that conserves memory.
+By default the checkpoints are at `sol.t`, but we can override this:
 
 ```julia
-sol = solve(prob,Vern9(),save_everystep=false,save_start=false)
-res = adjoint_sensitivities(sol,Vern9(),dg,t,sensealg=SensitivityAlg(backsolve=true))
+res = adjoint_sensitivities(sol,Vern9(),dg,t,
+                            sensealg=InterpolatingAdjoint(checkpointing=true),
+                            checkpoints = [0.0,0.5])
 ```
-
-When this is done, the values for the Jacobian will be computing the original ODE in
-reverse. Note that this only requires the final value of the solution.
 
 #### Applicability of Backsolve and Caution
 
-When `backsolve` is applicable it is the fastest method and requires the least memory.
+When `backsolve` is applicable it is a fast method and requires the least memory.
 However, one must be cautious because not all ODEs are stable under backwards integration
 by the majority of ODE solvers. An example of such an equation is the Lorenz equation.
 Notice that if one solves the Lorenz equation forward and then in reverse with any
@@ -692,18 +483,19 @@ sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
 ```
 
 Thus one should check the stability of the backsolve on their type of problem before
-enabling this method.
+enabling this method. Additionally, using checkpointing with backsolve can be a
+low memory way to stabilize it.
 
-#### Example continuous adjoints on an energy functional
+### Example continuous adjoints on an energy functional
 
 In this case we'd like to calculate the adjoint sensitivity of the scalar energy
-functional
+functional:
 
 ```math
 G(u,p)=\int_{0}^{T}\frac{\sum_{i=1}^{n}u_{i}^{2}(t)}{2}dt
 ```
 
-which is
+which is:
 
 ```julia
 g(u,p,t) = (sum(u).^2) ./ 2

@@ -341,8 +341,6 @@ Pages = [
 Depth = 2
 ```
 
-
-
 ### Extra Details
 
 These are just assorted extra explanations for the curious.
@@ -350,6 +348,7 @@ These are just assorted extra explanations for the curious.
 ```@contents
 Pages = [
     "extras/timestepping.md"
+    "extras/sensitivity_math.md"
 ]
 Depth = 2
 ```
