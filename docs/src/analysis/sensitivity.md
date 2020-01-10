@@ -136,6 +136,12 @@ is:
   DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
   on native Julia solvers. The methods which utilize altered differential
   equation systems only work on ODEs (without events), but work on any ODE solver.
+- `TrackerAdjoint` is able to use a `TrackedArray` form with out-of-place
+  functions `du = f(u,p,t)` but requires an `Array{TrackedReal}` form for
+  `f(du,u,p,t)` mutating `du`. The latter has much more overhead, and should be
+  avoided if possible. Thus if solving non-ODEs with lots of parameters, using
+  `TrackerAdjoint` with an out-of-place definition may be the current best
+  option.
 
 # Lower Level Sensitivity Analysis Interfaces
 
