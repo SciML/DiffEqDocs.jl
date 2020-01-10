@@ -55,6 +55,110 @@ interpolations are possible but it has the same array-like semantics of the
 full solution object. The keyword argument `sensealg` controls the dispatch
 to the `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
 
+### concrete_solve Examples
+
+Computing a solution with `concrete_solve` looks almost exactly like `solve`:
+
+```julia
+using DiffEqSensitivity, OrdinaryDiffEq, Zygote
+
+function fiip(du,u,p,t)
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + p[4]*u[1]*u[2]
+end
+p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
+prob = ODEProblem(fiip,u0,(0.0,10.0),p)
+sol = concrete_solve(prob,Tsit5())
+```
+
+But if we want to perturb `u0` and `p` in a gradient calculation then we can.
+
+```julia
+du01,dp1 = Zygote.gradient((u0,p)->sum(concrete_solve(prob,Tsit5(),u0,p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)
+```
+
+Here this computes the derivative of the output with respect to the initial
+condition and the the derivative with respect to the parameters respectively
+using the `QuadratureAdjoint()`.
+
+When Zygote.jl is used in a larger context, these gradients are implicitly
+calculated and utilized. For example, the
+[Flux.jl deep learning package](https://github.com/FluxML/Flux.jl) uses Zygote.jl
+in its training loop, so if we use `concrete_solve` in a likelihood of a
+Flux training loop then the derivative choice we make will be used in the
+optimization:
+
+```julia
+using Flux
+
+p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
+function predict() # Our 1-layer neural network
+  Array(concrete_solve(prob,Tsit5(),u0,p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
+end
+loss() = sum(abs2,x-1 for x in predict_adjoint())
+
+data = Iterators.repeated((), 100)
+opt = ADAM(0.1)
+cb = function () #callback function to observe training
+  display(loss_adjoint())
+  # using `remake` to re-create our `prob` with current parameters `p`
+  display(plot(solve(remake(prob,p=p),Tsit5(),saveat=0.0:0.1:10.0),ylim=(0,6)))
+end
+
+# Display the ODE with the initial parameter values.
+cb()
+
+Flux.train!(loss_adjoint, Flux.params(p), data, opt, cb = cb)
+```
+
+This optimizes the parameters from a starting point `p` where the gradients
+are calculated using the `BacksolveAdjoint` method.
+
+Using this technique, we can define and mix neural networks into the differential
+equation:
+
+```julia
+using DiffEqFlux, Flux, OrdinaryDiffEq
+
+u0 = Float32[0.8; 0.8]
+tspan = (0.0f0,25.0f0)
+
+ann = Chain(Dense(2,10,tanh), Dense(10,1))
+
+p1,re = Flux.destructure(ann)
+p2 = Float32[-2.0,1.1]
+p3 = [p1;p2]
+ps = Flux.params(p3,u0)
+
+function dudt_(du,u,p,t)
+    x, y = u
+    du[1] = re(p[1:41])(u)[1]
+    du[2] = p[end-1]*y + p[end]*x
+end
+prob = ODEProblem(dudt_,u0,tspan,p3)
+
+function predict_adjoint()
+  concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:25.0,abstol=1e-8,
+                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true))
+end
+loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
+
+data = Iterators.repeated((), 100)
+opt = ADAM(0.1)
+cb = function ()
+  display(loss_adjoint())
+  #display(plot(solve(remake(prob,p=p3,u0=u0),Tsit5(),saveat=0.1),ylim=(0,6)))
+end
+
+# Display the ODE with the current parameter values.
+cb()
+
+Flux.train!(loss_adjoint, ps, data, opt, cb = cb)
+```
+
+For more details and helper function for using DifferentialEquations.jl with
+neural networks, see the [DiffEqFlux.jl repository](https://github.com/JuliaDiffEq/DiffEqFlux.jl).
+
 ## Sensitivity Algorithms
 
 The following algorithm choices exist for `sensealg`. See
@@ -185,7 +289,7 @@ extract_local_sensitivities(sol, t::Union{Number,AbstractVector}, asmatrix::Val=
 For information on the mathematics behind these calculations, consult
 [the sensitivity math page](@ref sensitivity_math)
 
-#### Example using an ODELocalSensitivityProblem
+### Example using an ODELocalSensitivityProblem
 
 To define a sensitivity problem, simply use the `ODELocalSensitivityProblem` type
 instead of an ODE type. For example, we generate an ODE with the sensitivity
@@ -260,7 +364,7 @@ calc_res = Calculus.finite_difference_jacobian(test_f,p)
 
 Here we just checked the derivative at the end point.
 
-#### Internal representation
+### Internal representation
 
 For completeness, we detail the internal representation. When using
 ForwardDiffSensitivity, the representation is with `Dual` numbers under the
@@ -457,35 +561,6 @@ res = adjoint_sensitivities(sol,Vern9(),dg,t,
                             checkpoints = [0.0,0.5])
 ```
 
-#### Applicability of Backsolve and Caution
-
-When `backsolve` is applicable it is a fast method and requires the least memory.
-However, one must be cautious because not all ODEs are stable under backwards integration
-by the majority of ODE solvers. An example of such an equation is the Lorenz equation.
-Notice that if one solves the Lorenz equation forward and then in reverse with any
-adaptive time step and non-reversible integrator, then the backwards solution diverges
-from the forward solution. As a quick demonstration:
-
-```julia
-using Sundials, DiffEqBase
-function lorenz(du,u,p,t)
- du[1] = 10.0*(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
-end
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,100.0)
-prob = ODEProblem(lorenz,u0,tspan)
-sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
-prob2 = ODEProblem(lorenz,sol[end],(100.0,0.0))
-sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
-@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]
-```
-
-Thus one should check the stability of the backsolve on their type of problem before
-enabling this method. Additionally, using checkpointing with backsolve can be a
-low memory way to stabilize it.
-
 ### Example continuous adjoints on an energy functional
 
 In this case we'd like to calculate the adjoint sensitivity of the scalar energy
@@ -530,3 +605,32 @@ end
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
 res3 = Calculus.gradient(G,[1.5,1.0,3.0])
 ```
+
+### Applicability of Backsolve and Caution
+
+When `BacksolveAdjoint` is applicable it is a fast method and requires the least memory.
+However, one must be cautious because not all ODEs are stable under backwards integration
+by the majority of ODE solvers. An example of such an equation is the Lorenz equation.
+Notice that if one solves the Lorenz equation forward and then in reverse with any
+adaptive time step and non-reversible integrator, then the backwards solution diverges
+from the forward solution. As a quick demonstration:
+
+```julia
+using Sundials, DiffEqBase
+function lorenz(du,u,p,t)
+ du[1] = 10.0*(u[2]-u[1])
+ du[2] = u[1]*(28.0-u[3]) - u[2]
+ du[3] = u[1]*u[2] - (8/3)*u[3]
+end
+u0 = [1.0;0.0;0.0]
+tspan = (0.0,100.0)
+prob = ODEProblem(lorenz,u0,tspan)
+sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
+prob2 = ODEProblem(lorenz,sol[end],(100.0,0.0))
+sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
+@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]
+```
+
+Thus one should check the stability of the backsolve on their type of problem before
+enabling this method. Additionally, using checkpointing with backsolve can be a
+low memory way to stabilize it.
