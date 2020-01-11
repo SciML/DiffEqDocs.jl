@@ -228,24 +228,28 @@ solution derivatives for a given problem, consult our analysis
 [in this arxiv paper](https://arxiv.org/abs/1812.01892). A general rule of thumb
 is:
 
-- Discrete Forward Sensitivity Analysis via ForwardDiff.jl is the fastest for
-  ODEs with small numbers of parameters (<100).
+- `ForwardDiffSensitivity` is the fastest for differential equations with small 
+  numbers of parameters (<100) and can be used on any differential equation
+  solver that is native Julia.
 - Adjoint senstivity analysis is the fastest when the number of parameters is
   sufficiently large. There are three configurations of note. Using
   `QuadratureAdjoint` is the fastest for small systems, `BacksolveAdjoint`
   uses the least memory but on very stiff problems it may be unstable and
   require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
   allowing checkpointing to control total memory use.
-- The methods which use automatic differentiation support the full range of
+- The methods which use automatic differentiation (`TrackerAdjoint`, 
+  `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support the full range of 
   DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
   on native Julia solvers. The methods which utilize altered differential
   equation systems only work on ODEs (without events), but work on any ODE solver.
+- For non-ODEs with large numbers of parameters, `TrackerAdjoint` in out-of-place
+  form may be the best performer. 
 - `TrackerAdjoint` is able to use a `TrackedArray` form with out-of-place
   functions `du = f(u,p,t)` but requires an `Array{TrackedReal}` form for
   `f(du,u,p,t)` mutating `du`. The latter has much more overhead, and should be
   avoided if possible. Thus if solving non-ODEs with lots of parameters, using
   `TrackerAdjoint` with an out-of-place definition may be the current best
-  option.
+  option. 
 
 # Lower Level Sensitivity Analysis Interfaces
 
