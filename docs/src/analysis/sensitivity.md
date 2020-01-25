@@ -399,7 +399,7 @@ at time `sol.t[i]`. Note that all of the functionality available to ODE solution
 is available in this case, including interpolations and plot recipes (the recipes
 will plot the expanded system).
 
-## Adjoint Sensitivity Analysis via adjoint_sensitivities
+## Adjoint Sensitivity Analysis via adjoint_sensitivities (Backpropogation)
 
 Adjoint sensitivity analysis is used to find the gradient of the solution
 with respect to some functional of the solution. In many cases this is used
