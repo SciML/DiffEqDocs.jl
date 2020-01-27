@@ -1,6 +1,6 @@
 # [Parameter Estimation and Bayesian Analysis](@id parameter_estimation)
 
-Parameter estimation for ODE models, also known as dynamic data analysis,
+Parameter estimation for differential equation models, also known as dynamic data analysis,
 is provided by the DiffEq suite.
 
 ## Installation
