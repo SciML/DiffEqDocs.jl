@@ -71,13 +71,24 @@ Multiple Shooting is generally used in Boundary Value Problems (BVP) and is
 more robust than the regular objective function used in these problems. It
 proceeds as follows:
 
-  1. Divide up the time span into short time periods and solve the equation
+- Divide up the time span into short time periods and solve the equation
   with the current parameters which here consist of both, the parameters of the
   differential equations and also the initial values for the short time periods.
-  2. This objective additionally involves a discontinuity error term that imposes
+- This objective additionally involves a discontinuity error term that imposes
   higher cost if the end of the solution of one time period doesn't match the
   beginning of the next one.
-  3. Merge the solutions from the shorter intervals and then calculate the loss.
+- Merge the solutions from the shorter intervals and then calculate the loss.
+
+```julia
+function multiple_shooting_objective(prob::DiffEqBase.DEProblem,alg,loss,
+                              regularization=nothing;prior=nothing,
+                              mpg_autodiff = false,discontinuity_weight=1.0,
+                              verbose_opt = false,
+                              prob_generator = STANDARD_PROB_GENERATOR,
+                              autodiff_prototype = mpg_autodiff ? zeros(init_N_params) : nothing,
+                              autodiff_chunk = mpg_autodiff ? ForwardDiff.Chunk(autodiff_prototype) : nothing,
+                              kwargs...)
+```
 
 For consistency `multiple_shooting_objective` takes exactly the same arguments
 as `build_loss_objective`. It also has the option for `discontinuity_error` as
