@@ -20,7 +20,7 @@ using DiffEqSensitivity
 The general interface for calling a global sensitivity analysis is either:
 
 ```julia
-effects = gsa(f,method,param_range;N,batch=false)
+effects = gsa(f, method, param_range; N, batch=false)
 ```
 
 where:
@@ -35,7 +35,7 @@ where:
 Note that for some methods there is a second interface where one can directly pass the design matrices:
 
 ```julia
-effects = gsa(f,method,A,B;batch=false)
+effects = gsa(f, method, A, B; batch=false)
 ```
 
 where `A` and `B` are design matrices with each row being a set of parameters. Note that `generate_design_matrices`
@@ -50,7 +50,7 @@ matrices.
 - `relative_scale` - The elementary effects are calculated with the assumption that
   the parameters lie in the range `[0,1]` but as this is not always the case
   scaling is used to get more informative, scaled effects. Defaults to `false`.
-- `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are 
+- `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are
   generated out of which `num_trajectory` matrices with the highest spread are used in calculation.
 - len_design_mat` - The size of a design matrix.
 
@@ -78,13 +78,13 @@ individual contribution.
 
 ### Sobol Method
 
-The `Sobol` object has as its fields the `order` of the indices to be estimated. 
+The `Sobol` object has as its fields the `order` of the indices to be estimated.
 
 - `order` - the order of the indices to calculate. Defaults to `[0,1]`, which means the
   Total and First order indices. Passing `2` enables calculation of the Second order indices as well.
 - `Ei_estimator` - Can take `:Homma1996`, `:Sobol2007` and `:Jansen1999` for which
   Monte Carlo estimator is used for the Ei term. Defaults to `:Jansen1999`.
-  
+
 #### Sobol Method Details
 
 Sobol is a variance-based method and it decomposes the variance of the output of
@@ -112,7 +112,15 @@ by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
 `RegressionGSA` has the following keyword arguments:
 
-- `coeffs` for which coefficients to calculate. Defaults to `:rank`.
+- `rank`: flag which determines whether to calculate the rank coefficients. Defaults to `false`.
+
+It returns a `RegressionGSAResult`, which contains the `pearson`, `standard_regression`, and
+`partial_correlation` coefficients, described below. If `rank` is true, then it also contains the ranked
+versions of these coefficients. Note that the ranked version of the `pearson` coefficient is
+also known as the Spearman coefficient, which is returned here as the `pearson_rank` coefficient.
+
+For multi-variable models, the coefficient for the `` X_i `` input variable relating to the
+`` Y_j `` output variable is given as the `[i, j]` entry in the corresponding returned matrix.
 
 #### Regression Details
 
@@ -133,7 +141,8 @@ r = \frac{\sum_{i=1}^{n} (x_i - \overline{x})(y_i - \overline{y})}{\sqrt{\sum_{i
 SRC_j = \beta_{j} \sqrt{\frac{Var(X_j)}{Var(Y)}}
 ```
 
-where ``\beta_j`` is the linear regression coefficient associated to $X_j$.
+where ``\beta_j`` is the linear regression coefficient associated to $X_j$. This is also known
+as a sigma-normalized derivative.
 
   c) Partial Correlation Coefficient (PCC):
 
@@ -145,6 +154,8 @@ where ``\hat{X_{-j}}`` is the prediction of the linear model, expressing ``X_{j}
 with respect to the other inputs and ``\hat{Y_{-j}}`` is the prediction of the
 linear model where ``X_j`` is absent. PCC measures the sensitivity of ``Y`` to
 ``X_j`` when the effects of the other inputs have been canceled.
+
+If `rank` is set to `true`, then the rank coefficients are also calculated.
 
 ## GSA examples
 
@@ -166,7 +177,7 @@ end
 u0 = [1.0;1.0]
 tspan = (0.0,10.0)
 p = [1.5,1.0,3.0,1.0]
-prob = ODEProblem(f,u0,tspan,p) 
+prob = ODEProblem(f,u0,tspan,p)
 t = collect(range(0, stop=10, length=200))
 ```
 
@@ -195,7 +206,7 @@ Let's get the means and variances from the `MorrisResult` struct.
 m.means
 2×2 Array{Float64,2}:
  0.474053  0.114922
- 1.38542   5.26094 
+ 1.38542   5.26094
 
 m.variances
 2×2 Array{Float64,2}:
@@ -218,7 +229,7 @@ m = gsa(f1,Sobol(),[[1,5],[1,5],[1,5],[1,5]])
 
 ### Design Matrices
 
-For the Sobol Method, we can have more control over the sampled points by generating design matrices. 
+For the Sobol Method, we can have more control over the sampled points by generating design matrices.
 Doing it in this manner lets us directly specify a quasi-Monte Carlo sampling method for the parameter space. Here
 we use [QuasiMonteCarlo.jl](https://github.com/JuliaDiffEq/QuasiMonteCarlo.jl) to generate the design matrices
 as follows:
