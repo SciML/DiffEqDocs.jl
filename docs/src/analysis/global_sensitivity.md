@@ -114,7 +114,7 @@ by dividing other terms in the variance decomposition by `` Var(Y) ``.
 
 - `rank`: flag which determines whether to calculate the rank coefficients. Defaults to `false`.
 
-If returns a `RegressionGSAResult`, which contains the `pearson`, `standard_regression`, and
+It returns a `RegressionGSAResult`, which contains the `pearson`, `standard_regression`, and
 `partial_correlation` coefficients, described below. If `rank` is true, then it also contains the ranked
 versions of these coefficients. Note that the ranked version of the `pearson` coefficient is
 also known as the Spearman coefficient, which is returned here as the `pearson_rank` coefficient.
