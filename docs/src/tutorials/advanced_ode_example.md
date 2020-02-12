@@ -109,7 +109,7 @@ We will now showcase how to make use of this functionality with growing complexi
 
 ### Declaring Jacobian Functions
 
-Let's solve the Rosenbrock equations:
+Let's solve the Rober equations:
 
 ```math
 \begin{aligned}
