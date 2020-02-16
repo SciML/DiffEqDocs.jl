@@ -26,8 +26,8 @@ For how to define a linear function `A`, see the documentation for the [DiffEqOp
 ### Constructors
 
 ```julia
-SplitODEProblem(f::SplitFunction,u0,tspan,p=nothing;kwargs...)
-SplitODEProblem{isinplace}(f1,f2,u0,tspan,p=nothing;kwargs...)
+SplitODEProblem(f::SplitFunction,u0,tspan,p=NullParameters();kwargs...)
+SplitODEProblem{isinplace}(f1,f2,u0,tspan,p=NullParameters();kwargs...)
 ```
 
 The `isinplace` parameter can be omitted and will be determined using the signature of `f2`.
