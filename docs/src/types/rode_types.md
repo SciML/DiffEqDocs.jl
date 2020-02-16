@@ -17,8 +17,8 @@ to numbers or vectors for `u₀`; one is allowed to provide `u₀` as arbitrary 
 
 ### Constructors
 
-- `RODEProblem(f::RODEFunction,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)`
-- `RODEProblem{isinplace}(f,u0,tspan,p=nothing;noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I)` :
+- `RODEProblem(f::RODEFunction,u0,tspan,p=NullParameters();noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing)`
+- `RODEProblem{isinplace}(f,u0,tspan,p=NullParameters();noise=WHITE_NOISE,rand_prototype=nothing,callback=nothing,mass_matrix=I)` :
   Defines the RODE with the specified functions. The default noise is `WHITE_NOISE`.
   `isinplace` optionally sets whether the function is inplace or not. This is
   determined automatically, but not inferred.
