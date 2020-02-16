@@ -78,6 +78,9 @@ function SDEFunction{iip,recompile}(f,g;
                  syms = nothing)
 ```
 
+Notice here that the Jacobian refers to the Jacobian of the drift function `f`. The sparsity,
+colorvec, etc. all refer to this Jacobian. `ggprime` refers to `g(u,p,t)*Dg(u,p,t)`.
+
 ### SplitSDEFunction
 
 ```julia
