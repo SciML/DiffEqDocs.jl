@@ -126,19 +126,19 @@ julia&gt; @btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveG
 @btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(),save_everystep=false) # 42.804 s (51388 allocations: 3.20 MiB)
 # GMRES Version: Doesn&#39;t require any extra stuff!
 @btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 485.671 ms (61058 allocations: 3.63 MiB)</code></pre><p>Details for setting up a preconditioner with Sundials can be found at the <a href="../../solvers/ode_solve/#ode_solve_sundials-1">Sundials solver page</a>.</p><h2 id="Handling-Mass-Matrices-1"><a class="docs-heading-anchor" href="#Handling-Mass-Matrices-1">Handling Mass Matrices</a><a class="docs-heading-anchor-permalink" href="#Handling-Mass-Matrices-1" title="Permalink"></a></h2><p>Instead of just defining an ODE as <span>$u&#39; = f(u,p,t)$</span>, it can be common to express the differential equation in the form with a mass matrix:</p><div>\[Mu&#39; = f(u,p,t)\]</div><p>where <span>$M$</span> is known as the mass matrix. Let&#39;s solve the Robertson equation. At the top we wrote this equation as:</p><div>\[\begin{aligned}
-dy_1 &amp;= -0.04y₁ + 10^4 y_2 y_3 \\
-dy_2 &amp;= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
-dy_3 &amp;= 3*10^7 y_{3}^2 \\
+dy_1 &amp;= -0.04 y_1 + 10^4 y_2 y_3 \\
+dy_2 &amp;=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+dy_3 &amp;= 3*10^7 y_{2}^2 \\
 \end{aligned}\]</div><p>But we can instead write this with a conservation relation:</p><div>\[\begin{aligned}
-\frac{dy_1}{dt} &amp;= -0.04y₁ + 10^4 y_2 y_3 \\
-\frac{dy_2}{dt} &amp;= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+\frac{dy_1}{dt} &amp;= -0.04 y_1 + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &amp;=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &amp;=  y_{1} + y_{2} + y_{3} \\
 \end{aligned}\]</div><p>In this form, we can write this as a mass matrix ODE where <span>$M$</span> is singular (this is another form of a differential-algebraic equation (DAE)). Here, the last row of <code>M</code> is just zero. We can implement this form as:</p><pre><code class="language-julia">using DifferentialEquations
 function rober(du,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
-  du[1] = -k₁*y₁+k₃*y₂*y₃
-  du[2] =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
+  du[1] = -k₁*y₁ + k₃*y₂*y₃
+  du[2] =  k₁*y₁ - k₃*y₂*y₃ - k₂*y₂^2
   du[3] =  y₁ + y₂ + y₃ - 1
   nothing
 end
@@ -149,4 +149,4 @@ f = ODEFunction(rober,mass_matrix=M)
 prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 sol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)
 
-plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))</code></pre><p><img src="../../assets/intro_dae_plot.png" alt="IntroDAEPlot"/></p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>If your mass matrix is singular, i.e. your system is a DAE, then you need to make sure you choose <a href="../../solvers/dae_solve/#dae_solve_full-1">a solver that is compatible with DAEs</a></p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../ode_example/">« Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../sde_example/">Stochastic Differential Equations »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 16 February 2020 13:56">Sunday 16 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))</code></pre><p><img src="../../assets/intro_dae_plot.png" alt="IntroDAEPlot"/></p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>If your mass matrix is singular, i.e. your system is a DAE, then you need to make sure you choose <a href="../../solvers/dae_solve/#dae_solve_full-1">a solver that is compatible with DAEs</a></p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../ode_example/">« Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../sde_example/">Stochastic Differential Equations »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 17 February 2020 11:56">Monday 17 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
