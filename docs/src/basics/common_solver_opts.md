@@ -200,7 +200,9 @@ explanations of the timestepping algorithms, see the
   to `any(isnan,u)`, i.e. checking if any value is a NaN.
 * `verbose`: Toggles whether warnings are thrown when the solver exits early.
   Defaults to true.
-
+* `merge_callbacks`: Toggles whether to merge `prob.callback` with the `solve` keyword
+  argument `callback`. Defaults to `true`.
+  
 ## Progress Monitoring
 
 These arguments control the usage of the progressbar in the Juno IDE.
