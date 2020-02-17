@@ -479,9 +479,9 @@ At the top we wrote this equation as:
 
 ```math
 \begin{aligned}
-dy_1 &= -0.04y₁ + 10^4 y_2 y_3 \\
-dy_2 &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
-dy_3 &= 3*10^7 y_{3}^2 \\
+dy_1 &= -0.04 y_1 + 10^4 y_2 y_3 \\
+dy_2 &=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+dy_3 &= 3*10^7 y_{2}^2 \\
 \end{aligned}
 ```
 
@@ -489,8 +489,8 @@ But we can instead write this with a conservation relation:
 
 ```math
 \begin{aligned}
-\frac{dy_1}{dt} &= -0.04y₁ + 10^4 y_2 y_3 \\
-\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+\frac{dy_1}{dt} &= -0.04 y_1 + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 1 &=  y_{1} + y_{2} + y_{3} \\
 \end{aligned}
 ```
@@ -504,8 +504,8 @@ using DifferentialEquations
 function rober(du,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
-  du[1] = -k₁*y₁+k₃*y₂*y₃
-  du[2] =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
+  du[1] = -k₁*y₁ + k₃*y₂*y₃
+  du[2] =  k₁*y₁ - k₃*y₂*y₃ - k₂*y₂^2
   du[3] =  y₁ + y₂ + y₃ - 1
   nothing
 end
