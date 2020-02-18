@@ -16,7 +16,14 @@ algorithm is `daskr`. Which one is more efficient is problem-dependent.
 
 ## [Full List of Methods](@id dae_solve_full)
 
-### OrdinaryDiffEq.jl
+### OrdinaryDiffEq.jl (Implicit ODE)
+
+These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
+
+- `DImplicitEuler` - 1st order A-L and stiffly stable adaptive implicit Euler
+- `DABDF2` - 2nd order A-L stable adaptive BDF method.
+
+### OrdinaryDiffEq.jl (Mass Matrix)
 
 These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
@@ -148,7 +155,7 @@ information. Where:
 - `t`: the current independent variable
 - `resid`: the current residual
 - `u`: the current state
-- `du`: the current `f(u,p,t)`
+- `du`: the current derivative of the state
 - `gamma`: the `gamma` of `W = M - gamma*J`
 
 `psetup` is optional when `prec` is set.
