@@ -1,8 +1,8 @@
 # BVP Problems
 
-## Mathematical Specification of an BVP Problem
+## Mathematical Specification of a BVP Problem
 
-To define an BVP Problem, you simply need to give the function ``f`` and the initial
+To define a BVP Problem, you simply need to give the function ``f`` and the initial
 condition ``u₀`` which define an ODE:
 
 ```math
