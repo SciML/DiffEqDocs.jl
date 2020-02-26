@@ -38,13 +38,13 @@ cb()
 
 Flux.train!(loss_adjoint, Flux.params(p), data, opt, cb = cb)</code></pre><p>This optimizes the parameters from a starting point <code>p</code> where the gradients are calculated using the <code>BacksolveAdjoint</code> method.</p><p>Using this technique, we can define and mix neural networks into the differential equation:</p><pre><code class="language-julia">using DiffEqFlux, Flux, OrdinaryDiffEq, DiffEqSensitivity
 
-u0 = Float32[0.8; 0.8]
-tspan = (0.0f0,25.0f0)
+u0 = Float32[0.0; 1.1]
+tspan = (0.0f0,1.0f0)
 
 ann = Chain(Dense(2,10,tanh), Dense(10,1))
 
 p1,re = Flux.destructure(ann)
-p2 = Float32[-2.0,1.1]
+p2 = Float32[-0.5,-0.5]
 p3 = [p1;p2]
 ps = Flux.params(p3,u0)
 
@@ -56,8 +56,9 @@ end
 prob = ODEProblem(dudt_,u0,tspan,p3)
 
 function predict_adjoint()
-  concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:25.0,abstol=1e-8,
-                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true))
+  Array(concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:1.0,abstol=1e-8,
+                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true)))
+  # ^ wrapped this in Array as done in the previous example
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
@@ -146,4 +147,4 @@ prob = ODEProblem(lorenz,u0,tspan)
 sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
 prob2 = ODEProblem(lorenz,sol[end],(100.0,0.0))
 sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
-@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]</code></pre><p>Thus one should check the stability of the backsolve on their type of problem before enabling this method. Additionally, using checkpointing with backsolve can be a low memory way to stabilize it.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 26 February 2020 18:02">Wednesday 26 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]</code></pre><p>Thus one should check the stability of the backsolve on their type of problem before enabling this method. Additionally, using checkpointing with backsolve can be a low memory way to stabilize it.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 26 February 2020 23:22">Wednesday 26 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
