@@ -120,13 +120,13 @@ equation:
 ```julia
 using DiffEqFlux, Flux, OrdinaryDiffEq, DiffEqSensitivity
 
-u0 = Float32[0.8; 0.8]
-tspan = (0.0f0,25.0f0)
+u0 = Float32[0.0; 1.1]
+tspan = (0.0f0,1.0f0)
 
 ann = Chain(Dense(2,10,tanh), Dense(10,1))
 
 p1,re = Flux.destructure(ann)
-p2 = Float32[-2.0,1.1]
+p2 = Float32[-0.5,-0.5]
 p3 = [p1;p2]
 ps = Flux.params(p3,u0)
 
@@ -138,8 +138,9 @@ end
 prob = ODEProblem(dudt_,u0,tspan,p3)
 
 function predict_adjoint()
-  concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:25.0,abstol=1e-8,
-                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true))
+  Array(concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:1.0,abstol=1e-8,
+                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true)))
+  # ^ wrapped this in Array as done in the previous example
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
