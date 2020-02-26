@@ -89,13 +89,13 @@ Flux training loop then the derivative choice we make will be used in the
 optimization:
 
 ```julia
-using Flux
+using Flux, Plots
 
 p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
-function predict() # Our 1-layer neural network
+function predict_adjoint() # Our 1-layer neural network
   Array(concrete_solve(prob,Tsit5(),u0,p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
 end
-loss() = sum(abs2,x-1 for x in predict_adjoint())
+loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
 data = Iterators.repeated((), 100)
 opt = ADAM(0.1)
@@ -118,7 +118,7 @@ Using this technique, we can define and mix neural networks into the differentia
 equation:
 
 ```julia
-using DiffEqFlux, Flux, OrdinaryDiffEq
+using DiffEqFlux, Flux, OrdinaryDiffEq, DiffEqSensitivity
 
 u0 = Float32[0.8; 0.8]
 tspan = (0.0f0,25.0f0)
