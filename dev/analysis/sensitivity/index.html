@@ -17,13 +17,13 @@ function fiip(du,u,p,t)
 end
 p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
 prob = ODEProblem(fiip,u0,(0.0,10.0),p)
-sol = concrete_solve(prob,Tsit5())</code></pre><p>But if we want to perturb <code>u0</code> and <code>p</code> in a gradient calculation then we can.</p><pre><code class="language-julia">du01,dp1 = Zygote.gradient((u0,p)-&gt;sum(concrete_solve(prob,Tsit5(),u0,p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)</code></pre><p>Here this computes the derivative of the output with respect to the initial condition and the the derivative with respect to the parameters respectively using the <code>QuadratureAdjoint()</code>.</p><p>When Zygote.jl is used in a larger context, these gradients are implicitly calculated and utilized. For example, the <a href="https://github.com/FluxML/Flux.jl">Flux.jl deep learning package</a> uses Zygote.jl in its training loop, so if we use <code>concrete_solve</code> in a likelihood of a Flux training loop then the derivative choice we make will be used in the optimization:</p><pre><code class="language-julia">using Flux
+sol = concrete_solve(prob,Tsit5())</code></pre><p>But if we want to perturb <code>u0</code> and <code>p</code> in a gradient calculation then we can.</p><pre><code class="language-julia">du01,dp1 = Zygote.gradient((u0,p)-&gt;sum(concrete_solve(prob,Tsit5(),u0,p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)</code></pre><p>Here this computes the derivative of the output with respect to the initial condition and the the derivative with respect to the parameters respectively using the <code>QuadratureAdjoint()</code>.</p><p>When Zygote.jl is used in a larger context, these gradients are implicitly calculated and utilized. For example, the <a href="https://github.com/FluxML/Flux.jl">Flux.jl deep learning package</a> uses Zygote.jl in its training loop, so if we use <code>concrete_solve</code> in a likelihood of a Flux training loop then the derivative choice we make will be used in the optimization:</p><pre><code class="language-julia">using Flux, Plots
 
 p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
-function predict() # Our 1-layer neural network
+function predict_adjoint() # Our 1-layer neural network
   Array(concrete_solve(prob,Tsit5(),u0,p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
 end
-loss() = sum(abs2,x-1 for x in predict_adjoint())
+loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
 data = Iterators.repeated((), 100)
 opt = ADAM(0.1)
@@ -36,7 +36,7 @@ end
 # Display the ODE with the initial parameter values.
 cb()
 
-Flux.train!(loss_adjoint, Flux.params(p), data, opt, cb = cb)</code></pre><p>This optimizes the parameters from a starting point <code>p</code> where the gradients are calculated using the <code>BacksolveAdjoint</code> method.</p><p>Using this technique, we can define and mix neural networks into the differential equation:</p><pre><code class="language-julia">using DiffEqFlux, Flux, OrdinaryDiffEq
+Flux.train!(loss_adjoint, Flux.params(p), data, opt, cb = cb)</code></pre><p>This optimizes the parameters from a starting point <code>p</code> where the gradients are calculated using the <code>BacksolveAdjoint</code> method.</p><p>Using this technique, we can define and mix neural networks into the differential equation:</p><pre><code class="language-julia">using DiffEqFlux, Flux, OrdinaryDiffEq, DiffEqSensitivity
 
 u0 = Float32[0.8; 0.8]
 tspan = (0.0f0,25.0f0)
@@ -146,4 +146,4 @@ prob = ODEProblem(lorenz,u0,tspan)
 sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
 prob2 = ODEProblem(lorenz,sol[end],(100.0,0.0))
 sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
-@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]</code></pre><p>Thus one should check the stability of the backsolve on their type of problem before enabling this method. Additionally, using checkpointing with backsolve can be a low memory way to stabilize it.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 23 February 2020 20:06">Sunday 23 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+@show sol[end]-u0 #[-3.22091, -1.49394, 21.3435]</code></pre><p>Thus one should check the stability of the backsolve on their type of problem before enabling this method. Additionally, using checkpointing with backsolve can be a low memory way to stabilize it.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 26 February 2020 18:02">Wednesday 26 February 2020</span>. Using Julia version 1.1.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
