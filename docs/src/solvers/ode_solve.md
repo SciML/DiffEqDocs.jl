@@ -154,6 +154,14 @@ problems.
 - `Anas5(w)` - 4th order Runge-Kutta method designed for periodic problems.
   Requires a periodicity estimate `w` which when accurate the method becomes
   5th order (and is otherwise 4th order with less error for better estimates).
+- `FRK65(w=0)` - Zero Dissipation Runge-Kutta of 6th order. Takes an optional
+  argument `w` to for the periodicity phase, in which case this method results in
+  zero numerical dissipation.
+- `PFRK87(w=0)` - Phase-fitted Runge-Kutta Runge-Kutta of 8th order. Takes an optional
+  argument `w` to for the periodicity phase, in which case this method results in
+  zero numerical dissipation.
+- `RKO65` - Olver's 6 stage 5th order method. This method is robust on problems
+  which have a singularity at `t=0`.
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince Runge-Kutta method.
   (7th order interpolant).
@@ -1104,11 +1112,11 @@ For more information on these algorithms, see
 
 ### SciPyDiffEq.jl
 
-[SciPyDiffEq.jl](https://github.com/JuliaDiffEq/SciPyDiffEq.jl) is a wrapper over SciPy for 
+[SciPyDiffEq.jl](https://github.com/JuliaDiffEq/SciPyDiffEq.jl) is a wrapper over SciPy for
 easing the transition of new users (same exact results!)
 and benchmarking. This wrapper uses Julia's JIT acceleration to accelerate about 3x over SciPy+Numba,
 but it is still around 1000x slower than the pure-Julia methods and thus should probably be used
-sparingly. 
+sparingly.
 
 Note that this setup is not automatically included
 with DifferentialEquaitons.jl. To use the following algorithms, you must install
@@ -1129,10 +1137,10 @@ The available methods are:
 
 ### deSolveDiffEq.jl
 
-[deSolveDiffEq.jl](https://github.com/JuliaDiffEq/deSolveDiffEq.jl) is a wrapper over R's deSolve for 
+[deSolveDiffEq.jl](https://github.com/JuliaDiffEq/deSolveDiffEq.jl) is a wrapper over R's deSolve for
 easing the transition of new users (same exact results!)
-and benchmarking. This wrapper is around 1000x slower than the pure-Julia methods (~2x-3x overhead 
-from directly using R) and thus should probably be used sparingly. 
+and benchmarking. This wrapper is around 1000x slower than the pure-Julia methods (~2x-3x overhead
+from directly using R) and thus should probably be used sparingly.
 
 Note that this setup is not automatically included
 with DifferentialEquaitons.jl. To use the following algorithms, you must install
