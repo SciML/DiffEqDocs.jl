@@ -205,10 +205,13 @@ explanations of the timestepping algorithms, see the
 
 ## Progress Monitoring
 
-These arguments control the usage of the progressbar. In Juno this will use the
-special Juno progress bar, otherwise it'll use the REPL progress setup.
+These arguments control the usage of the progressbar.
 
 * `progress`: Turns on/off the progressbar. Default is false.
+* `logger`: Controls what logger is used. In Juno this will default to `nothing`
+  and use the special Juno progress bar, otherwise it'll use the REPL progress
+  setup provided by TerminalLoggers.jl. A custom logger can be provided to override
+  these settings.
 * `progress_steps`: Numbers of steps between updates of the progress bar.
   Default is 1000.
 * `progress_name`: Controls the name of the progressbar. Default is the name
