@@ -202,12 +202,13 @@ explanations of the timestepping algorithms, see the
   Defaults to true.
 * `merge_callbacks`: Toggles whether to merge `prob.callback` with the `solve` keyword
   argument `callback`. Defaults to `true`.
-  
+
 ## Progress Monitoring
 
-These arguments control the usage of the progressbar in the Juno IDE.
+These arguments control the usage of the progressbar. In Juno this will use the
+special Juno progress bar, otherwise it'll use the REPL progress setup.
 
-* `progress`: Turns on/off the Juno progressbar. Default is false.
+* `progress`: Turns on/off the progressbar. Default is false.
 * `progress_steps`: Numbers of steps between updates of the progress bar.
   Default is 1000.
 * `progress_name`: Controls the name of the progressbar. Default is the name
