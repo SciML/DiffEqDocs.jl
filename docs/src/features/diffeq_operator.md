@@ -18,25 +18,22 @@ via a function `update_coefficients!(A,u,p,t)`.
 ### Wrapping an Array: DiffEqArrayOperator
 
 `DiffEqArrayOperator` is for defining an operator directly from an array. The
-operator is of the form
+operator is of the form:
 
 ```math
-\alpha(t)A(u,p,t)
+A(u,p,t)
 ```
 
 for some scalar `α` and time plus possibly state dependent `A`. The
 constructor is:
 
 ```julia
-DiffEqArrayOperator(A::AbstractMatrix{T},α=1.0,
-                             update_func = DEFAULT_UPDATE_FUNC)
+DiffEqArrayOperator(A::AbstractMatrix{T},update_func = DEFAULT_UPDATE_FUNC)
 ```
 
-`A` is the operator array. `α` is the scalar coefficient. If `α` is a function
-`α(t)`, then it will update the coefficient as necessary. `update_func(A,u,p,t)` 
-is the function called by `update_coefficients!(A,u,p,t)` (along with `α` if it's 
-a function). If left as its default, then `update_func` is trivial which signifies
-`A` is a constant.
+`A` is the operator array. `update_func(A,u,p,t)` is the function called by 
+`update_coefficients!(A,u,p,t)`. If left as its default, then `update_func` 
+is trivial which signifies `A` is a constant.
 
 ### AffineDiffEqOperator
 
@@ -76,8 +73,8 @@ for it to work in the solvers.
    such constants.
 4. `isconstant(A)` trait for whether the operator is constant or not.
 5. Optional: `diagonal`, `symmetric`, etc traits from LinearMaps.jl.
-6. Optional: `expm(A)`. Required for simple exponential integration.
-7. Optional: `expmv(A,u,t) = expm(t*A)*u` and `expmv!(v,A::DiffEqOperator,u,t)`
+6. Optional: `exp(A)`. Required for simple exponential integration.
+7. Optional: `expv(A,u,t) = exp(t*A)*u` and `expv!(v,A::DiffEqOperator,u,t)`
    Required for sparse-saving exponential integration.
 8. Optional: factorizations. `ldiv!`, `factorize` et. al. This is only required
    for algorithms which use the factorization of the operator (Crank-Nicholson),
