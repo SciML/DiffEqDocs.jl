@@ -41,21 +41,48 @@ parameters in the basis elements.
 
 ### Structural Identification Methods
 
-#### SInDy
+#### Sparse Identification of Nonlinear Dynamics
 
 `SInDy` is the [method for generating sparse sets of equations](https://www.pnas.org/content/113/15/3932)
 from a chosen basis. The function call is:
 
 ```julia
-SInDy(data, dx, basis, ϵ = 1e-10)
+dudt = SInDy(data, dx, basis)
 ```
 
-where `data` is a matrix of observed values (each column is a timepoint, each
-row is an observable), `dx` is the matrix of derivatives of the observables,
-`basis` is a `Basis`, `ϵ` is a cutoff tolerance for exclusion from the final
-sparsified equations. This function will return the coefficients for the equations
-in the chosen basis, with zeros denoting forms that do not exist in the final
-equations.
+where `data` is a matrix of observed values (each column is a timepoint,
+each row is an observable), `dx` is the matrix of derivatives of the observables,
+`basis` is a `Basis`. This function will return a `Basis` constructed via a
+sparse regression over initial `basis`.
+
+`DataDrivenDiffEq` comes with some sparsifying regression algorithms (of the
+abstract type `AbstractOptimiser`). Currently these are `STRRidge(threshold)`
+from the [original paper](https://www.pnas.org/content/113/15/3932), a custom lasso
+implementation via the alternating direction method of multipliers `ADMM(threshold, weight)`
+and the `SR3(threshold, relaxation, proxoperator)` for [sparse relaxed regularized regression](https://arxiv.org/pdf/1807.05411.pdf). Here `proxoperator` can be any norm defined
+via [ProximalOperators](https://github.com/kul-forbes/ProximalOperators.jl).
+The `SInDy` algorithm can be called with all of the above via
+
+```julia
+opt = SR3()
+dudt = SInDy(data, dx, basis, maxiter = 100, opt = opt)
+```
+
+In most cases, `STRRidge` works fine with little iterations (passed in via the `maxiter` argument ).
+For larger datasets, `SR3` is in general faster even though it requires more iterations to converge.
+
+Additionally, the boolean arguments `normalize` and `denoise` can be passed, which normalize the data matrix
+or reduce it via the [optimal threshold for singular values](http://arxiv.org/abs/1305.5870).
+
+#### Implicit Sparse Identification of Nonlinear Dynamics
+
+While `SInDy` works well for ODEs, some systems take the form of rational functions `dx = f(x) / g(x)`. These can be inferred via `ISInDy`, which extends `SInDy` [for Implicit problems](https://ieeexplore.ieee.org/abstract/document/7809160).
+
+```julia
+dudt = ISInDy(data, dx,basis)
+```
+
+The function call returns `Basis`. The signature of the additional arguments is equal to `SInDy`, but requires an `AbstractSubspaceOptimser`. Currently `DataDrivenDiffEq` just implements `ADM()` based on [alternating directions](https://arxiv.org/pdf/1412.4659.pdf). `rtol` gets passed into the derivation of the `nullspace` via `LinearAlgebra`.
 
 ### Structural Estimation Methods
 
@@ -200,7 +227,8 @@ basis = Basis(h, u)
 From this we perform our SInDy to recover the differential equations in this basis:
 
 ```julia
-Ψ = SInDy(data, DX, basis, ϵ = 1e-10)
+opt = STRRidge(1e-10)
+Ψ = SInDy(data, DX, basis, maxiter = 50, opt = opt)
 ```
 
 From here we can use Latexify.jl to generate the LaTeX form of the outputted
@@ -222,4 +250,71 @@ plot(sol_)
 scatter!(data)
 ```
 
-### Linear Approximation of Dynamics with eDMD
+### Linear Approximation of Dynamics with DMD
+
+Lets start by creating some data from a given linear discrete system
+
+```julia
+function linear_discrete(du, u, p, t)
+    du[1] = 0.9u[1]
+    du[2] = 0.9u[2] + 0.1u[1]
+end
+
+u0 = [10.0; -2.0]
+tspan = (0.0, 10.0)
+prob = DiscreteProblem(linear_discrete, u0, tspan)
+sol = solve(prob)
+```
+
+To approximate the system, we simply call
+
+```julia
+approx = ExactDMD(sol[:,:])
+```
+
+which returns us the approximation of the Koopman Operator.
+As before, we can now get the dynamics and look at the approximation of our trajectory
+
+```julia
+approx_dudt = dynamics(approx)
+prob_approx = DiscreteProblem(approx_dudt, u0, tspan)
+approx_sol = solve(prob_approx)
+
+plot(sol)
+plot!(approx_sol)
+```
+
+But what about a differential equation? In contrast to `SInDy` `ExactDMD` does not require
+differential data, but can estimate the dynamics from evenly sampled trajectories over time.
+We pass that information via `dt` into the algorithm.
+
+```julia
+function linear(du, u, p, t)
+    du[1] = -0.9*u[1] + 0.1*u[2]
+    du[2] = -0.8*u[2]
+end
+
+prob_cont = ODEProblem(linear, u0, tspan)
+sol_cont = solve(prob_cont, saveat = 0.1)
+
+plot(sol_cont)
+
+approx_cont = ExactDMD(sol_cont[:,:], dt = 0.1)
+```
+To get the continouos time dynamics, we simply use
+
+```julia
+test = dynamics(approx_cont, discrete = false)
+```
+and look at the results
+```julia
+approx_sys = ODEProblem(test, u0, tspan)
+approx_sol = solve(approx_sys, saveat = 0.1)
+
+plot(sol_cont)
+plot!(approx_sol)
+```
+
+### Noninear Approximation of Dynamics with EDMD
+
+Not all systems can be approximated sufficiently via linear dynamics. To circum
