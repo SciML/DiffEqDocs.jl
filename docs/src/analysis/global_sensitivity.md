@@ -271,7 +271,7 @@ a row for each set of parameters. Here we showcase using the [Ensemble Interface
 f1 = function (p)
   prob_func(prob,i,repeat) = remake(prob;p=p[i,:])
   ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
-  sol = solve(ensemble_prob,Tsit5(),EnsembleThreads();saveat=t)
+  sol = solve(ensemble_prob,Tsit5(),EnsembleThreads();saveat=t,trajectories=size(p,1))
   # Now sol[i] is the solution for the ith set of parameters
   out = zeros(size(p,1),2)
   for i in 1:size(p,1)
