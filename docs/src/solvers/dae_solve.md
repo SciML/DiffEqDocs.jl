@@ -1,20 +1,33 @@
 # DAE Solvers
 
-## Recomended Methods
+## Recommended Methods
 
-For medium to low accuracy DAEs in mass matrix form, the `Rodas4` and `Rodas42`
-methods are good choices which will get good efficiency. The OrdinaryDiffEq.jl
-methods are also the only methods which allow for Julia-defined number types.
-For high accuracy (error `<1e-7`) on problems of `Vector{Float64}` defined in
-mass matrix form, `radau` is an efficient method.
+For medium to low accuracy small numbers of DAEs in constant mass matrices form,
+the  `Rosenbrock23` and `Rodas5` methods are good choices which will get good
+efficiency if the mass matrix is constant. `Rosenbrock23` is better for low
+accuracy (error tolerance `<1e-4`) and `Rodas5` is better for high accuracy.
+Another choice at high accuracy is `RadauIIA5`.
+
+If the mass matrices are not constant, the Rosenbrock methods are not applicable.
+In that case, `RadauIIA5` or BDF methods like `QBDF` tend to perform well, with
+`RadauIIA5` doing best for high accuracy.
 
 If the problem cannot be defined in mass matrix form, the recommended method for
 performance is `IDA` from the Sundials.jl package if you are solving problems with
-`Float64`. It's a very well-optimized method, and allows you to have a little bit of
-control over the linear solver to better tailor it to your problem. A similar
-algorithm is `daskr`. Which one is more efficient is problem-dependent.
+`Float64`. If Julia types are required, currently `DABDF2` is the best method.
 
 ## [Full List of Methods](@id dae_solve_full)
+
+#### Initialization Schemes
+
+For all OrdinaryDiffEq.jl methods, an initialization scheme can be set with a
+common keyword argument `initializealg`. The choices are:
+
+- `BrownFullBasicInit`: For Index-1 DAEs implicit DAEs and and semi-explicit
+  DAEs in mass matrix form. Keeps the differential variables constant. Requires
+  `du0` when used on a `DAEProblem`.
+- `ShampineCollocationInit`: For Index-1 DAEs implicit DAEs and and semi-explicit
+  DAEs in mass matrix form. Changes both the differential and algebraic variables.
 
 ### OrdinaryDiffEq.jl (Implicit ODE)
 
@@ -29,6 +42,8 @@ These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
 
 #### Rosenbrock Methods
+
+Note that the Rosenbrock methods only support constant mass matrices.
 
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
   accuracy on discretizations of nonlinear parabolic PDEs.
@@ -54,6 +69,8 @@ extra options for the solvers, see the ODE solver page.
 
 #### Rosenbrock-W Methods
 
+Note that the Rosenbrock methods only support constant mass matrices.
+
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances. 2nd order stiff-aware interpolation.
 - `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution. 2nd order stiff-aware interpolation.
 - `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
@@ -69,13 +86,38 @@ extra options for the solvers, see the ODE solver page.
 
 #### SDIRK Methods
 
-SDIRK Methods
-
 - `ImplicitEuler` - Stage order 1. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
   presurving (SSP).
 - `ImplicitMidpoint` - Stage order 1. Symplectic. Good for when symplectic
   integration is required.
+- `Trapezoid` - A second order A-stable symmetric ESDIRK method. "Almost
+  symplectic" without numerical dampening. Also known as Crank-Nicolson when
+  applied to PDEs. Adaptive timestepping via divided differences on the memory.
+  Good for highly stiff equations which are non-oscillatory.
+
+#### Multistep Methods
+
+Quasi-constant stepping is the time stepping strategy which matches the classic
+GEAR, LSODE,  and `ode15s` integrators. The variable-coefficient methods match
+the ideas of the classic EPISODE integrator and early VODE designs. The Fixed
+Leading Coefficient (FLC) methods match the behavior of the classic VODE and
+Sundials CVODE integrator.
+
+- `QNDF1` - An adaptive order 1 quasi-constant timestep L-stable numerical
+  differentiation function (NDF) method. Optional parameter `kappa` defaults
+  to Shampine's accuracy-optimal `-0.1850`.
+- `QBDF1` - An adaptive order 1 L-stable BDF method. This is equivalent to
+  implicit Euler but using the BDF error estimator.
+- `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
+  BDF method.
+- `QNDF2` - An adaptive order 2 quasi-constant timestep L-stable numerical
+  differentiation function (NDF) method.
+- `QBDF2` - An adaptive order 2 L-stable BDF method using quasi-constant timesteps.
+- `QNDF` - An adaptive order quasi-constant timestep NDF method. Utilizes
+  Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
+  for a tuple of `kappa` coefficients).
+- `QBDF` - An adaptive order quasi-constant timestep BDF method.
 
 ### Sundials.jl
 

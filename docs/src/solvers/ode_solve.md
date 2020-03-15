@@ -678,6 +678,9 @@ Sundials CVODE integrator.
   implicit Euler but using the BDF error estimator.
 - `ABDF2` - An adaptive order 2 L-stable fixed leading coefficient multistep
   BDF method.
+- `QNDF2` - An adaptive order 2 quasi-constant timestep L-stable numerical
+  differentiation function (NDF) method.
+- `QBDF2` - An adaptive order 2 L-stable BDF method using quasi-constant timesteps.
 - `QNDF` - An adaptive order quasi-constant timestep NDF method. Utilizes
   Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
   for a tuple of `kappa` coefficients).
