@@ -62,6 +62,11 @@ extra options for the solvers, see the ODE solver page.
 - `ROS34PW2` - A 4th order stiffy accurate Rosenbrock-W method for PDAEs.
 - `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
 
+#### FIRK Methods
+
+- `RadauIIA5` - An A-B-L stable fully implicit Runge-Kutta method with internal
+  tableau complex basis transform for efficiency.
+
 #### SDIRK Methods
 
 SDIRK Methods
