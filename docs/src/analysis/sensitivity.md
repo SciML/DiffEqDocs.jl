@@ -651,3 +651,39 @@ sol = solve(prob,Tsit5(),reltol=1e-12,abstol=1e-12)
 Thus one should check the stability of the backsolve on their type of problem before
 enabling this method. Additionally, using checkpointing with backsolve can be a
 low memory way to stabilize it.
+
+## Second Order Sensitivity Analysis via second_order_sensitivities (Experimental)
+
+Second order sensitivity analysis is used for the fast calculation of Hessian
+matrices. Currently there are two functions available. The first, `second_order_sensitivities`,
+calculates the Hessian of the solution to a differential equation with respect
+to a loss function on the solution `loss(sol)`. The second calculates Hessian-vector
+products, i.e. `H*v`, with respect to such a loss. The syntax is:
+
+```julia
+H  = second_order_sensitivities(loss,prob,alg,args...;kwargs...)
+Hv  = second_order_sensitivity_product(loss,v,prob,alg,args...;kwargs...)
+```
+
+These methods utilize what is known as forward-over-reverse to mix a forward-mode
+sensitivity analysis with an adjoint sensitivity analysis for a fast computation.
+
+### Example second order sensitivity analysis calculation
+
+```julia
+using DiffEqSensitivity, OrdinaryDiffEq, DiffEqBase, ForwardDiff
+using Test
+
+function lotka!(du,u,p,t)
+  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
+  du[2] = dy = -p[3]*u[2] + p[4]*u[1]*u[2]
+end
+
+p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
+prob = ODEProblem(lotka!,u0,(0.0,10.0),p)
+loss(sol) = sum(sol)
+v = ones(4)
+
+H  = second_order_sensitivities(loss,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)
+Hv = second_order_sensitivity_product(loss,v,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)
+```
