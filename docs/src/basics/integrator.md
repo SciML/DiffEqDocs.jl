@@ -103,6 +103,7 @@ of the differential equation. Useful fields are:
 * `sol` - the current state of the solution
 * `tprev` - the last timepoint
 * `uprev` - the value at the last timepoint
+* `uprev2` - the value at the second-last timepoint(For this to work, make sure to set `alg_extrapolates(alg::Your_Alg) = true` in alg_utils.jl)
 * `tdir` - the sign for the direction of time
 
 The `p` is the data which is provided by the user as a keyword arg in
@@ -118,7 +119,7 @@ The `sol` field holds the current solution. This current solution includes the
 interpolation function if available, and thus `integrator.sol(t)` lets one
 interpolate efficiently over the whole current solution. Additionally, a
 a "current interval interpolation function" is provided on the `integrator` type
-via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`. 
+via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`.
 This uses only the solver information from the interval
 `[tprev,t]` to compute the interpolation, and is allowed to extrapolate beyond
 that interval.
