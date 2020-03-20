@@ -460,8 +460,8 @@ First we will generate a noise process by solving an SDE:
 
 ```julia
 using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess
-f1(t,u) = 1.01u
-g1(t,u) = 1.01u
+f1(u, p, t) = 1.01u
+g1(u, p, t) = 1.01u
 dt = 1//2^(4)
 prob1 = SDEProblem(f1,g1,1.0,(0.0,1.0))
 sol1 = solve(prob1,EM(),dt=dt,save_noise = true)
@@ -557,8 +557,8 @@ that way the noise can be used over an indefinite integral.
 ```julia
 const μ = 1.5
 const σ = 1.2
-f(t,u) = μ*u
-g(t,u) = σ*u
+f(u, p, t) = μ*u
+g(u, p, t) = σ*u
 prob = SDEProblem(f,g,1.0,(0.0,Inf))
 ```
 
