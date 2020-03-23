@@ -306,8 +306,7 @@ stan_inference(prob::ODEProblem,t,data,priors = nothing;alg=:rk45,
 `stan_inference` uses [Stan.jl](https://stanjulia.github.io/CmdStan.jl/latest/INTRO/)
 to perform the Bayesian inference. The
 [Stan installation process](https://stanjulia.github.io/CmdStan.jl/latest/INSTALLATION/)
-is required to use this function. The input requires that the function is defined
-by a `ParameterizedFunction` with the `@ode_def` macro. `t` is the array of time
+is required to use this function. `t` is the array of time
 and `data` is the array where the first dimension (columns) corresponds to the
 array of system values. `priors` is an array of prior distributions for each
 parameter, specified via a [Distributions.jl](https://juliastats.github.io/Distributions.jl/dev/)
@@ -1027,7 +1026,7 @@ the original noise parameter after searching a two orders of magnitude range.
 ### Stan
 
 Like in the previous examples, we setup the Lotka-Volterra system and generate
-data. Note that using `@ode_def` here is required.
+data.
 
 ```julia
 f1 = @ode_def begin

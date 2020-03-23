@@ -1089,10 +1089,8 @@ detection, and [discrete variables need to be updated appropriately](@ref diffeq
 
 ### MATLABDiffEq.jl
 
-These algorithms require that the problem was defined using a `ParameterizedFunction`
-via the `@ode_def` macro. Note that this setup is not automatically included
-with DifferentialEquaitons.jl. To use the following algorithms, you must install
-and use MATLABDiffEq.jl:
+Note that this setup is not automatically included with DifferentialEquaitons.jl.
+To use the following algorithms, you must install and use MATLABDiffEq.jl:
 
 ```julia
 ]add https://github.com/JuliaDiffEq/MATLABDiffEq.jl
