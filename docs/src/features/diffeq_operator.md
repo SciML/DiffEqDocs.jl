@@ -63,7 +63,7 @@ for it to work in the solvers.
 2. If the operator is not a constant, update it with `(u,p,t)`. A mutating form, i.e.
    `update_coefficients!(A,u,p,t)` that changes the internal coefficients, and a
    out-of-place form `B = update_coefficients(A,u,p,t)`.
-3. `is_constant(A)` trait for whether the operator is constant or not.
+3. `isconstant(A)` trait for whether the operator is constant or not.
 
 ### AbstractDiffEqLinearOpeartor Interface Description
 
