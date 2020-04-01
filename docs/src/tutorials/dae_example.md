@@ -69,7 +69,7 @@ prob = DAEProblem(f,du₀,u₀,tspan,differential_vars=differential_vars)
 
 `differential_vars` is an option which states which of the variables are differential,
 i.e. not purely algebraic (which means that their derivative shows up in the residual
-equations). This is required for the algorithm to be able to find consistant initial
+equations). This is required for the algorithm to be able to find consistent initial
 conditions. Notice that the first two variables are determined by their changes, but
 the last is simply determined by the conservation equation. Thus we use
 `differential_vars = [true,true,false]`.
@@ -83,7 +83,7 @@ sol = solve(prob,IDA())
 ```
 
 In order to clearly see all the features of this solution, it should be plotted
-on a logarithmic scale. We'll also plot each on a different subplot to allow
+on a logarithmic scale. We'll also plot each on a different subplot, to allow
 scaling the y-axis appropriately.
 
 ```julia
