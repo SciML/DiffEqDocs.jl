@@ -451,7 +451,8 @@ as sufficiently small:
 ```julia
 function reduction(u,batch,I)
   u = append!(u,batch)
-  u,((var(u)/sqrt(last(I)))/mean(u)<0.5) ? true : false
+  finished = (var(u) / sqrt(last(I))) / mean(u) < 0.5
+  u, finished
 end
 ```
 
