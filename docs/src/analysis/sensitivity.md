@@ -185,11 +185,14 @@ the definition of the methods.
   ignore saving arguments during the gradient calculation. When checkpointing is
   enabled it will only require the memory to interpolate between checkpoints.
   Only supports ODEs.
-- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,ADKwargs...)`: An implementation of adjoint
-  sensitivity analysis which develops a full continuous solution of the reverse
-  solve in order to perform a post-ODE quadrature. This method requires the
-  the dense solution and will ignore saving arguments during the gradient
-  calculation. The tolerances in the constructor control the inner quadrature.
+- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,compile=false,ADKwargs...)`: 
+  An implementation of adjoint sensitivity analysis which develops a full 
+  continuous solution of the reverse solve in order to perform a post-ODE 
+  quadrature. This method requires the the dense solution and will ignore 
+  saving arguments during the gradient calculation. The tolerances in the 
+  constructor control the inner quadrature. The inner quadrature uses a
+  ReverseDiff vjp if autojacvec, and `compile=false` by default but can
+  compile the tape under the same circumstances as `ReverseDiffVJP`. 
   Only supports ODEs.
 - `TrackerAdjoint()`: An implementation of discrete adjoint sensitivity analysis
   using the Tracker.jl tracing-based AD. Supports in-place functions through
