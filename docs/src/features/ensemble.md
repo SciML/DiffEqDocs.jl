@@ -280,7 +280,7 @@ and use that for calculating the trajectory:
 
 ```julia
 @everywhere function prob_func(prob,i,repeat)
-  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
+  remake(prob,u0=rand()*prob.u0)
 end
 ```
 
@@ -320,7 +320,7 @@ use the `@everywhere` macro. Instead, the same problem can be implemented simply
 using DifferentialEquations
 prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 function prob_func(prob,i,repeat)
-  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
+  remake(prob,u0=rand()*prob.u0)
 end
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
 sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)
@@ -343,8 +343,7 @@ we could simply index the `linspace` type:
 ```julia
 initial_conditions = range(0, stop=1, length=100)
 function prob_func(prob,i,repeat)
-  prob.u0 = initial_conditions[i]
-  prob
+  remake(prob,u0=initial_conditions[i])
 end
 ```
 
@@ -387,8 +386,8 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 
 ```julia
 function prob_func(prob,i,repeat)
-  prob.p[3:4] = 0.3rand(2)
-  prob
+  x = 0.3rand(2)
+  remake(prob,p=[p[1:2];x])
 end
 ```
 
@@ -440,7 +439,7 @@ Our `prob_func` will simply randomize the initial condition:
 prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 
 function prob_func(prob,i,repeat)
-  ODEProblem(prob.f,rand()*prob.u0,prob.tspan)
+  remake(prob,u0=rand()*prob.u0)
 end
 ```
 
