@@ -1,7 +1,7 @@
 # Algorithm Development and Testing
 
 Algorithm developing and testing tools are provided by DiffEqDevTools.jl and
-are documented in the [developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/index.html).
+are documented in the [developer documentation](https://sciml.github.io/DiffEqDevDocs.jl/dev/index.html).
 
 ## Installation
 
