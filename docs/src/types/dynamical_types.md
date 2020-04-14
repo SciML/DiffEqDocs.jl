@@ -118,5 +118,4 @@ HamiltonianProblem{T}(H,p0,q0,tspan;kwargs...)
 * `p0`: The initial momentums.
 * `q0`: The initial positions.
 * `tspan`: The timespan for the problem.
-* `callback`: A callback to be applied to every solver which uses the problem.
-  Defaults to nothing.
+* `p`: Defaults to `nothing`. `p` will be passed to `H`'s `params`. 
