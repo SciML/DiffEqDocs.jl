@@ -129,5 +129,5 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
 # end
 
 deploydocs(
-   repo = "github.com/JuliaDiffEq/DiffEqDocs.jl.git"
+   repo = "github.com/SciML/DiffEqDocs.jl.git"
 )
