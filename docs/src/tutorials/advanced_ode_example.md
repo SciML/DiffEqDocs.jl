@@ -269,7 +269,7 @@ end
 p = (3.4, 1., 10., step(xyd_brusselator))
 ```
 
-Given this setup, we can give and example `input` and `output` and call `sparsity!`
+Given this setup, we can give and example `input` and `output` and call `jacobian_sparsity`
 on our function with the example arguments and it will kick out a sparse matrix
 with our pattern, that we can turn into our `jac_prototype`.
 
@@ -277,7 +277,7 @@ with our pattern, that we can turn into our `jac_prototype`.
 using SparsityDetection, SparseArrays
 input = rand(32,32,2)
 output = similar(input)
-sparsity_pattern = sparsity!(brusselator_2d_loop,output,input,p,0.0)
+sparsity_pattern = jacobian_sparsity(brusselator_2d_loop,output,input,p,0.0)
 jac_sparsity = Float64.(sparse(sparsity_pattern))
 ```
 
