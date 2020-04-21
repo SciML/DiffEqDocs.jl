@@ -4,9 +4,6 @@ The `AbstractDiffEqOperator` interface is an interface for declaring parts of
 a differential equation as linear or affine. This then allows the solvers to
 exploit linearity to achieve maximal performance.
 
-!!! note
-    This functionality is under heavy development. Interfaces may change. Treat this as experimental until the end of Summer 2019.
-
 ## Using DiffEqOperators
 
 `AbstractDiffEqOperator`s act like functions. When defined, `A` has function
