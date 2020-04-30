@@ -281,20 +281,20 @@ plot(p1,p2,p1_,p2_)
 ### Parallelized GSA Example
 
 In all of the previous examples, `f(p)` was calculated serially. However, we can parallelize our computations
-by using the batch interface. In the batch interface, each row `p[i,:]` is a set of parameters, and we output
-a row for each set of parameters. Here we showcase using the [Ensemble Interface](@ref ensemble) to use
+by using the batch interface. In the batch interface, each column `p[:,i]` is a set of parameters, and we output
+a column for each set of parameters. Here we showcase using the [Ensemble Interface](@ref ensemble) to use
 `EnsembleGPUArray` to perform automatic multithreaded-parallelization of the ODE solves.
 
 ```julia
 f1 = function (p)
-  prob_func(prob,i,repeat) = remake(prob;p=p[i,:])
+  prob_func(prob,i,repeat) = remake(prob;p=p[:,i])
   ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
-  sol = solve(ensemble_prob,Tsit5(),EnsembleThreads();saveat=t,trajectories=size(p,1))
+  sol = solve(ensemble_prob,Tsit5(),EnsembleThreads();saveat=t,trajectories=size(p,2))
   # Now sol[i] is the solution for the ith set of parameters
-  out = zeros(size(p,1),2)
-  for i in 1:size(p,1)
-    out[i,1] = mean(sol[i][1,:])
-    out[i,2] = maximum(sol[i][2,:])
+  out = zeros(2,size(p,2))
+  for i in 1:size(p,2)
+    out[1,i] = mean(sol[i][1,:])
+    out[2,i] = maximum(sol[i][2,:])
   end
   out
 end
