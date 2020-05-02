@@ -17,7 +17,7 @@ EnsembleProblem(prob::DEProblem;
                 output_func = (sol,i) -> (sol,false),
                 prob_func= (prob,i,repeat)->(prob),
                 reduction = (u,data,I)->(append!(u,data),false),
-                u_init = [])
+                u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
 ```
 
 * `prob_func`: The function by which the problem is to be modified. `prob`
@@ -33,7 +33,13 @@ EnsembleProblem(prob::DEProblem;
   Defaults to appending the data from the batches. The second part of the output
   determines whether the simulation has converged. If `true`, the simulation
   will exit early. By default, this is always `false`.
-
+* `safetycopy`: Determines whether a safety `deepcopy` is called on the `prob`
+  before the `prob_func`. By default this is true for any user-given `prob_func`,
+  as without this, modifying the arguments of something in the `prob_func`, such
+  as parameters or caches stored within the user function, are not necessarily
+  thread-safe. If you know that your function is thread-safe, then setting this
+  to `false` can improve performance when used with threads.
+  
 One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
@@ -97,8 +103,8 @@ are handled. Currently, the ensemble algorithm types are:
 * `EnsembleSplitThreads()` - This uses threading on each process, splitting the problem
   into `nprocs()` even parts. This is for solving many quick trajectories on a
   multi-node machine. It's recommended you have one process on each node.
-* `EnsembleGPUArray()` - Requires installing and `using DiffEqGPU`. This uses a GPU for computing the ensemble 
-  with hyperparallelism. It will automatically recompile your Julia functions to the GPU. A standard GPU sees 
+* `EnsembleGPUArray()` - Requires installing and `using DiffEqGPU`. This uses a GPU for computing the ensemble
+  with hyperparallelism. It will automatically recompile your Julia functions to the GPU. A standard GPU sees
   a 5x performance increase over a 16 core Xeon CPU. However, there are limitations on what functions can
   auto-compile in this fashion, please see the [DiffEqGPU README for more details](https://github.com/JuliaDiffEq/DiffEqGPU.jl)
 
@@ -122,7 +128,7 @@ of the plots. An additional argument is `idxs` which allows you to choose which
 components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
 of the odd components. An other additional argument is `zcolors` (an alias of `marker_z`) which allows
-you to pass a `zcolor` for each series. For details about `zcolor` see the 
+you to pass a `zcolor` for each series. For details about `zcolor` see the
 [Series documentation for Plots.jl](http://docs.juliaplots.org/dev/attributes/).
 
 ## Analyzing an Ensemble Experiment
@@ -251,9 +257,9 @@ around the mean.
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
 we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
-will be parallelized. Here we will choose to use distributed parallelism which means 
-that the required functions must be made available to all processes. This can be 
-achieved with 
+will be parallelized. Here we will choose to use distributed parallelism which means
+that the required functions must be made available to all processes. This can be
+achieved with
 [`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
@@ -347,12 +353,12 @@ function prob_func(prob,i,repeat)
 end
 ```
 
-It's worth noting that if you run this code successfully, there will be no visible output. 
+It's worth noting that if you run this code successfully, there will be no visible output.
 
 ## Example 2: Solving an SDE with Different Parameters
 
-Let's solve the same SDE but with varying parameters. Let's create a Lotka-Volterra 
-system with multiplicative noise. Our Lotka-Volterra system will have as its 
+Let's solve the same SDE but with varying parameters. Let's create a Lotka-Volterra
+system with multiplicative noise. Our Lotka-Volterra system will have as its
 drift component:
 
 ```julia
