@@ -59,20 +59,16 @@ while `RegularJump`s require special algorithms.
 The constructor for a `RegularJump` is:
 
 ```julia
-RegularJump(rate,c,c_prototype;mark_dist = nothing,constant_c = false)
+RegularJump(rate,c,numjumps;mark_dist = nothing)
 ```
 
 - `rate(out,u,p,t)` is the function which computes the rate for every regular
   jump process
-- `c(dc,u,p,t,mark)` is the current Stoichiometry matrix for each jump process
-- `dc` is the cache array to be used for `dc`
-- `mark_dist` is the distribution for the mark
-- `constant_c` denotes whether the Stoichiometry matrix `c` is constant
-
-`dc` is an `n x m` matrix, where `n` is the number of Poisson processes and `m`
-is the number of dependent variables (should match `length(u)`). `rate` is a
-vector equation which should compute the rates in to `out` which is a length
-`n` vector.
+- `c(du,u,p,t,counts,mark)` is calculates the update given `counts` number of
+  jumps for each jump process in the interval.
+- `numjumps` is the number of jump processes, i.e. the number of `rate` equations
+  and the number of `counts`
+- `mark_dist` is the distribution for the mark.
 
 #### Defining a Constant Rate Jump
 
