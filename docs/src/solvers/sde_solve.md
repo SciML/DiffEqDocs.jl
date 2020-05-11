@@ -244,7 +244,7 @@ The following methods require analytic derivatives of the diffusion term.
 
 #### High Weak Order Methods
 
-None of the following methods is adaptive.
+Note that none of the following methods are adaptive.
 
 - `SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
   size. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
