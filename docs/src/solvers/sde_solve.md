@@ -36,10 +36,11 @@ In addition, the option `symplectic=true` will turns these methods into an
 implicit Midpoint extension which is symplectic in distribution but has an
 accuracy tradeoff.
 
-If only an estimation for the expectation value of the solution is required, i.e.,
+If only an estimation for the expected value of the solution is required, i.e.,
 if one is only interested in an accurate draw from the distribution induced by
-a given SDE, the use of high weak order solvers is recommended.
-Specifically, `DRI1` is preferred for a high number of Wiener processes.
+a given SDE, the use of high weak order solvers is recommended. Specifically,
+`DRI1` is preferred for a high number of Wiener processes. Currently, all high
+weak order solvers require a fixed step size.
 
 ## Mass Matrices and Stochastic DAEs
 
@@ -108,8 +109,6 @@ Orders are given in terms of strong order.
   with an error estimator based on Lamba due to Rackauckas. Strong order 0.5 in
   the Stratonovich sense. Can handle all forms of noise, including non-diagonal,
   scalar, and colored noise.†
-- `SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
-  size. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†  
 - `RKMil` - An explicit Runge-Kutta discretization of the strong order 1.0
   Milstein method. Defaults to solving the Ito problem, but
   `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
@@ -245,6 +244,10 @@ The following methods require analytic derivatives of the diffusion term.
 
 #### High Weak Order Methods
 
+None of the following methods is adaptive.
+
+- `SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
+  size. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
 - `DRI1` - Fixed step weak order 2.0 for Ito SDEs with minimized error constants.
   Can handle diagonal, non-diagonal, and scalar additive noise.†
 - `RI1` - Fixed step weak order 2.0 for Ito SDEs.
