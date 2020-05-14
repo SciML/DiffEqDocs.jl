@@ -323,41 +323,12 @@ Now let's see how the version with sparsity compares to the version without:
 
 ```julia
 @btime solve(prob_ode_brusselator_2d,save_everystep=false) # 51.714 s (7317 allocations: 70.12 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 36.374 s (367199 allocations: 896.99 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 2.880 s (55533 allocations: 885.09 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false) # 1.185 s (55081 allocations: 347.79 MiB)
 ```
 
-### Declaring Color Vectors for Fast Construction
-
-If you cannot directly define a Jacobian function, you can use the `colorvec`
-to speed up the Jacobian construction. What the `colorvec` does is allows for
-calculating multiple columns of a Jacobian simultaniously by using the sparsity
-pattern. An explanation of matrix coloring can be found in the
-[MIT 18.337 Lecture Notes](https://mitmath.github.io/18337/lecture9/stiff_odes).
-
-To perform general matrix coloring, we can use
-[SparseDiffTools.jl](https://github.com/JuliaDiffEq/SparseDiffTools.jl). For
-example, for the Brusselator equation:
-
-```julia
-using SparseDiffTools
-colorvec = matrix_colors(jac_sparsity)
-@show maximum(colorvec) # maximum(colorvec) = 12
-```
-
-This means that we can now calculate the Jacobian in 12 function calls. This is
-a nice reduction from 2048 using only automated tooling! To now make use of this
-inside of the ODE solver, you simply need to declare the colorvec:
-
-```julia
-f = ODEFunction(brusselator_2d_loop;jac_prototype=jac_sparsity,
-                                    colorvec=colorvec)
-prob_ode_brusselator_2d_sparse = ODEProblem(f,
-                                     init_brusselator_2d(xyd_brusselator),
-                                     (0.,11.5),p)
-@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 5.519 s (19039 allocations: 881.07 MiB)
-```
-
-Notice the massive speed enhancement!
+From some automated tooling an a choice of an algorithm, we went from almost a
+minute to almost a second!
 
 ## Defining Linear Solver Routines and Jacobian-Free Newton-Krylov
 
@@ -395,8 +366,8 @@ Jv = JacVecOperator(brusselator_2d_loop,u0,p,0.0)
 and then we can use this by making it our `jac_prototype`:
 
 ```julia-repl
-julia> f = ODEFunction(brusselator_2d_loop;jac_prototype=Jv);
-julia> prob_ode_brusselator_2d_jacfree = ODEProblem(f,u0,(0.,11.5),p);
+julia> f2 = ODEFunction(brusselator_2d_loop;jac_prototype=Jv);
+julia> prob_ode_brusselator_2d_jacfree = ODEProblem(f2,u0,(0.,11.5),p);
 julia> @btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false)
 8.352 s (1875298 allocations: 78.86 MiB)
 ```
