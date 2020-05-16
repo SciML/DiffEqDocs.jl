@@ -30,6 +30,13 @@ algorithms are optimized for pure jump problems.
 
 ## RegularJump Compatible Methods
 
+### StochasticDiffEq.jl
+
+These methods support mixing with event handling, other jump types, and all of
+the features of the normal differential equation solvers.
+
+- `TauLeaping`: an adaptive tau-leaping algorithm with post-leap estimates.
+
 ### DiffEqJump.jl
 
 - `SimpleTauLeaping`: a tau-leaping algorithm for pure `RegularJump` `JumpProblem`s.
