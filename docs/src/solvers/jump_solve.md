@@ -14,7 +14,7 @@ the  `aggregator` version of the SSA for pure `ConstantRateJump` and/or
 events are necessary, then `FunctionMap` does well.
 
 If there is a `RegularJump`, then specific methods must be used. The current
-recommended method is `SimpleTauLeaping`.
+recommended method is `TauLeaping`.
 
 ## Special Methods for Pure Jump Problems
 
