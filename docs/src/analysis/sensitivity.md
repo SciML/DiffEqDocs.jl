@@ -518,7 +518,7 @@ dg_{2}&=1-u_{2}
 and thus:
 
 ```julia
-dg(out,u,i) = (out.=1.0.-u)
+dg(out,u,p,t,i) = (out.=1.0.-u)
 ```
 
 If we had data, we'd just replace `1.0` with `data[i]`. To get the adjoint
