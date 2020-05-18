@@ -182,7 +182,7 @@ the Julia code for this.
 ```julia
 using ModelingToolkit
 de = modelingtoolkitize(prob)
-ModelingToolkit.generate_jacobian(de...)[2] # Second is in-place
+ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
 ```
 
 which outputs:
