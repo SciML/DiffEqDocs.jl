@@ -1,6 +1,8 @@
-# [Jump Problem Solvers](@id jump_solve)
+# [Jump Problem and Jump Diffusion Solvers](@id jump_solve)
 
-`solve(prob::JumpProblem,alg;kwargs)`
+```julia
+solve(prob::JumpProblem,alg;kwargs)
+```
 
 ## Recommended Methods
 
@@ -44,3 +46,13 @@ the features of the normal differential equation solvers.
 - `SimpleTauLeaping`: a tau-leaping algorithm for pure `RegularJump` `JumpProblem`s.
   Requires a choice of `dt`.
 - `RegularSSA`: a version of SSA for pure `RegularJump` `JumpProblem`s.
+
+## Regular Jump Diffusion Compatible Methods
+
+Regular jump diffusions are `JumpProblem`s where the internal problem is an `SDEProblem`
+and the jump process has designed a regular jump.
+
+### StochasticDiffEq.jl
+
+- `EM`: Explicit Euler-Maruyama.
+- `ImplicitEM`: Implicit Euler-Maruyama. See the SDE solvers page for more details.
