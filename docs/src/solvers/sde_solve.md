@@ -186,20 +186,22 @@ For `SRA` and `SRI`, the following option is allowed:
 #### Stiff Methods
 
 - `ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which
-  defaults to `theta=1/2` or the Trapezoid method on the drift term. This method
+  defaults to `theta=1` or the Trapezoid method on the drift term. This method
   defaults to `symplectic=false`, but when true and `theta=1/2` this is the
   implicit Midpoint method on the drift term and is symplectic in distribution.
   Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
   Uses a 1.0/1.5 heuristic for adaptive time stepping.
+- `STrapezoid` - An alias for `ImplicitEM` with `theta=1/2`
+- `SImplicitMidpoint` - An alias for `ImplicitEM` with `theta=1/2` and `symplectic=true`
 - `ImplicitEulerHeun` - An order 0.5 Stratonovich drift-implicit method. This is a
   theta method which defaults to `theta=1/2` or the Trapezoid method on the
   drift term. This method defaults to `symplectic=false`, but when true and
-  `theta=1/2` this is the implicit Midpoint method on the drift term and is
+  `theta=1` this is the implicit Midpoint method on the drift term and is
   symplectic in distribution. Can handle all forms of noise, including
   non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for
   adaptive time stepping.
 - `ImplicitRKMil` - An order 1.0 drift-implicit method. This is a theta method which
-  defaults to `theta=1/2` or the Trapezoid method on the drift term. Defaults
+  defaults to `theta=1` or the Trapezoid method on the drift term. Defaults
   to solving the Ito problem, but `ImplicitRKMil(interpretation=:Stratonovich)`
   makes it solve the Stratonovich problem. This method defaults to
   `symplectic=false`, but when true and `theta=1/2` this is the
