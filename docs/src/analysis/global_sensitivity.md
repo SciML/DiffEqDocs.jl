@@ -215,7 +215,6 @@ Now let's perform a Morris global sensitivity analysis on this model. We specify
 `[1,5]` for each of the parameters, and thus call:
 
 ```julia
-
 m = gsa(f1,Morris(total_num_trajectory=1000,num_trajectory=150),[[1,5],[1,5],[1,5],[1,5]])
 ```
 Let's get the means and variances from the `MorrisResult` struct.
@@ -242,7 +241,7 @@ scatter(m.means[2,:], m.variances[2,:],series_annotations=[:a,:b,:c,:d],color=:g
 For the Sobol method we can similarly do:
 
 ```julia
-m = gsa(f1,Sobol(),[[1,5],[1,5],[1,5],[1,5]])
+m = gsa(f1,Sobol(),[[1,5],[1,5],[1,5],[1,5]],N=1000)
 ```
 
 ### Design Matrices
