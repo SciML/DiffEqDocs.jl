@@ -18,38 +18,38 @@ Instead of working on the `Vector{uType}` directly, we can use the provided
 array interface.
 
 ```julia
-sol[i]
+sol[j]
 ```
 
-to access the value at timestep `i` (if the timeseries was saved), and
+to access the value at timestep `j` (if the timeseries was saved), and
 
 ```julia
-sol.t[i]
+sol.t[j]
 ```
 
-to access the value of `t` at timestep `i`. For multi-dimensional systems, this
+to access the value of `t` at timestep `j`. For multi-dimensional systems, this
 will address first by component and lastly by time, and thus
 
 ```julia
 sol[i,j]
 ```
 
-will be the `i`th component at timestep `j`. If the independent variables had shape
+will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major, so the leading dimension should be contiguous in memory. If the independent variables had shape
 (for example, was a matrix), then `i` is the linear index. We can also access
 solutions with shape:
 
 ```julia
-sol[i,j,k]
+sol[i,k,j]
 ```
 
-gives the `[i,j]` component of the system at timestep `k`. The colon operator is
+gives the `[i,k]` component of the system at timestep `j`. The colon operator is
 supported, meaning that
 
 ```julia
-sol[j,:]
+sol[i,:]
 ```
 
-gives the timeseries for the `j`th component.
+gives the timeseries for the `i`th component.
 
 ## Using the AbstractArray Interface
 
