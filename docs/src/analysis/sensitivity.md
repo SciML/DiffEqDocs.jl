@@ -194,6 +194,10 @@ the definition of the methods.
   ReverseDiff vjp if autojacvec, and `compile=false` by default but can
   compile the tape under the same circumstances as `ReverseDiffVJP`. 
   Only supports ODEs.
+- `ReverseDiffAdjoint()`: An implementation of discrete adjoint sensitivity analysis
+  using the ReverseDiff.jl tracing-based AD. Supports in-place functions through
+  an Array of Structs formulation, and supports out of place through struct of
+  arrays.
 - `TrackerAdjoint()`: An implementation of discrete adjoint sensitivity analysis
   using the Tracker.jl tracing-based AD. Supports in-place functions through
   an Array of Structs formulation, and supports out of place through struct of
@@ -253,10 +257,10 @@ is:
   uses the least memory but on very stiff problems it may be unstable and
   require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
   allowing checkpointing to control total memory use.
-- The methods which use automatic differentiation (`TrackerAdjoint`,
-  `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support the full range of
-  DifferentialEquations.jl features (SDEs, DDEs, events, etc.), but only work
-  on native Julia solvers. The methods which utilize altered differential
+- The methods which use automatic differentiation (`ReverseDiffAdjoitn`,
+  `TrackerAdjoint`, `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support 
+  the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.), 
+  but only work on native Julia solvers. The methods which utilize altered differential
   equation systems only work on ODEs (without events), but work on any ODE solver.
 - For non-ODEs with large numbers of parameters, `TrackerAdjoint` in out-of-place
   form may be the best performer.
