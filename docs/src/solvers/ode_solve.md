@@ -79,8 +79,8 @@ For asymptotically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
 in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
 `CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
-this method can be less stiff than other methods and stuff may fail at low
-accuracy situations. Another good choice for this regime is `lsoda`.
+this method can handle less stiffness than other methods and its Newton iterations
+may fail at low accuracy situations. Another good choice for this regime is `lsoda`.
 
 #### Special Properties of Stiff Integrators
 
