@@ -9,7 +9,7 @@ types which can be helpful for modeling differential equations problems.
 ## ArrayPartitions
 
 ArrayPartitions in DiffEq are used for heterogeneous arrays. For example,
-`PartitionedODEProblem` solvers use them internally to turn the separate parts
+`DynamicalODEProblem` solvers use them internally to turn the separate parts
 into a single array. You can construct an `ArrayPartition` using RecursiveArrayTools.jl:
 
 ```julia
