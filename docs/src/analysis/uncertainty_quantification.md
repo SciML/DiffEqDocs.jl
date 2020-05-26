@@ -198,7 +198,7 @@ using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
 
 we see that we can extend the amount of time until we deviate strongly from the "true" solution.
 Of course, for a chaotic system like the Lorenz one presented here, it is impossible to follow the true solution
-for long times, due to the fact that the system is chaotic and unavoidable deviations due to the numerical precision of a cumputer get amplified exponentially.
+for long times, due to the fact that the system is chaotic and unavoidable deviations due to the numerical precision of a computer get amplified exponentially.
 
 However, not all hope is lost. The [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) is a strong statement for having confidence in numerical evolution of chaotic systems:
 
