@@ -916,11 +916,11 @@ Fitness: -739.658433715
 
 This shows that it found the true parameters as the best fit to the likelihood.
 
-## Parameter Estimation for Stochastic Differential Equations and Monte Carlo
+## Parameter Estimation for Stochastic Differential Equations and Ensembles
 
 We can use any `DEProblem`, which not only includes `DAEProblem` and `DDEProblem`s,
 but also stochastic problems. In this case, let's use the generalized maximum
-likelihood to fit the parameters of an SDE's Monte Carlo evaluation.
+likelihood to fit the parameters of an SDE's ensemble evaluation.
 
 Let's use the same Lotka-Volterra equation as before, but this time add noise:
 
@@ -955,12 +955,12 @@ aggregate_data = convert(Array,VectorOfArray([generate_data(t) for i in 1:10000]
 ```
 
 Now let's estimate the parameters. Instead of using single runs from the SDE, we
-will use a `MonteCarloProblem`. This means that it will solve the SDE `N` times
+will use a `EnsembleProblem`. This means that it will solve the SDE `N` times
 to come up with an approximate probability distribution at each time point and
 use that in the likelihood estimate.
 
 ```julia
-monte_prob = MonteCarloProblem(prob)
+monte_prob = EnsembleProblem(prob)
 ```
 
 We use Optim.jl for optimization below
