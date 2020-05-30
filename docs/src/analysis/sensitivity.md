@@ -47,13 +47,22 @@ solve(prob,args...;sensealg=InterpolatingAdjoint(),
 ```
 
 `solve` is fully compatible with automatic differentiation libraries
-like [Zygote.jl](https://github.com/FluxML/Zygote.jl) and will automatically
-replace any calculations of the solution's derivative with a fast method.
-The keyword argument `sensealg` controls the dispatch to the
+like: 
+
+- [Zygote.jl](https://github.com/FluxML/Zygote.jl) 
+- [ReverseDiff.jl](https://github.com/JuliaDiff/ReverseDiff.jl)
+- [Tracker.jl](https://github.com/FluxML/Tracker.jl)
+- [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
+
+and will automatically replace any calculations of the solution's derivative 
+with a fast method. The keyword argument `sensealg` controls the dispatch to the
 `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
 Note that `solve` in an AD context does not allow higher order
 interpolations unless `sensealg=DiffEqBase.SensitivityADPassThrough()`
 is used, i.e. going back to the AD mechanism.
+
+!!! note
+  ForwardDiff.jl only does forward differentiation pass through.
 
 ### solve Differentiation Examples
 
