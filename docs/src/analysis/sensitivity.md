@@ -37,27 +37,25 @@ To use this functionality, you must install DiffEqSensitivty.jl:
 using DiffEqSensitivity
 ```
 
-## High Level Interface: `concrete_solve`
+## High Level Interface: `sensealg`
 
-The highest level interface is provided by the function `concrete_solve`:
+The highest level interface is provided by the function `solve`:
 
 ```julia
-concrete_solve(prob,alg,u0=prob.u0,p=prob.p,args...;
-               sensealg=InterpolatingAdjoint(),
-               checkpoints=sol.t,kwargs...)
+solve(prob,args...;sensealg=InterpolatingAdjoint(),
+      checkpoints=sol.t,kwargs...)
 ```
 
-This function is fully compatible with automatic differentiation libraries
+`solve` is fully compatible with automatic differentiation libraries
 like [Zygote.jl](https://github.com/FluxML/Zygote.jl) and will automatically
 replace any calculations of the solution's derivative with a fast method.
-The return of `concrete_solve` is a concretized version of `solve`, i.e. no
-interpolations are possible but it has the same array-like semantics of the
-full solution object. The keyword argument `sensealg` controls the dispatch
-to the `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
+The keyword argument `sensealg` controls the dispatch to the
+`AbstractSensitivityAlgorithm` used for the sensitivity calculation.
+Note that `solve` in an AD context does not allow higher order
+interpolations unless `sensealg=DiffEqBase.SensitivityADPassThrough()`
+is used, i.e. going back to the AD mechanism.
 
-### concrete_solve Examples
-
-Computing a solution with `concrete_solve` looks almost exactly like `solve`:
+### solve Differentiation Examples
 
 ```julia
 using DiffEqSensitivity, OrdinaryDiffEq, Zygote
@@ -68,13 +66,24 @@ function fiip(du,u,p,t)
 end
 p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
 prob = ODEProblem(fiip,u0,(0.0,10.0),p)
-sol = concrete_solve(prob,Tsit5())
+sol = solve(prob,Tsit5())
 ```
 
 But if we want to perturb `u0` and `p` in a gradient calculation then we can.
 
 ```julia
-du01,dp1 = Zygote.gradient((u0,p)->sum(concrete_solve(prob,Tsit5(),u0,p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)
+function sum_of_solution(u0,p)
+  _prob = remake(prob,u0=u0,p=p)
+  sum(solve(prob,Tsit5(),saveat=0.1,sensealg=QuadratureAdjoint()))
+end
+du01,dp1 = Zygote.gradient(sum_of_solution,u0,p)
+```
+
+Or we can use the `u0` and `p` keyword argument short hands to tell
+it to replace `u0` and `p` by the inputs:
+
+```julia
+du01,dp1 = Zygote.gradient((u0,p)->sum(solve(prob,Tsit5(),u0=u0,p=p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)
 ```
 
 Here this computes the derivative of the output with respect to the initial
@@ -84,7 +93,7 @@ using the `QuadratureAdjoint()`.
 When Zygote.jl is used in a larger context, these gradients are implicitly
 calculated and utilized. For example, the
 [Flux.jl deep learning package](https://github.com/FluxML/Flux.jl) uses Zygote.jl
-in its training loop, so if we use `concrete_solve` in a likelihood of a
+in its training loop, so if we use `solve` in a likelihood of a
 Flux training loop then the derivative choice we make will be used in the
 optimization:
 
@@ -93,7 +102,7 @@ using Flux, Plots
 
 p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
 function predict_adjoint() # Our 1-layer neural network
-  Array(concrete_solve(prob,Tsit5(),u0,p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
+  Array(solve(prob,Tsit5(),p=p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
@@ -138,8 +147,8 @@ end
 prob = ODEProblem(dudt_,u0,tspan,p3)
 
 function predict_adjoint()
-  Array(concrete_solve(prob,Tsit5(),u0,p3,saveat=0.0:0.1:1.0,abstol=1e-8,
-                 reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true)))
+  Array(solve(prob,Tsit5(),u0=u0,p=p3,saveat=0.0:0.1:1.0,abstol=1e-8,
+              reltol=1e-6,sensealg=InterpolatingAdjoint(checkpointing=true)))
   # ^ wrapped this in Array as done in the previous example
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
@@ -185,14 +194,14 @@ the definition of the methods.
   ignore saving arguments during the gradient calculation. When checkpointing is
   enabled it will only require the memory to interpolate between checkpoints.
   Only supports ODEs.
-- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,compile=false,ADKwargs...)`: 
-  An implementation of adjoint sensitivity analysis which develops a full 
-  continuous solution of the reverse solve in order to perform a post-ODE 
-  quadrature. This method requires the the dense solution and will ignore 
-  saving arguments during the gradient calculation. The tolerances in the 
+- `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,compile=false,ADKwargs...)`:
+  An implementation of adjoint sensitivity analysis which develops a full
+  continuous solution of the reverse solve in order to perform a post-ODE
+  quadrature. This method requires the the dense solution and will ignore
+  saving arguments during the gradient calculation. The tolerances in the
   constructor control the inner quadrature. The inner quadrature uses a
   ReverseDiff vjp if autojacvec, and `compile=false` by default but can
-  compile the tape under the same circumstances as `ReverseDiffVJP`. 
+  compile the tape under the same circumstances as `ReverseDiffVJP`.
   Only supports ODEs.
 - `ReverseDiffAdjoint()`: An implementation of discrete adjoint sensitivity analysis
   using the ReverseDiff.jl tracing-based AD. Supports in-place functions through
@@ -205,6 +214,8 @@ the definition of the methods.
 - `ZygoteAdjoint()`: An implementation of discrete adjoint sensitivity analysis
   using the Zygote.jl source-to-source AD directly on the differential equation
   solver. Currently fails.
+- `SensitivityADPassThrough()`: Ignores all adjoint definitions and
+  proceeds to do standard AD through the `solve` functions.
 
 ### Internal Automatic Differentiation Options (ADKwargs)
 
@@ -258,8 +269,8 @@ is:
   require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
   allowing checkpointing to control total memory use.
 - The methods which use automatic differentiation (`ReverseDiffAdjoitn`,
-  `TrackerAdjoint`, `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support 
-  the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.), 
+  `TrackerAdjoint`, `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support
+  the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.),
   but only work on native Julia solvers. The methods which utilize altered differential
   equation systems only work on ODEs (without events), but work on any ODE solver.
 - For non-ODEs with large numbers of parameters, `TrackerAdjoint` in out-of-place
