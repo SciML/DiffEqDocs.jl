@@ -113,7 +113,7 @@ ensembleprob = EnsembleProblem(prob)
 ```
 
 The solver commands are defined [at the Parallel Ensemble Simulations page](@ref ensemble).
-For example we can choose to have 1000 trajectories via `num_monte=1000`. In addition,
+For example we can choose to have 1000 trajectories via `trajectories=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
 `EnsembleThreads()`. Together, this looks like:
@@ -122,8 +122,9 @@ are added via `addprocs()`, but we can change this to use multithreading via
 sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
 ```
 
-Many more controls are defined at the Monte Carlo page, including analysis tools.
-A very simple analysis can be done with the `MonteCarloSummary`, which builds
+Many more controls are defined at the [Ensemble simulations page](@ref ensemble), 
+including analysis tools.
+A very simple analysis can be done with the `EnsembleSummary`, which builds
 mean/var statistics and has an associated plot recipe. For example, we can get
 the statistics at every `0.01` timesteps and plot the average + error using:
 
