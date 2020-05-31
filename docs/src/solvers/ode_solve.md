@@ -1041,7 +1041,7 @@ to solve both stiff and non-stiff equations.
 
   - `lsoda` - The LSODA wrapper algorithm.
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use LSODA.jl:
 
 ```julia
@@ -1062,7 +1062,7 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
   - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
     interface. Only allows `solve`.
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use SimpleDiffEq.jl:
 
 ```julia
@@ -1073,7 +1073,7 @@ using SimpleDiffEq
 ### ODE.jl
 
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use ODE.jl:
 
 ```julia
@@ -1095,7 +1095,7 @@ detection, and [discrete variables need to be updated appropriately](@ref diffeq
 
 ### MATLABDiffEq.jl
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use MATLABDiffEq.jl:
 
 ```julia
@@ -1126,7 +1126,7 @@ but it is still around 1000x slower than the pure-Julia methods and thus should 
 sparingly.
 
 Note that this setup is not automatically included
-with DifferentialEquaitons.jl. To use the following algorithms, you must install
+with DifferentialEquations.jl. To use the following algorithms, you must install
 and use SciPyDiffEq.jl:
 
 ```julia
@@ -1150,7 +1150,7 @@ and benchmarking. This wrapper is around 1000x slower than the pure-Julia method
 from directly using R) and thus should probably be used sparingly.
 
 Note that this setup is not automatically included
-with DifferentialEquaitons.jl. To use the following algorithms, you must install
+with DifferentialEquations.jl. To use the following algorithms, you must install
 and use deSolveDiffEq.jl:
 
 ```julia
@@ -1180,7 +1180,7 @@ The available methods are:
 ### GeometricIntegrators.jl
 
 GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
@@ -1209,7 +1209,7 @@ Note that all of these methods require the user supplies `dt`.
 Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
 are made and optimized for out-of-place functions on immutable (static vector)
 types. Note that this setup is not automatically included with
-DifferentialEquaitons.jl. To use the following algorithms, you must install and
+DifferentialEquations.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
@@ -1225,7 +1225,7 @@ using BridgeDiffEq
 TaylorIntegration.jl is a pure-Julia implementation of an adaptive order Taylor
 series method for high accuracy integration of ODEs. These methods are optimized
 when the absolute tolerance is required to be very low.
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and
 use TaylorIntegration.jl:
 
@@ -1242,7 +1242,7 @@ Note: this method is much faster if you put `@taylorize` on your derivative func
 
 QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and
 use QuDiffEq.jl:
 
@@ -1260,7 +1260,7 @@ This method trains a neural network using Flux.jl to approximate the solution of
 ODE. Currently this method isn't competitive but it is a fun curiosity that will be
 improved with future integration with Zygote.
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and
 use NeuralNetDiffEq.jl:
 
@@ -1275,7 +1275,7 @@ using NeuralNetDiffEq
 
 ### List of Supplied Tableaus
 
-A large variety of tableaus have been supplied by default via DiffEqDevTools.jl.
+A large variety of tableaus have been supplied by default, via DiffEqDevTools.jl.
 The list of tableaus can be found in [the developer docs](https://devdocs.juliadiffeq.org/dev/internals/tableaus/).
 To use them, note you must install the library:
 
