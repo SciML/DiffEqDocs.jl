@@ -62,7 +62,8 @@ interpolations unless `sensealg=DiffEqBase.SensitivityADPassThrough()`
 is used, i.e. going back to the AD mechanism.
 
 !!! note
-  ForwardDiff.jl only does forward differentiation pass through.
+
+    ForwardDiff.jl only does forward differentiation pass through.
 
 ### solve Differentiation Examples
 
