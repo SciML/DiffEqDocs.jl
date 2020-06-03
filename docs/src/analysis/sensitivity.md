@@ -30,7 +30,7 @@ on a different page.
 ## Installation
 
 This functionality does not come standard with DifferentialEquations.jl.
-To use this functionality, you must install DiffEqSensitivty.jl:
+To use this functionality, you must install DiffEqSensitivity.jl:
 
 ```julia
 ]add DiffEqSensitivity
