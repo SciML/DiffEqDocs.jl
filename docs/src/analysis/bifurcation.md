@@ -3,7 +3,7 @@
 Bifurcation analysis on DifferentialEquations.jl types can be performed by:
 
 - Bifurcations.jl
-- PseudoArcLengthContinuations.jl
+- [BifurcationKit.jl](https://github.com/rveltz/BifurcationKit.jl)
 - PyDSTool.jl
 - DiffEqBiological.jl
 
