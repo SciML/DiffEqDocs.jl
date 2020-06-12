@@ -17,7 +17,7 @@ using RecursiveArrayTools
 A = ArrayPartition(x::AbstractArray...)
 ```
 
-where is `x` a list of arrays. The resulting `A` will act like a single array, and its
+where `x` is an array of arrays. Then, `A` will act like a single array, and its
 broadcast will be type stable, allowing for it to be used inside of the native Julia
 DiffEq solvers in an efficient way. This is a good way to generate an array which
 has different units for different parts, or different amounts of precision.
