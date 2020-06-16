@@ -84,7 +84,7 @@ But if we want to perturb `u0` and `p` in a gradient calculation then we can.
 ```julia
 function sum_of_solution(u0,p)
   _prob = remake(prob,u0=u0,p=p)
-  sum(solve(prob,Tsit5(),saveat=0.1,sensealg=QuadratureAdjoint()))
+  sum(solve(_prob,Tsit5(),saveat=0.1,sensealg=QuadratureAdjoint()))
 end
 du01,dp1 = Zygote.gradient(sum_of_solution,u0,p)
 ```
