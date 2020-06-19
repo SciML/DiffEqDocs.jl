@@ -479,7 +479,7 @@ with `u=u(t)`.
 For continuous functionals, the form is:
 
 ```julia
-du0,dp = adjoint_sensitivities(sol,alg,g,nothing,dg;sensealg=InterpolatingAdjoint(),
+du0,dp = adjoint_sensitivities(sol,alg,g,nothing,(dgdu,dgdp);sensealg=InterpolatingAdjoint(),
                                checkpoints=sol.t,,kwargs...)
 ```
 
@@ -492,7 +492,8 @@ g(u,p,t)
 with in-place gradient
 
 ```julia
-dg(out,u,p,t)
+dgdu(out,u,p,t)
+dgdp(out,u,p,t)
 ```
 
 If the gradient is omitted, i.e.
@@ -501,7 +502,7 @@ If the gradient is omitted, i.e.
 du0,dp = adjoint_sensitivities(sol,alg,g,nothing;kwargs...)
 ```
 
-then it will be computed automatically using ForwardDiff or finite
+then we assume `dgdp` is zero and `dgdu` will be computed automatically using ForwardDiff or finite
 differencing, depending on the `autodiff` setting in the `AbstractSensitivityAlgorithm`.
 Note that the keyword arguments are passed to the internal ODE solver for
 solving the adjoint problem.
@@ -546,7 +547,7 @@ and thus:
 dg(out,u,p,t,i) = (out.=1.0.-u)
 ```
 
-If we had data, we'd just replace `1.0` with `data[i]`. To get the adjoint
+Also, we can omit `dgdp`, because the cost function doesn't dependent on `p`. If we had data, we'd just replace `1.0` with `data[i]`. To get the adjoint
 sensitivities, call:
 
 ```julia
