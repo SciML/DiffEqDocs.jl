@@ -131,6 +131,33 @@ allow for sophisticated event handling, etc. On stiff ODEs these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
+#### Linear Methods
+
+##### u' = A(t)u solvers
+
+- `MagnusMidpoint` - Second order Magnus Midpoint method.
+- `MagnusLeapfrog`- Second order Magnus Leapfrog method.
+- `MagnusGauss4` - Fourth order Magnus method approximated using a two stage Gauss quadrature.
+- `MagnusGL4`- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
+- `MagnusNC6`- Sixth order Magnus method approximated using Newton-Cotes quadrature.
+- `MagnusGL6`- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
+- `MagnusNC8`- Eighth order Magnus method approximated using Newton-Cotes quadrature.
+- `MagnusGL8`- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
+
+Example:
+
+```julia
+function update_func(A,u,p,t)
+    A[1,1] = cos(t)
+    A[2,1] = sin(t)
+    A[1,2] = -sin(t)
+    A[2,2] = cos(t)
+end
+A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
+prob = ODEProblem(A, ones(2), (1.0, 6.0))
+sol = solve(prob,MagnusGL6(),dt=1/10)
+```
+
 #### Explicit Runge-Kutta Methods
 
 - `Euler`- The canonical forward Euler method. Fixed timestep only.
