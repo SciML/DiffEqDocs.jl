@@ -480,12 +480,12 @@ These methods require a choice of `dt`.
 - `Kvaerno3` - An A-L stable stiffly-accurate 3rd order ESDIRK method
 - `KenCarp3` - An A-L stable stiffly-accurate 3rd order ESDIRK method with splitting
 - `Cash4` - An A-L stable 4th order SDIRK method
-- `Hairer4` - An A-L stable 4rd order SDIRK method
-- `Hairer42` - An A-L stable 4rd order SDIRK method
-- `Kvaerno4` - An A-L stable stiffly-accurate 4rd order ESDIRK method
-- `KenCarp4` - An A-L stable stiffly-accurate 4rd order ESDIRK method with splitting
-- `Kvaerno5` - An A-L stable stiffly-accurate 5rd order ESDIRK method
-- `KenCarp5` - An A-L stable stiffly-accurate 5rd order ESDIRK method with splitting
+- `Hairer4` - An A-L stable 4th order SDIRK method
+- `Hairer42` - An A-L stable 4th order SDIRK method
+- `Kvaerno4` - An A-L stable stiffly-accurate 4th order ESDIRK method
+- `KenCarp4` - An A-L stable stiffly-accurate 4th order ESDIRK method with splitting
+- `Kvaerno5` - An A-L stable stiffly-accurate 5th order ESDIRK method
+- `KenCarp5` - An A-L stable stiffly-accurate 5th order ESDIRK method with splitting
 
 #### Fully-Implicit Runge-Kutta Methods (FIRK)
 
