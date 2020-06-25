@@ -36,7 +36,9 @@ the problem, though for large enough PDEs the `ARKODE` method with
 - `SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
 - `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
 - `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method.
+- `KenCarp47` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
 - `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method.
+- `KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
 
 ### Sundials.jl
 
