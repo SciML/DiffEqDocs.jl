@@ -380,7 +380,7 @@ So the above implementation of `f` becomes valid.
 
 The following are adaptive order, adaptive step size extrapolation methods:
 
-- `AitkenNevillie` - Euler extrapolation using Aitken-Neville with the Romberg Sequence.
+- `AitkenNeville` - Euler extrapolation using Aitken-Neville with the Romberg Sequence.
 - `ExtrapolationMidpointDeuflhard` - Midpoint extrapolation using Barycentric coordinates
 - `ExtrapolationMidpointHairerWanner` - Midpoint extrapolation using Barycentric coordinates,
   following Hairer's `ODEX` in the adaptivity behavior.
@@ -408,7 +408,7 @@ alg = ExtrapolationMidpointDeuflhard(max_order=7,min_order=4,init_order=4,sequen
 solve(prob,alg)
 ```
 
-Note that the order that is referred to is the extrapolation order. For `AitkenNevillie`
+Note that the order that is referred to is the extrapolation order. For `AitkenNeville`
 this is the order of the method, for the others an extrapolation order of `n`
 gives an order `2(n+1)` method.
 
@@ -592,7 +592,7 @@ methods have the additional argument:
 To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = ImplicitEulerExtrapolation(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)
+alg = ImplicitDeuflhardExtrapolation(max_order=7,min_order=4,init_order=4,sequence=:bulirsch)
 solve(prob,alg)
 ```
 
