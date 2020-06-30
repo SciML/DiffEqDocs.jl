@@ -45,13 +45,14 @@ The following options are all related to output control. See the "Examples"
 section at the end of this page for some example usage.
 
 * `dense`: Denotes whether to save the extra pieces required for dense (continuous)
-  output. Default is true for algorithms which have the ability to produce dense
-  output. If dense is false, the solution still acts like a function, and `sol(t)`
-  is a linear interpolation between the saved time points.
+  output. Default is `save_everystep && !isempty(saveat)` for algorithms which have 
+  the ability to produce dense output, i.e. by default it's `true` unless the user
+  has turned off saving on steps or has chosen a `saveat` value. If `dense=false`, 
+  the solution still acts like a function, and `sol(t)` is a linear interpolation 
+  between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
-  most efficient manner available to the solver. Note that this
-  can be used even if `dense=false`. If only `saveat` is given, then
+  most efficient manner available to the solver. If only `saveat` is given, then
   the arguments `save_everystep` and `dense` are `false` by default.   
   If `saveat` is given a number, then it will automatically expand to
   `tspan[1]:saveat:tspan[2]`. For methods where interpolation is not possible,
