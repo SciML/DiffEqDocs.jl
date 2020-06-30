@@ -491,6 +491,8 @@ These methods require a choice of `dt`.
 
 #### Fully-Implicit Runge-Kutta Methods (FIRK)
 
+- `RadauIIA3` - An A-B-L stable fully implicit Runge-Kutta method with internal
+  tableau complex basis transform for efficiency.
 - `RadauIIA5` - An A-B-L stable fully implicit Runge-Kutta method with internal
   tableau complex basis transform for efficiency.
 
