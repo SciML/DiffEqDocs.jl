@@ -87,7 +87,7 @@ on a logarithmic scale. We'll also plot each on a different subplot, to allow
 scaling the y-axis appropriately.
 
 ```julia
-using Plots; plotly() # Using the Plotly backend
+using Plots
 plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 ```
 
