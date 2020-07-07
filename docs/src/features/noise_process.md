@@ -132,6 +132,19 @@ WienerProcess(t0,W0,Z0=nothing;kwargs...)
 WienerProcess!(t0,W0,Z0=nothing;kwargs...)
 ```
 
+### Real Wiener Process
+
+The `RealWienerProcess` is a Brownian motion that is forced to be
+real-valued. While the normal `WienerProcess` becomes complex valued
+if `W0` is complex, this verion is real valued for when you want to,
+for example, solve an SDE defined by complex numbers where the noise
+is in the reals.
+
+```julia
+RealWienerProcess(t0,W0,Z0=nothing;kwargs...)
+RealWienerProcess!(t0,W0,Z0=nothing;kwargs...)
+```
+
 ### Correlated Noise
 
 One can define a `CorrelatedWienerProcess` which is a Wiener process with
