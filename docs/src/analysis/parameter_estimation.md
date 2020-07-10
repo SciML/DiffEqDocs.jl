@@ -860,8 +860,8 @@ First let's use the objective function to plot the likelihood landscape:
 
 ```julia
 using Plots; plotly()
-range = 0.5:0.1:5.0
-heatmap(range,range,[obj([j,i]) for i in range, j in range],
+prange = 0.5:0.1:5.0
+heatmap(prange,prange,[obj([j,i]) for i in prange, j in prange],
         yscale=:log10,xlabel="Parameter 1",ylabel="Parameter 2",
         title="Likelihood Landscape")
 ```
@@ -869,13 +869,13 @@ heatmap(range,range,[obj([j,i]) for i in range, j in range],
 ![2 Parameter Likelihood](../assets/2paramlike.png)
 
 Recall that this is the negative loglikelihood and thus the minimum is the
-maximum of the likelihood. There is a clear valley where the second parameter
+maximum of the likelihood. There is a clear valley where the first parameter
 is 1.5, while the first parameter's likelihood is more muddled. By taking a
 one-dimensional slice:
 
 ```julia
-plot(range,[obj([i,1.0]) for i in range],lw=3,
-     title="Parameter 1 Likelihood (Parameter 2 = 1.5)",
+plot(prange,[obj([1.5,i]) for i in prange],lw=3,
+     title="Parameter 2 Likelihood (Parameter 1 = 1.5)",
      xlabel = "Parameter 1", ylabel = "Objective Function Value")
 ```
 
