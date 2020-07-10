@@ -870,7 +870,7 @@ heatmap(prange,prange,[obj([j,i]) for i in prange, j in prange],
 
 Recall that this is the negative loglikelihood and thus the minimum is the
 maximum of the likelihood. There is a clear valley where the first parameter
-is 1.5, while the first parameter's likelihood is more muddled. By taking a
+is 1.5, while the second parameter's likelihood is more muddled. By taking a
 one-dimensional slice:
 
 ```julia
