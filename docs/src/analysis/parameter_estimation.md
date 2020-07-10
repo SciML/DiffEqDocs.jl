@@ -876,7 +876,7 @@ one-dimensional slice:
 ```julia
 plot(prange,[obj([1.5,i]) for i in prange],lw=3,
      title="Parameter 2 Likelihood (Parameter 1 = 1.5)",
-     xlabel = "Parameter 1", ylabel = "Objective Function Value")
+     xlabel = "Parameter 2", ylabel = "Objective Function Value")
 ```
 
 ![1 Parameter Likelihood](../assets/1paramlike.png)
