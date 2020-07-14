@@ -64,9 +64,10 @@ merge(network1::ReactionSystem, network2::ReactionSystem)
 ```
 
 ## Generated ModelingToolkit Operations
-As the underlying `ReactionSystem` is comprised of `ModelingToolkit` `Operation`s and
-`Variable`s, one can directly access the generated rate laws, and using `ModelingToolkit` tooling
-generate functions or Julia `Expr`s from them.
+As the underlying [`ReactionSystem`](@ref) is comprised of
+`ModelingToolkit.Operation`s and `ModelingToolkit.Variable`s, one can directly
+access the generated rate laws, and using `ModelingToolkit` tooling generate
+functions or Julia `Expr`s from them.
 ```@docs
 ModelingToolkit.oderatelaw
 ModelingToolkit.jumpratelaw
