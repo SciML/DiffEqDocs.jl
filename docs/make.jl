@@ -1,4 +1,4 @@
-using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological
+using Documenter,DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ModelingToolkit
 
 ODEProblemLibrary = DiffEqProblemLibrary.ODEProblemLibrary
 ODEProblemLibrary.importodeproblems()
@@ -12,7 +12,7 @@ DDEProblemLibrary.importddeproblems()
 DAEProblemLibrary = DiffEqProblemLibrary.DAEProblemLibrary
 DAEProblemLibrary.importdaeproblems()
 
-makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary],
+makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary,ModelingToolkit],
          doctest=false, clean=true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
                                   assets = ["assets/favicon.ico"],
