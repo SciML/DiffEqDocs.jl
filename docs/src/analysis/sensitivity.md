@@ -278,7 +278,7 @@ is:
   uses the least memory but on very stiff problems it may be unstable and
   require a lot of checkpoints, while `InterpolatingAdjoint` is in the middle,
   allowing checkpointing to control total memory use.
-- The methods which use automatic differentiation (`ReverseDiffAdjoitn`,
+- The methods which use automatic differentiation (`ReverseDiffAdjoint`,
   `TrackerAdjoint`, `ForwardDiffSensitivity`, and `ZygoteAdjoint`) support
   the full range of DifferentialEquations.jl features (SDEs, DDEs, events, etc.),
   but only work on native Julia solvers. The methods which utilize altered differential
