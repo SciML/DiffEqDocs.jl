@@ -220,13 +220,13 @@ Italicized constant rate jump aggregators require the user to pass a dependency 
 ```julia
 JumpProblem(prob,DirectCR(),jump1,jump2; dep_graph=your_dependency_graph)
 ```
-For systems with only `MassActionJump`s, or those generated from a `DiffEqBiological` `reaction_network`, this graph will be auto-generated. Otherwise you must construct the dependency graph manually. Dependency graphs are represented as a `Vector{Vector{Int}}`, with the `i`th vector containing the indices of the jumps for which rates must be recalculated when the `i`th jump occurs.
+For systems with only `MassActionJump`s, or those generated from a `Catalyst` `ReactionSystem`, this graph will be auto-generated. Otherwise you must construct the dependency graph manually. Dependency graphs are represented as a `Vector{Vector{Int}}`, with the `i`th vector containing the indices of the jumps for which rates must be recalculated when the `i`th jump occurs.
 
 `RSSA` requires two different types of dependency graphs, passed through the following `JumpProblem` kwargs:
 - `vartojumps_map` - A `Vector{Vector{Int}}` mapping each variable index, `i`, to a set of jump indices. The jump indices correspond to jumps with rate functions that depend on the value of `u[i]`.
 -  `jumptovars_map` - A `Vector{Vector{Int}}`  mapping each jump index to a set of variable indices. The corresponding variables are those that have their value, `u[i]`, altered when the jump occurs.
 
-For systems generated from a `DiffEqBiological` `reaction_network` these will be auto-generated. Otherwise you must explicitly construct and pass in these mappings.
+For systems generated from a `Catalyst` `ReactionSystem` these will be auto-generated. Otherwise you must explicitly construct and pass in these mappings.
 
 ## Recommendations for Constant Rate Jumps
 For representing and aggregating constant rate jumps 

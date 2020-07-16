@@ -4,7 +4,7 @@ CurrentModule = DiffEqBiological
 ```
 
 ## Reaction Network Generation and Representation
-DiffEqBiological provides the [`@reaction_network`](@ref) macro for generating a
+Catalyst provides the [`@reaction_network`](@ref) macro for generating a
 complete network, stored as a [`ModelingToolkit.ReactionSystem`](@ref), which in
 turn is composed of [`ModelingToolkit.Reaction`](@ref)s. `ReactionSystem`s can
 be converted to other `ModelingToolkit.AbstractSystem`s, including an

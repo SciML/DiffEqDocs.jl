@@ -6,7 +6,7 @@ models. It helps users quickly build discrete stochastic and differential
 equation based representations of biological and chemical models, which can then
 be used in SciML solvers. These tools allow one to define the models at a high
 level by specifying reactions and rate constants, with the creation of the
-actual SciML `Problems` then handled by ModelingToolkit.
+actual SciML `Problem`s then handled by ModelingToolkit.
 
 ## Installation
 

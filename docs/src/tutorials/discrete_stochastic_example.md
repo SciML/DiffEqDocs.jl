@@ -87,9 +87,9 @@ c2, i --> r
 Thus our full reaction network is:
 
 ```julia
-# ]add DiffEqBiological
-using DiffEqBiological
-sir_model = @reaction_network SIR begin
+# ]add Catalyst
+using Catalyst
+sir_model = @reaction_network begin
     c1, s + i --> 2i
     c2, i --> r
 end c1 c2
