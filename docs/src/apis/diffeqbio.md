@@ -42,6 +42,7 @@ species
 speciesmap
 params
 paramsmap 
+reactions
 numspecies 
 numparams
 numreactions
