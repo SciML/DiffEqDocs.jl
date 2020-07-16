@@ -324,7 +324,7 @@ Pages = [
     "models/multiscale.md",
     "models/physical.md",
     "models/financial.md",
-    "models/biological.md",
+    "models/catalyst.md",
     "models/external_modeling.md"
 ]
 Depth = 2
@@ -336,7 +336,7 @@ Some DifferentialEquations.jl packages provide documented APIs, these include:
 
 ```@contents
 Pages = [
-    "apis/diffeqbio.md"
+    "apis/catalyst_api.md"
 ]
 Depth = 2
 ```

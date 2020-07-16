@@ -443,34 +443,6 @@ rn = @reaction_network begin
 end
 ```
 
-<!-- #### Scaling noise in the chemical Langevin equations
-TO UPDATE!
-When making stochastic simulations using SDEs it is possible to scale the amount
-of noise in the simulations by declaring a noise scaling parameter. This
-parameter is declared as a second argument to the `@reaction_network` macro
-(when scaling the noise one have to declare a custom type).
-
-```julia
-rn = @reaction_network my_custom_type ns begin
-  1.0, ∅ → X
-end
-```
-
-The noise scaling parameter is automatically added as a last argument to the parameter array
-(even if not declared at the end). E.g. this is correct syntax:
-
-```julia
-rn = @reaction_network my_custom_type ns begin
-  1.0, ∅ → X
-end
-p = [0.1,]
-u0 = [0.1]
-tspan = (0.,1.)
-prob = SDEProblem(rn,u0,tspan,p)
-sol = solve(prob)
-```
-Here the amount of noise in the stochastic simulation will be reduced by a factor 10. -->
-
 #### Ignoring mass action kinetics
 While one in almost all cases wants the reaction rate to use the law of mass
 action, so the reaction
@@ -572,7 +544,7 @@ to other `ModelingToolkit.AbstractSystem`s.
 ### Example: Modifying generated ODEs by adding forcing
 Conversion to other `ModelingToolkit.AbstractSystem`s allows the possibility to
 modify the system with further terms that are difficult to encode as a chemical
-reaction. For example, suppose we wish to add a forcing term, `10*sin(10*t)`, to
+reaction. For example, suppose we wish to add a forcing term, $10\sin(10t)$, to
 the ODE for `dX/dt` above. We can do so as:
 ```julia
 dXdteq = equations(osys)[1]           

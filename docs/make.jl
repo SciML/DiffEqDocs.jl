@@ -97,11 +97,11 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
              "models/multiscale.md",
              "models/physical.md",
              "models/financial.md",
-             "models/biological.md",
+             "models/catalyst.md",
              "models/external_modeling.md"
          ],
          "APIs" => Any[
-             "apis/diffeqbio.md"
+             "apis/catalyst_api.md"
          ],
          "Extra Details" => Any[
              "extras/timestepping.md",
