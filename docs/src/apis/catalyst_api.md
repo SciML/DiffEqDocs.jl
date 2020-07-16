@@ -1,13 +1,13 @@
 # Catalyst.jl API
 ```@meta
-CurrentModule = DiffEqBiological
+CurrentModule = Catalyst
 ```
 
 ## Reaction Network Generation and Representation
 Catalyst provides the [`@reaction_network`](@ref) macro for generating a
 complete network, stored as a [`ModelingToolkit.ReactionSystem`](@ref), which in
 turn is composed of [`ModelingToolkit.Reaction`](@ref)s. `ReactionSystem`s can
-be converted to other `ModelingToolkit.AbstractSystem`s, including an
+be converted to other `ModelingToolkit.AbstractSystem`s, including a
 `ModelingToolkit.ODESystem`, `ModelingToolkit.SDESystem` or
 `ModelingToolkit.JumpSystem`. 
 
@@ -18,15 +18,13 @@ programmatically using [`addspecies!`](@ref), [`addparam!`](@ref), and
 
 It is important to note for [`@reaction_network`](@ref) that species which are
 used *within the macro* as part of a rate expression, but not as a substrate or
-product of some reaction, are not recognized as either a species or parameter.
-i.e. avoid
+product of some reaction, may lead to undefined behavior. i.e. avoid
 ```julia
 rn = @reaction_network begin
     k*X, Y --> W
 end k
 ```
-as here `X` is never defined as either a species or parameter. This leads to
-internal problems in the representation of reactions.
+as here `X` is never defined as either a species or parameter. 
 
 ```@docs
 @reaction_network

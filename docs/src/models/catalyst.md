@@ -28,10 +28,10 @@ are provided in [Basic Chemical Reaction Network Examples](@ref).
 The `@reaction_network` macro allows the (symbolic) specification of reaction
 networks with a simple format. Its input is a set of chemical reactions, and
 from them it generates a [`ReactionSystem`](@ref) reaction network object. The
-`ReactionSystem` used as input to `ODEProblem`, `SteadyStateProblem`,
-`SDEProblem`, `JumpProblem` and more. `@reaction_network`s can also
-be incrementally extended as needed, allowing for programmatic construction
-of networks and network composition.
+`ReactionSystem` can be used as input to `ODEProblem`, `SteadyStateProblem`,
+`SDEProblem`, `JumpProblem` and more. `ReactionSystem`s can also be
+incrementally extended as needed, allowing for programmatic construction of
+networks and network composition.
 
 The basic syntax is:
 
@@ -55,14 +55,14 @@ called `rn`). The generated `ReactionSystem` can be converted to a differential
 equation model via
 ```julia
 osys = convert(ODESystem, rn)
-oprob = ODEProblem(osys, u0, t, p)
+oprob = ODEProblem(osys, Pair.(species(rn),u0), t, Pair.(params(rn),p))
 ```
 or more directly via
 ```julia
 oprob = ODEProblem(rn, u0, t, p)
 ```
-The generated differential equations use the law of mass action. For the above example
-the ODEs are then
+See the detailed examples below. The generated differential equations use the
+law of mass action. For the above example the ODEs are then
 
 ```math
 \frac{d[X]}{dt} = -2 [X] [Y]\\
@@ -88,8 +88,8 @@ end
 `-->` is the only supported plain text arrow.*
 
 #### Using bi-directional arrows
-Bi-directional arrows can be used to designate a reaction that goes two ways.
-These two models are equivalent:
+Bi-directional unicode arrows can be used to designate a reaction that goes two
+ways. These two models are equivalent:
 ```julia
 rn = @reaction_network begin
   2.0, X + Y → XY             
@@ -241,7 +241,7 @@ end p d
 ```
 Parameters can only exist in the reaction rates (where they can be mixed with
 reactants). All variables not declared after `end` will be treated as a chemical
-species.
+species, and may lead to undefined behavior if unchanged by *all* reactions.
 
 #### Pre-defined functions
 Hill functions and a Michaelis-Menten function are pre-defined and can be used
@@ -279,7 +279,7 @@ which can be solved by `DifferentialEquations.jl`.
 A reaction network can be used as input to an `ODEProblem` instead of a
 function, using 
 ```julia
-probODE = ODEProblem(rn, args...; kwargs...) 
+odeprob = ODEProblem(rn, args...; kwargs...) 
 ``` 
 E.g. a model can be created and simulated using:
 ```julia
@@ -292,7 +292,7 @@ p = [1.0,2.0]
 u0 = [0.1]
 tspan = (0.,1.)
 prob = ODEProblem(rn,u0,tspan,p)
-sol = solve(prob)
+sol = solve(prob, Tsit5())
 ```
 Here the order of unknowns in `u0` and `p` matches the order that species and
 parameters first appear within the DSL. They can also be determined by examining
@@ -318,7 +318,7 @@ sol = solve(prob, DynamicSS(Tsit5()))
 In a similar way an SDE can be created using 
 ```julia
 using StochasticDiffEq
-probSDE = SDEProblem(rn, args...; kwargs...)
+sdeprob = SDEProblem(rn, args...; kwargs...)
 ```
 In this case the chemical Langevin equations (as derived in Gillespie, J. Chem.
 Phys. 2000) will be used to generate stochastic differential equations.
@@ -336,9 +336,9 @@ end p d
 p = [1.0,2.0]
 u0 = [10]
 tspan = (0.,1.)
-discrete_prob = DiscreteProblem(rn, u0,tspan,p)
-jump_prob = JumpProblem(discrete_prob,Direct(),rn)
-sol = solve(jump_prob,SSAStepper())
+discrete_prob = DiscreteProblem(rn, u0, tspan, p)
+jump_prob = JumpProblem(rn, discrete_prob, Direct())
+sol = solve(jump_prob, SSAStepper())
 ```
 Here we used Gillespie's `Direct` method as the underlying stochastic simulation
 algorithm.
@@ -392,7 +392,7 @@ ssol  = solve(sprob, EM(), dt=.01)
 # solve JumpProblem
 u0 = [5]
 dprob = DiscreteProblem(rs, u0, tspan, p)
-jprob = JumpProblem(dprob, Direct(), rs)
+jprob = JumpProblem(rs, dprob, Direct())
 jsol = solve(jprob, SSAStepper())
 ```
 
@@ -415,7 +415,7 @@ osol  = solve(oprob, Tsit5())
 # solve JumpProblem
 u0 = [301, 100, 0, 0] 
 dprob = DiscreteProblem(rs, u0, tspan, p)
-jprob = JumpProblem(dprob, Direct(), rs)
+jprob = JumpProblem(rs, dprob, Direct())
 jsol = solve(jprob, SSAStepper())
 ```
 
@@ -444,10 +444,10 @@ end
 ```
 
 #### Ignoring mass action kinetics
-While one in almost all cases wants the reaction rate to use the law of mass
-action, so the reaction
+While generally one wants the reaction rate to use the law of mass action, so
+the reaction
 ```julia
-rn = @reaction_network my_custom_type ns begin
+rn = @reaction_network begin
   k, X → ∅
 end k
 ```
@@ -456,7 +456,7 @@ any of the following non-filled arrows when declaring the reaction: `⇐`, `⟽`
 `⇒`, `⟾`, `⇔`, `⟺`. This means that the reaction
 
 ```julia
-rn = @reaction_network my_custom_type ns begin
+rn = @reaction_network begin
   k, X ⇒ ∅
 end k
 ```
@@ -479,23 +479,25 @@ API method listed first:
   system , usually `t` for time, represented as a `ModelingToolkit.Variable`. 
 
 Each `Reaction` within `reactions(rn)` has a number of subfields. For `rx` a `Reaction` we have
-* `rx.substrates`, a vector of `ModelingToolkit.Operation`s storied each substrate variable.
-* `rx.products`, a vector of `ModelingToolkit.Operation`s storied each product variable.
+* `rx.substrates`, a vector of `ModelingToolkit.Operation`s storing each
+  substrate variable.
+* `rx.products`, a vector of `ModelingToolkit.Operation`s storing each product
+  variable.
 * `rx.substoich`, a vector storing the corresponding integer stoichiometry of
   each substrate species in `rx.substrates`.
 * `rx.prodstoich`, a vector storing the corresponding integer stoichiometry of
   each product species in `rx.products`.
 * `rx.rate`, a `ModelingToolkit.Operation` representing the reaction rate. e.g.
   for a reaction like `k*X, Y --> X+Y` we'd have `rate = k*X`.
-* `rx.netstoich`, a vector of pairs mapping each the `ModelingToolkit.Variable`
-  for each species that changes numbers by the reaction to how much it changes.
-  E.g. for `k, X + 2Y --> X + W` we'd have `rx.netstoich = [Y => -2, W => 1]`. 
+* `rx.netstoich`, a vector of pairs mapping the `ModelingToolkit.Variable` for
+  each species that changes numbers by the reaction to how much it changes. E.g.
+  for `k, X + 2Y --> X + W` we'd have `rx.netstoich = [Y => -2, W => 1]`. 
 * `rx.only_use_rate`, a boolean that is `true` if the reaction was made with
   non-filled arrows and should ignore mass action kinetics. `false` by default.
 
 Empty `ReactionSystem`s can be generated via [`make_empty_network`](@ref) or
-`@reaction_network` with no arguments. `ReactionSystem`s can be programmatically
-extended using [`addspecies!`](@ref), [`addparam!`](@ref),
+[`@reaction_network`](@ref) with no arguments. `ReactionSystem`s can be
+programmatically extended using [`addspecies!`](@ref), [`addparam!`](@ref),
 [`addreaction!`](@ref), [`@add_reactions`](@ref), or composed using `merge` and
 `merge!`.
 
@@ -536,12 +538,12 @@ of `k*X*(X-1)` for jumps. This can be disabled when directly `convert`ing a
 [`ReactionSystem`](@ref). If `rn` is a generated [`ReactionSystem`](@ref) we can
 do
 ```julia
-osys  = convert(ODESystem, rn; combinatoric_ratelaws=false)
+osys = convert(ODESystem, rn; combinatoric_ratelaws=false)
 ```
 Disabling these rescalings should work for all conversions of `ReactionSystem`s
 to other `ModelingToolkit.AbstractSystem`s.
 
-### Example: Modifying generated ODEs by adding forcing
+#### Example: Modifying generated ODEs by adding forcing
 Conversion to other `ModelingToolkit.AbstractSystem`s allows the possibility to
 modify the system with further terms that are difficult to encode as a chemical
 reaction. For example, suppose we wish to add a forcing term, $10\sin(10t)$, to
@@ -554,14 +556,7 @@ osys2  = ODESystem([dXdteq], t, states(osys), parameters(osys))
 oprob  = ODEProblem(osys2, u0map, tspan, pmap)
 osol   = solve(oprob, Tsit5())
 ```
-Similarly, we can bring the current species (or parameters) into our current
-scope to use like
-```julia
-for spec in species(rs)
-  @eval $(spec.name) = $(spec())
-end
-```
-To then add $e^{-X}$ to $dX/dt$ as a forcing term we can then do
+We can add $e^{-X}$ to $dX/dt$ as a forcing term by
 ```julia
 dXdteq = equations(osys)[1]           
 @variables X

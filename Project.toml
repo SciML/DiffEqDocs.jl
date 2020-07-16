@@ -1,11 +1,11 @@
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
-DiffEqBiological = "eb300fae-53e8-50a0-950c-e21f52c2b7e0"
+Catalyst = "eb300fae-53e8-50a0-950c-e21f52c2b7e0"
 DiffEqProblemLibrary = "a077e3f3-b75c-5d7f-a0c6-6bc4c8ec64a9"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 
 [compat]
 DiffEqBase = "6.5"
-DiffEqBiological = "4.0"
+Catalyst = "5.0"
 DiffEqProblemLibrary = "4.5"
 Documenter = "0.23, 0.24, 0.25"
