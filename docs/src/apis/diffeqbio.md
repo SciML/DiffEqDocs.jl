@@ -1,4 +1,4 @@
-# DiffEqBiological.jl API
+# Catalyst.jl API
 ```@meta
 CurrentModule = DiffEqBiological
 ```
