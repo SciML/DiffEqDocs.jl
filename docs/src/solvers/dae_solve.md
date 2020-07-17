@@ -8,9 +8,7 @@ efficiency if the mass matrix is constant. `Rosenbrock23` is better for low
 accuracy (error tolerance `<1e-4`) and `Rodas5` is better for high accuracy.
 Another choice at high accuracy is `RadauIIA5`.
 
-If the mass matrices are not constant, the Rosenbrock methods are not applicable.
-In that case, `RadauIIA5` or BDF methods like `QBDF` tend to perform well, with
-`RadauIIA5` doing best for high accuracy.
+Non-constant mass matrices are not supported.
 
 If the problem cannot be defined in mass matrix form, the recommended method for
 performance is `IDA` from the Sundials.jl package if you are solving problems with
