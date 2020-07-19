@@ -17,7 +17,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
          format = Documenter.HTML(analytics = "UA-90474609-3",
                                   assets = ["assets/favicon.ico"],
                                   canonical="https://docs.sciml.ai/stable/"),
-         sitename="DifferentialEquations.jl: Scientific Machine Learning (SciML) Differentiable Programming Enabled Solvers",
+         sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[
          "Home" => "index.md",
