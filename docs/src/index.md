@@ -1,4 +1,4 @@
-# DifferentialEquations.jl Documentation
+# DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation
 
 This is a suite for numerically solving differential equations written in Julia
 and available for use in Julia, Python, and R. The
