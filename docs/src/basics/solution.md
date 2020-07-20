@@ -77,7 +77,7 @@ solution type.
 
 At anytime, a true `Array` can be created using `Array(sol)`.
 
-## Interpolations
+## Interpolations and Calculating Derivatives
 
 If the solver allows for dense output and `dense=true` was set for the solving
 (which is the default), then we can access the approximate value
