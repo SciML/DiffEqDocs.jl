@@ -20,7 +20,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
          sitename="DifferentialEquations.jl",
          authors="Chris Rackauckas",
          pages = Any[
-         "Home" => "index.md",
+         "DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation" => "index.md",
          "Tutorials" => Any[
            "tutorials/ode_example.md",
            "tutorials/advanced_ode_example.md",
