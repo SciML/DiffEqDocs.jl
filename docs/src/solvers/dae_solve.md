@@ -28,6 +28,7 @@ common keyword argument `initializealg`. The choices are:
   `du0` when used on a `DAEProblem`.
 - `ShampineCollocationInit`: For Index-1 DAEs implicit DAEs and and semi-explicit
   DAEs in mass matrix form. Changes both the differential and algebraic variables.
+- `NoInit`: Explicitly opts-out of DAE initialization.
 
 ### OrdinaryDiffEq.jl (Implicit ODE)
 
