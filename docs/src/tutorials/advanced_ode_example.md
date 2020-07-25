@@ -210,7 +210,7 @@ which outputs:
 Now let's use that to give the analytical solution Jacobian:
 
 ```julia
-jac = eval(ModelingToolkit.generate_jacobian(de...)[2])
+jac = eval(ModelingToolkit.generate_jacobian(de)[2])
 f = ODEFunction(rober, jac=jac)
 prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
