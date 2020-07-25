@@ -254,6 +254,9 @@ Note that none of the following methods are adaptive.
 - `DRI1` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
   (deterministic order 3). Can handle diagonal, non-diagonal, non-commuting, and
   scalar additive noise.†
+- `DRI1NM` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
+  (deterministic order 3). Can handle non-mixing diagonal (i.e., du[k] = f(u[k]))
+  and scalar additive noise.†  
 - `RI1` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
   Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
 - `RI3` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
@@ -275,7 +278,9 @@ Note that none of the following methods are adaptive.
 - `RS2` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 3).
   Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†  
 - `PL1WM` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
-  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†        
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†  
+- `PL1WMA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle additive noise.†         
 - `NON` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 4).
   Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
 - `SIEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
