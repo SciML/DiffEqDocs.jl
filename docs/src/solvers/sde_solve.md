@@ -39,8 +39,9 @@ accuracy tradeoff.
 If only an estimation for the expected value of the solution is required, i.e.,
 if one is only interested in an accurate draw from the distribution induced by
 a given SDE, the use of high weak order solvers is recommended. Specifically,
-`DRI1` is preferred for a high number of Wiener processes. Currently, all high
-weak order solvers require a fixed step size.
+`DRI1` is preferred for a high number of Wiener processes. The weak stochastic
+Runge-Kutta solvers with weak order 2 due to Roessler are adaptive. All other
+high weak order solvers currently require a fixed step size.
 
 ## Mass Matrices and Stochastic DAEs
 
@@ -250,10 +251,45 @@ Note that none of the following methods are adaptive.
 
 - `SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
   size. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
-- `DRI1` - Fixed step weak order 2.0 for Ito SDEs with minimized error constants.
-  Can handle diagonal, non-diagonal, and scalar additive noise.†
-- `RI1` - Fixed step weak order 2.0 for Ito SDEs.
-  Can handle diagonal, non-diagonal, and scalar additive noise.†
+- `DRI1` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
+  (deterministic order 3). Can handle diagonal, non-diagonal, non-commuting, and
+  scalar additive noise.†
+- `RI1` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RI3` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RI5` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RI6` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RDI1WM` - Fixed step weak order 1.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RDI2WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†  
+- `RDI3WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†  
+- `RDI4WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RS1` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 2).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `RS2` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 3).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†  
+- `PL1WM` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†        
+- `NON` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 4).
+  Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
+- `SIEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal and scalar additive noise.†  Stochastic generalization of
+  the improved Euler method.
+- `SIEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal and scalar additive noise.†  Stochastic generalization of
+  the improved Euler method.   
+- `SMEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal and scalar additive noise.†  Stochastic generalization of
+  the modified Euler method.  
+- `SMEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  Can handle diagonal and scalar additive noise.†  Stochastic generalization of
+  the modified Euler method.              
 
 ### StochasticCompositeAlgorithm
 
