@@ -62,7 +62,7 @@ for it to work in the solvers.
    out-of-place form `B = update_coefficients(A,u,p,t)`.
 3. `isconstant(A)` trait for whether the operator is constant or not.
 
-### AbstractDiffEqLinearOpeartor Interface Description
+### AbstractDiffEqLinearOperator Interface Description
 
 1. `AbstractDiffEqLinearOperator <: AbstractDiffEqOperator`
 2. Can absorb under multiplication by a scalar. In all algorithms things like
