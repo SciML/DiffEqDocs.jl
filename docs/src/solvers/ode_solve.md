@@ -386,13 +386,15 @@ The following are adaptive order, adaptive step size extrapolation methods:
   following Hairer's `ODEX` in the adaptivity behavior.
 
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
-algorithm. `threading` denotes whether to automatically multithread the `f` evaluations,
+algorithm. The `sequence_factor` denotes which even multiple of sequence to take while evaluating internal discretisations. 
+`threading` denotes whether to automatically multithread the `f` evaluations,
 allowing for a high degree of within-method parallelism. The defaults are:
 
 - `max_order=10`
 - `min_order=1` except for `ExtrapolationMidpointHairerWanner` it's 2.
 - `init_order=5`
 - `threading=true`
+- `seqeunce_factor = 2`
 
 Additionally, the `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
 methods have the additional argument:
@@ -577,12 +579,13 @@ The following are adaptive order, adaptive step size extrapolation methods:
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
 algorithm. `threading` denotes whether to automatically multithread the `f` evaluations
 and J/W instantiations+factorizations, allowing for a high degree of
-within-method parallelism. The defaults are:
+within-method parallelism. We recommend to switch to multi-threading when the system consists of more than ~ 150 ODES.
+The defaults are:
 
 - `max_order=10`
 - `min_order=1` except for `ImplicitHairerWannerExtrapolation` it's 2.
 - `init_order=5`
-- `threading=true`
+- `threading=false`
 
 Additionally, the `ImplicitDeuflhardExtrapolation` and `ImplicitHairerWannerExtrapolation`
 methods have the additional argument:
