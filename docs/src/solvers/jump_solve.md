@@ -29,8 +29,8 @@ algorithms are optimized for pure jump problems.
 ### DiffEqJump.jl
 
 - `SSAStepper`: a stepping algorithm for pure `ConstantRateJump` and/or
-  `MassActionJump` `JumpProblem`s. Does not support event handling, but does
-  support saving controls like `saveat`.
+  `MassActionJump` `JumpProblem`s. Supports handling of `DiscreteCallback`
+  and saving controls like `saveat`.
 
 ## RegularJump Compatible Methods
 
