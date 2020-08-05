@@ -68,7 +68,7 @@ is used, i.e. going back to the AD mechanism.
 ### solve Differentiation Examples
 
 ```julia
-using DiffEqSensitivity, OrdinaryDiffEq, Zygote
+using DiffEqSensitivity, OrdinaryDiffEq, ForwardDiff, Zygote
 
 function fiip(du,u,p,t)
   du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
@@ -79,7 +79,17 @@ prob = ODEProblem(fiip,u0,(0.0,10.0),p)
 sol = solve(prob,Tsit5())
 ```
 
-But if we want to perturb `u0` and `p` in a gradient calculation then we can.
+But if we want to perturb `u0` and `p` in a gradient calculation then we can do forward-mode:
+
+```julia
+function sum_of_solution(x)
+    _prob = remake(prob,u0=x[1:2],p=x[3:end])
+    sum(solve(_prob,Tsit5(),saveat=0.1,sensealg=QuadratureAdjoint()))
+end
+dx = ForwardDiff.gradient(sum_of_solution,[u0;p])
+```
+
+or reverse-mode:
 
 ```julia
 function sum_of_solution(u0,p)
