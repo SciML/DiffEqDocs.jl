@@ -46,7 +46,7 @@ Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
-Note that all of these methods are fixed timestep only.
+Note that all of these methods are fixed timestep unless otherwise specified.
 
 ### Exponential Methods for Linear and Affine Problems
 
