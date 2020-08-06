@@ -47,8 +47,6 @@ Note that all of these methods are fixed timestep only.
 These methods require that ``A`` is constant.
 
 - `LinearExponential` - Exact solution formula for linear, time-independent problems.
-  Expects the right hand side function to be a
-  [`AbstractDiffEqOperator`](@ref).
 
 Options:
 
