@@ -125,7 +125,7 @@ sol = solve(prob,OrdinaryDiffEq.LieRK4(),dt=1/4)
 The above example solves a non-stiff Non-Autonomous Linear ODE
 with a state dependent operator, using the `LieRK4` method.
 Similarly, a stiff Non-Autonomous Linear ODE with state dependent
-operators can be solved using specialized adaptive alorithms, like `MagnusAdapt4`. 
+operators can be solved using specialized adaptive algorithms, like `MagnusAdapt4`. 
 
 Example:
 
