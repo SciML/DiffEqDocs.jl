@@ -237,6 +237,8 @@ the definition of the methods.
 - `SensitivityADPassThrough()`: Ignores all adjoint definitions and
   proceeds to do standard AD through the `solve` functions.
 
+The `ReverseDiffAdjoint()`, `TrackerAdjoint()`, `ZygoteAdjoint()`, and `SensitivityADPassThrough()` algorithms all offer differentiate-through-the-solver adjoints, each based on their respective automatic differentiation packages. If you're not sure which to use, `ReverseDiffAdjoint()` is generally a stable and performant bet if using the CPU, while `TrackerAdjoint()` is required if you need GPUs. Note that `SensitivityADPassThrough()` is more or less an internal implementation detail. For example, `ReverseDiffAdjoint()` is implemented by invoking `ReverseDiff`'s AD functionality on `solve(...; sensealg=SensitivityADPassThrough())`.
+
 ### Internal Automatic Differentiation Options (ADKwargs)
 
 Many sensitivity algorithms share the same options for controlling internal
