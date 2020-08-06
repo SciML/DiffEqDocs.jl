@@ -14,7 +14,7 @@ is for solvers to require state-independent operators, which implies the form:
 u^\prime = A(t)u
 ```
 
-Another type for solvers require state-dependent operators, i.e.
+Another type of solvers are needed when the operators are state-dependent, i.e.
 
 ```math
 u^\prime = A(u)u
