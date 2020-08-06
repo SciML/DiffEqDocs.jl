@@ -98,7 +98,7 @@ sol = solve(prob,MagnusGL6(),dt=1/10)
 
 ### State-Dependent Solvers
 
-These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u,t)``.
+These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u)``.
 
 
 - `LieEuler` - First order Lie Euler method.
