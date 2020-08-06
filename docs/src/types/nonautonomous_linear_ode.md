@@ -13,9 +13,9 @@ These algorithms require a Non-autonomous linear ODE of the form:
 u^\prime = A(u,p,t)u
 ```
 
-Where `A` is an [AbstractDiffEqOperator](@ref DiffEqOperators) that is 
-multiplied against `u`. Many algorithms specialize on the form of `A`, 
-such as `A` being a constant or `A` being only time-dependent (`A(t)`). 
+Where ``A`` is an [AbstractDiffEqOperator](@ref DiffEqOperators) that is 
+multiplied against ``u``. Many algorithms specialize on the form of ``A``, 
+such as ``A`` being a constant or ``A`` being only time-dependent (``A(t)``). 
 
 ### Construction
 
