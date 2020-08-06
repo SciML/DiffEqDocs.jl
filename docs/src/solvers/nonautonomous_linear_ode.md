@@ -14,6 +14,12 @@ is for solvers to require state-independent operators, which implies the form:
 u^\prime = A(t)u
 ```
 
+Another type for solvers require state-dependent operators, i.e.
+
+```math
+u^\prime = A(u)u
+```
+
 Others specifically require linearity, i.e.
 
 ```math
@@ -88,3 +94,50 @@ A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
 prob = ODEProblem(A, ones(2), (1.0, 6.0))
 sol = solve(prob,MagnusGL6(),dt=1/10)
 ```
+
+
+### State-Dependent Solvers
+
+These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u)``.
+
+
+- `LieEuler` - First order Lie Euler method.
+- `RKMK2` - Second order Runge–Kutta–Munthe-Kaas method.
+- `RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
+- `LieRK4` - Fourth order Lie Runge-Kutta method.
+- `CG2` - Second ordere Crouch–Grossman method.
+- `MagnusAdapt4` - Fourth Order Adaptive Magnus method.
+
+Example:
+
+```julia
+function update_func(A,u,p,t)
+    A[1,1] = 0
+    A[2,1] = sin(u[1])
+    A[1,2] = -1
+    A[2,2] = 0
+end
+A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
+prob = ODEProblem(A, ones(2), (0, 30.))
+sol = solve(prob,OrdinaryDiffEq.LieRK4(),dt=1/4)
+```
+
+The above example solves a non-stiff Non-Autonomous Linear ODE
+with a state dependent operator, using the `LieRK4` method.
+Similarly, a stiff Non-Autonomous Linear ODE with state dependent
+operators can be solved using specialized adaptive alorithms, like `MagnusAdapt4`. 
+
+Example:
+
+```julia
+function update_func(A,u,p,t)
+    A[1,1] = 0
+    A[2,1] = 1
+    A[1,2] = -2*(1 - cos(u[2]) - u[2]*sin(u[2]))
+    A[2,2] = 0
+end
+A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
+prob = ODEProblem(A, ones(2), (30, 150.))
+sol = solve(prob,OrdinaryDiffEq.MagnusAdapt4(),dt=1/10)
+```
+
