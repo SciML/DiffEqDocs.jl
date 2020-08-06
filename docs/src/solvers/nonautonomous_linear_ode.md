@@ -138,5 +138,5 @@ function update_func(A,u,p,t)
 end
 A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
 prob = ODEProblem(A, ones(2), (30, 150.))
-sol = solve(prob,OrdinaryDiffEq.MagnusAdapt4(),dt=1/10)
+sol = solve(prob,OrdinaryDiffEq.MagnusAdapt4())
 ```
