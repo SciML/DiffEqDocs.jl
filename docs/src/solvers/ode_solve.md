@@ -131,33 +131,6 @@ allow for sophisticated event handling, etc. On stiff ODEs these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
-#### Linear Methods
-
-##### u' = A(t)u solvers
-
-- `MagnusMidpoint` - Second order Magnus Midpoint method.
-- `MagnusLeapfrog`- Second order Magnus Leapfrog method.
-- `MagnusGauss4` - Fourth order Magnus method approximated using a two stage Gauss quadrature.
-- `MagnusGL4`- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
-- `MagnusNC6`- Sixth order Magnus method approximated using Newton-Cotes quadrature.
-- `MagnusGL6`- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
-- `MagnusNC8`- Eighth order Magnus method approximated using Newton-Cotes quadrature.
-- `MagnusGL8`- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
-
-Example:
-
-```julia
-function update_func(A,u,p,t)
-    A[1,1] = cos(t)
-    A[2,1] = sin(t)
-    A[1,2] = -sin(t)
-    A[2,2] = cos(t)
-end
-A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
-prob = ODEProblem(A, ones(2), (1.0, 6.0))
-sol = solve(prob,MagnusGL6(),dt=1/10)
-```
-
 #### Explicit Runge-Kutta Methods
 
 - `Euler`- The canonical forward Euler method. Fixed timestep only.
@@ -612,25 +585,6 @@ efficient on small highly stiff ODEs. Has an option `threading=true` to turn
 on/off multithreading.
 
 - `PDIRK44`: a 4th order 2-processor DIRK method.
-
-#### Exponential Methods for Linear and Affine Problems
-
-- `LinearExponential` - Exact solution formula for linear, time-independent problems.
-  Expects the right hand side function to be a
-  [`AbstractDiffEqOperator`](@ref).
-
-Options:
-
-- `krylov` - symbol. One of
-  - :off (default) - cache the operator beforehand. Requires `Matrix(A)` method
-    defined for the operator `A`.
-  - :simple - uses simple Krylov approximations with fixed subspace size `m`.
-  - :adaptive - uses adaptive Krylov approximations with internal timestepping.
-- `m` - integer, default: `30`. Controls the size of Krylov subsapce if
-  `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
-- `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
-  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
-  then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 #### Exponential Runge-Kutta Methods
 

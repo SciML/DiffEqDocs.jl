@@ -46,6 +46,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
          "Problem Types" => Any[
            "types/discrete_types.md",
            "types/ode_types.md",
+           "types/nonautonomous_linear_ode.md",
            "types/dynamical_types.md",
            "types/split_ode_types.md",
            "types/steady_state_types.md",
@@ -59,6 +60,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,DiffEqBiological,ODEProblemLib
          "Solver Algorithms" => Any[
            "solvers/discrete_solve.md",
            "solvers/ode_solve.md",
+           "solvers/nonautonomous_linear_ode.md",
            "solvers/dynamical_solve.md",
            "solvers/split_ode_solve.md",
            "solvers/steady_state_solve.md",
