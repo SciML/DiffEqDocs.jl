@@ -84,12 +84,13 @@ reaction is thus modeled as:
 c2, i --> r
 ```
 
-Thus our full reaction network is:
-
+Using [Catalyst.jl](https://github.com/SciML/Catalyst.jl) we can input our full
+reaction network in a form that can be easily used with DifferentialEquations.jl
+solvers:
 ```julia
-# ]add DiffEqBiological
-using DiffEqBiological
-sir_model = @reaction_network SIR begin
+# ]add Catalyst
+using Catalyst
+sir_model = @reaction_network begin
     c1, s + i --> 2i
     c2, i --> r
 end c1 c2
@@ -111,7 +112,7 @@ the problem via:
 
 ```julia
 p = (0.1/1000,0.01)
-prob = DiscreteProblem([999,1,0],(0.0,250.0),p)
+prob = DiscreteProblem(sir_model, [999,1,0], (0.0,250.0), p)
 ```
 
 The reaction network can be converted into various differential equations
@@ -119,14 +120,19 @@ like `JumpProblem`, `ODEProblem`, or an `SDEProblem`. To turn it into a
 jump problem, we simply do:
 
 ```julia
-jump_prob = JumpProblem(prob,Direct(),sir_model)
+jump_prob = JumpProblem(sir_model, prob, Direct())
 ```
+Here `Direct()` indicates that we will determine the random times and types of
+reactions using [Gillespie's Direct stochastic simulation algorithm
+(SSA)](https://doi.org/10.1016/0021-9991(76)90041-3). See [Constant Rate Jump
+Aggregators](@ref) for other supported SSAs.
 
-This is now a problem that can be solved using the differential equations solvers.
-Since our problem is discrete, we will use the `FunctionMap()` method.
+We now have a problem that can be evolved in time using the differential
+equations solvers. Since our problem is discrete, we will use `SSAStepper()` to
+handle time-stepping the `Direct` method from jump to jump:
 
 ```julia
-sol = solve(jump_prob,FunctionMap())
+sol = solve(jump_prob, SSAStepper())
 ```
 
 This solve command takes the standard commands of the common interface, and the
@@ -137,24 +143,18 @@ there exists a plot recipe, which we can plot with:
 using Plots; plot(sol)
 ```
 
-![gillespie_solution](../assets/gillespie_solution.png)
+![SIR Solution](../assets/SIR.svg)
 
 ## SSAStepper
 
-The previous example used `FunctionMap()` to perform the jump process
-simulation. `FunctionMap` is a `DiscreteProblem` algorithm in OrdinaryDiffEq.jl.
-This shows that any common interface algorithm can be used to perform the
-timestepping since this is implemented over the callback interface. In many
-cases we may have a pure jump system that only involves `ConstantRateJump`s
-and/or `MassActionJump`s. When that's the case, a substantial performance benefit
-may be gained by using `SSAStepper()`
-
-```julia
-sol = solve(jump_prob,SSAStepper())
-```
-
-`SSAStepper` is a barebones SSA method which doesn't allow defining events or
-integrating simultaneous ODEs, but is very efficient for pure jump/SSA problems.
+Any common interface algorithm can be used to perform the time-stepping since it
+is implemented over the callback interface. This allows for hybrid systems that
+mix ODEs, SDEs and jumps. In many cases we may have a pure jump system that only
+involves `ConstantRateJump`s and/or `MassActionJump`s (see below). When that's
+the case, a substantial performance benefit may be gained by using
+`SSAStepper()`. Note, `SSAStepper` is a more limited time-stepper which only
+supports discrete events, and does not allow simultaneous coupled ODEs or SDEs.
+It is, however, very efficient for pure jump/SSA problems.
 
 ## Controlling Saving Behavior
 
@@ -163,28 +163,29 @@ The reason is because this is required in order to accurately resolve every disc
 exactly (and this is what allows for perfectly vertical lines!). However, in many cases
 when using jump problems you may wish to decrease the saving pressure given by large
 numbers of jumps. To do this, you set `save_positions` in the `JumpProblem`. Just like
-for other callbacks, this is a tuple `(bool1,bool2)` which saves whether to save
+for other callbacks, this is a tuple `(bool1,bool2)` which sets whether to save
 before or after a jump. If we do not want to save at every jump, we would thus pass:
 
 ```julia
-jump_prob = JumpProblem(prob,Direct(),sir_model,save_positions=(false,false))
+jump_prob = JumpProblem(sir_model, prob, Direct(), save_positions=(false,false))
 ```
 
 Now the saving controls associated with the integrator are the only ones to note.
 For example, we can use `saveat=0.5` to save at an evenly spaced grid:
 
 ```julia
-sol = solve(jump_prob,FunctionMap(),saveat=0.5)
+sol = solve(jump_prob, SSAStepper(), saveat=0.5)
 ```
 
 ## Defining the Jumps Directly: `ConstantRateJump`
 
-Instead of using the biological modeling functionality of `@reaction_network`, we can
-directly define jumps. This allows for more general types of rates, at the cost
-of some modeling friendliness. The constructor for a `ConstantRateJump` is:
+Instead of using the chemical reaction modeling functionality of
+[Catalyst.jl's](https://github.com/SciML/Catalyst.jl) `@reaction_network`, we
+can directly define jumps. This allows for more general types of rates, at the
+cost of some modeling friendliness. The constructor for a `ConstantRateJump` is:
 
 ```julia
-jump = ConstantRateJump(rate,affect!)
+jump = ConstantRateJump(rate, affect!)
 ```
 
 where `rate` is a function `rate(u,p,t)` and `affect!` is a function of the integrator
@@ -208,22 +209,23 @@ end
 jump2 = ConstantRateJump(rate2,affect2!)
 ```
 
-We can then use `JumpProblem` to augment a problem with jumps. To add the jumps
-to the `DiscreteProblem` and solve it, we would simply do:
+We can then use `JumpProblem` to augment a problem with jumps. To create and
+solve it, we would simply do:
 
 ```julia
-jump_prob = JumpProblem(prob,Direct(),jump,jump2)
-sol = solve(jump_prob,FunctionMap())
+prob = DiscreteProblem([999,1,0], (0.0,250.0), p)
+jump_prob = JumpProblem(prob, Direct(), jump, jump2)
+sol = solve(jump_prob, SSAStepper())
 ```
 Note, in systems with more than a few jumps (more than ~10), it can be
 advantageous to use a different internal representation for the jump collection.
-For such systems it is recommended to use `DirectFW()`, which should offer
-better performance than `Direct()`.
+For such systems it is recommended to use `SortingDirect`, `RSSA` or `RSSACR`,
+see the list of DiffEqJump SSAs at [Constant Rate Jump Aggregators](@ref).
 
 ## Defining the Jumps Directly: `MassActionJump`
 For systems that can be represented as mass action reactions, a further
 specialization of the jump type is possible that offers improved computational
-performance; `MasssActionJump`. Suppose the system has ``N`` chemical species
+performance; `MassActionJump`. Suppose the system has ``N`` chemical species
 ``\{S_1,\dots,S_N\}``. A general mass action reaction has the form
 
 ```math
@@ -242,8 +244,8 @@ stoichiometry `(-1,1,0)`. The second reaction has rate `c2`, reactant
 stoichiometry `(0,1,0)`, product stoichiometry `(0,0,1)`, and net stoichiometry
 `(0,-1,1)`.
 
-We can encode this system as a mass action jump by specifying the rates, reactant
-stoichiometry, and the net stoichiometry as follows:
+We can manually encode this system as a mass action jump by specifying the
+rates, reactant stoichiometry, and the net stoichiometry as follows:
 ```julia
 rates = [0.1/1000, 0.01]    # i.e. [c1,c2]
 reactant_stoich =
@@ -264,6 +266,8 @@ a `JumpProblem` and call `solve`:
 jump_prob = JumpProblem(prob, Direct(), mass_act_jump)
 sol = solve(jump_prob, SSAStepper())
 ```
+Note, Catalyst.jl automatically groups reactions into their optimal jump
+representation.
 
 
 ## Defining the Jumps Directly: Mixing `ConstantRateJump` and `MassActionJump`
