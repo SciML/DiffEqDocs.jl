@@ -1,4 +1,4 @@
-using Documenter, DiffEqBase, DiffEqProblemLibrary, Catalyst
+using Documenter, DiffEqBase, DiffEqProblemLibrary
 
 ODEProblemLibrary = DiffEqProblemLibrary.ODEProblemLibrary
 ODEProblemLibrary.importodeproblems()
@@ -12,7 +12,7 @@ DDEProblemLibrary.importddeproblems()
 DAEProblemLibrary = DiffEqProblemLibrary.DAEProblemLibrary
 DAEProblemLibrary.importdaeproblems()
 
-makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,Catalyst,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary],
+makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary],
          doctest=false, clean=true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
                                   assets = ["assets/favicon.ico"],
@@ -99,11 +99,8 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,Catalyst,ODEProblemLibrary,SDE
              "models/multiscale.md",
              "models/physical.md",
              "models/financial.md",
-             "models/biological.md",
+             "models/chemical_reactions.md",
              "models/external_modeling.md"
-         ],
-         "APIs" => Any[
-             "apis/diffeqbio.md"
          ],
          "Extra Details" => Any[
              "extras/timestepping.md",
