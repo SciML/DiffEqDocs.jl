@@ -54,6 +54,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,ODEProblemLibrary,SDEProblemLi
            "types/sde_types.md",
            "types/rode_types.md",
            "types/dde_types.md",
+           "types/sdde_types.md",
            "types/dae_types.md",
            "types/jump_types.md",
          ],
@@ -69,6 +70,7 @@ makedocs(modules=[DiffEqBase,DiffEqProblemLibrary,ODEProblemLibrary,SDEProblemLi
            "solvers/sde_solve.md",
            "solvers/rode_solve.md",
            "solvers/dde_solve.md",
+           "solvers/sdde_solve.md",
            "solvers/dae_solve.md",
            "solvers/benchmarks.md"
          ],
