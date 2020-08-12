@@ -1,4 +1,4 @@
-# SDDE Solvers
+# DDE Solvers
 
 `solve(prob::AbstractDDEProblem, alg; kwargs)`
 
