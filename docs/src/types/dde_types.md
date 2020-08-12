@@ -7,13 +7,13 @@ condition ``u_0`` at time point ``t_0``, and the history function ``h``
 which together define a DDE:
 
 ```math
-\frac{du}{dt} = f(u,h,p,t) \qquad & (t \geq t_0)
+\frac{du}{dt} = f(u,h,p,t) \qquad (t \geq t_0)
 ```
 ```math
 u(t_0) = u_0,
 ```
 ```math
-u(t) = h(t) \qquad &(t < t_0).
+u(t) = h(t) \qquad (t < t_0).
 ```
 
 ``f`` should be specified as `f(u, h, p, t)` (or in-place as `f(du, u, h, p, t)`),

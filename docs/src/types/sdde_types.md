@@ -7,7 +7,7 @@ the diffusion function `g`, the initial condition ``u_0`` at time point ``t_0``,
 and the history function ``h`` which together define a SDDE:
 
 ```math
-du = f(u,h,p,t)dt + g(u,h,p,t)dW_t \qquad & (t \geq t_0)
+du = f(u,h,p,t)dt + g(u,h,p,t)dW_t \qquad (t \geq t_0)
 ```
 ```math
 u(t_0) = u_0,
