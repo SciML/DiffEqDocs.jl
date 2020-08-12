@@ -31,8 +31,8 @@ allowing for easy benchmarking to ensure you are using the fastest method possib
 DifferentialEquations.jl integrates with the Julia package sphere with:
 
 - GPU accleration through CUDA.jl and DiffEqGPU.jl
-- Automated sparsity detection with [SparsityDetection.jl](https://github.com/JuliaDiffEq/SparsityDetection.jl)
-- Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/JuliaDiffEq/SparseDiffTools.jl), allowing for fast solutions
+- Automated sparsity detection with [SparsityDetection.jl](https://github.com/SciML/SparsityDetection.jl)
+- Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/SciML/SparseDiffTools.jl), allowing for fast solutions
   to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
 - Allowing the specification of linear solvers for maximal efficiency
 - Progress meter integration with the Juno IDE for estimated time to solution
@@ -48,7 +48,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
 
 - [Forward and Adjoint Sensitivity Analysis (Automatic Differentiation)](@ref sensitivity) for fast gradient computations
 - [Parameter Estimation and Bayesian Analysis](@ref parameter_estimation)
-- Neural differential equations with [DiffEqFlux.jl](https://github.com/JuliaDiffEq/DiffEqFlux.jl)
+- Neural differential equations with [DiffEqFlux.jl](https://github.com/SciML/DiffEqFlux.jl)
   for efficient scientific machine learning (scientific ML) and scientific AI.
 - Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
 - [Global Sensitivity Analysis](@ref gsa)
@@ -67,7 +67,7 @@ If you would like to help support it, please star the repository as such
 metrics may help us secure funding in the future. If you use JuliaDiffEq
 software as part of your research, teaching, or other activities, we would
 be grateful if you could cite our work.
-[Please see our citation page for guidelines](http://juliadiffeq.org/citing.html).
+[Please see our citation page for guidelines](http://sciml.ai/citing.html).
 
 ## Getting Started: Installation And First Steps
 
@@ -96,7 +96,7 @@ page.
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
 [ODE tutorial](@ref ode_example)**. Example IJulia notebooks
-[can also be found in DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+[can also be found in DiffEqTutorials.jl](https://github.com/SciML/DiffEqTutorials.jl).
 If you find any example where there seems to be an error, please open an issue.
 
 For the most up to date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
@@ -108,7 +108,7 @@ for power users. Information on how to get to the bleeding edge is found in the
 ### Installing from Python
 
 Use of DifferentialEquations.jl from the Python programming language is available through the
-[diffeqpy](https://github.com/JuliaDiffEq/diffeqpy) module. To install diffeqpy, use pip:
+[diffeqpy](https://github.com/SciML/diffeqpy) module. To install diffeqpy, use pip:
 
 ```
 pip install diffeqpy
@@ -135,17 +135,17 @@ pip install numba
 ```
 
 diffeqpy supports the majority of DifferentialEquations.jl with very similar
-syntax, see [the diffeqpy README for more details](https://github.com/JuliaDiffEq/diffeqpy).
+syntax, see [the diffeqpy README for more details](https://github.com/SciML/diffeqpy).
 One important point to note is that Numba is generally an order of magnitude slower
 than Julia in terms of  the generated differential equation solver code, and thus it is
 recommended to use `julia.Main.eval` for Julia-side derivative function implementations
-for maximal efficiency. See [this blog post](http://juliadiffeq.org/2018/04/30/Jupyter.html)
+for maximal efficiency. See [this blog post](https://sciml.ai/news/2018/04/30/Jupyter/)
 for more information.
 
 ### Installing from R
 
 Use of DifferentialEquations.jl from the R programming language is available through the
-[diffeqr](https://github.com/JuliaDiffEq/diffeqr) module.
+[diffeqr](https://github.com/SciML/diffeqr) module.
 [diffeqr is registered into CRAN](https://CRAN.R-project.org/package=diffeqr).
 Thus to add the package, use:
 
@@ -156,7 +156,7 @@ install.packages("diffeqr")
 To install the master branch of the package (for developers), use:
 
 ```R
-devtools::install_github('JuliaDiffEq/diffeqr', build_vignettes=T)
+devtools::install_github('SciML/diffeqr', build_vignettes=T)
 ```
 
 You will need a working installation of Julia in your path. To install Julia, download a generic binary
@@ -169,12 +169,12 @@ Currently, use from R supported a subset of DifferentialEquations.jl which is do
 ### IJulia Notebook Tutorials
 
 You can access extra tutorials supplied in the
-[DiffEqTutorials.jl repository](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
+[DiffEqTutorials.jl repository](https://github.com/SciML/DiffEqTutorials.jl)
 via the commands:
 
 ```julia
 using Pkg
-pkg"add https://github.com/JuliaDiffEq/DiffEqTutorials.jl"
+pkg"add https://github.com/SciML/DiffEqTutorials.jl"
 using DiffEqTutorials
 DiffEqTutorials.open_notebooks()
 ```
