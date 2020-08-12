@@ -13,7 +13,7 @@ du = f(u,h,p,t)dt + g(u,h,p,t)dW_t \qquad (t \geq t_0)
 u(t_0) = u_0,
 ```
 ```math
-u(t) = h(t) \qquad &(t < t_0).
+u(t) = h(t) \qquad (t < t_0).
 ```
 
 ``f`` should be specified as `f(u, h, p, t)` (or in-place as `f(du, u, h, p, t)`)
