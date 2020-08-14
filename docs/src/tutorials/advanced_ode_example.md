@@ -480,7 +480,7 @@ M = [1. 0  0
      0  1. 0
      0  0  0]
 f = ODEFunction(rober,mass_matrix=M)
-prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
 sol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)
 
 plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
