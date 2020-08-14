@@ -133,7 +133,7 @@ function rober(du,u,p,t)
   du[3] =  k₂*y₂^2
   nothing
 end
-prob = ODEProblem(rober,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+prob = ODEProblem(rober,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
 sol = solve(prob)
 plot(sol,tspan=(1e-2,1e5),xscale=:log10)
 ```
