@@ -49,7 +49,9 @@ Note that the history function specification can be used to specify general
 retarded arguments, i.e. `h(p,α(u,t))`. Neutral delay differential equations
 can be specified by using the `deriv` value in the history interpolation.
 For example, `h(p,t-τ, Val{1})` returns the first derivative of the history
-values at time `t-τ`. 
+values at time `t-τ`.
+
+Note that algebraic equations can be specified by using a singular mass matrix.
 
 ## Problem Type
 
