@@ -43,6 +43,14 @@ the interpolant of `h` at that point. However, one should use caution in order
 to achieve the best accuracy. When lags are declared, the solvers can more
 efficiently be more accurate and thus this is recommended.
 
+## Neutral and Retarded Delay Differential Equations
+
+Note that the history function specification can be used to specify general
+retarded arguments, i.e. `h(p,α(u,t))`. Neutral delay differential equations
+can be specified by using the `deriv` value in the history interpolation.
+For example, `h(p,t-τ, Val{1})` returns the first derivative of the history
+values at time `t-τ`. 
+
 ## Problem Type
 
 ### Constructors

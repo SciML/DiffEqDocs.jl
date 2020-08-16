@@ -43,22 +43,6 @@ a given SDE, the use of high weak order solvers is recommended. Specifically,
 Runge-Kutta solvers with weak order 2 due to Roessler are adaptive. All other
 high weak order solvers currently require a fixed step size.
 
-## Mass Matrices and Stochastic DAEs
-
-The stiff methods can solve stochastic equations with mass matrices
-(including stochastic DAEs written in mass matrix form) when either
-`symplectic=true` or `theta=1`. These methods interpret the mass matrix
-equation as:
-
-```math
-Mu' = f(t,u)dt + Mg(t,u)dW_t
-```
-
-i.e. with no mass matrix inversion applied to the `g` term. Thus these methods
-apply noise per dependent variable instead of on the combinations of the
-dependent variables and this is designed for phenomenological noise on the
-dependent variables (like multiplicative or additive noise)
-
 ## Special Noise Forms
 
 Some solvers are for specialized forms of noise. Diagonal noise is the default
@@ -223,7 +207,7 @@ For `SRA` and `SRI`, the following option is allowed:
   this is the implicit Midpoint method on the drift term and is symplectic in
   distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
   and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
-- `SKenCarp` - Adaptive L-stable drfit-implicit strong order 1.5 for additive
+- `SKenCarp` - Adaptive L-stable drift-implicit strong order 1.5 for additive
   Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
   and scalar additive noise.\*†
 
