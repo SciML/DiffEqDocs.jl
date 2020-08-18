@@ -312,14 +312,14 @@ in some cases one may want more control over the way the sensitivities are
 calculated in order to squeeze out every ounce of optimization. If you're that
 user, then this section of the docs is for you.
 
-## Local Forward Sensitivity Analysis via ODELocalSensitivityProblem
+## Local Forward Sensitivity Analysis via ODEForwardSensitivityProblem
 
 Local forward sensitivity analysis gives a solution along with a timeseries of
 the sensitivities. Thus if one wishes to have a derivative at every possible
 time point, directly utilizing the `ODELocalSensitivityProblem` can be more
 efficient.
 
-### ODELocalSensitivityProblem Syntax
+### ODEForwardSensitivityProblem Syntax
 
 `ODELocalSensitivityProblem` is similar to an `ODEProblem`, but takes an
 `AbstractSensitivityAlgorithm` that describes how to append the forward sensitivity
