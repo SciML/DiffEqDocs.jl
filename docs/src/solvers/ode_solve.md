@@ -359,7 +359,7 @@ The following are adaptive order, adaptive step size extrapolation methods:
   following Hairer's `ODEX` in the adaptivity behavior.
 
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
-algorithm. The `sequence_factor` denotes which even multiple of sequence to take while evaluating internal discretisations. 
+algorithm. The `sequence_factor` denotes which even multiple of sequence to take while evaluating internal discretisations.
 `threading` denotes whether to automatically multithread the `f` evaluations,
 allowing for a high degree of within-method parallelism. The defaults are:
 
@@ -1049,7 +1049,12 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
     form. Not compatible with events.
   - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
     interface. Only allows `solve`.
-
+  - `SimpleRK4` - A fixed timestep barebones RK4 implementation with integrators.
+  - `LoopRK4` - A fixed timestep barebones RK4. Not compatible with events or
+    the integrator interface.
+  - `GPURK4` - A fully static RK4 for specialized compilation to accelerators
+    like GPUs and TPUs.
+    
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use SimpleDiffEq.jl:
 
