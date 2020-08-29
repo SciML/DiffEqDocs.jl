@@ -112,7 +112,6 @@ function RODEFunction{iip,recompile}(f;
 
 ```julia
 function DAEFunction{iip,recompile}(f;
-                 mass_matrix=I,
                  analytic=nothing,
                  tgrad=nothing,
                  jac=nothing, # (J,du,u,p,gamma,t) or (du,u,p,gamma,t)
