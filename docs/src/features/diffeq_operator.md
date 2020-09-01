@@ -74,5 +74,5 @@ for it to work in the solvers.
 7. Optional: `expv(A,u,t) = exp(t*A)*u` and `expv!(v,A::DiffEqOperator,u,t)`
    Required for sparse-saving exponential integration.
 8. Optional: factorizations. `ldiv!`, `factorize` et. al. This is only required
-   for algorithms which use the factorization of the operator (Crank-Nicholson),
+   for algorithms which use the factorization of the operator (Crank-Nicolson),
    and only for when the default linear solve is used.
