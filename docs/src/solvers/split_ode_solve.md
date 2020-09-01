@@ -29,8 +29,8 @@ the problem, though for large enough PDEs the `ARKODE` method with
   of splits.
 - `IMEXEuler` : 1st order explicit Euler mixed with implicit Euler. Fixed time
   step only.
-- `CNAB2`: Crank-Nicholson Adams Bashforth Order 2. Fixed time step only.
-- `CNLF`: Crank-Nicholson Leapfrog of Order 2. Fixed time step only.
+- `CNAB2`: Crank-Nicolson Adams Bashforth Order 2. Fixed time step only.
+- `CNLF`: Crank-Nicolson Leapfrog of Order 2. Fixed time step only.
 - `SBDF2` : 2nd order IMEX BDF method. Fixed time step only.
 - `SBDF3` : 3rd order IMEX BDF method. Fixed time step only. In development.
 - `SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
