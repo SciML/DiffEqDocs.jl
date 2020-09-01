@@ -35,7 +35,7 @@ is trivial which signifies `A` is a constant.
 ### AffineDiffEqOperator
 
 For `As = (A1,A2,...,An)` and `Bs = (B1,B2,...,Bn)` where each of the `Ai` and
-`Bi` are `DiffEqLinearOperator`s, the following constructor:
+`Bi` are `DiffEqArrayOperator`s, the following constructor:
 
 ```julia
 function AffineDiffEqOperator{T}(As,Bs,u_cache=nothing)
