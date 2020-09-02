@@ -34,14 +34,14 @@ is trivial which signifies `A` is a constant.
 
 ### AffineDiffEqOperator
 
-For `As = (A1,A2,...,An)` and `Bs = (B1,B2,...,Bn)` where each of the `Ai` and
-`Bi` are `DiffEqArrayOperator`s, the following constructor:
+For `As = (A1,A2,...,An)` and `Bs = (B1,B2,...,Bm)` where each of the `Ai` and
+`Bi` are `AbstractDiffEqOperator`s, the following constructor:
 
 ```julia
 function AffineDiffEqOperator{T}(As,Bs,u_cache=nothing)
 ```
 
-builds an operator `L = (A1 + A2 + ... An)*u + B1 + B2 + ... + Bn`. `u_cache`
+builds an operator `L = (A1 + A2 + ... An)*u + B1 + B2 + ... + Bm`. `u_cache`
 is for designating a type of internal cache for non-allocating evaluation of
 `L(du,u,p,t)`. If not given, the function `L(du,u,p,t)` is not available. Note
 that in solves which exploit this structure, this function call is not necessary.
