@@ -88,7 +88,7 @@ may fail at low accuracy situations. Another good choice for this regime is `lso
 `Trapezoid` is a symmetric (almost symplectic) integrator with adaptive
 timestepping. `ImplicitEuler` is an extension to the common algorithm with
 adaptive timestepping and efficient quasi-Newton Jacobian re-usage which is fully
-strong-stability presurving (SSP) for hyperbolic PDEs.
+strong-stability preserving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
 parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
