@@ -57,6 +57,30 @@ commutative noise, occurs when the noise satisfies the following condition:
 for every ``j_1,j_2`` and ``k``. Additive noise is when ``g(t,u)=g(t)``,
 i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 
+## Iterated Integral Approximations
+
+The difficulty of higher strong order integrators is the resolution of the stochastic
+iterated integral expressions, i.e.
+
+```math
+\iint dW_t dZ_s
+```
+
+Most methods are specific noise cases, like diagonal noise or commutative noise,
+because of how this iterated integral approximation is performed within the method.
+However, the methods for general noise, like `RKMilGeneral`, perform a direct
+approximation of the iterated integrals. For those methods, the algorithms have
+an `ii_approx` keyword argument which allows for specifying the method for the
+approximation. The choices are:
+
+- `IICommutative`: a simplification of the integral which assumes the noise commutativity
+  property. If used on a non-commutative noise problem this will limit the strong convergence
+  to 0.5.
+- `IIWiktorsson`: approximation of the due to Wiktorsson with a approximation of the truncation
+  term
+
+Example: `RKMilGeneral(ii_approx=IIWiktorsson())`.
+
 ## Special Keyword Arguments
 
 * `save_noise`: Determines whether the values of `W` are saved whenever the timeseries
@@ -102,6 +126,10 @@ Orders are given in terms of strong order.
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
+- `RKMilGeneral(;interpretation=:Ito, ii_approx=IIWiktorsson()` - An explicit 
+  Runge-Kutta discretization of the strong order 1.0 Milstein method for general 
+  non-commutative noise problems. Allows for a choice of interpretation between
+  `:Ito` and `:Stratonovich`. Allows for a choice of iterated integral approximation.
 - `WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
 - `WangLi3SMil_B` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
 - `WangLi3SMil_C` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
