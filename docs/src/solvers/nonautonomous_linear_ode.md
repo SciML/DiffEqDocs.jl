@@ -101,11 +101,12 @@ sol = solve(prob,MagnusGL6(),dt=1/10)
 These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u)``.
 
 
+- `CayleyEuler` - First order method using Cayley transformations.
 - `LieEuler` - First order Lie Euler method.
 - `RKMK2` - Second order Runge–Kutta–Munthe-Kaas method.
 - `RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
 - `LieRK4` - Fourth order Lie Runge-Kutta method.
-- `CG2` - Second ordere Crouch–Grossman method.
+- `CG2` - Second order Crouch–Grossman method.
 - `MagnusAdapt4` - Fourth Order Adaptive Magnus method.
 
 Example:
@@ -140,3 +141,9 @@ A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
 prob = ODEProblem(A, ones(2), (30, 150.))
 sol = solve(prob,MagnusAdapt4())
 ```
+
+# Time and State-Dependent Operators
+
+These methods can be used when ``A`` is dependent on both time and state variables, i.e. ``A(u,t)``
+
+- `CG3` - Third order Crouch-Grossman method.
