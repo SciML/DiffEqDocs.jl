@@ -224,6 +224,29 @@ Pages = [
 Depth = 2
 ```
 
+### Removing and Reducing Compile Times
+
+In some situations one may wish to decrease the compile time associated with DifferenitalEquations.jl
+usage. If that's the case, there's two strategies to employ. One strategy is to use the
+[low dependency usage](https://diffeq.sciml.ai/stable/features/low_dep/). DifferentialEquations.jl
+is a metapackage composed of many smaller packages, and thus one could directly use a single component,
+such as `OrdinaryDiffEq.jl` for the pure Julia ODE solvers, and decrease the compile times by ignoring
+the rest (note: the interface is exactly the same, except using a solver other than those in OrdinaryDiffEq.jl
+will error). We recommend that downstream packages only rely on exactly the packages they need.
+
+The other strategy is to use [PackageCompiler.jl](https://julialang.github.io/PackageCompiler.jl/dev/) to create 
+a system image that precompiles the whole package. To do this, one simply does:
+
+```julia
+using PackageCompiler
+PackageCompiler.create_sysimage([:DifferentialEquations,:Plots];replace_default=true)
+```
+
+Note that there are some drawbacks to adding a package in your system image, for example
+the package will never update until you manually rebuild the system image again. For more
+information on the consequences, 
+[see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/dev/sysimages/#Drawbacks-to-custom-sysimages-1)
+
 ### Basics
 
 These pages introduce you to the core of DifferentialEquations.jl and the common
