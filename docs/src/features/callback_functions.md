@@ -127,6 +127,7 @@ are hit. For example, to dose at time `t=4` and `t=8`, we can do the following:
 dosetimes = [4.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
+cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
@@ -142,6 +143,7 @@ of just `10`. This model is implemented as simply:
 dosetimes = [4.0,6.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes && (u[1] < 1.0)
 affect!(integrator) = integrator.u[1] += 10integrator.t
+cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
