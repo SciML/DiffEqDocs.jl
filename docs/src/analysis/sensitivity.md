@@ -452,7 +452,7 @@ at time `sol.t[i]`. Note that all of the functionality available to ODE solution
 is available in this case, including interpolations and plot recipes (the recipes
 will plot the expanded system).
 
-## Adjoint Sensitivity Analysis via adjoint_sensitivities (Backpropogation)
+## Adjoint Sensitivity Analysis via `adjoint_sensitivities` (Backpropogation)
 
 Adjoint sensitivity analysis is used to find the gradient of the solution
 with respect to some functional of the solution. In many cases this is used
@@ -693,7 +693,7 @@ Thus one should check the stability of the backsolve on their type of problem be
 enabling this method. Additionally, using checkpointing with backsolve can be a
 low memory way to stabilize it.
 
-## Second Order Sensitivity Analysis via second_order_sensitivities (Experimental)
+## Second Order Sensitivity Analysis via `second_order_sensitivities` (Experimental)
 
 Second order sensitivity analysis is used for the fast calculation of Hessian
 matrices. Currently there are two functions available. The first, `second_order_sensitivities`,
