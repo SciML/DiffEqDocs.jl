@@ -24,6 +24,12 @@ gr()
 plot(sol,title="I Love DiffEqs!")
 ```
 
+Then to save the plot, use `savefig`, for example:
+
+```julia
+savefig("myplot.png")
+```
+
 ## Density
 
 If the problem was solved with `dense=true`, then `denseplot` controls whether
@@ -170,6 +176,15 @@ plot(sol,vars=(f,1,2,3))
 ```
 
 ![norm_plot](../assets/normalized.png)
+
+or the norm over time:
+
+```julia
+f(t,x,y,z) = (t,sqrt(x^2+y^2+z^2))
+plot(sol,vars=(f,0,1,2,3))
+```
+
+![normtime plot](https://user-images.githubusercontent.com/1814174/94351101-4667df80-0023-11eb-987d-aca652e32521.png)
 
 ## Animations
 
