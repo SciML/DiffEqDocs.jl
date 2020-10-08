@@ -160,7 +160,7 @@ problems.
 - `PFRK87(w=0)` - Phase-fitted Runge-Kutta Runge-Kutta of 8th order. Takes an optional
   argument `w` to for the periodicity phase, in which case this method results in
   zero numerical dissipation.
-- `RKO65` - Olver's 6 stage 5th order method. This method is robust on problems
+- `RKO65` - Tsitouras' Runge-Kutta-Oliver 6 stage 5th order method. This method is robust on problems
   which have a singularity at `t=0`.
 - `TanYam7` - Tanaka-Yamashita 7 Runge-Kutta method.
 - `DP8` - Hairer's 8/5/3 adaption of the Dormand-Prince Runge-Kutta method.
