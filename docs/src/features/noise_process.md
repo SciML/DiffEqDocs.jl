@@ -29,6 +29,12 @@ smaller `dt`) in a distributionally-exact manner. It is demonstrated how the
 `NoiseWrapper` can be used to wrap the `NoiseProcess` of one SDE/RODE solution
 in order to re-use the same noise process in another simulation.
 
+The `VirtualBrownianTree` allows one to trade speed for O(1) memory usage.
+Instead of storing Brownian motion increments, the `VirtualBrownianTree` samples
+recursively from the midpoint `tmid` of Brownian bridges, using a splittable PRNG.
+The recursion terminates when the query time agrees within some tolerance
+with `tmid` or when the maximum depth of the tree is reached.
+
 Lastly, the `NoiseFunction` allows you to use any function of time as the
 noise process. Together, this functionality allows you to define any colored
 noise process and use this efficiently and accurately in your simulations.
@@ -124,7 +130,7 @@ options like `reset` are available on the pre-built processes.
 ### Wiener Process
 
 The `WienerProcess`, also known as Brownian motion, or
-the noise in the Langevin equation, is the stationary process with 
+the noise in the Langevin equation, is the stationary process with
 white noise increments and a distribution `N(0,t)`. The constructor is:
 
 ```julia
@@ -221,7 +227,7 @@ NoiseProcess(t0,W0,Z0,dist,bridge;
 
 - `t0` is the first timepoint
 - `W0` is the first value of the process.
-- `Z0` is the first value of the psudo-process. This is necessary for higher
+- `Z0` is the first value of the pseudo-process. This is necessary for higher
   order algorithms. If it's not needed, set to `nothing`.
 - `dist` the distribution for the steps over time.
 - `bridge` the bridging distribution. Optional, but required for adaptivity and interpolating
@@ -432,6 +438,34 @@ time points of the future integration since the interpolant of the SDE solution
 will be used. Thus the limiting factor is error tolerance and not hitting specific
 points.
 
+### VirtualBrownianTree
+
+A `VirtualBrownianTree` builds the noise process starting from an initial
+time `t0`, the first value of the proces `W0`, and (optionally) the first
+value `Z0` for an auxiliary pseudo-process. The constructor is given as
+
+```julia
+VirtualBrownianTree(t0,W0,Z0=nothing,dist=WHITE_NOISE_DIST,bridge=VBT_BRIDGE;kwargs...)
+```
+
+where `dist` specifies the distribution that is used to generate the end
+point(s) `Wend` (`Zend`) of the noise process for the final time `tend`.
+`bridge` denotes the distribution of the employed Brownian bridge.  Per
+default `tend` is fixed to `t0+1` but can be changed by passing a custom `tend`
+as a keyword argument. The following keyword arguments are available:
+
+- `tend` is the end time of the noise process.
+- `Wend` is the end value of the noise process.
+- `Zend` is the end value of the pseudo-noise process.
+- `atol` represents the absolute tolerance determining when the recursion is
+   terminated.
+- `tree_depth` allows one to store a cache of seeds, noise values, and times
+   to speed up the simulation by reducing the recursion steps.
+- `search_depth` maximal search depth for the tree if `atol` is not reached.
+- `rng` the splittable PRNG used for generating the random numbers.
+   Default: `Threefry4x()` from the Random123 package.
+
+
 ## Examples Using Non-Standard Noise Processes
 
 ### NoiseGrid
@@ -592,6 +626,24 @@ prob = SDEProblem(f,g,1.0,(0.0,Inf),noise=W)
 ```
 
 The possibilities are endless.
+
+### VirtualBrownianTree Example
+
+In this example, we define a multi-dimensional Brownian process based on a
+`VirtualBrownianTree` with a minimal `tree_depth=0` such that memory consumption
+is minimized.
+
+```julia
+  W0 = zeros(10)
+  W = VirtualBrownianTree(0.0,W0; tree_depth=0)
+
+  prob = NoiseProblem(W,(0.0,1.0))
+  sol = solve(prob;dt=1/10)
+```
+
+Using a look-up cache by increasing `tree_depth` can significantly reduce the
+runtime. Thus, the `VirtualBrownianTree` allows for trading off speed for memory
+in a simple manner.
 
 ### NoiseFunction Example
 
