@@ -1,6 +1,6 @@
 # Differential Algebraic Equations
 
-This tutorial will introduce you to the functionality for solving DAEs. Other
+This tutorial will introduce you to the functionality for solving differential algebraic equations (DAEs). Other
 introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). 
 
 !!! note
@@ -13,8 +13,8 @@ In this example we will solve the implicit ODE equation
 f(du,u,p,t) = 0
 ```
 
-where `f` is the a variant of the Roberts equation. This equation is of
-the form
+where `f` is a variant of the Roberts equation. This equation is a DAE of
+the form:
 
 ```math
 \begin{aligned}
@@ -23,7 +23,7 @@ the form
  \end{aligned}
 ```
 
-or is also known as a constrained differential equation where `g` is the constraint
+which is also known as a constrained differential equation, where `g` is the constraint
 equation. The Robertson model can be written in the form:
 
 ```math
@@ -38,10 +38,10 @@ with initial conditions ``y_1(0) = 1``, ``y_2(0) = 0``, ``y_3(0) = 0``,
 ``dy_1 = - 0.04``, ``dy_2 = 0.04``, and ``dy_3 = 0.0``.
 
 The workflow for DAEs is the same as for the other types of equations, where all
-you need to know is how to define the problem. A DAEProblem is specified by defining
+you need to know is how to define the problem. A `DAEProblem` is specified by defining
 an in-place update `f(out,du,u,p,t)` which uses the values to mutate `out` as the
 output. To makes this into a DAE, we move all of the variables to one side.
-Thus we can define the function:
+Thus, we can define the function:
 
 ```julia
 function f(out,du,u,p,t)
@@ -59,7 +59,7 @@ du₀ = [-0.04, 0.04, 0.0]
 tspan = (0.0,100000.0)
 ```
 
-and make the DAEProblem:
+and make the `DAEProblem`:
 
 ```julia
 using DifferentialEquations
@@ -71,7 +71,7 @@ prob = DAEProblem(f,du₀,u₀,tspan,differential_vars=differential_vars)
 i.e. not purely algebraic (which means that their derivative shows up in the residual
 equations). This is required for the algorithm to be able to find consistent initial
 conditions. Notice that the first two variables are determined by their changes, but
-the last is simply determined by the conservation equation. Thus we use
+the last is simply determined by the conservation equation. Thus, we use
 `differential_vars = [true,true,false]`.
 
 As with the other DifferentialEquations problems, the commands are then to solve
