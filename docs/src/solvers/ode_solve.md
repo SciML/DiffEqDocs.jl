@@ -1037,6 +1037,20 @@ To use the following algorithms, you must install and use LSODA.jl:
 using LSODA
 ```
 
+### IRKGaussLegendre.jl
+
+This setup provides a specific solver, `IRKGL16`, which is a 16th order Symplectic Gauss-Legendre
+scheme. This scheme is highly efficient for precise integration of ODEs, specifically ODEs derived
+from Hamiltonian systems.
+
+Note that this setup is not automatically included with DifferentialEquations.jl.
+To use the following algorithms, you must install and use IRKGaussLegendre.jl:
+
+```julia
+]add IRKGaussLegendre
+using IRKGaussLegendre
+```
+
 ### SimpleDiffEq.jl
 
 This setup provides access to simplified versions of a few ODE solvers. They
