@@ -1,7 +1,7 @@
 # DiffEqDocs
 
 [![Join the chat at https://gitter.im/JuliaDiffEq/Lobby](https://badges.gitter.im/JuliaDiffEq/Lobby.svg)](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.com/SciML/DiffEqDocs.jl.svg?branch=master)](https://travis-ci.com/SciML/DiffEqDocs.jl)
+[![Build Status](https://github.com/SciML/DiffEqDocs.jl/workflows/CI/badge.svg)](https://github.com/SciML/DiffEqDocs.jl/actions?query=workflow%3ACI)
 [![stable](https://img.shields.io/badge/docs-dev-blue.svg)](http://diffeq.sciml.ai/stable/)
 [![dev](https://img.shields.io/badge/docs-dev-blue.svg)](http://diffeq.sciml.ai/dev/)
 
