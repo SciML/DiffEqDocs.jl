@@ -56,14 +56,14 @@ The easiest way to specify a `linsolve` is by a `factorization` function which
 generates a type on which `\` (or `A_ldiv_B!`) is called.  This is done through
 the helper function `LinSolveFactorize` which makes the appropriate function.
 For example, the  `Rosenbrock23` takes in a `linsolve` function, which we can
-choose to be a  QR-factorization by:
+choose to be a QR-factorization from the standard library `LinearAlgebra` by:
 
 ```julia
-Rosenbrock23(linsolve=LinSolveFactorize(qrfact!))
+Rosenbrock23(linsolve=LinSolveFactorize(qr!))
 ```
 
 LinSolveFactorize takes in a function which returns an object that can `\`.
-Direct methods like `qrfact!` will automatically cache the factorization,
+Direct methods like `qr!` will automatically cache the factorization,
 making it efficient for small dense problems.
 
 However, for large sparse problems, you can let `\` be an iterative method. For
