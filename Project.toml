@@ -7,4 +7,4 @@ version = "6.16.1"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 
 [compat]
-Documenter = "0.23, 0.24, 0.25"
+Documenter = "0.23, 0.24, 0.25, 0.26"
