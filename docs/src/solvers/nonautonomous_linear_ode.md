@@ -147,3 +147,5 @@ sol = solve(prob,MagnusAdapt4())
 These methods can be used when ``A`` is dependent on both time and state variables, i.e. ``A(u,t)``
 
 - `CG3` - Third order Crouch-Grossman method.
+
+[^1]: A description of IOP can be found in this [paper](https://doi.org/10.1016/j.jcp.2018.06.026).
