@@ -1,4 +1,4 @@
-# [Non-autonomous Linear ODE / Lie Group Problems](@id dynamical_prob)
+# [Non-autonomous Linear ODE / Lie Group Problems](@id nonauto_dynamical_prob)
 
 Non-autonomous linear ODEs show up in a lot of scientific problems where
 the differential equation lives on a manifold such as Lie Group. In these
