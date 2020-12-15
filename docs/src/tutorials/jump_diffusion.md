@@ -4,7 +4,7 @@
 
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
-Jump Diffusion equations are stochastic diffeential equations with discontinuous
+Jump Diffusion equations are stochastic differential equations with discontinuous
 jumps. These can be written as:
 
 ```math
