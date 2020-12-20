@@ -1198,15 +1198,32 @@ using GeometricIntegratorsDiffEq
 
 - `GIEuler` - 1st order Euler method
 - `GIMidpoint` - 2nd order explicit midpoint method
-- `GIHeun` - 2nd order Heun's method
+- `GIHeun2` - 2nd order Heun's method
+- `GIRalston2` - 2nd order Ralston's method
+- `GIHeun3` - 3rd order Heun's method
+- `GIRalston3` - 3rd order Ralston's method
+- `GIRunge` - 3rd order Kutta's method
 - `GIKutta` - 3rd order Kutta's method
-- `GIERK4` - standard 4th order Runge-Kutta
-- `GIERK438` - 4th order Runge-Kutta, 3/8's rule
+- `GIRK4` - standard 4th order Runge-Kutta
+- `GIRK416`
+- `GIRK438` - 4th order Runge-Kutta, 3/8's rule
 - `GIImplicitEuler` - 1st order implicit Euler method
 - `GIImplicitMidpoint` - 2nd order implicit midpoint method
-- `GIRadIIA2` - 2-stage order 3 Radau-IIA
-- `GIRadIIA3` - 3-stage order 5 Radau-IIA
+- `GIRadauIA(s)` - s-stage Radau-IA
+- `GIRadauIIA(s)` - s-stage Radau-IA
+- `GILobattoIIIA(s)`
+- `GILobattoIIIB(s)`
+- `GILobattoIIIC(s)`
+- `GILobattoIIIC̄(s)`
+- `GILobattoIIID(s)`
+- `GILobattoIIIE(s)`
+- `GILobattoIIIF(s)`
 - `GISRK3` - 3-stage order 4 symmetric Runge-Kutta method
+- `GISSPRK3` - 3rd orer explicit SSP method
+- `GICrankNicholson
+- `GIKraaijevangerSpijker`
+- `GIQinZhang`
+- `GICrouzeix`
 - `GIGLRK(s)` - Gauss-Legendre Runge-Kutta method of order 2s
 
 Note that all of these methods require the user supplies `dt`.
