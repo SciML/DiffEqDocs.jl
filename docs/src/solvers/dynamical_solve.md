@@ -99,7 +99,8 @@ steps are computed lazily (i.e. not during the solve).
 Note that all symplectic integrators are fixed timestep only.
 
 - `SymplecticEuler`: First order explicit symplectic integrator
-- `VelocityVerlet`: 2nd order explicit symplectic integrator.
+- `VelocityVerlet`: 2nd order explicit symplectic integrator. Requires `f_2(t,u) = v`, i.e.
+  a second order ODE.
 - `VerletLeapfrog`: 2nd order explicit symplectic integrator.
 - `PseudoVerletLeapfrog`: 2nd order explicit symplectic integrator.
 - `McAte2`: Optimized efficiency 2nd order explicit symplectic integrator.
