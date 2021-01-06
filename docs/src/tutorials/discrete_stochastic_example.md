@@ -442,3 +442,9 @@ One such algorithm is `SimpleTauLeaping`, which we use as follows:
 ```julia
 sol = solve(jump_prob,SimpleTauLeaping();dt=1.0)
 ```
+
+## Updating `JumpProblem`s
+In [Remaking `JumpProblem`s](@ref) we show how to modify parameters, the initial
+condition, and other components of a generated `JumpProblem`. This can be useful
+when trying to call `solve` many times while avoiding reallocations of the
+internal aggregators for each new parameter value or initial condition.
