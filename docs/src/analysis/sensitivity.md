@@ -206,14 +206,14 @@ the definition of the methods.
   adjoint sensitivity analysis using a backwards solution of the ODE. By default
   this algorithm will use the values from the forward pass to perturb the backwards
   solution to the correct spot, allowing reduced memory with stabilization.
-  Only supports ODEs.
+  Only supports ODEs and SDEs.
 - `InterpolatingAdjoint(;checkpointing=false;ADKwargs...)`: The default. An
   implementation of adjoint sensitivity analysis which uses the interpolation of
   the forward solution for the reverse solve vector-Jacobian products. By
   default it requires a dense solution of the forward pass and will internally
   ignore saving arguments during the gradient calculation. When checkpointing is
   enabled it will only require the memory to interpolate between checkpoints.
-  Only supports ODEs.
+  Only supports ODEs and SDEs.
 - `QuadratureAdjoint(;abstol=1e-6,reltol=1e-3,compile=false,ADKwargs...)`:
   An implementation of adjoint sensitivity analysis which develops a full
   continuous solution of the reverse solve in order to perform a post-ODE
