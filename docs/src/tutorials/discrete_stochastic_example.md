@@ -371,8 +371,8 @@ sol = solve(jump_prob,Tsit5())
 Notice that this increases the amount of 3 at the end, reducing the falloff in
 the rate (though this model is kind of nonsensical).
 
-Note that even if the problem is a `DiscreteProblem`, `VariableRateJump`s and
-`VariableRateReaction`s require a continuous solver, like an ODE/SDE/DDE/DAE solver.
+Note that `VariableRateJump`s and `VariableRateReaction`s require a continuous problem, 
+like an ODE/SDE/DDE/DAE problem.
 
 Lastly, we are not restricted to ODEs. For example, we can solve the same jump
 problem except with multiplicative noise on `u[4]` by using an `SDEProblem` instead:
