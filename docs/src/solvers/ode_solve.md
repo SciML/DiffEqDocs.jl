@@ -1264,7 +1264,8 @@ Note: this method is much faster if you put `@taylorize` on your derivative func
 
 ### QuDiffEq.jl
 
-QuDiffEq.jl is a pacakge for solving differential equations using quantum algorithm. It makes use of the Yao framework for simulating quantum circuits.
+QuDiffEq.jl is a package for solving differential equations using quantum algorithm. 
+It makes use of the Yao framework for simulating quantum circuits.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and
