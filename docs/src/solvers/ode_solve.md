@@ -1279,7 +1279,7 @@ using QuDiffEq
 - `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit).
 - `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution.
 
-### NeuralNetDiffEq.jl
+### NeuralPDE.jl
 
 This method trains a neural network using Flux.jl to approximate the solution of the
 ODE. Currently this method isn't competitive but it is a fun curiosity that will be
@@ -1287,11 +1287,11 @@ improved with future integration with Zygote.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and
-use NeuralNetDiffEq.jl:
+use NeuralPDE.jl:
 
 ```julia
-]add NeuralNetDiffEq
-using NeuralNetDiffEq
+]add NeuralPDE
+using NeuralPDE
 ```
 
 - `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
