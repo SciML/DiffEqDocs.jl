@@ -498,7 +498,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and
   3rd order accurate on nonlinear parabolic problems (as opposed to lower if not
   corrected).
-- `Rodas4P2` - A 4th order A-stable stiffly stable Rosenbrock method with a
+- `Rodas4P2` - A 4th order L-stable stiffly stable Rosenbrock method with a
   stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and
   3rd order accurate on nonlinear parabolic problems. It is an improvement of Roadas4P 
   and in case of inexact Jacobians a second order W method.
