@@ -105,7 +105,7 @@ err_{scaled} = err/(abstol + max(uprev,u)*reltol)
 
 The scaled error is guaranteed to be `<1` for a given local error estimate
 (note: error estimates are local unless the method specifies otherwise). `abstol`
-controls the non-scaling error and thus can be though of as the error around zero.
+controls the non-scaling error and thus can be thought of as the error around zero.
 `reltol` scales with the size of the dependent variables and so one can interpret
 `reltol=1e-3` as roughly being (locally) correct to 3 digits. Note tolerances can
 be specified element-wise by passing a vector whose size matches `u0`.
