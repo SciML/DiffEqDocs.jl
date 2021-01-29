@@ -13,7 +13,7 @@ In this example we will solve the equation
 \frac{du}{dt} = f(u,p,t)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by Calculus
+on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by calculus
 that the solution to this equation is ``u(t)=u₀\exp(αt)``.
 
 The general workflow is to define a problem, solve the problem, and then analyze
