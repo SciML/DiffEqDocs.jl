@@ -143,7 +143,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
   is a good algorithm to use if you know nothing about the equation.
 - `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
-  efficiency for high accuracy.
+  efficient for high accuracy.
 - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
   most cases.
 - `BS3()` for fast low accuracy non-stiff.
