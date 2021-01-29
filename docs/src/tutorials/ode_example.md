@@ -207,7 +207,7 @@ is [detailed at the solver algorithm page](@ref ode_solve). If `dense=false`
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
-For details on more handling the output, see [the solution handling page](@ref solution).
+For more details on handling the output, see [the solution handling page](@ref solution).
 
 #### Plotting Solutions
 
