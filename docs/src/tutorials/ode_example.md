@@ -150,7 +150,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `Vern7()` for high accuracy non-stiff.
 - `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
 - `KenCarp4()` or `TRBDF2()` for medium sized (100-2000 ODEs) stiff equations
-- `RadauIIA()` for really high accuracy stiff equations
+- `RadauIIA5()` for really high accuracy stiff equations
 - `CVODE_BDF()` for large stiff equations
 
 For a comprehensive list of the available algorithms and detailed recommendations,
