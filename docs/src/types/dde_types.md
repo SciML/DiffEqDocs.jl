@@ -87,6 +87,94 @@ For specifying Jacobians and mass matrices, see the [DiffEqFunctions](@ref perfo
 * `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
 * `kwargs`: The keyword arguments passed onto the solves.
 
+## Dynamical Delay Differential Equations
+
+Much like [Dynamical ODEs](@ref dynamical_prob), a Dynamical DDE is a Partitioned DDE
+of the form:
+
+```math
+\frac{dv}{dt} = f_1(u,t,h) \\
+\frac{du}{dt} = f_2(v,h) \\
+```
+
+### Constructors
+
+```
+DynamicalDDEProblem(f1, f2[, v0, u0], h, tspan[, p]; <keyword arguments>)
+DynamicalDDEProblem{isinplace}(f1, f2[, v0, u0], h, tspan[, p]; <keyword arguments>)
+```
+Parameter `isinplace` optionally sets whether the function is inplace or not.
+This is determined automatically, but not inferred.
+
+### Arguments
+
+* `f`: The function in the DDE.
+* `v0` and `u0`: The initial condition. Defaults to the values `h(p, first(tspan))...` of the history function evaluated at the initial time point.
+* `h`: The history function for the DDE before `t0`. Must return an object with the indices 1 and 2, with the values of `v` and `u` respectively.
+* `tspan`: The timespan for the problem.
+* `p`: The parameters with which function `f` is called. Defaults to `NullParameters`.
+* `constant_lags`: A collection of constant lags used by the history function `h`. Defaults to `()`.
+* `dependent_lags` A tuple of functions `(v, u, p, t) -> lag` for the state-dependent lags
+  used by the history function `h`. Defaults to `()`.
+* `neutral`: If the DDE is neutral, i.e., if delays appear in derivative terms.
+* `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
+* `kwargs`: The keyword arguments passed onto the solves.
+
+The for dynamical and second order DDEs, the history function will return an object with
+the indicies 1 and 2 defined, where `h(p, t_prev)[1]` is the value of ``f_2(v, u, h, p,
+t_{\mathrm{prev}})`` and `h(p, t_prev)[2]` is the value of ``f_1(v, u, h, p, t_{\mathrm{prev}})``
+(this is for consistency with the ordering of the intitial conditions in the constructor).
+The supplied history function must also return such a 2-index object, which can be accomplished
+with a tuple `(v,u)` or vector `[v,u]`.
+
+## 2nd Order Delay Differential Equations
+
+To define a 2nd Order DDE Problem, you simply need to give the function ``f``
+and the initial condition ``u_0`` which define an DDE:
+
+```math
+u'' = f(u',u,h,p,t)
+```
+
+`f` should be specified as `f(du,u,p,t)` (or in-place as `f(ddu,du,u,p,t)`), and `u₀`
+should be an AbstractArray (or number) whose geometry matches the desired
+geometry of `u`. Note that we are not limited to numbers or vectors for `u₀`;
+one is allowed to provide `u₀` as arbitrary matrices / higher dimension tensors
+as well.
+
+From this form, a dynamical ODE:
+
+```math
+v' = f(v,u,h,p,t) \\
+u' = v \\
+```
+
+### Constructors
+
+```
+SecondOrderDDEProblem(f, [, du0, u0], h, tspan[, p]; <keyword arguments>)
+SecondOrderDDEProblem{isinplace}(f, [, du0, u0], h, tspan[, p]; <keyword arguments>)
+```
+
+Parameter `isinplace` optionally sets whether the function is inplace or not.
+This is determined automatically, but not inferred.
+
+### Arguments
+
+* `f`: The function in the DDE.
+* `du0` and `u0`: The initial condition. Defaults to the values `h(p, first(tspan))...` of the history function evaluated at the initial time point.
+* `h`: The history function for the DDE before `t0`. Must return an object with the indices 1 and 2, with the values of `v` and `u` respectively.
+* `tspan`: The timespan for the problem.
+* `p`: The parameters with which function `f` is called. Defaults to `NullParameters`.
+* `constant_lags`: A collection of constant lags used by the history function `h`. Defaults to `()`.
+* `dependent_lags` A tuple of functions `(v, u, p, t) -> lag` for the state-dependent lags
+  used by the history function `h`. Defaults to `()`.
+* `neutral`: If the DDE is neutral, i.e., if delays appear in derivative terms.
+* `order_discontinuity_t0`: The order of the discontinuity at the initial time point. Defaults to `0` if an initial condition `u0` is provided. Otherwise it is forced to be greater or equal than `1`.
+* `kwargs`: The keyword arguments passed onto the solves.
+
+As above, the history function will return an object with indices 1 and 2, with the values of `du` and `u` respectively. The supplied history function must also match this return type, e.g. by returning a 2-element tuple or vector.
+
 ## Example Problems
 
 Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/dde).
