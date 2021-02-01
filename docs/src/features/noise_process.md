@@ -9,7 +9,7 @@ be simulated and solved using the DiffEq common interface (including the Monte
 Carlo interface).
 
 This page first describes how to use noise processes in SDEs, and analyze/simulate
-them directly noise processes. Then it describes the standard noise processes
+noise processes directly. Then it describes the standard noise processes
 which are available. Processes like `WienerProcess`, `CorrelatedWienerProcess`,
 `GeometricBrownianMotionProcess`, `BrownianBridgeProcess` and
 `OrnsteinUhlenbeckProcess` are pre-defined. Then it is shown how one can define
