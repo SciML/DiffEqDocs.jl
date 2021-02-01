@@ -131,7 +131,7 @@ options like `reset` are available on the pre-built processes.
 
 The `WienerProcess`, also known as Brownian motion, or
 the noise in the Langevin equation, is the stationary process with
-white noise increments and a distribution `N(0,t)`. The constructor is:
+white noise increments and a distribution `N(0,dt)`. The constructor is:
 
 ```julia
 WienerProcess(t0,W0,Z0=nothing;kwargs...)
