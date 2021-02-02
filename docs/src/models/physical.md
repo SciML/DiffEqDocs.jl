@@ -10,6 +10,9 @@ ODEs defined by Hamiltonians is described in the
 
 ## N-Body Problems
 
+N-Body problems can be solved by the implementation provided
+by NBodySimulator.jl using a defined potential:
+
 ```julia
 nprob = NBodyProblem(f, mass, vel, pos, tspan)
 ```
