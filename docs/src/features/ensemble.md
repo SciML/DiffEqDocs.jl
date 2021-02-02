@@ -225,8 +225,8 @@ The `EnsembleSummary` type is included to help with analyzing the general summar
 statistics. Two constructors are provided:
 
 ```julia
-EnsembleSummary(sim;quantile=[0.05,0.95])
-EnsembleSummary(sim,ts;quantile=[0.05,0.95])
+EnsembleSummary(sim;quantiles=[0.05,0.95])
+EnsembleSummary(sim,ts;quantiles=[0.05,0.95])
 ```
 
 The first produces a `(mean,var)` summary at each time step. As with the summary
