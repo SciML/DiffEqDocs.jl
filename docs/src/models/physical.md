@@ -26,6 +26,7 @@ timespan to solve on.
 In this example we will model the outer solar system planets.
 
 ```julia
+using NBodySimulator
 G = 2.95912208286e-4
 M = [1.00000597682, 0.000954786104043, 0.000285583733151, 0.0000437273164546, 0.0000517759138449, 1/1.3e8]
 invM = inv.(M)
