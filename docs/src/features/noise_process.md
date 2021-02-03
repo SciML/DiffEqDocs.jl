@@ -9,7 +9,7 @@ be simulated and solved using the DiffEq common interface (including the Monte
 Carlo interface).
 
 This page first describes how to use noise processes in SDEs, and analyze/simulate
-them directly noise processes. Then it describes the standard noise processes
+noise processes directly. Then it describes the standard noise processes
 which are available. Processes like `WienerProcess`, `CorrelatedWienerProcess`,
 `GeometricBrownianMotionProcess`, `BrownianBridgeProcess` and
 `OrnsteinUhlenbeckProcess` are pre-defined. Then it is shown how one can define
@@ -132,7 +132,7 @@ options like `reset` are available on the pre-built processes.
 
 The `WienerProcess`, also known as Brownian motion, or
 the noise in the Langevin equation, is the stationary process with
-white noise increments and a distribution `N(0,t)`. The constructor is:
+white noise increments and a distribution `N(0,dt)`. The constructor is:
 
 ```julia
 WienerProcess(t0,W0,Z0=nothing;kwargs...)

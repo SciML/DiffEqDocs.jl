@@ -2,8 +2,8 @@
 
 Performing Monte Carlo simulations, solving with a predetermined set of initial conditions, and
 GPU-parallelizing a parameter search all fall under the ensemble simulation interface. This
-interface allows one to declare a template DEProblem to parallelize, how to tweak the template
-in `trajectories` many trajectories, solve each in parallel batches, reduce the solutions down
+interface allows one to declare a template DEProblem to parallelize, tweak the template
+in `trajectories` for many trajectories, solve each in parallel batches, reduce the solutions down
 to specific answers, and compute summary statistics on the results.
 
 ## Performing an Ensemble Simulation
@@ -225,8 +225,8 @@ The `EnsembleSummary` type is included to help with analyzing the general summar
 statistics. Two constructors are provided:
 
 ```julia
-EnsembleSummary(sim;quantile=[0.05,0.95])
-EnsembleSummary(sim,ts;quantile=[0.05,0.95])
+EnsembleSummary(sim;quantiles=[0.05,0.95])
+EnsembleSummary(sim,ts;quantiles=[0.05,0.95])
 ```
 
 The first produces a `(mean,var)` summary at each time step. As with the summary

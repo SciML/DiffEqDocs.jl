@@ -13,7 +13,7 @@ In this example we will solve the equation
 \frac{du}{dt} = f(u,p,t)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by Calculus
+on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by calculus
 that the solution to this equation is ``u(t)=u₀\exp(αt)``.
 
 The general workflow is to define a problem, solve the problem, and then analyze
@@ -143,7 +143,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
   is a good algorithm to use if you know nothing about the equation.
 - `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
-  efficiency for high accuracy.
+  efficient for high accuracy.
 - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
   most cases.
 - `BS3()` for fast low accuracy non-stiff.
@@ -207,7 +207,7 @@ is [detailed at the solver algorithm page](@ref ode_solve). If `dense=false`
 (unless specifically set, this only occurs when `save_everystep=false` or `saveat`
 is used) then this defaults to giving a linear interpolation.
 
-For details on more handling the output, see [the solution handling page](@ref solution).
+For more details on handling the output, see [the solution handling page](@ref solution).
 
 #### Plotting Solutions
 
