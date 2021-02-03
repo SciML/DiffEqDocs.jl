@@ -55,7 +55,7 @@ every solve call.
 ## Mathematical Specification of a 2nd Order ODE Problem
 
 To define a 2nd Order ODE Problem, you simply need to give the function ``f``
-and the initial condition ``u₀`` which define an ODE:
+and the initial condition ``u_0`` which define an ODE:
 
 ```math
 u'' = f(u',u,p,t)

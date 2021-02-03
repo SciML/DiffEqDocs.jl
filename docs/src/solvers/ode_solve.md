@@ -106,7 +106,7 @@ library methods are as follows:
 - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
 - `ode15s`/`vode` --> `QNDF()`, though in many cases `CVODE_BDF()`, `Rodas4()`,
-  `KenCarp4()`, `TRBDF2()`, or `RadauIIA()` are more efficient
+  `KenCarp4()`, `TRBDF2()`, or `RadauIIA5()` are more efficient
 - `ode23t` --> `Trapezoid()`
 - `ode23tb` --> `TRBDF2()`
 - `lsoda` --> `lsoda()`, though `AutoTsit5(Rosenbrock23())` or `AutoVern7(Rodas5())`

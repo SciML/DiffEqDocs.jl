@@ -115,9 +115,10 @@ the solution distributionally exact. This kind of stepping is done via:
 W = WienerProcess(0.0,1.0,1.0)
 dt = 0.1
 W.dt = dt
-setup_next_step!(W)
+u = nothing; p = nothing # for state-dependent distributions
+calculate_step!(W,dt,u,p)
 for i in 1:10
-  accept_step!(W,dt)
+  accept_step!(W,dt,u,p)
 end
 ```
 
