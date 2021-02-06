@@ -58,7 +58,7 @@ interval. For medium accuracy calculations, `RK4` is a good choice.
 
 For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 `Rosenbrock23` or `TRBDF2`. These are robust to oscillations and massive
-stiffness is needed, though are only efficient when low accuracy is needed.
+stiffness, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
 systems `TRBDF2` will be more efficient. `ABDF2` can be the most efficient
