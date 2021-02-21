@@ -1327,7 +1327,11 @@ Plot recipes are provided which will plot the stability region for a given table
 ### ProbNumDiffEq.jl
 
 ProbNumDiffEq.jl provides _probabilistic_ numerical solvers for ODEs.
-By casting the solution of ODEs as a problem of Bayesian inference, these so-called ODE filters return a posterior probability distribution over ODE solutions and thereby provide estimates of their own numerical approximation error.
+By casting the solution of ODEs as a problem of Bayesian inference, they return a posterior probability distribution over ODE solutions and thereby provide estimates of their own numerical approximation error.
+
+Both implemented solvers, `EK0` and `EK1`, have adaptive timestepping and their order can be specified by the user.
+Using `EK1` is recommended if the Jacobian of the vector field is available.
+The full documentation is available at [ProbNumDiffEq.jl](https://nathanaelbosch.github.io/ProbNumDiffEq.jl/stable/).
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use ProbNumDiffEq.jl:
@@ -1336,9 +1340,6 @@ To use the following algorithms, you must install and use ProbNumDiffEq.jl:
 using ProbNumDiffEq
 ```
 
-Both implemented solvers, `EK0` and `EK1`, have adaptive timestepping and their order can be specified by the user.
-Using `EK1` is recommended if the Jacobian of the vector field is available.
-The full documentation is available at [ProbNumDiffEq.jl](https://nathanaelbosch.github.io/ProbNumDiffEq.jl/stable/).
 - `EK0(order=3)` - An explicit ODE solver based on extended Kalman filtering and smoothing with zeroth order linearization.
 - `EK1(order=3)` - A semi-implicit ODE solver based on extended Kalman filtering and smoothing with first order linearization. Requires that the Jacobian of the vector field is specified.
 
