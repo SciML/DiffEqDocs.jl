@@ -1324,4 +1324,21 @@ Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.
 
+### ProbNumDiffEq.jl
+
+ProbNumDiffEq.jl provides _probabilistic_ numerical solvers for ODEs.
+By casting the solution of ODEs as a problem of Bayesian inference, they return a posterior probability distribution over ODE solutions and thereby provide estimates of their own numerical approximation error.
+The solvers have adaptive timestepping, their order can be freely specified, and the returned posterior distribution naturally enables dense output and sampling.
+The full documentation is available at [ProbNumDiffEq.jl](https://nathanaelbosch.github.io/ProbNumDiffEq.jl/stable/).
+
+Note that this setup is not automatically included with DifferentialEquations.jl.
+To use the following algorithms, you must install and use ProbNumDiffEq.jl:
+```julia
+]add ProbNumDiffEq
+using ProbNumDiffEq
+```
+
+- `EK1(order=3)` - A semi-implicit ODE solver based on extended Kalman filtering and smoothing with first order linearization. Recommended, but requires that the Jacobian of the vector field is specified.
+- `EK0(order=3)` - An explicit ODE solver based on extended Kalman filtering and smoothing with zeroth order linearization.
+
 [^1]: Koskela, A. (2015). Approximating the matrix exponential of an advection-diffusion operator using the incomplete orthogonalization method. In Numerical Mathematics and Advanced Applications-ENUMATH 2013 (pp. 345-353). Springer, Cham.
