@@ -331,7 +331,7 @@ PresetTimeCallback(tstops,user_affect!;
 - `user_affect!`: an `affect!(integrator)` function to use at the time points.
 - `filter_tstops`: Whether to filter out tstops beyond the end of the integration timespan.
   Defaults to true. If false, then tstops can extend the interval of integration.
-  
+
 ## IterativeCallback
 
 `IterativeCallback` is a callback to be used to iteratively apply some effect.

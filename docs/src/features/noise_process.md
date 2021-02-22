@@ -220,7 +220,7 @@ A `NoiseProcess` is a type defined as
 
 ```julia
 NoiseProcess(t0,W0,Z0,dist,bridge;
-             iip=DiffEqBase.isinplace(dist,3),
+             iip=SciMLBase.isinplace(dist,3),
              rswm = RSWM(),save_everystep=true,
              rng = Xorshifts.Xoroshiro128Plus(rand(UInt64)),
              reset = true, reseed = true)
@@ -274,7 +274,7 @@ Gaussian white noise.
 
 This is the noise process which uses `randn!`. A special dispatch is added for
 complex numbers for `(randn()+im*randn())/sqrt(2)`. This function is
-`DiffEqBase.wiener_randn` (or with `!` respectively).
+`DiffEqNoiseProcess.wiener_randn` (or with `!` respectively).
 
 The first function that must be defined is the noise distribution. This is how
 to generate ``W(t+dt)`` given that we know ``W(x)`` for ``x∈[t₀,t]``. For Gaussian
@@ -507,7 +507,7 @@ In this example, we will solve an SDE three times:
 First we will generate a noise process by solving an SDE:
 
 ```julia
-using StochasticDiffEq,  DiffEqBase, DiffEqNoiseProcess
+using StochasticDiffEq,  DiffEqNoiseProcess
 f1(u, p, t) = 1.01u
 g1(u, p, t) = 1.01u
 dt = 1//2^(4)

@@ -84,9 +84,9 @@ Finally, to solve to the last `tstop`, call `solve!(integrator)`. Doing `init`
 and then `solve!` is equivalent to `solve`.
 
 ```@docs
-DiffEqBase.step!
-DiffEqBase.check_error
-DiffEqBase.check_error!
+SciMLBase.step!
+SciMLBase.check_error
+SciMLBase.check_error!
 ```
 
 ## Handing Integrators
@@ -118,7 +118,7 @@ The `sol` field holds the current solution. This current solution includes the
 interpolation function if available, and thus `integrator.sol(t)` lets one
 interpolate efficiently over the whole current solution. Additionally, a
 a "current interval interpolation function" is provided on the `integrator` type
-via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`. 
+via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`.
 This uses only the solver information from the interval
 `[tprev,t]` to compute the interpolation, and is allowed to extrapolate beyond
 that interval.
@@ -137,9 +137,9 @@ have efficient ways to modify `u` and `t`.  In such case, `set_*!` are as
 inefficient as `reinit!`.
 
 ```@docs
-DiffEqBase.set_t!
-DiffEqBase.set_u!
-DiffEqBase.set_ut!
+SciMLBase.set_t!
+SciMLBase.set_u!
+SciMLBase.set_ut!
 ```
 
 ### Integrator vs Solution

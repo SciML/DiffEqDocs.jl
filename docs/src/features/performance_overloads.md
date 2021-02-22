@@ -165,7 +165,7 @@ ODEFunction{iip,false}(f)
 
 This makes the ODE solver compilation independent of the function and so changing
 the function will not cause recompilation. One can change the default value
-by changing the `const RECOMPILE_BY_DEFAULT = true` to false in the DiffEqBase.jl
+by changing the `const RECOMPILE_BY_DEFAULT = true` to false in the SciMLBase.jl
 source code.
 
 ## Specifying Jacobian Types

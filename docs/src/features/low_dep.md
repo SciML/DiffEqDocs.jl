@@ -4,12 +4,12 @@ DifferentialEquations.jl is a large library containing the functionality of
 many different solver and addon packages. However in many cases you may want
 to cut down on the size of the dependency and only use the parts of the
 the library which are essential to your application. This is possible
-due to JuliaDiffEq's modular package structure.
+due to SciML's modular package structure.
 
 ## Common Example: Using only OrdinaryDiffEq.jl
 
 One common example is using only the ODE solvers OrdinaryDiffEq.jl. The solvers all
-reexport DiffEqBase.jl (which holds the problem and solution types) and so
+reexport SciMLBase.jl (which holds the problem and solution types) and so
 OrdinaryDiffEq.jl is all that's needed. Thus replacing
 
 ```julia
@@ -28,17 +28,17 @@ will work if these are the only features you are using.
 
 ## Generalizing the Idea
 
-In general, you will always need DiffEqBase.jl, since it defines all of the
+In general, you will always need SciMLBase.jl, since it defines all of the
 fundamental types, but the solvers will automatically reexport it.
 For solvers, you typically only need that solver package.
-So DiffEqBase+Sundials, DiffEqBase+LSODA, etc. will get you the common interface
-with that specific solver setup. DiffEqBase.jl is a very lightweight dependency,
-so there is no issue here! For PDEs, you normally need DiffEqBase+DiffEqPDEBase
+So SciMLBase+Sundials, SciMLBase+LSODA, etc. will get you the common interface
+with that specific solver setup. SciMLBase.jl is a very lightweight dependency,
+so there is no issue here! For PDEs, you normally need SciMLBase+DiffEqPDEBase
 in addition to the solver package.
 
-For the addon packages, you will normally need DiffEqBase, the solver package
+For the addon packages, you will normally need SciMLBase, the solver package
 you choose, and the addon package. So for example, for parameter estimation you
-would likely want DiffEqBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure
+would likely want SciMLBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure
 which package a specific command is from, they using `@which`. For example, from
 the parameter estimation docs we have:
 
@@ -66,7 +66,7 @@ If we wanted to know where `build_loss_objective` came from, we can do:
 ```julia
 @which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
 
-(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::DiffEqBase.DEProblem, t, data, alg)
+(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::SciMLBase.DEProblem, t, data, alg)
 ```
 
 This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have
