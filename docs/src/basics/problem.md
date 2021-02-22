@@ -12,7 +12,7 @@ in-place form which, as its output, mutates `du`. Whatever is returned is simply
 ignored. Similarly, for OOP we have the form `du=f(u,p,t)` which uses the return.
 
 Each of the problem types have that the first argument is the option mutating
-argument. The DiffEqBase system will automatically determine the functional
+argument. The SciMLBase system will automatically determine the functional
 form and place a specifier `isinplace` on the function to carry as type information
 whether the function defined for this `DEProblem` is in-place. However, every
 constructor allows for manually specifying the in-placeness of the function.

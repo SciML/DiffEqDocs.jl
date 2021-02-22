@@ -47,14 +47,14 @@ solve(prob,args...;sensealg=InterpolatingAdjoint(),
 ```
 
 `solve` is fully compatible with automatic differentiation libraries
-like: 
+like:
 
-- [Zygote.jl](https://github.com/FluxML/Zygote.jl) 
+- [Zygote.jl](https://github.com/FluxML/Zygote.jl)
 - [ReverseDiff.jl](https://github.com/JuliaDiff/ReverseDiff.jl)
 - [Tracker.jl](https://github.com/FluxML/Tracker.jl)
 - [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
 
-and will automatically replace any calculations of the solution's derivative 
+and will automatically replace any calculations of the solution's derivative
 with a fast method. The keyword argument `sensealg` controls the dispatch to the
 `AbstractSensitivityAlgorithm` used for the sensitivity calculation.
 Note that `solve` in an AD context does not allow higher order
@@ -327,7 +327,7 @@ equation calculation to the time evolution to simultaneously compute the derivat
 of the solution with respect to parameters.
 
 ```julia
-ODEForwardSensitivityProblem(f::DiffEqBase.AbstractODEFunction,u0,
+ODEForwardSensitivityProblem(f::SciMLBase.AbstractODEFunction,u0,
                              tspan,p=nothing,
                              sensealg::AbstractForwardSensitivityAlgorithm = ForwardSensitivity();
                              kwargs...)
@@ -674,7 +674,7 @@ adaptive time step and non-reversible integrator, then the backwards solution di
 from the forward solution. As a quick demonstration:
 
 ```julia
-using Sundials, DiffEqBase
+using Sundials
 function lorenz(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
@@ -712,7 +712,7 @@ sensitivity analysis with an adjoint sensitivity analysis for a fast computation
 ### Example second order sensitivity analysis calculation
 
 ```julia
-using DiffEqSensitivity, OrdinaryDiffEq, DiffEqBase, ForwardDiff
+using DiffEqSensitivity, OrdinaryDiffEq, ForwardDiff
 using Test
 
 function lotka!(du,u,p,t)

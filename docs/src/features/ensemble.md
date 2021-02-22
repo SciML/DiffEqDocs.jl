@@ -39,7 +39,7 @@ EnsembleProblem(prob::DEProblem;
   as parameters or caches stored within the user function, are not necessarily
   thread-safe. If you know that your function is thread-safe, then setting this
   to `false` can improve performance when used with threads.
-  
+
 One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
@@ -142,7 +142,7 @@ To use this functionality, import the analysis module via:
 using DifferentialEquations.EnsembleAnalysis
 ```
 
-(or more directly `DiffEqBase.EnsembleAnalysis`).
+(or more directly `SciMLBase.EnsembleAnalysis`).
 
 ### Time steps vs time points
 

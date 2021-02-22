@@ -1,7 +1,7 @@
 # Delay Differential Equations
 
 This tutorial will introduce you to the functionality for solving delay differential
-equations. 
+equations.
 
 !!! note
 
@@ -49,7 +49,7 @@ end
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDEProblem(f, u0, h, tspan, p=DiffEqBase.NullParameters();
+prob = DDEProblem(f, u0, h, tspan, p=SciMLBase.NullParameters();
                   constant_lags=[], dependent_lags=[], kwargs...)
 ```
 

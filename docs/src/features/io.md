@@ -113,7 +113,7 @@ BSON.load("test.bson")
 
 If you load it without the DE function then for some algorithms the
 interpolation may not work, and for all algorithms you'll need
-at least a solver package or DiffEqBase.jl in scope in order for
+at least a solver package or SciMLBase.jl in scope in order for
 the solution interface (plot recipes, array indexing, etc.) to
 work. If none of these are put into scope, the solution type
 will still load and hold all of the values (so `sol.u` and `sol.t`
