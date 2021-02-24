@@ -19,7 +19,12 @@ and find tough locations for the solvers.
 ## Using Progress Bars Outside Juno
 
 To use the progress bars outside of Juno, use [TerminalLoggers.jl](https://github.com/c42f/TerminalLoggers.jl).
-The following is an example for redirecting the logging to the terminal:
+[Follow these directions to add TerminalLogging to your startup.jl](https://c42f.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1)
+, if you want it enabled by default.
+
+Otherwise, follow the example down below. Note that `global_logger` is initialized 
+before any other julia call. This step is crucial, otherwise no logging will 
+appear in the terminal.
 
 ```julia
 using Logging: global_logger
@@ -37,5 +42,3 @@ solve(
     progress_steps = 1,
 )
 ```
-
-To do this by default, [follow these direction to add TerminalLogging to your startup.jl](https://c42f.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1).
