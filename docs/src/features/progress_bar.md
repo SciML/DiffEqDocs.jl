@@ -19,7 +19,7 @@ and find tough locations for the solvers.
 ## Using Progress Bars Outside Juno
 
 To use the progress bars outside of Juno, use [TerminalLoggers.jl](https://github.com/c42f/TerminalLoggers.jl).
-[Follow these direction to add TerminalLogging to your startup.jl](https://c42f.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1)
+[Follow these directions to add TerminalLogging to your startup.jl](https://c42f.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1)
 , if you want it enabled by default.
 
 Otherwise, follow the example down below. Note that `global_logger` is initialized 
@@ -42,4 +42,3 @@ solve(
     progress_steps = 1,
 )
 ```
-
