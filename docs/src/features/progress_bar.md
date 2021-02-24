@@ -23,7 +23,7 @@ To use the progress bars outside of Juno, use [TerminalLoggers.jl](https://githu
 , if you want it enabled by default.
 
 Otherwise, follow the example down below. Note that `global_logger` is initialized 
-before other julia calls are done. This step is crucial, otherwise no logging will 
+before any other julia call. This step is crucial, otherwise no logging will 
 appear in the terminal.
 
 ```julia
