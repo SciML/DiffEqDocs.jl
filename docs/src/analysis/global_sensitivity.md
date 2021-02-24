@@ -179,7 +179,7 @@ If `rank` is set to `true`, then the rank coefficients are also calculated.
 
 ### Lotka-Volterra Global Sensitivities
 
-Let's run GSA on the Lotka-Volterra model to and study the sensitivity of the maximum of predator population and the average prey population.
+Let's run GSA on the Lotka-Volterra model to study the sensitivity of the maximum of predator population and the average prey population.
 
 ```julia
 using DiffEqSensitivity, Statistics, OrdinaryDiffEq #load packages
