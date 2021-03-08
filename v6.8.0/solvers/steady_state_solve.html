@@ -1,1 +1,16 @@
-<meta http-equiv="refresh" content="0; url=steady_state_solve/"/>
+<!DOCTYPE ><HTML><head><meta content="0; url=steady_state_solve/" http-equiv="refresh"/><script data-is-old-version="">document.addEventListener("DOMContentLoaded", function(){
+    const div = document.createElement('div');
+    div.setAttribute('style', 'position: fixed; bottom: 1em; right: 1em; z-index: 999; background-color: #ffaf9c; color: rgba(0, 0, 0, 0.7); border: 1px solid #d54625; border-radius: 4px; padding: 2em; text-align: center');
+    const closer = document.createElement('div');
+    closer.setAttribute('style', 'position: absolute; top: 0; right: 5px; padding: 5px; cursor: pointer; width: 12px; height: 12px;')
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', () => {
+        document.body.removeChild(div)
+    })
+    const href = documenterBaseURL + '/../stable'
+    div.innerHTML = 'This is an old version of the documentation. <br> Click <a href="' + href + '">here</a> to go to the newest version.';
+    div.appendChild(closer)
+    document.body.appendChild(div);
+});
+</script></head><body></body></HTML>
