@@ -69,7 +69,8 @@ extra options for the solvers, see the ODE solver page.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
   yet implemented. This means the interpolation is unstable on algebraic variables,
-  meaning this algorithm should not be used with `saveat` or post-solution interpolation.
+  meaning this algorithm should not be used with `saveat` or post-solution interpolation
+  on DAEs.
 
 #### Rosenbrock-W Methods
 
