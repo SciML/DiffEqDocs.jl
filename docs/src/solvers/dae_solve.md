@@ -3,9 +3,9 @@
 ## Recommended Methods
 
 For medium to low accuracy small numbers of DAEs in constant mass matrices form,
-the  `Rosenbrock23` and `Rodas5` methods are good choices which will get good
+the  `Rosenbrock23` and `Rodas4` methods are good choices which will get good
 efficiency if the mass matrix is constant. `Rosenbrock23` is better for low
-accuracy (error tolerance `<1e-4`) and `Rodas5` is better for high accuracy.
+accuracy (error tolerance `<1e-4`) and `Rodas4` is better for high accuracy.
 Another choice at high accuracy is `RadauIIA5`.
 
 Non-constant mass matrices are not directly supported: users are advised to
@@ -68,7 +68,8 @@ extra options for the solvers, see the ODE solver page.
   inexact Jacobians a second order W method.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
-  yet implemented.
+  yet implemented. This means the interpolation is unstable on algebraic variables,
+  meaning this algorithm should not be used with `saveat` or post-solution interpolation.
 
 #### Rosenbrock-W Methods
 
