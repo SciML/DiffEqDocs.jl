@@ -62,7 +62,10 @@ Note that the affine equation
 u^\prime = A(u,p,t)u + g(u,p,t)
 ```
 
+
 can be written as a linear form by extending the size of the system by one to have a
-constant term of 1, and extending `A` to have a new row containing the values of
-`g(u,p,t)`. In this way, these types of equations can be handled by these specialized
+constant term of 1. This is done by extending `A` with a new row, containing only zeros,
+and giving this new state an initial value of 1.
+Then extend `A` to have a new column containing the values of `g(u,p,t)`.
+In this way, these types of equations can be handled by these specialized
 integrators.
