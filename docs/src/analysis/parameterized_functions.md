@@ -57,7 +57,7 @@ The macro is a Domain-Specific Language (DSL) and thus has different internal
 semantics than standard Julia functions. In particular:
 
 1) Control sequences and conditionals (while, for, if) will not work in the macro.
-2) Intermediate calculations (likes that don't start with `d_`) are incompatible
+2) Intermediate calculations (lines that don't start with `d_`) are incompatible
    with the Jacobian etc. calculations.
 3) The macro has to use `t` for the independent variable.
 
