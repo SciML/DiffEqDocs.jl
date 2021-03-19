@@ -68,7 +68,6 @@ Options:
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
   
 ```julia
-using OrdinaryDiffEq
 _A = [2 -1;-3 -5]/5
 A = DiffEqArrayOperator(_A)
 prob = ODEProblem(A, [1.0,-1.0], (1.0, 6.0))
