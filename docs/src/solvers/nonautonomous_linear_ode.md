@@ -66,6 +66,13 @@ Options:
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
+  
+```julia
+_A = [2 -1;-3 -5]/5
+A = DiffEqArrayOperator(_A)
+prob = ODEProblem(A, [1.0,-1.0], (1.0, 6.0))
+sol = solve(prob, LinearExponential())
+```
 
 
 ### State-Independent Solvers
