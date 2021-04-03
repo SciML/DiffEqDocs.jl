@@ -59,7 +59,7 @@ end
 and the `intervals` iterator lets you view the full interval:
 
 ```julia
-for (tprev,uprev,u,t) in intervals(integrator)
+for (uprev,tprev,u,t) in intervals(integrator)
   @show tprev,t
 end
 ```
