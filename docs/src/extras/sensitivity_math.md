@@ -67,7 +67,7 @@ f(d) = f(x) + Jv \epsilon
 
 as a fast way to calcuate ``Jv``. Thus, except when a sufficiently good function for `J` is given
 by the user, the Jacobian is never formed. For more details, consult the
-[MIT 18.337 lecture notes on forward mode AD](https://mitmath.github.io/18337/lecture9/autodiff_dimensions).
+[MIT 18.337 lecture notes on forward mode AD](https://mitmath.github.io/18337/lecture8/automatic_differentiation.html).
 
 ## Adjoint Sensitivity Analysis
 
