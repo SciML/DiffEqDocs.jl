@@ -536,7 +536,7 @@ prob = ODEProblem(f,[1.0;1.0],(0.0,10.0),p)
 sol = solve(prob,Vern9(),abstol=1e-10,reltol=1e-10)
 ```
 
-Now let's calculate the sensitivity of the L2 error against 1 at evenly spaced
+Now let's calculate the sensitivity of the ``\ell_2`` error against 1 at evenly spaced
 points in time, that is:
 
 ```math
@@ -549,7 +549,8 @@ For this function, notice we have that:
 ```math
 \begin{aligned}
 dg_{1}&=1-u_{1} \\
-dg_{2}&=1-u_{2}
+dg_{2}&=1-u_{2} \\
+& \quad \vdots
 \end{aligned}
 ```
 
@@ -563,7 +564,8 @@ Also, we can omit `dgdp`, because the cost function doesn't dependent on `p`. If
 sensitivities, call:
 
 ```julia
-res = adjoint_sensitivities(sol,Vern9(),dg,t,abstol=1e-14,
+ts = 0:0.5:10
+res = adjoint_sensitivities(sol,Vern9(),dg,ts,abstol=1e-14,
                             reltol=1e-14)
 ```
 
@@ -575,9 +577,9 @@ autodifferentiation and numerical differentiation results:
 using ForwardDiff,Calculus
 function G(p)
   tmp_prob = remake(prob,u0=convert.(eltype(p),prob.u0),p=p)
-  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=t)
+  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=ts)
   A = convert(Array,sol)
-  sum(((1-A).^2)./2)
+  sum(((1 .- A).^2)./2)
 end
 G([1.5,1.0,3.0])
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
