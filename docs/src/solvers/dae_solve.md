@@ -91,7 +91,7 @@ extra options for the solvers, see the ODE solver page.
 
 - `ImplicitEuler` - Stage order 1. A-B-L-stable. Adaptive
   timestepping through a divided differences estimate via memory. Strong-stability
-  presurving (SSP).
+  preserving (SSP).
 - `ImplicitMidpoint` - Stage order 1. Symplectic. Good for when symplectic
   integration is required.
 - `Trapezoid` - A second order A-stable symmetric ESDIRK method. "Almost
