@@ -113,16 +113,18 @@ end
 
 p = [1.5,1.0,3.0]
 prob = ODEProblem(f,[1.0;1.0],(0.0,10.0),p)
-sol = solve(prob,Vern9(),abstol=1e-10,reltol=1e-10)</code></pre><p>Now let&#39;s calculate the sensitivity of the L2 error against 1 at evenly spaced points in time, that is:</p><p class="math-container">\[L(u,p,t)=\sum_{i=1}^{n}\frac{\Vert1-u(t_{i},p)\Vert^{2}}{2}\]</p><p>for <span>$t_i = 0.5i$</span>. This is the assumption that the data is <code>data[i]=1.0</code>. For this function, notice we have that:</p><p class="math-container">\[\begin{aligned}
+sol = solve(prob,Vern9(),abstol=1e-10,reltol=1e-10)</code></pre><p>Now let&#39;s calculate the sensitivity of the <span>$\ell_2$</span> error against 1 at evenly spaced points in time, that is:</p><p class="math-container">\[L(u,p,t)=\sum_{i=1}^{n}\frac{\Vert1-u(t_{i},p)\Vert^{2}}{2}\]</p><p>for <span>$t_i = 0.5i$</span>. This is the assumption that the data is <code>data[i]=1.0</code>. For this function, notice we have that:</p><p class="math-container">\[\begin{aligned}
 dg_{1}&amp;=1-u_{1} \\
-dg_{2}&amp;=1-u_{2}
-\end{aligned}\]</p><p>and thus:</p><pre><code class="language-julia">dg(out,u,p,t,i) = (out.=1.0.-u)</code></pre><p>Also, we can omit <code>dgdp</code>, because the cost function doesn&#39;t dependent on <code>p</code>. If we had data, we&#39;d just replace <code>1.0</code> with <code>data[i]</code>. To get the adjoint sensitivities, call:</p><pre><code class="language-julia">res = adjoint_sensitivities(sol,Vern9(),dg,t,abstol=1e-14,
+dg_{2}&amp;=1-u_{2} \\
+&amp; \quad \vdots
+\end{aligned}\]</p><p>and thus:</p><pre><code class="language-julia">dg(out,u,p,t,i) = (out.=1.0.-u)</code></pre><p>Also, we can omit <code>dgdp</code>, because the cost function doesn&#39;t dependent on <code>p</code>. If we had data, we&#39;d just replace <code>1.0</code> with <code>data[i]</code>. To get the adjoint sensitivities, call:</p><pre><code class="language-julia">ts = 0:0.5:10
+res = adjoint_sensitivities(sol,Vern9(),dg,ts,abstol=1e-14,
                             reltol=1e-14)</code></pre><p>This is super high accuracy. As always, there&#39;s a tradeoff between accuracy and computation time. We can check this almost exactly matches the autodifferentiation and numerical differentiation results:</p><pre><code class="language-julia">using ForwardDiff,Calculus
 function G(p)
   tmp_prob = remake(prob,u0=convert.(eltype(p),prob.u0),p=p)
-  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=t)
+  sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=ts)
   A = convert(Array,sol)
-  sum(((1-A).^2)./2)
+  sum(((1 .- A).^2)./2)
 end
 G([1.5,1.0,3.0])
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
@@ -170,4 +172,4 @@ loss(sol) = sum(sol)
 v = ones(4)
 
 H  = second_order_sensitivities(loss,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)
-Hv = second_order_sensitivity_product(loss,v,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Thursday 22 April 2021 23:41">Thursday 22 April 2021</span>. Using Julia version 1.6.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Hv = second_order_sensitivity_product(loss,v,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 25 April 2021 19:05">Sunday 25 April 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
