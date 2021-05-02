@@ -367,7 +367,7 @@ PeriodicCallback(f, Δt::Number; initial_affect = true, kwargs...)
 ```
 
 where `f` is the function to be called periodically, `Δt` is the period,
-`initial_affect` is whether to apply the affect at `t=0` which defaults to `true`,
+`initial_affect` is whether to apply the affect at `t=0` which defaults to `false`,
 and `kwargs` are keyword arguments accepted by the `DiscreteCallback` constructor
 (see the [DiscreteCallback](@ref discrete_callback) section).
 
