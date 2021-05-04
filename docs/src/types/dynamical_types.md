@@ -100,7 +100,7 @@ to define equations of motion from the corresponding Hamiltonian. To define a
 `HamiltonianProblem` one only needs to specify the Hamiltonian:
 
 ```math
-H(q,p)
+H(p,q)
 ```
 
 and autodifferentiation (via ForwardDiff.jl) will create the appropriate
@@ -109,13 +109,13 @@ equations.
 ### Constructors
 
 ```julia
-HamiltonianProblem{T}(H,p0,q0,tspan;kwargs...)
+HamiltonianProblem{T}(H,p0,q0,tspan,param=nothing;kwargs...)
 ```
 
 ### Fields
 
-* `H`: The Hamiltonian `H(q,p,params)` which returns a scalar.
+* `H`: The Hamiltonian `H(p,q,params)` which returns a scalar.
 * `p0`: The initial momentums.
 * `q0`: The initial positions.
 * `tspan`: The timespan for the problem.
-* `p`: Defaults to `nothing`. `p` will be passed to `H`'s `params`. 
+* `param`: Defaults to `nothing`. `param` will be passed to `H`'s `params`. 
