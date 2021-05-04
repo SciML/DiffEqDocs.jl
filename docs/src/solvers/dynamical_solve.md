@@ -6,9 +6,9 @@ that can be specialized on in the solver for more efficiency.
 These algorithms require an ODE defined in the following ways:
 
 ```julia
-DynamicalODEProblem{isinplace}(f1,f2,u0,v0,tspan,p=NullParameters();kwargs...)
+DynamicalODEProblem{isinplace}(f1,f2,v0,u0,tspan,p=NullParameters();kwargs...)
 SecondOrderODEProblem{isinplace}(f,du0,u0,tspan,p=NullParameters();kwargs...)
-HamiltonianProblem{T}(H,q0,p0,tspan,p=NullParameters();kwargs...)
+HamiltonianProblem{T}(H,p0,q0,tspan,p=NullParameters();kwargs...)
 ```
 
 These correspond to partitioned equations of motion:
