@@ -38,8 +38,8 @@ in addition to the solver package.
 
 For the addon packages, you will normally need SciMLBase, the solver package
 you choose, and the addon package. So for example, for parameter estimation you
-would likely want SciMLBase+OrdinaryDiffEq+DiffEqParamEstim. If you arne't sure
-which package a specific command is from, they using `@which`. For example, from
+would likely want SciMLBase+OrdinaryDiffEq+DiffEqParamEstim. If you aren't sure
+which package a specific command is from, then use `@which`. For example, from
 the parameter estimation docs we have:
 
 ```julia
