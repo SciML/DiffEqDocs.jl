@@ -2,6 +2,7 @@
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
 DiffEqProblemLibrary = "a077e3f3-b75c-5d7f-a0c6-6bc4c8ec64a9"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 
 [compat]
