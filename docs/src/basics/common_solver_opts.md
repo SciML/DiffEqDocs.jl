@@ -45,15 +45,15 @@ The following options are all related to output control. See the "Examples"
 section at the end of this page for some example usage.
 
 * `dense`: Denotes whether to save the extra pieces required for dense (continuous)
-  output. Default is `save_everystep && !isempty(saveat)` for algorithms which have 
+  output. Default is `save_everystep && !isempty(saveat)` for algorithms which have
   the ability to produce dense output, i.e. by default it's `true` unless the user
-  has turned off saving on steps or has chosen a `saveat` value. If `dense=false`, 
-  the solution still acts like a function, and `sol(t)` is a linear interpolation 
+  has turned off saving on steps or has chosen a `saveat` value. If `dense=false`,
+  the solution still acts like a function, and `sol(t)` is a linear interpolation
   between the saved time points.
 * `saveat`: Denotes specific times to save the solution at, during the solving
   phase. The solver will save at each of the timepoints in this array in the
   most efficient manner available to the solver. If only `saveat` is given, then
-  the arguments `save_everystep` and `dense` are `false` by default.   
+  the arguments `save_everystep` and `dense` are `false` by default.
   If `saveat` is given a number, then it will automatically expand to
   `tspan[1]:saveat:tspan[2]`. For methods where interpolation is not possible,
   `saveat` may be equivalent to `tstops`. The default value is `[]`.
@@ -73,7 +73,7 @@ section at the end of this page for some example usage.
 * `d_discontinuities:` Denotes locations of discontinuities in low order derivatives.
   This will force FSAL algorithms which assume derivative continuity to re-evaluate
   the derivatives at the point of discontinuity. The default is `[]`.
-* `save_everystep`: Saves the result at every step.    
+* `save_everystep`: Saves the result at every step.
   Default is true if `isempty(saveat)`.
 * `save_on`: Denotes whether intermediate solutions are saved. This overrides the
   settings of `dense`, `saveat` and `save_everystep` and is used by some applicatioins
@@ -145,6 +145,10 @@ Note that if a method does not have adaptivity, the following rules apply:
 
 #### [Advanced Adaptive Stepsize Control](@id advanced_adaptive_stepsize_control)
 
+```@meta
+CurrentModule = OrdinaryDiffEq
+```
+
 These arguments control more advanced parts of the internals of adaptive timestepping
 and are mostly used to make it more efficient on specific problems. For detained
 explanations of the timestepping algorithms, see the
@@ -154,28 +158,32 @@ explanations of the timestepping algorithms, see the
   are calculated. Required are two dispatches: one dispatch for the state variable
   and the other on the elements of the state variable (scalar norm).
   Defaults are package-dependent.
-* `gamma`: The risk-factor γ in the q equation for adaptive timestepping.
-  Default is algorithm dependent.
-* `beta1`: The Lund stabilization α parameter. Defaults are
-  algorithm-dependent.
-* `beta2`: The Lund stabilization β parameter. Defaults are
-  algorithm-dependent.
-* `qmax`: Defines the maximum value possible for the adaptive q. Defaults are
-  algorithm-dependent.
-* `qmin`: Defines the minimum value possible for the adaptive q. Defaults are
-  algorithm-dependent.
+* `controller`: Possible examples are [`StandardIController`](@ref),
+  [`PIController`](@ref), [`PIDController`](@ref), [`PredictiveController`](@ref).
+  Default is algorithm-dependent.
+* `gamma`: The risk-factor γ in the q equation for adaptive timestepping
+  of the controllers using it.
+  Default is algorithm-dependent.
+* `beta1`: The Lund stabilization α parameter.
+  Default is algorithm-dependent.
+* `beta2`: The Lund stabilization β parameter.
+  Default is algorithm-dependent.
+* `qmax`: Defines the maximum value possible for the adaptive q.
+  Default is algorithm-dependent.
+* `qmin`: Defines the minimum value possible for the adaptive q.
+  Default is algorithm-dependent.
 * `qsteady_min`: Defines the minimum for the range around 1 where the timestep
-  is held constant. Defaults are algorithm-dependent.
+  is held constant. Default is algorithm-dependent.
 * `qsteady_max`: Defines the maximum for the range around 1 where the timestep
-  is held constant. Defaults are algorithm-dependent.
-* `qoldinit`: The initial `qold` in stabilization stepping. Defaults are
-  algorithm-dependent.
+  is held constant. Default is algorithm-dependent.
+* `qoldinit`: The initial `qold` in stabilization stepping.
+  Default is algorithm-dependent.
 * `failfactor`: The amount to decrease the timestep by if the Newton iterations
   of an implicit method fail. Default is 2.
 
 ## Memory Optimizations
 
-* `calck`: Turns on and off the internal ability for intermediate    
+* `calck`: Turns on and off the internal ability for intermediate
   interpolations (also known as intermediate density). Not the same as `dense`, which is post-solution interpolation.
   This defaults to `dense || !isempty(saveat) ||  "no custom callback is given"`.
   This can be used to turn off interpolations
@@ -203,7 +211,7 @@ explanations of the timestepping algorithms, see the
   Defaults to true.
 * `merge_callbacks`: Toggles whether to merge `prob.callback` with the `solve` keyword
   argument `callback`. Defaults to `true`.
-  
+
 ## Progress Monitoring
 
 These arguments control the usage of the progressbar in the Juno IDE.

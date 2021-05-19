@@ -1,5 +1,9 @@
 # [Timestepping Method Descriptions](@id timestepping)
 
+```@meta
+CurrentModule = OrdinaryDiffEq
+```
+
 ## Common Setup
 
 All methods start by calculating a scaled error estimate on each scalar component of ``u``:
@@ -9,7 +13,7 @@ err^{scaled}_i = norm(err_i/(abstol_i + max(uprev_i,u_i)reltol_i))
 ```
 
 On this scaled error estimate, we calculate the norm. This norm is usually the
-Hairer semi-norm:
+Hairer norm:
 
 ```math
 norm(x) = sqrt(sum(x^2)/length(x))
@@ -23,7 +27,7 @@ In all cases, the step is rejected if ``err^{scaled}>1`` since that means the
 error is larger than the tolerances, and the step is accepted if
 ``err^{scaled}<1``.
 
-## Proportional Control (Standard Control)
+## Integral Controller (Standard Controller)
 
 The proportional control algorithm is the "standard algorithm" for adaptive
 timestepping. Note that it is not the default in DifferentialEquations.jl
@@ -48,7 +52,11 @@ Since proportional control is "jagged", i.e. can cause large changes between
 one step to the next, it can effect the stability of explicit methods. Thus
 it's only applied by default to low order implicit solvers.
 
-## Proportional-Integral Control (PI-Control)
+```@docs
+StandardIController
+```
+
+## Proportional-Integral Controller (PI Controller)
 
 The proportional-integral control algorithm is a standard control algorithm
 from control theory. It mixes proportional control with memory in order to
@@ -71,6 +79,16 @@ q
 
 `beta1` is the gain on the proportional part, and `beta2` is the gain for the
 history portion. `qoldinit` is the initialized value for the gain history.
+
+```@docs
+PIController
+```
+
+## Proportional-Integral-Derivative Controller (PID Controller)
+
+```@docs
+PIDController
+```
 
 ## Gustafsson Acceleration
 
@@ -120,4 +138,8 @@ if integrator.success_iter == 0
 else
   integrator.dt = integrator.dt/integrator.qold
 end
+```
+
+```@docs
+PredictiveController
 ```
