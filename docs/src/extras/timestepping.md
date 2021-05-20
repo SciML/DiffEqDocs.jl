@@ -53,7 +53,7 @@ one step to the next, it can effect the stability of explicit methods. Thus
 it's only applied by default to low order implicit solvers.
 
 ```@docs
-StandardIController
+IController
 ```
 
 ## Proportional-Integral Controller (PI Controller)
