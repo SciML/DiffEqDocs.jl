@@ -1,7 +1,7 @@
 name = "DiffEqDocs"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
 authors = ["Chris Rackauckas <accounts@chrisrackauckas.com>"]
-version = "6.17.0"
+version = "6.18.0"
 
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
