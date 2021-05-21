@@ -606,7 +606,7 @@ Creates a non-dense solution with checkpoints at `[0.0,0.2,0.5,0.7]`. Now we
 can do:
 
 ```julia
-res = adjoint_sensitivities(sol,Vern9(),dg,t,
+res = adjoint_sensitivities(sol,Vern9(),dg,ts,
                             sensealg=InterpolatingAdjoint(checkpointing=true))
 ```
 
@@ -616,7 +616,7 @@ nearest checkpoint to build local interpolants in a way that conserves memory.
 By default the checkpoints are at `sol.t`, but we can override this:
 
 ```julia
-res = adjoint_sensitivities(sol,Vern9(),dg,t,
+res = adjoint_sensitivities(sol,Vern9(),dg,ts,
                             sensealg=InterpolatingAdjoint(checkpointing=true),
                             checkpoints = [0.0,0.5])
 ```
@@ -656,10 +656,11 @@ Notice that we can check this against autodifferentiation and numerical
 differentiation as follows:
 
 ```julia
+using QuadGK
 function G(p)
   tmp_prob = remake(prob,p=p)
   sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)
-  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)
+  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,atol=1e-14,rtol=1e-10)
   res
 end
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
