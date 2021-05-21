@@ -42,6 +42,12 @@ The following choices of pre-built linear solvers exist:
 - LinSolveMINRES
 - LinSolveIterativeSolvers
 
+Additionally, by adding [Pardiso.jl](https://github.com/JuliaSparse/Pardiso.jl) the following exist:
+
+- MKLPardisoFactorize
+- PardisoFactorize
+- PardisoIterate
+
 ### DefaultLinSolve
 
 The default linear solver is `DefaultLinSolve`. This method is adaptive, and
