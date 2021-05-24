@@ -29,9 +29,9 @@ recommendations can be found on the solver page (for example, the
 [ODE Solver Recommendations](@ref ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
-for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and Sundials
-`CVODE_BDF` for even larger problems. `lsoda` from
-[LSODA.jl](https://github.com/rveltz/LSODA.jl) is generally worth a try.
+for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
+larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
+sometimes worth a try.
 
 More details on the solver to choose can be found by benchmarking. See the
 [DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) to

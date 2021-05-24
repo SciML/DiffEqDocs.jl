@@ -151,7 +151,7 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
 - `KenCarp4()` or `TRBDF2()` for medium sized (100-2000 ODEs) stiff equations
 - `RadauIIA5()` for really high accuracy stiff equations
-- `CVODE_BDF()` for large stiff equations
+- `QNDF()` for large stiff equations
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [Please see the solver documentation](@ref ode_solve). Every problem
@@ -165,7 +165,7 @@ The result of `solve` is a solution object. We can access the 5th value of the
 solution with:
 
 ```julia-repl
-julia> sol[5] 
+julia> sol[5]
 0.637
 ```
 
