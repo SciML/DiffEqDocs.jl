@@ -77,10 +77,11 @@ use `radau`.
 
 For asymptotically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
-in that case `CVODE_BDF` will be the most efficient but requires `Vector{Float64}`.
-`CVODE_BDF` will also do surprisingly well if the solution is smooth. However,
+in that case `QNDF` will be the most efficient but requires `Vector{Float64}`.
+`QNDF` will also do surprisingly well if the solution is smooth. However,
 this method can handle less stiffness than other methods and its Newton iterations
-may fail at low accuracy situations. Another good choice for this regime is `lsoda`.
+may fail at low accuracy situations. Other choices to consider in this regime are
+`CVODE_BDF` and `lsoda`.
 
 #### Special Properties of Stiff Integrators
 
@@ -105,7 +106,7 @@ library methods are as follows:
 - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
 - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-- `ode15s`/`vode` --> `QNDF()`, though in many cases `CVODE_BDF()`, `Rodas4()`,
+- `ode15s`/`vode` --> `QNDF()`, though in many cases `Rodas4()`,
   `KenCarp4()`, `TRBDF2()`, or `RadauIIA5()` are more efficient
 - `ode23t` --> `Trapezoid()`
 - `ode23tb` --> `TRBDF2()`
@@ -506,7 +507,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   corrected).
 - `Rodas4P2` - A 4th order L-stable stiffly stable Rosenbrock method with a
   stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and
-  3rd order accurate on nonlinear parabolic problems. It is an improvement of Roadas4P 
+  3rd order accurate on nonlinear parabolic problems. It is an improvement of Roadas4P
   and in case of inexact Jacobians a second order W method.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
@@ -1078,7 +1079,7 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
     the integrator interface.
   - `GPURK4` - A fully static RK4 for specialized compilation to accelerators
     like GPUs and TPUs.
-    
+
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use SimpleDiffEq.jl:
 
@@ -1274,7 +1275,7 @@ Note: this method is much faster if you put `@taylorize` on your derivative func
 
 ### QuDiffEq.jl
 
-QuDiffEq.jl is a package for solving differential equations using quantum algorithm. 
+QuDiffEq.jl is a package for solving differential equations using quantum algorithm.
 It makes use of the Yao framework for simulating quantum circuits.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.

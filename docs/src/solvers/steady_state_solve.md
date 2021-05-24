@@ -10,9 +10,10 @@ Solves for the steady states in the problem defined by `prob` using the algorith
 `DynamicSS` is a good choice if you think you may have multiple steady states
 or a bad initial guess. `SSRootfind` can be faster if you have a good initial
 guess. For `DynamicSS`, in many cases an adaptive stiff solver, like a
-Rosenbrock method (`Rodas5` or `CVODE_BDF`), is a good way to allow for very
-large time steps as the steady state approaches. Note that if you use `CVODE_BDF`
-you may need to give a starting `dt` via `dt=....`.
+Rosenbrock or BDF method (`Rodas5` or `QNDF`), is a good way to allow for very
+large time steps as the steady state approaches.
+
+*Note that if you use `CVODE_BDF` you may need to give a starting `dt` via `dt=....`.*
 
 ## Full List of Methods
 
