@@ -11,7 +11,7 @@ The recommended method for DDE problems are the `MethodOfSteps` algorithms.
 These are constructed from an OrdinaryDiffEq.jl algorithm as follows:
 
 ```julia
-MethodOfSteps(alg; constrained = false, fpsolve = FPFunctional(; max_iter = 10))
+MethodOfSteps(alg; constrained=false, fpsolve=NLFunctional(; max_iter=10))
 ```
 
 where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
