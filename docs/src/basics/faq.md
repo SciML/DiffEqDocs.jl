@@ -84,7 +84,7 @@ compiler, and fix them. If you have any global variables, you should make them
 are:
 
 - Array slicing, like `u[1:5]`. Instead, use `@view u[1:5]`
-- Matrix multiplication with `*`. Instead of `A*b`, use `A_mul_B!(c,A,b)` for some
+- Matrix multiplication with `*`. Instead of `A*b`, use `mul!(c,A,b)` for some
   pre-allocated cache vector `c`.
 - Non-broadcasted expressions. Every expression on arrays should `.=` into another
   array, or it should be re-written to loop and do computations with scalar (or
