@@ -2,6 +2,176 @@
 
 This page is a compilation of frequently asked questions and answers.
 
+## [Stability and Divergence of ODE Solves](@id faq_stability)
+
+#### My model is reporting unstable results. What can I do?
+
+First of all, don't panic. You may have experienced one of the following warnings:
+
+> dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
+> NaN dt detected. Likely a NaN value in the state, parameters, or derivative value caused this outcome.
+> Instability detected. Aborting
+
+These are all pointing to a similar behavior: for some reason or another, the
+ODE solve is diverging to infinity. As it diverges to infinity, the `dt` of the
+integrator will drop (trying to control the speed and error), so it will either
+hit the minimum `dt`, hit `dt=NaN`, or have a value in the ODE hit `Inf`. Whichever
+one occurs first will throw the respective warning.
+
+How to handle this? 99.99% of the time this has been debugged, it has turned out
+to be an error in the user's model! A missing minus sign, an incorrect term,
+etc. There are many other behaviors to watch out for. In some ODEs, increasing
+a parameter can cause a bifurcation so that the solution diverges. With
+`u'=a*u`, if `a` is negative then it nicely falls to zero, but if `a` is positive
+the solution quickly diverges to infinity! This means, double check your parameters
+are indexed correctly!
+
+**Note: if you see these warnings during a parameter estimation process, this is
+likely the underlying problem. Simply check `sol.retcode != :Success` and throw
+an `Inf` cost and most optimizers will reject steps in those parameter regimes!**
+
+There are a few other things to check as well. In many cases, the stability of
+an ODE solve improves as you decrease the tolerance, so you may want to try a
+smaller `abstol` and `reltol`. One behavior to watch out for is that if your
+model is a differential-algebraic equation and your DAE is of high index (say
+index>1), this can impact the numerical solution. In this case you may want to
+use the [ModelingToolkit.jl index reduction tools](https://mtk.sciml.ai/dev/mtkitize_tutorials/modelingtoolkitize_index_reduction/)
+to improve the numerical stability of a solve. In addition, if it's a highly
+stiff ODE/DAE that is large and you're using a matrix-free solver (such as GMRES),
+make sure the tolerance of the GMRES is well-tuned and an appropriate preconditioner
+is applied. Finally, try other solvers. They all have different stability, so try
+`Tsit5()`, `Vern7()`, `QNDF()`, `Rodas5()`, `TRBDF2()`, `KenCarp4()`, `Sundials.CVODE_BDF()`,
+etc. and see what works.
+
+If none of this works out, double check that your ODE truly has the behavior
+that you believe it should. This is one of the most common issues: your intuition
+may be deceiving. For example, `u' = -sqrt(u)` with `u(0)=1` cannot hit zero
+because its derivative shrinks to zero, right? Wrong! [It will hit zero in a finite
+time, after which the solution is undefined and does not have a purely real solution](https://www.wolframalpha.com/input/?i=u%27%3D-sqrt%28u%29).
+`u' = u^2 - 100u` will "usually" go to zero, but if `u(0)>10` then it will go to
+infinity. Plot out your diverging solution and see whether the asymtopics are
+correct: if `u[i]` gets big, do you equations make `u'[i]` positive and growing?
+That's would be a problem!
+
+Let's say you don't believe you made an error at all and you want to file a bug
+report. To do so, you'll first want to prove that it's isolated to a solver.
+If it's a solver issue, then you shouldn't see it happen with every single solver.
+Do you think it's an issue with the Julia solvers? Well fortunately,
+DifferentialEquations.jl offers direct unmodified wrappers to almost all previously
+built solvers, so if you think it's a Julia issue, try running your ODE through:
+
+- Sundials.jl, a wrapper for the C++ SUNDIALS library though `CVODE_Adams`,
+  `CVODE_BDF`, `IDA`, and `ARKODE`.
+- ODEInterfaceDiffEq.jl, a wrapper for the classic Hairer Fortran codes like
+  `dorpi5`, `dop853`, `radau`, `rodas`, etc.
+- LSODA.jl, a wrapper for the classic `lsoda` algorithm.
+- MATLABDiffEq.jl, a wrapper for the MATLAB ODE solvers `ode45`, `ode15s`, etc.
+- SciPyDiffEq.jl, a wrapper for SciPy's `odeint` (LSODA) and other methods (LSODE, etc.).
+- deSolveDiffEq.jl, a wrapper for the commonly used R library.
+
+And many more. Testing this is as simple as changing `solve(prob,Tsit5())` to
+`solve(prob,lsoda())`, so please give this a try. If you translated your code
+from another language, like Python or MATLAB, use the direct wrapper to double
+check the steps are the same. If they are not, then your ODE is not the same,
+because it's using a direct call to the solvers of those packages!
+
+If your ODE diverges to infinity with every ODE solver ever made, the problem is
+most likely not the ODE solvers. Or rather, to put it in meme form:
+
+![](https://user-images.githubusercontent.com/1814174/120933617-eb65ac80-c6c8-11eb-85f7-ef98688d054c.jpg)
+
+Don't be like Patrick. If after trying these ideas your ODE solve still seems
+to have issues and you haven't narrowed it down, feel free to ask on the
+[Julia Discourse](https://discourse.julialang.org/) to get some help diagnosing
+it. If you did find a solver issue, please open an issue on the Github repository.
+
+#### A larger maxiters seems to be needed, but it's already high?
+
+If you see:
+
+>Interrupted. Larger maxiters is needed.
+
+Note that it could quite possibly arise just from having a very long timespan.
+If you check `sol.t` from the returned object and it looks like it's stepping
+at reasonable lengths, feel free to just pass `maxiters=...` into solve to
+bump it up from the default of `Int(1e5)`.
+
+But if your `maxiters` is already high, then the problem is likely that your model
+is stiff. A stiff ODE requires very small time steps from many explicit solvers,
+such as `Tsit5()`, `Vern7()`, etc., and thus those methods are not appropriate
+for this kind of problem. You will want to change to a different method, like
+`Rodas5()`, `Rosenbrock23()`, `TRBDF2()`, `KenCarp4()`, or `QNDF()`.
+
+#### My ODE goes negative but should stay positive, what tools can help?
+
+There are many tools to help! However, let's first focus on one piece first:
+when you say "should" be positive, what do you mean by "should"? If you mean
+"mathematically you can prove that the ODE with these values and these initial
+conditions will have a solution that is positive for all time" then yes, you're
+looking in the right place. If by "should" you mean "it's a model of biochemical
+reactions so the concentration should always be positive", well ask yourself
+first, did you write down a model where it will always be positive?
+
+The following set of tools are designed to accuracy enforce positivity in ODE
+models which mathematically should be positive in the true solution. If they
+encounter a model that is actually going negative, they will work really hard
+to get a positive but correct solution, which is impossible, so they will simply
+error out. This can be more subtle than you think. Solving `u'=-sqrt(u)` is
+not guaranteed to stay positive, even though the derivative goes to zero as `u`
+goes to zero (check the analytical solution if you're curious). Similarly,
+analyzing nonlinear models can showcase all sorts of behavior. A common cause
+for accidental negativity is Hill functions in systems biology models: just
+because derivatives go to zero doesn't mean they are going to zero fast enough
+to keep things positive!
+
+With that in mind, let's see the options.
+
+The simplest trick is to change the solver tolerance. Reduce `abstol` (and maybe
+`reltol`) a bit. That can help reduce the error and thus keep the solution positive.
+For some more difficult equations, changing to a stiff ODE solver like `Rosenbrock23()`
+`QNDF`, or `TRBDF2()` can be helpful.
+
+If those don't work, call out the big guns. One of them is `isoutofdomain`, where
+you can define a boolean function which will cause step rejections whenever it
+is not satisfied. For example, `isoutofdomain = (u,p,t)->any(x->x<0,u)` will make
+the solver reject any step which cases any variable `u` to go negative. Now, using
+any pure-Julia solver with this option, it's impossible to get a negative in the
+result! One thing you may see though is:
+
+> dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
+
+or
+
+>Interrupted. Larger maxiters is needed.
+
+What this means is that enforcing positivity is not possible. It keeps rejecting
+steps that go negative, reducing `dt`, taking another step, rejecting, reducing,
+repeat until `dt` hits `dtmin` or it hits maxiters. This means that even when
+trying to solve the problem with the most accurate infinitesimal `dt`, the
+solution still goes negative. Are you sure the true solution is supposed to be
+positive? If you see this, check for issues like a missing minus sign in your
+equations.
+
+If that works but is a little slow, the domain handling callbacks in
+[the callback library](@ref callback_library) are designed to function similarly
+but in a way that gets better performance. Instead of repeating lots of steps
+through rejections, it interpolates back to still take a smaller step, always
+progressing forwards. However, this can be a bit less stable, so its applicability
+depends on the equation, and once again this requires that the solution is
+truly positive. If the true solution goes negative, it will repeatedly try
+interpolating backwards until it can no longer and end with a `dtmin` issue.
+
+Finally, note that ODE solvers will not be more correct than tolerance, and so
+one should expect that if the solution is supposed to be positive but `abstol=1e-12`,
+you may end up with `u[i]=-1e-12`. That is okay,
+[that is expected behavior of numerical solvers](https://www.radford.edu/~thompson/RP/nonnegative.pdf),
+the ODE solver is still doing its job. If this is a major issue for your application,
+you may want to write your model to be robust to this behavior, such as changing
+`sqrt(u[i])` to `sqrt(max(0,u[i]))`. You should also consider transforming your
+values, like solving for `u^2` or `exp(u)` instead of `u`, which mathematically
+can only be positive. Look into using a tool like [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)
+for automatically transforming your equations.
+
 ## [Performance](@id faq_performance)
 
 #### GPUs, multithreading and distributed computation support
@@ -49,7 +219,10 @@ causing a divergence of the solution is the most common reason for reported
 slow codes.
 
 If you have no bugs, great! The standard tricks for optimizing Julia code then
-apply. What you want to do first is make sure your function does not allocate.
+apply. Take a look at the [Optimizing DiffEq Code tutorial](https://tutorials.sciml.ai/html/introduction/03-optimizing_diffeq_code.html)
+for some tips and pointers.
+
+What you want to do first is make sure your function does not allocate.
 If your system is small (`<=100` ODEs/SDEs/DDEs/DAEs?), then you should set your
 system up to use [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl).
 This is demonstrated
@@ -105,20 +278,21 @@ First of all, when available, it's recommended that you pass a function for comp
 your Jacobian. This is discussed in the [performance overloads](@ref ode_explicit_jac)
 section. Jacobians are especially helpful for Rosenbrock methods.
 
-Secondly, if your Jacobian isn't dense, you shouldn't use a dense Jacobian! In
-the Sundials algorithm you can set `linear_solver=:Band` for banded Jacobians
-for example. More support is coming for this soon.
-
-But lastly, you shouldn't use a dense factorization for large sparse matrices.
+Secondly, if your Jacobian isn't dense, you shouldn't use a dense Jacobian!
 Instead, if you're using  a `*DiffEq` library you should
-[specify a linear solver](@ref linear_nonlinear).
-For Sundials.jl, you should change the `linear_solver` option. See
+[specify a linear solver](@ref linear_nonlinear) and/or a `jac_prototype` for the
+matrix form, and for Sundials.jl, you should change the `linear_solver` option. See
 [the ODE solve Sundials portion](@ref ode_solve_sundials)
-for details on that. Right now, Sundials.jl is the recommended method for stiff
-problems with large sparse Jacobians. `linear_solver=:Band` should be used
-if your Jacobian is banded and you can specify the band sizes. If you only
-know the Jacobian is sparse, `linear_solver=:GMRES` is a good option. Once
-again, a good reference for how to handle PDE discretizations can be found
+for details on that.
+
+Right now, `QNDF` is the recommended method for stiff
+problems with large sparse Jacobians. You should specify `jac_prototype` as a
+special matrix, such as a banded or tridiagonal matrix, if it satisfies a special
+structure. If you only know the Jacobian is sparse, using automated sparsity
+detection can help with identifying the sparsity pattern. See the [stiff ODE tutorial](@ref stiff)
+for more details. Lastly, using `LinSolveGMRES()` can help if a sparsity pattern
+cannot be obtained but the matrix is large, or if the sparsity cannot fit into
+memory. Once again, a good reference for how to handle PDE discretizations can be found
 [at this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
 
 #### My Problem Has Discontinuities and is Unstable / Slow
@@ -168,14 +342,14 @@ this is probably the cheapest part of the computation...).
 
 #### What does tolerance mean and how much error should I expect
 
-The most useful options are the tolerances `abstol` and `reltol`. These tell the 
-internal adaptive time stepping engine how precise of a solution you want. 
-Generally, `reltol` is the relative accuracy while `abstol` is the accuracy when 
-`u` is near zero. *These tolerances are local tolerances and thus are not global 
-guarantees*. However, a good rule of thumb is that the total solution accuracy 
-is 1-2 digits less than the relative tolerances. Thus for the defaults 
-`abstol=1e-6` and `reltol=1e-3`, you can expect a global accuracy of about 1-2 
-digits. This is standard across the board and applies to the native Julia methods, 
+The most useful options are the tolerances `abstol` and `reltol`. These tell the
+internal adaptive time stepping engine how precise of a solution you want.
+Generally, `reltol` is the relative accuracy while `abstol` is the accuracy when
+`u` is near zero. *These tolerances are local tolerances and thus are not global
+guarantees*. However, a good rule of thumb is that the total solution accuracy
+is 1-2 digits less than the relative tolerances. Thus for the defaults
+`abstol=1e-6` and `reltol=1e-3`, you can expect a global accuracy of about 1-2
+digits. This is standard across the board and applies to the native Julia methods,
 the wrapped Fortran and C++ methods, the calls to MATLAB/Python/R, etc.
 
 #### The solver doesn't obey physical law X (e.g. conservation of energy)
@@ -232,12 +406,10 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
 #### Native Julia solvers compatibility with autodifferentiation
 
-
 Yes, they are compatible with automatic differentiation! Take a look at the
-[sensitivity analysis](@ref sensitivity)
-page for more details.
+[sensitivity analysis](@ref sensitivity) page for more details.
 
-If the algorithm does not have differentiation of parameter-depedendent events,
+If the algorithm does not have differentiation of parameter-dependent events,
 then you simply need to make the initial condition have elements of Dual numbers.
 If the algorithm uses Dual numbers, you need to make sure that time is also
 given by Dual numbers.
