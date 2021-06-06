@@ -232,6 +232,9 @@ requires that simultaneous calls to `f` are thread-safe.
   Fixed timestep only.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
   five stages (SSP coefficient 2, free 2nd order SSP interpolant).
+- `SSPRK43` - A  3/2 adaptive strong stability preserving (SSP) method with
+  five stages (SSP coefficient 2, free 2nd order SSP interpolant). The main method 
+  is the same as `SSPRK432`, but the embedded method has a larger stability region.
 - `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
   nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).
 - `SSPRK54` - The five-stage, fourth order strong stability preserving (SSP)
@@ -248,7 +251,7 @@ requires that simultaneous calls to `f` are thread-safe.
 The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
 All explicit SSP methods take two optional arguments
 `SSPXY(stage_limiter!, step_limiter!)`, where `stage_limiter!` and `step_limiter`
-are functions taking arguments of the form `limiter!(u, f, t)`. Here, `u` is the
+are functions taking arguments of the form `limiter!(u, f, p, t)`. Here, `u` is the
 new solution value (updated inplace) after an explicit Euler stage / the whole
 time step , `f` the time derivative function (semidiscretisation for PDEs), and
 `t` the current time. These limiters can be used to enforce physical constraints,
@@ -261,18 +264,24 @@ Royal Society, 2011.).
 #### Low-Storage Methods
 
 - `ORK256` - 5-stage, second order low-storage method for wave propogation
-  equations. Fixed timestep only.
+  equations. Fixed timestep only. Like SSPRK methods, ORK256 also takes optional 
+  arguments `stage_limiter!`, `step_limiter!`, where `stage_limiter!` and 
+  `step_limiter!` are functions of the form `limiter!(u, f, p, t)`. 
 - `SSPRK53_2N1` and `SSPRK53_2N2` - 5-stage, third order low-storage methods
   with large SSP coefficients. (SSP coefficient 2.18 and 2.15, free 3rd order
   Hermite interpolant). Fixed timestep only.
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
-  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
+  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties). 
+  Like SSPRK methods, `CarpenterKennedy2N54` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `NDBLSRK124` - 12-stage, fourth order low-storage method with optimized
   stability regions for advection-dominated problems. Fixed timestep only.
+  Like SSPRK methods, `NDBLSRK124` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `NDBLSRK134` - 13-stage, fourth order low-storage method with optimized
   stability regions for advection-dominated problems. Fixed timestep only.
+  Like SSPRK methods, `NDBLSRK134` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `NDBLSRK144` - 14-stage, fourth order low-storage method with optimized
   stability regions for advection-dominated problems. Fixed timestep only.
+   Like SSPRK methods, `NDBLSRK144` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `CFRLDDRK64` - 6-stage, fourth order low-storage, low-dissipation,
   low-dispersion scheme. Fixed timestep only.
 - `TSLDDRK74` - 7-stage, fourth order low-storage low-dissipation,
@@ -282,16 +291,19 @@ Royal Society, 2011.).
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when maximum spatial step is small due to geometric features of computational
-  domain. Fixed timestep only.
+  domain. Fixed timestep only. 
+  Like SSPRK methods, `DGLDDRK73_C` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `DGLDDRK84_C` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when maximum spatial step is small due to geometric features of computational
-  domain. Fixed timestep only.
+  domain. Fixed timestep only. 
+  Like SSPRK methods, `DGLDDRK84_C` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `DGLDDRK84_F` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when the maximum spatial step size is not constrained. Fixed timestep only.
+  Like SSPRK methods, `DGLDDRK84_F` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `HSLDDRK64` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
