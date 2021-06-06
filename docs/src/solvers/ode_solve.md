@@ -305,7 +305,7 @@ Royal Society, 2011.).
   when the maximum spatial step size is not constrained. Fixed timestep only.
   Like SSPRK methods, `DGLDDRK84_F` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `SHLDDRK64` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
-  scheme. Fixed timestep only.
+  scheme. Fixed timestep only. Like SSPRK methods, SHLDDRK64 also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
 - `ParsaniKetchesonDeconinck3S32` - 3-stage, second order (3S) low-storage scheme, optimised for for the
