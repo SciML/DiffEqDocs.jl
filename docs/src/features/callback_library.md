@@ -363,7 +363,7 @@ a fixed rate.
 ### Constructor
 
 ```julia
-PeriodicCallback(f, Δt::Number; initial_affect = true, kwargs...)
+PeriodicCallback(f, Δt::Number; initial_affect = false, kwargs...)
 ```
 
 where `f` is the function to be called periodically, `Δt` is the period,
