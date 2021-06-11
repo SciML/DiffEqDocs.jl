@@ -6,4 +6,4 @@ OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 
 [compat]
-Documenter = "0.25.0"
+Documenter = "0.27.0"
