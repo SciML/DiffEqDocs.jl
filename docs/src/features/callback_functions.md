@@ -11,7 +11,7 @@ The callback types are defined as follows. There are three primitive callback ty
 `ContinuousCallback`, `DiscreteCallback` and the `VectorContinuousCallback`. The [`ContinuousCallback`](@ref) is
 applied when a continuous condition function hits zero. This type of callback
 implements what is known in other problem solving environments as an Event. A
-[`DiscreteCallback`](@ref) is applied when its `condition` function is `true`. The [`VectorContinuousCallback`](@ref) works 
+[`DiscreteCallback`](@ref) is applied when its `condition` function is `true`. The [`VectorContinuousCallback`](@ref) works
 like a vector of `ContinuousCallbacks` and lets the user specify which callback is called when.
 
 ### ContinuousCallback
@@ -327,6 +327,188 @@ plot(sol,plotdensity=10000)
 ```
 
 ![bounce_long](../assets/bounce_long.png)
+
+#### Handling Changing Dynamics and Exactness
+
+Let's make a version of the bouncing ball where the ball sticks to the ground.
+We can do this by introducing a parameter `p` to send the velocity to zero on
+the bounce. This looks as follows:
+
+```julia
+function dynamics!(du, u, p, t)
+	du[1] = u[2]
+	du[2] = p[1] * -9.8
+end
+function floor_aff!(int)
+    int.p[1] = 0
+    int.u[2] = 0
+    @show int.u[1], int.t
+end
+floor_event = ContinuousCallback(floor_cond, floor_aff!)
+u0 = [1.0,0.0]
+p = [1.0]
+prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
+sol = solve(prob, Tsit5(), callback=floor_event)
+plot(sol)
+@show sol[end] # [4.329177480185359e-16, 0.0]
+```
+
+![sticky bounce](https://user-images.githubusercontent.com/1814174/122674462-58864100-d1a3-11eb-8946-3acb240d8d51.png)
+
+Notice that at the end, the ball is not at `0.0` like the condition would let
+you believe, but instead it's at `4.329177480185359e-16`. From the printing
+inside of the affect function, we can see that this is the value it had at the
+event time `t=0.4517539514526232`. Why did the event handling not make it exactly
+zero? If you instead would have run the simulation to
+`nextfloat(0.4517539514526232) = 0.45175395145262326`, we would see that the
+value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
+`rootfind` argument of the callback:
+
+```julia
+floor_event = ContinuousCallback(floor_cond, floor_aff!,rootfind=DiffEqBase.RightRootFind)
+u0 = [1.0,0.0]
+p = [1.0]
+prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
+sol = solve(prob, Tsit5(), callback=floor_event)
+@show sol[end] # [-1.2647055847076505e-15, 0.0]
+```
+
+What this means is that there is not 64-bit floating point number `t` such that
+the condition is zero! By default, if there is no `t` such that `condition=0`,
+then rootfinder defaults to choosing the floating point number exactly before
+the exactly before the event (`LeftRootFind`). This way manifold constraints are
+preserved by default (i.e. the ball never goes below the floor). However, if you
+require that the condition is exactly satisfied after the event, you will want
+to add such a change to the `affect!` function. For example, the error correction
+in this case is to add `int.u[1] = 0` to the `affect!`, i.e.:
+
+```julia
+function floor_aff!(int)
+    int.p[1] = 0
+    int.u[1] = 0
+    int.u[2] = 0
+    @show int.u[1], int.t
+end
+floor_event = ContinuousCallback(floor_cond, floor_aff!)
+u0 = [1.0,0.0]
+p = [1.0]
+prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
+sol = solve(prob, Tsit5(), callback=floor_event)
+@show sol[end] # [0.0,0.0]
+```
+
+and now the sticky behavior is perfect to the floating point.
+
+#### Handling Accumulation Points
+
+Now let's take a look at the bouncing ball with friction. After the bounce,
+we will send the velocity to `-v/2`. Since the velocity is halving each time,
+we should have Zeno-like behavior and see an accumulation point of bounces. We
+will use some extra parameters to count the number of bounces (to infinity) and
+find the accumulation point. Let's watch!
+
+```julia
+function dynamics!(du, u, p, t)
+	du[1] = u[2]
+	du[2] = p[1] * -9.8
+end
+floor_cond(u, t, int) = u[1]
+function floor_aff!(int)
+    int.u[2] *= -0.5
+    int.p[1] += 1
+    int.p[2] = int.t
+end
+floor_event = ContinuousCallback(floor_cond, floor_aff!)
+u0 = [1.0,0.0]
+p = [0.0,0.0]
+prob = ODEProblem{true}(dynamics!, u0, (0., 2.), p)
+sol = solve(prob, Tsit5(), callback=floor_event)
+plot(sol)
+@show p # [8.0, 1.3482031881786312]
+```
+
+![ball floor](https://user-images.githubusercontent.com/1814174/122674606-e2360e80-d1a3-11eb-9e91-51b00eee1dcc.png)
+
+From the readout we can see the ball only bounced 8 times before it went below
+the floor, what happened? What happened is floating point error. Because one
+cannot guarantee that floating point numbers exist to make the `condition=0`,
+a heuristic is used to ensure that a zero is not accidentally detected at
+`nextfloat(t)` after the simulation restarts (otherwise it would repeatly find
+the same event!). However, sooner or later the ability to detect minute floating
+point differences will crash, and what should be infinitely many bounces finally
+misses a bounce.
+
+This leads to two questions:
+
+1. How can you improve the accuracy of an accumulation calculation?
+2. How can you make it gracefully continue?
+
+For (1), note that floating point accuracy is dependent on the current `dt`. If
+you know that an accumulation point is coming, one can use `set_proposed_dt!`
+to shrink the `dt` value and help find the next bounce point. You can use
+`t - tprev` to know the length of the previous interval for this calculation.
+For this example, we can set the proposed `dt` to `(t - tprev)/10` to ensure
+an ever increasing accuracy of the check.
+
+However, at some point we will hit machine epsilon, the value where
+`t + eps(t) == t`, so we cannot measure infinitely many bounces and instead will
+be limited by the floating point accuracy of our number representation. Using
+alternative number types like
+[ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl) can allow for this
+to be done at very high accuracy, but still not infinite. Thus what we need to
+do is determine a tolerance after which we assume the accumulation has been
+reached and define the exit behavior. In this case we will say when the
+`dt<1e-12`, we are almost at the edge of Float64 accuracy
+(`eps(1.0) = 2.220446049250313e-16`), so we will change the position and
+velocity to exactly zero.
+
+With these floating point corrections in mind, the accumulation calculations
+looks as follows:
+
+```julia
+function dynamics!(du, u, p, t)
+	du[1] = u[2]
+	du[2] = p[1] * -9.8
+end
+floor_cond(u, t, int) = u[1]
+function floor_aff!(int)
+    int.u[2] *= -0.5
+    if int.dt > 1e-12
+        set_proposed_dt!(int,(int.t-int.tprev)/100)
+    else
+        int.u[1] = 0
+        int.u[2] = 0
+        int.p[1] = 0
+    end
+    int.p[2] += 1
+    int.p[3] = int.t
+end
+floor_event = ContinuousCallback(floor_cond, floor_aff!)
+u0 = [1.0,0.0]
+p = [1.0,0.0,0.0]
+prob = ODEProblem{true}(dynamics!, u0, (0., 2.), p)
+sol = solve(prob, Tsit5(), callback=floor_event)
+plot(sol)
+@show p # [0.0, 41.0, 1.355261854357056]
+```
+
+![bounce accumulation](https://user-images.githubusercontent.com/1814174/122675006-89677580-d1a5-11eb-9ba2-fd83c14dbb3e.png)
+
+With this corrected version, we see that after 41 bounces the accumulation
+point is reached at `t = 1.355261854357056`. To really see the accumulation,
+let's zoom in:
+
+```julia
+p1 = plot(sol,vars=1,tspan=(1.25,1.40))
+p2 = plot(sol,vars=1,tspan=(1.35,1.36))
+p3 = plot(sol,vars=1,tspan=(1.354,1.35526))
+p4 = plot(sol,vars=1,tspan=(1.35526,1.35526185))
+plot(p1,p2,p3,p4)
+```
+
+![bounce accumulation zoom](https://user-images.githubusercontent.com/1814174/122675034-a7cd7100-d1a5-11eb-8403-dd37a83e5aae.png)
+
+I think Zeno would be proud of our solution.
 
 ### Example 2: Terminating an Integration
 
