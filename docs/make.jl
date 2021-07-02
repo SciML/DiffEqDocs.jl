@@ -30,6 +30,7 @@ makedocs(modules=[DiffEqBase,SciMLBase,DiffEqProblemLibrary,ODEProblemLibrary,SD
            "tutorials/dae_example.md",
            "tutorials/discrete_stochastic_example.md",
            "tutorials/jump_diffusion.md",
+           "tutorials/diffusion_implicit_heat_equation.md",
            "tutorials/bvp_example.md",
            "tutorials/additional.md"
          ],
