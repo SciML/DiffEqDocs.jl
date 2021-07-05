@@ -29,7 +29,7 @@ systems (`>1000 ODEs?`), consider using `lsoda`.
 For non-stiff problems, the native OrdinaryDiffEq.jl algorithms are vastly
 more efficient than the other choices. For most non-stiff
 problems, we recommend `Tsit5`. When more robust error control is required,
-`BS5` is a good choice. If at moderate tolerances an the interpolation error
+`BS5` is a good choice. If at moderate tolerances, the interpolation error
 is very important, consider the `OwrenZen5` method. For fast solving at higher
 tolerances, we recommend `BS3` (or `OwrenZen3` if the interpolation error is
 important). For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
