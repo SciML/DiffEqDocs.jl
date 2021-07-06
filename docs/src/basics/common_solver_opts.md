@@ -158,7 +158,7 @@ explanations of the timestepping algorithms, see the
   are calculated. Required are two dispatches: one dispatch for the state variable
   and the other on the elements of the state variable (scalar norm).
   Defaults are package-dependent.
-* `controller`: Possible examples are [`StandardIController`](@ref),
+* `controller`: Possible examples are [`IController`](@ref),
   [`PIController`](@ref), [`PIDController`](@ref), [`PredictiveController`](@ref).
   Default is algorithm-dependent.
 * `gamma`: The risk-factor γ in the q equation for adaptive timestepping
