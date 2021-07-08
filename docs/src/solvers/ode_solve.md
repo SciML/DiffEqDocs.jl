@@ -175,7 +175,7 @@ Example usage:
 
 ```julia
 alg = Tsit5()
-solve(prob,alg)  
+solve(prob,alg)
 ```
 
 Additionally, the following algorithms have a lazy interpolant:
@@ -233,7 +233,7 @@ requires that simultaneous calls to `f` are thread-safe.
 - `SSPRK432` - A  3/2 adaptive strong stability preserving (SSP) method with
   five stages (SSP coefficient 2, free 2nd order SSP interpolant).
 - `SSPRK43` - A  3/2 adaptive strong stability preserving (SSP) method with
-  five stages (SSP coefficient 2, free 2nd order SSP interpolant). The main method 
+  five stages (SSP coefficient 2, free 2nd order SSP interpolant). The main method
   is the same as `SSPRK432`, but the embedded method has a larger stability region.
 - `SSPRK932` - A  3/2 adaptive strong stability preserving (SSP) method with
   nine stages (SSP coefficient 6, free 3rd order Hermite interpolant).
@@ -251,9 +251,9 @@ requires that simultaneous calls to `f` are thread-safe.
 The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
 All explicit SSP methods take two optional arguments
 `SSPXY(stage_limiter!, step_limiter!)`, where `stage_limiter!` and `step_limiter`
-are functions taking arguments of the form `limiter!(u, f, p, t)`. Here, `u` is the
+are functions taking arguments of the form `limiter!(u, integrator, p, t)`. Here, `u` is the
 new solution value (updated inplace) after an explicit Euler stage / the whole
-time step , `f` the time derivative function (semidiscretisation for PDEs), and
+time step , `integrator` the ODE integrator, and
 `t` the current time. These limiters can be used to enforce physical constraints,
 e.g. the positivity preserving limiters of Zhang and Shu (Zhang, Xiangxiong, and
 Chi-Wang Shu. "Maximum-principle-satisfying and positivity-preserving high-order
@@ -264,14 +264,14 @@ Royal Society, 2011.).
 #### Low-Storage Methods
 
 - `ORK256` - 5-stage, second order low-storage method for wave propogation
-  equations. Fixed timestep only. Like SSPRK methods, ORK256 also takes optional 
-  arguments `stage_limiter!`, `step_limiter!`, where `stage_limiter!` and 
-  `step_limiter!` are functions of the form `limiter!(u, f, p, t)`. 
+  equations. Fixed timestep only. Like SSPRK methods, ORK256 also takes optional
+  arguments `stage_limiter!`, `step_limiter!`, where `stage_limiter!` and
+  `step_limiter!` are functions of the form `limiter!(u, integrator, p, t)`.
 - `SSPRK53_2N1` and `SSPRK53_2N2` - 5-stage, third order low-storage methods
   with large SSP coefficients. (SSP coefficient 2.18 and 2.15, free 3rd order
   Hermite interpolant). Fixed timestep only.
 - `CarpenterKennedy2N54` - The five-stage, fourth order low-storage method of Carpenter and Kennedy
-  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties). 
+  (free 3rd order Hermite interpolant). Fixed timestep only. Designed for hyperbolic PDEs (stability properties).
   Like SSPRK methods, `CarpenterKennedy2N54` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `NDBLSRK124` - 12-stage, fourth order low-storage method with optimized
   stability regions for advection-dominated problems. Fixed timestep only.
@@ -291,13 +291,13 @@ Royal Society, 2011.).
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when maximum spatial step is small due to geometric features of computational
-  domain. Fixed timestep only. 
+  domain. Fixed timestep only.
   Like SSPRK methods, `DGLDDRK73_C` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `DGLDDRK84_C` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
   applied to wave propagation problems, optimized for PDE discretizations
   when maximum spatial step is small due to geometric features of computational
-  domain. Fixed timestep only. 
+  domain. Fixed timestep only.
   Like SSPRK methods, `DGLDDRK84_C` also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `DGLDDRK84_F` - 8-stage, fourth order low-storage low-dissipation,
   low-dispersion scheme for discontinuous Galerkin space discretizations
@@ -419,15 +419,15 @@ These methods require a choice of `dt`.
 - `AB3` - The 3-step third order multistep method. Ralston's Second Order Method
   is used to calculate starting values.
 - `AB4` - The 4-step fourth order multistep method. Runge-Kutta method of order
-  4 is used to calculate starting values.  
+  4 is used to calculate starting values.
 - `AB5` - The 5-step fifth order multistep method. Runge-Kutta method of order
-  4 is used to calculate starting values.  
+  4 is used to calculate starting values.
 - `ABM32` - It is third order method. In `ABM32`, `AB3` works as predictor and
   Adams Moulton 2-steps method works as Corrector. Ralston's Second Order Method
-  is used to calculate starting values.  
+  is used to calculate starting values.
 - `ABM43` - It is fourth order method. In `ABM43`, `AB4` works as predictor and
   Adams Moulton 3-steps method works as Corrector. Runge-Kutta method of order
-  4 is used to calculate starting values.  
+  4 is used to calculate starting values.
 - `ABM54` - It is fifth order method. In `ABM54`, `AB5` works as predictor and
   Adams Moulton 4-steps method works as Corrector. Runge-Kutta method of order 4
   is used to calculate starting values.
@@ -435,15 +435,15 @@ These methods require a choice of `dt`.
 #### Adaptive step size Adams explicit Methods
 
 - `VCAB3` - The 3rd order Adams method. Bogacki-Shampine 3/2 method is used to
-  calculate starting values.  
+  calculate starting values.
 - `VCAB4` - The 4th order Adams method. Runge-Kutta 4 is used to calculate
-  starting values.  
+  starting values.
 - `VCAB5` - The 5th order Adams method. Runge-Kutta 4 is used to calculate
   starting values.
 - `VCABM3` - The 3rd order Adams-Moulton method. Bogacki-Shampine 3/2 method is used
-  to calculate starting values.  
+  to calculate starting values.
 - `VCABM4` - The 4th order Adams-Moulton method. Runge-Kutta 4 is used to calculate
-  starting values.  
+  starting values.
 - `VCABM5` - The 5th order Adams-Moulton method. Runge-Kutta 4 is used to calculate
   starting values.
 - `VCABM` - An adaptive order adaptive time Adams Moulton method. It uses an
@@ -494,7 +494,7 @@ These methods require a choice of `dt`.
 
 - `PDIRK44` - A 2 processor 4th order diagonally non-adaptive implicit method.
 
-These methods also have option `nlsolve` same as SDIRK methods. These methods also need `f` to be thread safe. It parallelises the `nlsolve` calls inside the method.  
+These methods also have option `nlsolve` same as SDIRK methods. These methods also need `f` to be thread safe. It parallelises the `nlsolve` calls inside the method.
 
 #### Rosenbrock Methods
 
@@ -874,7 +874,7 @@ Example:
 CVODE_BDF() # BDF method using Newton + Dense solver
 CVODE_BDF(method=:Functional) # BDF method using Functional iterations
 CVODE_BDF(linear_solver=:Band,jac_upper=3,jac_lower=3) # Banded solver with nonzero diagonals 3 up and 3 down
-CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method                                   
+CVODE_BDF(linear_solver=:BCG) # Biconjugate gradient method
 ```
 
 The main options for `ARKODE` are the choice between explicit and implicit and
