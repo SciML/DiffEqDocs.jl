@@ -181,7 +181,7 @@ IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
     use_linesearch_ic = true,
     max_convergence_failures = 10,
     init_all = false,
-    prec = nothing, psetup = nothing, prec_side = 0)
+    prec = nothing, psetup = nothing)
 ```
 
 See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf)
@@ -191,8 +191,8 @@ implicit equation), `init_all=false` means that the algebraic variables and deri
 be modified in order to satisfy the DAE. If `init_all=true`, all initial conditions will be
 modified to satify the DAE.
 
-Note that here `prec` is a preconditioner function
-`prec(z,r,p,t,y,fy,gamma,delta,lr)` where:
+Note that here `prec` is a (left) preconditioner function
+`prec(z,r,p,t,y,fy,gamma,delta)` where:
 
 - `z`: the computed output vector
 - `r`: the right-hand side vector of the linear system
@@ -201,8 +201,6 @@ Note that here `prec` is a preconditioner function
 - `du`: the current value of `f(u,p,t)`
 - `gamma`: the `gamma` of `W = M - gamma*J`
 - `delta`: the iterative method tolerance
-- `lr`: a flag for whether `lr=1` (left) or `lr=2` (right)
-  preconditioning
 
 and `psetup` is the preconditioner setup function for pre-computing Jacobian
 information. Where:
