@@ -178,7 +178,7 @@ Another example of a `DiscreteCallback` is the [control problem demonstrated on 
 
 MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
 In this example we will implement a callback which will add this behavior to
-any JuliaDiffEq solver which implments the `integrator` and callback interface.
+any JuliaDiffEq solver which implements the `integrator` and callback interface.
 
 The algorithm is as follows. The default value is set to start at `1e-6`, though
 we will give the user an option for this choice. Then as the simulation progresses,
