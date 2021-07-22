@@ -29,7 +29,7 @@ allows for a Bayesian estimation of differential equations (used in conjunction
 with the high-level package DiffEqBayes.jl). For more examples on combining
 Turing.jl with DiffEqBayes.jl, see the documentation below. It is important
 to note that Turing.jl can also perform Bayesian estimation without relying on
-DiffEqBayes.jl (for an example, consult [this](https://turing.ml/stable/tutorials/10-bayesiandiffeq/) tutorial).
+DiffEqBayes.jl (for an example, consult [this](https://turing.ml/stable/tutorials/10-bayesian-differential-equations/) tutorial).
 
 ### DataDrivenDiffEq.jl
 
