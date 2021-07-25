@@ -193,9 +193,9 @@ via the commands:
 
 ```julia
 using Pkg
-pkg"add https://github.com/SciML/DiffEqTutorials.jl"
-using DiffEqTutorials
-DiffEqTutorials.open_notebooks()
+pkg"add https://github.com/SciML/SciMLTutorials.jl"
+using SciMLTutorials
+SciMLTutorials.open_notebooks()
 ```
 
 Or you can view the webpages for the rendered tutorials at the links found in the repository.
