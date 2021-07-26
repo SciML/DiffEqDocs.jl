@@ -316,13 +316,13 @@ user, then this section of the docs is for you.
 
 Local forward sensitivity analysis gives a solution along with a timeseries of
 the sensitivities. Thus if one wishes to have a derivative at every possible
-time point, directly utilizing the `ODELocalSensitivityProblem` can be more
+time point, directly utilizing the `ODEForwardSensitivityProblem` can be more
 efficient.
 
 ### ODEForwardSensitivityProblem Syntax
 
-`ODELocalSensitivityProblem` is similar to an `ODEProblem`, but takes an
-`AbstractSensitivityAlgorithm` that describes how to append the forward sensitivity
+`ODEForwardSensitivityProblem` is similar to an `ODEProblem`, but takes an
+`AbstractForwardSensitivityAlgorithm` that describes how to append the forward sensitivity
 equation calculation to the time evolution to simultaneously compute the derivative
 of the solution with respect to parameters.
 
@@ -346,9 +346,9 @@ extract_local_sensitivities(sol, t::Union{Number,AbstractVector}, asmatrix::Val=
 For information on the mathematics behind these calculations, consult
 [the sensitivity math page](@ref sensitivity_math)
 
-### Example using an ODELocalSensitivityProblem
+### Example using an ODEForwardSensitivityProblem
 
-To define a sensitivity problem, simply use the `ODELocalSensitivityProblem` type
+To define a sensitivity problem, simply use the `ODEForwardSensitivityProblem` type
 instead of an ODE type. For example, we generate an ODE with the sensitivity
 equations attached for the Lotka-Volterra equations by:
 
@@ -359,7 +359,7 @@ function f(du,u,p,t)
 end
 
 p = [1.5,1.0,3.0]
-prob = ODELocalSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)
+prob = ODEForwardSensitivityProblem(f,[1.0;1.0],(0.0,10.0),p)
 ```
 
 This generates a problem which the ODE solvers can solve:
