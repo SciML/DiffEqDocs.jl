@@ -344,7 +344,7 @@ GMRES linear solver.
 
 ```julia
 @btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) 10.928 s (1327264 allocations: 59.92 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
 ```
 
 For more information on linear solver choices, see the
