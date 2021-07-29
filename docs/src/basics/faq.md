@@ -494,7 +494,7 @@ We could use `get_tmp` and `dualcache` functions from `DiffEqBase` to solve this
 using LinearAlgebra, OrdinaryDiffEq
 using DiffEqBase: get_tmp, dualcache
 function foo(du, u, (A, tmp), t)
-    tmp = DiffEqBase.get_tmp(tmp, u)
+    tmp = DiffEqBase.get_tmp(tmp, first(u)*t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
