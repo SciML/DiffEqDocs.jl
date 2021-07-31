@@ -488,20 +488,18 @@ sol = solve(prob,Rosenbrock23(autodiff=false))
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
 calculate Jacobians.
 
-We could use `get_tmp` and `dualcache` functions from `DiffEqBase` to solve this issue, e.g.,
+We could use `get_tmp` and `dualcache` functions from 
+[PreallocationTools.jl](https://github.com/SciML/PreallocationTools.jl) 
+to solve this issue, e.g.,
 
 ```julia
-using LinearAlgebra, OrdinaryDiffEq
-using DiffEqBase: get_tmp, dualcache
+using LinearAlgebra, OrdinaryDiffEq, PreallocationTools
 function foo(du, u, (A, tmp), t)
-    tmp = DiffEqBase.get_tmp(tmp, first(u)*t)
+    tmp = get_tmp(tmp, first(u)*t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-chunk_size = 5
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5), Val{chunk_size})))
-solve(prob, TRBDF2(chunk_size=chunk_size))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5))))
+solve(prob, TRBDF2()
 ```
-
-Note that one can adjust the chunk size by `DiffEqBase.dualcache(du, Val{N})`, where `N` is the chunk size.
