@@ -4,6 +4,9 @@ This page is a compilation of frequently asked questions and answers.
 
 ## [Stability and Divergence of ODE Solves](@id faq_stability)
 
+For guidelines on debugging ODE solve issues, see 
+[PSA: How to help yourself debug differential equation solving issues](https://discourse.julialang.org/t/psa-how-to-help-yourself-debug-differential-equation-solving-issues/62489).
+
 #### My model is reporting unstable results. What can I do?
 
 First of all, don't panic. You may have experienced one of the following warnings:
