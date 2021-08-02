@@ -172,7 +172,85 @@ Notice that this version will automatically set the `tstops` for you.
 
 ### Example 2: A Control Problem
 
-Another example of a `DiscreteCallback` is the [control problem demonstrated on the DiffEq-specific arrays page](@ref control_problem).
+Another example of a `DiscreteCallback` is a control problem switching
+parameters. Our parameterized ODE system is as follows:
+
+Our ODE function will use this field as follows:
+
+```julia
+function f(du,u,p,t)
+    du[1] = -0.5*u[1] + u.f1
+    du[2] = -0.5*u[2]
+end
+```
+
+Now we will setup our control mechanism. It will be a simple setup which uses
+set timepoints at which we will change `p`. At `t=5.0` we will want to increase
+the value of `p`, and at `t=8.0` we will want to decrease the value of `p`. Using
+the [`DiscreteCallback` interface](@ref discrete_callback), we code these conditions
+as follows:
+
+```julia
+const tstop1 = [5.]
+const tstop2 = [8.]
+
+
+function condition(u,t,integrator)
+  t in tstop1
+end
+
+function condition2(u,t,integrator)
+  t in tstop2
+end
+```
+
+Now we have to apply an effect when these conditions are reached. When `condition`
+is hit (at `t=5.0`), we will increase `p` to 1.5. When `condition2` is reached,
+we will decrease `p` to `-1.5`. This is done via the functions:
+
+```julia
+function affect!(integrator)
+  integrator.p = 1.5
+end
+
+function affect2!(integrator)
+  integrator.p = -1.5
+end
+```
+
+With these functions we can build our callbacks:
+
+```julia
+save_positions = (true,true)
+
+cb = DiscreteCallback(condition, affect!, save_positions=save_positions)
+
+save_positions = (false,true)
+
+cb2 = DiscreteCallback(condition2, affect2!, save_positions=save_positions)
+
+cbs = CallbackSet(cb,cb2)
+```
+
+Now we define our initial condition. We will start at `[10.0;10.0]` with `p=0.0`.
+
+```julia
+u0 = [10.0;10.0]
+p = 0.0
+prob = ODEProblem(f,u0,(0.0,10.0),p)
+```
+
+Lastly we solve the problem. Note that we must pass `tstop` values of `5.0` and
+`8.0` to ensure the solver hits those timepoints exactly:
+
+```julia
+const tstop = [5.;8.]
+sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
+```
+
+![data_array_plot](../assets/data_array.png)
+
+It's clear from the plot how the controls affected the outcome.
 
 ### Example 3: AutoAbstol
 
