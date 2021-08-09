@@ -230,9 +230,9 @@ Notice that this does not use the interpolation. When not using the plot recipe,
 the interpolation must be done manually. For example:
 
 ```julia
-n = 100 #number of timepoints
+n = 101 #number of timepoints
 ts = range(0, stop=1, length=n)
 plot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))
 ```
 
-is the phase space using values `0.001` apart in time.
+is the phase space using values `0.01` apart in time.
