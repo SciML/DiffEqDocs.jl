@@ -236,6 +236,10 @@ the definition of the methods.
   solver. Currently fails.
 - `SensitivityADPassThrough()`: Ignores all adjoint definitions and
   proceeds to do standard AD through the `solve` functions.
+- `ForwardLSS()`, `AdjointLSS()`, and `NILSS(nseg,nstep)`: Implementation of
+  shadowing methods for chaotic systems with a long-time averaged objective. See
+  the [sensitivity analysis for chaotic systems (shadowing methods) section](@ref shadowing_methods)
+  for more details.
 
 The `ReverseDiffAdjoint()`, `TrackerAdjoint()`, `ZygoteAdjoint()`, and `SensitivityADPassThrough()` algorithms all offer differentiate-through-the-solver adjoints, each based on their respective automatic differentiation packages. If you're not sure which to use, `ReverseDiffAdjoint()` is generally a stable and performant best if using the CPU, while `TrackerAdjoint()` is required if you need GPUs. Note that `SensitivityADPassThrough()` is more or less an internal implementation detail. For example, `ReverseDiffAdjoint()` is implemented by invoking `ReverseDiff`'s AD functionality on `solve(...; sensealg=SensitivityADPassThrough())`.
 
@@ -697,7 +701,7 @@ Thus one should check the stability of the backsolve on their type of problem be
 enabling this method. Additionally, using checkpointing with backsolve can be a
 low memory way to stabilize it.
 
-## Sensitivity Analysis for chaotic systems (shadowing methods)
+## Sensitivity analysis for chaotic systems (shadowing methods)(@id shadowing_methods)
 
 Let us define the instantaneous objective ``g(u,p)`` which depends on the state `u`
 and the parameter `p` of the differential equation. Then, if the objective is a
