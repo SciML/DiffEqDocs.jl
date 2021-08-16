@@ -697,6 +697,86 @@ Thus one should check the stability of the backsolve on their type of problem be
 enabling this method. Additionally, using checkpointing with backsolve can be a
 low memory way to stabilize it.
 
+## Sensitivity Analysis for chaotic systems (shadowing methods)
+
+Let us define the instantaneous objective ``g(u,p)`` which depends on the state `u`
+and the parameter `p` of the differential equation. Then, if the objective is a
+long-time average quantity
+```math
+\langle g \rangle_∞ = \lim_{T \rightarrow ∞} \langle g \rangle_T,
+```
+where
+```math
+\langle g \rangle_T = \frac{1}{T} \int_0^T g(u,s) \text{d}t,
+```
+under the assumption of ergodicity, ``\langle g \rangle_∞`` only depends on `p`.
+
+In the case of chaotic systems, the trajectories diverge with ``O(1)`` error and one
+finds that the average derivative is not the derivative of the average. "Traditional"
+forward and adjoint sensitivity methods also diverge because the tangent space
+diverges with a rate given by the Lyapunov exponent.
+
+Shadowing methods use renormalization to accurately compute derivatives w.r.t. the
+long-time average quantities. The following `sensealg` choices exist
+
+
+- `ForwardLSS(;alpha=CosWindowing(),ADKwargs...)`: An implementation of the forward
+  [least square shadowing](https://arxiv.org/abs/1204.0159) method. For `alpha`,
+  one can choose between two different windowing options, `CosWindowing` (default)
+  and `Cos2Windowing`, and `alpha::Number` which corresponds to the weight of the
+  time dilation term in `ForwardLSS`.
+- `AdjointLSS(;alpha=10.0,ADKwargs...)`: An implementation of the adjoint-mode
+  [least square shadowing](https://arxiv.org/abs/1204.0159) method. `alpha`
+  controls the weight of the time dilation term in `AdjointLSS`.
+- `NILSS(nseg, nstep; rng = Xorshifts.Xoroshiro128Plus(rand(UInt64)), ADKwargs...)`:  
+  An implementation of the [non-intrusive least squares shadowing](https://arxiv.org/abs/1611.00880)
+  method. `nseg` is the number of segments. `nstep` is the number of steps per
+  segment.
+
+Recommendation: Since the computational and memory costs of `NILSS()` scale with
+the number of positive (unstable) Lyapunov, it is typically less expensive than
+`ForwardLSS()`. `AdjointLSS()` is favorable for a large number of system parameters.
+
+As an example, for the Lorenz system with `g(u,p,t) = u[3]`, i.e., the ``z`` coordinate,
+as the instantaneous objective, we can use the direct interface by passing `ForwardLSS`
+as the `sensealg`:
+
+```julia
+function lorenz!(du,u,p,t)
+  du[1] = p[1]*(u[2]-u[1])
+  du[2] = u[1]*(p[2]-u[3]) - u[2]
+  du[3] = u[1]*u[2] - p[3]*u[3]
+end
+
+p = [10.0, 28.0, 8/3]
+
+tspan_init = (0.0,30.0)
+tspan_attractor = (30.0,50.0)
+u0 = rand(3)
+prob_init = ODEProblem(lorenz!,u0,tspan_init,p)
+sol_init = solve(prob_init,Tsit5())
+prob_attractor = ODEProblem(lorenz!,sol_init[end],tspan_attractor,p)
+
+g(u,p,t) = u[end]
+
+function G(p)
+  _prob = remake(prob_attractor,p=p)
+  _sol = solve(_prob,Vern9(),abstol=1e-14,reltol=1e-14,saveat=0.01,sensealg=ForwardLSS(alpha=10),g=g)
+  sum(getindex.(_sol.u,3))
+end
+dp1 = Zygote.gradient(p->G(p),p)
+```
+
+Alternatively, we can define the `ForwardLSSProblem` and solve it
+via `shadow_forward` as follows:
+
+```julia
+lss_problem = ForwardLSSProblem(sol_attractor, ForwardLSS(alpha=10), g)
+resfw = shadow_forward(lss_problem)
+@test res ≈ dp1[1] atol=1e-10
+```
+
+
 ## Second Order Sensitivity Analysis via `second_order_sensitivities` (Experimental)
 
 Second order sensitivity analysis is used for the fast calculation of Hessian
