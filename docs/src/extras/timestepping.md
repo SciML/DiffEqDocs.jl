@@ -113,7 +113,7 @@ q
 
 In this case, `niters` is the number of Newton iterations which was required in
 the most recent step of the algorithm. Note that these values are used differently
-depending on acceptance and rejectance. When the step is accepted, the
+depending on acceptance and rejection. When the step is accepted, the
 following logic is applied:
 
 ```julia
