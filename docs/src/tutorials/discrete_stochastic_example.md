@@ -1,4 +1,4 @@
-# Continuous-Time Jump Processes 
+# Continuous-Time Jump Processes and Gillespie Methods
 
 In this tutorial we will describe how to define and simulate continuous-time
 jump processes, also known in biological fields as stochastic chemical kinetics
@@ -286,7 +286,7 @@ jump_prob = JumpProblem(prob, Direct(), jump, jump2)
 Here `Direct()` indicates that we will determine the random times and types of
 jumps that occur using [Gillespie's Direct stochastic simulation algorithm
 (SSA)](https://doi.org/10.1016/0021-9991(76)90041-3). See [Constant Rate Jump
-Aggregators](@ref) below for other supported SSAs.
+Aggregators](@ref) for other supported SSAs.
 
 We now have a problem that can be evolved in time using the DiffEqJump solvers.
 Since our model is a pure jump process (no continuously-varying components), we
@@ -304,7 +304,8 @@ there exists a plot recipe, which we can plot with:
 ```julia
 using Plots; plot(sol)
 ```
-![SIR Solution](../assets/SIR.svg)
+
+![SIR Solution](../assets/SIR.png)
 
 Note, in systems with more than a few jumps (more than ~10), it can be
 advantageous to use more sophisticated SSAs than `Direct`. For such systems it
@@ -335,9 +336,9 @@ both must be constant other than changes due to some other `ConstantRateJump` or
 these rates only change when `u[1]` or `u[2]` is changed, and `u[1]` and `u[2]`
 only change when one of the jumps occur, this setup is valid. However, a rate of
 `t*p[1]*u[1]*u[2]` would not be valid because the rate would change during the
-interval, as would `p[2]*u[1]*u[4]` when `u[4]` is the solution to a
-continuous problem such as an ODE or SDE. Thus one must be careful about to
-follow this rule when choosing rates.
+interval, as would `p[2]*u[1]*u[4]` when `u[4]` is the solution to a continuous
+problem such as an ODE or SDE. Thus one must be careful to follow this rule when
+choosing rates.
 
 If your problem must have the rates depend on a continuously changing quantity,
 you need to use the `VariableRateJump`.
@@ -353,7 +354,7 @@ the case, a substantial performance benefit may be gained by using
 supports discrete events, and does not allow simultaneous coupled ODEs or SDEs.
 It is, however, very efficient for pure jump problems.
 
-## Reducing Memory Use: Controlling Saving Behavior
+## [Reducing Memory Use: Controlling Saving Behavior](@id save_positions_docs)
 
 Note that jumps act via the callback interface which defaults to saving at each
 event. The reason is because this is required in order to accurately resolve
@@ -415,12 +416,19 @@ net_stoich =
 ]
 mass_act_jump = MassActionJump(reactant_stoich, net_stoich; param_idxs=rateidxs)
 ```
+Notice, one typically should define one `MassActionJump` that encodes each
+possible jump that can be represented via a mass action reaction. This is in
+contrast to `ConstantRateJump`s or `VariableRateJump`s where separate instances
+are created for each distinct jump type.
+
 Just like for `ConstantRateJumps`, to then simulate the system we create
 a `JumpProblem` and call `solve`:
 ```julia
 jump_prob = JumpProblem(prob, Direct(), mass_act_jump)
 sol = solve(jump_prob, SSAStepper())
 ```
+
+For more details about MassActionJumps see [Defining a Mass Action Jump](@ref). 
 
 Note, for chemical reaction systems, Catalyst.jl automatically groups reactions
 into their optimal jump representation.
@@ -523,6 +531,9 @@ sol = solve(jump_prob,SRIW1())
 
 ![sde_gillespie](../assets/sde_gillespie.png)
 
+For more details about `VariableRateJump`s see [Defining a Variable Rate
+Jump](@ref).
+
 ## RegularJumps and Tau-Leaping
 
 The previous parts described how to use `ConstantRateJump`s, `MassActionJump`s,
@@ -579,20 +590,38 @@ sol = solve(jump_prob,SimpleTauLeaping();dt=1.0)
 
 ## FAQ
 
-#### *1. When running many consecutive simulations, for example within an `EnsembleProblem` or loop, how can I update `JumpProblem`s?*
+#### *1. My simulation is really slow and/or using a lot of memory, what can I do?*
+To reduce memory use, use `save_positions=(false,false)` in the `JumpProblem`
+constructor as described [earlier](@ref save_positions_docs) to turn off saving
+the system state before and after every jump. Combined with use of `saveat` in
+the call to `solve` this can dramatically reduce memory usage.
+
+While `Direct` is often fastest for systems with 10 or less `ConstantRateJump`s
+or `MassActionJump`s, if your system has many jumps or one jump occurs most
+frequently, other stochastic simulation algorithms may be faster. See [Constant
+Rate Jump Aggregators](@ref) and the subsequent sections there for guidance on
+choosing different SSAs (called aggregators in DiffEqJump).
+
+#### *2. When running many consecutive simulations, for example within an `EnsembleProblem` or loop, how can I update `JumpProblem`s?*
 
 In [Remaking `JumpProblem`s](@ref) we show how to modify parameters, the initial
 condition, and other components of a generated `JumpProblem`. This can be useful
 when trying to call `solve` many times while avoiding reallocations of the
 internal aggregators for each new parameter value or initial condition.
 
-#### *2. How do I use callbacks with `ConstantRateJump` or `MassActionJump` systems?*
+#### *3. How do I use callbacks with `ConstantRateJump` or `MassActionJump` systems?*
 
-Callbacks can be used with `ConstantRateJump`s and `MassActionJump`s. When solving a pure jump system with `SSAStepper`, only discrete callbacks can be used (otherwise a different time stepper is needed). 
+Callbacks can be used with `ConstantRateJump`s and `MassActionJump`s. When
+solving a pure jump system with `SSAStepper`, only discrete callbacks can be
+used (otherwise a different time stepper is needed). 
 
-*Note, when modifying `u` or `p` within a callback, you must call `reset_aggregated_jumps!(integrator)` after making updates.* This ensures that the underlying jump simulation algorithms know to reinitialize their internal data structures. Leaving out this call will lead to incorrect behavior!
+*Note, when modifying `u` or `p` within a callback, you must call
+`reset_aggregated_jumps!(integrator)` after making updates.* This ensures that
+the underlying jump simulation algorithms know to reinitialize their internal
+data structures. Leaving out this call will lead to incorrect behavior!
 
-A simple example that uses a `MassActionJump` and changes the parameters at a specified time in the simulation using a `DiscreteCallback` is
+A simple example that uses a `MassActionJump` and changes the parameters at a
+specified time in the simulation using a `DiscreteCallback` is
 ```julia
 using DiffEqJump
 rs = [[1 => 1],[2=>1]]
@@ -611,11 +640,12 @@ function paffect!(integrator)
 end
 sol = solve(jprob, SSAStepper(), tstops=[20.0], callback=DiscreteCallback(pcondit,paffect!))
 ```
-Here at time `20.0` we turn off production of `u[2]` while activating production of `u[1]`, giving
+Here at time `20.0` we turn off production of `u[2]` while activating production
+of `u[1]`, giving
 
 ![callback_gillespie](../assets/callback_gillespie.png)
 
-#### *3. How can I define collections of many different jumps and pass them to `JumpProblem`?*
+#### *4. How can I define collections of many different jumps and pass them to `JumpProblem`?*
 
 We can use `JumpSet`s to collect jumps together, and then pass them into
 `JumpProblem`s directly. For example, using the `MassActionJump` and
@@ -626,7 +656,7 @@ jump_prob = JumpProblem(prob, Direct(), jset)
 sol = solve(jump_prob, SSAStepper())
 ```
 
-#### *4. How can I set the random number generator used in the jump process sampling algorithms (SSAs)?*
+#### *5. How can I set the random number generator used in the jump process sampling algorithms (SSAs)?*
 
 Random number generators can be passed to `JumpProblem` via the `rng` keyword
 argument. Continuing the previous example:
@@ -638,3 +668,13 @@ jprob = JumpProblem(dprob, Direct(), maj, rng=Xorshifts.Xoroshiro128Star(rand(UI
 ```
 uses the `Xoroshiro128Star` generator from
 [RandomNumbers.jl](https://github.com/JuliaRandom/RandomNumbers.jl).
+
+#### *6. What are these aggregators and aggregations in DiffEqJump?*
+
+DiffEqJump provides a variety of methods for sampling the time the next
+`ConstantRateJump` or `MassActionJump` occurs, and which jump type happens at
+that time. These methods are examples of stochastic simulation algorithms
+(SSAs), also known as Gillespie methods, Doob's method, or Kinetic Monte Carlo
+methods. In the DiffEqJump terminology we call such methods "aggregators", and
+the cache structures that hold their basic data "aggregations". See [Constant
+Rate Jump Aggregators](@ref) for a list of the available SSA aggregators.
