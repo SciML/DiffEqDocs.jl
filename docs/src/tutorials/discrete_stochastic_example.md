@@ -650,10 +650,26 @@ of `u[1]`, giving
 We can use `JumpSet`s to collect jumps together, and then pass them into
 `JumpProblem`s directly. For example, using the `MassActionJump` and
 `ConstantRateJump` defined earlier we can write
-```
+
+```julia
 jset = JumpSet(mass_act_jump, birth_jump)
 jump_prob = JumpProblem(prob, Direct(), jset)
 sol = solve(jump_prob, SSAStepper())
+```
+
+If you have many jumps in tuples or vectors it is easiest to use the keyword
+argument-based constructor:
+```julia
+cj1 = ConstantRateJump(rate1,affect1!)
+cj2 = ConstantRateJump(rate2,affect2!)
+cjvec = [cj1,cj2]
+
+vj1 = VariableRateJump(rate3,affect3!)
+vj2 = VariableRateJump(rate4,affect4!)
+vjtuple = (vj1,vj2)
+
+jset = JumpSet(; constant_jumps=cjvec, variable_jumps=vjtuple, 
+                 massaction_jumps=mass_act_jump)
 ```
 
 #### *5. How can I set the random number generator used in the jump process sampling algorithms (SSAs)?*
@@ -678,3 +694,32 @@ that time. These methods are examples of stochastic simulation algorithms
 methods. In the DiffEqJump terminology we call such methods "aggregators", and
 the cache structures that hold their basic data "aggregations". See [Constant
 Rate Jump Aggregators](@ref) for a list of the available SSA aggregators.
+
+#### *7. How should jumps be ordered in dependency graphs?*
+Internally, DiffEqJump SSAs (aggregators) order all `MassActionJump`s first,
+then all `ConstantRateJumps`. i.e. in the example
+
+```julia
+using DiffEqJump
+rs = [[1 => 1],[2=>1]]
+ns = [[1 => -1, 2 => 1],[1=>1,2=>-1]]
+p  = [1.0,0.0]
+maj = MassActionJump(rs, ns; param_idxs=[1,2])
+rate1(u,p,t) = u[1]
+function affect1!(integrator) 
+  u[1] -= 1
+end
+cj1 = ConstantRateJump(rate1,affect1)
+rate2(u,p,t) = u[2]
+function affect2!(integrator)
+  u[2] -= 1
+end 
+cj2 = ConstantRateJump(rate2,affect2)
+jset = JumpSet(; constant_jumps=[cj1,cj2], massaction_jump=maj)
+```
+The four jumps would be ordered by the first jump in `maj`, the second jump in
+`maj`, `cj1`, and finally `cj2`. Any user-generated dependency graphs should
+then follow this ordering when assigning an integer id to each jump. 
+
+See also [Constant Rate Jump Aggregators Requiring Dependency Graphs](@ref) for
+more on dependency graphs needed for the various SSAs.

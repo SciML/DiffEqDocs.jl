@@ -229,16 +229,20 @@ will build a problem where the constant rate jumps are solved using Gillespie's
 Direct SSA method.
 
 ## Constant Rate Jump Aggregators Requiring Dependency Graphs
-Italicized constant rate jump aggregators require the user to pass a dependency graph to `JumpProblem`. `DirectCR`, `NRM` and `SortingDirect` require a jump-jump dependency graph, passed through the named parameter `dep_graph`. i.e.
+Italicized constant rate jump aggregators require the user to pass a dependency
+graph to `JumpProblem`. `DirectCR`, `NRM` and `SortingDirect` require a
+jump-jump dependency graph, passed through the named parameter `dep_graph`. i.e.
 ```julia
 JumpProblem(prob,DirectCR(),jump1,jump2; dep_graph=your_dependency_graph)
 ```
 For systems with only `MassActionJump`s, or those generated from a
-[Catalyst](https://github.com/SciML/Catalyst.jl) `reaction_network`, this
-graph will be auto-generated. Otherwise you must construct the dependency graph
+[Catalyst](https://github.com/SciML/Catalyst.jl) `reaction_network`, this graph
+will be auto-generated. Otherwise you must construct the dependency graph
 manually. Dependency graphs are represented as a `Vector{Vector{Int}}`, with the
 `i`th vector containing the indices of the jumps for which rates must be
-recalculated when the `i`th jump occurs.
+recalculated when the `i`th jump occurs. Internally, all `MassActionJump`s are
+ordered before `ConstantRateJump`s (with the latter internally ordered in the
+same order they were passed in).
 
 `RSSA` and `RSSACR` require two different types of dependency graphs, passed
 through the following `JumpProblem` kwargs:
