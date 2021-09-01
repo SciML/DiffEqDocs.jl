@@ -133,7 +133,7 @@ function is created. For example, for an LU-Factorization, we would like to use
 using LinearAlgebra
 function linsolve!(::Type{Val{:init}},f,u0; kwargs...)
   function _linsolve!(x,A,b,update_matrix=false; kwargs...)
-    _A = lu!(A)
+    _A = lu(A)
     ldiv!(x,_A,b)
   end
 end
