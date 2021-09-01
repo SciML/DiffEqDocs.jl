@@ -130,9 +130,10 @@ function is created. For example, for an LU-Factorization, we would like to use
 `lufact!` to do our linear solving. We can directly write this as:
 
 ```julia
-function linsolve!(::Type{Val{:init}},f,u0,kwargs...)
-  function _linsolve!(x,A,b,update_matrix=false,kwargs...)
-    _A = lufact!(A)
+using LinearAlgebra
+function linsolve!(::Type{Val{:init}},f,u0; kwargs...)
+  function _linsolve!(x,A,b,update_matrix=false; kwargs...)
+    _A = lu!(A)
     ldiv!(x,_A,b)
   end
 end
