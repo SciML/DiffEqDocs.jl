@@ -117,7 +117,7 @@ be specified element-wise by passing a vector whose size matches `u0`.
   are related). Defaults to `1e-6` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
   on stochastic equations (SDEs/RODEs).
 * `reltol`: Relative tolerance in adaptive timestepping.  This is the tolerance
-  on local error estimatoes, not necessarily the global error (though these quantities
+  on local error estimates, not necessarily the global error (though these quantities
   are related). Defaults to `1e-3` on deterministic equations (ODEs/DDEs/DAEs) and `1e-2`
   on stochastic equations (SDEs/RODEs).
 * `dt`: Sets the initial stepsize. This is also the stepsize for fixed
