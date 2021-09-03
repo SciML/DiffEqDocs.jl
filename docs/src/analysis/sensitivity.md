@@ -267,9 +267,11 @@ use of automatic differentiation. The following arguments constitute the
   and `autojacvec=false` then it will use forward-mode AD for the Jacobian,
   otherwise it will fall back to using a numerical approximation to the Jacobian.
   Additionally, if the method is an adjoint method, there are three choices
-  which can be made explicitly:
-    - `TrackerVJP`: Uses Tracker.jl for the vjp. Default of in-place definitions.
-    - `ZygoteVJP`: Uses Zygote.jl for the vjp. Default for out-of-place definitions.
+  which can be made explicitly. The default vjp choice is a polyalgorithm that
+  uses a compiler analysis to choose the most efficient vjp for a given code.
+    - `TrackerVJP`: Uses Tracker.jl for the vjp.
+    - `ZygoteVJP`: Uses Zygote.jl for the vjp.
+    - `EnzymeVJP`: Uses Enzyme.jl for the vjp. 
     - `ReverseDiffVJP(compile=false)`: Uses ReverseDiff.jl for the vjp. `compile`
       is a boolean for whether to precompile the tape, which should only be done
       if there are no branches (`if` or `while` statements) in the `f` function.
