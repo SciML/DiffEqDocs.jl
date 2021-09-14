@@ -184,7 +184,7 @@ IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
     prec = nothing, psetup = nothing)
 ```
 
-See [the Sundials manual](https://computation.llnl.gov/sites/default/files/public/ida_guide.pdf)
+See [the Sundials manual](https://computing.llnl.gov/sites/default/files/ida_guide-5.7.0.pdf)
 for details on the additional options. The option `init_all` controls the initial condition
 consistency routine. If the initial conditions are inconsistant (i.e. they do not satisfy the
 implicit equation), `init_all=false` means that the algebraic variables and derivatives will

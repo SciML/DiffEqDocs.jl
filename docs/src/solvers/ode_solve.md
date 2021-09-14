@@ -982,8 +982,8 @@ ARKODE(stiffness=Sundials.Implicit();
       )
 ```
 
-See [the CVODE manual](https://computation.llnl.gov/sites/default/files/public/cv_guide.pdf)
-and the [ARKODE manual](https://computation.llnl.gov/sites/default/files/public/ark_guide.pdf)
+See [the CVODE manual](https://computing.llnl.gov/sites/default/files/cv_guide-5.7.0.pdf)
+and the [ARKODE manual](https://computing.llnl.gov/sites/default/files/ark_guide-4.7.0.pdf)
 for details on the additional options.
 
 Note that here `prec` is a preconditioner function
