@@ -82,4 +82,13 @@ prob_ode_nonlinchem
 prob_ode_brusselator_1d
 prob_ode_brusselator_2d
 prob_ode_filament
+prob_ode_thomas
+prob_ode_lorenz
+prob_ode_aizawa
+prob_ode_dadras
+prob_ode_chen
+prob_ode_rossler
+prob_ode_rabinovich_fabrikant
+prob_ode_sprott
+prob_ode_hindmarsh_rose
 ```
