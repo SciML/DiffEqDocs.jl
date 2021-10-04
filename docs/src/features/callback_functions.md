@@ -179,7 +179,7 @@ Our ODE function will use this field as follows:
 
 ```julia
 function f(du,u,p,t)
-    du[1] = -0.5*u[1] + u.f1
+    du[1] = -0.5*u[1] + p
     du[2] = -0.5*u[2]
 end
 ```
