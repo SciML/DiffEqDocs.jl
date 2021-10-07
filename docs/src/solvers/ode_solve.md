@@ -341,11 +341,17 @@ Royal Society, 2011.).
 - `CKLLSRK85_4FM_4R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
 - `CKLLSRK75_4M_5R` - 7-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
 - `RDPK3Sp35` - 5-stage, third order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3SpFSAL35` - 5-stage, third order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3Sp49` - 9-stage, fourth order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3SpFSAL49` - 9-stage, fourth order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3Sp510` - 10-stage, fifth order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3SpFSAL510` - 10-stage, fifth order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
+  Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 
 __NOTE__: All the 2N Methods (`ORK256`, `CarpenterKennedy2N54`, `NDBLSRK124`, `NDBLSRK134`, `NDBLSRK144`, `DGLDDRK73_C`, `DGLDDRK84_C`, `DGLDDRK84_F` and `SHLDDRK64`) work on the basic principle of being able to perform step `S1 = S1 + F(S2)` in just 2 registers. Certain optimizations have been done to achieve this theoritical limit (when `alias_u0` is set) but have a limitation that `du` should always be on the left hand side (assignments only) in the implementation.
 
