@@ -787,7 +787,7 @@ resfw = shadow_forward(lss_problem)
 ```
 
 
-## Second Order Sensitivity Analysis via `second_order_sensitivities` (Experimental)
+## Second Order Sensitivity Analysis via `second_order_sensitivities`
 
 Second order sensitivity analysis is used for the fast calculation of Hessian
 matrices. Currently there are two functions available. The first, `second_order_sensitivities`,
