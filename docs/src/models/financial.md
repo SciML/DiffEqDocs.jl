@@ -37,7 +37,7 @@ GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)
 ### BlackScholesProblem
 
 ```math
-d \ln S(t) = \left(r(t) - \frac{Θ(t,S)^2}{2}\left)dt + σ dW_t
+d \ln S(t) = \left(r(t) - \frac{Θ(t,S)^2}{2}\right)dt + σ dW_t
 ```
 
 Solves for ``log S(t)``. Constructor:
