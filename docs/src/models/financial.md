@@ -25,7 +25,7 @@ HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan)
 ### GeneralizedBlackScholesProblem
 
 ```math
-d \ln S(t) = (r(t) - q(t) - \frac{Θ(t,S)^2}{2})dt + σ dW_t
+d \ln S(t) = \left(r(t) - q(t) - \frac{Θ(t,S)^2}{2}\right)dt + σ dW_t
 ```
 
 Solves for ``log S(t)``. Constructor:
@@ -37,7 +37,7 @@ GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)
 ### BlackScholesProblem
 
 ```math
-d \ln S(t) = (r(t) - \frac{Θ(t,S)^2}{2})dt + σ dW_t
+d \ln S(t) = \left(r(t) - \frac{Θ(t,S)^2}{2}\right)dt + σ dW_t
 ```
 
 Solves for ``log S(t)``. Constructor:
