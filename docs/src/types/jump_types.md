@@ -3,8 +3,8 @@
 ### Mathematical Specification of an problem with jumps
 
 Jumps are defined as a Poisson process which changes states at some `rate`. When
-there are multiple possible jumps, the process is a compound Poisson process. On their
-own, a jump equation is continuous-time Markov Chain where the time to the
+there are multiple possible jumps, the process is a compound Poisson process. On its
+own, a jump equation is a continuous-time Markov Chain where the time to the
 next jump is exponentially distributed as calculated by the rate. This type of
 process, known in biology as "Gillespie discrete stochastic simulations" and
 modeled by the Chemical Master Equation (CME), is the same thing as adding jumps
@@ -12,15 +12,15 @@ to a `DiscreteProblem`. However, any differential equation can be extended by ju
 as well. For example, we have an ODE with jumps, denoted by
 
 ```math
-\frac{du}{dt} = f(u,p,t) + Σ c_i(u,p,t)dp_i
+\frac{du}{dt} = f(u,p,t) + \sum_{i}c_i(u,p,t)p_i(t)
 ```
 
-where ``dp_i`` is a Poisson counter of rate ``\lambda_i(u,p,t)``. Extending a
-stochastic differential equation to have jumps is commonly known as a Jump
+where ``p_i`` is a Poisson counter of rate ``\lambda_i(u,p,t)``.
+Extending a stochastic differential equation to have jumps is commonly known as a Jump
 Diffusion, and is denoted by
 
 ```math
-\frac{du}{dt} = f(u,p,t) + Σgᵢ(u,t)dWⁱ + Σ c_i(u,p,t)dp_i
+du = f(u,p,t)dt + \sum_{j}g_j(u,t)dW_j(t) + \sum_{i}c_i(u,p,t)dp_i(t)
 ```
 
 ## Types of Jumps: Regular, Variable, Constant Rate and Mass Action

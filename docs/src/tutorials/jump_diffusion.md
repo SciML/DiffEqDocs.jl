@@ -8,7 +8,7 @@ Jump Diffusion equations are stochastic differential equations with discontinuou
 jumps. These can be written as:
 
 ```math
-\frac{du}{dt} = f(u,p,t) + Σgᵢ(u,t)dWⁱ + Σ h_i(u,p,t)N_i(t)
+du = f(u,p,t)dt + \sum_{j}g_j(u,p,t)dW_j(t) + \sum_{i}h_i(u,p,t)dN_i(t)
 ```
 
 where ``N_i`` is a Poisson-counter which denotes jumps of size ``h_i``. In this
