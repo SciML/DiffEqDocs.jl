@@ -61,7 +61,7 @@ For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 stiffness, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
-systems `TRBDF2` will be more efficient. `ABDF2` can be the most efficient
+systems `TRBDF2` will be more efficient. `QNDF` or `FBDF` can be the most efficient
 the largest systems or most expensive `f`.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
@@ -77,8 +77,8 @@ use `radau`.
 
 For asymptotically large systems of ODEs (`N>1000`?)
 where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
-in that case `QNDF` will be the most efficient but requires `Vector{Float64}`.
-`QNDF` will also do surprisingly well if the solution is smooth. However,
+in that case `QNDF` or `FBDF` will be the most efficient.
+`QNDF` and `FBDF` will also do surprisingly well if the solution is smooth. However,
 this method can handle less stiffness than other methods and its Newton iterations
 may fail at low accuracy situations. Other choices to consider in this regime are
 `CVODE_BDF` and `lsoda`.
@@ -106,15 +106,15 @@ library methods are as follows:
 - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
 - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
 - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-- `ode15s`/`vode` --> `QNDF()`, though in many cases `Rodas4()`,
+- `ode15s`/`vode` --> `QNDF()` or `FBDF()`, though in many cases `Rodas4()`,
   `KenCarp4()`, `TRBDF2()`, or `RadauIIA5()` are more efficient
 - `ode23t` --> `Trapezoid()`
 - `ode23tb` --> `TRBDF2()`
 - `lsoda` --> `lsoda()`, though `AutoTsit5(Rosenbrock23())` or `AutoVern7(Rodas5())`
   may be more efficient. Note that `lsoda()` requires the LSODA.jl extension, which
   can be added via `]add LSODA; using LSODA`.
-- `ode15i` --> `IDA()`, though in many cases `Rodas4()` can handle the DAE and is
-  significantly more efficient
+- `ode15i` --> `IDA()` or `DFBDF()`, though in many cases `Rodas4()` can handle
+  the DAE and is significantly more efficient.
 
 ## Full List of Methods
 
@@ -700,12 +700,12 @@ Sundials CVODE integrator.
 - `QBDF2` - An adaptive order 2 L-stable BDF method using quasi-constant timesteps.
 - `QNDF` - An adaptive order quasi-constant timestep NDF method. Utilizes
   Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
-  for a tuple of `kappa` coefficients).
-- `QBDF` - An adaptive order quasi-constant timestep BDF method.
-- `JVODE_BDF` - An adaptive time adaptive order fixed-leading coefficient BDF
-  method in Nordsieck form. In development.
+  for a tuple of `kappa` coefficients). Similar to `ode15s`.
+- `QBDF` - An adaptive order quasi-constant timestep BDF method.  
 - `MEBDF2` - The second order Modified Extended BDF method, which has improved
   stability properties over the standard BDF. Fixed timestep only.
+- `FBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
+  similar to `ode15i` or `CVODE_BDF` in divided differences form.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 

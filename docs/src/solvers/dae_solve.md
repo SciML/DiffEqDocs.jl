@@ -14,7 +14,8 @@ matrices.
 
 If the problem cannot be defined in mass matrix form, the recommended method for
 performance is `IDA` from the Sundials.jl package if you are solving problems with
-`Float64`. If Julia types are required, currently `DABDF2` is the best method.
+`Float64`. If Julia types are required, currently `FBDF` is the best method
+but still experimental.
 
 ## [Full List of Methods](@id dae_solve_full)
 
@@ -36,6 +37,8 @@ These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
 
 - `DImplicitEuler` - 1st order A-L and stiffly stable adaptive implicit Euler
 - `DABDF2` - 2nd order A-L stable adaptive BDF method.
+- `DFBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
+  similar to `ode15i` or `IDA` in divided differences form.
 
 ### OrdinaryDiffEq.jl (Mass Matrix)
 
@@ -62,9 +65,9 @@ extra options for the solvers, see the ODE solver page.
   stiff-aware 3rd order interpolant. 4th order on linear parabolic problems
   and 3rd order accurate on nonlinear parabolic problems (as opposed to lower
   if not corrected).
-- `Rodas4P2` - A 4th order L-stable stiffly stable Rosenbrock method with a stiff-aware 
-  3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate 
-  on nonlinear parabolic problems. It is an improvement of Roadas4P and in case of 
+- `Rodas4P2` - A 4th order L-stable stiffly stable Rosenbrock method with a stiff-aware
+  3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
+  on nonlinear parabolic problems. It is an improvement of Roadas4P and in case of
   inexact Jacobians a second order W method.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
   a Hermite interpolant because its stiff-aware 3rd order interpolant is not
