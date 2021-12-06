@@ -6,10 +6,10 @@ To define an Discrete Problem, you simply need to give the function ``f`` and th
 condition ``u₀`` which define a function map:
 
 ```math
-u_{n+1} = f(u,p,t_{n+1})
+u_{n+1} = f(u_{n},p,t_{n+1})
 ```
 
-`f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
+`f` should be specified as `f(un,p,tnp1)` (or in-place as `f(unp1,un,p,tnp1)`), and `u₀` should
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well. ``t_{n+1}`` is the
@@ -21,7 +21,7 @@ Note that if the discrete solver is set to have `scale_by_time=true`, then the p
 is interpreted as the map:
 
 ```math
-u_{n+1} = u_n + dt f(u,p,t_n)
+u_{n+1} = u_n + dt f(u,p,t_{n+1})
 ```
 
 ## Problem Type
