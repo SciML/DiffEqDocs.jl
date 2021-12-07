@@ -6,14 +6,14 @@ To define an Discrete Problem, you simply need to give the function ``f`` and th
 condition ``u₀`` which define a function map:
 
 ```math
-u_{n+1} = f(u,p,t_{n+1})
+u_{n+1} = f(u_{n},p,t_{n})
 ```
 
-`f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
+`f` should be specified as `f(un,p,tn)` (or in-place as `f(unp1,un,p,tn)`), and `u₀` should
 be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
-provide `u₀` as arbitrary matrices / higher dimension tensors as well. ``t_{n+1}`` is the
-current time at which the map is applied. For a `FunctionMap` with defaults,
+provide `u₀` as arbitrary matrices / higher dimension tensors as well. ``u_{n+1}`` only depends on the previous
+iteration ``u_{n}`` and ``t_{n}``. The default ``t_{n}`` of `FunctionMap` is
 ``t_n = t_0 + n*dt`` (with `dt=1` being the default). For continuous-time Markov chains
 this is the time at which the change is occuring.
 
@@ -21,7 +21,7 @@ Note that if the discrete solver is set to have `scale_by_time=true`, then the p
 is interpreted as the map:
 
 ```math
-u_{n+1} = u_n + dt f(u,p,t_n)
+u_{n+1} = u_n + dt f(u_{n},p,t_{n})
 ```
 
 ## Problem Type
