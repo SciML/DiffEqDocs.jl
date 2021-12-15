@@ -72,7 +72,7 @@ prob_ode_fitzhughnagumo
 prob_ode_threebody
 prob_ode_pleiades
 prob_ode_vanderpol
-prob_ode_vanstiff
+prob_ode_vanderpol_stiff
 prob_ode_rober
 prob_ode_rigidbody
 prob_ode_hires
