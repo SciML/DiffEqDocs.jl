@@ -343,8 +343,8 @@ To swap the linear solver out, we use the `linsolve` command and choose the
 GMRES linear solver.
 
 ```julia
-@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
+@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
 ```
 
 For more information on linear solver choices, see the
@@ -366,7 +366,7 @@ and then we can use this by making it our `jac_prototype`:
 ```julia
 f2 = ODEFunction(brusselator_2d_loop;jac_prototype=Jv);
 prob_ode_brusselator_2d_jacfree = ODEProblem(f2,u0,(0.,11.5),p);
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)
+@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)
 ```
 
 ### Adding a Preconditioner
@@ -380,7 +380,7 @@ for an incomplete LU-factorization (iLU).
 ```julia
 using AlgebraicMultigrid
 pc = aspreconditioner(ruge_stuben(jac_sparsity));
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=LinSolveGMRES(Pl=pc)),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)
+@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)
 ```
 
 ## Using Structured Matrix Types
