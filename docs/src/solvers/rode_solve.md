@@ -16,5 +16,5 @@ Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 Example usage:
 
 ```julia
-sol = solve(prob,RandomEM())
+sol = solve(prob,RandomEM(),dt=1/100)
 ```
