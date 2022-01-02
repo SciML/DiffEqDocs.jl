@@ -76,7 +76,7 @@ function fiip(du,u,p,t)
 end
 p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
 prob = ODEProblem(fiip,u0,(0.0,10.0),p)
-sol = solve(prob,Tsit5(),rtol=1e-6,atol=1e-6)
+sol = solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6)
 ```
 
 !!! note
@@ -88,7 +88,7 @@ But if we want to perturb `u0` and `p` in a gradient calculation then we can do 
 ```julia
 function sum_of_solution(x)
     _prob = remake(prob,u0=x[1:2],p=x[3:end])
-    sum(solve(_prob,Tsit5(),rtol=1e-6,atol=1e-6,saveat=0.1))
+    sum(solve(_prob,Tsit5(),reltol=1e-6,abstol=1e-6,saveat=0.1))
 end
 dx = ForwardDiff.gradient(sum_of_solution,[u0;p])
 ```
@@ -98,7 +98,7 @@ or reverse-mode:
 ```julia
 function sum_of_solution(u0,p)
   _prob = remake(prob,u0=u0,p=p)
-  sum(solve(_prob,Tsit5(),rtol=1e-6,atol=1e-6,saveat=0.1,sensealg=QuadratureAdjoint()))
+  sum(solve(_prob,Tsit5(),reltol=1e-6,abstol=1e-6,saveat=0.1,sensealg=QuadratureAdjoint()))
 end
 du01,dp1 = Zygote.gradient(sum_of_solution,u0,p)
 ```
@@ -126,7 +126,7 @@ using Flux, Plots
 
 p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
 function predict_adjoint() # Our 1-layer neural network
-  Array(solve(prob,Tsit5(),rtol=1e-6,atol=1e-6,p=p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
+  Array(solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6,p=p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
@@ -671,7 +671,7 @@ using QuadGK
 function G(p)
   tmp_prob = remake(prob,p=p)
   sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)
-  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,atol=1e-14,rtol=1e-10)
+  res,err = quadgk((t)-> (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)
   res
 end
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
