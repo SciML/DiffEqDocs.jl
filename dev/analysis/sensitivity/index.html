@@ -13,19 +13,19 @@ function fiip(du,u,p,t)
 end
 p = [1.5,1.0,3.0,1.0]; u0 = [1.0;1.0]
 prob = ODEProblem(fiip,u0,(0.0,10.0),p)
-sol = solve(prob,Tsit5(),rtol=1e-6,atol=1e-6)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Since <a href="https://diffeq.sciml.ai/stable/basics/faq/#What-does-tolerance-mean-and-how-much-error-should-I-expect">the global error is 1-2 orders of magnitude higher than the local error</a>, we use accuracies of 1e-6 (instead of the default 1e-3) to get reasonable sensitivities</p></div></div><p>But if we want to perturb <code>u0</code> and <code>p</code> in a gradient calculation then we can do forward-mode:</p><pre><code class="language-julia hljs">function sum_of_solution(x)
+sol = solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Since <a href="https://diffeq.sciml.ai/stable/basics/faq/#What-does-tolerance-mean-and-how-much-error-should-I-expect">the global error is 1-2 orders of magnitude higher than the local error</a>, we use accuracies of 1e-6 (instead of the default 1e-3) to get reasonable sensitivities</p></div></div><p>But if we want to perturb <code>u0</code> and <code>p</code> in a gradient calculation then we can do forward-mode:</p><pre><code class="language-julia hljs">function sum_of_solution(x)
     _prob = remake(prob,u0=x[1:2],p=x[3:end])
-    sum(solve(_prob,Tsit5(),rtol=1e-6,atol=1e-6,saveat=0.1))
+    sum(solve(_prob,Tsit5(),reltol=1e-6,abstol=1e-6,saveat=0.1))
 end
 dx = ForwardDiff.gradient(sum_of_solution,[u0;p])</code></pre><p>or reverse-mode:</p><pre><code class="language-julia hljs">function sum_of_solution(u0,p)
   _prob = remake(prob,u0=u0,p=p)
-  sum(solve(_prob,Tsit5(),rtol=1e-6,atol=1e-6,saveat=0.1,sensealg=QuadratureAdjoint()))
+  sum(solve(_prob,Tsit5(),reltol=1e-6,abstol=1e-6,saveat=0.1,sensealg=QuadratureAdjoint()))
 end
 du01,dp1 = Zygote.gradient(sum_of_solution,u0,p)</code></pre><p>Or we can use the <code>u0</code> and <code>p</code> keyword argument short hands to tell it to replace <code>u0</code> and <code>p</code> by the inputs:</p><pre><code class="language-julia hljs">du01,dp1 = Zygote.gradient((u0,p)-&gt;sum(solve(prob,Tsit5(),u0=u0,p=p,saveat=0.1,sensealg=QuadratureAdjoint())),u0,p)</code></pre><p>Here this computes the derivative of the output with respect to the initial condition and the the derivative with respect to the parameters respectively using the <code>QuadratureAdjoint()</code>.</p><p>When Zygote.jl is used in a larger context, these gradients are implicitly calculated and utilized. For example, the <a href="https://github.com/FluxML/Flux.jl">Flux.jl deep learning package</a> uses Zygote.jl in its training loop, so if we use <code>solve</code> in a likelihood of a Flux training loop then the derivative choice we make will be used in the optimization:</p><pre><code class="language-julia hljs">using Flux, Plots
 
 p = [2.2, 1.0, 2.0, 0.4] # Initial Parameter Vector
 function predict_adjoint() # Our 1-layer neural network
-  Array(solve(prob,Tsit5(),rtol=1e-6,atol=1e-6,p=p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
+  Array(solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6,p=p,saveat=0.0:0.1:10.0,sensealg=BacksolveAdjoint())) # Concretize to a matrix
 end
 loss_adjoint() = sum(abs2,x-1 for x in predict_adjoint())
 
@@ -140,7 +140,7 @@ end</code></pre><p>To get the adjoint sensitivities, we call:</p><pre><code clas
 function G(p)
   tmp_prob = remake(prob,p=p)
   sol = solve(tmp_prob,Vern9(),abstol=1e-14,reltol=1e-14)
-  res,err = quadgk((t)-&gt; (sum(sol(t)).^2)./2,0.0,10.0,atol=1e-14,rtol=1e-10)
+  res,err = quadgk((t)-&gt; (sum(sol(t)).^2)./2,0.0,10.0,abstol=1e-14,reltol=1e-10)
   res
 end
 res2 = ForwardDiff.gradient(G,[1.5,1.0,3.0])
@@ -195,4 +195,4 @@ loss(sol) = sum(sol)
 v = ones(4)
 
 H  = second_order_sensitivities(loss,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)
-Hv = second_order_sensitivity_product(loss,v,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Tuesday 28 December 2021 13:15">Tuesday 28 December 2021</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Hv = second_order_sensitivity_product(loss,v,prob,Vern9(),saveat=0.1,abstol=1e-12,reltol=1e-12)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../bifurcation/">« Bifurcation Analysis</a><a class="docs-footer-nextpage" href="../global_sensitivity/">Global Sensitivity Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.10 on <span class="colophon-date" title="Sunday 2 January 2022 22:10">Sunday 2 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
