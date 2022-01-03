@@ -63,7 +63,10 @@ is used, i.e. going back to the AD mechanism.
 
 !!! note
 
-    ForwardDiff.jl only does forward differentiation pass through.
+    The behavior of ForwardDiff.jl is different from the other automatic differentiation libraries mentioned above.
+    The `sensealg` keyword is ignored. Instead, the differential equations are solved using `Dual` numbers for `u0` and `p`.
+    If only `p` is perturbed in the sensitivity analysis, but not `u0`, the state is still implemented as a `Dual` number.
+    ForwardDiff.jl will thus not dispatch into continuous forward nor adjoint sensitivity analysis even if a `sensealg` is provided.
 
 ### solve Differentiation Examples
 
