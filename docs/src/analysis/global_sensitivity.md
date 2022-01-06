@@ -52,7 +52,7 @@ matrices.
   scaling is used to get more informative, scaled effects. Defaults to `false`.
 - `total_num_trajectory`, `num_trajectory` - The total number of design matrices that are
   generated out of which `num_trajectory` matrices with the highest spread are used in calculation.
-- len_design_mat` - The size of a design matrix.
+- `len_design_mat` - The size of a design matrix.
 
 #### Morris Method Details
 
@@ -119,7 +119,7 @@ eFAST offers a robust, especially at low sample size, and computationally effici
 get the first and total order indices as discussed in Sobol. It utilizes monodimensional Fourier decomposition
 along a curve exploring the parameter space. The curve is defined by a set of parametric equations,
 ```math
-x_{i}(s) = G_{i}(sin ω_{i}s), ∀ i=1,2 ,..., n,
+x_{i}(s) = G_{i}(\sin ω_{i}s), ∀ i=1,2 ,..., n,
 ```
 where s is a scalar variable varying over the range ``-∞ < s < +∞``, ``G_{i}`` are transformation functions
 and ``{ω_{i}}, ∀ i=1,2,...,n`` is a set of different (angular) frequencies, to be properly selected, associated with each factor.
