@@ -69,11 +69,8 @@ extra options for the solvers, see the ODE solver page.
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems. It is an improvement of Roadas4P and in case of
   inexact Jacobians a second order W method.
-- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
-  a Hermite interpolant because its stiff-aware 3rd order interpolant is not
-  yet implemented. This means the interpolation is inaccurate on algebraic variables,
-  meaning this algorithm should not be used with `saveat` or post-solution interpolation
-  on DAEs.
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. with a stiff-aware 
+  3rd order interpolant
 
 #### Rosenbrock-W Methods
 
