@@ -2,8 +2,8 @@
 
 ## Mathematical Specification of a Split ODE Problem
 
-To define a `SplitODEProblem`, you simply need to give a two functions
-functions ``f_1`` and ``f_2`` along with an initial condition ``u₀`` which
+To define a `SplitODEProblem`, you simply need to give a two functions 
+``f_1`` and ``f_2`` along with an initial condition ``u₀`` which
 define an ODE:
 
 ```math
