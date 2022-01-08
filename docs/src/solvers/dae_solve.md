@@ -45,6 +45,14 @@ These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
 These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
 
+!!! note
+
+    The standard Hermite interpolation used for ODE methods in OrdinaryDiffEq.jl
+    is not applicable to the algebraic variables. Thus for the following mass-matrix
+    methods, use the interplation (thus `saveat`) with caution if the default
+    Hermite interpolation is used. All methods which mention a specialized interpolation
+    (and implicit ODE methods) are safe.
+    
 #### Rosenbrock Methods
 
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
