@@ -1,191 +1,95 @@
-# [Specifying (Non)Linear Solvers](@id linear_nonlinear)
+# [Specifying (Non)Linear Solvers and Preconditioners](@id linear_nonlinear)
 
 One of the key features of DifferentialEquations.jl is its flexibility. Keeping
 with this trend, many of the native Julia solvers provided by DifferentialEquations.jl
 allow you to choose the method for linear and nonlinear solving. This section
 details how to make that choice.
 
+!!! note
+
+    We highly recommend looking at the [Solving Large Stiff Equations](@id stiff)
+    tutorial which goes through these options in a real-world example.
+
+!!! warning
+
+    These options do not apply to the Sundials differential equation solvers
+    (`CVODE_BDF`, `CVODE_Adams`, `ARKODE`, and `IDA`). For complete descriptions
+    of similar functionality for Sundials, see the
+    [Sundials ODE solver documentation](@id ode_solve_sundials) and
+    [Sundials DAE solver documentation](@id dae_solve_sundials).
+
 ## Linear Solvers: `linsolve` Specification
 
-For differential equation integrators which use linear solvers, an argument
-to the method `linsolve` determines the linear solver which is used. The signature
-is:
+For linear solvers, DifferentialEquations.jl uses
+[LinearSolve.jl](https://github.com/SciML/LinearSolve.jl). Any
+[LinearSolve.jl algorithm](http://linearsolve.sciml.ai/dev/solvers/solvers/)
+can be used as the linear solver simply by passing the algorithm choice to
+linsole. For example, the following tells `TRBDF2` to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
 
 ```julia
-linsolve! = linsolve(Val{:init},f,x;kwargs...)
-linsolve!(x,A,b,matrix_updated=false;kwargs...)
+TRBDF2(linsolve = KLUFactorization())
 ```
 
-This is an in-place function which updates `x` by solving `Ax=b`. The user should
-specify the function `linsolve(Val{:init},f,x)` which returns a `linsolve!` function.
-The setting `matrix_updated` determines whether the matrix `A` has changed from the
-last call. This can be used to smartly cache factorizations.
+Many choices exist, including GPU offloading, so consult the
+[LinearSole.jl documentation](http://linearsolve.sciml.ai/dev/) for more details
+on the choices.
 
-Note that `linsolve!` needs to accept splatted keyword arguments. The possible arguments
-passed to the linear solver are as follows:
+## Preconditioners: `precs` Specification
 
-- `Pl`, a pre-specified left preconditioner which utilizes the internal adaptive norm estimates
-- `Pr`, a pre-specified right preconditioner which utilizes the internal adaptive norm estimates
-- `tol`, a linear solver tolerance specified from the ODE solver's implicit handling
+Any [LinearSolve.jl-compatible preconditioner](http://linearsolve.sciml.ai/dev/basics/Preconditioners/)
+can be used as a left or right preconditioner. Preconditioners are specified by
+the `Pl,Pr = precs(W,du,u,p,t,newW,Plprev,Prprev,solverdata)` function where
+the arguments are defined as:
 
-### Pre-Built Linear Solver Choices
+- `W`: the current Jacobian of the nonlinear system. Specified as either
+  ``I - gamma*J`` or ``I/gamma - J`` depending on the algorithm. This will
+  commonly be a `WOperator` type defined by OrdinaryDiffEq.jl. It is a lazy
+  representation of the operator. Users can construct the W-matrix on demand
+  by calling `convert(AbstractMatrix,W)` to receive an `AbstractMatrix` matching
+  the `jac_prototype`.
+- `du`: the current ODE derivative
+- `u`: the current ODE state
+- `p`: the ODE parameters
+- `t`: the current ODE time
+- `newW`: a `Bool` which specifies whether the `W` matrix has been updated since
+  the last call to `precs`. It is recommended that this is checked to only
+  update the preconditioner when `newW == true`.
+- `Plprev`: the previous `Pl`.
+- `Prprev`: the previous `Pr`.
+- `solverdata`: Optional extra data the solvers can give to the `precs` function.
+  Solver-dependent and subject to change.
 
-The following choices of pre-built linear solvers exist:
+The return is a tuple `(Pl,Pr)` of the LinearSolve.jl-compatible preconditioners.
+To specify one-sided preconditioning, simply return `nothing` for the preconditioner
+which is not used.
 
-- DefaultLinSolve
-- LinSolveFactorize
-- LinSolveGPUFactorize
-- LinSolveGMRES
-- LinSolveCG
-- LinSolveBiCGStabl
-- LinSolveChebyshev
-- LinSolveMINRES
-- LinSolveIterativeSolvers
-
-Additionally, by adding [Pardiso.jl](https://github.com/JuliaSparse/Pardiso.jl) the following exist:
-
-- MKLPardisoFactorize
-- PardisoFactorize
-- PardisoIterate
-
-### DefaultLinSolve
-
-The default linear solver is `DefaultLinSolve`. This method is adaptive, and
-automatically chooses an LU factorization choose for dense and sparse
-arrays, and is compatible with GPU-based arrays. When the Jacobian is an
-`AbstractDiffEqOperator`, i.e. is matrix-free, `DefaultLinSolve` defaults to
-using a `gmres` iterative solver.
-
-### Basic linsolve method choice: Factorization by LinSolveFactorize
-
-The easiest way to specify a `linsolve` is by a `factorization` function which
-generates a type on which `\` (or `A_ldiv_B!`) is called.  This is done through
-the helper function `LinSolveFactorize` which makes the appropriate function.
-For example, the  `Rosenbrock23` takes in a `linsolve` function, which we can
-choose to be a QR-factorization from the standard library `LinearAlgebra` by:
+Additionally, `precs` must supply the dispatch:
 
 ```julia
-Rosenbrock23(linsolve=LinSolveFactorize(qr!))
+Pl,Pr = precs(W,du,u,p,t,::Nothing,::Nothing,::Nothing,solverdata)
 ```
 
-LinSolveFactorize takes in a function which returns an object that can `\`.
-Direct methods like `qr!` will automatically cache the factorization,
-making it efficient for small dense problems.
+which is used in the solver setup phase in order to construct the integrator
+type with the preconditioners `(Pl,Pr)`.
 
-However, for large sparse problems, you can let `\` be an iterative method. For
-example, using PETSc.jl, we can define our factorization function to be:
+The default is `precs=DEFAULT_PRECS` where the default preconditioner function
+is defined as:
 
 ```julia
-linsolve = LinSolveFactorize((A) -> KSP(A, ksp_type="gmres", ksp_rtol=1e-6))
+DEFAULT_PRECS(W,du,u,p,t,newW,Plprev,Prprev,solverdata) = nothing,nothing
 ```
 
-This function creates a `KSP` type which makes `\` perform the GMRES iterative
-method provided by PETSc.jl. Thus if we pass this function into the algorithm
-as the factorization method, all internal linear solves will happen by PETSc.jl.
+## Nonlinear Solvers: `nlsolve` Specification
 
-### GPU offloading of factorization with LinSolveGPUFactorize
+All of the Julia-based implicit solvers (OrdinaryDiffEq.jl, StochasticDiffEq.jl, etc.)
+allow for choosing the nonlinear solver that is used to handle the implicit system.
+While fully modifiable and customizable, most users should stick to the pre-defined
+nonlinear solver choices. These are:
 
-If one has a problem with a sufficiently large Jacobian (~100x100) and a
-sufficiently powerful GPU, it can make sense to offload the factorization
-and backpropogation steps to the GPU. For this, the `LinSolveGPUFactorize`
-linear solver is provided. It works similarly to `LinSolveFactorize`, but
-the matrix is automatically sent to the GPU as a `CuArray` and the `ldiv!`
-is performed against a CUDA QR factorization of the matrix.
-
-Note that this method requires that you have done `using CuArrays` in your
-script. A working installation of CuArrays.jl is required, which requires
-an installation of CUDA Toolkit.
-
-### [IterativeSolvers.jl-Based Methods](@id iterativesolvers-jl)
-
-The signature for `LinSolveIterativeSolvers` is:
-
-```julia
-LinSolveIterativeSolvers(generate_iterator,args...;
-                         Pl=IterativeSolvers.Identity(),
-                         Pr=IterativeSolvers.Identity(),
-                         kwargs...)
-```
-
-where `Pl` is the left preconditioner, `Pr` is the right preconditioner, and
-the other `args...` and `kwargs...` are passed into the iterative solver
-chosen in `generate_iterator` which designates the construction of an iterator
-from IterativeSolvers.jl. For example, using `gmres_iterable!` would make a
-version that uses `IterativeSolvers.gmres`. The following are aliases to common
-choices:
-
-- LinSolveGMRES -- GMRES
-- LinSolveCG -- CG (Conjugate Gradient)
-- LinSolveBiCGStabl -- BiCGStabl Stabilized Bi-Conjugate Gradient
-- LinSolveChebyshev -- Chebyshev
-- LinSolveMINRES -- MINRES
-
-which all have the same arguments as `LinSolveIterativeSolvers` except with
-`generate_iterator` pre-specified.
-
-### Implementing Your Own LinSolve: How LinSolveFactorize Was Created
-
-In order to make your own `linsolve` functions, let's look at how the `LinSolveFactorize`
-function is created. For example, for an LU-Factorization, we would like to use
-`lufact!` to do our linear solving. We can directly write this as:
-
-```julia
-using LinearAlgebra
-function linsolve!(::Type{Val{:init}},f,u0; kwargs...)
-  function _linsolve!(x,A,b,update_matrix=false; kwargs...)
-    _A = lu(A)
-    ldiv!(x,_A,b)
-  end
-end
-```
-
-This initialization function returns a linear solving function
-that always computes the LU-factorization and then does the solving.
-This method works fine and you can pass it to the methods like
-
-```julia
-Rosenbrock23(linsolve=linsolve!)
-```
-
-and it will work, but this method does not cache `_A`, the factorization. This
-means that, even if `A` has not changed, it will re-factorize the matrix.
-
-To change this, we can instead create a call-overloaded type. The generalized form
-of this is:
-
-```julia
-mutable struct LinSolveFactorize{F}
-  factorization::F
-  A
-end
-LinSolveFactorize(factorization) = LinSolveFactorize(factorization,nothing)
-function (p::LinSolveFactorize)(x,A,b,matrix_updated=false)
-  if matrix_updated
-    p.A = p.factorization(A)
-  end
-  A_ldiv_B!(x,p.A,b)
-end
-function (p::LinSolveFactorize)(::Type{Val{:init}},f,u0_prototype)
-  LinSolveFactorize(p.factorization,nothing)
-end
-linsolve = LinSolveFactorize(lufact!)
-```
-
-`LinSolveFactorize` is a type which holds the factorization method and the pre-factorized
-matrix. When `linsolve` is passed to the ODE/SDE/etc. solver, it will use the function
-`linsolve(Val{:init},f,u0_prototype)` to create a `LinSolveFactorize` object which holds
-the factorization method and a cache for holding a factorized matrix. Then
-
-```julia
-function (p::LinSolveFactorize)(x,A,b,matrix_updated=false)
-  if matrix_updated
-    p.A = p.factorization(A)
-  end
-  A_ldiv_B!(x,p.A,b)
-end
-```
-
-is what's used in the solver's internal loop. If `matrix_updated` is true, it
-will re-compute the factorization. Otherwise it just solves the linear system
-with the cached factorization. This general idea of using a call-overloaded
-type can be employed to do many other things.
+- `NLNewton(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5, new_W_dt_cutoff=1//5)`: A quasi-Newton method. The default
+- `NLAnderson(; κ=1//100, max_iter=10, max_history::Int=5, aa_start::Int=1, droptol=nothing, fast_convergence_cutoff=1//5)`:
+  Anderson acceleration. While more stable than functional iteration, this method
+  is less stable than Newton's method but does not require a Jacobian.
+- `NLFunctional(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5)`: This method
+  is the least stable but does not require Jacobians. Should only be used for
+  non-stiff ODEs.

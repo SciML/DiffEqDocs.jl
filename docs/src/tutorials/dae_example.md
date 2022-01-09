@@ -1,20 +1,85 @@
 # Differential Algebraic Equations
 
-This tutorial will introduce you to the functionality for solving differential algebraic equations (DAEs). Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). 
+Differential Algebraic Equations (DAEs) are differential equations which have
+constraint equations on their evolution. This tutorial will introduce you to
+the functionality for solving differential algebraic equations (DAEs). Other
+introductions can be found by
+[checking out SciMLTutorials.jl](https://github.com/JuliaDiffEq/SciMLTutorials.jl).
 
 !!! note
 
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
-In this example we will solve the implicit ODE equation
+## Mass-Matrix Differential-Algebraic Equations (DAEs)
+
+Instead of just defining an ODE as ``u' = f(u,p,t)``, it can be common to express
+the differential equation in the form with a mass matrix:
+
+```math
+Mu' = f(u,p,t)
+```
+
+where ``M`` is known as the mass matrix. Let's solve the Robertson equation.
+In previous tutorials we wrote this equation as:
+
+```math
+\begin{aligned}
+dy_1 &= -0.04 y_1 + 10^4 y_2 y_3 \\
+dy_2 &=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+dy_3 &= 3*10^7 y_{2}^2 \\
+\end{aligned}
+```
+
+But we can instead write this with a conservation relation:
+
+```math
+\begin{aligned}
+\frac{dy_1}{dt} &= -0.04 y_1 + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &=  0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+1 &=  y_{1} + y_{2} + y_{3} \\
+\end{aligned}
+```
+
+In this form, we can write this as a mass matrix ODE where ``M`` is singular
+(this is another form of a differential-algebraic equation (DAE)). Here, the
+last row of `M` is just zero. We can implement this form as:
+
+```julia
+using DifferentialEquations
+function rober(du,u,p,t)
+  y₁,y₂,y₃ = u
+  k₁,k₂,k₃ = p
+  du[1] = -k₁*y₁ + k₃*y₂*y₃
+  du[2] =  k₁*y₁ - k₃*y₂*y₃ - k₂*y₂^2
+  du[3] =  y₁ + y₂ + y₃ - 1
+  nothing
+end
+M = [1. 0  0
+     0  1. 0
+     0  0  0]
+f = ODEFunction(rober,mass_matrix=M)
+prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+sol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)
+
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
+```
+
+![IntroDAEPlot](../assets/intro_dae_plot.png)
+
+!!! note
+    If your mass matrix is singular, i.e. your system is a DAE, then you
+    need to make sure you choose
+    [a solver that is compatible with DAEs](@ref dae_solve_full)
+
+## Implicitly-Defined Differential-Algebraic Equations (DAEs)
+
+In this example we will solve the Robertson equation in its implicit form:
 
 ```math
 f(du,u,p,t) = 0
 ```
 
-where `f` is a variant of the Roberts equation. This equation is a DAE of
-the form:
+This equation is a DAE of the form:
 
 ```math
 \begin{aligned}

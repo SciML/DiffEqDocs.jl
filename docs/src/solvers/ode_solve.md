@@ -716,11 +716,10 @@ Sundials CVODE integrator.
 
 All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
-solver, see
-[the manual page on solver specification](@ref linear_nonlinear).
+solver, see [the manual page on solver specification](@ref linear_nonlinear).
 
 Note that performance overload information (Jacobians etc.) are not used in this
-mode. This can control autodifferentiation of the Jacobian as well.
+mode. This can control automatic differentiation of the Jacobian as well.
 For more information on specifying the nonlinear solver, see
 [the manual page on solver specification](@ref linear_nonlinear).
 

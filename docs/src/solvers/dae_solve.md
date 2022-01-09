@@ -52,7 +52,7 @@ extra options for the solvers, see the ODE solver page.
     methods, use the interplation (thus `saveat`) with caution if the default
     Hermite interpolation is used. All methods which mention a specialized interpolation
     (and implicit ODE methods) are safe.
-    
+
 #### Rosenbrock Methods
 
 - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
@@ -77,7 +77,7 @@ extra options for the solvers, see the ODE solver page.
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems. It is an improvement of Roadas4P and in case of
   inexact Jacobians a second order W method.
-- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. with a stiff-aware 
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. with a stiff-aware
   3rd order interpolant
 
 #### Rosenbrock-W Methods
@@ -130,7 +130,7 @@ Sundials CVODE integrator.
   for a tuple of `kappa` coefficients).
 - `QBDF` - An adaptive order quasi-constant timestep BDF method.
 
-### Sundials.jl
+### [Sundials.jl](@id dae_solve_sundials)
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use Sundials.jl:
