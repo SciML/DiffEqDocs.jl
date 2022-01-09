@@ -16,7 +16,11 @@ list:
 - [MIT 18.337 Course Notes on Optimizing Serial Code](https://mitmath.github.io/18337/lecture2/optimizing)
 - [What scientists must know about hardware to write fast code](https://biojulia.net/post/hardware/)
 
-User-side optimizations are important because, for sufficiently difficult problems, most of the time will be spent inside of your `f` function, the function you are trying to solve. "Efficient" integrators are those that reduce the required number of `f` calls to hit the error tolerance. The main ideas for optimizing your DiffEq code, or any Julia function, are the following:
+User-side optimizations are important because, for sufficiently difficult problems,
+most of the time will be spent inside of your `f` function, the function you are
+trying to solve. "Efficient" integrators are those that reduce the required
+number of `f` calls to hit the error tolerance. The main ideas for optimizing
+your DiffEq code, or any Julia function, are the following:
 
 - Make it non-allocating
 - Use StaticArrays for small arrays
@@ -235,7 +239,8 @@ function lorenz_static(u,p,t)
 end
 ```
 
-To make the solver internally use static arrays, we simply give it a static array as the initial condition:
+To make the solver internally use static arrays, we simply give it a static
+array as the initial condition:
 
 ```julia
 u0 = SA[1.0,0.0,0.0]
@@ -317,7 +322,28 @@ julia> @btime solve(prob)
 97.000 μs (1832 allocations: 132.30 KiB)
 ```
 
-Now let's improve that.
+### Choosing a Good Solver
+
+Choosing a good solver is required for getting top notch speed. General
+recommendations can be found on the solver page (for example, the
+[ODE Solver Recommendations](@ref ode_solve)).
+The current recommendations can be simplified to a Rosenbrock method
+(`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
+for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
+larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
+sometimes worth a try for the medium sized category.
+
+More details on the solver to choose can be found by benchmarking. See the
+[SciMLBenchmarks](https://github.com/JuliaDiffEq/SciMLBenchmarks.jl) to
+compare many solvers on many problems.
+
+From this, we try the recommendation of `Rosenbrock23()` for stiff ODEs at
+default tolerances:
+
+```julia
+@btime solve(prob,Rosenbrock23())
+# 61.200 μs (918 allocations: 78.72 KiB)
+```
 
 ### Declaring Jacobian Functions
 
@@ -344,8 +370,8 @@ f = ODEFunction(rober, jac=rober_jac)
 prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
 ```julia-repl
-julia> @btime solve(prob_jac)
-74.500 μs (1475 allocations: 100.50 KiB)
+julia> @btime solve(prob_jac,Rosenbrock23())
+57.400 μs (978 allocations: 82.58 KiB)
 ```
 
 ### Automatic Derivation of Jacobian Functions
@@ -400,21 +426,6 @@ julia> @btime solve(prob_jac2)
 
 See the [ModelingToolkit.jl documentation](https://mtk.sciml.ai/dev/) for more
 details.
-
-### Choosing a Good Solver
-
-Choosing a good solver is required for getting top notch speed. General
-recommendations can be found on the solver page (for example, the
-[ODE Solver Recommendations](@ref ode_solve)).
-The current recommendations can be simplified to a Rosenbrock method
-(`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
-for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
-larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
-sometimes worth a try for the medium sized category.
-
-More details on the solver to choose can be found by benchmarking. See the
-[SciMLBenchmarks](https://github.com/JuliaDiffEq/SciMLBenchmarks.jl) to
-compare many solvers on many problems.
 
 ### Accelerating Small ODE Solves with Static Arrays
 
