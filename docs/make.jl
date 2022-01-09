@@ -23,6 +23,7 @@ makedocs(modules=[DiffEqBase,SciMLBase,DiffEqProblemLibrary,ODEProblemLibrary,SD
          "DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation" => "index.md",
          "Tutorials" => Any[
            "tutorials/ode_example.md",
+           "tutorials/faster_ode_example.md",
            "tutorials/advanced_ode_example.md",
            "tutorials/sde_example.md",
            "tutorials/rode_example.md",

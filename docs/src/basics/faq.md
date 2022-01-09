@@ -4,7 +4,7 @@ This page is a compilation of frequently asked questions and answers.
 
 ## [Stability and Divergence of ODE Solves](@id faq_stability)
 
-For guidelines on debugging ODE solve issues, see 
+For guidelines on debugging ODE solve issues, see
 [PSA: How to help yourself debug differential equation solving issues](https://discourse.julialang.org/t/psa-how-to-help-yourself-debug-differential-equation-solving-issues/62489).
 
 #### My model is reporting unstable results. What can I do?
@@ -12,9 +12,9 @@ For guidelines on debugging ODE solve issues, see
 First of all, don't panic. You may have experienced one of the following warnings:
 
 > dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
-> 
+>
 > NaN dt detected. Likely a NaN value in the state, parameters, or derivative value caused this outcome.
-> 
+>
 > Instability detected. Aborting
 
 These are all pointing to a similar behavior: for some reason or another, the
@@ -213,6 +213,37 @@ won't do much or it will slow things down just due to how GPUs work.
 DistributedArrays require parallel linear solves to really matter, and thus are
 only recommended when you have a problem that cannot fit into memory or are using
 a stiff solver with a Krylov method for the linear solves.
+
+### Note About Setting Up Your Julia Installation for Speed: BLAS Choices
+
+Julia uses an underlying BLAS implementation for its matrix multiplications
+and factorizations. This library is automatically multithreaded and accelerates
+the internal linear algebra of DifferentialEquations.jl. However, for optimality,
+you should make sure that the number of BLAS threads that you are using matches
+the number of physical cores and not the number of logical cores. See
+[this issue for more details](https://github.com/JuliaLang/julia/issues/33409).
+
+To check the number of BLAS threads, use:
+
+```julia
+ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())
+```
+
+If I want to set this directly to 4 threads, I would use:
+
+```julia
+using LinearAlgebra
+LinearAlgebra.BLAS.set_num_threads(4)
+```
+
+Additionally, in some cases Intel's MKL might be a faster BLAS than the standard
+BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
+can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl) which will accelerate
+the linear algebra routines. This is done via:
+
+```julia
+using MKL
+```
 
 #### My ODE is solving really slow
 
@@ -491,8 +522,8 @@ sol = solve(prob,Rosenbrock23(autodiff=false))
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
 calculate Jacobians.
 
-We could use `get_tmp` and `dualcache` functions from 
-[PreallocationTools.jl](https://github.com/SciML/PreallocationTools.jl) 
+We could use `get_tmp` and `dualcache` functions from
+[PreallocationTools.jl](https://github.com/SciML/PreallocationTools.jl)
 to solve this issue, e.g.,
 
 ```julia
