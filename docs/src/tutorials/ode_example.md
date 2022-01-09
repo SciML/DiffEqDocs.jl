@@ -1,7 +1,7 @@
 # [Ordinary Differential Equations](@id ode_example)
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+introductions can be found by [checking out SciMLTutorials.jl](https://github.com/JuliaDiffEq/SciMLTutorials.jl).
 Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
 this material.
 
@@ -55,7 +55,7 @@ Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent vari
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
 unitful numbers, etc. Please see the
-[notebook tutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
+[notebook tutorials](https://github.com/JuliaDiffEq/SciMLTutorials.jl)
 for more examples.
 
 The problem types include many other features, including the ability to define

@@ -1,7 +1,7 @@
 # Boundary Value Problems
 
 This tutorial will introduce you to the functionality for solving BVPs. Other
-introductions can be found by [checking out DiffEqTutorials.jl](https://github.com/JuliaDiffEq/DiffEqTutorials.jl). 
+introductions can be found by [checking out SciMLTutorials.jl](https://github.com/JuliaDiffEq/SciMLTutorials.jl). 
 
 !!! note
 
