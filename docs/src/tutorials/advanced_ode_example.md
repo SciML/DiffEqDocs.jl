@@ -10,6 +10,8 @@ controls also extend to stiff SDEs, DDEs, DAEs, etc.
 !!! note
 
     This tutorial is for advanced users to dive into advanced features!
+    DifferentialEquations.jl automates most of this usage, so we recommend
+    users try `solve(prob)` with the automatic algorithm first!
 
 ## Code Optimization for Differential Equations
 
@@ -31,10 +33,10 @@ The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
 for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
 larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
-sometimes worth a try.
+sometimes worth a try for the medium sized category.
 
 More details on the solver to choose can be found by benchmarking. See the
-[DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) to
+[SciMLBenchmarks](https://github.com/JuliaDiffEq/SciMLBenchmarks.jl) to
 compare many solvers on many problems.
 
 ### Check Out the Speed FAQ
@@ -67,7 +69,11 @@ LinearAlgebra.BLAS.set_num_threads(4)
 Additionally, in some cases Intel's MKL might be a faster BLAS than the standard
 BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
 can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl) which will accelerate
-the linear algebra routines. Please see the package for the limitations.
+the linear algebra routines. This is done via:
+
+```julia
+using MKL
+```
 
 ### Use Accelerator Hardware
 
@@ -143,7 +149,7 @@ plot(sol,tspan=(1e-2,1e5),xscale=:log10)
 ```julia-repl
 julia> using BenchmarkTools
 julia> @btime solve(prob)
-415.800 μs (3053 allocations: 161.64 KiB)
+97.000 μs (1832 allocations: 132.30 KiB)
 ```
 
 Now we want to add the Jacobian. First we have to derive the Jacobian
@@ -169,7 +175,7 @@ prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
 ```julia-repl
 julia> @btime solve(prob_jac)
-305.400 μs (2599 allocations: 153.11 KiB)
+74.500 μs (1475 allocations: 100.50 KiB)
 ```
 
 ### Automatic Derivation of Jacobian Functions
@@ -188,23 +194,28 @@ ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
 which outputs:
 
 ```julia
-:((##MTIIPVar#376, u, p, t)->begin
-          #= C:\Users\accou\.julia\packages\ModelingToolkit\czHtj\src\utils.jl:65 =#
-          #= C:\Users\accou\.julia\packages\ModelingToolkit\czHtj\src\utils.jl:66 =#
-          let (x₁, x₂, x₃, α₁, α₂, α₃) = (u[1], u[2], u[3], p[1], p[2], p[3])
-              ##MTIIPVar#376[1] = α₁ * -1
-              ##MTIIPVar#376[2] = α₁
-              ##MTIIPVar#376[3] = 0
-              ##MTIIPVar#376[4] = x₃ * α₃
-              ##MTIIPVar#376[5] = x₂ * α₂ * -2 + x₃ * α₃ * -1
-              ##MTIIPVar#376[6] = x₂ * 2 * α₂
-              ##MTIIPVar#376[7] = α₃ * x₂
-              ##MTIIPVar#376[8] = α₃ * x₂ * -1
-              ##MTIIPVar#376[9] = 0
-          end
-          #= C:\Users\accou\.julia\packages\ModelingToolkit\czHtj\src\utils.jl:67 =#
-          nothing
-      end)
+julia> ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
+:(function (ˍ₋out, ˍ₋arg1, ˍ₋arg2, t)
+      #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:303 =#
+      #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:304 =#
+      let var"x₁(t)" = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[1]), var"x₂(t)" = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[2]), var"x₃(t)" = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[3]), α₁ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[1]), α₂ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[2]), α₃ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[3])
+          #= C:\Users\accou\.julia\dev\Symbolics\src\build_function.jl:378 =#
+          #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:350 =# @inbounds begin
+                  #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:346 =#
+                  ˍ₋out[1] = (*)(-1, α₁)
+                  ˍ₋out[2] = α₁
+                  ˍ₋out[3] = 0
+                  ˍ₋out[4] = (*)(α₃, var"x₃(t)")
+                  ˍ₋out[5] = (+)((*)((*)(-2, α₂), var"x₂(t)"), (*)((*)(-1, α₃), var"x₃(t)"))
+                  ˍ₋out[6] = (*)((*)(2, α₂), var"x₂(t)")
+                  ˍ₋out[7] = (*)(α₃, var"x₂(t)")
+                  ˍ₋out[8] = (*)((*)(-1, α₃), var"x₂(t)")
+                  ˍ₋out[9] = 0
+                  #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:348 =#
+                  nothing
+              end
+      end
+  end)
 ```
 
 Now let's use that to give the analytical solution Jacobian:
@@ -214,6 +225,42 @@ jac = eval(ModelingToolkit.generate_jacobian(de)[2])
 f = ODEFunction(rober, jac=jac)
 prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
+
+### Accelerating Small ODE Solves with Static Arrays
+
+If the ODE is sufficiently small (<20 ODEs or so), using [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
+for the state variables can greatly enhance the performance. This is done by
+making `u0` a `StaticArray` and writing an out-of-place non-mutating dispatch
+for static arrays, for the ROBER problem, this looks like:
+
+```julia
+using DifferentialEquations, StaticArrays
+function rober_static(u,p,t)
+  y₁,y₂,y₃ = u
+  k₁,k₂,k₃ = p
+  du1 = -k₁*y₁+k₃*y₂*y₃
+  du2 =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
+  du3 =  k₂*y₂^2
+  SA[du1,du2,du3]
+end
+prob = ODEProblem(rober_static,SA[1.0,0.0,0.0],(0.0,1e5),SA[0.04,3e7,1e4])
+sol = solve(prob,Rosenbrock23())
+```
+
+If we benchmark this we see a really fast solution with really low allocation
+counts:
+
+```julia
+@btime sol = solve(prob,Rosenbrock23())
+# 12.100 μs (87 allocations: 18.53 KiB)
+```
+
+This version is thus very amenable to multithreading and other forms of parallelism.
+
+## Accelerating Large Stiff ODE / PDE Solves
+
+This section is focused on the tools and tricks for getting the most performance
+out of very large ODE solves, such as those resulting from PDE discretizations.
 
 ### Declaring a Sparse Jacobian
 
@@ -244,7 +291,7 @@ prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ### Automatic Sparsity Detection
 
 One of the useful companion tools for DifferentialEquations.jl is
-[SparsityDetection.jl](https://github.com/JuliaDiffEq/SparsityDetection.jl).
+[Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
 This allows for automatic declaration of Jacobian sparsity types. To see this
 in action, let's look at the 2-dimensional Brusselator equation:
 
@@ -269,32 +316,32 @@ end
 p = (3.4, 1., 10., step(xyd_brusselator))
 ```
 
-Given this setup, we can give and example `input` and `output` and call `jacobian_sparsity`
+Given this setup, we can give and example `du` and `u` and call `jacobian_sparsity`
 on our function with the example arguments and it will kick out a sparse matrix
 with our pattern, that we can turn into our `jac_prototype`.
 
 ```julia
-using SparsityDetection, SparseArrays
-input = rand(32,32,2)
-output = similar(input)
-sparsity_pattern = jacobian_sparsity(brusselator_2d_loop,output,input,p,0.0)
-jac_sparsity = Float64.(sparse(sparsity_pattern))
+using Symbolics
+du0 = copy(u0)
+jac_sparsity = Symbolics.jacobian_sparsity((du,u)->brusselator_2d_loop(du,u,p,0.0),du0,u0)
+
+2048×2048 SparseArrays.SparseMatrixCSC{Bool, Int64} with 12288 stored entries:
+⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀
+⠀⠈⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀
+⡀⠀⠀⠀⠀⠈⠻⣦⠀⠀⠀⠀⠀⠈⠳⣄
+⠙⢦⡀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠈
+⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀
+⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦⡀⠀
+⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦
 ```
 
-Let's double check what our sparsity pattern looks like:
+Notice Julia gives a nice print out of the sparsity pattern. That's neat, and
+would be tedious to build by hand! Now we just pass it to the `ODEFunction`
+like as before:
 
 ```julia
-using Plots
-spy(jac_sparsity,markersize=1,colorbar=false,color=:deep)
-```
-
-![Bruss Sparsity](../assets/bruss_sparsity.png)
-
-That's neat, and would be tedius to build by hand! Now we just pass it to the
-`ODEFunction` like as before:
-
-```julia
-f = ODEFunction(brusselator_2d_loop;jac_prototype=jac_sparsity)
+f = ODEFunction(brusselator_2d_loop;jac_prototype=float.(jac_sparsity))
 ```
 
 Build the `ODEProblem`:
@@ -322,13 +369,9 @@ prob_ode_brusselator_2d_sparse = ODEProblem(f,
 Now let's see how the version with sparsity compares to the version without:
 
 ```julia
-@btime solve(prob_ode_brusselator_2d,save_everystep=false) # 51.714 s (7317 allocations: 70.12 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,save_everystep=false) # 2.880 s (55533 allocations: 885.09 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false) # 1.185 s (55081 allocations: 347.79 MiB)
+@btime solve(prob_ode_brusselator_2d,TRBDF2(),save_everystep=false) # 2.771 s (5452 allocations: 65.73 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false) # 680.612 ms (37905 allocations: 359.34 MiB)
 ```
-
-From some automated tooling an a choice of an algorithm, we went from almost a
-minute to almost a second!
 
 ## Defining Linear Solver Routines and Jacobian-Free Newton-Krylov
 
@@ -343,45 +386,100 @@ To swap the linear solver out, we use the `linsolve` command and choose the
 GMRES linear solver.
 
 ```julia
-@btime solve(prob_ode_brusselator_2d,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 469.174 s (1266049 allocations: 120.80 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 10.928 s (1327264 allocations: 59.92 MiB)
+@btime solve(prob_ode_brusselator_2d,KenCarp47(linsolve=KrylovJL_GMRES()),save_everystep=false)
+# 707.439 ms (173868 allocations: 31.07 MiB)
 ```
 
-For more information on linear solver choices, see the
-[linear solver documentation](@ref linear_nonlinear).
-
-We can also enhance this by using a Jacobian-Free implementation of `f'(x)*v`.
-To define the Jacobian-Free operator, we can use
-[DiffEqOperators.jl](https://github.com/JuliaDiffEq/DiffEqOperators.jl) to generate
-an operator `JacVecOperator` such that `Jv*v` performs `f'(x)*v` without building
-the Jacobian matrix.
-
-```julia
-using DiffEqOperators
-Jv = JacVecOperator(brusselator_2d_loop,u0,p,0.0)
-```
-
-and then we can use this by making it our `jac_prototype`:
-
-```julia
-f2 = ODEFunction(brusselator_2d_loop;jac_prototype=Jv);
-prob_ode_brusselator_2d_jacfree = ODEProblem(f2,u0,(0.,11.5),p);
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 8.352 s (1875298 allocations: 78.86 MiB)
-```
+Notice that this acceleration does not require the definition of a sparsity
+pattern and can thus be an easier way to scale for large problems. For more
+information on linear solver choices, see the
+[linear solver documentation](@ref linear_nonlinear). `linsolve` choices are any
+valid [LinearSolve.jl](http://linearsolve.sciml.ai/dev/) solver.
 
 ### Adding a Preconditioner
 
-The [linear solver documentation](@ref iterativesolvers-jl)
-shows how you can add a preconditioner to the GMRES. For example, you can
-use packages like [AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
-to add an algebraic multigrid (AMG) or [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
-for an incomplete LU-factorization (iLU).
+Any [LinearSolve.jl-compatible preconditioner](http://linearsolve.sciml.ai/dev/basics/Preconditioners/)
+can be used as a preconditioner in the linear solver interface. To define
+preconditioners, one must define a `precs` function in compatible stiff ODE
+solvers which returns the left and right preconditioners, matrices which
+approximate the inverse of `W = I - gamma*J` used in the solution of the ODE.
+An example of this with using [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
+is as follows:
+
+```julia
+using IncompleteLU
+function incompletelu(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    Pl = ilu(convert(AbstractMatrix,W), τ = 50.0)
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+# Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
+Base.eltype(::IncompleteLU.ILUFactorization{Tv,Ti}) where {Tv,Ti} = Tv
+
+@time solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=incompletelu,concrete_jac=true),save_everystep=false);
+# 174.386 ms (61756 allocations: 61.38 MiB)
+```
+
+Notice a few things about this preconditioner. This preconditioner uses the
+sparse Jacobian, and thus we set `concrete_jac=true` to tell the algorithm to
+generate the Jacobian (otherwise, a Jacobian-free algorithm is used with GMRES
+by default). Then `newW = true` whenever a new `W` matrix is computed, and
+`newW=nothing` during the startup phase of the solver. Thus we do a check
+`newW === nothing || newW` and when true, it's only at these points when we
+we update the preconditioner, otherwise we just pass on the previous version.
+We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix (matching
+`jac_prototype`, thus `SpraseMatrixCSC`) which we can use in the preconditioner's
+definition. Then we use `IncompleteLU.ilu` on that sparse matrix to generate
+the preconditioner. We return `Pl,nothing` to say that our preconditioner is a
+left preconditioner, and that there is no right preconditioning.
+
+This method thus uses both the Krylov solver and the sparse Jacobian. Not only
+that, it is faster than both implementations! IncompleteLU is fussy in that it
+requires a well-tuned `τ` parameter. Another option is to use
+[AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
+which is more automatic. The setup is very similar to before:
 
 ```julia
 using AlgebraicMultigrid
-pc = aspreconditioner(ruge_stuben(jac_sparsity));
-@btime solve(prob_ode_brusselator_2d_jacfree,TRBDF2(linsolve=IterativeSolversJL_GMRES()),save_everystep=false) # 5.247 s (233048 allocations: 139.27 MiB)
+function algebraicmultigrid(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    Pl = aspreconditioner(ruge_stuben(convert(AbstractMatrix,W)))
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+# Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
+Base.eltype(::AlgebraicMultigrid.Preconditioner) = Float64
+
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid,concrete_jac=true),save_everystep=false);
+# 372.528 ms (61179 allocations: 160.82 MiB)
 ```
+
+or with a Jacobi smoother:
+
+```julia
+function algebraicmultigrid2(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    A = convert(AbstractMatrix,W)
+    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A, presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,1)))))
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid2,concrete_jac=true),save_everystep=false);
+# 293.476 ms (65714 allocations: 170.23 MiB)
+```
+
+For more information on the preconditioner interface, see the
+[linear solver documentation](@ref linear_nonlinear).
 
 ## Using Structured Matrix Types
 
@@ -423,14 +521,104 @@ Newton Krylov (with numerical differentiation). Thus on this problem we could do
 
 ```julia
 using Sundials
-# Sparse Version
-@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(),save_everystep=false) # 42.804 s (51388 allocations: 3.20 MiB)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(),save_everystep=false) # 13.280 s (51457 allocations: 2.43 MiB)
+# Simplest speedup: use :LapackDense
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:LapackDense),save_everystep=false) # 2.024 s (51457 allocations: 2.43 MiB)
 # GMRES Version: Doesn't require any extra stuff!
-@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 485.671 ms (61058 allocations: 3.63 MiB)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 213.800 ms (58353 allocations: 2.64 MiB)
 ```
 
+Notice that using sparse matrices with Sundials requires an analytical Jacobian
+function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
+`modelingtoolkitize` to automatically generate this:
+
+```julia
+using ModelingToolkit
+prob_ode_brusselator_2d_mtk = ODEProblem(modelingtoolkitize(prob_ode_brusselator_2d_sparse),[],(0.0,11.5),jac=true,sparse=true);
+@btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false) # 493.908 ms (1358 allocations: 5.79 MiB)
+```
+
+### Using Preconditioners with Sundials
+
 Details for setting up a preconditioner with Sundials can be found at the
-[Sundials solver page](@ref ode_solve_sundials).
+[Sundials solver page](@ref ode_solve_sundials). Sundials algorithms are very
+different from the standard Julia-based algorithms in that they require the
+user does all handling of the Jacobian matrix. To do this, you must define a
+`psetup` function that sets up the preconditioner and then a `prec` function
+that is the action of the preconditioner on a vector. For the `psetup` function,
+we need to first compute the `W = I - gamma*J` matrix before computing the
+preconditioner on it. For the ILU example above, this is done for Sundials like:
+
+```julia
+using LinearAlgebra
+u0 = prob_ode_brusselator_2d_mtk.u0
+p  = prob_ode_brusselator_2d_mtk.p
+const jaccache = prob_ode_brusselator_2d_mtk.f.jac(u0,p,0.0)
+const W = I - 1.0*jaccache
+
+prectmp = ilu(W, τ = 50.0)
+const preccache = Ref(prectmp)
+
+function psetupilu(p, t, u, du, jok, jcurPtr, gamma)
+  if jok
+    prob_ode_brusselator_2d_mtk.f.jac(jaccache,u,p,t)
+    jcurPtr[] = true
+
+    # W = I - gamma*J
+    @. W = -gamma*jaccache
+    idxs = diagind(W)
+    @. @view(W[idxs]) = @view(W[idxs]) + 1
+
+    # Build preconditioner on W
+    preccache[] = ilu(W, τ = 5.0)
+  end
+end
+```
+
+Then the preconditioner action is to simply use the `ldiv!` of the generated
+preconditioner:
+
+```julia
+function precilu(z,r,p,t,y,fy,gamma,delta,lr)
+  ldiv!(z,preccache[],r)
+end
+```
+
+We then simply pass these functions to the Sundials solver with a choice of
+`prec_side=1` to indicate that it is a left-preconditioner:
+
+```julia
+@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precilu,psetup=psetupilu,prec_side=1),save_everystep=false);
+# 87.176 ms (17717 allocations: 77.08 MiB)
+```
+
+And similarly for algebraic multigrid:
+
+```julia
+prectmp2 = aspreconditioner(ruge_stuben(W, presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1)))))
+const preccache2 = Ref(prectmp2)
+function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
+  if jok
+    prob_ode_brusselator_2d_mtk.f.jac(jaccache,u,p,t)
+    jcurPtr[] = true
+
+    # W = I - gamma*J
+    @. W = -gamma*jaccache
+    idxs = diagind(W)
+    @. @view(W[idxs]) = @view(W[idxs]) + 1
+
+    # Build preconditioner on W
+    preccache2[] = aspreconditioner(ruge_stuben(W, presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1)))))
+  end
+end
+
+function precamg(z,r,p,t,y,fy,gamma,delta,lr)
+  ldiv!(z,preccache2[],r)
+end
+
+@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precamg,psetup=psetupamg,prec_side=1),save_everystep=false);
+# 136.431 ms (30682 allocations: 275.68 MiB)
+```
 
 ## Handling Mass Matrices
 
