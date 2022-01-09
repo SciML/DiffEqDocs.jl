@@ -446,3 +446,463 @@ counts:
 ```
 
 This version is thus very amenable to multithreading and other forms of parallelism.
+
+## Example Accelerating Linear Algebra PDE Semi-Discretization
+
+In this tutorial we will optimize the right-hand side definition of a PDE
+semi-discretization.
+
+!!! note
+
+    We highly recommend looking at the [Solving Large Stiff Equations](@id stiff)
+    tutorial for details on customizing DifferentialEquations.jl for more
+    efficient large-scale stiff ODE solving. This section will only focus on the
+    user-side code.
+
+Let's optimize the solution of a Reaction-Diffusion PDE's discretization.
+In its discretized form, this is the ODE:
+
+```math
+\begin{align}
+du &= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - \alpha u\\
+dv &= D_2 (A_y v + v A_x) + a u^2 + \beta v
+\end{align}
+```
+
+where ``u``, ``v``, and ``A`` are matrices. Here, we will use the simplified
+version where ``A`` is the tridiagonal stencil ``[1,-2,1]``, i.e. it's the 2D
+discretization of the LaPlacian. The native code would be something along the
+lines of:
+
+```julia
+using DifferentialEquations, LinearAlgebra
+# Generate the constants
+p = (1.0,1.0,1.0,10.0,0.001,100.0) # a,α,ubar,β,D1,D2
+N = 100
+Ax = Array(Tridiagonal([1.0 for i in 1:N-1],[-2.0 for i in 1:N],[1.0 for i in 1:N-1]))
+Ay = copy(Ax)
+Ax[2,1] = 2.0
+Ax[end-1,end] = 2.0
+Ay[1,2] = 2.0
+Ay[end,end-1] = 2.0
+
+function basic_version!(dr,r,p,t)
+  a,α,ubar,β,D1,D2 = p
+  u = r[:,:,1]
+  v = r[:,:,2]
+  Du = D1*(Ay*u + u*Ax)
+  Dv = D2*(Ay*v + v*Ax)
+  dr[:,:,1] = Du .+ a.*u.*u./v .+ ubar .- α*u
+  dr[:,:,2] = Dv .+ a.*u.*u .- β*v
+end
+
+a,α,ubar,β,D1,D2 = p
+uss = (ubar+β)/α
+vss = (a/β)*uss^2
+r0 = zeros(100,100,2)
+r0[:,:,1] .= uss.+0.1.*rand.()
+r0[:,:,2] .= vss
+
+prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)
+```
+
+In this version we have encoded our initial condition to be a 3-dimensional
+array, with `u[:,:,1]` being the `A` part and `u[:,:,2]` being the `B` part.
+
+```julia
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 48 samples with 1 evaluation.
+ Range (min … max):   96.001 ms … 130.443 ms  ┊ GC (min … max):  7.04% … 16.06%
+ Time  (median):     104.225 ms               ┊ GC (median):    10.48%
+ Time  (mean ± σ):   105.063 ms ±   6.812 ms  ┊ GC (mean ± σ):   9.42% ±  2.62%
+
+  ▃█▃   █▃█    ▃██   ▃█ ▃▃           ▃
+  ███▇▁▇███▇▇▁▇███▁▇▁██▇██▇▁▁▇▇▇▁▇▁▁▁█▁▁▁▇▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▇ ▁
+  96 ms            Histogram: frequency by time          130 ms <
+
+ Memory estimate: 186.83 MiB, allocs estimate: 7341.
+```
+
+While this version isn't very efficient,
+
+#### We recommend writing the "high-level" code first, and iteratively optimizing it!
+
+The first thing that we can do is get rid of the slicing allocations. The
+operation `r[:,:,1]` creates a temporary array instead of a "view", i.e. a
+pointer to the already existing memory. To make it a view, add `@view`. Note
+that we have to be careful with views because they point to the same memory,
+and thus changing a view changes the original values:
+
+```julia
+A = rand(4)
+@show A
+B = @view A[1:3]
+B[2] = 2
+@show A
+```
+
+Notice that changing `B` changed `A`. This is something to be careful of, but
+at the same time we want to use this since we want to modify the output `dr`.
+Additionally, the last statement is a purely element-wise operation, and thus
+we can make use of broadcast fusion there. Let's rewrite `basic_version!` to
+***avoid slicing allocations*** and to ***use broadcast fusion***:
+
+```julia
+function gm2!(dr,r,p,t)
+  a,α,ubar,β,D1,D2 = p
+  u = @view r[:,:,1]
+  v = @view r[:,:,2]
+  du = @view dr[:,:,1]
+  dv = @view dr[:,:,2]
+  Du = D1*(Ay*u + u*Ax)
+  Dv = D2*(Ay*v + v*Ax)
+  @. du = Du + a.*u.*u./v + ubar - α*u
+  @. dv = Dv + a.*u.*u - β*v
+end
+prob = ODEProblem(gm2!,r0,(0.0,0.1),p)
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 58 samples with 1 evaluation.
+ Range (min … max):  80.456 ms … 106.830 ms  ┊ GC (min … max): 0.00% … 10.74%
+ Time  (median):     85.858 ms               ┊ GC (median):    6.34%
+ Time  (mean ± σ):   86.916 ms ±   4.214 ms  ┊ GC (mean ± σ):  6.46% ±  1.75%
+
+              █ ▄
+  ▅▃▁▁▁▁▁▁▁▆▃▆█▃██▆▆▅▃▃▅▃█▆▁▃▁▃▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃ ▁
+  80.5 ms         Histogram: frequency by time          102 ms <
+
+ Memory estimate: 119.71 MiB, allocs estimate: 5871.
+```
+
+Now, most of the allocations are taking place in `Du = D1*(Ay*u + u*Ax)` since
+those operations are vectorized and not mutating. We should instead replace the
+matrix multiplications with `mul!`. When doing so, we will need to have cache
+variables to write into. This looks like:
+
+```julia
+Ayu = zeros(N,N)
+uAx = zeros(N,N)
+Du = zeros(N,N)
+Ayv = zeros(N,N)
+vAx = zeros(N,N)
+Dv = zeros(N,N)
+function gm3!(dr,r,p,t)
+  a,α,ubar,β,D1,D2 = p
+  u = @view r[:,:,1]
+  v = @view r[:,:,2]
+  du = @view dr[:,:,1]
+  dv = @view dr[:,:,2]
+  mul!(Ayu,Ay,u)
+  mul!(uAx,u,Ax)
+  mul!(Ayv,Ay,v)
+  mul!(vAx,v,Ax)
+  @. Du = D1*(Ayu + uAx)
+  @. Dv = D2*(Ayv + vAx)
+  @. du = Du + a*u*u./v + ubar - α*u
+  @. dv = Dv + a*u*u - β*v
+end
+prob = ODEProblem(gm3!,r0,(0.0,0.1),p)
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 71 samples with 1 evaluation.
+ Range (min … max):  66.051 ms … 78.626 ms  ┊ GC (min … max): 0.00% … 6.51%
+ Time  (median):     69.778 ms              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   70.563 ms ±  3.392 ms  ┊ GC (mean ± σ):  1.68% ± 2.94%
+
+     ▂▆█    ▂
+  ▄▁▄███▁▆▄▁█▁▁▆█▁▆▆▁▄▁▆▁▄▁▄▄▆▁▄▆▁▁▁▆▁▄▄▁▄█▆▄▁▆▄▆▁▆▁▆▆▁▁▁▁▄▁▄ ▁
+  66.1 ms         Histogram: frequency by time        77.1 ms <
+
+ Memory estimate: 29.98 MiB, allocs estimate: 4695.
+```
+
+But our temporary variables are global variables. We need to either declare the caches as `const` or localize them. We can localize them by adding them to the parameters, `p`. It's easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.
+
+```julia
+p = (1.0,1.0,1.0,10.0,0.001,100.0,Ayu,uAx,Du,Ayv,vAx,Dv) # a,α,ubar,β,D1,D2
+function gm4!(dr,r,p,t)
+  a,α,ubar,β,D1,D2,Ayu,uAx,Du,Ayv,vAx,Dv = p
+  u = @view r[:,:,1]
+  v = @view r[:,:,2]
+  du = @view dr[:,:,1]
+  dv = @view dr[:,:,2]
+  mul!(Ayu,Ay,u)
+  mul!(uAx,u,Ax)
+  mul!(Ayv,Ay,v)
+  mul!(vAx,v,Ax)
+  @. Du = D1*(Ayu + uAx)
+  @. Dv = D2*(Ayv + vAx)
+  @. du = Du + a*u*u./v + ubar - α*u
+  @. dv = Dv + a*u*u - β*v
+end
+prob = ODEProblem(gm4!,r0,(0.0,0.1),p)
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 75 samples with 1 evaluation.
+ Range (min … max):  63.820 ms … 76.176 ms  ┊ GC (min … max): 0.00% … 6.03%
+ Time  (median):     66.711 ms              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   67.396 ms ±  3.167 ms  ┊ GC (mean ± σ):  1.55% ± 2.78%
+
+  ▁▁█▁█▃▆         ▁ ▁        ▆         ▁
+  ███████▄▁▁▄▁▇▁▄▁█▄█▁▄▇▁▄▄▄▇█▁▁▁▁▄▁▄▁▇█▁▁▁▄▁▄▄▇▁▁▁▇▁▄▁▁▁▁▁▇▇ ▁
+  63.8 ms         Histogram: frequency by time          74 ms <
+
+ Memory estimate: 29.66 MiB, allocs estimate: 1020.
+```
+
+We could then use the BLAS `gemmv` to optimize the matrix multiplications some more, but instead let's devectorize the stencil.
+
+```julia
+p = (1.0,1.0,1.0,10.0,0.001,100.0,N)
+function fast_gm!(du,u,p,t)
+  a,α,ubar,β,D1,D2,N = p
+
+  @inbounds for j in 2:N-1, i in 2:N-1
+    du[i,j,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
+              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+  end
+
+  @inbounds for j in 2:N-1, i in 2:N-1
+    du[i,j,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
+            a*u[i,j,1]^2 - β*u[i,j,2]
+  end
+
+  @inbounds for j in 2:N-1
+    i = 1
+    du[1,j,1] = D1*(2u[i+1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
+            a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+  end
+  @inbounds for j in 2:N-1
+    i = 1
+    du[1,j,2] = D2*(2u[i+1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
+            a*u[i,j,1]^2 - β*u[i,j,2]
+  end
+  @inbounds for j in 2:N-1
+    i = N
+    du[end,j,1] = D1*(2u[i-1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
+           a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+  end
+  @inbounds for j in 2:N-1
+    i = N
+    du[end,j,2] = D2*(2u[i-1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
+           a*u[i,j,1]^2 - β*u[i,j,2]
+  end
+
+  @inbounds for i in 2:N-1
+    j = 1
+    du[i,1,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
+              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+  end
+  @inbounds for i in 2:N-1
+    j = 1
+    du[i,1,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
+              a*u[i,j,1]^2 - β*u[i,j,2]
+  end
+  @inbounds for i in 2:N-1
+    j = N
+    du[i,end,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
+             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+  end
+  @inbounds for i in 2:N-1
+    j = N
+    du[i,end,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
+             a*u[i,j,1]^2 - β*u[i,j,2]
+  end
+
+  @inbounds begin
+    i = 1; j = 1
+    du[1,1,1] = D1*(2u[i+1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
+              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+    du[1,1,2] = D2*(2u[i+1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
+              a*u[i,j,1]^2 - β*u[i,j,2]
+
+    i = 1; j = N
+    du[1,N,1] = D1*(2u[i+1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
+             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+    du[1,N,2] = D2*(2u[i+1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
+             a*u[i,j,1]^2 - β*u[i,j,2]
+
+    i = N; j = 1
+    du[N,1,1] = D1*(2u[i-1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
+             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+    du[N,1,2] = D2*(2u[i-1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
+             a*u[i,j,1]^2 - β*u[i,j,2]
+
+    i = N; j = N
+    du[end,end,1] = D1*(2u[i-1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
+             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
+    du[end,end,2] = D2*(2u[i-1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
+             a*u[i,j,1]^2 - β*u[i,j,2]
+   end
+end
+prob = ODEProblem(fast_gm!,r0,(0.0,0.1),p)
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 700 samples with 1 evaluation.
+ Range (min … max):  5.433 ms … 26.007 ms  ┊ GC (min … max):  0.00% … 56.34%
+ Time  (median):     5.878 ms              ┊ GC (median):     0.00%
+ Time  (mean ± σ):   7.138 ms ±  2.348 ms  ┊ GC (mean ± σ):  11.10% ± 13.88%
+
+  ▄▇█▆▃       ▁           ▁▁▁      ▁ ▁▁▂
+  ██████▆▆█▇▇▆███▇▆▆▄▆█▇█▇███▇▆▄█▇██████▆██▇▆▁▄▁▁▁▄▄▁▁▁▁▁▁▁▄ █
+  5.43 ms      Histogram: log(frequency) by time     13.4 ms <
+
+ Memory estimate: 29.62 MiB, allocs estimate: 432.
+```
+
+Notice that in this case fusing the loops and avoiding the linear operators is a
+major improvement of about 10x! That's an order of magnitude faster than our
+original MATLAB/SciPy/R vectorized style code!
+
+Since this is tedious to do by hand, we note that
+[ModelingToolkit.jl's symbolic code generation](https://mtk.sciml.ai/dev/) can
+do this automatically from the basic version:
+
+```julia
+function basic_version!(dr,r,p,t)
+  a,α,ubar,β,D1,D2 = p
+  u = r[:,:,1]
+  v = r[:,:,2]
+  Du = D1*(Ay*u + u*Ax)
+  Dv = D2*(Ay*v + v*Ax)
+  dr[:,:,1] = Du .+ a.*u.*u./v .+ ubar .- α*u
+  dr[:,:,2] = Dv .+ a.*u.*u .- β*v
+end
+
+a,α,ubar,β,D1,D2 = p
+uss = (ubar+β)/α
+vss = (a/β)*uss^2
+r0 = zeros(100,100,2)
+r0[:,:,1] .= uss.+0.1.*rand.()
+r0[:,:,2] .= vss
+
+prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)
+de = modelingtoolkitize(prob)
+
+# Note jac=true,sparse=true makes it automatically build sparse Jacobian code
+# as well!
+
+fastprob = ODEProblem(de,[],(0.0,0.1),jac=true,sparse=true)
+```
+
+Lastly, we can do other things like multithread the main loops.
+[LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) provides
+the `@turbo` macro for doing a lot of SIMD enhancements, and `@tturbo` is the
+multithreaded version.
+
+### Optimizing Algorithm Choices
+
+The last thing to do is then ***optimize our algorithm choice***. We have been
+using `Tsit5()` as our test algorithm, but in reality this problem is a stiff
+PDE discretization and thus one recommendation is to use `CVODE_BDF()`. However,
+instead of using the default dense Jacobian, we should make use of the sparse
+Jacobian afforded by the problem. The Jacobian is the matrix $\frac{df_i}{dr_j}$,
+where $r$ is read by the linear index (i.e. down columns). But since the $u$
+variables depend on the $v$, the band size here is large, and thus this will
+not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian
+algorithms. `CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
+setting `linear_solver = :GMRES`.
+
+!!! note
+
+    The [Solving Large Stiff Equations](@id stiff) tutorial goes through these
+    details. This is simply to give a taste of how much optimization opportunity
+    is left on the table!
+
+Let's see how our fast right-hand side scales as we increase the integration time.
+
+```julia
+prob = ODEProblem(fast_gm!,r0,(0.0,10.0),p)
+@benchmark solve(prob,Tsit5())
+
+BenchmarkTools.Trial: 3 samples with 1 evaluation.
+ Range (min … max):  1.578 s …    2.502 s  ┊ GC (min … max): 31.99% … 58.83%
+ Time  (median):     1.580 s               ┊ GC (median):    35.16%
+ Time  (mean ± σ):   1.887 s ± 532.716 ms  ┊ GC (mean ± σ):  44.74% ± 14.66%
+
+  █                                                        ▁
+  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  1.58 s         Histogram: frequency by time          2.5 s <
+
+ Memory estimate: 2.76 GiB, allocs estimate: 39323.
+```
+
+```julia
+using Sundials
+@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES))
+
+BenchmarkTools.Trial: 11 samples with 1 evaluation.
+ Range (min … max):  450.051 ms … 476.904 ms  ┊ GC (min … max): 0.00% … 0.38%
+ Time  (median):     460.246 ms               ┊ GC (median):    0.75%
+ Time  (mean ± σ):   461.439 ms ±   9.264 ms  ┊ GC (mean ± σ):  0.56% ± 0.33%
+
+  █    █   █  █ █        █ ██                        █   █    █
+  █▁▁▁▁█▁▁▁█▁▁█▁█▁▁▁▁▁▁▁▁█▁██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁█▁▁▁▁█ ▁
+  450 ms           Histogram: frequency by time          477 ms <
+
+ Memory estimate: 120.93 MiB, allocs estimate: 20000.
+```
+
+```julia
+prob = ODEProblem(fast_gm!,r0,(0.0,100.0),p)
+# Will go out of memory if we don't turn off `save_everystep`!
+@benchmark solve(prob,Tsit5(),save_everystep=false)
+
+BenchmarkTools.Trial: 2 samples with 1 evaluation.
+ Range (min … max):  3.075 s …   3.095 s  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     3.085 s              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   3.085 s ± 14.570 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
+
+  █                                                       █
+  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  3.07 s         Histogram: frequency by time         3.1 s <
+
+ Memory estimate: 2.90 MiB, allocs estimate: 60.
+```
+
+```julia
+@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false)
+
+BenchmarkTools.Trial: 4 samples with 1 evaluation.
+ Range (min … max):  1.342 s …   1.386 s  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     1.352 s              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   1.358 s ± 19.636 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
+
+  █    █               █                                  █
+  █▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  1.34 s         Histogram: frequency by time        1.39 s <
+
+ Memory estimate: 3.09 MiB, allocs estimate: 49880.
+```
+
+```julia
+prob = ODEProblem(fast_gm!,r0,(0.0,500.0),p)
+@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false)
+
+BenchmarkTools.Trial: 3 samples with 1 evaluation.
+ Range (min … max):  1.817 s …   1.915 s  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     1.825 s              ┊ GC (median):    0.00%
+ Time  (mean ± σ):   1.853 s ± 54.179 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
+
+  █   █                                                   █
+  █▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
+  1.82 s         Histogram: frequency by time        1.91 s <
+
+ Memory estimate: 3.83 MiB, allocs estimate: 66931.
+```
+
+Notice that we've eliminated almost all allocations, allowing the code to grow
+without hitting garbage collection and slowing down.
+
+Why is `CVODE_BDF` doing well? What's happening is that, because the problem is
+stiff, the number of steps required by the explicit Runge-Kutta method grows
+rapidly, whereas `CVODE_BDF` is taking large steps. Additionally, the `GMRES`
+linear solver form is quite an efficient way to solve the implicit system in
+this case. This is problem-dependent, and in many cases using a Krylov method
+effectively requires a preconditioner, so you need to play around with testing
+other algorithms and linear solvers to find out what works best with your
+problem.
+
+Now continue to the [Solving Large Stiff Equations](@id stiff) tutorial for more
+details on optimizing the algorithm choice for such codes.
