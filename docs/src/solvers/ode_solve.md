@@ -1006,7 +1006,7 @@ Note that here `prec` is a preconditioner function
   preconditioning
 
 and `psetup` is the preconditioner setup function for pre-computing Jacobian
-information. Where:
+information `psetup(p, t, u, du, jok, jcurPtr, gamma)`. Where:
 
 - `p`: the parameters
 - `t`: the current independent variable
