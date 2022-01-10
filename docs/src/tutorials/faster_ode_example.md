@@ -1,4 +1,4 @@
-# [Code Optimization for Differential Equations](@ref speed)
+# [Code Optimization for Differential Equations](@id speed)
 
 !!! note
 
