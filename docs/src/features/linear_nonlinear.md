@@ -42,7 +42,7 @@ the `Pl,Pr = precs(W,du,u,p,t,newW,Plprev,Prprev,solverdata)` function where
 the arguments are defined as:
 
 - `W`: the current Jacobian of the nonlinear system. Specified as either
-  ``I - gamma*J`` or ``I/gamma - J`` depending on the algorithm. This will
+  ``I - \gamma J`` or ``I/\gamma - J`` depending on the algorithm. This will
   commonly be a `WOperator` type defined by OrdinaryDiffEq.jl. It is a lazy
   representation of the operator. Users can construct the W-matrix on demand
   by calling `convert(AbstractMatrix,W)` to receive an `AbstractMatrix` matching
