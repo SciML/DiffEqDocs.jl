@@ -71,6 +71,8 @@ are then applied at each point in space (they are broadcast). Use `dx=dy=1/32`.
 The resulting `ODEProblem` definition is:
 
 ```julia
+using DifferentialEquations, LinearAlgebra, SparseArrays
+
 const N = 32
 const xyd_brusselator = range(0,stop=1,length=N)
 brusselator_f(x, y, t) = (((x-0.3)^2 + (y-0.6)^2) <= 0.1^2) * (t >= 1.1) * 5.
