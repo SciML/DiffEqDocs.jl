@@ -3,8 +3,7 @@
 !!! note
 
     See [this FAQ](@ref faq_performance)
-    for information on common pitfalls and how to improve performance. For a similar
-    tutorial, see [Optimizing DiffEq Code](http://tutorials.juliadiffeq.org/html/introduction/03-optimizing_diffeq_code.html).
+    for information on common pitfalls and how to improve performance.
 
 ## Code Optimization in Julia
 
