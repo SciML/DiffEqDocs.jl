@@ -86,7 +86,7 @@ allow for choosing the nonlinear solver that is used to handle the implicit syst
 While fully modifiable and customizable, most users should stick to the pre-defined
 nonlinear solver choices. These are:
 
-- `NLNewton(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5, new_W_dt_cutoff=1//5)`: A quasi-Newton method. The default
+- `NLNewton(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5, new_W_dt_cutoff=1//5)`: A quasi-Newton method. The default.
 - `NLAnderson(; κ=1//100, max_iter=10, max_history::Int=5, aa_start::Int=1, droptol=nothing, fast_convergence_cutoff=1//5)`:
   Anderson acceleration. While more stable than functional iteration, this method
   is less stable than Newton's method but does not require a Jacobian.
