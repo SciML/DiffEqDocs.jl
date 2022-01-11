@@ -464,7 +464,7 @@ semi-discretization.
 
 !!! note
 
-    We highly recommend looking at the [Solving Large Stiff Equations](@id stiff)
+    We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
     tutorial for details on customizing DifferentialEquations.jl for more
     efficient large-scale stiff ODE solving. This section will only focus on the
     user-side code.
@@ -816,7 +816,7 @@ setting `linear_solver = :GMRES`.
 
 !!! note
 
-    The [Solving Large Stiff Equations](@id stiff) tutorial goes through these
+    The [Solving Large Stiff Equations](@ref stiff) tutorial goes through these
     details. This is simply to give a taste of how much optimization opportunity
     is left on the table!
 
@@ -914,5 +914,5 @@ effectively requires a preconditioner, so you need to play around with testing
 other algorithms and linear solvers to find out what works best with your
 problem.
 
-Now continue to the [Solving Large Stiff Equations](@id stiff) tutorial for more
+Now continue to the [Solving Large Stiff Equations](@ref stiff) tutorial for more
 details on optimizing the algorithm choice for such codes.
