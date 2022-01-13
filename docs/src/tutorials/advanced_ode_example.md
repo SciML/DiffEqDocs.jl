@@ -181,6 +181,7 @@ Now let's see how the version with sparsity compares to the version without:
 using BenchmarkTools # for @btime
 @btime solve(prob_ode_brusselator_2d,TRBDF2(),save_everystep=false) # 2.771 s (5452 allocations: 65.73 MiB)
 @btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false) # 680.612 ms (37905 allocations: 359.34 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KLUFactorization()),save_everystep=false) # 342.017 ms (65150 allocations: 158.99 MiB)
 ```
 
 Note that depending on the properties of the sparsity pattern, one may want
