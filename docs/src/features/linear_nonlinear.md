@@ -24,14 +24,14 @@ For linear solvers, DifferentialEquations.jl uses
 [LinearSolve.jl](https://github.com/SciML/LinearSolve.jl). Any
 [LinearSolve.jl algorithm](http://linearsolve.sciml.ai/dev/solvers/solvers/)
 can be used as the linear solver simply by passing the algorithm choice to
-linsole. For example, the following tells `TRBDF2` to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
+linsolve. For example, the following tells `TRBDF2` to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
 
 ```julia
 TRBDF2(linsolve = KLUFactorization())
 ```
 
 Many choices exist, including GPU offloading, so consult the
-[LinearSole.jl documentation](http://linearsolve.sciml.ai/dev/) for more details
+[LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/) for more details
 on the choices.
 
 ## Preconditioners: `precs` Specification
