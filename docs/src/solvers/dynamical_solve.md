@@ -133,5 +133,5 @@ using GeometricIntegratorsDiffEq
 
 - `GISymplecticEulerA` - First order explicit symplectic Euler A
 - `GISymplecticEulerB` - First order explicit symplectic Euler B
-- `GILobattoIIIAIIIB2` - Second order Gauss-Labatto-IIIA-IIIB
-- `GILobattoIIIBIIIA2` - Second order Gauss-Labatto-IIIB-IIIA
+- `GILobattoIIIAIIIB(n)` - Nth order Gauss-Labatto-IIIA-IIIB
+- `GILobattoIIIBIIIA(n)` - Nth order Gauss-Labatto-IIIB-IIIA
