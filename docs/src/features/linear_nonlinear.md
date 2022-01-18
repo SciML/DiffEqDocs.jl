@@ -7,7 +7,7 @@ details how to make that choice.
 
 !!! note
 
-    We highly recommend looking at the [Solving Large Stiff Equations](@id stiff)
+    We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
     tutorial which goes through these options in a real-world example.
 
 !!! warning
