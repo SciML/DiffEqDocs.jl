@@ -7,7 +7,7 @@ details how to make that choice.
 
 !!! note
 
-    We highly recommend looking at the [Solving Large Stiff Equations](https://diffeq.sciml.ai/stable/tutorials/advanced_ode_example/)
+    We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
     tutorial which goes through these options in a real-world example.
 
 !!! warning
