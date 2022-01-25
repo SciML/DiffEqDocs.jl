@@ -9,8 +9,11 @@ condition ``u₀`` which define an ODE:
 \frac{du}{dt} = f(u,p,t)
 ```
 
-`f` should be specified as `f(u,p,t)` (or in-place as `f(du,u,p,t)`), and `u₀` should
-be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
+There are two different ways of specifying `f`:
+- `f(du,u,p,t)`: in-place. Memory-efficient when avoiding allocations. Best option for most cases unless mutation is not allowed. 
+- `f(u,p,t)`: returning `du`. Less memory-efficient way, particularly suitable when mutation is not allowed (e.g. with certain automatic differentiation packages such as Zygote).
+
+`u₀` should be an AbstractArray (or number) whose geometry matches the desired geometry of `u`.
 Note that we are not limited to numbers or vectors for `u₀`; one is allowed to
 provide `u₀` as arbitrary matrices / higher dimension tensors as well.
 
