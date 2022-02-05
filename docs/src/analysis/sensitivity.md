@@ -481,6 +481,15 @@ by directly controlling the forward solve that is then reversed over. Lastly,
 it allows one to define a continuous cost function on the continuous solution,
 instead of just at discrete data points.
 
+!!! warning
+
+      Non-checkpointed InterpolatingAdjoint and QuadratureAdjoint sensealgs
+      require that the forward solution `sol(t)` has an accurate dense 
+      solution unless checkpointing is used. This means that you should
+      not use `solve(prob,alg,saveat=ts)` unless checkpointing. If specific
+      saving is required, one should solve dense `solve(prob,alg)`, use the
+      solution in the adjoint, and then `sol(ts)` interpolate. 
+
 ### Syntax
 
 There are two forms. For discrete adjoints, the form is:
