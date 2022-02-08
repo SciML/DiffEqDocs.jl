@@ -83,7 +83,7 @@ sol = solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6)
 ```
 
 !!! note
-      
+
       Since [the global error is 1-2 orders of magnitude higher than the local error](https://diffeq.sciml.ai/stable/basics/faq/#What-does-tolerance-mean-and-how-much-error-should-I-expect), we use accuracies of 1e-6 (instead of the default 1e-3) to get reasonable sensitivities
 
 But if we want to perturb `u0` and `p` in a gradient calculation then we can do forward-mode:
@@ -250,6 +250,15 @@ the definition of the methods.
 
 The `ReverseDiffAdjoint()`, `TrackerAdjoint()`, `ZygoteAdjoint()`, and `SensitivityADPassThrough()` algorithms all offer differentiate-through-the-solver adjoints, each based on their respective automatic differentiation packages. If you're not sure which to use, `ReverseDiffAdjoint()` is generally a stable and performant best if using the CPU, while `TrackerAdjoint()` is required if you need GPUs. Note that `SensitivityADPassThrough()` is more or less an internal implementation detail. For example, `ReverseDiffAdjoint()` is implemented by invoking `ReverseDiff`'s AD functionality on `solve(...; sensealg=SensitivityADPassThrough())`.
 
+All methods based on discrete sensitivity analysis via automatic differentiation,
+like `ReverseDiffAdjoint`, `TrackerAdjoint`, or `ForwardDiffAdjoint` are fully
+compatible with events. This applies to ODEs, SDEs, DAEs, and DDEs.
+The continuous adjoint sensitivities `BacksolveAdjoint`, `InterpolatingAdjoint`,
+and `QuadratureAdjoint` are compatible with events for ODEs. `BacksolveAdjoint` and
+`InterpolatingAdjoint` can also handle events for SDEs. Use `BacksolveAdjoint` if
+the event terminates the time evolution and several states are saved. Currently,
+the continuous adjoint sensitivities do not support multiple events per time point.
+
 ### Internal Automatic Differentiation Options (ADKwargs)
 
 Many sensitivity algorithms share the same options for controlling internal
@@ -274,7 +283,7 @@ use of automatic differentiation. The following arguments constitute the
   uses a compiler analysis to choose the most efficient vjp for a given code.
     - `TrackerVJP`: Uses Tracker.jl for the vjp.
     - `ZygoteVJP`: Uses Zygote.jl for the vjp.
-    - `EnzymeVJP`: Uses Enzyme.jl for the vjp. 
+    - `EnzymeVJP`: Uses Enzyme.jl for the vjp.
     - `ReverseDiffVJP(compile=false)`: Uses ReverseDiff.jl for the vjp. `compile`
       is a boolean for whether to precompile the tape, which should only be done
       if there are no branches (`if` or `while` statements) in the `f` function.
@@ -484,11 +493,11 @@ instead of just at discrete data points.
 !!! warning
 
       Non-checkpointed InterpolatingAdjoint and QuadratureAdjoint sensealgs
-      require that the forward solution `sol(t)` has an accurate dense 
+      require that the forward solution `sol(t)` has an accurate dense
       solution unless checkpointing is used. This means that you should
       not use `solve(prob,alg,saveat=ts)` unless checkpointing. If specific
       saving is required, one should solve dense `solve(prob,alg)`, use the
-      solution in the adjoint, and then `sol(ts)` interpolate. 
+      solution in the adjoint, and then `sol(ts)` interpolate.
 
 ### Syntax
 
@@ -719,7 +728,7 @@ Thus one should check the stability of the backsolve on their type of problem be
 enabling this method. Additionally, using checkpointing with backsolve can be a
 low memory way to stabilize it.
 
-## Sensitivity analysis for chaotic systems (shadowing methods)(@id shadowing_methods)
+## Sensitivity analysis for chaotic systems (shadowing methods)
 
 Let us define the instantaneous objective ``g(u,p)`` which depends on the state `u`
 and the parameter `p` of the differential equation. Then, if the objective is a
@@ -751,13 +760,20 @@ long-time average quantities. The following `sensealg` choices exist
   [least square shadowing](https://arxiv.org/abs/1204.0159) method. `alpha`
   controls the weight of the time dilation term in `AdjointLSS`.
 - `NILSS(nseg, nstep; rng = Xorshifts.Xoroshiro128Plus(rand(UInt64)), ADKwargs...)`:  
-  An implementation of the [non-intrusive least squares shadowing](https://arxiv.org/abs/1611.00880)
+  An implementation of the [non-intrusive least squares shadowing (NILSS)](https://arxiv.org/abs/1611.00880)
   method. `nseg` is the number of segments. `nstep` is the number of steps per
   segment.
+- `NILSAS(nseg, nstep, M=nothing; rng = Xorshifts.Xoroshiro128Plus(rand(UInt64)), ADKwargs...)`:  
+  An implementation of the [non-intrusive least squares adjoint shadowing (NILSAS)](https://arxiv.org/abs/1801.08674)
+  method. `nseg` is the number of segments. `nstep` is the number of steps per
+  segment, `M >= nus + 1` has to be provided, where `nus` is the number of unstable
+  covariant Lyapunov vectors.
+
 
 Recommendation: Since the computational and memory costs of `NILSS()` scale with
 the number of positive (unstable) Lyapunov, it is typically less expensive than
-`ForwardLSS()`. `AdjointLSS()` is favorable for a large number of system parameters.
+`ForwardLSS()`. `AdjointLSS()` and `NILSAS()` are favorable for a large number
+of system parameters.
 
 As an example, for the Lorenz system with `g(u,p,t) = u[3]`, i.e., the ``z`` coordinate,
 as the instantaneous objective, we can use the direct interface by passing `ForwardLSS`
