@@ -59,24 +59,30 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 
 ## Iterated Integral Approximations
 
-The difficulty of higher strong order integrators is the resolution of the stochastic
-iterated integral expressions, i.e.
+The difficulty of higher strong order integrators stems from the presence of iterated
+stochastic integrals
 
 ```math
-\iint dW_t dZ_s
+I(h) = \int_0^h\int_0^sdW^1_tdW^2_s
 ```
+in these schemes.
 
-Most methods are specific noise cases, like diagonal noise or commutative noise,
-because of how this iterated integral approximation is performed within the method.
-However, the methods for general noise, like `RKMilGeneral`, perform a direct
+The approximation of these iterated integrals can be avoided, if the diffusion matrix
+satisfies the special commutativity condition given [above](@ref special noise forms).
+Because of this, many methods are only applicable to problems that satisfy the commutativity
+condition. In other words, many methods can only handle specific noise cases, like
+diagonal noise or commutative noise, because of how this iterated integral approximation
+is computed.
+
+However, the methods for general SDEs, like `RKMilGeneral`, perform a direct
 approximation of the iterated integrals. For those methods, the algorithms have
-an `ii_approx` keyword argument which allows for specifying the method for the
+an `ii_approx` keyword argument that allows one to specify the method for the
 approximation. The choices are:
 
 - `IICommutative`: a simplification of the integral which assumes the noise commutativity
   property. If used on a non-commutative noise problem this will limit the strong convergence
   to 0.5.
-- `IILevyArea`: computes the iterated integrals based on an approximation of the LevyArea
+- `IILevyArea`: computes the iterated integrals based on an approximation of the Levy area
   using the [LevyArea.jl](https://github.com/stochastics-uni-luebeck/LevyArea.jl) package:
   Kastner, F. and Rößler, A., [arXiv: 2201.08424](https://arxiv.org/abs/2201.08424)
   Kastner, F. and Rößler, A., LevyArea.jl, [10.5281/ZENODO.5883748](https://zenodo.org/record/5883749#.Yg-d698xmu4).
@@ -86,6 +92,7 @@ approximation. The choices are:
   methods can be manually selected.
 
 Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
+
 
 ## Special Keyword Arguments
 
