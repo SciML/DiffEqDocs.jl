@@ -8,9 +8,9 @@ do well. If the problem has additive noise, then `SOSRA` will be the
 optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
 though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
 is a strong order 1.0 method which utilizes the commutivity property to greatly
-speed up the Wiktorsson approximation and can choose between Ito and Stratonovich.
-For non-commutative noise, difficult problems usually require adaptive time
-stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
+speed up the stochastic iterated integral approximation and can choose between Ito
+and Stratonovich. For non-commutative noise, difficult problems usually require adaptive
+time stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
 are adaptive and handle general non-diagonal problems (for Ito and Stratonovich
 interpretations respectively). If adaptivity isn't necessary, the `EM` and
 `EulerHeun` are good choices (for Ito and Stratonovich interpretations
@@ -76,10 +76,16 @@ approximation. The choices are:
 - `IICommutative`: a simplification of the integral which assumes the noise commutativity
   property. If used on a non-commutative noise problem this will limit the strong convergence
   to 0.5.
-- `IIWiktorsson`: approximation of the due to Wiktorsson with a approximation of the truncation
-  term
+- `IILevyArea`: computes the iterated integrals based on an approximation of the LevyArea
+  using the [LevyArea.jl](https://github.com/stochastics-uni-luebeck/LevyArea.jl) package:
+  Kastner, F. and Rößler, A., [arXiv: 2201.08424](https://arxiv.org/abs/2201.08424)
+  Kastner, F. and Rößler, A., LevyArea.jl, [10.5281/ZENODO.5883748](https://zenodo.org/record/5883749#.Yg-d698xmu4).
+  The package supports the schemes: `Fourier()`, `Milstein()`, `Wiktorsson()`,`MronRoe()`.
+  The optimal algorithm is automatically selected based on the dimension of the Brownian
+  process and the step size. By passing a specific scheme, e.g. `ii_approx=Fourier()`
+  methods can be manually selected.
 
-Example: `RKMilGeneral(ii_approx=IIWiktorsson())`.
+Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
 
 ## Special Keyword Arguments
 
@@ -126,8 +132,8 @@ Orders are given in terms of strong order.
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
-- `RKMilGeneral(;interpretation=:Ito, ii_approx=IIWiktorsson()` - An explicit 
-  Runge-Kutta discretization of the strong order 1.0 Milstein method for general 
+- `RKMilGeneral(;interpretation=:Ito, ii_approx=IILevyArea()` - An explicit
+  Runge-Kutta discretization of the strong order 1.0 Milstein method for general
   non-commutative noise problems. Allows for a choice of interpretation between
   `:Ito` and `:Stratonovich`. Allows for a choice of iterated integral approximation.
 - `WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
