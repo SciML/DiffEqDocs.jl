@@ -8,9 +8,9 @@ do well. If the problem has additive noise, then `SOSRA` will be the
 optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
 though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
 is a strong order 1.0 method which utilizes the commutivity property to greatly
-speed up the Wiktorsson approximation and can choose between Ito and Stratonovich.
-For non-commutative noise, difficult problems usually require adaptive time
-stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
+speed up the stochastic iterated integral approximation and can choose between Ito
+and Stratonovich. For non-commutative noise, difficult problems usually require adaptive
+time stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
 are adaptive and handle general non-diagonal problems (for Ito and Stratonovich
 interpretations respectively). If adaptivity isn't necessary, the `EM` and
 `EulerHeun` are good choices (for Ito and Stratonovich interpretations
@@ -59,27 +59,44 @@ i.e. is independent of `u`. Multiplicative noise is ``g_i(t,u)=a_i u``.
 
 ## Iterated Integral Approximations
 
-The difficulty of higher strong order integrators is the resolution of the stochastic
-iterated integral expressions, i.e.
+The difficulty of higher strong order integrators stems from the presence of iterated
+stochastic integrals
 
 ```math
-\iint dW_t dZ_s
+I(h) = \int_0^h\int_0^sdW^1_tdW^2_s
 ```
+in these schemes.
 
-Most methods are specific noise cases, like diagonal noise or commutative noise,
-because of how this iterated integral approximation is performed within the method.
-However, the methods for general noise, like `RKMilGeneral`, perform a direct
+The approximation of these iterated integrals can be avoided, if the diffusion matrix
+satisfies the special commutativity condition given [above](@ref special noise forms).
+Because of this, many methods are only applicable to problems that satisfy the commutativity
+condition. In other words, many methods can only handle specific noise cases, like
+diagonal noise or commutative noise, because of how this iterated integral approximation
+is computed.
+
+However, the methods for general SDEs, like `RKMilGeneral`, perform a direct
 approximation of the iterated integrals. For those methods, the algorithms have
-an `ii_approx` keyword argument which allows for specifying the method for the
+an `ii_approx` keyword argument that allows one to specify the method for the
 approximation. The choices are:
 
 - `IICommutative`: a simplification of the integral which assumes the noise commutativity
   property. If used on a non-commutative noise problem this will limit the strong convergence
   to 0.5.
-- `IIWiktorsson`: approximation of the due to Wiktorsson with a approximation of the truncation
-  term
+- `IILevyArea`: computes the iterated integrals based on an approximation of the Levy area
+  using the [LevyArea.jl](https://github.com/stochastics-uni-luebeck/LevyArea.jl) package:
+  Kastner, F. and Rößler, A., [arXiv: 2201.08424](https://arxiv.org/abs/2201.08424)
+  Kastner, F. and Rößler, A., LevyArea.jl, [10.5281/ZENODO.5883748](https://zenodo.org/record/5883749#.Yg-d698xmu4).
+  The package supports the schemes: `Fourier()`, `Milstein()`, `Wiktorsson()`,`MronRoe()`.
+  The optimal algorithm is automatically selected based on the dimension of the Brownian
+  process and the step size. By passing a specific scheme, e.g. `ii_approx=Fourier()`
+  methods can be manually selected. One must be careful when using the Levy area
+  approximations in conjunction with adaptivity (`adaptive=true`) because the Levy area
+  approximations draw random numbers that do not reflect the random numbers taken in a
+  previous rejected step. This leads to a bias that increases with an increasing number
+  of rejected steps.
 
-Example: `RKMilGeneral(ii_approx=IIWiktorsson())`.
+Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
+
 
 ## Special Keyword Arguments
 
@@ -126,8 +143,8 @@ Orders are given in terms of strong order.
   Milstein method for commutative noise problems. Defaults to solving the Ito
   problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
   Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
-- `RKMilGeneral(;interpretation=:Ito, ii_approx=IIWiktorsson()` - An explicit 
-  Runge-Kutta discretization of the strong order 1.0 Milstein method for general 
+- `RKMilGeneral(;interpretation=:Ito, ii_approx=IILevyArea()` - An explicit
+  Runge-Kutta discretization of the strong order 1.0 Milstein method for general
   non-commutative noise problems. Allows for a choice of interpretation between
   `:Ito` and `:Stratonovich`. Allows for a choice of iterated integral approximation.
 - `WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
