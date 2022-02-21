@@ -89,7 +89,11 @@ approximation. The choices are:
   The package supports the schemes: `Fourier()`, `Milstein()`, `Wiktorsson()`,`MronRoe()`.
   The optimal algorithm is automatically selected based on the dimension of the Brownian
   process and the step size. By passing a specific scheme, e.g. `ii_approx=Fourier()`
-  methods can be manually selected.
+  methods can be manually selected. One must be careful when using the Levy area
+  approximations in conjunction with adaptivity (`adaptive=true`) because the Levy area
+  approximations draw random numbers that do not reflect the random numbers taken in a
+  previous rejected step. This leads to a bias that increases with an increasing number
+  of rejected steps.
 
 Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
 
