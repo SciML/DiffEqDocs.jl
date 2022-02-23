@@ -27,7 +27,7 @@ The Brusselator PDE is defined as follows:
 ```math
 \begin{align}
 \frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}) + f(x, y, t)\\
-\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2})
+\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2})
 \end{align}
 ```
 
@@ -44,8 +44,8 @@ and the initial conditions are
 
 ```math
 \begin{align}
-u(x, y, 0) &= 22\cdot y(1-y)^{3/2} \\
-v(x, y, 0) &= 27\cdot x(1-x)^{3/2}
+u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
+v(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
 \end{align}
 ```
 
