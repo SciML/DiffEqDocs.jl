@@ -374,7 +374,7 @@ using DifferentialEquations
 using Plots
 
 l = 1.0                             # length [m]
-m = 1.0                             # mass[m]
+m = 1.0                             # mass [kg]
 g = 9.81                            # gravitational acceleration [m/s²]
 
 function pendulum!(du,u,p,t)
