@@ -72,7 +72,7 @@ CSV.write("out.csv",df)
 ## JLD2 and BSON.jl
 
 JLD2.jl and BSON.jl will work with the full solution type if you bring the required functions
-back into scope before loading. For eaxmple, if we save the solution:
+back into scope before loading. For example, if we save the solution:
 
 ```julia
 using OrdinaryDiffEq, JLD2
