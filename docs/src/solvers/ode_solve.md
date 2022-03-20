@@ -557,7 +557,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 - `RKC` - Second order stabilized Runge-Kutta method. Exhibits high stability
   for real eigenvalues and is smoothened to allow for moderate sized complex
   eigenvalues.
-- `SERK2v2` - Second order stabilized extrapolated Runge-Kutta method. Exhibits
+- `SERK2` - Second order stabilized extrapolated Runge-Kutta method. Exhibits
   high stability for real eigenvalues and is smoothened to allow for moderate
   sized complex eigenvalues.
 - `ESERK5` - Fifth order stabilized extrapolated Runge-Kutta method. Exhibits
@@ -565,7 +565,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   sized complex eigenvalues.
 
 ROCK methods offer a `min_stages` and `max_stages` functionality. SERK methods
-derive higher orders by Aitken-Neville algorithm. SERK2v2 is defaulted to Predictive
+derive higher orders by Aitken-Neville algorithm. SERK2 is defaulted to Predictive
 control but has option of PI control.
 
 #### Parallelized Implicit Extrapolation Methods
