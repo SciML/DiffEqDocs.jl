@@ -13,8 +13,14 @@ In this example we will solve the equation
 \frac{du}{dt} = f(u,p,t)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. We know by calculus
-that the solution to this equation is ``u(t)=u₀\exp(αt)``.
+on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. Here, ``u`` is the
+current state variable, ``p`` is our parameter variable (containing things like
+a reaction rate or the constant of gravity), and ``t`` is the current time.
+
+(In our example, we know by calculus that the solution to this equation is 
+``u(t)=u₀\exp(αt)``, but we will use DifferentialEquations.jl to solve this 
+problem *numerically*, which is essential for problems where a symbolic solution 
+is not known.)
 
 The general workflow is to define a problem, solve the problem, and then analyze
 the solution. The full code for solving this problem is:
