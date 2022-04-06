@@ -743,7 +743,7 @@ where
 ```
 under the assumption of ergodicity, ``\langle g \rangle_∞`` only depends on `p`.
 
-In the case of chaotic systems, [the trajectories diverge with ``O(1)`` error](https://frankschae.github.io/post/shadowing/). This
+In the case of chaotic systems, the trajectories diverge with ``O(1)`` error]. This
 can be seen, for instance, when solving the [Lorenz system](https://en.wikipedia.org/wiki/Lorenz_system) at
 `1e-14` tolerances with 9th order integrators and a small machine-epsilon perturbation:
 
@@ -776,19 +776,21 @@ as follows: "For most initial conditions, the (homogeneous) tangent solutions gr
 exponentially fast."
 
 To compute derivatives of an objective ``\langle g \rangle_∞`` with respect to the
-parameters `p` of a chaotic systems (i.e., the long-time effect), one encounters
-that "traditional" forward and adjoint sensitivity methods diverge because the tangent
-space diverges with a rate given by the Lyapunov exponent. Taking the average of
-these derivative can then also fail, i.e., one finds that the average derivative
-is not the derivative of the average.
+parameters `p` of a chaotic systems, one thus encounters that "traditional" forward
+and adjoint sensitivity methods diverge because the tangent space diverges with a
+rate given by the Lyapunov exponent. Taking the average of these derivative can then
+also fail, i.e., one finds that the average derivative is not the derivative of
+the average.
 
 Although numerically computed chaotic trajectories diverge from the true/original
 trajectory, the [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) guarantees that there exists an errorless trajectory
 with a slightly different initial condition that stays near ("shadows") the numerically
-computed one, see the [non-intrusive least squares shadowing paper](https://arxiv.org/abs/1611.00880) for details.
-Shadowing methods use this property within a renormalization procedure to accurately
-compute derivatives w.r.t. the long-time average quantities. Essentially, this works
-by replacing the ill-conditioned ODE by a well-conditioned optimization problem.
+computed one, see, e.g, the [blog post](https://frankschae.github.io/post/shadowing/) or the [non-intrusive least squares shadowing paper](https://arxiv.org/abs/1611.00880) for more details.
+Essentially, the idea is to replace the ill-conditioned ODE by a well-conditioned
+optimization problem. Shadowing methods use the shadowing theorem within a renormalization
+procedure to distill the long-time effect from the joint observation of the long-time
+and the butterfly effect. This allows us to accurately compute derivatives w.r.t.
+the long-time average quantities.
 
 The following `sensealg` choices exist
 
