@@ -739,18 +739,58 @@ long-time average quantity
 ```
 where
 ```math
-\langle g \rangle_T = \frac{1}{T} \int_0^T g(u,s) \text{d}t,
+\langle g \rangle_T = \frac{1}{T} \int_0^T g(u,p) \text{d}t,
 ```
 under the assumption of ergodicity, ``\langle g \rangle_∞`` only depends on `p`.
 
-In the case of chaotic systems, the trajectories diverge with ``O(1)`` error and one
-finds that the average derivative is not the derivative of the average. "Traditional"
-forward and adjoint sensitivity methods also diverge because the tangent space
-diverges with a rate given by the Lyapunov exponent.
+In the case of chaotic systems, [the trajectories diverge with ``O(1)`` error](https://frankschae.github.io/post/shadowing/). This
+can be seen, for instance, when solving the [Lorenz system](https://en.wikipedia.org/wiki/Lorenz_system) at
+`1e-14` tolerances with 9th order integrators and a small machine-epsilon perturbation:
 
-Shadowing methods use renormalization to accurately compute derivatives w.r.t. the
-long-time average quantities. The following `sensealg` choices exist
+```julia
+using OrdinaryDiffEq
 
+function lorenz!(du, u, p, t)
+  du[1] = 10 * (u[2] - u[1])
+  du[2] = u[1] * (p[1] - u[3]) - u[2]
+  du[3] = u[1] * u[2] - (8 // 3) * u[3]
+end
+
+p = [28.0]
+tspan = (0.0, 100.0)
+u0 = [1.0, 0.0, 0.0]
+prob = ODEProblem(lorenz!, u0, tspan, p)
+sol = solve(prob, Vern9(), abstol = 1e-14, reltol = 1e-14)
+sol2 = solve(prob, Vern9(), abstol = 1e-14 + eps(Float64), reltol = 1e-14)
+```
+![Chaotic behavior of the Lorenz system](../assets/chaos_eps_pert.png)
+
+More formally, such chaotic behavior can be analyzed using tools from
+[uncertainty quantification](@ref uncertainty_quantification).
+This effect of diverging trajectories is known as the butterfly effect and can be
+formulated as "most (small) perturbations on initial conditions or parameters lead
+to new trajectories diverging exponentially fast from the original trajectory".
+
+The latter statement can be roughly translated to the level of sensitivity calculation
+as follows: "For most initial conditions, the (homogeneous) tangent solutions grow
+exponentially fast."
+
+To compute derivatives of an objective ``\langle g \rangle_∞`` with respect to the
+parameters `p` of a chaotic systems (i.e., the long-time effect), one encounters
+that "traditional" forward and adjoint sensitivity methods diverge because the tangent
+space diverges with a rate given by the Lyapunov exponent. Taking the average of
+these derivative can then also fail, i.e., one finds that the average derivative
+is not the derivative of the average.
+
+Although numerically computed chaotic trajectories diverge from the true/original
+trajectory, the [shadowing theorem](http://mathworld.wolfram.com/ShadowingTheorem.html) guarantees that there exists an errorless trajectory
+with a slightly different initial condition that stays near ("shadows") the numerically
+computed one, see the [non-intrusive least squares shadowing paper](https://arxiv.org/abs/1611.00880) for details.
+Shadowing methods use this property within a renormalization procedure to accurately
+compute derivatives w.r.t. the long-time average quantities. Essentially, this works
+by replacing the ill-conditioned ODE by a well-conditioned optimization problem.
+
+The following `sensealg` choices exist
 
 - `ForwardLSS(;alpha=CosWindowing(),ADKwargs...)`: An implementation of the forward
   [least square shadowing](https://arxiv.org/abs/1204.0159) method. For `alpha`,
