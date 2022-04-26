@@ -62,7 +62,6 @@ Note that the affine equation
 u^\prime = A(u,p,t)u + g(u,p,t)
 ```
 
-
 can be written as a linear form by extending the size of the system by one to have a
 constant term of 1. This is done by extending `A` with a new row, containing only zeros,
 and giving this new state an initial value of 1.
