@@ -486,7 +486,7 @@ find the accumulation point. Let's watch!
 ```julia
 function dynamics!(du, u, p, t)
 	du[1] = u[2]
-	du[2] = p[1] * -9.8
+	du[2] = -9.8
 end
 floor_cond(u, t, int) = u[1]
 function floor_aff!(int)
