@@ -636,7 +636,8 @@ Except for `ETD2`, all methods come with these options, which can be set in the 
 constructor:
 
 - `krylov` - boolean, default: `false`. Determines whether Krylov approximation or operator
-  caching is used, the latter only available for semilinear problems.
+  caching is used, the latter only available for semilinear problems. `krylov=true` is much
+  faster for larger systems and is thus recommended whenever there are >100 ODEs.
 - `m` - integer, default: `30`. Controls the size of Krylov subsapce.
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
