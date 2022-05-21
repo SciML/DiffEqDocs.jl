@@ -710,7 +710,7 @@ adaptive time step and non-reversible integrator, then the backwards solution di
 from the forward solution. As a quick demonstration:
 
 ```julia
-using Sundials
+using DifferentialEquations
 function lorenz(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
