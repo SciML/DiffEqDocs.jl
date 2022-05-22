@@ -3,3 +3,9 @@
 ```@docs
 BVProblem
 ```
+
+## Solution Type
+
+```@docs
+ODESolution
+```

@@ -4,3 +4,9 @@
 SplitODEProblem
 SplitFunction
 ```
+
+## Solution Type
+
+```@docs
+ODESolution
+```

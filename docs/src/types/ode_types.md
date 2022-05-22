@@ -5,6 +5,12 @@ ODEProblem
 ODEFunction
 ```
 
+## Solution Type
+
+```@docs
+ODESolution
+```
+
 ## Example Problems
 
 Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/tree/master/src/ode).

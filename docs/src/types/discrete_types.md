@@ -4,3 +4,9 @@
 DiscreteProblem
 DiscreteFunction
 ```
+
+## Solution Type
+
+```@docs
+ODESolution
+```

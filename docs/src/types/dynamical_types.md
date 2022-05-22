@@ -6,6 +6,12 @@ SecondOrderODEProblem
 DynamicalODEFunction
 ```
 
+## Solution Type
+
+```@docs
+ODESolution
+```
+
 ## Hamiltonian Problems
 
 `HamiltonianProblem`s are provided by DiffEqPhysics.jl and provide an easy way

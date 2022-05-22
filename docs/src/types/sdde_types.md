@@ -4,3 +4,9 @@
 SDDEProblem
 SDDEFunction
 ```
+
+## Solution Type
+
+```@docs
+RODESolution
+```

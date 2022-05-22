@@ -5,6 +5,12 @@ DAEProblem
 DAEFunction
 ```
 
+## Solution Type
+
+```@docs
+DAESolution
+```
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/dae_premade_problems.jl).

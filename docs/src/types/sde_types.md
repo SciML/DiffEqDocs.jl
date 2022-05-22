@@ -5,6 +5,12 @@ SDEProblem
 SDEFunction
 ```
 
+## Solution Type
+
+```@docs
+RODESolution
+```
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/JuliaDiffEq/DiffEqProblemLibrary.jl/blob/master/src/sde_premade_problems.jl).

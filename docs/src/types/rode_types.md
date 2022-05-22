@@ -4,3 +4,9 @@
 RODEProblem
 RODEFunction
 ```
+
+## Solution Type
+
+```@docs
+RODESolution
+```
