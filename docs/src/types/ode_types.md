@@ -2,6 +2,7 @@
 
 ```@docs
 ODEProblem
+ODEFunction
 ```
 
 ## Example Problems

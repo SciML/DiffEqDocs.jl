@@ -2,4 +2,5 @@
 
 ```@docs
 RODEProblem
+RODEFunction
 ```

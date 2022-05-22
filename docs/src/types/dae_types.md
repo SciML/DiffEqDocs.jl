@@ -2,6 +2,7 @@
 
 ```@docs
 DAEProblem
+DAEFunction
 ```
 
 ## Example Problems

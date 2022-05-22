@@ -2,4 +2,5 @@
 
 ```@docs
 DiscreteProblem
+DiscreteFunction
 ```
