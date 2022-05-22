@@ -3,3 +3,9 @@
 ```@docs
 SteadyStateProblem
 ```
+
+## Solution Type
+
+```@docs
+NonlinearSolution
+```
