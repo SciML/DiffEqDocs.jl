@@ -2,4 +2,5 @@
 
 ```@docs
 SplitODEProblem
+SplitFunction
 ```

@@ -2,6 +2,7 @@
 
 ```@docs
 SDEProblem
+SDEFunction
 ```
 
 ## Example Problems

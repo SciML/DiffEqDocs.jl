@@ -2,6 +2,7 @@
 
 ```@docs
 DDEProblem
+DDEFunction
 ```
 
 ## Example Problems

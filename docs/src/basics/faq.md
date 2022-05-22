@@ -311,7 +311,7 @@ and do a dense factorization. However, in many cases you may want to use alterna
 that are more tuned for your problem.
 
 First of all, when available, it's recommended that you pass a function for computing
-your Jacobian. This is discussed in the [performance overloads](@ref ode_explicit_jac)
+your Jacobian. This is discussed in the [performance overloads](@ref performance_overloads)
 section. Jacobians are especially helpful for Rosenbrock methods.
 
 Secondly, if your Jacobian isn't dense, you shouldn't use a dense Jacobian!

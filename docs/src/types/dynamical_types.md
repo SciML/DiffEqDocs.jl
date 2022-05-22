@@ -3,6 +3,7 @@
 ```@docs
 DynamicalODEProblem
 SecondOrderODEProblem
+DynamicalODEFunction
 ```
 
 ## Hamiltonian Problems
