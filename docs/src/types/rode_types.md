@@ -1,4 +1,4 @@
-# RODE Problems
+# [RODE Problems](@id rode_problem)
 
 ```@docs
 RODEProblem

@@ -8,9 +8,8 @@ DynamicalODEFunction
 
 ## Solution Type
 
-```@docs
-ODESolution
-```
+Dynamical ODE solutions return an `ODESolution`. For more information, see the
+[ODE problem definition page](@ref ode_prob) for the `ODESolution` docstring.
 
 ## Hamiltonian Problems
 

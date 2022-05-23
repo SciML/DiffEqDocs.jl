@@ -36,18 +36,11 @@ arguments for handling the automatic Jacobian construction with the following de
   Defalts to `Val{:forward}`, with altnerative choices of `Val{:central}` and
   `Val{:complex}`. 
 
-## Function Type Definitions
+## Passing Jacobian Function Definitions
 
-```@docs
-ODEFunction
-SDEFunction
-DAEFunction
-DiscreteFunction
-DDEFunction
-SDDEFunction
-DynamicalODEFunction
-DynamicalSDEFunction
-DynamicalDDEFunction
-SplitFunction
-SplitSDEFunction
-```
+If one wishes to directly define a Jacobian function for use in the solver, then
+the defined method is passed to the `AbstractSciMLFunction` type associated with
+the `DEProblem`. For example, `ODEProblem` definitions have a spot for `jac` in
+the `ODEFunction` specification. For more information on how to define Jacobians
+for the specific problems, see the appropriate problem type page, for example,
+[the ODE problem page](@ref ode_prob)
