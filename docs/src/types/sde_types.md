@@ -7,9 +7,8 @@ SDEFunction
 
 ## Solution Type
 
-```@docs
-RODESolution
-```
+`SDEProblem` solutions return an `RODESolution`. For more information, see the
+[RODE problem definition page](@ref rode_problem) for the `RODESolution` docstring.
 
 ## Example Problems
 
