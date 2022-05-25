@@ -159,6 +159,12 @@ will default to plotting the surface at the final timepoint. The iterator interf
 simply iterates the value of `tslocation`, and the `animate` function iterates
 the solution calling solve at each step.
 
+## Differential Equation Solver Statistics (destats)
+
+```@docs
+SciMLBase.DEStats
+```
+
 ## [Return Codes (RetCodes)](@id retcodes)
 
 The solution types have a `retcode` field which returns a symbol signifying the
