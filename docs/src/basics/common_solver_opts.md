@@ -27,7 +27,7 @@ Currently unused options include:
 * `:memorybound` - Denotes that the solver will be memory bound.
 
 This functionality is derived via the benchmarks in
-[DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl)
+[SciMLBenchmarks.jl](https://github.com/SciML/SciMLBenchmarks.jl)
 
 ### SDE Specific Alghints
 
