@@ -14,8 +14,8 @@ matrices.
 
 If the problem cannot be defined in mass matrix form, the recommended method for
 performance is `IDA` from the Sundials.jl package if you are solving problems with
-`Float64`. If Julia types are required, currently `FBDF` is the best method
-but still experimental.
+`Float64`. If Julia types are required, currently `DFBDF` is the best method
+but still needs more optimizations.
 
 ## [Full List of Methods](@id dae_solve_full)
 
@@ -129,7 +129,9 @@ Sundials CVODE integrator.
   Shampine's accuracy-optimal `kappa` values as defaults (has a keyword argument
   for a tuple of `kappa` coefficients).
 - `QBDF` - An adaptive order quasi-constant timestep BDF method.
-
+- `FBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
+  similar to `ode15i` or `CVODE_BDF` in divided differences form.
+  
 ### [Sundials.jl](@id dae_solve_sundials)
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
