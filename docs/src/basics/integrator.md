@@ -193,6 +193,9 @@ set_proposed_dt!
 terminate!
 change_t_via_interpolation!
 add_tstop!
+has_tstop
+first_tstop
+pop_tstop!
 add_saveat!
 ```
 
