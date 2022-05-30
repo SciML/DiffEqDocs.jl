@@ -109,7 +109,6 @@ makedocs(modules=[DiffEqBase,SciMLBase,DiffEqProblemLibrary,ODEProblemLibrary,SD
          ],
          "Extra Details" => Any[
              "extras/timestepping.md",
-             "extras/sensitivity_math.md",
          ]
          ])
 
