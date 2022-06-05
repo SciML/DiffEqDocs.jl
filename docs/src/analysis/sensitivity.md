@@ -38,4 +38,4 @@ using SciMLSensitivity
 ```
 
 For complete information on using the sensitivity analyis features, please
-[consult the SciMLSensitivity.jl documentation](sensitivity.sciml.ai/dev)
+[consult the SciMLSensitivity.jl documentation](https://sensitivity.sciml.ai/dev)
