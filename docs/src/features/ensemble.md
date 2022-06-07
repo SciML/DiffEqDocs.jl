@@ -38,7 +38,9 @@ EnsembleProblem(prob::DEProblem;
   as without this, modifying the arguments of something in the `prob_func`, such
   as parameters or caches stored within the user function, are not necessarily
   thread-safe. If you know that your function is thread-safe, then setting this
-  to `false` can improve performance when used with threads.
+  to `false` can improve performance when used with threads. For nested problems,
+  e.g., SDE problems with custom noise processes, `deepcopy` might be
+  insufficient. In such cases use a custom `prob_func`.
 
 One can specify a function `prob_func` which changes the problem. For example:
 
