@@ -120,8 +120,6 @@ are added via `addprocs()`, but we can change this to use multithreading via
 
 ```julia
 sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
-```
-
 Many more controls are defined at the [Ensemble simulations page](@ref ensemble), 
 including analysis tools.
 A very simple analysis can be done with the `EnsembleSummary`, which builds
