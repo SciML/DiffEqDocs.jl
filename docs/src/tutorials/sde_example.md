@@ -120,6 +120,13 @@ are added via `addprocs()`, but we can change this to use multithreading via
 
 ```julia
 sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
+```
+
+!!! warn
+
+    If you use a custom noise process, you might need to specify it in a custom prob_func
+    in the EnsembleProblem constructor, as each trajectory needs its own noise process.
+
 Many more controls are defined at the [Ensemble simulations page](@ref ensemble), 
 including analysis tools.
 A very simple analysis can be done with the `EnsembleSummary`, which builds
