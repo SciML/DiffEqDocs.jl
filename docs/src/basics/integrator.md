@@ -21,7 +21,7 @@ used by `solve` and the returned value is an `integrator` which satisfies
 step!(integrator)
 ```
 
-which will take one successful step. Additonally:
+which will take one successful step. Additionally:
 
 ```julia
 step!(integrator,dt[,stop_at_tdt=false])
