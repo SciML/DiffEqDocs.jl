@@ -22,7 +22,7 @@ include:
 - (Stochastic) partial differential equations ((S)PDEs) (with both finite
   difference and finite element methods)
 
-The well-optimized DifferentialEquations solvers benchmark as the some of the fastest
+The well-optimized DifferentialEquations solvers benchmark as some of the fastest
 implementations, using classic algorithms and ones from recent research which
 routinely outperform the "standard" C/Fortran methods, and include algorithms
 optimized for high-precision and HPC applications. At the same time, it wraps
@@ -226,7 +226,7 @@ Depth = 2
 
 ### Removing and Reducing Compile Times
 
-In some situations one may wish to decrease the compile time associated with DifferenitalEquations.jl
+In some situations one may wish to decrease the compile time associated with DifferentialEquations.jl
 usage. If that's the case, there's two strategies to employ. One strategy is to use the
 [low dependency usage](https://diffeq.sciml.ai/stable/features/low_dep/). DifferentialEquations.jl
 is a metapackage composed of many smaller packages, and thus one could directly use a single component,
