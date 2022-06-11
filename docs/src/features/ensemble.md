@@ -393,6 +393,10 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 `prob.p`:
 
 ```julia
+# `p` is a global variable, referencing it would be type unstable. 
+# Using a let block defines a small local scope in which we can
+# capture that local `p` which isn't redefined anywhere in that local scope.
+# This allows it to be type stable.
 prob_func = let p=p
     (prob,i,repeat) -> begin
         x = 0.3rand(2)
