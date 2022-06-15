@@ -365,8 +365,8 @@ function rober_jac!(J,u,p,t)
   J[3,3] = 0
   nothing
 end
-f = ODEFunction(rober!, jac=rober_jac!)
-prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+f! = ODEFunction(rober!, jac=rober_jac!)
+prob_jac = ODEProblem(f!,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
 ```julia-repl
 julia> @btime solve(prob_jac,Rosenbrock23())
