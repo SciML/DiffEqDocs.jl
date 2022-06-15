@@ -300,7 +300,7 @@ For example:
 
 ```julia
 using DifferentialEquations
-function rober(du,u,p,t)
+function rober!(du,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
   du[1] = -k₁*y₁+k₃*y₂*y₃
@@ -308,7 +308,7 @@ function rober(du,u,p,t)
   du[3] =  k₂*y₂^2
   nothing
 end
-prob = ODEProblem(rober,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
+prob = ODEProblem(rober!,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
 sol = solve(prob)
 plot(sol,tspan=(1e-2,1e5),xscale=:log10)
 ```
@@ -351,7 +351,7 @@ function by using the `jac` argument for the `ODEFunction`. First we have to
 derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this we get:
 
 ```julia
-function rober_jac(J,u,p,t)
+function rober_jac!(J,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
   J[1,1] = k₁ * -1
@@ -365,8 +365,8 @@ function rober_jac(J,u,p,t)
   J[3,3] = 0
   nothing
 end
-f = ODEFunction(rober, jac=rober_jac)
-prob_jac = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+f! = ODEFunction(rober!, jac=rober_jac!)
+prob_jac = ODEProblem(f!,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
 ```
 ```julia-repl
 julia> @btime solve(prob_jac,Rosenbrock23())
