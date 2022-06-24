@@ -122,7 +122,7 @@ Note that all symplectic integrators are fixed timestep only.
 ### GeometricIntegrators.jl
 
 GeometricIntegrators.jl is a set of fixed timestep algorithms written in Julia.
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
