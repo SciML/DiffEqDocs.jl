@@ -2,7 +2,7 @@
 
 Non-autonomous linear ODEs show up in a lot of scientific problems where
 the differential equation lives on a manifold such as Lie Group. In these
-situtations, specialized solvers can be utilized to enforce physical bounds
+situations, specialized solvers can be utilized to enforce physical bounds
 on the solution and enhance the solving.
 
 ## Mathematical Specification of a Non-autonomous Linear ODE

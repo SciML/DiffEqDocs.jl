@@ -196,10 +196,10 @@ IDA(;linear_solver=:Dense,jac_upper=0,jac_lower=0,krylov_dim=0,
 
 See [the Sundials manual](https://computing.llnl.gov/sites/default/files/ida_guide-5.7.0.pdf)
 for details on the additional options. The option `init_all` controls the initial condition
-consistency routine. If the initial conditions are inconsistant (i.e. they do not satisfy the
+consistency routine. If the initial conditions are inconsistent (i.e. they do not satisfy the
 implicit equation), `init_all=false` means that the algebraic variables and derivatives will
 be modified in order to satisfy the DAE. If `init_all=true`, all initial conditions will be
-modified to satify the DAE.
+modified to satisfy the DAE.
 
 Note that here `prec` is a (left) preconditioner function
 `prec(z,r,p,t,y,fy,gamma,delta)` where:
