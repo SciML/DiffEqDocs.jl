@@ -13,7 +13,7 @@ a "trivial" (non-existent) differential equation. We will first demonstrate how
 to build these types of models using the biological modeling functionality of
 [Catalyst.jl](https://github.com/SciML/Catalyst.jl), then describe how to build
 them directly and more generally using
-[DiffEqJump.jl](https://github.com/SciML/DiffEqJump.jl) jump types, and finally
+[JumpProcesses.jl](https://github.com/SciML/JumpProcesses.jl) jump types, and finally
 show how to couple discrete stochastic simulations to differential equation
 models.
 
@@ -56,10 +56,10 @@ intuitive explanation of the model, and then demonstrate how it can be written
 as a serious of chemical reactions in
 [Catalyst.jl](https://github.com/SciML/Catalyst.jl) and seamlessly converted
 into a form that can be used with the
-[DiffEqJump.jl](https://github.com/SciML/DiffEqJump.jl) solvers. Users
-interested in how to directly define jumps using the lower-level DiffEqJump
+[JumpProcesses.jl](https://github.com/SciML/JumpProcesses.jl) solvers. Users
+interested in how to directly define jumps using the lower-level JumpProcesses
 interface can skip to [Building and Simulating the Jump Process using the
-DiffEqJump Low-level Interface](@ref).
+JumpProcesses Low-level Interface](@ref).
 
 The SIR model described above involves two basic chemical reactions,
 
@@ -100,7 +100,7 @@ recovered is ``\nu`` times the number of infected people, i.e. ``\nu I(t)``.
 Rate functions give the probability per time for each of the two types of jumps
 to occur, and hence determine when the state of our system changes. To fully
 specify our model we also need to specify how the state changes when a jump
-occurs, giving what are called `affect` functions in DiffEqJump. For example,
+occurs, giving what are called `affect` functions in JumpProcesses. For example,
 when the $S + I \to 2 I$ reaction occurs and some susceptible person becomes
 infected, the subsequent (instantaneous) state change is that
 
@@ -120,7 +120,7 @@ I &\to I - 1 & R \to R + 1.
 ```
 
 Using [Catalyst.jl](https://github.com/SciML/Catalyst.jl) we can input our full
-reaction network in a form that can be easily used with DiffEqJump's solvers:
+reaction network in a form that can be easily used with JumpProcesses's solvers:
 ```julia
 # ]add Catalyst
 using Catalyst
@@ -156,10 +156,10 @@ people in the different states.*
 The Catalyst reaction network can be converted into various
 DifferentialEquations.jl problem types, including `JumpProblem`s, `ODEProblem`s,
 or `SDEProblem`s. To turn it into a jump problem representing the SIR jump
-process model, we load DiffEqJump and simply do:
+process model, we load JumpProcesses and simply do:
 
 ```julia
-using DiffEqJump
+using JumpProcesses
 jump_prob = JumpProblem(sir_model, prob, Direct())
 ```
 Here `Direct()` indicates that we will determine the random times and types of
@@ -167,7 +167,7 @@ reactions using [Gillespie's Direct stochastic simulation algorithm
 (SSA)](https://doi.org/10.1016/0021-9991(76)90041-3). See [Constant Rate Jump
 Aggregators](@ref) below for other supported SSAs.
 
-We now have a problem that can be evolved in time using the DiffEqJump solvers.
+We now have a problem that can be evolved in time using the JumpProcesses solvers.
 Since our model is a pure jump process (no continuously-varying components), we
 will use `SSAStepper()` to handle time-stepping the `Direct` method from jump to
 jump:
@@ -186,8 +186,8 @@ using Plots; plot(sol)
 
 ![SIR Solution](../assets/SIR.png)
 
-## Building and Simulating the Jump Process using the DiffEqJump Low-level Interface
-We now show how to directly use DiffEqJump's low-level interface to construct
+## Building and Simulating the Jump Process using the JumpProcesses Low-level Interface
+We now show how to directly use JumpProcesses's low-level interface to construct
 and solve our jump process model for ``(S(t),I(t),R(t))``. Each individual jump
 that can occur is represented through specifying two pieces of information; a
 `rate` function (i.e. intensity or propensity) for the jump and an `affect`
@@ -208,7 +208,7 @@ corresponding (mathematical) rates and affects given by
 \end{matrix}
 ```
 
-DiffEqJump offers three different ways to represent jumps: `MassActionJump`,
+JumpProcesses offers three different ways to represent jumps: `MassActionJump`,
 `ConstantRateJump`, and `VariableRateJump`. Choosing which to use is a trade off
 between the desired generality of the `rate` and `affect` functions vs. the
 computational performance of the resulting simulated system. In general
@@ -241,7 +241,7 @@ passing parameters to derivative functions in ODE solvers. Thus, to define the
 two possible jumps for our model we take (with `β=.1/1000.0` and `ν=.01`).
 
 ```julia
-using DiffEqJump
+using JumpProcesses
 β = 0.1 / 1000.0; ν = .01;
 p = (β,ν)
 rate1(u,p,t) = p[1]*u[1]*u[2]  # β*S*I
@@ -275,7 +275,7 @@ people, we will build a `DiscreteProblem`.
 prob = DiscreteProblem(u₀, tspan, p)
 ```
 
-We can then use `JumpProblem` from DiffEqJump to augment the discrete problem
+We can then use `JumpProblem` from JumpProcesses to augment the discrete problem
 with jumps and select the stochastic simulation algorithm (SSA) to use in
 sampling the jump processes. To create a `JumpProblem` we would simply do:
 
@@ -288,7 +288,7 @@ jumps that occur using [Gillespie's Direct stochastic simulation algorithm
 (SSA)](https://doi.org/10.1016/0021-9991(76)90041-3). See [Constant Rate Jump
 Aggregators](@ref) for other supported SSAs.
 
-We now have a problem that can be evolved in time using the DiffEqJump solvers.
+We now have a problem that can be evolved in time using the JumpProcesses solvers.
 Since our model is a pure jump process (no continuously-varying components), we
 will use `SSAStepper()` to handle time-stepping the `Direct` method from jump to
 jump:
@@ -310,7 +310,7 @@ using Plots; plot(sol)
 Note, in systems with more than a few jumps (more than ~10), it can be
 advantageous to use more sophisticated SSAs than `Direct`. For such systems it
 is recommended to use `SortingDirect`, `RSSA` or `RSSACR`, see the list of
-DiffEqJump SSAs at [Constant Rate Jump Aggregators](@ref).
+JumpProcesses SSAs at [Constant Rate Jump Aggregators](@ref).
 
 
 ### *Caution about Constant Rate Jumps*
@@ -600,7 +600,7 @@ While `Direct` is often fastest for systems with 10 or less `ConstantRateJump`s
 or `MassActionJump`s, if your system has many jumps or one jump occurs most
 frequently, other stochastic simulation algorithms may be faster. See [Constant
 Rate Jump Aggregators](@ref) and the subsequent sections there for guidance on
-choosing different SSAs (called aggregators in DiffEqJump).
+choosing different SSAs (called aggregators in JumpProcesses).
 
 #### *2. When running many consecutive simulations, for example within an `EnsembleProblem` or loop, how can I update `JumpProblem`s?*
 
@@ -623,7 +623,7 @@ data structures. Leaving out this call will lead to incorrect behavior!
 A simple example that uses a `MassActionJump` and changes the parameters at a
 specified time in the simulation using a `DiscreteCallback` is
 ```julia
-using DiffEqJump
+using JumpProcesses
 rs = [[1 => 1],[2=>1]]
 ns = [[1 => -1, 2 => 1],[1=>1,2=>-1]]
 p  = [1.0,0.0]
@@ -685,22 +685,22 @@ jprob = JumpProblem(dprob, Direct(), maj, rng=Xorshifts.Xoroshiro128Star(rand(UI
 uses the `Xoroshiro128Star` generator from
 [RandomNumbers.jl](https://github.com/JuliaRandom/RandomNumbers.jl).
 
-#### *6. What are these aggregators and aggregations in DiffEqJump?*
+#### *6. What are these aggregators and aggregations in JumpProcesses?*
 
-DiffEqJump provides a variety of methods for sampling the time the next
+JumpProcesses provides a variety of methods for sampling the time the next
 `ConstantRateJump` or `MassActionJump` occurs, and which jump type happens at
 that time. These methods are examples of stochastic simulation algorithms
 (SSAs), also known as Gillespie methods, Doob's method, or Kinetic Monte Carlo
-methods. In the DiffEqJump terminology we call such methods "aggregators", and
+methods. In the JumpProcesses terminology we call such methods "aggregators", and
 the cache structures that hold their basic data "aggregations". See [Constant
 Rate Jump Aggregators](@ref) for a list of the available SSA aggregators.
 
 #### *7. How should jumps be ordered in dependency graphs?*
-Internally, DiffEqJump SSAs (aggregators) order all `MassActionJump`s first,
+Internally, JumpProcesses SSAs (aggregators) order all `MassActionJump`s first,
 then all `ConstantRateJumps`. i.e. in the example
 
 ```julia
-using DiffEqJump
+using JumpProcesses
 rs = [[1 => 1],[2=>1]]
 ns = [[1 => -1, 2 => 1],[1=>1,2=>-1]]
 p  = [1.0,0.0]
