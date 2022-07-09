@@ -26,7 +26,7 @@ If you are using jumps with a differential equations, use the same methods
 as in the case of the differential equation solving. However, the following
 algorithms are optimized for pure jump problems.
 
-### DiffEqJump.jl
+### JumpProcesses.jl
 
 - `SSAStepper`: a stepping algorithm for pure `ConstantRateJump` and/or
   `MassActionJump` `JumpProblem`s. Supports handling of `DiscreteCallback`
@@ -41,7 +41,7 @@ the features of the normal differential equation solvers.
 
 - `TauLeaping`: an adaptive tau-leaping algorithm with post-leap estimates.
 
-### DiffEqJump.jl
+### JumpProcesses.jl
 
 - `SimpleTauLeaping`: a tau-leaping algorithm for pure `RegularJump` `JumpProblem`s.
   Requires a choice of `dt`.
