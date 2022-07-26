@@ -1,7 +1,8 @@
 # [Ordinary Differential Equations](@id ode_example)
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://github.com/JuliaDiffEq/SciMLTutorials.jl).
+introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl) 
+and further resources are available at [DifferentialEquations.jl](https://diffeq.sciml.ai/stable/).
 Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
 this material.
 
