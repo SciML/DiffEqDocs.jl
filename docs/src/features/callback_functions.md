@@ -441,7 +441,7 @@ value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
 `rootfind` argument of the callback:
 
 ```julia
-floor_event = ContinuousCallback(floor_cond, floor_aff!,rootfind=DiffEqBase.RightRootFind)
+floor_event = ContinuousCallback(floor_cond, floor_aff!,rootfind=SciMLBase.RightRootFind)
 u0 = [1.0,0.0]
 p = [1.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
