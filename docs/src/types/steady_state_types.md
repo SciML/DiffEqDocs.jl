@@ -1,11 +1,11 @@
 # Steady State Problems
 
 ```@docs
-SteadyStateProblem
+SciMLBase.SteadyStateProblem
 ```
 
 ## Solution Type
 
 ```@docs
-NonlinearSolution
+SciMLBase.NonlinearSolution
 ```

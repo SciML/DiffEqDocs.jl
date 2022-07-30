@@ -1,8 +1,8 @@
 # Discrete Problems
 
 ```@docs
-DiscreteProblem
-DiscreteFunction
+SciMLBase.DiscreteProblem
+SciMLBase.DiscreteFunction
 ```
 
 ## Solution Type

@@ -1,7 +1,7 @@
 # BVP Problems
 
 ```@docs
-BVProblem
+SciMLBase.BVProblem
 ```
 
 ## Solution Type

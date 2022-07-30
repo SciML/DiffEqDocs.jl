@@ -1,8 +1,8 @@
 # [DDE Problems](@id dde_prob)
 
 ```@docs
-DDEProblem
-DDEFunction
+SciMLBase.DDEProblem
+SciMLBase.DDEFunction
 ```
 
 ## Solution Type

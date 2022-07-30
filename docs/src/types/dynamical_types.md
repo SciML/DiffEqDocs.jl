@@ -1,9 +1,9 @@
 # [Dynamical, Hamiltonian and 2nd Order ODE Problems](@id dynamical_prob)
 
 ```@docs
-DynamicalODEProblem
-SecondOrderODEProblem
-DynamicalODEFunction
+SciMLBase.DynamicalODEProblem
+SciMLBase.SecondOrderODEProblem
+SciMLBase.DynamicalODEFunction
 ```
 
 ## Solution Type
@@ -36,4 +36,4 @@ HamiltonianProblem{T}(H,p0,q0,tspan,param=nothing;kwargs...)
 * `p0`: The initial momentums.
 * `q0`: The initial positions.
 * `tspan`: The timespan for the problem.
-* `param`: Defaults to `nothing`. `param` will be passed to `H`'s `params`. 
+* `param`: Defaults to `nothing`. `param` will be passed to `H`'s `params`.

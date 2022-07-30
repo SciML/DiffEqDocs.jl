@@ -1,14 +1,14 @@
 # DAE Problems
 
 ```@docs
-DAEProblem
-DAEFunction
+SciMLBase.DAEProblem
+SciMLBase.DAEFunction
 ```
 
 ## Solution Type
 
 ```@docs
-DAESolution
+SciMLBase.DAESolution
 ```
 
 ## Example Problems

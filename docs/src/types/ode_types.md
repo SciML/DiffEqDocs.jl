@@ -1,14 +1,14 @@
 # [ODE Problems](@id ode_prob)
 
 ```@docs
-ODEProblem
-ODEFunction
+SciMLBase.ODEProblem
+SciMLBase.ODEFunction
 ```
 
 ## Solution Type
 
 ```@docs
-ODESolution
+SciMLBase.ODESolution
 ```
 
 ## Example Problems

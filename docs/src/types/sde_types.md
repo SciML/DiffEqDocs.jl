@@ -1,8 +1,8 @@
 # SDE Problems
 
 ```@docs
-SDEProblem
-SDEFunction
+SciMLBase.SDEProblem
+SciMLBase.SDEFunction
 ```
 
 ## Solution Type

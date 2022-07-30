@@ -1,12 +1,12 @@
 # [RODE Problems](@id rode_problem)
 
 ```@docs
-RODEProblem
-RODEFunction
+SciMLBase.RODEProblem
+SciMLBase.RODEFunction
 ```
 
 ## Solution Type
 
 ```@docs
-RODESolution
+SciMLBase.RODESolution
 ```
