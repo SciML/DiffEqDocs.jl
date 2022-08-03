@@ -62,7 +62,7 @@ Float64. Since `tspan = (0.0,1.0)` is a tuple of Float64's, the independent vari
 will be solved using Float64's (note that the start time and end time must match
 types). You can use this to choose to solve with arbitrary precision numbers,
 unitful numbers, etc. Please see the
-[notebook tutorials](https://github.com/JuliaDiffEq/SciMLTutorials.jl)
+[notebook tutorials](https://github.com/SciML/SciMLTutorials.jl)
 for more examples.
 
 The problem types include many other features, including the ability to define
@@ -520,5 +520,5 @@ check out the features for:
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types
 of equations. In addition, to get help, please either
-[file an issue at the main repository](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
+[file an issue at the main repository](https://github.com/SciML/DifferentialEquations.jl)
 or [come have an informal discussion at our Gitter chatroom](https://gitter.im/JuliaDiffEq/Lobby).

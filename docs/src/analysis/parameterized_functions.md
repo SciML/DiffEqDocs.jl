@@ -73,4 +73,4 @@ Jacobians are also used.
 Normally these will be computed fast enough that the user doesn't have to worry.
 However, in some cases you may want to restrict the number of functions (or get rid
 of a warning). For more information,
-please see the [ParameterizedFunctions.jl documentation](https://github.com/JuliaDiffEq/ParameterizedFunctions.jl).
+please see the [ParameterizedFunctions.jl documentation](https://github.com/SciML/ParameterizedFunctions.jl).

@@ -4,7 +4,7 @@ Differential Algebraic Equations (DAEs) are differential equations which have
 constraint equations on their evolution. This tutorial will introduce you to
 the functionality for solving differential algebraic equations (DAEs). Other
 introductions can be found by
-[checking out SciMLTutorials.jl](https://github.com/JuliaDiffEq/SciMLTutorials.jl).
+[checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
 
 !!! note
 

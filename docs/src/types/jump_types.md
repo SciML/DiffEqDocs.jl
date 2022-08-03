@@ -274,7 +274,7 @@ For representing and aggregating constant rate jumps
 In general, for systems with sparse dependency graphs if `Direct` is slow, one
 of `SortingDirect`, `RSSA` or `RSSACR` will usually offer substantially better
 performance. See
-[DiffEqBenchmarks.jl](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) for
+[DiffEqBenchmarks.jl](https://github.com/SciML/DiffEqBenchmarks.jl) for
 benchmarks on several example networks.
 
 ## Remaking `JumpProblem`s

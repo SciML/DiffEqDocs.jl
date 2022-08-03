@@ -333,7 +333,7 @@ larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
 sometimes worth a try for the medium sized category.
 
 More details on the solver to choose can be found by benchmarking. See the
-[SciMLBenchmarks](https://github.com/JuliaDiffEq/SciMLBenchmarks.jl) to
+[SciMLBenchmarks](https://github.com/SciML/SciMLBenchmarks.jl) to
 compare many solvers on many problems.
 
 From this, we try the recommendation of `Rosenbrock23()` for stiff ODEs at
@@ -376,7 +376,7 @@ julia> @btime solve(prob_jac,Rosenbrock23())
 ### Automatic Derivation of Jacobian Functions
 
 But that was hard! If you want to take the symbolic Jacobian of numerical
-code, we can make use of [ModelingToolkit.jl](https://github.com/JuliaDiffEq/ModelingToolkit.jl)
+code, we can make use of [ModelingToolkit.jl](https://github.com/SciML/ModelingToolkit.jl)
 to symbolic-ify the numerical code and do the symbolic calculation and return
 the Julia code for this.
 

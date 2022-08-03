@@ -185,7 +185,7 @@ Yes. The `*`DiffEq.jl libraries (OrdinaryDiffEq.jl, StochasticDiffEq.jl, and
 DelayDiffEq.jl) are all written to be generic to the array and number types.
 This means they will adopt the implementation that is given by the array type.
 The in-place algorithms internally utilize Julia's broadcast (with some exceptions
-due to a Julia bug for now, see [this issue](https://github.com/JuliaDiffEq/OrdinaryDiffEq.jl/issues/106))
+due to a Julia bug for now, see [this issue](https://github.com/SciML/OrdinaryDiffEq.jl/issues/106))
 and Julia's `mul!` in-place matrix multiplication function. The out-of-place
 algorithms utilize standard arithmetical functions. Both additionally utilize
 the user's norm specified via the common interface options and, if a stiff
@@ -427,7 +427,7 @@ for long time integration.
 For conserving energy, there are a few things you can do. First of all, the energy
 error is related to the integration error, so simply solving with higher accuracy
 will reduce the error. The results in the
-[DiffEqBenchmarks](https://github.com/JuliaDiffEq/DiffEqBenchmarks.jl) show
+[DiffEqBenchmarks](https://github.com/SciML/DiffEqBenchmarks.jl) show
 that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
 [the ManifoldProjection callback from the callback library](@ref callback_library).

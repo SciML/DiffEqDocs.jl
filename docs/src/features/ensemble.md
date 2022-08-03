@@ -108,7 +108,7 @@ are handled. Currently, the ensemble algorithm types are:
 * `EnsembleGPUArray()` - Requires installing and `using DiffEqGPU`. This uses a GPU for computing the ensemble
   with hyperparallelism. It will automatically recompile your Julia functions to the GPU. A standard GPU sees
   a 5x performance increase over a 16 core Xeon CPU. However, there are limitations on what functions can
-  auto-compile in this fashion, please see the [DiffEqGPU README for more details](https://github.com/JuliaDiffEq/DiffEqGPU.jl)
+  auto-compile in this fashion, please see the [DiffEqGPU README for more details](https://github.com/SciML/DiffEqGPU.jl)
 
 For example, `EnsembleThreads()` is invoked by:
 

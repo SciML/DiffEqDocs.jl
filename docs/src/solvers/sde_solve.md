@@ -370,7 +370,7 @@ DifferentialEquaitons.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/JuliaDiffEq/BridgeDiffEq.jl")
+Pkg.clone("https://github.com/SciML/BridgeDiffEq.jl")
 using BridgeDiffEq
 ```
 
