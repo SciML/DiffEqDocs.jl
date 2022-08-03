@@ -6,5 +6,5 @@
 [![dev](https://img.shields.io/badge/docs-dev-blue.svg)](http://diffeq.sciml.ai/dev/)
 
 DiffEqDocs.jl is a component package in the DifferentialEquations ecosystem. It holds [the documentation for the common user interface](http://docs.juliadiffeq.org/dev/). Users interested in using
-these features should check out [DifferentialEquations.jl](https://github.com/JuliaDiffEq/DifferentialEquations.jl).
+these features should check out [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl).
 

@@ -127,7 +127,7 @@ To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
 ```julia
-Pkg.clone("https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl")
+Pkg.clone("https://github.com/SciML/GeometricIntegratorsDiffEq.jl")
 using GeometricIntegratorsDiffEq
 ```
 

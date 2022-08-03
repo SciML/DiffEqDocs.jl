@@ -1137,7 +1137,7 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use MATLABDiffEq.jl:
 
 ```julia
-]add https://github.com/JuliaDiffEq/MATLABDiffEq.jl
+]add https://github.com/SciML/MATLABDiffEq.jl
 using MATLABDiffEq
 ```
 
@@ -1157,7 +1157,7 @@ For more information on these algorithms, see
 
 ### SciPyDiffEq.jl
 
-[SciPyDiffEq.jl](https://github.com/JuliaDiffEq/SciPyDiffEq.jl) is a wrapper over SciPy for
+[SciPyDiffEq.jl](https://github.com/SciML/SciPyDiffEq.jl) is a wrapper over SciPy for
 easing the transition of new users (same exact results!)
 and benchmarking. This wrapper uses Julia's JIT acceleration to accelerate about 3x over SciPy+Numba,
 but it is still around 1000x slower than the pure-Julia methods and thus should probably be used
@@ -1168,7 +1168,7 @@ with DifferentialEquations.jl. To use the following algorithms, you must install
 and use SciPyDiffEq.jl:
 
 ```julia
-]add https://github.com/JuliaDiffEq/SciPyDiffEq.jl
+]add https://github.com/SciML/SciPyDiffEq.jl
 using SciPyDiffEq
 ```
 
@@ -1182,7 +1182,7 @@ The available methods are:
 
 ### deSolveDiffEq.jl
 
-[deSolveDiffEq.jl](https://github.com/JuliaDiffEq/deSolveDiffEq.jl) is a wrapper over R's deSolve for
+[deSolveDiffEq.jl](https://github.com/SciML/deSolveDiffEq.jl) is a wrapper over R's deSolve for
 easing the transition of new users (same exact results!)
 and benchmarking. This wrapper is around 1000x slower than the pure-Julia methods (~2x-3x overhead
 from directly using R) and thus should probably be used sparingly.
@@ -1192,7 +1192,7 @@ with DifferentialEquations.jl. To use the following algorithms, you must install
 and use deSolveDiffEq.jl:
 
 ```julia
-]add https://github.com/JuliaDiffEq/deSolveDiffEq.jl
+]add https://github.com/SciML/deSolveDiffEq.jl
 using deSolveDiffEq
 ```
 
@@ -1223,7 +1223,7 @@ To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
 ```julia
-]add https://github.com/JuliaDiffEq/GeometricIntegratorsDiffEq.jl
+]add https://github.com/SciML/GeometricIntegratorsDiffEq.jl
 using GeometricIntegratorsDiffEq
 ```
 
@@ -1268,7 +1268,7 @@ DifferentialEquations.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
-]add https://github.com/JuliaDiffEq/BridgeDiffEq.jl
+]add https://github.com/SciML/BridgeDiffEq.jl
 using BridgeDiffEq
 ```
 
@@ -1346,7 +1346,7 @@ instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
 serve as a good method for comparing between tableaus and understanding the
 pros/cons of the methods. Implemented are every published tableau (that I know
 exists). Note that user-defined tableaus also are accepted. To see how to define
-a tableau, checkout the [premade tableau source code](https://github.com/JuliaDiffEq/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
+a tableau, checkout the [premade tableau source code](https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
 Tableau docstrings should have appropriate citations (if not, file an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.

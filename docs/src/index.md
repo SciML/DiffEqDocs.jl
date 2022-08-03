@@ -208,7 +208,7 @@ Or you can view the webpages for the rendered tutorials at the links found in th
 
 The following tutorials will introduce you to the functionality of
 DifferentialEquations.jl. More examples can be found by
-[checking out the IJulia notebooks in the examples folder](https://github.com/JuliaDiffEq/DiffEqTutorials.jl).
+[checking out the IJulia notebooks in the examples folder](https://github.com/SciML/DiffEqTutorials.jl).
 
 ```@contents
 Pages = [

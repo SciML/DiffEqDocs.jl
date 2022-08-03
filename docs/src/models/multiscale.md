@@ -6,4 +6,4 @@ turn can be directly used in the native Julia solvers of DifferentialEquations.j
 
 ## More Information
 
-For more information, please see [the MultiScaleArrays.jl README](https://github.com/JuliaDiffEq/MultiScaleArrays.jl).
+For more information, please see [the MultiScaleArrays.jl README](https://github.com/SciML/MultiScaleArrays.jl).

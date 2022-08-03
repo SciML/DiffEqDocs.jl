@@ -128,7 +128,7 @@ vars = [(1,2), (1,3), (1,4)]
 
 The recipe library DimensionalPlotRecipes.jl is provided for extra functionality
 on high dimensional numbers (complex numbers) and other high dimensional plots.
-See [the README](https://github.com/JuliaDiffEq/DimensionalPlotRecipes.jl) for
+See [the README](https://github.com/SciML/DimensionalPlotRecipes.jl) for
 more details on the extra controls that exist.
 
 ### Timespan
