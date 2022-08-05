@@ -393,7 +393,7 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 `prob.p`:
 
 ```julia
-# `p` is a global variable, referencing it would be type unstable. 
+# `p` is a global variable, referencing it would be type unstable.
 # Using a let block defines a small local scope in which we can
 # capture that local `p` which isn't redefined anywhere in that local scope.
 # This allows it to be type stable.
@@ -411,8 +411,8 @@ Now we solve the problem 10 times and plot all of the trajectories in phase spac
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
 sim = solve(ensemble_prob,SRIW1(),trajectories=10)
 using Plots; plotly()
-using Plots; plot(sim,linealpha=0.6,color=:blue,vars=(0,1),title="Phase Space Plot")
-plot!(sim,linealpha=0.6,color=:red,vars=(0,2),title="Phase Space Plot")
+using Plots; plot(sim,linealpha=0.6,color=:blue,idxs=(0,1),title="Phase Space Plot")
+plot!(sim,linealpha=0.6,color=:red,idxs=(0,2),title="Phase Space Plot")
 ```
 
 ![monte_lotka_blue](../assets/monte_carlo_blue.png)

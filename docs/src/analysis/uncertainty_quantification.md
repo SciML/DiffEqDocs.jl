@@ -78,7 +78,7 @@ sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 Now we can plot the resulting Monte Carlo solution:
 
 ```julia
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_02](../assets/uncertainty_02.png)
@@ -90,7 +90,7 @@ equation have less uncertainty than others. For example, at `σ=0.5`:
 cb = ProbIntsUncertainty(0.5,1)
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_05](../assets/uncertainty_05.png)
@@ -102,7 +102,7 @@ decreasing `dt`:
 cb = ProbIntsUncertainty(0.5,1)
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/100)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_lowh](../assets/uncertainty_lowh.png)
@@ -124,7 +124,7 @@ cb = AdaptiveProbIntsUncertainty(5)
 sol = solve(prob,Tsit5())
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_adaptive_default](../assets/uncertainty_adaptive_default.png)
@@ -136,7 +136,7 @@ cb = AdaptiveProbIntsUncertainty(5)
 sol = solve(prob,Tsit5())
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb,abstol=1e-3,reltol=1e-1)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_adaptive_default](../assets/uncertainty_high_tolerance.png)
@@ -175,7 +175,7 @@ Then we solve the `MonteCarloProblem`
 ```julia
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Tsit5(),trajectories=100,callback=cb)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_chaos](../assets/uncertainty_chaos.png)
@@ -191,7 +191,7 @@ prob = ODEProblem(g,u0,tspan,p)
 cb = AdaptiveProbIntsUncertainty(7)
 ensemble_prob = EnsembleProblem(prob)
 sim = solve(ensemble_prob,Vern7(),trajectories=100,callback=cb,reltol=1e-6)
-using Plots; plotly(); plot(sim,vars=(0,1),linealpha=0.4)
+using Plots; plotly(); plot(sim,idxs=(0,1),linealpha=0.4)
 ```
 
 ![uncertainty_high_order](../assets/uncertainty_high_order.png)

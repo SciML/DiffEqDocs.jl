@@ -7,9 +7,9 @@ types can be used to build libraries of extension behavior.
 
 ## The Callback Types
 
-The callback types are defined as follows. There are three primitive callback types: the `ContinuousCallback`, `DiscreteCallback` and the `VectorContinuousCallback`: 
-- The [`ContinuousCallback`](@ref) is applied when a given continuous *condition function* hits zero. This hitting can happen even within an integration step and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements what is known in other problem solving environments as an *Event*. 
-- The [`DiscreteCallback`](@ref) is applied when its *condition function* is `true`, but the condition is only evaluated at the end of every integration step. 
+The callback types are defined as follows. There are three primitive callback types: the `ContinuousCallback`, `DiscreteCallback` and the `VectorContinuousCallback`:
+- The [`ContinuousCallback`](@ref) is applied when a given continuous *condition function* hits zero. This hitting can happen even within an integration step and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements what is known in other problem solving environments as an *Event*.
+- The [`DiscreteCallback`](@ref) is applied when its *condition function* is `true`, but the condition is only evaluated at the end of every integration step.
 - The [`VectorContinuousCallback`](@ref) works like a vector of `ContinuousCallbacks` and lets the user specify which callback is called when.
 
 ### ContinuousCallback
@@ -575,10 +575,10 @@ point is reached at `t = 1.355261854357056`. To really see the accumulation,
 let's zoom in:
 
 ```julia
-p1 = plot(sol,vars=1,tspan=(1.25,1.40))
-p2 = plot(sol,vars=1,tspan=(1.35,1.36))
-p3 = plot(sol,vars=1,tspan=(1.354,1.35526))
-p4 = plot(sol,vars=1,tspan=(1.35526,1.35526185))
+p1 = plot(sol,idxs=1,tspan=(1.25,1.40))
+p2 = plot(sol,idxs=1,tspan=(1.35,1.36))
+p3 = plot(sol,idxs=1,tspan=(1.354,1.35526))
+p4 = plot(sol,idxs=1,tspan=(1.35526,1.35526185))
 plot(p1,p2,p3,p4)
 ```
 
@@ -803,7 +803,7 @@ tspan = (0.0,15.0)
 p = 9.8
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb,dt=1e-3,adaptive=false)
-plot(sol,vars=(1,3))
+plot(sol,idxs=(1,3))
 ```
 And you get the following output:
 

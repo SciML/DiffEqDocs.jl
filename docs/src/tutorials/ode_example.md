@@ -1,7 +1,7 @@
 # [Ordinary Differential Equations](@id ode_example)
 
 This tutorial will introduce you to the functionality for solving ODEs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl) 
+introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl)
 and further resources are available at [DifferentialEquations.jl](https://diffeq.sciml.ai/stable/).
 Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
 this material.
@@ -18,9 +18,9 @@ on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. Here, ``u`` is the
 current state variable, ``p`` is our parameter variable (containing things like
 a reaction rate or the constant of gravity), and ``t`` is the current time.
 
-(In our example, we know by calculus that the solution to this equation is 
-``u(t)=u₀\exp(αt)``, but we will use DifferentialEquations.jl to solve this 
-problem *numerically*, which is essential for problems where a symbolic solution 
+(In our example, we know by calculus that the solution to this equation is
+``u(t)=u₀\exp(αt)``, but we will use DifferentialEquations.jl to solve this
+problem *numerically*, which is essential for problems where a symbolic solution
 is not known.)
 
 The general workflow is to define a problem, solve the problem, and then analyze
@@ -303,7 +303,7 @@ Using the plot recipe tools
 we can choose to do a 3D phase space plot between the different variables:
 
 ```julia
-plot(sol,vars=(1,2,3))
+plot(sol,idxs=(1,2,3))
 ```
 
 ![Lorenz System](../assets/3d_lorenz.png)
@@ -313,7 +313,7 @@ each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
 ```julia
-plot(sol,vars=(0,2))
+plot(sol,idxs=(0,2))
 ```
 
 ![Lorenz Timeseries](../assets/lorenz_timeseries.png)
@@ -404,7 +404,7 @@ plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
 
 ![Pendulum response](../assets/pendulum_response.png)
 
-Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.  
+Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
 
 Note also that, in contrast with the time-varying parameter, the (vector of) state variables `u`, which is generally also time-varying, is always used without the explicit dependence on time `(t)`.
 
