@@ -515,7 +515,7 @@ option in the solver. Every solver which uses autodifferentiation has this optio
 Thus we'd solve this with:
 
 ```julia
-prob = ODEProblem(f,rand(4),(0.0,1.0))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), zeros(5,5)))
 sol = solve(prob,Rosenbrock23(autodiff=false))
 ```
 
@@ -534,6 +534,6 @@ function foo(du, u, (A, tmp), t)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), DiffEqBase.dualcache(zeros(5,5))))
+prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), dualcache(zeros(5,5))))
 solve(prob, TRBDF2()
 ```
