@@ -127,7 +127,7 @@ sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
     If you use a custom noise process, you might need to specify it in a custom prob_func
     in the EnsembleProblem constructor, as each trajectory needs its own noise process.
 
-Many more controls are defined at the [Ensemble simulations page](@ref ensemble), 
+Many more controls are defined at the [Ensemble simulations page](@ref ensemble),
 including analysis tools.
 A very simple analysis can be done with the `EnsembleSummary`, which builds
 mean/var statistics and has an associated plot recipe. For example, we can get
@@ -186,7 +186,7 @@ end
 
 prob_sde_lorenz = SDEProblem(lorenz,σ_lorenz,[1.0,0.0,0.0],(0.0,10.0))
 sol = solve(prob_sde_lorenz)
-plot(sol,vars=(1,2,3))
+plot(sol,idxs=(1,2,3))
 ```
 
 ![stochastic_3d_lorenz](../assets/stochastic_3d_lorenz.png)

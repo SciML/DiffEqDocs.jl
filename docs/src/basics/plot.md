@@ -55,7 +55,7 @@ In the plot command, one can choose the variables to be plotted in each plot. Th
 master form is:
 
 ```julia
-vars = [(f1,0,1), (f2,1,3), (f3,4,5)]
+idxs = [(f1,0,1), (f2,1,3), (f3,4,5)]
 ```
 
 which could be used to plot `f1(var₀, var₁)`, `f2(var₁, var₃)`, and
@@ -64,7 +64,7 @@ or the independent variable). Functions `f1`, `f2` and `f3` should take in scala
 and return a tuple. If no function is given, for example,
 
 ```julia
-vars = [(0,1), (1,3), (4,5)]
+idxs = [(0,1), (1,3), (4,5)]
 ```
 
 this would mean "plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁`, and
@@ -77,13 +77,13 @@ the following conveniences are provided:
   is equivalent to:
 
 ```julia
-vars = [1, (1,3), (4,5)]
+idxs = [1, (1,3), (4,5)]
 ```
 
 and
 
 ```julia
-vars = [1, 3, 4]
+idxs = [1, 3, 4]
 ```
 
 is the most concise way to plot the variables 1, 3, and 4 as a function
@@ -96,29 +96,29 @@ of time.
   associating corresponding elements of the lists with each other:
 
 ```julia
-vars = ([1,2,3], [4,5,6])
+idxs = ([1,2,3], [4,5,6])
 ```
 
 is equivalent to
 
 ```julia
-vars = [(1,4), (2,5), (3,6)]
+idxs = [(1,4), (2,5), (3,6)]
 ```
 
 and
 
 ```julia
-vars = (1, [2,3,4])
+idxs = (1, [2,3,4])
 ```
 
 is equivalent to
 
 ```julia
-vars = [(1,2), (1,3), (1,4)]
+idxs = [(1,2), (1,3), (1,4)]
 ```
 
 * Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
-  For example, `vars=(:x,:y)` will replace the symbols with the integer values for
+  For example, `idxs=(:x,:y)` will replace the symbols with the integer values for
   components `:x` and `:y`.
 
 * n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
@@ -159,10 +159,10 @@ p = (10.0,28.0,8/3)
 prob = ODEProblem(lorenz, u0, tspan,p)
 sol = solve(prob)
 xyzt = plot(sol, plotdensity=10000,lw=1.5)
-xy = plot(sol, plotdensity=10000, vars=(1,2))
-xz = plot(sol, plotdensity=10000, vars=(1,3))
-yz = plot(sol, plotdensity=10000, vars=(2,3))
-xyz = plot(sol, plotdensity=10000, vars=(1,2,3))
+xy = plot(sol, plotdensity=10000, idxs=(1,2))
+xz = plot(sol, plotdensity=10000, idxs=(1,3))
+yz = plot(sol, plotdensity=10000, idxs=(2,3))
+xyz = plot(sol, plotdensity=10000, idxs=(1,2,3))
 plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
@@ -172,7 +172,7 @@ An example using the functions:
 
 ```julia
 f(x,y,z) = (sqrt(x^2+y^2+z^2),x)
-plot(sol,vars=(f,1,2,3))
+plot(sol,idxs=(f,1,2,3))
 ```
 
 ![norm_plot](../assets/normalized.png)
@@ -181,7 +181,7 @@ or the norm over time:
 
 ```julia
 f(t,x,y,z) = (t,sqrt(x^2+y^2+z^2))
-plot(sol,vars=(f,0,1,2,3))
+plot(sol,idxs=(f,0,1,2,3))
 ```
 
 ![normtime plot](https://user-images.githubusercontent.com/1814174/94351101-4667df80-0023-11eb-987d-aca652e32521.png)

@@ -264,7 +264,7 @@ Like the `DESolution` type, a plot recipe is provided for the `DEIntegrator` typ
 Since the `DEIntegrator` type is a local state type on the current interval,
 `plot(integrator)` returns the solution on the current interval. The same
 options for the plot recipe are provided as for `sol`, meaning one can choose
-variables via the `vars` keyword argument, or change the `plotdensity` / turn
+variables via the `idxs` keyword argument, or change the `plotdensity` / turn
 on/off `denseplot`.
 
 Additionally, since the `integrator` is an iterator, this can be used in the
@@ -285,9 +285,9 @@ integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])
 pyplot(show=true)
 plot(integrator)
 for i in integrator
-  display(plot!(integrator,vars=(0,1),legend=false))
+  display(plot!(integrator,idxs=(0,1),legend=false))
 end
-step!(integrator); plot!(integrator,vars=(0,1),legend=false)
+step!(integrator); plot!(integrator,idxs=(0,1),legend=false)
 savefig("iteratorplot.png")
 ```
 
