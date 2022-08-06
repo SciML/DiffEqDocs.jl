@@ -109,6 +109,9 @@ prob = ODEProblem(A, ones(2), (1.0, 6.0))
 sol = solve(prob,MagnusGL6(),dt=1/10)
 ```
 
+The initial values for ``A`` are irrelevant in this and similar cases as the `update_func` immediately overwrites them.
+Starting with `ones(2,2)` is just a convenient way to get a mutable 2x2 matrix.
+
 
 ### State-Dependent Solvers
 
