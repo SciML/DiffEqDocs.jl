@@ -14,13 +14,22 @@ DAEProblemLibrary.importdaeproblems()
 
 include("pages.jl")
 
-makedocs(modules=[DiffEqBase,SciMLBase,DiffEqProblemLibrary,ODEProblemLibrary,SDEProblemLibrary,DDEProblemLibrary,DAEProblemLibrary,OrdinaryDiffEq],
-         doctest=false, clean=true,
+makedocs(modules = [
+             DiffEqBase,
+             SciMLBase,
+             DiffEqProblemLibrary,
+             ODEProblemLibrary,
+             SDEProblemLibrary,
+             DDEProblemLibrary,
+             DAEProblemLibrary,
+             OrdinaryDiffEq,
+         ],
+         doctest = false, clean = true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
                                   assets = ["assets/favicon.ico"],
-                                  canonical="https://diffeq.sciml.ai/stable/"),
-         sitename="DifferentialEquations.jl",
-         authors="Chris Rackauckas",
+                                  canonical = "https://diffeq.sciml.ai/stable/"),
+         sitename = "DifferentialEquations.jl",
+         authors = "Chris Rackauckas",
          pages = pages)
 
 #Redirect old links
@@ -42,6 +51,4 @@ makedocs(modules=[DiffEqBase,SciMLBase,DiffEqProblemLibrary,ODEProblemLibrary,SD
 #     end
 # end
 
-deploydocs(
-   repo = "github.com/SciML/DiffEqDocs.jl.git"
-)
+deploydocs(repo = "github.com/SciML/DiffEqDocs.jl.git")
