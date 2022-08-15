@@ -1,4 +1,4 @@
-pages = Any["DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation" => "index.md",
+pages = Any["index.md",
             "Tutorials" => Any["tutorials/ode_example.md",
                                "tutorials/faster_ode_example.md",
                                "tutorials/advanced_ode_example.md",
