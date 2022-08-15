@@ -57,11 +57,20 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
 - [Global Sensitivity Analysis](@ref gsa)
 - [Uncertainty Quantification](@ref uncertainty_quantification)
 
-If you have any questions, or just want to chat about solvers/using the package,
-please feel free to use the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
-For bug reports, feature requests, etc., please submit an issue. If you're
-interested in contributing, please see the
-[Developer Documentation](https://devdocs.sciml.ai/dev/).
+## Contributing
+- If you're interested in contributing, please see the
+  [Developer Documentation.](https://devdocs.sciml.ai/dev/)
+- Please refer to the
+  [SciML ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://github.com/SciML/ColPrac/blob/master/README.md)
+  for guidance on PRs, issues, and other matters relating to contributing to SciML.
+- See the [SciML Style Guide](https://github.com/SciML/SciMLStyle) for common coding practices and other style decisions.
+- There are a few community forums:
+    - The #diffeq-bridged and #sciml-bridged channels in the
+      [Julia Slack](https://julialang.org/slack/)
+    - The #diffeq-bridged and #sciml-bridged channels in the
+      [Julia Zulip](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged)
+    - On the [Julia Discourse forums](https://discourse.julialang.org)
+    - See also [SciML Community page](https://sciml.ai/community/)
 
 ## Supporting and Citing
 
