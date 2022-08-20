@@ -1,6 +1,10 @@
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
-DiffEqProblemLibrary = "a077e3f3-b75c-5d7f-a0c6-6bc4c8ec64a9"
+DAEProblemLibrary = "dfb8ca35-80a1-48ba-a605-84916a45b4f8"
+DDEProblemLibrary = "f42792ee-6ffc-4e2a-ae83-8ee2f22de800"
+JumpProblemLibrary = "faf0f6d7-8cee-47cb-b27c-1eb80cef534e"
+ODEProblemLibrary = "fdc4e326-1af4-4b90-96e7-779fcce2daa5"
+SDEProblemLibrary = "c72e72a9-a271-4b2b-8966-303ed956772e"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"

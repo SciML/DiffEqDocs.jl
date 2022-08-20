@@ -1,23 +1,11 @@
-using Documenter, DiffEqBase, SciMLBase, DiffEqProblemLibrary, OrdinaryDiffEq
-
-ODEProblemLibrary = DiffEqProblemLibrary.ODEProblemLibrary
-ODEProblemLibrary.importodeproblems()
-
-SDEProblemLibrary = DiffEqProblemLibrary.SDEProblemLibrary
-SDEProblemLibrary.importsdeproblems()
-
-DDEProblemLibrary = DiffEqProblemLibrary.DDEProblemLibrary
-DDEProblemLibrary.importddeproblems()
-
-DAEProblemLibrary = DiffEqProblemLibrary.DAEProblemLibrary
-DAEProblemLibrary.importdaeproblems()
+using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq
+import ODEProblemLibrary, SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary
 
 include("pages.jl")
 
 makedocs(modules = [
              DiffEqBase,
              SciMLBase,
-             DiffEqProblemLibrary,
              ODEProblemLibrary,
              SDEProblemLibrary,
              DDEProblemLibrary,
