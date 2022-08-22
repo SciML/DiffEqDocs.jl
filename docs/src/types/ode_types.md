@@ -37,7 +37,7 @@ prob_ode_bigfloatlinear
 prob_ode_bigfloat2Dlinear
 prob_ode_large2Dlinear
 prob_ode_2Dlinear_notinplace
-prob_ode_lotkavoltera
+prob_ode_lotkavolterra
 prob_ode_fitzhughnagumo
 prob_ode_threebody
 prob_ode_pleiades
