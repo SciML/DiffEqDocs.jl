@@ -544,7 +544,7 @@ solve(prob, TRBDF2()
 
 This is likely because you're using a Jacobian matrix with a sparsity structure that changes, which is incompatible with the default linear solver for sparse matrices.  To address this issue, you need to disable caching the symbolic factorization, e.g., 
 
-```
+```julia
 solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
 ```
 
