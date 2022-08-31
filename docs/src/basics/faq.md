@@ -537,3 +537,16 @@ end
 prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), PreallocationTools.dualcache(zeros(5,5))))
 solve(prob, TRBDF2()
 ```
+
+## Sparse Jacobians
+
+#### I get errors when I try to solve my problem using sparse Jacobians
+
+This is likely because you're using a Jacobian matrix with a sparsity structure that changes, which is incompatible with the default linear solver for sparse matrices.  To address this issue, you need to disable caching the symbolic factorization, e.g., 
+
+```
+solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
+```
+
+For more details about possible linear solvers, consult the [LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/)
+
