@@ -542,7 +542,15 @@ solve(prob, TRBDF2()
 
 #### I get errors when I try to solve my problem using sparse Jacobians
 
-This is likely because you're using a Jacobian matrix with a sparsity structure that changes, which is incompatible with the default linear solver for sparse matrices.  To address this issue, you need to disable caching the symbolic factorization, e.g., 
+This is likely because you're using a Jacobian matrix with a sparsity structure that changes, which is incompatible with the default linear solver for sparse matrices.  If the linear solver catches the issue, you'll see the error message
+```
+ERROR: ArgumentError: The pattern of the original matrix must match the pattern of the refactor.
+```
+or
+```
+ERROR: ArgumentError: pattern of the matrix changed
+```
+though an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g., 
 
 ```julia
 solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
