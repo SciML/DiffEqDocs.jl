@@ -105,7 +105,12 @@ of the differential equation. Useful fields are:
 * `uprev` - the value at the last timepoint
 * `tdir` - the sign for the direction of time
 
-The `p` is the data which is provided by the user as a keyword arg in
+The function `f` is usually a wrapper of the function provided when creating the
+specific problem. For example, when solving an `ODEProblem`, `f` will be an
+`ODEFunction`. To access the right-hand side function provided by the user when
+creating the `ODEProblem`, please use `SciMLBase.unwrapped_f(integrator.f.f)`.
+
+The `p` is the (parameter) data which is provided by the user as a keyword arg in
 `init`. `opts` holds all of the common solver options, and can be mutated to
 change the solver characteristics. For example, to modify the absolute tolerance
 for the future timesteps, one can do:
