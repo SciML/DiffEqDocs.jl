@@ -270,9 +270,6 @@ function algebraicmultigrid(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
   Pl,nothing
 end
 
-# Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
-Base.eltype(::AlgebraicMultigrid.Preconditioner) = Float64
-
 @btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid,concrete_jac=true),save_everystep=false);
 # 372.528 ms (61179 allocations: 160.82 MiB)
 ```

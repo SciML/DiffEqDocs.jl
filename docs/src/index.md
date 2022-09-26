@@ -118,7 +118,7 @@ for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Support
 Equations section below). If you are interested in only one type of equation
 solvers of `DifferentialEquations.jl` or simply want a more lightweight
 version, see the
-[Low Dependency Usage](@ref)
+[Reduced Compile Time and Low Dependency Usage](@ref low_dep)
 page.
 
 To understand the package in more detail, check out the following tutorials in
