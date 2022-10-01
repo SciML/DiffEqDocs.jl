@@ -13,7 +13,7 @@ SciMLBase.ODESolution
 
 ## Example Problems
 
-Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/src/ode).
+Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/lib/ODEProblemLibrary/src).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
