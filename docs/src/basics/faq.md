@@ -558,3 +558,11 @@ solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/)
 
+## Odd Error Messages
+
+#### "Error Exception: `llvmcall` must be compiled to be called" when running the debugger?
+
+The debugger is incompatible with `llvmcall` which is used in the `AutoSpecialize` form that is used to reduce the compile times.
+In order to make use of the debugger, make use of the `FullSpecialize` form. I.e., change `prob = ODEProblem(lorenz!,u0,tspan)`
+to `prob = ODEProblem{true, SciMLBase.FullSpecialize}(lorenz!,u0,tspan)`. We plan to have a fix for this but for now the workaround
+should be sufficient for all cases.
