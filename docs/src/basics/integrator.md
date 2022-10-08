@@ -101,6 +101,7 @@ of the differential equation. Useful fields are:
 * `alg` - the algorithm associated with the solution
 * `f` - the function being solved
 * `sol` - the current state of the solution
+* `iter` - the number of steps so far
 * `tprev` - the last timepoint
 * `uprev` - the value at the last timepoint
 * `tdir` - the sign for the direction of time
