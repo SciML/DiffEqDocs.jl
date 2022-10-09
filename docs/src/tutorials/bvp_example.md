@@ -22,6 +22,7 @@ The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac
 
 ```julia
 using BoundaryValueDiffEq
+using Plots
 const g = 9.81
 L = 1.0
 tspan = (0.0,pi/2)
