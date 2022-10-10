@@ -34,8 +34,8 @@ allowing for easy benchmarking to ensure you are using the fastest method possib
 DifferentialEquations.jl integrates with the Julia package sphere with:
 
 - GPU acceleration through CUDA.jl and DiffEqGPU.jl
-- Automated sparsity detection with [SparsityDetection.jl](https://github.com/SciML/SparsityDetection.jl)
-- Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/SciML/SparseDiffTools.jl), allowing for fast solutions
+- Automated sparsity detection with [Symbolics.jl](https://github.com/JuliaSymbolics/SparsityDetection.jl)
+- Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/JuliaDiff/SparseDiffTools.jl), allowing for fast solutions
   to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
 - Allowing the specification of linear solvers for maximal efficiency
 - Progress meter integration with the Juno IDE for estimated time to solution
