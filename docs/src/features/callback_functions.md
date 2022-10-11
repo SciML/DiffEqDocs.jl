@@ -8,9 +8,16 @@ types can be used to build libraries of extension behavior.
 ## The Callback Types
 
 The callback types are defined as follows. There are three primitive callback types: the `ContinuousCallback`, `DiscreteCallback` and the `VectorContinuousCallback`:
-- The [`ContinuousCallback`](@ref) is applied when a given continuous *condition function* hits zero. This hitting can happen even within an integration step and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements what is known in other problem solving environments as an *Event*.
-- The [`DiscreteCallback`](@ref) is applied when its *condition function* is `true`, but the condition is only evaluated at the end of every integration step.
-- The [`VectorContinuousCallback`](@ref) works like a vector of `ContinuousCallbacks` and lets the user specify which callback is called when.
+
+- The [`ContinuousCallback`](@ref) is applied when a given continuous *condition function* hits zero. This hitting can happen even within 
+  an integration step and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements 
+  what is known in other problem solving environments as an *Event*.
+- The [`DiscreteCallback`](@ref) is applied when its *condition function* is `true`, but the condition is only evaluated at the end of every 
+  integration step.
+- The [`VectorContinuousCallback`](@ref) works like a vector of `ContinuousCallbacks` and lets the user specify a vector of continuous callbacks
+  each with simultanious rootfinding equations. The effect that is applied is the effect corresponding to the first/earliest condition that is
+  satisfied. A `VectorContinuousCallback` is more efficient than a `CallbackSet` of `ContinuousCallback`s as the number of callbacks grows. As 
+  such, it's a slightly more involved definition which gives better scaling.
 
 ### ContinuousCallback
 
