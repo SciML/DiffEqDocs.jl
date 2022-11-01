@@ -39,18 +39,21 @@ The solvers include some
 - standard solvers for non-stiff problems such as `Tsit5()`
 - standard solvers for stiff problems such as `Rosenbrock23()`
 - standard solvers with stiffnes detction such as `AutoTsit5(Rosenbrock23())`
+- low-storage methods for conservation laws such as `SSPRK43()`
+  (precompilation disabled by default)
 
 To adapt the amount of precompilation, you can use 
 [Preferences.jl](https://github.com/JuliaPackaging/Preferences.jl).
 For example, to turn off precompilation for non-default problem types
-(specialization levels) and all stiff/implicit solvers, you can execute
-the following code in your active project.
+(specialization levels) and all stiff/implicit/low-storage solvers, 
+you can execute the following code in your active project.
 
 ```
 using Preferences, UUIDs
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
 set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
