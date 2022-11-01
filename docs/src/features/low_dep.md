@@ -29,7 +29,40 @@ following choices:
   running long computations, such as in optimization loops.
 
 For more information on the specialization levels, please see
-[the SciMLBase documentation on specialization levels](https://scimlbase.sciml.ai/stable/interfaces/Problems/#Specialization-Levels)
+[the SciMLBase documentation on specialization levels](https://scimlbase.sciml.ai/stable/interfaces/Problems/#Specialization-Levels).
+
+DifferentialEquations.jl and its ODE package OrdinaryDiffEq.jl precompile
+some standard problem types and solvers. The problem types include the
+three specialization levels described above and the default setting.
+The solvers include some
+
+- standard solvers for non-stiff problems such as `Tsit5()`
+- standard solvers for stiff problems such as `Rosenbrock23()`
+- standard solvers with stiffnes detction such as `AutoTsit5(Rosenbrock23())`
+- low-storage methods for conservation laws such as `SSPRK43()`
+  (precompilation disabled by default)
+
+To adapt the amount of precompilation, you can use 
+[Preferences.jl](https://github.com/JuliaPackaging/Preferences.jl).
+For example, to turn off precompilation for non-default problem types
+(specialization levels) and all stiff/implicit/low-storage solvers, 
+you can execute the following code in your active project.
+
+```
+using Preferences, UUIDs
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
+```
+
+This will create a `LocalPreferences.toml` file next to the currently active
+`Project.toml` file.
+
 
 ## Decreasing Dependency Size by Direct Dependence on Specific Solvers
 
