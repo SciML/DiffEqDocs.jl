@@ -33,12 +33,12 @@ allowing for easy benchmarking to ensure you are using the fastest method possib
 
 DifferentialEquations.jl integrates with the Julia package sphere with:
 
-- GPU acceleration through CUDA.jl and DiffEqGPU.jl
-- Automated sparsity detection with [Symbolics.jl](https://github.com/JuliaSymbolics/SparsityDetection.jl)
-- Automatic Jacobian coloring with [SparseDiffTools.jl](https://github.com/JuliaDiff/SparseDiffTools.jl), allowing for fast solutions
+- GPU acceleration through CUDA.jl[https://cuda.juliagpu.org/stable/] and [DiffEqGPU.jl](https://docs.sciml.ai/DiffEqGPU/dev/)
+- Automated sparsity detection with [Symbolics.jl][(https://github.com/JuliaSymbolics/SparsityDetection.jl)
+- Automatic Jacobian coloring with [SparseDiffTools.jl](https://docs.sciml.ai/SparseDiffTools/stable/), allowing for fast solutions
   to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
-- Allowing the specification of linear solvers for maximal efficiency
-- Progress meter integration with the Juno IDE for estimated time to solution
+- Allowing the specification of linear solvers for maximal efficiency with [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/)
+- Progress meter integration with the Visual Studio Code IDE for estimated time to solution
 - Automatic plotting of time series and phase plots
 - Built-in interpolations
 - Wraps for common C/Fortran methods like Sundials and Hairer's radau
@@ -49,13 +49,13 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Forward and Adjoint Sensitivity Analysis (Automatic Differentiation)](@ref sensitivity) for fast gradient computations
-- [Parameter Estimation and Bayesian Analysis](@ref parameter_estimation)
-- Neural differential equations with [DiffEqFlux.jl](https://github.com/SciML/DiffEqFlux.jl)
+- [Forward and Adjoint Sensitivity Analysis [Automatic Differentiation](https://docs.sciml.ai/SciMLSensitivity/stable/) for fast gradient computations
+- [Parameter Estimation and Bayesian Analysis](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
+- Neural differential equations with [DiffEqFlux.jl](https://docs.sciml.ai/DiffEqFlux/stable/)
   for efficient scientific machine learning (scientific ML) and scientific AI.
 - Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
-- [Global Sensitivity Analysis](@ref gsa)
-- [Uncertainty Quantification](@ref uncertainty_quantification)
+- [Global Sensitivity Analysis](https://docs.sciml.ai/GlobalSensitivity/stable/)
+- [Uncertainty Quantification](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
 
 ## Contributing
 - If you're interested in contributing, please see the

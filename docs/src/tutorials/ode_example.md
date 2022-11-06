@@ -324,7 +324,7 @@ Note that here "variable 0" corresponds to the independent variable ("time").
 
 In many cases you may want to explicitly have parameters associated with your
 differential equations. This can be used by things like
-[parameter estimation routines](@ref parameter_estimation).
+[parameter estimation routines](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/).
 In this case, you use the `p` values via the syntax:
 
 ```julia
@@ -514,8 +514,8 @@ check out the features for:
 - [Handling, parallelizing, and analyzing large Ensemble experiments](@ref ensemble)
 - [Saving the output to tabular formats like DataFrames and CSVs](@ref io)
 - [Event handling](@ref callbacks)
-- [Parameter estimation (inverse problems)](@ref parameter_estimation)
-- [Quantification of numerical uncertainty and error](@ref uncertainty_quantification)
+- [Parameter estimation (inverse problems)](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
+- [Quantification of numerical uncertainty and error](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types
