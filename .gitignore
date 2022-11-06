@@ -8,3 +8,5 @@ docs/site
 # vscode stuff
 .vscode
 .vscode/*
+
+Manifest.toml
