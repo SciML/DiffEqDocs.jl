@@ -58,5 +58,4 @@ pages = Any["index.md",
                                          "features/io.md",
                                          "features/low_dep.md",
                                          "features/progress_bar.md"],
-            "Additional Functionality" => Any["additional_functionality.md"],
             "Extra Details" => Any["extras/timestepping.md"]]
