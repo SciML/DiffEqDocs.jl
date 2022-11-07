@@ -21,7 +21,7 @@ are a good go-to method when applicable.
 
 For default tolerances, `AutoTsit5(Rosenbrock23())` is a good choice. For lower
 tolerances, using `AutoVern7` or `AutoVern9` with `Rodas4`, `KenCarp4`, or
-`Rodas5` can all be good choices depending on the problem. For very large
+`Rodas5P` can all be good choices depending on the problem. For very large
 systems (`>1000 ODEs?`), consider using `lsoda`.
 
 ### Non-Stiff Problems
@@ -66,7 +66,7 @@ re-factorizing the Jacobian is not too costly, and for sufficiently large
 systems `TRBDF2` will be more efficient. `QNDF` or `FBDF` can be the most efficient
 the largest systems or most expensive `f`.
 
-At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5`,
+At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5P`,
 `Rodas4P` (the former is more efficient but the later is more reliable),
 `Kvaerno5`, or `KenCarp4`. As native DifferentialEquations.jl solvers,
 many Julia numeric types (such as BigFloats,
@@ -95,8 +95,9 @@ strong-stability preserving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
 parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
-situations which is 3rd order. `ROS3P` is only third order and achieves 3rd order
-on such problems and can thus be more efficient in this case.
+situations which is 3rd order. Similarly between `Rodas5` and Rodas5P`. `ROS3P` 
+is only third order and achieves 3rd order on such problems and can thus be more 
+efficient in this case.
 
 ## Translations from MATLAB/Python/R
 
@@ -529,10 +530,11 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   stiff-aware 3rd order interpolant. 4th order on linear parabolic problems and
   3rd order accurate on nonlinear parabolic problems. It is an improvement of Roadas4P
   and in case of inexact Jacobians a second order W method.
-- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. Currently has
-  a Hermite interpolant because its stiff-aware 3rd order interpolant is not
-  yet implemented.
-
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 
+  4th order interpolant.
+- `Rodas5P - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 
+  4th order interpolant. Has improved stability in the adaptive time stepping embedding
+  
 #### Rosenbrock-W Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
