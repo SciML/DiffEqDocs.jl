@@ -1,0 +1,20 @@
+[deps]
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DAEProblemLibrary = "dfb8ca35-80a1-48ba-a605-84916a45b4f8"
+DDEProblemLibrary = "f42792ee-6ffc-4e2a-ae83-8ee2f22de800"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
+DiffEqDocs = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+JumpProblemLibrary = "faf0f6d7-8cee-47cb-b27c-1eb80cef534e"
+ODEProblemLibrary = "fdc4e326-1af4-4b90-96e7-779fcce2daa5"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+SDEProblemLibrary = "c72e72a9-a271-4b2b-8966-303ed956772e"
+SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
+
+[compat]
+Documenter = "0.27.0"
+SciMLBase = "1.34.1"
+julia = "1.6"
