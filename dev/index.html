@@ -22,11 +22,13 @@ PackageCompiler.create_sysimage([:DifferentialEquations,:Plots];replace_default=
   [336ed68f] CSV v0.10.7
   [dfb8ca35] DAEProblemLibrary v0.1.0
   [f42792ee] DDEProblemLibrary v0.1.2
-  [a93c6f00] DataFrames v1.4.2
+  [a93c6f00] DataFrames v1.4.3
   [2b5f629d] DiffEqBase v6.106.0
+  [459566f4] DiffEqCallbacks v2.24.3
   [d91efeb5] DiffEqDocs v7.2.0 `~/work/DiffEqDocs.jl/DiffEqDocs.jl`
+  [0c46a032] DifferentialEquations v7.6.0
   [e30172f5] Documenter v0.27.23
-  [033835bb] JLD2 v0.4.26
+  [033835bb] JLD2 v0.4.28
   [faf0f6d7] JumpProblemLibrary v0.1.3
   [fdc4e326] ODEProblemLibrary v0.1.4
   [1dea7af3] OrdinaryDiffEq v6.31.2
@@ -62,7 +64,9 @@ Platform Info:
   [62783981] BitTwiddlingConvenienceFunctions v0.1.4
   [8e7c35d0] BlockArrays v0.16.21
   [ffab5731] BlockBandedMatrices v0.11.9
-  [2a0fbf3d] CPUSummary v0.1.28
+  [764a87c0] BoundaryValueDiffEq v2.10.0
+  [fa961155] CEnum v0.4.2
+  [2a0fbf3d] CPUSummary v0.1.29
   [00ebfdb7] CSTParser v3.3.6
   [336ed68f] CSV v0.10.7
   [49dc2e85] Calculus v0.5.1
@@ -84,17 +88,20 @@ Platform Info:
   [dfb8ca35] DAEProblemLibrary v0.1.0
   [f42792ee] DDEProblemLibrary v0.1.2
   [9a962f9c] DataAPI v1.13.0
-  [a93c6f00] DataFrames v1.4.2
+  [a93c6f00] DataFrames v1.4.3
   [864edb3b] DataStructures v0.18.13
   [e2d170a0] DataValueInterfaces v1.0.0
   [244e2a9f] DefineSingletons v0.1.2
+  [bcd4f6db] DelayDiffEq v5.39.1
   [b429d917] DensityInterface v0.4.0
   [2b5f629d] DiffEqBase v6.106.0
   [459566f4] DiffEqCallbacks v2.24.3
   [d91efeb5] DiffEqDocs v7.2.0 `~/work/DiffEqDocs.jl/DiffEqDocs.jl`
+  [77a26b50] DiffEqNoiseProcess v5.14.2
   [9fdde737] DiffEqOperators v4.43.1
   [163ba53b] DiffResults v1.1.0
-  [b552c78f] DiffRules v1.12.1
+  [b552c78f] DiffRules v1.12.2
+  [0c46a032] DifferentialEquations v7.6.0
   [b4f34e82] Distances v0.10.7
   [31c24e10] Distributions v0.25.77
   [ffbed154] DocStringExtensions v0.9.2
@@ -113,7 +120,7 @@ Platform Info:
   [1a297f60] FillArrays v0.13.5
   [6a86dc24] FiniteDiff v2.16.0
   [59287772] Formatting v0.4.2
-  [f6369f11] ForwardDiff v0.10.32
+  [f6369f11] ForwardDiff v0.10.33
   [069b7b12] FunctionWrappers v1.1.3
   [77dc65aa] FunctionWrappersWrappers v0.1.1
   [46192b85] GPUArraysCore v0.1.2
@@ -122,7 +129,7 @@ Platform Info:
   [86223c79] Graphs v1.7.4
   [0b43b601] Groebner v0.2.11
   [d5909c97] GroupsCore v0.4.0
-  [3e5b6fbb] HostCPUFeatures v0.1.9
+  [3e5b6fbb] HostCPUFeatures v0.1.11
   [34004b35] HypergeometricFunctions v0.3.11
   [b5f81e59] IOCapture v0.2.2
   [615f187c] IfElse v0.1.1
@@ -136,10 +143,10 @@ Platform Info:
   [92d709cd] IrrationalConstants v0.1.1
   [42fd0dbc] IterativeSolvers v0.9.2
   [82899510] IteratorInterfaceExtensions v1.0.0
-  [033835bb] JLD2 v0.4.26
+  [033835bb] JLD2 v0.4.28
   [692b3bcd] JLLWrappers v1.4.1
   [682c06a0] JSON v0.21.3
-  [98e50ef6] JuliaFormatter v1.0.14
+  [98e50ef6] JuliaFormatter v1.0.15
   [faf0f6d7] JumpProblemLibrary v0.1.3
   [ccbc3e58] JumpProcesses v9.2.2
   [ef3ab10e] KLU v0.4.0
@@ -152,10 +159,11 @@ Platform Info:
   [10f19ff3] LayoutPointers v0.1.11
   [5078a376] LazyArrays v0.22.12
 ⌅ [d7e5e226] LazyBandedMatrices v0.7.17
+  [2d8b4e74] LevyArea v1.0.0
   [d3d80556] LineSearches v7.2.0
   [7ed4a6bd] LinearSolve v1.28.0
   [2ab3a3ac] LogExpFunctions v0.3.18
-  [bdcacae8] LoopVectorization v0.12.138
+  [bdcacae8] LoopVectorization v0.12.139
   [1914dd2f] MacroTools v0.5.10
   [d125e4d3] ManualMemory v0.1.8
   [a3b82374] MatrixFactorizations v0.9.3
@@ -173,6 +181,7 @@ Platform Info:
   [8913a72c] NonlinearSolve v0.3.22
   [fdc4e326] ODEProblemLibrary v0.1.4
   [6fe1bfb0] OffsetArrays v1.12.8
+  [429524aa] Optim v1.7.3
   [bac558e1] OrderedCollections v1.4.1
   [1dea7af3] OrdinaryDiffEq v6.31.2
   [90014a1f] PDMats v0.11.16
@@ -182,11 +191,13 @@ Platform Info:
   [f517fe37] Polyester v0.6.16
   [1d0040c9] PolyesterWeave v0.1.10
   [2dfb63ee] PooledArrays v1.4.2
+  [85a6dd25] PositiveFactorizations v0.2.4
   [d236fae5] PreallocationTools v0.4.4
   [21216c6a] Preferences v1.3.0
-  [08abe8d2] PrettyTables v2.2.0
+  [08abe8d2] PrettyTables v2.2.1
   [27ebfcd6] Primes v0.5.3
   [1fd47b50] QuadGK v2.6.0
+  [74087812] Random123 v1.6.0
   [fb686558] RandomExtensions v0.4.3
   [e6cf234a] RandomNumbers v1.5.3
   [3cdcf5f2] RecipesBase v1.3.1
@@ -195,6 +206,7 @@ Platform Info:
   [189a3867] Reexport v1.2.2
   [42d2dcc6] Referenceables v0.1.2
   [ae029012] Requires v1.3.0
+  [ae5879a3] ResettableStacks v1.1.1
   [79098fc4] Rmath v0.7.0
   [7e49a35a] RuntimeGeneratedFunctions v0.5.5
   [c72e72a9] SDEProblemLibrary v0.1.3
@@ -206,18 +218,21 @@ Platform Info:
   [efcf1570] Setfield v1.1.1
   [699a6c99] SimpleTraits v0.9.4
   [66db9d55] SnoopPrecompile v1.0.1
-  [a2af1166] SortingAlgorithms v1.0.1
+  [a2af1166] SortingAlgorithms v1.1.0
   [47a9eef4] SparseDiffTools v1.29.0
   [276daf66] SpecialFunctions v2.1.7
   [171d559e] SplittablesBase v0.1.15
-  [aedffcd0] Static v0.7.8
+⌅ [aedffcd0] Static v0.7.8
   [90137ffa] StaticArrays v1.5.9
   [1e83bf80] StaticArraysCore v1.4.0
   [82ae8749] StatsAPI v1.5.0
   [2913bbd2] StatsBase v0.33.21
   [4c63d2b9] StatsFuns v1.0.1
+  [9672c7b4] SteadyStateDiffEq v1.9.0
+  [789caeaf] StochasticDiffEq v6.56.0
   [7792a7ef] StrideArraysCore v0.3.15
   [892a3eda] StringManipulation v0.3.0
+  [c3572dad] Sundials v4.10.3
   [d1185830] SymbolicUtils v0.19.11
   [0c5d862f] Symbolics v4.13.0
   [3783bdb8] TableTraits v1.0.1
@@ -235,12 +250,13 @@ Platform Info:
   [5c2747f8] URIs v1.4.0
   [3a884ed6] UnPack v1.0.2
   [1986cc42] Unitful v1.12.0
-  [3d5dd08c] VectorizationBase v0.21.54
+  [3d5dd08c] VectorizationBase v0.21.55
   [19fa3120] VertexSafeGraphs v0.2.0
   [ea10d353] WeakRefStrings v1.4.2
   [700de1a5] ZygoteRules v0.2.2
   [efe28fd5] OpenSpecFun_jll v0.5.5+0
   [f50d1b31] Rmath_jll v0.3.0+0
+  [fb77eaff] Sundials_jll v5.2.1+0
   [0dad84c5] ArgTools v1.1.1
   [56f22d72] Artifacts
   [2a0f44e3] Base64
@@ -288,4 +304,4 @@ Platform Info:
   [3f19e933] p7zip_jll v17.4.0+0
 Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated -m`</code></pre></details>You can also download the 
 <a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.2.0/assets/Manifest.toml">manifest</a> file and the
-<a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.2.0/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="tutorials/ode_example/">Ordinary Differential Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Thursday 10 November 2022 16:53">Thursday 10 November 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.2.0/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="tutorials/ode_example/">Ordinary Differential Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 15 November 2022 11:08">Tuesday 15 November 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
