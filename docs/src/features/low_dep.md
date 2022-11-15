@@ -127,6 +127,7 @@ sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
 
 ```@example low_dep_1
+using InteractiveUtils # hide
 @which ProbIntsUncertainty(0.2,1)
 ```
 
