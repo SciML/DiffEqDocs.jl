@@ -343,45 +343,6 @@ Pages = [
 Depth = 2
 ```
 
-### Analysis Tools
-
-Because DifferentialEquations.jl has a common interface on the solutions, it is
-easy to add functionality to the entire DiffEq ecosystem by developing it
-to the solution interface. These pages describe the add-on analysis tools which
-are available.
-
-```@contents
-Pages = [
-    "analysis/parameterized_functions.md",
-    "analysis/parameter_estimation.md",
-    "analysis/bifurcation.md",
-    "analysis/sensitivity.md",
-    "analysis/global_sensitivity.md",
-    "analysis/uncertainty_quantification.md",
-    "analysis/neural_networks.md",
-    "analysis/dev_and_test.md"
-]
-Depth = 2
-```
-
-### Modeling Tools
-
-While DifferentialEquations.jl can be used to directly build any differential
-or difference equation (/ discrete stochastic) model, in many cases it can be
-helpful to have a tailored-built API for making certain types of common models
-easier. This is provided by the modeling functionality.
-
-```@contents
-Pages = [
-    "models/multiscale.md",
-    "models/physical.md",
-    "models/financial.md",
-    "models/chemical_reactions.md",
-    "models/external_modeling.md"
-]
-Depth = 2
-```
-
 ### Extra Details
 
 These are just assorted extra explanations for the curious.
@@ -389,7 +350,6 @@ These are just assorted extra explanations for the curious.
 ```@contents
 Pages = [
     "extras/timestepping.md"
-    "extras/sensitivity_math.md"
 ]
 Depth = 2
 ```
