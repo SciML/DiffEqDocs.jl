@@ -99,47 +99,56 @@ fundamental types, but the solvers will automatically reexport it.
 For solvers, you typically only need that solver package.
 So SciMLBase+Sundials, SciMLBase+LSODA, etc. will get you the common interface
 with that specific solver setup. SciMLBase.jl is a very lightweight dependency,
-so there is no issue here! For PDEs, you normally need SciMLBase+DiffEqPDEBase
-in addition to the solver package.
+so there is no issue here!
 
 For the addon packages, you will normally need SciMLBase, the solver package
-you choose, and the addon package. So for example, for parameter estimation you
-would likely want SciMLBase+OrdinaryDiffEq+DiffEqParamEstim. If you aren't sure
+you choose, and the addon package. So for example, for predefined callbacks you
+would likely want SciMLBase+OrdinaryDiffEq+DiffEqCallbacks. If you aren't sure
 which package a specific command is from, then use `@which`. For example, from
-the parameter estimation docs we have:
+the callback docs we have:
 
-```julia
+```@example low_dep_1
 using DifferentialEquations
-function f(du,u,p,t)
-  dx = p[1]*u[1] - u[1]*u[2]
-  dy = -3*u[2] + u[1]*u[2]
+function fitz(du,u,p,t)
+  V,R = u
+  a,b,c = p
+  du[1] = c*(V - V^3/3 + R)
+  du[2] = -(1/c)*(V -  a - b*R)
 end
-
-u0 = [1.0;1.0]
-tspan = (0.0,10.0)
-p = [1.5]
-prob = ODEProblem(f,u0,tspan,p)
-sol = solve(prob,Tsit5())
-t = collect(range(0, stop=10, length=200))
-randomized = VectorOfArray([(sol(t[i]) + .01randn(2)) for i in 1:length(t)])
-using RecursiveArrayTools
-data = convert(Array,randomized)
-cost_function = build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
+u0 = [-1.0;1.0]
+tspan = (0.0,20.0)
+p = (0.2,0.2,3.0)
+prob = ODEProblem(fitz,u0,tspan,p)
+cb = ProbIntsUncertainty(0.2,1)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 ```
 
-If we wanted to know where `build_loss_objective` came from, we can do:
+If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
 
-```julia
-@which build_loss_objective(prob,t,data,Tsit5(),maxiters=10000)
-
-(::DiffEqParamEstim.#kw##build_loss_objective)(::Array{Any,1}, ::DiffEqParamEstim.#build_loss_objective, prob::SciMLBase.DEProblem, t, data, alg)
+```@example low_dep_1
+using InteractiveUtils # hide
+@which ProbIntsUncertainty(0.2,1)
 ```
 
-This says it's in the DiffEqParamEstim.jl package. Thus in this case, we could have
+This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have
 done
 
-```julia
-using OrdinaryDiffEq, DiffEqParamEstim
+```@example low_dep_2
+using OrdinaryDiffEq, DiffEqCallbacks
+function fitz(du,u,p,t)
+  V,R = u
+  a,b,c = p
+  du[1] = c*(V - V^3/3 + R)
+  du[2] = -(1/c)*(V -  a - b*R)
+end
+u0 = [-1.0;1.0]
+tspan = (0.0,20.0)
+p = (0.2,0.2,3.0)
+prob = ODEProblem(fitz,u0,tspan,p)
+cb = ProbIntsUncertainty(0.2,1)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 ```
 
 instead of the full `using DifferentialEquations`. Note that due to the way
@@ -147,3 +156,4 @@ Julia dependencies work, any internal function in the package will work. The onl
 dependencies you need to explicitly `using` are the functions you are specifically
 calling. Thus this method can be used to determine all of the DiffEq packages
 you are using.
+
