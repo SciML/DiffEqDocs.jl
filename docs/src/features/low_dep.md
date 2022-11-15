@@ -101,7 +101,58 @@ So SciMLBase+Sundials, SciMLBase+LSODA, etc. will get you the common interface
 with that specific solver setup. SciMLBase.jl is a very lightweight dependency,
 so there is no issue here!
 
-Note that due to the way Julia dependencies work, any internal function
-in the package will work. The only dependencies you need to explicitly `using`
-are the functions you are specifically calling. Thus this method can be used to
-determine all of the DiffEq packagesyou are using.
+For the addon packages, you will normally need SciMLBase, the solver package
+you choose, and the addon package. So for example, for predefined callbacks you
+would likely want SciMLBase+OrdinaryDiffEq+DiffEqCallbacks. If you aren't sure
+which package a specific command is from, then use `@which`. For example, from
+the callback docs we have:
+
+```@example low_dep_1
+using DifferentialEquations
+function fitz(du,u,p,t)
+  V,R = u
+  a,b,c = p
+  du[1] = c*(V - V^3/3 + R)
+  du[2] = -(1/c)*(V -  a - b*R)
+end
+u0 = [-1.0;1.0]
+tspan = (0.0,20.0)
+p = (0.2,0.2,3.0)
+prob = ODEProblem(fitz,u0,tspan,p)
+cb = ProbIntsUncertainty(0.2,1)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
+```
+
+If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
+
+```@example low_dep_1
+@which ProbIntsUncertainty(0.2,1)
+```
+
+This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have
+done
+
+```@example low_dep_2
+using OrdinaryDiffEq, DiffEqCallbacks
+function fitz(du,u,p,t)
+  V,R = u
+  a,b,c = p
+  du[1] = c*(V - V^3/3 + R)
+  du[2] = -(1/c)*(V -  a - b*R)
+end
+u0 = [-1.0;1.0]
+tspan = (0.0,20.0)
+p = (0.2,0.2,3.0)
+prob = ODEProblem(fitz,u0,tspan,p)
+cb = ProbIntsUncertainty(0.2,1)
+ensemble_prob = EnsembleProblem(prob)
+sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
+```
+
+instead of the full `using DifferentialEquations`. Note that due to the way
+Julia dependencies work, any internal function in the package will work. The only
+dependencies you need to explicitly `using` are the functions you are specifically
+calling. Thus this method can be used to determine all of the DiffEq packages
+you are using.
+
