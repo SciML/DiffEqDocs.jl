@@ -396,7 +396,7 @@ allowing for a high degree of within-method parallelism. The defaults are:
 - `min_order=1` except for `ExtrapolationMidpointHairerWanner` it's 2.
 - `init_order=5`
 - `threading=true`
-- `seqeunce_factor = 2`
+- `sequence_factor = 2`
 
 Additionally, the `ExtrapolationMidpointDeuflhard` and `ExtrapolationMidpointHairerWanner`
 methods have the additional argument:
