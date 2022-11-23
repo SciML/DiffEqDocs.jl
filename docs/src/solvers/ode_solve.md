@@ -579,6 +579,8 @@ The following are adaptive order, adaptive step size extrapolation methods:
 
 - `ImplicitEulerExtrapolation` - Extrapolation of implicit Euler method with Romberg sequence.
   Similar to Hairer's `SEULEX`.
+- `ImplicitEulerBarycentricExtrapolation` - Extrapolation of the implicit Euler method, using
+  Barycentric coordinates to improve the stability of the method.
 - `ImplicitDeuflhardExtrapolation` - Midpoint extrapolation using Barycentric coordinates
 - `ImplicitHairerWannerExtrapolation` - Midpoint extrapolation using Barycentric coordinates,
   following Hairer's `SODEX` in the adaptivity behavior.
