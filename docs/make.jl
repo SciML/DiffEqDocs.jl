@@ -26,7 +26,7 @@ makedocs(modules = [
          doctest = false, clean = true,
          format = Documenter.HTML(analytics = "UA-90474609-3",
                                   assets = ["assets/favicon.ico"],
-                                  canonical = "https://diffeq.sciml.ai/stable/"),
+                                  canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
          sitename = "DifferentialEquations.jl",
          authors = "Chris Rackauckas",
          pages = pages)
