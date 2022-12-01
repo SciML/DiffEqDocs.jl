@@ -335,7 +335,7 @@ version = "2.24.3"
 deps = ["Documenter"]
 path = "/home/runner/work/DiffEqDocs.jl/DiffEqDocs.jl"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
-version = "7.5.1"
+version = "7.6.0"
 
 [[deps.DiffEqNoiseProcess]]
 deps = ["DiffEqBase", "Distributions", "GPUArraysCore", "LinearAlgebra", "Markdown", "Optim", "PoissonRandom", "QuadGK", "Random", "Random123", "RandomNumbers", "RecipesBase", "RecursiveArrayTools", "ResettableStacks", "SciMLBase", "StaticArrays", "Statistics"]
