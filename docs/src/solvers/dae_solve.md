@@ -6,7 +6,7 @@ For medium to low accuracy small numbers of DAEs in constant mass matrices form,
 the  `Rosenbrock23` and `Rodas4` methods are good choices which will get good
 efficiency if the mass matrix is constant. `Rosenbrock23` is better for low
 accuracy (error tolerance `<1e-4`) and `Rodas4` is better for high accuracy.
-Another choice at high accuracy is `RadauIIA5`.
+Another choice at high accuracy is `Rodas5P` and `RadauIIA5`.
 
 Non-constant mass matrices are not directly supported: users are advised to
 transform their problem through substitution to a DAE with constant mass
@@ -77,8 +77,10 @@ extra options for the solvers, see the ODE solver page.
   3rd order interpolant. 4th order on linear parabolic problems and 3rd order accurate
   on nonlinear parabolic problems. It is an improvement of Roadas4P and in case of
   inexact Jacobians a second order W method.
-- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method. with a stiff-aware
-  3rd order interpolant
+- `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 
+  4th order interpolant.
+- `Rodas5P - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware 
+  4th order interpolant. Has improved stability in the adaptive time stepping embedding.
 
 #### Rosenbrock-W Methods
 
