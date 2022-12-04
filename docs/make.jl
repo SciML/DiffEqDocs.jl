@@ -15,7 +15,7 @@ makedocs(modules = [
              DDEProblemLibrary,
              DAEProblemLibrary,
              OrdinaryDiffEq,
-             Sundials
+             Sundials,
          ],
          strict = [
              :doctest,
