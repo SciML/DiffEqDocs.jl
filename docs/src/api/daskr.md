@@ -14,5 +14,5 @@ These methods can be used independently of the rest of DifferentialEquations.jl.
 ## DAE Solver APIs
 
 ```@docs
-daskr
+DASKR.daskr
 ```
