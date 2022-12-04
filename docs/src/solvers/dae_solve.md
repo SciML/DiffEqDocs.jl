@@ -161,26 +161,6 @@ using DASKR
 
 - `daskr` - This is a wrapper for the well-known DASKR algorithm.
 
-All additional options are available. The constructor is:
-
-```julia
-function daskr(;linear_solver=:Dense,
-                  jac_upper=0,jac_lower=0,max_order = 5,
-                  non_negativity_enforcement = 0,
-                  non_negativity_enforcement_array = nothing,
-                  max_krylov_iters = nothing,
-                  num_krylov_vectors = nothing,
-                  max_number_krylov_restarts = 5,
-                  krylov_convergence_test_constant = 0.05,
-                  exclude_algebraic_errors = false)
-```
-
-Choices for the linear solver are:
-
-- `:Dense`
-- `:Banded`
-- `:SPIGMR`, a Krylov method
-
 ### DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
