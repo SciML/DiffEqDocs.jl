@@ -1234,9 +1234,9 @@ version = "1.1.0"
 
 [[deps.SteadyStateDiffEq]]
 deps = ["DiffEqBase", "DiffEqCallbacks", "LinearAlgebra", "NLsolve", "Reexport", "SciMLBase"]
-git-tree-sha1 = "d06cb5c8f02490c85d46ec0ed303fd388941bd2e"
+git-tree-sha1 = "1177afbb130b55ea733e3a5aad49b488b8de7e63"
 uuid = "9672c7b4-1e72-59bd-8a11-6ac3964bc41f"
-version = "1.9.1"
+version = "1.10.0"
 
 [[deps.StochasticDiffEq]]
 deps = ["Adapt", "ArrayInterface", "DataStructures", "DiffEqBase", "DiffEqNoiseProcess", "DocStringExtensions", "FillArrays", "FiniteDiff", "ForwardDiff", "JumpProcesses", "LevyArea", "LinearAlgebra", "Logging", "MuladdMacro", "NLsolve", "OrdinaryDiffEq", "Random", "RandomNumbers", "RecursiveArrayTools", "Reexport", "SciMLBase", "SparseArrays", "SparseDiffTools", "StaticArrays", "UnPack"]
