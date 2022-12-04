@@ -5,6 +5,11 @@
 Solves for the steady states in the problem defined by `prob` using the algorithm
 `alg`. If no algorithm is given, a default algorithm will be chosen.
 
+!!! note
+
+    For a more complete documentation on nonlinear solvers for steady state problems,
+    see [NonlinearSolve.jl](https://docs.sciml.ai/NonlinearSolve/stable/)
+
 ## Recommended Methods
 
 `DynamicSS` is a good choice if you think you may have multiple steady states
@@ -21,7 +26,7 @@ large time steps as the steady state approaches.
 
 - `SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
   to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
-  keyword argument.
+  keyword argument. (This method is deprecated: use NonlinearSolve.jl instead).
 - `DynamicSS` : Uses an ODE solver to find the steady state. Automatically
   terminates when close to the steady state.
   `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
