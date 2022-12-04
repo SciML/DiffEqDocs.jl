@@ -161,6 +161,9 @@ using DASKR
 
 - `daskr` - This is a wrapper for the well-known DASKR algorithm.
 
+For more details on controlling the DASKR.jl solvers, see the
+[DASKR detailed solver API page](@ref daskr)
+
 ### DASSL.jl
 
 - `dassl` - A native Julia implementation of the DASSL algorithm.
