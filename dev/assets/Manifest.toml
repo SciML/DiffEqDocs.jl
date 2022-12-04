@@ -2,7 +2,7 @@
 
 julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "615dbedca2b71224546119e5c501c199e64a051c"
+project_hash = "da3c294296505ba4a5bcfc05826f20f1bcb8e236"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -269,6 +269,18 @@ deps = ["DiffEqBase", "Markdown"]
 git-tree-sha1 = "b222667764ee5954ab2c488ae521652b1a070aa5"
 uuid = "dfb8ca35-80a1-48ba-a605-84916a45b4f8"
 version = "0.1.0"
+
+[[deps.DASKR]]
+deps = ["Compat", "DASKR_jll", "DiffEqBase", "Libdl", "Reexport"]
+git-tree-sha1 = "49d1225a3f95f4c72f9f8c21fa7a8e9bde29687d"
+uuid = "165a45c3-f624-5814-8e85-3bdf39a7becd"
+version = "2.9.1"
+
+[[deps.DASKR_jll]]
+deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "0a26f33a54c88a340c3dca28b2e186c5d6c8793b"
+uuid = "655fdf9c-4522-5e7e-b537-e46a52300ea6"
+version = "1.0.0+0"
 
 [[deps.DDEProblemLibrary]]
 deps = ["DiffEqBase"]
