@@ -58,5 +58,6 @@ pages = Any["index.md",
                                          "features/io.md",
                                          "features/low_dep.md",
                                          "features/progress_bar.md"],
-            "Detailed Solver APIs" => Any["api/sundials.md"],
+            "Detailed Solver APIs" => Any["api/sundials.md",
+                                          "api/daskr.md"],
             "Extra Details" => Any["extras/timestepping.md"]]
