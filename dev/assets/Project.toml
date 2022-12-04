@@ -15,6 +15,7 @@ ODEProblemLibrary = "fdc4e326-1af4-4b90-96e7-779fcce2daa5"
 OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 SDEProblemLibrary = "c72e72a9-a271-4b2b-8966-303ed956772e"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
+Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 
 [compat]
 BSON = "0.3"
@@ -32,3 +33,4 @@ ODEProblemLibrary = "0.1"
 OrdinaryDiffEq = "6.31"
 SDEProblemLibrary = "0.1"
 SciMLBase = "1.34"
+Sundials = "4.11.3"
