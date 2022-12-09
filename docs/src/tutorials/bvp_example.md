@@ -1,7 +1,7 @@
 # Boundary Value Problems
 
 This tutorial will introduce you to the functionality for solving BVPs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl). 
+introductions can be found by [checking out SciMLTutorials.jl](https://docs.sciml.ai/SciMLTutorialsOutput/stable/). 
 
 !!! note
 
@@ -20,7 +20,7 @@ g(u) &= \vec{0}
 
 The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
 
-```julia
+```@example bvp
 using BoundaryValueDiffEq
 using Plots
 const g = 9.81
@@ -44,7 +44,7 @@ There are two problem types available:
 
  The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
-```julia
+```@example bvp
 function bc1!(residual, u, p, t)
     residual[1] = u[end÷2][1] + pi/2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
@@ -54,13 +54,11 @@ sol1 = solve(bvp1, GeneralMIRK4(), dt=0.05)
 plot(sol1)
 ```
 
-![BVP Example Plot1](../assets/bvp_example_plot1.png)
-
 The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example. <!-- add examples of more general initial conditions -->
 We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. `GeneralMIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
 If you can have a good initial guess, `Shooting` method works very well.
 
-```julia
+```@example bvp
 using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
 function bc3!(residual, sol, p, t)
@@ -73,17 +71,15 @@ sol3 = solve(bvp3, Shooting(Vern7()))
 The initial guess can also be supplied via a function of `t` or a previous solution type, this is espacially handy for parameter analysis.
 We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
 
-```julia
+```@example bvp
 plot(sol3)
 ```
-
-![BVP Example Plot3](../assets/bvp_example_plot3.png)
 
 #### `TwoPointBVProblem`
 
 Defining a similar problem as `TwoPointBVProblem` is shown in the following example. At the moment `MIRK4` is the only solver for `TwoPointBVProblem`s.
 
-```julia
+```@example bvp
 function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending
     residual[1] = u[1][1] + pi/2 # the solution at the beginning of the time span should be -pi/2
     residual[2] = u[end][1] - pi/2 # the solution at the end of the time span should be pi/2
@@ -93,5 +89,3 @@ sol2 = solve(bvp2, MIRK4(), dt=0.05) # we need to use the MIRK4 solver for TwoPo
 plot(sol2)
 ```
 Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )` and `p` holds the parameters of the given problem.
-
-![BVP Example Plot2](../assets/bvp_example_plot2.png)
