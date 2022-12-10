@@ -35,7 +35,8 @@ no delays are written as in the ODE.
 
 Thus, the function for this model is given by:
 
-```julia
+```@example dde
+using DifferentialEquations
 function bc_model(du,u,h,p,t)
   p0,q0,v0,d0,p1,q1,v1,d1,d2,beta0,beta1,tau = p
   hist3 = h(p, t-tau)[3]
@@ -58,13 +59,13 @@ is very similar to ODEs, where we now have to give the lags and a function `h`.
 the model starts. Here we will assume that for all time before `t0` the values were 1
 and define `h` as an out-of-place function:
 
-```julia
+```@example dde
 h(p, t) = ones(3)
 ```
 
 To use the constant lag model, we have to declare the lags. Here we will use `tau=1`.
 
-```julia
+```@example dde
 tau = 1
 lags = [tau]
 ```
@@ -72,7 +73,7 @@ lags = [tau]
 Next, we choose to solve on the timespan `(0.0,10.0)` and create the problem type:
 
 
-```julia
+```@example dde
 p0 = 0.2; q0 = 0.3; v0 = 1; d0 = 5
 p1 = 0.2; q1 = 0.3; v1 = 1; d1 = 1
 d2 = 1; beta0 = 1; beta1 = 1
@@ -88,7 +89,7 @@ MethodOfSteps solver. Through the magic that is Julia, it translates an Ordinary
 ODE solver method into a method for delay differential equations which is highly
 efficient due to sweet compiler magic. A good choice is the order 5 method `Tsit5()`:
 
-```julia
+```@example dde
 alg = MethodOfSteps(Tsit5())
 ```
 
@@ -100,7 +101,7 @@ solution.
 To solve the problem with this algorithm, we do the same thing we'd do with other
 methods on the common interface:
 
-```julia
+```@example dde
 sol = solve(prob,alg)
 ```
 
@@ -108,11 +109,10 @@ Note that everything available to OrdinaryDiffEq.jl can be used here, including
 event handling and other callbacks. The solution object has the same interface
 as for ODEs. For example, we can use the same plot recipes to view the results:
 
-```julia
-using Plots; plot(sol)
+```@example dde
+using Plots
+plot(sol)
 ```
-
-![DDE Example Plot](../assets/dde_example_plot.png)
 
 #### Speeding Up Interpolations with Idxs
 
@@ -122,13 +122,13 @@ form for the history function `h(out, p, t)` which writes the output to `out`. I
 case, we must supply the history initial conditions as in-place as well. For the
 previous example, that's simply
 
-```julia
+```@example dde
 h(out, p, t) = (out.=1.0)
 ```
 
 and then our DDE is:
 
-```julia
+```@example dde
 const out = zeros(3) # Define a cache variable
 function bc_model(du,u,h,p,t)
   h(out, p, t-tau) # updates out to be the correct history function
@@ -144,7 +144,7 @@ interpolate past values at index 3. Instead of generating a bunch of arrays,
 we can instead ask specifically for that value by passing the keyword `idxs = 3`.
 The DDE function `bc_model` is now:
 
-```julia
+```@example dde
 function bc_model(du,u,h,p,t)
   u3_past_sq = h(p, t-tau; idxs=3)^2
   du[1] = (v0/(1+beta0*(u3_past_sq))) * (p0 - q0)*u[1] - d0*u[1]
@@ -156,7 +156,7 @@ end
 
 Note that this requires that we define the historical values
 
-```julia
+```@example dde
 h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
 ```
 
@@ -165,7 +165,7 @@ and here for any number `idxs` we give back `1.0`. Note that if we wanted to use
 past values of the `i`th derivative then we would call the history function
 `h(p, t, Val{i})` in our DDE function and would have to define a dispatch like
 
-```julia
+```@example dde
 h(p, t, ::Type{Val{1}}) = zeros(3)
 ```
 
@@ -192,7 +192,7 @@ Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
 `ddesd`. Thus, for example, the following is similar to solving the example
 from above with residual control:
 
-```julia
+```@example dde
 prob = DDEProblem(bc_model,u0,h,tspan)
 alg = MethodOfSteps(RK4())
 sol = solve(prob,alg)
@@ -212,7 +212,7 @@ interface.
 We can solve the above problem with dependent delay tracking by declaring the
 dependent lags and solving with a `MethodOfSteps` algorithm:
 
-```julia
+```@example dde
 prob = DDEProblem(bc_model,u0,h,tspan; dependent_lags = ((u,p,t) -> tau,))
 alg = MethodOfSteps(Tsit5())
 sol = solve(prob,alg)

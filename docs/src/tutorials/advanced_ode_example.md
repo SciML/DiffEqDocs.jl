@@ -70,7 +70,7 @@ are then applied at each point in space (they are broadcast). Use `dx=dy=1/32`.
 
 The resulting `ODEProblem` definition is:
 
-```julia
+```@example stiff1
 using DifferentialEquations, LinearAlgebra, SparseArrays
 
 const N = 32
@@ -145,43 +145,34 @@ in action, we can give an example `du` and `u` and call `jacobian_sparsity`
 on our function with the example arguments and it will kick out a sparse matrix
 with our pattern, that we can turn into our `jac_prototype`.
 
-```julia
+```@example stiff1
 using Symbolics
 du0 = copy(u0)
 jac_sparsity = Symbolics.jacobian_sparsity((du,u)->brusselator_2d_loop(du,u,p,0.0),du0,u0)
-
-2048×2048 SparseArrays.SparseMatrixCSC{Bool, Int64} with 12288 stored entries:
-⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀
-⠀⠈⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀
-⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠈⠳⣄⠀⠀
-⡀⠀⠀⠀⠀⠈⠻⣦⠀⠀⠀⠀⠀⠈⠳⣄
-⠙⢦⡀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠈
-⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀
-⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦⡀⠀
-⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠈⠻⣦
 ```
 
 Notice Julia gives a nice print out of the sparsity pattern. That's neat, and
 would be tedious to build by hand! Now we just pass it to the `ODEFunction`
 like as before:
 
-```julia
+```@example stiff1
 f = ODEFunction(brusselator_2d_loop;jac_prototype=float.(jac_sparsity))
 ```
 
 Build the `ODEProblem`:
 
-```julia
+```@example stiff1
 prob_ode_brusselator_2d_sparse = ODEProblem(f,u0,(0.,11.5),p)
 ```
 
 Now let's see how the version with sparsity compares to the version without:
 
-```julia
+```@example stiff1
 using BenchmarkTools # for @btime
-@btime solve(prob_ode_brusselator_2d,TRBDF2(),save_everystep=false) # 2.771 s (5452 allocations: 65.73 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false) # 680.612 ms (37905 allocations: 359.34 MiB)
-@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KLUFactorization()),save_everystep=false) # 342.017 ms (65150 allocations: 158.99 MiB)
+@btime solve(prob_ode_brusselator_2d,TRBDF2(),save_everystep=false);
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false);
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KLUFactorization()),save_everystep=false);
+nothing # hide
 ```
 
 Note that depending on the properties of the sparsity pattern, one may want
@@ -195,9 +186,9 @@ matrices is to use a Krylov subpsace method. This requires choosing a linear
 solver for changing to a Krylov method. To swap the linear solver out, we use
 the `linsolve` command and choose the GMRES linear solver.
 
-```julia
-@btime solve(prob_ode_brusselator_2d,KenCarp47(linsolve=KrylovJL_GMRES()),save_everystep=false)
-# 707.439 ms (173868 allocations: 31.07 MiB)
+```@example stiff1
+@btime solve(prob_ode_brusselator_2d,KenCarp47(linsolve=KrylovJL_GMRES()),save_everystep=false);
+nothing # hide
 ```
 
 Notice that this acceleration does not require the definition of a sparsity
@@ -222,7 +213,7 @@ approximate the inverse of `W = I - gamma*J` used in the solution of the ODE.
 An example of this with using [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
 is as follows:
 
-```julia
+```@example stiff1
 using IncompleteLU
 function incompletelu(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
   if newW === nothing || newW
@@ -236,8 +227,8 @@ end
 # Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
 Base.eltype(::IncompleteLU.ILUFactorization{Tv,Ti}) where {Tv,Ti} = Tv
 
-@time solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=incompletelu,concrete_jac=true),save_everystep=false);
-# 174.386 ms (61756 allocations: 61.38 MiB)
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=incompletelu,concrete_jac=true),save_everystep=false);
+nothing # hide
 ```
 
 Notice a few things about this preconditioner. This preconditioner uses the
@@ -259,7 +250,7 @@ requires a well-tuned `τ` parameter. Another option is to use
 [AlgebraicMultigrid.jl](https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl)
 which is more automatic. The setup is very similar to before:
 
-```julia
+```@example stiff1
 using AlgebraicMultigrid
 function algebraicmultigrid(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
   if newW === nothing || newW
@@ -271,12 +262,12 @@ function algebraicmultigrid(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid,concrete_jac=true),save_everystep=false);
-# 372.528 ms (61179 allocations: 160.82 MiB)
+nothing # hide
 ```
 
 or with a Jacobi smoother:
 
-```julia
+```@example stiff1
 function algebraicmultigrid2(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
   if newW === nothing || newW
     A = convert(AbstractMatrix,W)
@@ -288,7 +279,7 @@ function algebraicmultigrid2(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid2,concrete_jac=true),save_everystep=false);
-# 293.476 ms (65714 allocations: 170.23 MiB)
+nothing # hide
 ```
 
 For more information on the preconditioner interface, see the
@@ -310,23 +301,25 @@ preset list. Particular choices of note are `:Band` for a banded matrix and
 defining the JacVecOperator, and instead will always make use of a Jacobian-Free
 Newton Krylov (with numerical differentiation). Thus on this problem we could do:
 
-```julia
+```@example stiff1
 using Sundials
-@btime solve(prob_ode_brusselator_2d,CVODE_BDF(),save_everystep=false) # 13.280 s (51457 allocations: 2.43 MiB)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(),save_everystep=false);
 # Simplest speedup: use :LapackDense
-@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:LapackDense),save_everystep=false) # 2.024 s (51457 allocations: 2.43 MiB)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:LapackDense),save_everystep=false);
 # GMRES Version: Doesn't require any extra stuff!
-@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false) # 213.800 ms (58353 allocations: 2.64 MiB)
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);
+nothing # hide
 ```
 
 Notice that using sparse matrices with Sundials requires an analytical Jacobian
 function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 `modelingtoolkitize` to automatically generate this:
 
-```julia
+```@example stiff1
 using ModelingToolkit
 prob_ode_brusselator_2d_mtk = ODEProblem(modelingtoolkitize(prob_ode_brusselator_2d_sparse),[],(0.0,11.5),jac=true,sparse=true);
-@btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false) # 493.908 ms (1358 allocations: 5.79 MiB)
+# @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
+nothing # hide
 ```
 
 ### Using Preconditioners with Sundials
@@ -380,7 +373,6 @@ We then simply pass these functions to the Sundials solver with a choice of
 
 ```julia
 @btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precilu,psetup=psetupilu,prec_side=1),save_everystep=false);
-# 87.176 ms (17717 allocations: 77.08 MiB)
 ```
 
 And similarly for algebraic multigrid:
@@ -408,5 +400,4 @@ function precamg(z,r,p,t,y,fy,gamma,delta,lr)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precamg,psetup=psetupamg,prec_side=1),save_everystep=false);
-# 136.431 ms (30682 allocations: 275.68 MiB)
 ```

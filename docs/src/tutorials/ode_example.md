@@ -26,7 +26,7 @@ is not known.)
 The general workflow is to define a problem, solve the problem, and then analyze
 the solution. The full code for solving this problem is:
 
-```julia
+```@example ODE1
 using DifferentialEquations
 f(u,p,t) = 1.01*u
 u0 = 1/2
@@ -47,7 +47,7 @@ where the pieces are described below.
 To solve this numerically, we define a problem type by giving it the equation,
 the initial condition, and the timespan to solve over:
 
-```julia
+```@example ODE2
 using DifferentialEquations
 f(u,p,t) = 1.01*u
 u0 = 1/2
@@ -79,7 +79,7 @@ function in order to speed up the solvers. These are detailed
 
 After defining a problem, you solve it using `solve`.
 
-```julia
+```@example ODE2
 sol = solve(prob)
 ```
 
@@ -88,7 +88,7 @@ The solvers can be controlled using the available options are described on the
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
-```julia
+```@example ODE2
 sol = solve(prob,reltol=1e-6)
 ```
 
@@ -96,7 +96,7 @@ There are many controls for handling outputs. For example, we can choose to have
 the solver save every `0.1` time points by setting `saveat=0.1`. Chaining this
 with the tolerance choice looks like:
 
-```julia
+```@example ODE2
 sol = solve(prob,reltol=1e-6,saveat=0.1)
 ```
 
@@ -105,7 +105,7 @@ Note that this uses interpolations to keep the timestep unconstrained to speed
 up the solution. In addition, if we only care about the endpoint, we can turn
 off intermediate saving in general:
 
-```julia
+```@example ODE2
 sol = solve(prob,reltol=1e-6,save_everystep=false)
 ```
 
@@ -123,7 +123,7 @@ using properties of the problem and necessary features for the solution.
 For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
-```julia
+```@example ODE2
 sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)
 ```
 
@@ -133,7 +133,7 @@ equations libraries. Many of these algorithms are from recent research and have
 been shown to be more efficient than the "standard" algorithms.
 For example, we can choose a 5th order Tsitouras method:
 
-```julia
+```@example ODE2
 sol = solve(prob,Tsit5())
 ```
 
@@ -141,7 +141,7 @@ Note that the solver controls can be combined with the algorithm choice. Thus
 we can for example solve the problem using `Tsit5()` with a lower tolerance
 via:
 
-```julia
+```@example ODE2
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
 ```
 
@@ -171,28 +171,26 @@ type has an associated page detailing all of the solvers associated with the pro
 The result of `solve` is a solution object. We can access the 5th value of the
 solution with:
 
-```julia-repl
-julia> sol[5]
-0.637
+```@example ODE2
+sol[5]
 ```
 
 or get the time of the 8th timestep by:
 
-```julia
-julia> sol.t[8]
-0.438
+```@example ODE2
+sol.t[8]
 ```
 
 Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
-```julia
+```@example ODE2
 [t+u for (u,t) in tuples(sol)]
 ```
 
 or more generally
 
-```julia
+```@example ODE2
 [t+2u for (u,t) in zip(sol.u,sol.t)]
 ```
 
@@ -200,7 +198,7 @@ allows one to use more parts of the solution type. The object that is returned b
 default acts as a continuous solution via an interpolation. We can access the
 interpolated values by treating `sol` as a function, for example:
 
-```julia
+```@example ODE2
 sol(0.45) # The value of the solution at t=0.45
 ```
 
@@ -222,14 +220,12 @@ While one can directly plot solution time points using the tools given above,
 convenience commands are defined by recipes for Plots.jl. To plot the solution
 object, simply call plot:
 
-```julia
+```@example ODE2
 #]add Plots # You need to install Plots.jl before your first time using it!
 using Plots
 #plotly() # You can optionally choose a plotting backend
 plot(sol)
 ```
-
-![ode_tutorial_linear_plot](../assets/ode_tutorial_linear_plot.png)
 
 If you are in Juno, this will plot to the plot pane. To open an interactive GUI
 (dependent on the backend), use the `gui` command:
@@ -247,18 +243,16 @@ Thus we add these to our plot command to get the correct output, fix up some
 axis labels, and change the legend (note we can disable the legend with
 `legend=false`) to get a nice looking plot:
 
-```julia
+```@example ODE2
 plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
      xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
 ```
 
 We can then add to the plot using the `plot!` command:
 
-```julia
+```@example ODE2
 plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 ```
-
-![ode_tutorial_thick_linear](../assets/ode_tutorial_thick_linear.png)
 
 ## Example 2: Solving Systems of Equations
 
@@ -281,7 +275,7 @@ amount of array allocations and achieve better performance.
 The way we do this is we simply write the output to the 1st input of the function.
 For example, our Lorenz equation problem would be defined by the function:
 
-```julia
+```@example ODE3
 function lorenz!(du,u,p,t)
  du[1] = 10.0*(u[2]-u[1])
  du[2] = u[1]*(28.0-u[3]) - u[2]
@@ -291,7 +285,8 @@ end
 
 and then we can use this function in a problem:
 
-```julia
+```@example ODE3
+using DifferentialEquations
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,100.0)
 prob = ODEProblem(lorenz!,u0,tspan)
@@ -302,21 +297,18 @@ Using the plot recipe tools
 [defined on the plotting page](@ref plot_vars),
 we can choose to do a 3D phase space plot between the different variables:
 
-```julia
+```@example ODE3
+using Plots
 plot(sol,idxs=(1,2,3))
 ```
-
-![Lorenz System](../assets/3d_lorenz.png)
 
 Note that the default plot for multi-dimensional systems is an overlay of
 each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
-```julia
+```@example ODE3
 plot(sol,idxs=(0,2))
 ```
-
-![Lorenz Timeseries](../assets/lorenz_timeseries.png)
 
 Note that here "variable 0" corresponds to the independent variable ("time").
 
@@ -327,7 +319,7 @@ differential equations. This can be used by things like
 [parameter estimation routines](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/).
 In this case, you use the `p` values via the syntax:
 
-```julia
+```@example ODE3
 function parameterized_lorenz!(du,u,p,t)
  du[1] = p[1]*(u[2]-u[1])
  du[2] = u[1]*(p[2]-u[3]) - u[2]
@@ -337,7 +329,7 @@ end
 
 and then we add the parameters to the `ODEProblem`:
 
-```julia
+```@example ODE3
 u0 = [1.0,0.0,0.0]
 tspan = (0.0,1.0)
 p = [10.0,28.0,8/3]
@@ -346,7 +338,7 @@ prob = ODEProblem(parameterized_lorenz!,u0,tspan,p)
 
 We can make our functions look nicer by doing a few tricks. For example:
 
-```julia
+```@example ODE3
 function parameterized_lorenz!(du,u,p,t)
   x,y,z = u
   σ,ρ,β = p
@@ -376,7 +368,7 @@ Parameterized functions can also be used for building **nonhomogeneous ordinary 
 ```
 where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitational acceleration.
 
-```julia
+```@example ODE4
 using DifferentialEquations
 using Plots
 
@@ -402,8 +394,6 @@ sol = solve(prob)
 plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
 ```
 
-![Pendulum response](../assets/pendulum_response.png)
-
 Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
 
 Note also that, in contrast with the time-varying parameter, the (vector of) state variables `u`, which is generally also time-varying, is always used without the explicit dependence on time `(t)`.
@@ -416,7 +406,9 @@ vector equation, let's let `u` be a matrix! To do this, we simply need to have `
 be a matrix, and define `f` such that it takes in a matrix and outputs a matrix.
 We can define a matrix of linear ODEs as follows:
 
-```julia
+```@example ODE4
+using DifferentialEquations
+using Plots
 A  = [1. 0  0 -5
       4 -2  4 -3
      -4  0  0  1
@@ -431,17 +423,15 @@ Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by
 multiplication by `A`. To solve the ODE, we do the same steps
 as before.
 
-```julia
+```@example ODE4
 sol = solve(prob)
 plot(sol)
 ```
 
-![ODE System Solution](../assets/multiODEplot.png)
-
 We can instead use the in-place form by using Julia's in-place matrix multiplication
 function `mul!`:
 
-```julia
+```@example ODE4
 using LinearAlgebra
 f(du,u,p,t) = mul!(du,A,u)
 ```
@@ -452,23 +442,23 @@ that their usage does not require any (slow) heap-allocations that arrays
 normally have. This means that they can be used to solve the same problem as
 above, with the only change being the type for the initial condition and constants:
 
-```julia
-using StaticArrays, DifferentialEquations
+```@example ODE4
+using StaticArrays
 A  = @SMatrix [ 1.0  0.0 0.0 -5.0
                 4.0 -2.0 4.0 -3.0
                -4.0  0.0 0.0  1.0
                 5.0 -2.0 2.0  3.0]
 u0 = @SMatrix rand(4,2)
 tspan = (0.0,1.0)
-f(u,p,t) = A*u
-prob = ODEProblem(f,u0,tspan)
+f2(u,p,t) = A*u
+prob = ODEProblem(f2,u0,tspan)
 sol = solve(prob)
-using Plots; plot(sol)
+plot(sol)
 ```
 
 Note that the analysis tools generalize over to systems of equations as well.
 
-```julia
+```@example ODE4
 sol[4]
 ```
 
@@ -476,13 +466,13 @@ still returns the solution at the fourth timestep. It also indexes into the arra
 as well. The last value is the timestep, and the beginning values are for the component.
 This means
 
-```julia
+```@example ODE4
 sol[5,3]
 ```
 
 is the value of the 5th component (by linear indexing) at the 3rd timepoint, or
 
-```julia
+```@example ODE4
 sol[2,1,:]
 ```
 

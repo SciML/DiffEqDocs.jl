@@ -25,7 +25,7 @@ u(t,Wₜ)=u₀\exp((α-\frac{β^2}{2})t+βWₜ)
 To solve this numerically, we define a problem type by giving it the equation
 and the initial condition:
 
-```julia
+```@example sde
 using DifferentialEquations
 α=1
 β=1
@@ -40,13 +40,11 @@ prob = SDEProblem(f,g,u₀,(0.0,1.0))
 The `solve` interface is then the same as with ODEs. Here we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
-```julia
+```@example sde
 sol = solve(prob,EM(),dt=dt)
-using Plots; plotly() # Using the Plotly backend
+using Plots
 plot(sol)
 ```
-
-![Basic Solution](../assets/basic_sde.png)
 
 ### Using Higher Order Methods
 
@@ -57,7 +55,7 @@ This can be a good way to judge how accurate the algorithms are, or is used to
 test convergence of the algorithms for methods developers. Thus we define the problem
 object with:
 
-```julia
+```@example sde
 f_analytic(u₀,p,t,W) = u₀*exp((α-(β^2)/2)*t+β*W)
 ff = SDEFunction(f,g,analytic=f_analytic)
 prob = SDEProblem(ff,g,u₀,(0.0,1.0))
@@ -65,42 +63,34 @@ prob = SDEProblem(ff,g,u₀,(0.0,1.0))
 
 and then we pass this information to the solver and plot:
 
-```julia
+```@example sde
 #We can plot using the classic Euler-Maruyama algorithm as follows:
 sol = solve(prob,EM(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
 
-![SDE Solution](../assets/introSDEplot.png)
-
 We can choose a higher-order solver for a more accurate result:
 
-```julia
+```@example sde
 sol = solve(prob,SRIW1(),dt=dt,adaptive=false)
 plot(sol,plot_analytic=true)
 ```
 
-![Better SDE Solution](../assets/introSDEplotSRI.png)
-
 By default, the higher order methods have adaptivity. Thus one can use
 
-```julia
+```@example sde
 sol = solve(prob,SRIW1())
 plot(sol,plot_analytic=true)
 ```
-
-![Better Automatic Solution](../assets/sde_auto_time.png)
 
 Here we allowed the solver to automatically determine a starting `dt`. This estimate
 at the beginning is conservative (small) to ensure accuracy. We can instead start
 the method with a larger `dt` by passing in a value for the starting `dt`:
 
-```julia
+```@example sde
 sol = solve(prob,SRIW1(),dt=dt)
 plot(sol,plot_analytic=true)
 ```
-
-![Better Automatic Solution](../assets/sde_start_time.png)
 
 ### Ensemble Simulations
 
@@ -108,7 +98,7 @@ Instead of solving single trajectories, we can turn our problem into a `Ensemble
 to solve many trajectories all at once. This is done by the `EnsembleProblem`
 constructor:
 
-```julia
+```@example sde
 ensembleprob = EnsembleProblem(prob)
 ```
 
@@ -118,7 +108,7 @@ this will automatically parallelize using Julia native parallelism if extra proc
 are added via `addprocs()`, but we can change this to use multithreading via
 `EnsembleThreads()`. Together, this looks like:
 
-```julia
+```@example sde
 sol = solve(ensembleprob,EnsembleThreads(),trajectories=1000)
 ```
 
@@ -133,7 +123,7 @@ A very simple analysis can be done with the `EnsembleSummary`, which builds
 mean/var statistics and has an associated plot recipe. For example, we can get
 the statistics at every `0.01` timesteps and plot the average + error using:
 
-```julia
+```@example sde
 using DifferentialEquations.EnsembleAnalysis
 summ = EnsembleSummary(sol,0:0.01:1)
 plot(summ,labels="Middle 95%")
@@ -141,13 +131,11 @@ summ = EnsembleSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
 plot!(summ,labels="Middle 50%",legend=true)
 ```
 
-![sde_tutorial_monte](../assets/sde_tutorial_monte.png)
-
 Additionally we can easily calculate the correlation between the values at `t=0.2`
 and `t=0.7` via
 
-```julia
-timepoint_meancor(sim,0.2,0.7) # Gives both means and then the correlation coefficient
+```@example sde
+timepoint_meancor(sol,0.2,0.7) # Gives both means and then the correlation coefficient
 ```
 
 ## Example 2: Systems of SDEs with Diagonal Noise
@@ -171,7 +159,9 @@ portion as the Lorenz equations, but adds an additive noise, which is simply
 `3*N(0,dt)` where `N` is the normal distribution `dt` is the time step, to each
 step of the equation. This is done via:
 
-```julia
+```@example sde2
+using DifferentialEquations
+using Plots
 function lorenz(du,u,p,t)
   du[1] = 10.0(u[2]-u[1])
   du[2] = u[1]*(28.0-u[3]) - u[2]
@@ -189,11 +179,9 @@ sol = solve(prob_sde_lorenz)
 plot(sol,idxs=(1,2,3))
 ```
 
-![stochastic_3d_lorenz](../assets/stochastic_3d_lorenz.png)
-
 Note that it's okay for the noise function to mix terms. For example
 
-```julia
+```@example sde2
 function σ_lorenz(du,u,p,t)
   du[1] = sin(u[3])*3.0
   du[2] = u[2]*u[1]*3.0
@@ -214,7 +202,9 @@ command `W = WienerProcess(0.0,0.0,0.0)` to define the Brownian motion we want,
 and then give this to the `noise` option in the `SDEProblem`. For a full example,
 let's solve a linear SDE with scalar noise using a high order algorithm:
 
-```julia
+```@example sde3
+using DifferentialEquations
+using Plots
 f(du,u,p,t) = (du .= u)
 g(du,u,p,t) = (du .= u)
 u0 = rand(4,2)
@@ -222,9 +212,8 @@ u0 = rand(4,2)
 W = WienerProcess(0.0,0.0,0.0)
 prob = SDEProblem(f,g,u0,(0.0,1.0),noise=W)
 sol = solve(prob,SRIW1())
+plot(sol)
 ```
-
-![Scalar Noise](../assets/matrix_sde_scalar_noise.png)
 
 ## Example 4: Systems of SDEs with Non-Diagonal Noise
 
@@ -242,7 +231,8 @@ Let's define a problem with four Wiener processes and two dependent random varia
 In this case, we will want the output of `g` to be a 2x4 matrix, such that the solution
 is `g(u,p,t)*dW`, the matrix multiplication. For example, we can do the following:
 
-```julia
+```@example sde4
+using DifferentialEquations
 f(du,u,p,t) = du .= 1.01u
 function g(du,u,p,t)
   du[1,1] = 0.3u[1]
@@ -276,9 +266,9 @@ The matrix itself is determined by the keyword argument `noise_rate_prototype` i
 constructor. This is a prototype for the type that `du` will be in `g`. This can
 be any `AbstractMatrix` type. Thus for example, we can define the problem as
 
-```julia
-
+```@example sde4
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
+using SparseArrays
 A = zeros(2,4)
 A[1,1] = 1
 A[1,4] = 1
@@ -324,7 +314,7 @@ dW_1 dW_2 = ρ dt
 
 In this problem, we have a diagonal noise problem given by:
 
-```julia
+```@example sde4
 function f(du,u,p,t)
   du[1] = μ*u[1]
   du[2] = κ*(Θ-u[2])
@@ -337,21 +327,23 @@ end
 
 However, our noise has a correlation matrix for some constant `ρ`. Choosing `ρ=0.2`:
 
-```julia
+```@example sde4
+ρ=0.2
 Γ = [1 ρ;ρ 1]
 ```
 
 To solve this, we can define a `CorrelatedWienerProcess` which starts at zero (`W(0)=0`)
 via:
 
-```julia
+```@example sde4
+tspan = (0.0,1.0)
 heston_noise = CorrelatedWienerProcess!(Γ,tspan[1],zeros(2),zeros(2))
 ```
 
 This is then used to build the SDE:
 
-```julia
-SDEProblem(f,g,u0,tspan,noise=heston_noise)
+```@example sde4
+SDEProblem(f,g,ones(2),tspan,noise=heston_noise)
 ```
 
 Of course, to fully define this problem we need to define our constants. Constructors
