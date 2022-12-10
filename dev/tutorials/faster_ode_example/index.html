@@ -8,110 +8,36 @@
  dy = u[1]*(28.0-u[3]) - u[2]
  dz = u[1]*u[2] - (8/3)*u[3]
  [dx,dy,dz]
-end</code></pre><p>Here, <code>lorenz</code> returns an object, <code>[dx,dy,dz]</code>, which is created within the body of <code>lorenz</code>.</p><p>This is a common code pattern from high-level languages like MATLAB, SciPy, or R&#39;s deSolve. However, the issue with this form is that it allocates a vector, <code>[dx,dy,dz]</code>, at each step. Let&#39;s benchmark the solution process with this choice of function:</p><pre><code class="language-julia hljs">using DifferentialEquations, BenchmarkTools
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz (generic function with 1 method)</code></pre><p>Here, <code>lorenz</code> returns an object, <code>[dx,dy,dz]</code>, which is created within the body of <code>lorenz</code>.</p><p>This is a common code pattern from high-level languages like MATLAB, SciPy, or R&#39;s deSolve. However, the issue with this form is that it allocates a vector, <code>[dx,dy,dz]</code>, at each step. Let&#39;s benchmark the solution process with this choice of function:</p><pre><code class="language-julia hljs">using DifferentialEquations, BenchmarkTools
 u0 = [1.0;0.0;0.0]
 tspan = (0.0,100.0)
 prob = ODEProblem(lorenz,u0,tspan)
-@benchmark solve(prob,Tsit5())</code></pre><pre><code class="language-julia hljs">BenchmarkTools.Trial: 1350 samples with 1 evaluation.
- Range (min … max):  2.296 ms … 13.764 ms  ┊ GC (min … max):  0.00% … 67.48%
- Time  (median):     2.561 ms              ┊ GC (median):     0.00%
- Time  (mean ± σ):   3.699 ms ±  2.223 ms  ┊ GC (mean ± σ):  14.83% ± 17.79%
-
-  █▆▄       ▁ ▃▄▃▄▂
-  ████▆▆█▇▇▇█▇█████▆▄▄▄▁▁▁▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄▄▆▇▆▇▇▆▇▇▆█▇▇▆ █
-  2.3 ms       Histogram: log(frequency) by time     11.3 ms &lt;
-
- Memory estimate: 7.82 MiB, allocs estimate: 101102.</code></pre><p>The <code>BenchmarkTools.jl</code> package&#39;s <code>@benchmark</code> runs the code multiple times to get an accurate measurement. The minimum time is the time it takes when your OS and other background processes aren&#39;t getting in the way. Notice that in this case it takes about 5ms to solve and allocates around 11.11 MiB. However, if we were to use this inside of a real user code we&#39;d see a lot of time spent doing garbage collection (GC) to clean up all of the arrays we made. Even if we turn off saving we have these allocations.</p><pre><code class="language-julia hljs">@benchmark solve(prob,Tsit5(),save_everystep=false)
-
-BenchmarkTools.Trial: 1490 samples with 1 evaluation.
- Range (min … max):  2.010 ms … 14.612 ms  ┊ GC (min … max):  0.00% … 65.56%
- Time  (median):     2.313 ms              ┊ GC (median):     0.00%
- Time  (mean ± σ):   3.350 ms ±  2.095 ms  ┊ GC (mean ± σ):  14.55% ± 17.48%
-
-  █▇▅▁       ▃▅▅▄▃
-  █████▇▇▇▆▇███████▅▁▄▁▁▁▁▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄▄▄▅▇▇▆▆█▇▇▆▆▆▆ █
-  2.01 ms      Histogram: log(frequency) by time       11 ms &lt;
-
- Memory estimate: 6.83 MiB, allocs estimate: 89529.</code></pre><p>The problem of course is that arrays are created every time our derivative function is called. This function is called multiple times per step and is thus the main source of memory usage. To fix this, we can use the in-place form to ***make our code non-allocating***:</p><pre><code class="language-julia hljs">function lorenz!(du,u,p,t)
- du[1] = 10.0*(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
- nothing
-end</code></pre><p>Here, instead of creating an array each time, we utilized the cache array <code>du</code>. When the in-place form is used, DifferentialEquations.jl takes a different internal route that minimizes the internal allocations as well.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Notice that nothing is returned. When in in-place form, the ODE solver ignores the return. Instead, make sure that the original <code>du</code> array is mutated instead of constructing a new array</p></div></div><p>When we benchmark this function, we will see quite a difference.</p><pre><code class="language-julia hljs">u0 = [1.0;0.0;0.0]
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  4.328 ms (101102 allocations: 7.82 MiB)</code></pre><p>The <code>BenchmarkTools.jl</code> package&#39;s <code>@benchmark</code> runs the code multiple times to get an accurate measurement. The minimum time is the time it takes when your OS and other background processes aren&#39;t getting in the way. Notice that in this case it takes about 5ms to solve and allocates around 11.11 MiB. However, if we were to use this inside of a real user code we&#39;d see a lot of time spent doing garbage collection (GC) to clean up all of the arrays we made. Even if we turn off saving we have these allocations.</p><pre><code class="language-julia hljs">@btime solve(prob,Tsit5(),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  3.733 ms (89529 allocations: 6.83 MiB)</code></pre><p>The problem of course is that arrays are created every time our derivative function is called. This function is called multiple times per step and is thus the main source of memory usage. To fix this, we can use the in-place form to ***make our code non-allocating***:</p><pre><code class="language-julia hljs">function lorenz!(du,u,p,t)
+  du[1] = 10.0*(u[2]-u[1])
+  du[2] = u[1]*(28.0-u[3]) - u[2]
+  du[3] = u[1]*u[2] - (8/3)*u[3]
+  nothing
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz! (generic function with 1 method)</code></pre><p>Here, instead of creating an array each time, we utilized the cache array <code>du</code>. When the in-place form is used, DifferentialEquations.jl takes a different internal route that minimizes the internal allocations as well.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Notice that nothing is returned. When in in-place form, the ODE solver ignores the return. Instead, make sure that the original <code>du</code> array is mutated instead of constructing a new array</p></div></div><p>When we benchmark this function, we will see quite a difference.</p><pre><code class="language-julia hljs">u0 = [1.0;0.0;0.0]
 tspan = (0.0,100.0)
 prob = ODEProblem(lorenz!,u0,tspan)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 8180 samples with 1 evaluation.
- Range (min … max):  415.800 μs …  12.112 ms  ┊ GC (min … max):  0.00% … 93.21%
- Time  (median):     463.700 μs               ┊ GC (median):     0.00%
- Time  (mean ± σ):   605.847 μs ± 695.892 μs  ┊ GC (mean ± σ):  11.02% ±  9.07%
-
-  ▄█▇▅▃▂▂▂▂▁▁▄▅▅▃▂▂▂▁▂▁▁                                        ▂
-  ███████████████████████▇▇▇▇▇▆▆▆▅▅▄▄▅▃▅▄▅▄▅▄▁▅▁▃▄▁▃▁▁▁▁▃▄▁▁▄▁▃ █
-  416 μs        Histogram: log(frequency) by time       1.68 ms &lt;
-
- Memory estimate: 1016.36 KiB, allocs estimate: 11641.</code></pre><pre><code class="language-julia hljs">@benchmark solve(prob,Tsit5(),save_everystep=false)
-
-BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  197.900 μs … 315.800 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     206.700 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   207.688 μs ±   6.241 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-          ▃▅▅▇█▅▃       ▁▁▂▁▃▂▁
-  ▁▁▁▂▃▃▅▇█████████▇▇▇▆█████████▆▆▅▅▃▂▃▂▂▂▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▃
-  198 μs           Histogram: frequency by time          227 μs &lt;
-
- Memory estimate: 4.94 KiB, allocs estimate: 41.</code></pre><p>There is a 16x time difference just from that change! Notice there are still some allocations and this is due to the construction of the integration cache. But this doesn&#39;t scale with the problem size:</p><pre><code class="language-julia hljs">tspan = (0.0,500.0) # 5x longer than before
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  824.913 μs (11415 allocations: 997.70 KiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob,Tsit5(),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  371.205 μs (49 allocations: 5.38 KiB)</code></pre><p>There is a 16x time difference just from that change! Notice there are still some allocations and this is due to the construction of the integration cache. But this doesn&#39;t scale with the problem size:</p><pre><code class="language-julia hljs">tspan = (0.0,500.0) # 5x longer than before
 prob = ODEProblem(lorenz!,u0,tspan)
-@benchmark solve(prob,Tsit5(),save_everystep=false)
-
-BenchmarkTools.Trial: 4755 samples with 1 evaluation.
- Range (min … max):  1.014 ms …  1.485 ms  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     1.042 ms              ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.048 ms ± 31.281 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-    ▁▆▆▅▇█▇▆▆▂▁ ▁            ▁
-  ▂▄█████████████▇▇▇▇▇▇█▇▇█▇███▇█▇▇▅▆▄▄▄▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁ ▄
-  1.01 ms        Histogram: frequency by time        1.12 ms &lt;
-
- Memory estimate: 4.94 KiB, allocs estimate: 41.</code></pre><p>Since that&#39;s all setup allocations the user-side optimization is complete.</p><h3 id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays"><a class="docs-heading-anchor" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays">Further Optimizations of Small Non-Stiff ODEs with StaticArrays</a><a id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays-1"></a><a class="docs-heading-anchor-permalink" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays" title="Permalink"></a></h3><p>Allocations are only expensive if they are &quot;heap allocations&quot;. For a more in-depth definition of heap allocations, <a href="http://net-informations.com/faq/net/stack-heap.htm">there are a lot of sources online</a>. But a good working definition is that heap allocations are variable-sized slabs of memory which have to be pointed to, and this pointer indirection costs time. Additionally, the heap has to be managed and the garbage controllers has to actively keep track of what&#39;s on the heap.</p><p>However, there&#39;s an alternative to heap allocations, known as stack allocations. The stack is statically-sized (known at compile time) and thus its accesses are quick. Additionally, the exact block of memory is known in advance by the compiler, and thus re-using the memory is cheap. This means that allocating on the stack has essentially no cost!</p><p>Arrays have to be heap allocated because their size (and thus the amount of memory they take up) is determined at runtime. But there are structures in Julia which are stack-allocated. <code>struct</code>s for example are stack-allocated &quot;value-type&quot;s. <code>Tuple</code>s are a stack-allocated collection. The most useful data structure for DiffEq though is the <code>StaticArray</code> from the package <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a>. These arrays have their length determined at compile-time. They are created using macros attached to normal array expressions, for example:</p><pre><code class="language-julia hljs">using StaticArrays
+@btime solve(prob,Tsit5(),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  1.914 ms (49 allocations: 5.38 KiB)</code></pre><p>Since that&#39;s all setup allocations the user-side optimization is complete.</p><h3 id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays"><a class="docs-heading-anchor" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays">Further Optimizations of Small Non-Stiff ODEs with StaticArrays</a><a id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays-1"></a><a class="docs-heading-anchor-permalink" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays" title="Permalink"></a></h3><p>Allocations are only expensive if they are &quot;heap allocations&quot;. For a more in-depth definition of heap allocations, <a href="http://net-informations.com/faq/net/stack-heap.htm">there are a lot of sources online</a>. But a good working definition is that heap allocations are variable-sized slabs of memory which have to be pointed to, and this pointer indirection costs time. Additionally, the heap has to be managed and the garbage controllers has to actively keep track of what&#39;s on the heap.</p><p>However, there&#39;s an alternative to heap allocations, known as stack allocations. The stack is statically-sized (known at compile time) and thus its accesses are quick. Additionally, the exact block of memory is known in advance by the compiler, and thus re-using the memory is cheap. This means that allocating on the stack has essentially no cost!</p><p>Arrays have to be heap allocated because their size (and thus the amount of memory they take up) is determined at runtime. But there are structures in Julia which are stack-allocated. <code>struct</code>s for example are stack-allocated &quot;value-type&quot;s. <code>Tuple</code>s are a stack-allocated collection. The most useful data structure for DiffEq though is the <code>StaticArray</code> from the package <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a>. These arrays have their length determined at compile-time. They are created using macros attached to normal array expressions, for example:</p><pre><code class="language-julia hljs">using StaticArrays
 A = SA[2.0,3.0,5.0]
-typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})</code></pre><p>Notice that the <code>3</code> after <code>SVector</code> gives the size of the <code>SVector</code>. It cannot be changed. Additionally, <code>SVector</code>s are immutable, so we have to create a new <code>SVector</code> to change values. But remember, we don&#39;t have to worry about allocations because this data structure is stack-allocated. <code>SArray</code>s have a lot of extra optimizations as well: they have fast matrix multiplication, fast QR factorizations, etc. which directly make use of the information about the size of the array. Thus, when possible they should be used.</p><p>Unfortunately static arrays can only be used for sufficiently small arrays. After a certain size, they are forced to heap allocate after some instructions and their compile time balloons. Thus static arrays shouldn&#39;t be used if your system has more than ~20 variables. Additionally, only the native Julia algorithms can fully utilize static arrays.</p><p>Let&#39;s ***optimize <code>lorenz</code> using static arrays***. Note that in this case, we want to use the out-of-place allocating form, but this time we want to output a static array:</p><pre><code class="language-julia hljs">function lorenz_static(u,p,t)
+typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">SVector{3, Float64} (alias for StaticArraysCore.SArray{Tuple{3}, Float64, 1, 3})</code></pre><p>Notice that the <code>3</code> after <code>SVector</code> gives the size of the <code>SVector</code>. It cannot be changed. Additionally, <code>SVector</code>s are immutable, so we have to create a new <code>SVector</code> to change values. But remember, we don&#39;t have to worry about allocations because this data structure is stack-allocated. <code>SArray</code>s have a lot of extra optimizations as well: they have fast matrix multiplication, fast QR factorizations, etc. which directly make use of the information about the size of the array. Thus, when possible they should be used.</p><p>Unfortunately static arrays can only be used for sufficiently small arrays. After a certain size, they are forced to heap allocate after some instructions and their compile time balloons. Thus static arrays shouldn&#39;t be used if your system has more than ~20 variables. Additionally, only the native Julia algorithms can fully utilize static arrays.</p><p>Let&#39;s ***optimize <code>lorenz</code> using static arrays***. Note that in this case, we want to use the out-of-place allocating form, but this time we want to output a static array:</p><pre><code class="language-julia hljs">function lorenz_static(u,p,t)
  dx = 10.0*(u[2]-u[1])
  dy = u[1]*(28.0-u[3]) - u[2]
  dz = u[1]*u[2] - (8/3)*u[3]
  SA[dx,dy,dz]
-end</code></pre><p>To make the solver internally use static arrays, we simply give it a static array as the initial condition:</p><pre><code class="language-julia hljs">u0 = SA[1.0,0.0,0.0]
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz_static (generic function with 1 method)</code></pre><p>To make the solver internally use static arrays, we simply give it a static array as the initial condition:</p><pre><code class="language-julia hljs">u0 = SA[1.0,0.0,0.0]
 tspan = (0.0,100.0)
 prob = ODEProblem(lorenz_static,u0,tspan)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  196.600 μs …   6.310 ms  ┊ GC (min … max): 0.00% … 95.70%
- Time  (median):     220.900 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   265.006 μs ± 302.623 μs  ┊ GC (mean ± σ):  6.91% ±  5.82%
-
-    ▅█▄▄▄
-  ▁▄██████▅▄▃▂▂▁▁▂▁▁▁▁▁▁▁▂▃▄▅▅▆▆▆▅▅▅▄▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁ ▂
-  197 μs           Histogram: frequency by time          374 μs &lt;
-
- Memory estimate: 394.50 KiB, allocs estimate: 1319.</code></pre><pre><code class="language-julia hljs">@benchmark solve(prob,Tsit5(),save_everystep=false)
-
-BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  144.100 μs … 242.600 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     151.000 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   151.875 μs ±   7.502 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-      █▇▇▂   ▁▅▄▂▂
-  ▂▂▃█████▇▇▇██████▅▄▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▂▂▂▂▂ ▃
-  144 μs           Histogram: frequency by time          185 μs &lt;
-
- Memory estimate: 3.67 KiB, allocs estimate: 22.</code></pre><p>And that&#39;s pretty much all there is to it. With static arrays you don&#39;t have to worry about allocating, so use operations like <code>*</code> and don&#39;t worry about fusing operations (discussed in the next section). Do &quot;the vectorized code&quot; of R/MATLAB/Python and your code in this case will be fast, or directly use the numbers/values.</p><h2 id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation"><a class="docs-heading-anchor" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation">Example Accelerating a Stiff Equation: the Robertson Equation</a><a id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation" title="Permalink"></a></h2><p>For these next examples, let&#39;s solve the Robertson equations (also known as ROBER):</p><p class="math-container">\[\begin{aligned}
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  343.204 μs (1293 allocations: 388.81 KiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob,Tsit5(),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  224.703 μs (22 allocations: 3.67 KiB)</code></pre><p>And that&#39;s pretty much all there is to it. With static arrays you don&#39;t have to worry about allocating, so use operations like <code>*</code> and don&#39;t worry about fusing operations (discussed in the next section). Do &quot;the vectorized code&quot; of R/MATLAB/Python and your code in this case will be fast, or directly use the numbers/values.</p><h2 id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation"><a class="docs-heading-anchor" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation">Example Accelerating a Stiff Equation: the Robertson Equation</a><a id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation" title="Permalink"></a></h2><p>For these next examples, let&#39;s solve the Robertson equations (also known as ROBER):</p><p class="math-container">\[\begin{aligned}
 \frac{dy_1}{dt} &amp;= -0.04y₁ + 10^4 y_2 y_3 \\
 \frac{dy_2}{dt} &amp;= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
 \frac{dy_3}{dt} &amp;= 3*10^7 y_{2}^2 \\
 \end{aligned}\]</p><p>Given that these equations are stiff, non-stiff ODE solvers like <code>Tsit5</code> or <code>Vern9</code> will fail to solve these equations. The automatic algorithm will detect this and automatically switch to something more robust to handle these issues. For example:</p><pre><code class="language-julia hljs">using DifferentialEquations
+using Plots
 function rober!(du,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
@@ -122,10 +48,440 @@ function rober!(du,u,p,t)
 end
 prob = ODEProblem(rober!,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
 sol = solve(prob)
-plot(sol,tspan=(1e-2,1e5),xscale=:log10)</code></pre><p><img src="../../assets/intro_dae_plot.png" alt="IntroDAEPlot"/></p><pre><code class="language-julia-repl hljs">julia&gt; using BenchmarkTools
-julia&gt; @btime solve(prob)
-97.000 μs (1832 allocations: 132.30 KiB)</code></pre><h3 id="Choosing-a-Good-Solver"><a class="docs-heading-anchor" href="#Choosing-a-Good-Solver">Choosing a Good Solver</a><a id="Choosing-a-Good-Solver-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-a-Good-Solver" title="Permalink"></a></h3><p>Choosing a good solver is required for getting top notch speed. General recommendations can be found on the solver page (for example, the <a href="../../solvers/ode_solve/#ode_solve">ODE Solver Recommendations</a>). The current recommendations can be simplified to a Rosenbrock method (<code>Rosenbrock23</code> or <code>Rodas5</code>) for smaller (&lt;50 ODEs) problems, ESDIRK methods for slightly larger (<code>TRBDF2</code> or <code>KenCarp4</code> for &lt;2000 ODEs), and <code>QNDF</code> for even larger problems. <code>lsoda</code> from <a href="https://github.com/rveltz/LSODA.jl">LSODA.jl</a> is sometimes worth a try for the medium sized category.</p><p>More details on the solver to choose can be found by benchmarking. See the <a href="https://github.com/SciML/SciMLBenchmarks.jl">SciMLBenchmarks</a> to compare many solvers on many problems.</p><p>From this, we try the recommendation of <code>Rosenbrock23()</code> for stiff ODEs at default tolerances:</p><pre><code class="language-julia hljs">@btime solve(prob,Rosenbrock23())
-# 61.200 μs (918 allocations: 78.72 KiB)</code></pre><h3 id="Declaring-Jacobian-Functions"><a class="docs-heading-anchor" href="#Declaring-Jacobian-Functions">Declaring Jacobian Functions</a><a id="Declaring-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Declaring-Jacobian-Functions" title="Permalink"></a></h3><p>In order to reduce the Jacobian construction cost, one can describe a Jacobian function by using the <code>jac</code> argument for the <code>ODEFunction</code>. First we have to derive the Jacobian <span>$\frac{df_i}{du_j}$</span> which is <code>J[i,j]</code>. From this we get:</p><pre><code class="language-julia hljs">function rober_jac!(J,u,p,t)
+plot(sol,tspan=(1e-2,1e5),xscale=:log10)</code></pre><?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="400" viewBox="0 0 2400 1600">
+<defs>
+  <clipPath id="clip580">
+    <rect x="0" y="0" width="2400" height="1600"/>
+  </clipPath>
+</defs>
+<path clip-path="url(#clip580)" d="
+M0 1600 L2400 1600 L2400 0 L0 0  Z
+  " fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip581">
+    <rect x="480" y="0" width="1681" height="1600"/>
+  </clipPath>
+</defs>
+<path clip-path="url(#clip580)" d="
+M86.9921 1458.42 L2352.76 1458.42 L2352.76 47.2441 L86.9921 47.2441  Z
+  " fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip582">
+    <rect x="86" y="47" width="2267" height="1412"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,1458.42 86.9921,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  410.673,1458.42 410.673,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  734.353,1458.42 734.353,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  1058.03,1458.42 1058.03,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  1381.71,1458.42 1381.71,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  1705.39,1458.42 1705.39,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  2029.08,1458.42 2029.08,47.2441 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  2352.76,1458.42 2352.76,47.2441 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1458.42 2352.76,1458.42 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1458.42 86.9921,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  410.673,1458.42 410.673,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  734.353,1458.42 734.353,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1058.03,1458.42 1058.03,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1381.71,1458.42 1381.71,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1705.39,1458.42 1705.39,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  2029.08,1458.42 2029.08,1439.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  2352.76,1458.42 2352.76,1439.52 
+  "/>
+<path clip-path="url(#clip580)" d="M37.2579 1532.54 L44.8967 1532.54 L44.8967 1506.18 L36.5866 1507.84 L36.5866 1503.58 L44.8504 1501.92 L49.5263 1501.92 L49.5263 1532.54 L57.1652 1532.54 L57.1652 1536.48 L37.2579 1536.48 L37.2579 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M76.6095 1505 Q72.9984 1505 71.1697 1508.56 Q69.3642 1512.1 69.3642 1519.23 Q69.3642 1526.34 71.1697 1529.9 Q72.9984 1533.44 76.6095 1533.44 Q80.2438 1533.44 82.0493 1529.9 Q83.878 1526.34 83.878 1519.23 Q83.878 1512.1 82.0493 1508.56 Q80.2438 1505 76.6095 1505 M76.6095 1501.29 Q82.4197 1501.29 85.4752 1505.9 Q88.5539 1510.48 88.5539 1519.23 Q88.5539 1527.96 85.4752 1532.56 Q82.4197 1537.15 76.6095 1537.15 Q70.7994 1537.15 67.7207 1532.56 Q64.6651 1527.96 64.6651 1519.23 Q64.6651 1510.48 67.7207 1505.9 Q70.7994 1501.29 76.6095 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M88.5539 1495.39 L112.665 1495.39 L112.665 1498.59 L88.5539 1498.59 L88.5539 1495.39 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M124.138 1505.87 L137.398 1505.87 L137.398 1509.07 L119.568 1509.07 L119.568 1505.87 Q121.731 1503.63 125.455 1499.87 Q129.197 1496.09 130.157 1495 Q131.981 1492.95 132.696 1491.54 Q133.429 1490.11 133.429 1488.74 Q133.429 1486.5 131.849 1485.09 Q130.288 1483.68 127.768 1483.68 Q125.981 1483.68 123.988 1484.3 Q122.013 1484.92 119.756 1486.18 L119.756 1482.34 Q122.051 1481.42 124.044 1480.95 Q126.038 1480.48 127.693 1480.48 Q132.056 1480.48 134.652 1482.66 Q137.247 1484.84 137.247 1488.49 Q137.247 1490.22 136.589 1491.78 Q135.949 1493.32 134.238 1495.43 Q133.768 1495.98 131.248 1498.59 Q128.727 1501.19 124.138 1505.87 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M360.788 1532.54 L368.427 1532.54 L368.427 1506.18 L360.117 1507.84 L360.117 1503.58 L368.381 1501.92 L373.056 1501.92 L373.056 1532.54 L380.695 1532.54 L380.695 1536.48 L360.788 1536.48 L360.788 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M400.14 1505 Q396.528 1505 394.7 1508.56 Q392.894 1512.1 392.894 1519.23 Q392.894 1526.34 394.7 1529.9 Q396.528 1533.44 400.14 1533.44 Q403.774 1533.44 405.579 1529.9 Q407.408 1526.34 407.408 1519.23 Q407.408 1512.1 405.579 1508.56 Q403.774 1505 400.14 1505 M400.14 1501.29 Q405.95 1501.29 409.005 1505.9 Q412.084 1510.48 412.084 1519.23 Q412.084 1527.96 409.005 1532.56 Q405.95 1537.15 400.14 1537.15 Q394.329 1537.15 391.251 1532.56 Q388.195 1527.96 388.195 1519.23 Q388.195 1510.48 391.251 1505.9 Q394.329 1501.29 400.14 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M412.084 1495.39 L436.196 1495.39 L436.196 1498.59 L412.084 1498.59 L412.084 1495.39 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M445.054 1505.87 L451.261 1505.87 L451.261 1484.45 L444.509 1485.8 L444.509 1482.34 L451.223 1480.99 L455.022 1480.99 L455.022 1505.87 L461.229 1505.87 L461.229 1509.07 L445.054 1509.07 L445.054 1505.87 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M699.336 1532.54 L706.975 1532.54 L706.975 1506.18 L698.665 1507.84 L698.665 1503.58 L706.929 1501.92 L711.604 1501.92 L711.604 1532.54 L719.243 1532.54 L719.243 1536.48 L699.336 1536.48 L699.336 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M738.688 1505 Q735.077 1505 733.248 1508.56 Q731.442 1512.1 731.442 1519.23 Q731.442 1526.34 733.248 1529.9 Q735.077 1533.44 738.688 1533.44 Q742.322 1533.44 744.127 1529.9 Q745.956 1526.34 745.956 1519.23 Q745.956 1512.1 744.127 1508.56 Q742.322 1505 738.688 1505 M738.688 1501.29 Q744.498 1501.29 747.553 1505.9 Q750.632 1510.48 750.632 1519.23 Q750.632 1527.96 747.553 1532.56 Q744.498 1537.15 738.688 1537.15 Q732.878 1537.15 729.799 1532.56 Q726.743 1527.96 726.743 1519.23 Q726.743 1510.48 729.799 1505.9 Q732.878 1501.29 738.688 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M760.337 1483.49 Q757.403 1483.49 755.917 1486.38 Q754.45 1489.26 754.45 1495.05 Q754.45 1500.83 755.917 1503.72 Q757.403 1506.6 760.337 1506.6 Q763.29 1506.6 764.757 1503.72 Q766.243 1500.83 766.243 1495.05 Q766.243 1489.26 764.757 1486.38 Q763.29 1483.49 760.337 1483.49 M760.337 1480.48 Q765.058 1480.48 767.54 1484.22 Q770.042 1487.95 770.042 1495.05 Q770.042 1502.14 767.54 1505.89 Q765.058 1509.61 760.337 1509.61 Q755.616 1509.61 753.115 1505.89 Q750.632 1502.14 750.632 1495.05 Q750.632 1487.95 753.115 1484.22 Q755.616 1480.48 760.337 1480.48 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1024.36 1532.54 L1032 1532.54 L1032 1506.18 L1023.69 1507.84 L1023.69 1503.58 L1031.95 1501.92 L1036.63 1501.92 L1036.63 1532.54 L1044.27 1532.54 L1044.27 1536.48 L1024.36 1536.48 L1024.36 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1063.71 1505 Q1060.1 1505 1058.27 1508.56 Q1056.47 1512.1 1056.47 1519.23 Q1056.47 1526.34 1058.27 1529.9 Q1060.1 1533.44 1063.71 1533.44 Q1067.35 1533.44 1069.15 1529.9 Q1070.98 1526.34 1070.98 1519.23 Q1070.98 1512.1 1069.15 1508.56 Q1067.35 1505 1063.71 1505 M1063.71 1501.29 Q1069.52 1501.29 1072.58 1505.9 Q1075.66 1510.48 1075.66 1519.23 Q1075.66 1527.96 1072.58 1532.56 Q1069.52 1537.15 1063.71 1537.15 Q1057.9 1537.15 1054.82 1532.56 Q1051.77 1527.96 1051.77 1519.23 Q1051.77 1510.48 1054.82 1505.9 Q1057.9 1501.29 1063.71 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1076.2 1505.87 L1082.41 1505.87 L1082.41 1484.45 L1075.66 1485.8 L1075.66 1482.34 L1082.37 1480.99 L1086.17 1480.99 L1086.17 1505.87 L1092.38 1505.87 L1092.38 1509.07 L1076.2 1509.07 L1076.2 1505.87 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1347.49 1532.54 L1355.13 1532.54 L1355.13 1506.18 L1346.82 1507.84 L1346.82 1503.58 L1355.08 1501.92 L1359.76 1501.92 L1359.76 1532.54 L1367.39 1532.54 L1367.39 1536.48 L1347.49 1536.48 L1347.49 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1386.84 1505 Q1383.23 1505 1381.4 1508.56 Q1379.59 1512.1 1379.59 1519.23 Q1379.59 1526.34 1381.4 1529.9 Q1383.23 1533.44 1386.84 1533.44 Q1390.47 1533.44 1392.28 1529.9 Q1394.11 1526.34 1394.11 1519.23 Q1394.11 1512.1 1392.28 1508.56 Q1390.47 1505 1386.84 1505 M1386.84 1501.29 Q1392.65 1501.29 1395.7 1505.9 Q1398.78 1510.48 1398.78 1519.23 Q1398.78 1527.96 1395.7 1532.56 Q1392.65 1537.15 1386.84 1537.15 Q1381.03 1537.15 1377.95 1532.56 Q1374.89 1527.96 1374.89 1519.23 Q1374.89 1510.48 1377.95 1505.9 Q1381.03 1501.29 1386.84 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1403.35 1505.87 L1416.61 1505.87 L1416.61 1509.07 L1398.78 1509.07 L1398.78 1505.87 Q1400.95 1503.63 1404.67 1499.87 Q1408.41 1496.09 1409.37 1495 Q1411.2 1492.95 1411.91 1491.54 Q1412.64 1490.11 1412.64 1488.74 Q1412.64 1486.5 1411.06 1485.09 Q1409.5 1483.68 1406.98 1483.68 Q1405.2 1483.68 1403.2 1484.3 Q1401.23 1484.92 1398.97 1486.18 L1398.97 1482.34 Q1401.27 1481.42 1403.26 1480.95 Q1405.25 1480.48 1406.91 1480.48 Q1411.27 1480.48 1413.87 1482.66 Q1416.46 1484.84 1416.46 1488.49 Q1416.46 1490.22 1415.8 1491.78 Q1415.16 1493.32 1413.45 1495.43 Q1412.98 1495.98 1410.46 1498.59 Q1407.94 1501.19 1403.35 1505.87 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1670.84 1532.54 L1678.48 1532.54 L1678.48 1506.18 L1670.17 1507.84 L1670.17 1503.58 L1678.43 1501.92 L1683.11 1501.92 L1683.11 1532.54 L1690.75 1532.54 L1690.75 1536.48 L1670.84 1536.48 L1670.84 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1710.19 1505 Q1706.58 1505 1704.75 1508.56 Q1702.94 1512.1 1702.94 1519.23 Q1702.94 1526.34 1704.75 1529.9 Q1706.58 1533.44 1710.19 1533.44 Q1713.82 1533.44 1715.63 1529.9 Q1717.46 1526.34 1717.46 1519.23 Q1717.46 1512.1 1715.63 1508.56 Q1713.82 1505 1710.19 1505 M1710.19 1501.29 Q1716 1501.29 1719.06 1505.9 Q1722.13 1510.48 1722.13 1519.23 Q1722.13 1527.96 1719.06 1532.56 Q1716 1537.15 1710.19 1537.15 Q1704.38 1537.15 1701.3 1532.56 Q1698.25 1527.96 1698.25 1519.23 Q1698.25 1510.48 1701.3 1505.9 Q1704.38 1501.29 1710.19 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1734.83 1493.93 Q1737.56 1494.51 1739.08 1496.35 Q1740.62 1498.2 1740.62 1500.9 Q1740.62 1505.06 1737.76 1507.34 Q1734.9 1509.61 1729.64 1509.61 Q1727.87 1509.61 1725.99 1509.25 Q1724.13 1508.92 1722.13 1508.22 L1722.13 1504.55 Q1723.71 1505.47 1725.6 1505.94 Q1727.48 1506.41 1729.53 1506.41 Q1733.1 1506.41 1734.96 1505 Q1736.84 1503.59 1736.84 1500.9 Q1736.84 1498.42 1735.09 1497.03 Q1733.36 1495.62 1730.26 1495.62 L1726.99 1495.62 L1726.99 1492.5 L1730.41 1492.5 Q1733.21 1492.5 1734.7 1491.39 Q1736.18 1490.26 1736.18 1488.15 Q1736.18 1485.99 1734.64 1484.84 Q1733.12 1483.68 1730.26 1483.68 Q1728.7 1483.68 1726.91 1484.01 Q1725.12 1484.35 1722.98 1485.07 L1722.98 1481.68 Q1725.14 1481.08 1727.02 1480.78 Q1728.92 1480.48 1730.6 1480.48 Q1734.92 1480.48 1737.44 1482.45 Q1739.96 1484.41 1739.96 1487.76 Q1739.96 1490.09 1738.63 1491.71 Q1737.29 1493.31 1734.83 1493.93 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1993.53 1532.54 L2001.17 1532.54 L2001.17 1506.18 L1992.86 1507.84 L1992.86 1503.58 L2001.12 1501.92 L2005.8 1501.92 L2005.8 1532.54 L2013.44 1532.54 L2013.44 1536.48 L1993.53 1536.48 L1993.53 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2032.88 1505 Q2029.27 1505 2027.44 1508.56 Q2025.64 1512.1 2025.64 1519.23 Q2025.64 1526.34 2027.44 1529.9 Q2029.27 1533.44 2032.88 1533.44 Q2036.52 1533.44 2038.32 1529.9 Q2040.15 1526.34 2040.15 1519.23 Q2040.15 1512.1 2038.32 1508.56 Q2036.52 1505 2032.88 1505 M2032.88 1501.29 Q2038.69 1501.29 2041.75 1505.9 Q2044.83 1510.48 2044.83 1519.23 Q2044.83 1527.96 2041.75 1532.56 Q2038.69 1537.15 2032.88 1537.15 Q2027.07 1537.15 2023.99 1532.56 Q2020.94 1527.96 2020.94 1519.23 Q2020.94 1510.48 2023.99 1505.9 Q2027.07 1501.29 2032.88 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2057.5 1484.3 L2047.91 1499.29 L2057.5 1499.29 L2057.5 1484.3 M2056.51 1480.99 L2061.28 1480.99 L2061.28 1499.29 L2065.29 1499.29 L2065.29 1502.45 L2061.28 1502.45 L2061.28 1509.07 L2057.5 1509.07 L2057.5 1502.45 L2044.83 1502.45 L2044.83 1498.78 L2056.51 1480.99 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2318.36 1532.54 L2326 1532.54 L2326 1506.18 L2317.69 1507.84 L2317.69 1503.58 L2325.95 1501.92 L2330.63 1501.92 L2330.63 1532.54 L2338.27 1532.54 L2338.27 1536.48 L2318.36 1536.48 L2318.36 1532.54 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2357.71 1505 Q2354.1 1505 2352.27 1508.56 Q2350.47 1512.1 2350.47 1519.23 Q2350.47 1526.34 2352.27 1529.9 Q2354.1 1533.44 2357.71 1533.44 Q2361.35 1533.44 2363.15 1529.9 Q2364.98 1526.34 2364.98 1519.23 Q2364.98 1512.1 2363.15 1508.56 Q2361.35 1505 2357.71 1505 M2357.71 1501.29 Q2363.52 1501.29 2366.58 1505.9 Q2369.66 1510.48 2369.66 1519.23 Q2369.66 1527.96 2366.58 1532.56 Q2363.52 1537.15 2357.71 1537.15 Q2351.9 1537.15 2348.82 1532.56 Q2345.77 1527.96 2345.77 1519.23 Q2345.77 1510.48 2348.82 1505.9 Q2351.9 1501.29 2357.71 1501.29 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2370.84 1480.99 L2385.75 1480.99 L2385.75 1484.18 L2374.32 1484.18 L2374.32 1491.07 Q2375.15 1490.79 2375.97 1490.65 Q2376.8 1490.5 2377.63 1490.5 Q2382.33 1490.5 2385.08 1493.08 Q2387.82 1495.66 2387.82 1500.06 Q2387.82 1504.59 2385 1507.11 Q2382.18 1509.61 2377.05 1509.61 Q2375.28 1509.61 2373.44 1509.31 Q2371.61 1509.01 2369.66 1508.41 L2369.66 1504.59 Q2371.35 1505.51 2373.15 1505.96 Q2374.96 1506.41 2376.97 1506.41 Q2380.23 1506.41 2382.12 1504.7 Q2384.02 1502.99 2384.02 1500.06 Q2384.02 1497.12 2382.12 1495.41 Q2380.23 1493.7 2376.97 1493.7 Q2375.45 1493.7 2373.92 1494.04 Q2372.42 1494.38 2370.84 1495.09 L2370.84 1480.99 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M1218.94 1575.94 L1218.94 1586.06 L1231 1586.06 L1231 1590.61 L1218.94 1590.61 L1218.94 1609.96 Q1218.94 1614.32 1220.11 1615.56 Q1221.32 1616.8 1224.98 1616.8 L1231 1616.8 L1231 1621.71 L1224.98 1621.71 Q1218.2 1621.71 1215.62 1619.19 Q1213.05 1616.64 1213.05 1609.96 L1213.05 1590.61 L1208.75 1590.61 L1208.75 1586.06 L1213.05 1586.06 L1213.05 1575.94 L1218.94 1575.94 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,1418.48 2352.76,1418.48 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,1085.52 2352.76,1085.52 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,752.565 2352.76,752.565 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,419.608 2352.76,419.608 
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="
+  86.9921,86.6511 2352.76,86.6511 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1458.42 86.9921,47.2441 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1418.48 105.89,1418.48 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1085.52 105.89,1085.52 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,752.565 105.89,752.565 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,419.608 105.89,419.608 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,86.6511 105.89,86.6511 
+  "/>
+<path clip-path="url(#clip580)" d="M-36.3454 1404.28 Q-39.9565 1404.28 -41.7852 1407.84 Q-43.5907 1411.38 -43.5907 1418.51 Q-43.5907 1425.62 -41.7852 1429.18 Q-39.9565 1432.73 -36.3454 1432.73 Q-32.7111 1432.73 -30.9056 1429.18 Q-29.0769 1425.62 -29.0769 1418.51 Q-29.0769 1411.38 -30.9056 1407.84 Q-32.7111 1404.28 -36.3454 1404.28 M-36.3454 1400.57 Q-30.5352 1400.57 -27.4797 1405.18 Q-24.401 1409.76 -24.401 1418.51 Q-24.401 1427.24 -27.4797 1431.85 Q-30.5352 1436.43 -36.3454 1436.43 Q-42.1555 1436.43 -45.2342 1431.85 Q-48.2897 1427.24 -48.2897 1418.51 Q-48.2897 1409.76 -45.2342 1405.18 Q-42.1555 1400.57 -36.3454 1400.57 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-16.1834 1429.88 L-11.2992 1429.88 L-11.2992 1435.76 L-16.1834 1435.76 L-16.1834 1429.88 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M8.88587 1404.28 Q5.27478 1404.28 3.44608 1407.84 Q1.64054 1411.38 1.64054 1418.51 Q1.64054 1425.62 3.44608 1429.18 Q5.27478 1432.73 8.88587 1432.73 Q12.5201 1432.73 14.3257 1429.18 Q16.1543 1425.62 16.1543 1418.51 Q16.1543 1411.38 14.3257 1407.84 Q12.5201 1404.28 8.88587 1404.28 M8.88587 1400.57 Q14.696 1400.57 17.7516 1405.18 Q20.8303 1409.76 20.8303 1418.51 Q20.8303 1427.24 17.7516 1431.85 Q14.696 1436.43 8.88587 1436.43 Q3.07572 1436.43 -0.00297114 1431.85 Q-3.05851 1427.24 -3.05851 1418.51 Q-3.05851 1409.76 -0.00297114 1405.18 Q3.07572 1400.57 8.88587 1400.57 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M39.0477 1404.28 Q35.4367 1404.28 33.608 1407.84 Q31.8024 1411.38 31.8024 1418.51 Q31.8024 1425.62 33.608 1429.18 Q35.4367 1432.73 39.0477 1432.73 Q42.682 1432.73 44.4875 1429.18 Q46.3162 1425.62 46.3162 1418.51 Q46.3162 1411.38 44.4875 1407.84 Q42.682 1404.28 39.0477 1404.28 M39.0477 1400.57 Q44.8579 1400.57 47.9134 1405.18 Q50.9921 1409.76 50.9921 1418.51 Q50.9921 1427.24 47.9134 1431.85 Q44.8579 1436.43 39.0477 1436.43 Q33.2376 1436.43 30.1589 1431.85 Q27.1034 1427.24 27.1034 1418.51 Q27.1034 1409.76 30.1589 1405.18 Q33.2376 1400.57 39.0477 1400.57 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-35.35 1071.32 Q-38.9611 1071.32 -40.7898 1074.88 Q-42.5953 1078.43 -42.5953 1085.56 Q-42.5953 1092.66 -40.7898 1096.23 Q-38.9611 1099.77 -35.35 1099.77 Q-31.7158 1099.77 -29.9102 1096.23 Q-28.0815 1092.66 -28.0815 1085.56 Q-28.0815 1078.43 -29.9102 1074.88 Q-31.7158 1071.32 -35.35 1071.32 M-35.35 1067.62 Q-29.5398 1067.62 -26.4843 1072.22 Q-23.4056 1076.81 -23.4056 1085.56 Q-23.4056 1094.28 -26.4843 1098.89 Q-29.5398 1103.47 -35.35 1103.47 Q-41.1602 1103.47 -44.2388 1098.89 Q-47.2944 1094.28 -47.2944 1085.56 Q-47.2944 1076.81 -44.2388 1072.22 Q-41.1602 1067.62 -35.35 1067.62 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-15.1881 1096.92 L-10.3038 1096.92 L-10.3038 1102.8 L-15.1881 1102.8 L-15.1881 1096.92 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M3.90904 1098.87 L20.2284 1098.87 L20.2284 1102.8 L-1.71592 1102.8 L-1.71592 1098.87 Q0.946098 1096.11 5.52941 1091.48 Q10.1359 1086.83 11.3164 1085.49 Q13.5618 1082.96 14.4414 1081.23 Q15.3442 1079.47 15.3442 1077.78 Q15.3442 1075.02 13.3997 1073.29 Q11.4784 1071.55 8.37661 1071.55 Q6.17755 1071.55 3.72386 1072.32 Q1.29332 1073.08 -1.48444 1074.63 L-1.48444 1069.91 Q1.33961 1068.77 3.7933 1068.19 Q6.247 1067.62 8.28402 1067.62 Q13.6544 1067.62 16.8488 1070.3 Q20.0432 1072.99 20.0432 1077.48 Q20.0432 1079.61 19.233 1081.53 Q18.446 1083.43 16.3395 1086.02 Q15.7608 1086.69 12.659 1089.91 Q9.55716 1093.1 3.90904 1098.87 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M30.0895 1068.24 L48.4458 1068.24 L48.4458 1072.18 L34.3718 1072.18 L34.3718 1080.65 Q35.3904 1080.3 36.4089 1080.14 Q37.4274 1079.95 38.4459 1079.95 Q44.2329 1079.95 47.6125 1083.13 Q50.9921 1086.3 50.9921 1091.71 Q50.9921 1097.29 47.5199 1100.39 Q44.0477 1103.47 37.7283 1103.47 Q35.5524 1103.47 33.2839 1103.1 Q31.0385 1102.73 28.6311 1101.99 L28.6311 1097.29 Q30.7145 1098.43 32.9367 1098.98 Q35.1589 1099.54 37.6357 1099.54 Q41.6403 1099.54 43.9783 1097.43 Q46.3162 1095.32 46.3162 1091.71 Q46.3162 1088.1 43.9783 1086 Q41.6403 1083.89 37.6357 1083.89 Q35.7607 1083.89 33.8857 1084.31 Q32.0339 1084.72 30.0895 1085.6 L30.0895 1068.24 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-36.3454 738.363 Q-39.9565 738.363 -41.7852 741.928 Q-43.5907 745.47 -43.5907 752.599 Q-43.5907 759.706 -41.7852 763.27 Q-39.9565 766.812 -36.3454 766.812 Q-32.7111 766.812 -30.9056 763.27 Q-29.0769 759.706 -29.0769 752.599 Q-29.0769 745.47 -30.9056 741.928 Q-32.7111 738.363 -36.3454 738.363 M-36.3454 734.66 Q-30.5352 734.66 -27.4797 739.266 Q-24.401 743.849 -24.401 752.599 Q-24.401 761.326 -27.4797 765.932 Q-30.5352 770.516 -36.3454 770.516 Q-42.1555 770.516 -45.2342 765.932 Q-48.2897 761.326 -48.2897 752.599 Q-48.2897 743.849 -45.2342 739.266 Q-42.1555 734.66 -36.3454 734.66 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-16.1834 763.965 L-11.2992 763.965 L-11.2992 769.845 L-16.1834 769.845 L-16.1834 763.965 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-1.06778 735.285 L17.2886 735.285 L17.2886 739.22 L3.2146 739.22 L3.2146 747.692 Q4.23312 747.345 5.25163 747.183 Q6.27014 746.997 7.28866 746.997 Q13.0757 746.997 16.4553 750.169 Q19.8349 753.34 19.8349 758.757 Q19.8349 764.335 16.3627 767.437 Q12.8905 770.516 6.57107 770.516 Q4.39515 770.516 2.12665 770.145 Q-0.118711 769.775 -2.52611 769.034 L-2.52611 764.335 Q-0.442784 765.47 1.77943 766.025 Q4.00164 766.581 6.47848 766.581 Q10.4831 766.581 12.821 764.474 Q15.159 762.368 15.159 758.757 Q15.159 755.146 12.821 753.039 Q10.4831 750.933 6.47848 750.933 Q4.60349 750.933 2.7285 751.349 Q0.876654 751.766 -1.06778 752.646 L-1.06778 735.285 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M39.0477 738.363 Q35.4367 738.363 33.608 741.928 Q31.8024 745.47 31.8024 752.599 Q31.8024 759.706 33.608 763.27 Q35.4367 766.812 39.0477 766.812 Q42.682 766.812 44.4875 763.27 Q46.3162 759.706 46.3162 752.599 Q46.3162 745.47 44.4875 741.928 Q42.682 738.363 39.0477 738.363 M39.0477 734.66 Q44.8579 734.66 47.9134 739.266 Q50.9921 743.849 50.9921 752.599 Q50.9921 761.326 47.9134 765.932 Q44.8579 770.516 39.0477 770.516 Q33.2376 770.516 30.1589 765.932 Q27.1034 761.326 27.1034 752.599 Q27.1034 743.849 30.1589 739.266 Q33.2376 734.66 39.0477 734.66 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-35.35 405.406 Q-38.9611 405.406 -40.7898 408.971 Q-42.5953 412.513 -42.5953 419.643 Q-42.5953 426.749 -40.7898 430.314 Q-38.9611 433.855 -35.35 433.855 Q-31.7158 433.855 -29.9102 430.314 Q-28.0815 426.749 -28.0815 419.643 Q-28.0815 412.513 -29.9102 408.971 Q-31.7158 405.406 -35.35 405.406 M-35.35 401.703 Q-29.5398 401.703 -26.4843 406.309 Q-23.4056 410.893 -23.4056 419.643 Q-23.4056 428.369 -26.4843 432.976 Q-29.5398 437.559 -35.35 437.559 Q-41.1602 437.559 -44.2388 432.976 Q-47.2944 428.369 -47.2944 419.643 Q-47.2944 410.893 -44.2388 406.309 Q-41.1602 401.703 -35.35 401.703 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-15.1881 431.008 L-10.3038 431.008 L-10.3038 436.888 L-15.1881 436.888 L-15.1881 431.008 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-1.29926 402.328 L20.9228 402.328 L20.9228 404.319 L8.37661 436.888 L3.49238 436.888 L15.2979 406.263 L-1.29926 406.263 L-1.29926 402.328 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M30.0895 402.328 L48.4458 402.328 L48.4458 406.263 L34.3718 406.263 L34.3718 414.735 Q35.3904 414.388 36.4089 414.226 Q37.4274 414.041 38.4459 414.041 Q44.2329 414.041 47.6125 417.212 Q50.9921 420.383 50.9921 425.8 Q50.9921 431.379 47.5199 434.48 Q44.0477 437.559 37.7283 437.559 Q35.5524 437.559 33.2839 437.189 Q31.0385 436.818 28.6311 436.078 L28.6311 431.379 Q30.7145 432.513 32.9367 433.068 Q35.1589 433.624 37.6357 433.624 Q41.6403 433.624 43.9783 431.517 Q46.3162 429.411 46.3162 425.8 Q46.3162 422.189 43.9783 420.082 Q41.6403 417.976 37.6357 417.976 Q35.7607 417.976 33.8857 418.393 Q32.0339 418.809 30.0895 419.689 L30.0895 402.328 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-45.5351 99.996 L-37.8963 99.996 L-37.8963 73.6304 L-46.2064 75.297 L-46.2064 71.0378 L-37.9426 69.3711 L-33.2667 69.3711 L-33.2667 99.996 L-25.6278 99.996 L-25.6278 103.931 L-45.5351 103.931 L-45.5351 99.996 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M-16.1834 98.0515 L-11.2992 98.0515 L-11.2992 103.931 L-16.1834 103.931 L-16.1834 98.0515 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M8.88587 72.4498 Q5.27478 72.4498 3.44608 76.0146 Q1.64054 79.5562 1.64054 86.6858 Q1.64054 93.7923 3.44608 97.3571 Q5.27478 100.899 8.88587 100.899 Q12.5201 100.899 14.3257 97.3571 Q16.1543 93.7923 16.1543 86.6858 Q16.1543 79.5562 14.3257 76.0146 Q12.5201 72.4498 8.88587 72.4498 M8.88587 68.7461 Q14.696 68.7461 17.7516 73.3526 Q20.8303 77.9359 20.8303 86.6858 Q20.8303 95.4126 17.7516 100.019 Q14.696 104.602 8.88587 104.602 Q3.07572 104.602 -0.00297114 100.019 Q-3.05851 95.4126 -3.05851 86.6858 Q-3.05851 77.9359 -0.00297114 73.3526 Q3.07572 68.7461 8.88587 68.7461 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M39.0477 72.4498 Q35.4367 72.4498 33.608 76.0146 Q31.8024 79.5562 31.8024 86.6858 Q31.8024 93.7923 33.608 97.3571 Q35.4367 100.899 39.0477 100.899 Q42.682 100.899 44.4875 97.3571 Q46.3162 93.7923 46.3162 86.6858 Q46.3162 79.5562 44.4875 76.0146 Q42.682 72.4498 39.0477 72.4498 M39.0477 68.7461 Q44.8579 68.7461 47.9134 73.3526 Q50.9921 77.9359 50.9921 86.6858 Q50.9921 95.4126 47.9134 100.019 Q44.8579 104.602 39.0477 104.602 Q33.2376 104.602 30.1589 100.019 Q27.1034 95.4126 27.1034 86.6858 Q27.1034 77.9359 30.1589 73.3526 Q33.2376 68.7461 39.0477 68.7461 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><polyline clip-path="url(#clip582)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,87.1829 89.2602,87.1916 91.5282,87.2003 93.7962,87.2093 96.0643,87.2183 98.3323,87.2275 100.6,87.2369 102.868,87.2464 105.136,87.256 107.404,87.2659 
+  109.672,87.2758 111.94,87.286 114.209,87.2963 116.477,87.3067 118.745,87.3174 121.013,87.3282 123.281,87.3392 125.549,87.3503 127.817,87.3617 130.085,87.3732 
+  132.353,87.3849 134.621,87.3968 136.889,87.4089 139.157,87.4212 141.425,87.4337 143.693,87.4464 145.961,87.4593 148.229,87.4724 150.497,87.4857 152.765,87.4992 
+  155.033,87.513 157.301,87.5269 159.569,87.5411 161.837,87.5556 164.105,87.5702 166.373,87.5851 168.641,87.6003 170.909,87.6156 173.177,87.6313 175.445,87.6472 
+  177.713,87.6633 179.981,87.6797 182.249,87.6964 184.517,87.7133 186.786,87.7305 189.054,87.748 191.322,87.7657 193.59,87.7838 195.858,87.8021 198.126,87.8208 
+  200.394,87.8397 202.662,87.859 204.93,87.8785 207.198,87.8984 209.466,87.9186 211.734,87.9391 214.002,87.9599 216.27,87.9811 218.538,88.0026 220.806,88.0245 
+  223.074,88.0467 225.342,88.0693 227.61,88.0922 229.878,88.1156 232.146,88.1392 234.414,88.1633 236.682,88.1878 238.95,88.2126 241.218,88.2379 243.486,88.2635 
+  245.754,88.2896 248.022,88.316 250.29,88.343 252.558,88.3703 254.826,88.3981 257.095,88.4263 259.363,88.455 261.631,88.4841 263.899,88.5137 266.167,88.5438 
+  268.435,88.5743 270.703,88.6054 272.971,88.6369 275.239,88.669 277.507,88.7016 279.775,88.7347 282.043,88.7683 284.311,88.8024 286.579,88.8371 288.847,88.8724 
+  291.115,88.9082 293.383,88.9446 295.651,88.9816 297.919,89.0191 300.187,89.0573 302.455,89.0961 304.723,89.1355 306.991,89.1755 309.259,89.2162 311.527,89.2575 
+  313.795,89.2994 316.063,89.3421 318.331,89.3854 320.599,89.4294 322.867,89.4741 325.135,89.5195 327.403,89.5656 329.672,89.6125 331.94,89.6601 334.208,89.7085 
+  336.476,89.7577 338.744,89.8076 341.012,89.8583 343.28,89.9098 345.548,89.9622 347.816,90.0153 350.084,90.0694 352.352,90.1242 354.62,90.18 356.888,90.2366 
+  359.156,90.2941 361.424,90.3525 363.692,90.4119 365.96,90.4721 368.228,90.5334 370.496,90.5956 372.764,90.6587 375.032,90.7229 377.3,90.7881 379.568,90.8543 
+  381.836,90.9216 384.104,90.9899 386.372,91.0593 388.64,91.1298 390.908,91.2014 393.176,91.2741 395.444,91.348 397.712,91.423 399.981,91.4992 402.249,91.5766 
+  404.517,91.6552 406.785,91.735 409.053,91.8161 411.321,91.8985 413.589,91.9821 415.857,92.0671 418.125,92.1533 420.393,92.2409 422.661,92.3299 424.929,92.4203 
+  427.197,92.5121 429.465,92.6053 431.733,92.6999 434.001,92.7961 436.269,92.8937 438.537,92.9928 440.805,93.0935 443.073,93.1957 445.341,93.2995 447.609,93.4049 
+  449.877,93.5119 452.145,93.6206 454.413,93.7309 456.681,93.843 458.949,93.9567 461.217,94.0723 463.485,94.1895 465.753,94.3085 468.021,94.4293 470.29,94.5519 
+  472.558,94.6765 474.826,94.803 477.094,94.9314 479.362,95.0618 481.63,95.1941 483.898,95.3285 486.166,95.465 488.434,95.6035 490.702,95.7442 492.97,95.8869 
+  495.238,96.0319 497.506,96.179 499.774,96.3284 502.042,96.4801 504.31,96.634 506.578,96.7903 508.846,96.9489 511.114,97.1099 513.382,97.2733 515.65,97.4392 
+  517.918,97.6076 520.186,97.7785 522.454,97.9519 524.722,98.128 526.99,98.3066 529.258,98.488 531.526,98.672 533.794,98.8587 536.062,99.0482 538.33,99.2406 
+  540.598,99.4357 542.867,99.6337 545.135,99.8347 547.403,100.039 549.671,100.245 551.939,100.455 554.207,100.668 556.475,100.884 558.743,101.104 561.011,101.326 
+  563.279,101.551 565.547,101.78 567.815,102.012 570.083,102.248 572.351,102.487 574.619,102.729 576.887,102.974 579.155,103.223 581.423,103.476 583.691,103.732 
+  585.959,103.992 588.227,104.256 590.495,104.523 592.763,104.795 595.031,105.07 597.299,105.349 599.567,105.632 601.835,105.919 604.103,106.21 606.371,106.505 
+  608.639,106.804 610.907,107.108 613.176,107.416 615.444,107.728 617.712,108.044 619.98,108.365 622.248,108.69 624.516,109.019 626.784,109.353 629.052,109.692 
+  631.32,110.035 633.588,110.383 635.856,110.735 638.124,111.093 640.392,111.455 642.66,111.821 644.928,112.193 647.196,112.57 649.464,112.95 651.732,113.336 
+  654,113.726 656.268,114.122 658.536,114.523 660.804,114.93 663.072,115.342 665.34,115.76 667.608,116.183 669.876,116.612 672.144,117.046 674.412,117.486 
+  676.68,117.932 678.948,118.383 681.216,118.841 683.484,119.304 685.753,119.773 688.021,120.248 690.289,120.729 692.557,121.217 694.825,121.71 697.093,122.209 
+  699.361,122.715 701.629,123.227 703.897,123.745 706.165,124.269 708.433,124.799 710.701,125.336 712.969,125.88 715.237,126.429 717.505,126.985 719.773,127.548 
+  722.041,128.117 724.309,128.691 726.577,129.271 728.845,129.858 731.113,130.452 733.381,131.054 735.649,131.662 737.917,132.278 740.185,132.901 742.453,133.532 
+  744.721,134.17 746.989,134.815 749.257,135.468 751.525,136.128 753.793,136.796 756.062,137.471 758.33,138.153 760.598,138.843 762.866,139.541 765.134,140.246 
+  767.402,140.958 769.67,141.678 771.938,142.406 774.206,143.141 776.474,143.883 778.742,144.633 781.01,145.39 783.278,146.154 785.546,146.921 787.814,147.696 
+  790.082,148.48 792.35,149.273 794.618,150.074 796.886,150.884 799.154,151.702 801.422,152.529 803.69,153.365 805.958,154.209 808.226,155.062 810.494,155.924 
+  812.762,156.794 815.03,157.672 817.298,158.559 819.566,159.455 821.834,160.359 824.102,161.27 826.37,162.191 828.639,163.119 830.907,164.055 833.175,164.999 
+  835.443,165.951 837.711,166.911 839.979,167.878 842.247,168.851 844.515,169.826 846.783,170.811 849.051,171.805 851.319,172.809 853.587,173.823 855.855,174.846 
+  858.123,175.878 860.391,176.92 862.659,177.971 864.927,179.031 867.195,180.1 869.463,181.178 871.731,182.265 873.999,183.36 876.267,184.464 878.535,185.576 
+  880.803,186.696 883.071,187.825 885.339,188.96 887.607,190.104 889.875,191.254 892.143,192.412 894.411,193.565 896.679,194.728 898.948,195.901 901.216,197.084 
+  903.484,198.278 905.752,199.482 908.02,200.695 910.288,201.918 912.556,203.151 914.824,204.393 917.092,205.645 919.36,206.905 921.628,208.174 923.896,209.452 
+  926.164,210.737 928.432,212.031 930.7,213.333 932.968,214.642 935.236,215.958 937.504,217.28 939.772,218.609 942.04,219.944 944.308,221.27 946.576,222.606 
+  948.844,223.954 951.112,225.312 953.38,226.68 955.648,228.058 957.916,229.447 960.184,230.844 962.452,232.251 964.72,233.667 966.988,235.092 969.257,236.525 
+  971.525,237.966 973.793,239.415 976.061,240.871 978.329,242.334 980.597,243.803 982.865,245.279 985.133,246.759 987.401,248.245 989.669,249.716 991.937,251.198 
+  994.205,252.69 996.473,254.194 998.741,255.708 1001.01,257.232 1003.28,258.767 1005.55,260.31 1007.81,261.863 1010.08,263.425 1012.35,264.995 1014.62,266.574 
+  1016.89,268.16 1019.15,269.753 1021.42,271.352 1023.69,272.958 1025.96,274.57 1028.23,276.186 1030.49,277.807 1032.76,279.427 1035.03,281.033 1037.3,282.65 
+  1039.57,284.279 1041.83,285.918 1044.1,287.568 1046.37,289.228 1048.64,290.898 1050.91,292.577 1053.17,294.264 1055.44,295.961 1057.71,297.665 1059.98,299.376 
+  1062.25,301.094 1064.51,302.819 1066.78,304.549 1069.05,306.284 1071.32,308.024 1073.59,309.767 1075.85,311.51 1078.12,313.232 1080.39,314.966 1082.66,316.711 
+  1084.93,318.467 1087.19,320.234 1089.46,322.012 1091.73,323.799 1094,325.595 1096.27,327.4 1098.53,329.214 1100.8,331.036 1103.07,332.864 1105.34,334.699 
+  1107.61,336.541 1109.87,338.387 1112.14,340.238 1114.41,342.092 1116.68,343.95 1118.95,345.806 1121.21,347.637 1123.48,349.48 1125.75,351.334 1128.02,353.2 
+  1130.29,355.077 1132.55,356.964 1134.82,358.862 1137.09,360.768 1139.36,362.684 1141.63,364.607 1143.89,366.539 1146.16,368.477 1148.43,370.422 1150.7,372.372 
+  1152.97,374.328 1155.24,376.287 1157.5,378.249 1159.77,380.214 1162.04,382.169 1164.31,384.103 1166.58,386.049 1168.84,388.008 1171.11,389.978 1173.38,391.959 
+  1175.65,393.95 1177.92,395.952 1180.18,397.964 1182.45,399.984 1184.72,402.013 1186.99,404.049 1189.26,406.092 1191.52,408.142 1193.79,410.197 1196.06,412.256 
+  1198.33,414.319 1200.6,416.385 1202.86,418.453 1205.13,420.51 1207.4,422.541 1209.67,424.585 1211.94,426.642 1214.2,428.71 1216.47,430.791 1218.74,432.882 
+  1221.01,434.983 1223.28,437.094 1225.54,439.215 1227.81,441.344 1230.08,443.481 1232.35,445.625 1234.62,447.775 1236.88,449.93 1239.15,452.09 1241.42,454.254 
+  1243.69,456.42 1245.96,458.588 1248.22,460.753 1250.49,462.875 1252.76,465.011 1255.03,467.161 1257.3,469.323 1259.56,471.496 1261.83,473.682 1264.1,475.878 
+  1266.37,478.085 1268.64,480.301 1270.9,482.526 1273.17,484.759 1275.44,487 1277.71,489.247 1279.98,491.5 1282.24,493.757 1284.51,496.018 1286.78,498.282 
+  1289.05,500.548 1291.32,502.814 1293.59,505.047 1295.85,507.269 1298.12,509.504 1300.39,511.753 1302.66,514.014 1304.93,516.288 1307.19,518.573 1309.46,520.869 
+  1311.73,523.175 1314,525.491 1316.27,527.816 1318.53,530.148 1320.8,532.487 1323.07,534.833 1325.34,537.184 1327.61,539.539 1329.87,541.897 1332.14,544.258 
+  1334.41,546.619 1336.68,548.98 1338.95,551.29 1341.21,553.604 1343.48,555.931 1345.75,558.272 1348.02,560.626 1350.29,562.993 1352.55,565.371 1354.82,567.76 
+  1357.09,570.159 1359.36,572.568 1361.63,574.985 1363.89,577.41 1366.16,579.843 1368.43,582.281 1370.7,584.724 1372.97,587.171 1375.23,589.62 1377.5,592.072 
+  1379.77,594.523 1382.04,596.974 1384.31,599.372 1386.57,601.769 1388.84,604.18 1391.11,606.604 1393.38,609.042 1395.65,611.492 1397.91,613.954 1400.18,616.427 
+  1402.45,618.911 1404.72,621.404 1406.99,623.905 1409.25,626.415 1411.52,628.931 1413.79,631.453 1416.06,633.98 1418.33,636.51 1420.59,639.043 1422.86,641.578 
+  1425.13,644.112 1427.4,646.644 1429.67,649.136 1431.93,651.605 1434.2,654.089 1436.47,656.586 1438.74,659.097 1441.01,661.62 1443.28,664.155 1445.54,666.701 
+  1447.81,669.258 1450.08,671.824 1452.35,674.399 1454.62,676.981 1456.88,679.57 1459.15,682.165 1461.42,684.764 1463.69,687.366 1465.96,689.971 1468.22,692.576 
+  1470.49,695.181 1472.76,697.784 1475.03,700.365 1477.3,702.894 1479.56,705.438 1481.83,707.996 1484.1,710.567 1486.37,713.15 1488.64,715.746 1490.9,718.352 
+  1493.17,720.968 1495.44,723.594 1497.71,726.228 1499.98,728.869 1502.24,731.516 1504.51,734.168 1506.78,736.824 1509.05,739.483 1511.32,742.144 1513.58,744.805 
+  1515.85,747.464 1518.12,750.12 1520.39,752.768 1522.66,755.345 1524.92,757.936 1527.19,760.54 1529.46,763.157 1531.73,765.786 1534,768.426 1536.26,771.077 
+  1538.53,773.737 1540.8,776.406 1543.07,779.082 1545.34,781.764 1547.6,784.452 1549.87,787.144 1552.14,789.839 1554.41,792.536 1556.68,795.233 1558.94,797.929 
+  1561.21,800.622 1563.48,803.311 1565.75,805.984 1568.02,808.593 1570.28,811.215 1572.55,813.85 1574.82,816.497 1577.09,819.155 1579.36,821.822 1581.63,824.5 
+  1583.89,827.185 1586.16,829.878 1588.43,832.576 1590.7,835.28 1592.97,837.988 1595.23,840.698 1597.5,843.41 1599.77,846.122 1602.04,848.832 1604.31,851.538 
+  1606.57,854.241 1608.84,856.937 1611.11,859.582 1613.38,862.206 1615.65,864.842 1617.91,867.489 1620.18,870.146 1622.45,872.813 1624.72,875.489 1626.99,878.172 
+  1629.25,880.861 1631.52,883.555 1633.79,886.254 1636.06,888.955 1638.33,891.658 1640.59,894.361 1642.86,897.063 1645.13,899.763 1647.4,902.458 1649.67,905.146 
+  1651.93,907.828 1654.2,910.463 1656.47,913.071 1658.74,915.69 1661.01,918.32 1663.27,920.958 1665.54,923.604 1667.81,926.257 1670.08,928.916 1672.35,931.58 
+  1674.61,934.248 1676.88,936.918 1679.15,939.589 1681.42,942.26 1683.69,944.929 1685.95,947.595 1688.22,950.256 1690.49,952.911 1692.76,955.557 1695.03,958.194 
+  1697.29,960.758 1699.56,963.332 1701.83,965.915 1704.1,968.506 1706.37,971.104 1708.63,973.708 1710.9,976.317 1713.17,978.929 1715.44,981.544 1717.71,984.16 
+  1719.98,986.776 1722.24,989.39 1724.51,992.002 1726.78,994.608 1729.05,997.209 1731.32,999.802 1733.58,1002.38 1735.85,1004.95 1738.12,1007.46 1740.39,1009.97 
+  1742.66,1012.49 1744.92,1015.01 1747.19,1017.54 1749.46,1020.08 1751.73,1022.61 1754,1025.15 1756.26,1027.69 1758.53,1030.23 1760.8,1032.77 1763.07,1035.3 
+  1765.34,1037.83 1767.6,1040.35 1769.87,1042.86 1772.14,1045.37 1774.41,1047.86 1776.68,1050.3 1778.94,1052.72 1781.21,1055.15 1783.48,1057.59 1785.75,1060.02 
+  1788.02,1062.47 1790.28,1064.91 1792.55,1067.35 1794.82,1069.8 1797.09,1072.24 1799.36,1074.68 1801.62,1077.11 1803.89,1079.54 1806.16,1081.95 1808.43,1084.36 
+  1810.7,1086.76 1812.96,1089.14 1815.23,1091.47 1817.5,1093.79 1819.77,1096.12 1822.04,1098.44 1824.3,1100.78 1826.57,1103.11 1828.84,1105.44 1831.11,1107.77 
+  1833.38,1110.1 1835.64,1112.42 1837.91,1114.74 1840.18,1117.05 1842.45,1119.36 1844.72,1121.65 1846.98,1123.93 1849.25,1126.19 1851.52,1128.41 1853.79,1130.62 
+  1856.06,1132.82 1858.32,1135.03 1860.59,1137.24 1862.86,1139.44 1865.13,1141.65 1867.4,1143.85 1869.67,1146.05 1871.93,1148.25 1874.2,1150.43 1876.47,1152.61 
+  1878.74,1154.78 1881.01,1156.94 1883.27,1159.08 1885.54,1161.21 1887.81,1163.29 1890.08,1165.36 1892.35,1167.43 1894.61,1169.51 1896.88,1171.58 1899.15,1173.65 
+  1901.42,1175.72 1903.69,1177.78 1905.95,1179.84 1908.22,1181.89 1910.49,1183.93 1912.76,1185.96 1915.03,1187.98 1917.29,1189.99 1919.56,1191.98 1921.83,1193.92 
+  1924.1,1195.86 1926.37,1197.79 1928.63,1199.72 1930.9,1201.65 1933.17,1203.58 1935.44,1205.5 1937.71,1207.42 1939.97,1209.33 1942.24,1211.24 1944.51,1213.13 
+  1946.78,1215.01 1949.05,1216.88 1951.31,1218.74 1953.58,1220.58 1955.85,1222.37 1958.12,1224.16 1960.39,1225.95 1962.65,1227.73 1964.92,1229.52 1967.19,1231.29 
+  1969.46,1233.07 1971.73,1234.83 1973.99,1236.59 1976.26,1238.34 1978.53,1240.08 1980.8,1241.81 1983.07,1243.52 1985.33,1245.22 1987.6,1246.87 1989.87,1248.52 
+  1992.14,1250.16 1994.41,1251.8 1996.67,1253.44 1998.94,1255.07 2001.21,1256.7 2003.48,1258.31 2005.75,1259.92 2008.02,1261.53 2010.28,1263.12 2012.55,1264.7 
+  2014.82,1266.26 2017.09,1267.81 2019.36,1269.32 2021.62,1270.82 2023.89,1272.31 2026.16,1273.81 2028.43,1275.3 2030.7,1276.78 2032.96,1278.26 2035.23,1279.73 
+  2037.5,1281.2 2039.77,1282.65 2042.04,1284.09 2044.3,1285.52 2046.57,1286.93 2048.84,1288.32 2051.11,1289.68 2053.38,1291.04 2055.64,1292.4 2057.91,1293.75 
+  2060.18,1295.09 2062.45,1296.43 2064.72,1297.77 2066.98,1299.09 2069.25,1300.41 2071.52,1301.71 2073.79,1303.01 2076.06,1304.29 2078.32,1305.54 2080.59,1306.77 
+  2082.86,1307.99 2085.13,1309.22 2087.4,1310.43 2089.66,1311.65 2091.93,1312.85 2094.2,1314.05 2096.47,1315.24 2098.74,1316.42 2101,1317.6 2103.27,1318.76 
+  2105.54,1319.9 2107.81,1321.02 2110.08,1322.12 2112.34,1323.22 2114.61,1324.31 2116.88,1325.4 2119.15,1326.49 2121.42,1327.57 2123.68,1328.64 2125.95,1329.7 
+  2128.22,1330.75 2130.49,1331.8 2132.76,1332.83 2135.02,1333.85 2137.29,1334.83 2139.56,1335.81 2141.83,1336.79 2144.1,1337.76 2146.37,1338.73 2148.63,1339.69 
+  2150.9,1340.65 2153.17,1341.6 2155.44,1342.54 2157.71,1343.47 2159.97,1344.39 2162.24,1345.3 2164.51,1346.18 2166.78,1347.05 2169.05,1347.92 2171.31,1348.79 
+  2173.58,1349.65 2175.85,1350.5 2178.12,1351.35 2180.39,1352.19 2182.65,1353.03 2184.92,1353.86 2187.19,1354.67 2189.46,1355.48 2191.73,1356.26 2193.99,1357.03 
+  2196.26,1357.8 2198.53,1358.56 2200.8,1359.32 2203.07,1360.07 2205.33,1360.82 2207.6,1361.57 2209.87,1362.3 2212.14,1363.03 2214.41,1363.75 2216.67,1364.46 
+  2218.94,1365.14 2221.21,1365.82 2223.48,1366.5 2225.75,1367.17 2228.01,1367.84 2230.28,1368.5 2232.55,1369.16 2234.82,1369.81 2237.09,1370.46 2239.35,1371.09 
+  2241.62,1371.73 2243.89,1372.34 2246.16,1372.93 2248.43,1373.53 2250.69,1374.12 2252.96,1374.71 2255.23,1375.29 2257.5,1375.87 2259.77,1376.44 2262.03,1377.01 
+  2264.3,1377.58 2266.57,1378.13 2268.84,1378.68 2271.11,1379.2 2273.37,1379.72 2275.64,1380.24 2277.91,1380.76 2280.18,1381.27 2282.45,1381.78 2284.71,1382.28 
+  2286.98,1382.78 2289.25,1383.28 2291.52,1383.77 2293.79,1384.25 2296.06,1384.71 2298.32,1385.16 2300.59,1385.61 2302.86,1386.06 2305.13,1386.51 2307.4,1386.95 
+  2309.66,1387.39 2311.93,1387.83 2314.2,1388.26 2316.47,1388.69 2318.74,1389.11 2321,1389.52 2323.27,1389.91 2325.54,1390.3 2327.81,1390.69 2330.08,1391.08 
+  2332.34,1391.47 2334.61,1391.85 2336.88,1392.23 2339.15,1392.61 2341.42,1392.98 2343.68,1393.35 2345.95,1393.71 2348.22,1394.06 2350.49,1394.4 2352.76,1394.75 
+  
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#e26f46; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1418.43 89.2602,1418.43 91.5282,1418.43 93.7962,1418.43 96.0643,1418.43 98.3323,1418.43 100.6,1418.43 102.868,1418.43 105.136,1418.43 107.404,1418.43 
+  109.672,1418.43 111.94,1418.43 114.209,1418.43 116.477,1418.43 118.745,1418.43 121.013,1418.43 123.281,1418.43 125.549,1418.43 127.817,1418.43 130.085,1418.43 
+  132.353,1418.43 134.621,1418.43 136.889,1418.43 139.157,1418.43 141.425,1418.43 143.693,1418.43 145.961,1418.43 148.229,1418.43 150.497,1418.43 152.765,1418.43 
+  155.033,1418.43 157.301,1418.43 159.569,1418.43 161.837,1418.43 164.105,1418.43 166.373,1418.43 168.641,1418.43 170.909,1418.43 173.177,1418.43 175.445,1418.43 
+  177.713,1418.43 179.981,1418.43 182.249,1418.43 184.517,1418.43 186.786,1418.43 189.054,1418.43 191.322,1418.43 193.59,1418.43 195.858,1418.43 198.126,1418.43 
+  200.394,1418.43 202.662,1418.43 204.93,1418.43 207.198,1418.43 209.466,1418.43 211.734,1418.43 214.002,1418.43 216.27,1418.43 218.538,1418.43 220.806,1418.43 
+  223.074,1418.43 225.342,1418.43 227.61,1418.43 229.878,1418.43 232.146,1418.43 234.414,1418.43 236.682,1418.43 238.95,1418.43 241.218,1418.43 243.486,1418.43 
+  245.754,1418.43 248.022,1418.43 250.29,1418.43 252.558,1418.43 254.826,1418.43 257.095,1418.43 259.363,1418.43 261.631,1418.43 263.899,1418.43 266.167,1418.43 
+  268.435,1418.43 270.703,1418.43 272.971,1418.43 275.239,1418.43 277.507,1418.43 279.775,1418.43 282.043,1418.43 284.311,1418.43 286.579,1418.43 288.847,1418.43 
+  291.115,1418.43 293.383,1418.43 295.651,1418.43 297.919,1418.43 300.187,1418.43 302.455,1418.43 304.723,1418.43 306.991,1418.43 309.259,1418.43 311.527,1418.43 
+  313.795,1418.43 316.063,1418.43 318.331,1418.43 320.599,1418.43 322.867,1418.43 325.135,1418.43 327.403,1418.43 329.672,1418.43 331.94,1418.43 334.208,1418.43 
+  336.476,1418.43 338.744,1418.43 341.012,1418.43 343.28,1418.43 345.548,1418.43 347.816,1418.43 350.084,1418.43 352.352,1418.43 354.62,1418.43 356.888,1418.43 
+  359.156,1418.43 361.424,1418.43 363.692,1418.43 365.96,1418.43 368.228,1418.43 370.496,1418.43 372.764,1418.43 375.032,1418.43 377.3,1418.43 379.568,1418.43 
+  381.836,1418.43 384.104,1418.43 386.372,1418.43 388.64,1418.43 390.908,1418.43 393.176,1418.43 395.444,1418.43 397.712,1418.43 399.981,1418.43 402.249,1418.43 
+  404.517,1418.43 406.785,1418.43 409.053,1418.43 411.321,1418.43 413.589,1418.43 415.857,1418.43 418.125,1418.43 420.393,1418.43 422.661,1418.43 424.929,1418.43 
+  427.197,1418.43 429.465,1418.43 431.733,1418.43 434.001,1418.43 436.269,1418.43 438.537,1418.43 440.805,1418.43 443.073,1418.43 445.341,1418.43 447.609,1418.43 
+  449.877,1418.43 452.145,1418.43 454.413,1418.43 456.681,1418.43 458.949,1418.43 461.217,1418.43 463.485,1418.43 465.753,1418.43 468.021,1418.43 470.29,1418.43 
+  472.558,1418.43 474.826,1418.43 477.094,1418.43 479.362,1418.43 481.63,1418.43 483.898,1418.43 486.166,1418.43 488.434,1418.43 490.702,1418.43 492.97,1418.43 
+  495.238,1418.43 497.506,1418.43 499.774,1418.43 502.042,1418.43 504.31,1418.43 506.578,1418.43 508.846,1418.43 511.114,1418.43 513.382,1418.43 515.65,1418.43 
+  517.918,1418.43 520.186,1418.43 522.454,1418.43 524.722,1418.43 526.99,1418.43 529.258,1418.43 531.526,1418.43 533.794,1418.43 536.062,1418.43 538.33,1418.43 
+  540.598,1418.43 542.867,1418.43 545.135,1418.43 547.403,1418.43 549.671,1418.43 551.939,1418.43 554.207,1418.43 556.475,1418.43 558.743,1418.43 561.011,1418.43 
+  563.279,1418.43 565.547,1418.43 567.815,1418.43 570.083,1418.43 572.351,1418.43 574.619,1418.43 576.887,1418.43 579.155,1418.43 581.423,1418.43 583.691,1418.43 
+  585.959,1418.43 588.227,1418.43 590.495,1418.43 592.763,1418.43 595.031,1418.43 597.299,1418.43 599.567,1418.43 601.835,1418.43 604.103,1418.43 606.371,1418.43 
+  608.639,1418.43 610.907,1418.43 613.176,1418.43 615.444,1418.43 617.712,1418.43 619.98,1418.43 622.248,1418.43 624.516,1418.43 626.784,1418.43 629.052,1418.43 
+  631.32,1418.43 633.588,1418.43 635.856,1418.43 638.124,1418.43 640.392,1418.43 642.66,1418.43 644.928,1418.43 647.196,1418.43 649.464,1418.43 651.732,1418.43 
+  654,1418.43 656.268,1418.43 658.536,1418.43 660.804,1418.43 663.072,1418.43 665.34,1418.43 667.608,1418.43 669.876,1418.43 672.144,1418.43 674.412,1418.43 
+  676.68,1418.43 678.948,1418.43 681.216,1418.43 683.484,1418.44 685.753,1418.44 688.021,1418.44 690.289,1418.44 692.557,1418.44 694.825,1418.44 697.093,1418.44 
+  699.361,1418.44 701.629,1418.44 703.897,1418.44 706.165,1418.44 708.433,1418.44 710.701,1418.44 712.969,1418.44 715.237,1418.44 717.505,1418.44 719.773,1418.44 
+  722.041,1418.44 724.309,1418.44 726.577,1418.44 728.845,1418.44 731.113,1418.44 733.381,1418.44 735.649,1418.44 737.917,1418.44 740.185,1418.44 742.453,1418.44 
+  744.721,1418.44 746.989,1418.44 749.257,1418.44 751.525,1418.44 753.793,1418.44 756.062,1418.44 758.33,1418.44 760.598,1418.44 762.866,1418.44 765.134,1418.44 
+  767.402,1418.44 769.67,1418.44 771.938,1418.44 774.206,1418.44 776.474,1418.44 778.742,1418.44 781.01,1418.44 783.278,1418.44 785.546,1418.44 787.814,1418.44 
+  790.082,1418.44 792.35,1418.44 794.618,1418.44 796.886,1418.44 799.154,1418.44 801.422,1418.44 803.69,1418.44 805.958,1418.44 808.226,1418.44 810.494,1418.44 
+  812.762,1418.44 815.03,1418.44 817.298,1418.44 819.566,1418.44 821.834,1418.44 824.102,1418.44 826.37,1418.44 828.639,1418.44 830.907,1418.44 833.175,1418.44 
+  835.443,1418.44 837.711,1418.44 839.979,1418.44 842.247,1418.44 844.515,1418.44 846.783,1418.44 849.051,1418.44 851.319,1418.44 853.587,1418.44 855.855,1418.44 
+  858.123,1418.44 860.391,1418.44 862.659,1418.44 864.927,1418.44 867.195,1418.44 869.463,1418.44 871.731,1418.44 873.999,1418.44 876.267,1418.44 878.535,1418.44 
+  880.803,1418.44 883.071,1418.45 885.339,1418.45 887.607,1418.45 889.875,1418.45 892.143,1418.45 894.411,1418.45 896.679,1418.45 898.948,1418.45 901.216,1418.45 
+  903.484,1418.45 905.752,1418.45 908.02,1418.45 910.288,1418.45 912.556,1418.45 914.824,1418.45 917.092,1418.45 919.36,1418.45 921.628,1418.45 923.896,1418.45 
+  926.164,1418.45 928.432,1418.45 930.7,1418.45 932.968,1418.45 935.236,1418.45 937.504,1418.45 939.772,1418.45 942.04,1418.45 944.308,1418.45 946.576,1418.45 
+  948.844,1418.45 951.112,1418.45 953.38,1418.45 955.648,1418.45 957.916,1418.45 960.184,1418.45 962.452,1418.45 964.72,1418.45 966.988,1418.45 969.257,1418.45 
+  971.525,1418.45 973.793,1418.45 976.061,1418.45 978.329,1418.45 980.597,1418.45 982.865,1418.45 985.133,1418.45 987.401,1418.45 989.669,1418.45 991.937,1418.45 
+  994.205,1418.45 996.473,1418.45 998.741,1418.45 1001.01,1418.45 1003.28,1418.45 1005.55,1418.45 1007.81,1418.45 1010.08,1418.45 1012.35,1418.45 1014.62,1418.45 
+  1016.89,1418.45 1019.15,1418.45 1021.42,1418.45 1023.69,1418.45 1025.96,1418.45 1028.23,1418.45 1030.49,1418.45 1032.76,1418.45 1035.03,1418.45 1037.3,1418.46 
+  1039.57,1418.46 1041.83,1418.46 1044.1,1418.46 1046.37,1418.46 1048.64,1418.46 1050.91,1418.46 1053.17,1418.46 1055.44,1418.46 1057.71,1418.46 1059.98,1418.46 
+  1062.25,1418.46 1064.51,1418.46 1066.78,1418.46 1069.05,1418.46 1071.32,1418.46 1073.59,1418.46 1075.85,1418.46 1078.12,1418.46 1080.39,1418.46 1082.66,1418.46 
+  1084.93,1418.46 1087.19,1418.46 1089.46,1418.46 1091.73,1418.46 1094,1418.46 1096.27,1418.46 1098.53,1418.46 1100.8,1418.46 1103.07,1418.46 1105.34,1418.46 
+  1107.61,1418.46 1109.87,1418.46 1112.14,1418.46 1114.41,1418.46 1116.68,1418.46 1118.95,1418.46 1121.21,1418.46 1123.48,1418.46 1125.75,1418.46 1128.02,1418.46 
+  1130.29,1418.46 1132.55,1418.46 1134.82,1418.46 1137.09,1418.46 1139.36,1418.46 1141.63,1418.46 1143.89,1418.46 1146.16,1418.46 1148.43,1418.46 1150.7,1418.46 
+  1152.97,1418.46 1155.24,1418.46 1157.5,1418.46 1159.77,1418.46 1162.04,1418.46 1164.31,1418.46 1166.58,1418.46 1168.84,1418.46 1171.11,1418.46 1173.38,1418.46 
+  1175.65,1418.46 1177.92,1418.46 1180.18,1418.46 1182.45,1418.46 1184.72,1418.46 1186.99,1418.46 1189.26,1418.46 1191.52,1418.46 1193.79,1418.46 1196.06,1418.46 
+  1198.33,1418.46 1200.6,1418.46 1202.86,1418.46 1205.13,1418.46 1207.4,1418.46 1209.67,1418.46 1211.94,1418.46 1214.2,1418.46 1216.47,1418.46 1218.74,1418.46 
+  1221.01,1418.46 1223.28,1418.46 1225.54,1418.46 1227.81,1418.46 1230.08,1418.46 1232.35,1418.46 1234.62,1418.47 1236.88,1418.47 1239.15,1418.47 1241.42,1418.47 
+  1243.69,1418.47 1245.96,1418.47 1248.22,1418.47 1250.49,1418.47 1252.76,1418.47 1255.03,1418.47 1257.3,1418.47 1259.56,1418.47 1261.83,1418.47 1264.1,1418.47 
+  1266.37,1418.47 1268.64,1418.47 1270.9,1418.47 1273.17,1418.47 1275.44,1418.47 1277.71,1418.47 1279.98,1418.47 1282.24,1418.47 1284.51,1418.47 1286.78,1418.47 
+  1289.05,1418.47 1291.32,1418.47 1293.59,1418.47 1295.85,1418.47 1298.12,1418.47 1300.39,1418.47 1302.66,1418.47 1304.93,1418.47 1307.19,1418.47 1309.46,1418.47 
+  1311.73,1418.47 1314,1418.47 1316.27,1418.47 1318.53,1418.47 1320.8,1418.47 1323.07,1418.47 1325.34,1418.47 1327.61,1418.47 1329.87,1418.47 1332.14,1418.47 
+  1334.41,1418.47 1336.68,1418.47 1338.95,1418.47 1341.21,1418.47 1343.48,1418.47 1345.75,1418.47 1348.02,1418.47 1350.29,1418.47 1352.55,1418.47 1354.82,1418.47 
+  1357.09,1418.47 1359.36,1418.47 1361.63,1418.47 1363.89,1418.47 1366.16,1418.47 1368.43,1418.47 1370.7,1418.47 1372.97,1418.47 1375.23,1418.47 1377.5,1418.47 
+  1379.77,1418.47 1382.04,1418.47 1384.31,1418.47 1386.57,1418.47 1388.84,1418.47 1391.11,1418.47 1393.38,1418.47 1395.65,1418.47 1397.91,1418.47 1400.18,1418.47 
+  1402.45,1418.47 1404.72,1418.47 1406.99,1418.47 1409.25,1418.47 1411.52,1418.47 1413.79,1418.47 1416.06,1418.47 1418.33,1418.47 1420.59,1418.47 1422.86,1418.47 
+  1425.13,1418.47 1427.4,1418.47 1429.67,1418.47 1431.93,1418.47 1434.2,1418.47 1436.47,1418.47 1438.74,1418.47 1441.01,1418.47 1443.28,1418.47 1445.54,1418.47 
+  1447.81,1418.47 1450.08,1418.47 1452.35,1418.47 1454.62,1418.47 1456.88,1418.47 1459.15,1418.47 1461.42,1418.47 1463.69,1418.47 1465.96,1418.47 1468.22,1418.47 
+  1470.49,1418.47 1472.76,1418.47 1475.03,1418.47 1477.3,1418.47 1479.56,1418.47 1481.83,1418.47 1484.1,1418.47 1486.37,1418.47 1488.64,1418.47 1490.9,1418.47 
+  1493.17,1418.47 1495.44,1418.47 1497.71,1418.47 1499.98,1418.47 1502.24,1418.47 1504.51,1418.47 1506.78,1418.47 1509.05,1418.47 1511.32,1418.47 1513.58,1418.47 
+  1515.85,1418.47 1518.12,1418.47 1520.39,1418.47 1522.66,1418.47 1524.92,1418.47 1527.19,1418.47 1529.46,1418.47 1531.73,1418.47 1534,1418.47 1536.26,1418.47 
+  1538.53,1418.47 1540.8,1418.47 1543.07,1418.47 1545.34,1418.47 1547.6,1418.47 1549.87,1418.47 1552.14,1418.47 1554.41,1418.47 1556.68,1418.47 1558.94,1418.47 
+  1561.21,1418.47 1563.48,1418.47 1565.75,1418.47 1568.02,1418.47 1570.28,1418.47 1572.55,1418.47 1574.82,1418.47 1577.09,1418.47 1579.36,1418.47 1581.63,1418.47 
+  1583.89,1418.47 1586.16,1418.47 1588.43,1418.47 1590.7,1418.47 1592.97,1418.47 1595.23,1418.47 1597.5,1418.47 1599.77,1418.47 1602.04,1418.47 1604.31,1418.47 
+  1606.57,1418.47 1608.84,1418.47 1611.11,1418.47 1613.38,1418.47 1615.65,1418.47 1617.91,1418.47 1620.18,1418.47 1622.45,1418.47 1624.72,1418.47 1626.99,1418.47 
+  1629.25,1418.47 1631.52,1418.47 1633.79,1418.47 1636.06,1418.47 1638.33,1418.47 1640.59,1418.47 1642.86,1418.47 1645.13,1418.47 1647.4,1418.47 1649.67,1418.47 
+  1651.93,1418.47 1654.2,1418.47 1656.47,1418.47 1658.74,1418.47 1661.01,1418.47 1663.27,1418.47 1665.54,1418.47 1667.81,1418.47 1670.08,1418.47 1672.35,1418.47 
+  1674.61,1418.47 1676.88,1418.47 1679.15,1418.47 1681.42,1418.47 1683.69,1418.47 1685.95,1418.48 1688.22,1418.48 1690.49,1418.48 1692.76,1418.48 1695.03,1418.48 
+  1697.29,1418.48 1699.56,1418.48 1701.83,1418.48 1704.1,1418.48 1706.37,1418.48 1708.63,1418.48 1710.9,1418.48 1713.17,1418.48 1715.44,1418.48 1717.71,1418.48 
+  1719.98,1418.48 1722.24,1418.48 1724.51,1418.48 1726.78,1418.48 1729.05,1418.48 1731.32,1418.48 1733.58,1418.48 1735.85,1418.48 1738.12,1418.48 1740.39,1418.48 
+  1742.66,1418.48 1744.92,1418.48 1747.19,1418.48 1749.46,1418.48 1751.73,1418.48 1754,1418.48 1756.26,1418.48 1758.53,1418.48 1760.8,1418.48 1763.07,1418.48 
+  1765.34,1418.48 1767.6,1418.48 1769.87,1418.48 1772.14,1418.48 1774.41,1418.48 1776.68,1418.48 1778.94,1418.48 1781.21,1418.48 1783.48,1418.48 1785.75,1418.48 
+  1788.02,1418.48 1790.28,1418.48 1792.55,1418.48 1794.82,1418.48 1797.09,1418.48 1799.36,1418.48 1801.62,1418.48 1803.89,1418.48 1806.16,1418.48 1808.43,1418.48 
+  1810.7,1418.48 1812.96,1418.48 1815.23,1418.48 1817.5,1418.48 1819.77,1418.48 1822.04,1418.48 1824.3,1418.48 1826.57,1418.48 1828.84,1418.48 1831.11,1418.48 
+  1833.38,1418.48 1835.64,1418.48 1837.91,1418.48 1840.18,1418.48 1842.45,1418.48 1844.72,1418.48 1846.98,1418.48 1849.25,1418.48 1851.52,1418.48 1853.79,1418.48 
+  1856.06,1418.48 1858.32,1418.48 1860.59,1418.48 1862.86,1418.48 1865.13,1418.48 1867.4,1418.48 1869.67,1418.48 1871.93,1418.48 1874.2,1418.48 1876.47,1418.48 
+  1878.74,1418.48 1881.01,1418.48 1883.27,1418.48 1885.54,1418.48 1887.81,1418.48 1890.08,1418.48 1892.35,1418.48 1894.61,1418.48 1896.88,1418.48 1899.15,1418.48 
+  1901.42,1418.48 1903.69,1418.48 1905.95,1418.48 1908.22,1418.48 1910.49,1418.48 1912.76,1418.48 1915.03,1418.48 1917.29,1418.48 1919.56,1418.48 1921.83,1418.48 
+  1924.1,1418.48 1926.37,1418.48 1928.63,1418.48 1930.9,1418.48 1933.17,1418.48 1935.44,1418.48 1937.71,1418.48 1939.97,1418.48 1942.24,1418.48 1944.51,1418.48 
+  1946.78,1418.48 1949.05,1418.48 1951.31,1418.48 1953.58,1418.48 1955.85,1418.48 1958.12,1418.48 1960.39,1418.48 1962.65,1418.48 1964.92,1418.48 1967.19,1418.48 
+  1969.46,1418.48 1971.73,1418.48 1973.99,1418.48 1976.26,1418.48 1978.53,1418.48 1980.8,1418.48 1983.07,1418.48 1985.33,1418.48 1987.6,1418.48 1989.87,1418.48 
+  1992.14,1418.48 1994.41,1418.48 1996.67,1418.48 1998.94,1418.48 2001.21,1418.48 2003.48,1418.48 2005.75,1418.48 2008.02,1418.48 2010.28,1418.48 2012.55,1418.48 
+  2014.82,1418.48 2017.09,1418.48 2019.36,1418.48 2021.62,1418.48 2023.89,1418.48 2026.16,1418.48 2028.43,1418.48 2030.7,1418.48 2032.96,1418.48 2035.23,1418.48 
+  2037.5,1418.48 2039.77,1418.48 2042.04,1418.48 2044.3,1418.48 2046.57,1418.48 2048.84,1418.48 2051.11,1418.48 2053.38,1418.48 2055.64,1418.48 2057.91,1418.48 
+  2060.18,1418.48 2062.45,1418.48 2064.72,1418.48 2066.98,1418.48 2069.25,1418.48 2071.52,1418.48 2073.79,1418.48 2076.06,1418.48 2078.32,1418.48 2080.59,1418.48 
+  2082.86,1418.48 2085.13,1418.48 2087.4,1418.48 2089.66,1418.48 2091.93,1418.48 2094.2,1418.48 2096.47,1418.48 2098.74,1418.48 2101,1418.48 2103.27,1418.48 
+  2105.54,1418.48 2107.81,1418.48 2110.08,1418.48 2112.34,1418.48 2114.61,1418.48 2116.88,1418.48 2119.15,1418.48 2121.42,1418.48 2123.68,1418.48 2125.95,1418.48 
+  2128.22,1418.48 2130.49,1418.48 2132.76,1418.48 2135.02,1418.48 2137.29,1418.48 2139.56,1418.48 2141.83,1418.48 2144.1,1418.48 2146.37,1418.48 2148.63,1418.48 
+  2150.9,1418.48 2153.17,1418.48 2155.44,1418.48 2157.71,1418.48 2159.97,1418.48 2162.24,1418.48 2164.51,1418.48 2166.78,1418.48 2169.05,1418.48 2171.31,1418.48 
+  2173.58,1418.48 2175.85,1418.48 2178.12,1418.48 2180.39,1418.48 2182.65,1418.48 2184.92,1418.48 2187.19,1418.48 2189.46,1418.48 2191.73,1418.48 2193.99,1418.48 
+  2196.26,1418.48 2198.53,1418.48 2200.8,1418.48 2203.07,1418.48 2205.33,1418.48 2207.6,1418.48 2209.87,1418.48 2212.14,1418.48 2214.41,1418.48 2216.67,1418.48 
+  2218.94,1418.48 2221.21,1418.48 2223.48,1418.48 2225.75,1418.48 2228.01,1418.48 2230.28,1418.48 2232.55,1418.48 2234.82,1418.48 2237.09,1418.48 2239.35,1418.48 
+  2241.62,1418.48 2243.89,1418.48 2246.16,1418.48 2248.43,1418.48 2250.69,1418.48 2252.96,1418.48 2255.23,1418.48 2257.5,1418.48 2259.77,1418.48 2262.03,1418.48 
+  2264.3,1418.48 2266.57,1418.48 2268.84,1418.48 2271.11,1418.48 2273.37,1418.48 2275.64,1418.48 2277.91,1418.48 2280.18,1418.48 2282.45,1418.48 2284.71,1418.48 
+  2286.98,1418.48 2289.25,1418.48 2291.52,1418.48 2293.79,1418.48 2296.06,1418.48 2298.32,1418.48 2300.59,1418.48 2302.86,1418.48 2305.13,1418.48 2307.4,1418.48 
+  2309.66,1418.48 2311.93,1418.48 2314.2,1418.48 2316.47,1418.48 2318.74,1418.48 2321,1418.48 2323.27,1418.48 2325.54,1418.48 2327.81,1418.48 2330.08,1418.48 
+  2332.34,1418.48 2334.61,1418.48 2336.88,1418.48 2339.15,1418.48 2341.42,1418.48 2343.68,1418.48 2345.95,1418.48 2348.22,1418.48 2350.49,1418.48 2352.76,1418.48 
+  
+  "/>
+<polyline clip-path="url(#clip582)" style="stroke:#3da44d; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  86.9921,1418 89.2602,1417.99 91.5282,1417.98 93.7962,1417.97 96.0643,1417.96 98.3323,1417.95 100.6,1417.94 102.868,1417.93 105.136,1417.92 107.404,1417.91 
+  109.672,1417.9 111.94,1417.89 114.209,1417.88 116.477,1417.87 118.745,1417.86 121.013,1417.85 123.281,1417.84 125.549,1417.83 127.817,1417.82 130.085,1417.8 
+  132.353,1417.79 134.621,1417.78 136.889,1417.77 139.157,1417.76 141.425,1417.74 143.693,1417.73 145.961,1417.72 148.229,1417.7 150.497,1417.69 152.765,1417.68 
+  155.033,1417.66 157.301,1417.65 159.569,1417.64 161.837,1417.62 164.105,1417.61 166.373,1417.59 168.641,1417.58 170.909,1417.56 173.177,1417.55 175.445,1417.53 
+  177.713,1417.51 179.981,1417.5 182.249,1417.48 184.517,1417.46 186.786,1417.45 189.054,1417.43 191.322,1417.41 193.59,1417.39 195.858,1417.38 198.126,1417.36 
+  200.394,1417.34 202.662,1417.32 204.93,1417.3 207.198,1417.28 209.466,1417.26 211.734,1417.24 214.002,1417.22 216.27,1417.2 218.538,1417.17 220.806,1417.15 
+  223.074,1417.13 225.342,1417.11 227.61,1417.08 229.878,1417.06 232.146,1417.04 234.414,1417.01 236.682,1416.99 238.95,1416.96 241.218,1416.94 243.486,1416.91 
+  245.754,1416.89 248.022,1416.86 250.29,1416.83 252.558,1416.81 254.826,1416.78 257.095,1416.75 259.363,1416.72 261.631,1416.69 263.899,1416.66 266.167,1416.63 
+  268.435,1416.6 270.703,1416.57 272.971,1416.54 275.239,1416.51 277.507,1416.48 279.775,1416.44 282.043,1416.41 284.311,1416.37 286.579,1416.34 288.847,1416.3 
+  291.115,1416.27 293.383,1416.23 295.651,1416.2 297.919,1416.16 300.187,1416.12 302.455,1416.08 304.723,1416.04 306.991,1416 309.259,1415.96 311.527,1415.92 
+  313.795,1415.88 316.063,1415.84 318.331,1415.79 320.599,1415.75 322.867,1415.7 325.135,1415.66 327.403,1415.61 329.672,1415.56 331.94,1415.52 334.208,1415.47 
+  336.476,1415.42 338.744,1415.37 341.012,1415.32 343.28,1415.27 345.548,1415.21 347.816,1415.16 350.084,1415.11 352.352,1415.05 354.62,1415 356.888,1414.94 
+  359.156,1414.88 361.424,1414.82 363.692,1414.77 365.96,1414.7 368.228,1414.64 370.496,1414.58 372.764,1414.52 375.032,1414.45 377.3,1414.39 379.568,1414.32 
+  381.836,1414.26 384.104,1414.19 386.372,1414.12 388.64,1414.05 390.908,1413.98 393.176,1413.9 395.444,1413.83 397.712,1413.75 399.981,1413.68 402.249,1413.6 
+  404.517,1413.52 406.785,1413.44 409.053,1413.36 411.321,1413.28 413.589,1413.19 415.857,1413.11 418.125,1413.02 420.393,1412.94 422.661,1412.85 424.929,1412.76 
+  427.197,1412.66 429.465,1412.57 431.733,1412.48 434.001,1412.38 436.269,1412.28 438.537,1412.18 440.805,1412.08 443.073,1411.98 445.341,1411.88 447.609,1411.77 
+  449.877,1411.66 452.145,1411.56 454.413,1411.45 456.681,1411.33 458.949,1411.22 461.217,1411.1 463.485,1410.99 465.753,1410.87 468.021,1410.75 470.29,1410.62 
+  472.558,1410.5 474.826,1410.37 477.094,1410.24 479.362,1410.11 481.63,1409.98 483.898,1409.85 486.166,1409.71 488.434,1409.57 490.702,1409.43 492.97,1409.29 
+  495.238,1409.14 497.506,1409 499.774,1408.85 502.042,1408.7 504.31,1408.54 506.578,1408.39 508.846,1408.23 511.114,1408.07 513.382,1407.9 515.65,1407.74 
+  517.918,1407.57 520.186,1407.4 522.454,1407.22 524.722,1407.05 526.99,1406.87 529.258,1406.69 531.526,1406.5 533.794,1406.32 536.062,1406.13 538.33,1405.93 
+  540.598,1405.74 542.867,1405.54 545.135,1405.34 547.403,1405.14 549.671,1404.93 551.939,1404.72 554.207,1404.51 556.475,1404.29 558.743,1404.07 561.011,1403.85 
+  563.279,1403.62 565.547,1403.39 567.815,1403.16 570.083,1402.93 572.351,1402.69 574.619,1402.45 576.887,1402.2 579.155,1401.95 581.423,1401.7 583.691,1401.44 
+  585.959,1401.18 588.227,1400.92 590.495,1400.65 592.763,1400.38 595.031,1400.1 597.299,1399.83 599.567,1399.54 601.835,1399.26 604.103,1398.96 606.371,1398.67 
+  608.639,1398.37 610.907,1398.07 613.176,1397.76 615.444,1397.45 617.712,1397.13 619.98,1396.81 622.248,1396.48 624.516,1396.15 626.784,1395.82 629.052,1395.48 
+  631.32,1395.14 633.588,1394.79 635.856,1394.44 638.124,1394.08 640.392,1393.72 642.66,1393.35 644.928,1392.98 647.196,1392.6 649.464,1392.22 651.732,1391.84 
+  654,1391.45 656.268,1391.05 658.536,1390.65 660.804,1390.24 663.072,1389.83 665.34,1389.41 667.608,1388.99 669.876,1388.56 672.144,1388.13 674.412,1387.69 
+  676.68,1387.24 678.948,1386.79 681.216,1386.33 683.484,1385.87 685.753,1385.4 688.021,1384.92 690.289,1384.44 692.557,1383.95 694.825,1383.46 697.093,1382.96 
+  699.361,1382.46 701.629,1381.94 703.897,1381.43 706.165,1380.9 708.433,1380.37 710.701,1379.83 712.969,1379.29 715.237,1378.74 717.505,1378.19 719.773,1377.62 
+  722.041,1377.05 724.309,1376.48 726.577,1375.9 728.845,1375.31 731.113,1374.72 733.381,1374.12 735.649,1373.51 737.917,1372.89 740.185,1372.27 742.453,1371.64 
+  744.721,1371 746.989,1370.35 749.257,1369.7 751.525,1369.04 753.793,1368.37 756.062,1367.7 758.33,1367.02 760.598,1366.33 762.866,1365.63 765.134,1364.92 
+  767.402,1364.21 769.67,1363.49 771.938,1362.76 774.206,1362.03 776.474,1361.28 778.742,1360.53 781.01,1359.78 783.278,1359.01 785.546,1358.25 787.814,1357.47 
+  790.082,1356.69 792.35,1355.89 794.618,1355.09 796.886,1354.28 799.154,1353.46 801.422,1352.64 803.69,1351.8 805.958,1350.96 808.226,1350.1 810.494,1349.24 
+  812.762,1348.37 815.03,1347.49 817.298,1346.61 819.566,1345.71 821.834,1344.81 824.102,1343.89 826.37,1342.97 828.639,1342.05 830.907,1341.11 833.175,1340.17 
+  835.443,1339.21 837.711,1338.25 839.979,1337.29 842.247,1336.31 844.515,1335.34 846.783,1334.35 849.051,1333.36 851.319,1332.35 853.587,1331.34 855.855,1330.32 
+  858.123,1329.29 860.391,1328.24 862.659,1327.19 864.927,1326.13 867.195,1325.06 869.463,1323.98 871.731,1322.9 873.999,1321.8 876.267,1320.7 878.535,1319.59 
+  880.803,1318.47 883.071,1317.34 885.339,1316.2 887.607,1315.06 889.875,1313.91 892.143,1312.75 894.411,1311.6 896.679,1310.43 898.948,1309.26 901.216,1308.08 
+  903.484,1306.88 905.752,1305.68 908.02,1304.47 910.288,1303.24 912.556,1302.01 914.824,1300.77 917.092,1299.52 919.36,1298.25 921.628,1296.99 923.896,1295.71 
+  926.164,1294.42 928.432,1293.13 930.7,1291.83 932.968,1290.52 935.236,1289.2 937.504,1287.88 939.772,1286.55 942.04,1285.21 944.308,1283.89 946.576,1282.55 
+  948.844,1281.2 951.112,1279.85 953.38,1278.48 955.648,1277.1 957.916,1275.71 960.184,1274.31 962.452,1272.91 964.72,1271.49 966.988,1270.06 969.257,1268.63 
+  971.525,1267.19 973.793,1265.74 976.061,1264.28 978.329,1262.82 980.597,1261.35 982.865,1259.88 985.133,1258.4 987.401,1256.91 989.669,1255.44 991.937,1253.96 
+  994.205,1252.46 996.473,1250.96 998.741,1249.45 1001.01,1247.92 1003.28,1246.39 1005.55,1244.84 1007.81,1243.29 1010.08,1241.73 1012.35,1240.16 1014.62,1238.58 
+  1016.89,1236.99 1019.15,1235.4 1021.42,1233.8 1023.69,1232.19 1025.96,1230.58 1028.23,1228.97 1030.49,1227.35 1032.76,1225.73 1035.03,1224.12 1037.3,1222.5 
+  1039.57,1220.87 1041.83,1219.23 1044.1,1217.58 1046.37,1215.92 1048.64,1214.25 1050.91,1212.57 1053.17,1210.89 1055.44,1209.19 1057.71,1207.49 1059.98,1205.77 
+  1062.25,1204.06 1064.51,1202.33 1066.78,1200.6 1069.05,1198.87 1071.32,1197.13 1073.59,1195.38 1075.85,1193.64 1078.12,1191.92 1080.39,1190.18 1082.66,1188.44 
+  1084.93,1186.68 1087.19,1184.91 1089.46,1183.14 1091.73,1181.35 1094,1179.55 1096.27,1177.75 1098.53,1175.93 1100.8,1174.11 1103.07,1172.28 1105.34,1170.45 
+  1107.61,1168.61 1109.87,1166.76 1112.14,1164.91 1114.41,1163.05 1116.68,1161.2 1118.95,1159.34 1121.21,1157.51 1123.48,1155.67 1125.75,1153.81 1128.02,1151.95 
+  1130.29,1150.07 1132.55,1148.18 1134.82,1146.28 1137.09,1144.38 1139.36,1142.46 1141.63,1140.54 1143.89,1138.61 1146.16,1136.67 1148.43,1134.72 1150.7,1132.77 
+  1152.97,1130.82 1155.24,1128.86 1157.5,1126.9 1159.77,1124.93 1162.04,1122.98 1164.31,1121.04 1166.58,1119.1 1168.84,1117.14 1171.11,1115.17 1173.38,1113.19 
+  1175.65,1111.19 1177.92,1109.19 1180.18,1107.18 1182.45,1105.16 1184.72,1103.13 1186.99,1101.09 1189.26,1099.05 1191.52,1097 1193.79,1094.95 1196.06,1092.89 
+  1198.33,1090.82 1200.6,1088.76 1202.86,1086.69 1205.13,1084.63 1207.4,1082.6 1209.67,1080.56 1211.94,1078.5 1214.2,1076.43 1216.47,1074.35 1218.74,1072.26 
+  1221.01,1070.16 1223.28,1068.05 1225.54,1065.93 1227.81,1063.8 1230.08,1061.66 1232.35,1059.52 1234.62,1057.37 1236.88,1055.21 1239.15,1053.05 1241.42,1050.89 
+  1243.69,1048.72 1245.96,1046.55 1248.22,1044.39 1250.49,1042.27 1252.76,1040.13 1255.03,1037.98 1257.3,1035.82 1259.56,1033.64 1261.83,1031.46 1264.1,1029.26 
+  1266.37,1027.06 1268.64,1024.84 1270.9,1022.61 1273.17,1020.38 1275.44,1018.14 1277.71,1015.89 1279.98,1013.64 1282.24,1011.38 1284.51,1009.12 1286.78,1006.86 
+  1289.05,1004.59 1291.32,1002.33 1293.59,1000.09 1295.85,997.871 1298.12,995.635 1300.39,993.387 1302.66,991.125 1304.93,988.851 1307.19,986.566 1309.46,984.27 
+  1311.73,981.964 1314,979.648 1316.27,977.323 1318.53,974.991 1320.8,972.651 1323.07,970.306 1325.34,967.955 1327.61,965.6 1329.87,963.241 1332.14,960.881 
+  1334.41,958.52 1336.68,956.159 1338.95,953.848 1341.21,951.534 1343.48,949.207 1345.75,946.866 1348.02,944.512 1350.29,942.145 1352.55,939.767 1354.82,937.378 
+  1357.09,934.979 1359.36,932.57 1361.63,930.153 1363.89,927.727 1366.16,925.295 1368.43,922.857 1370.7,920.414 1372.97,917.967 1375.23,915.517 1377.5,913.066 
+  1379.77,910.614 1382.04,908.163 1384.31,905.765 1386.57,903.368 1388.84,900.957 1391.11,898.533 1393.38,896.095 1395.65,893.645 1397.91,891.183 1400.18,888.71 
+  1402.45,886.226 1404.72,883.733 1406.99,881.231 1409.25,878.722 1411.52,876.205 1413.79,873.683 1416.06,871.156 1418.33,868.626 1420.59,866.093 1422.86,863.559 
+  1425.13,861.025 1427.4,858.492 1429.67,856 1431.93,853.531 1434.2,851.047 1436.47,848.55 1438.74,846.039 1441.01,843.516 1443.28,840.981 1445.54,838.434 
+  1447.81,835.878 1450.08,833.311 1452.35,830.737 1454.62,828.154 1456.88,825.565 1459.15,822.971 1461.42,820.371 1463.69,817.769 1465.96,815.165 1468.22,812.559 
+  1470.49,809.954 1472.76,807.352 1475.03,804.77 1477.3,802.241 1479.56,799.697 1481.83,797.139 1484.1,794.568 1486.37,791.984 1488.64,789.389 1490.9,786.783 
+  1493.17,784.166 1495.44,781.541 1497.71,778.907 1499.98,776.266 1502.24,773.619 1504.51,770.966 1506.78,768.31 1509.05,765.651 1511.32,762.99 1513.58,760.33 
+  1515.85,757.671 1518.12,755.014 1520.39,752.366 1522.66,749.789 1524.92,747.198 1527.19,744.594 1529.46,741.977 1531.73,739.348 1534,736.708 1536.26,734.057 
+  1538.53,731.397 1540.8,728.728 1543.07,726.052 1545.34,723.37 1547.6,720.682 1549.87,717.989 1552.14,715.294 1554.41,712.598 1556.68,709.901 1558.94,707.205 
+  1561.21,704.511 1563.48,701.822 1565.75,699.149 1568.02,696.54 1570.28,693.918 1572.55,691.283 1574.82,688.636 1577.09,685.979 1579.36,683.311 1581.63,680.634 
+  1583.89,677.948 1586.16,675.255 1588.43,672.557 1590.7,669.853 1592.97,667.145 1595.23,664.435 1597.5,661.723 1599.77,659.011 1602.04,656.301 1604.31,653.594 
+  1606.57,650.892 1608.84,648.196 1611.11,645.551 1613.38,642.927 1615.65,640.291 1617.91,637.644 1620.18,634.986 1622.45,632.319 1624.72,629.644 1626.99,626.961 
+  1629.25,624.272 1631.52,621.577 1633.79,618.879 1636.06,616.177 1638.33,613.474 1640.59,610.771 1642.86,608.069 1645.13,605.37 1647.4,602.675 1649.67,599.986 
+  1651.93,597.305 1654.2,594.67 1656.47,592.061 1658.74,589.442 1661.01,586.813 1663.27,584.174 1665.54,581.528 1667.81,578.875 1670.08,576.216 1672.35,573.552 
+  1674.61,570.884 1676.88,568.214 1679.15,565.543 1681.42,562.872 1683.69,560.203 1685.95,557.537 1688.22,554.876 1690.49,552.221 1692.76,549.574 1695.03,546.938 
+  1697.29,544.374 1699.56,541.8 1701.83,539.217 1704.1,536.626 1706.37,534.028 1708.63,531.424 1710.9,528.815 1713.17,526.203 1715.44,523.588 1717.71,520.972 
+  1719.98,518.356 1722.24,515.741 1724.51,513.13 1726.78,510.523 1729.05,507.922 1731.32,505.33 1733.58,502.746 1735.85,500.178 1738.12,497.675 1740.39,495.163 
+  1742.66,492.645 1744.92,490.12 1747.19,487.589 1749.46,485.055 1751.73,482.518 1754,479.979 1756.26,477.439 1758.53,474.9 1760.8,472.363 1763.07,469.83 
+  1765.34,467.302 1767.6,464.781 1769.87,462.268 1772.14,459.765 1774.41,457.275 1776.68,454.835 1778.94,452.411 1781.21,449.981 1783.48,447.546 1785.75,445.106 
+  1788.02,442.664 1790.28,440.221 1792.55,437.776 1794.82,435.333 1797.09,432.892 1799.36,430.454 1801.62,428.021 1803.89,425.595 1806.16,423.177 1808.43,420.769 
+  1810.7,418.372 1812.96,415.989 1815.23,413.663 1817.5,411.342 1819.77,409.015 1822.04,406.686 1824.3,404.355 1826.57,402.022 1828.84,399.69 1831.11,397.359 
+  1833.38,395.031 1835.64,392.707 1837.91,390.389 1840.18,388.078 1842.45,385.775 1844.72,383.483 1846.98,381.203 1849.25,378.937 1851.52,376.716 1853.79,374.514 
+  1856.06,372.309 1858.32,370.102 1860.59,367.894 1862.86,365.686 1865.13,363.48 1867.4,361.277 1869.67,359.077 1871.93,356.883 1874.2,354.696 1876.47,352.517 
+  1878.74,350.348 1881.01,348.191 1883.27,346.047 1885.54,343.918 1887.81,341.843 1890.08,339.771 1892.35,337.698 1894.61,335.624 1896.88,333.551 1899.15,331.481 
+  1901.42,329.413 1903.69,327.35 1905.95,325.293 1908.22,323.243 1910.49,321.201 1912.76,319.169 1915.03,317.15 1917.29,315.143 1919.56,313.152 1921.83,311.206 
+  1924.1,309.274 1926.37,307.341 1928.63,305.408 1930.9,303.478 1933.17,301.551 1935.44,299.627 1937.71,297.709 1939.97,295.798 1942.24,293.894 1944.51,292 
+  1946.78,290.117 1949.05,288.247 1951.31,286.39 1953.58,284.549 1955.85,282.76 1958.12,280.971 1960.39,279.183 1962.65,277.397 1964.92,275.615 1967.19,273.836 
+  1969.46,272.063 1971.73,270.296 1973.99,268.538 1976.26,266.788 1978.53,265.049 1980.8,263.322 1983.07,261.609 1985.33,259.911 1987.6,258.255 1989.87,256.611 
+  1992.14,254.968 1994.41,253.328 1996.67,251.692 1998.94,250.061 2001.21,248.435 2003.48,246.816 2005.75,245.205 2008.02,243.604 2010.28,242.013 2012.55,240.434 
+  2014.82,238.869 2017.09,237.319 2019.36,235.813 2021.62,234.313 2023.89,232.815 2026.16,231.321 2028.43,229.83 2030.7,228.346 2032.96,226.867 2035.23,225.396 
+  2037.5,223.934 2039.77,222.481 2042.04,221.04 2044.3,219.611 2046.57,218.196 2048.84,216.81 2051.11,215.449 2053.38,214.09 2055.64,212.734 2057.91,211.382 
+  2060.18,210.036 2062.45,208.696 2064.72,207.363 2066.98,206.038 2069.25,204.722 2071.52,203.418 2073.79,202.124 2076.06,200.844 2078.32,199.589 2080.59,198.361 
+  2082.86,197.136 2085.13,195.914 2087.4,194.696 2089.66,193.484 2091.93,192.278 2094.2,191.079 2096.47,189.888 2098.74,188.706 2101,187.534 2103.27,186.374 
+  2105.54,185.226 2107.81,184.108 2110.08,183.007 2112.34,181.909 2114.61,180.815 2116.88,179.725 2119.15,178.641 2121.42,177.564 2123.68,176.493 2125.95,175.43 
+  2128.22,174.377 2130.49,173.333 2132.76,172.3 2135.02,171.282 2137.29,170.299 2139.56,169.318 2141.83,168.34 2144.1,167.367 2146.37,166.399 2148.63,165.436 
+  2150.9,164.48 2153.17,163.531 2155.44,162.59 2157.71,161.658 2159.97,160.736 2162.24,159.825 2164.51,158.946 2166.78,158.075 2169.05,157.206 2171.31,156.342 
+  2173.58,155.482 2175.85,154.627 2178.12,153.778 2180.39,152.935 2182.65,152.1 2184.92,151.273 2187.19,150.456 2189.46,149.648 2191.73,148.871 2193.99,148.1 
+  2196.26,147.333 2198.53,146.569 2200.8,145.809 2203.07,145.054 2205.33,144.305 2207.6,143.561 2209.87,142.825 2212.14,142.096 2214.41,141.375 2216.67,140.666 
+  2218.94,139.985 2221.21,139.307 2223.48,138.632 2225.75,137.961 2228.01,137.293 2230.28,136.63 2232.55,135.972 2234.82,135.319 2237.09,134.673 2239.35,134.034 
+  2241.62,133.403 2243.89,132.792 2246.16,132.196 2248.43,131.602 2250.69,131.011 2252.96,130.423 2255.23,129.839 2257.5,129.26 2259.77,128.685 2262.03,128.115 
+  2264.3,127.551 2266.57,126.994 2268.84,126.447 2271.11,125.925 2273.37,125.405 2275.64,124.887 2277.91,124.372 2280.18,123.86 2282.45,123.352 2284.71,122.848 
+  2286.98,122.348 2289.25,121.853 2291.52,121.364 2293.79,120.88 2296.06,120.421 2298.32,119.968 2300.59,119.516 2302.86,119.067 2305.13,118.62 2307.4,118.176 
+  2309.66,117.735 2311.93,117.299 2314.2,116.866 2316.47,116.438 2318.74,116.015 2321,115.613 2323.27,115.219 2325.54,114.826 2327.81,114.435 2330.08,114.047 
+  2332.34,113.66 2334.61,113.277 2336.88,112.897 2339.15,112.52 2341.42,112.147 2343.68,111.778 2345.95,111.422 2348.22,111.072 2350.49,110.726 2352.76,110.382 
+  
+  "/>
+<path clip-path="url(#clip580)" d="
+M1942.97 301.643 L2277.23 301.643 L2277.23 94.2832 L1942.97 94.2832  Z
+  " fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<polyline clip-path="url(#clip580)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1942.97,301.643 2277.23,301.643 2277.23,94.2832 1942.97,94.2832 1942.97,301.643 
+  "/>
+<polyline clip-path="url(#clip580)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1968.14,146.123 2119.2,146.123 
+  "/>
+<path clip-path="url(#clip580)" d="M2144.37 153.172 L2144.37 137.477 L2148.63 137.477 L2148.63 153.01 Q2148.63 156.69 2150.07 158.542 Q2151.5 160.371 2154.37 160.371 Q2157.82 160.371 2159.81 158.172 Q2161.82 155.973 2161.82 152.176 L2161.82 137.477 L2166.08 137.477 L2166.08 163.403 L2161.82 163.403 L2161.82 159.422 Q2160.27 161.783 2158.21 162.94 Q2156.18 164.074 2153.47 164.074 Q2149 164.074 2146.69 161.297 Q2144.37 158.519 2144.37 153.172 M2155.09 136.852 L2155.09 136.852 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2176.27 159.468 L2183.91 159.468 L2183.91 133.102 L2175.6 134.769 L2175.6 130.51 L2183.86 128.843 L2188.54 128.843 L2188.54 159.468 L2196.18 159.468 L2196.18 163.403 L2176.27 163.403 L2176.27 159.468 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2215.25 127.431 Q2212.15 132.755 2210.64 137.964 Q2209.14 143.172 2209.14 148.519 Q2209.14 153.866 2210.64 159.121 Q2212.17 164.352 2215.25 169.653 L2211.55 169.653 Q2208.07 164.213 2206.34 158.959 Q2204.62 153.704 2204.62 148.519 Q2204.62 143.357 2206.34 138.126 Q2208.05 132.894 2211.55 127.431 L2215.25 127.431 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2227.73 130.116 L2227.73 137.477 L2236.5 137.477 L2236.5 140.788 L2227.73 140.788 L2227.73 154.862 Q2227.73 158.033 2228.58 158.936 Q2229.46 159.838 2232.12 159.838 L2236.5 159.838 L2236.5 163.403 L2232.12 163.403 Q2227.19 163.403 2225.32 161.574 Q2223.44 159.723 2223.44 154.862 L2223.44 140.788 L2220.32 140.788 L2220.32 137.477 L2223.44 137.477 L2223.44 130.116 L2227.73 130.116 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2241.43 127.431 L2245.13 127.431 Q2248.61 132.894 2250.32 138.126 Q2252.06 143.357 2252.06 148.519 Q2252.06 153.704 2250.32 158.959 Q2248.61 164.213 2245.13 169.653 L2241.43 169.653 Q2244.51 164.352 2246.01 159.121 Q2247.54 153.866 2247.54 148.519 Q2247.54 143.172 2246.01 137.964 Q2244.51 132.755 2241.43 127.431 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><polyline clip-path="url(#clip580)" style="stroke:#e26f46; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1968.14,197.963 2119.2,197.963 
+  "/>
+<path clip-path="url(#clip580)" d="M2144.37 205.012 L2144.37 189.317 L2148.63 189.317 L2148.63 204.85 Q2148.63 208.53 2150.07 210.382 Q2151.5 212.211 2154.37 212.211 Q2157.82 212.211 2159.81 210.012 Q2161.82 207.813 2161.82 204.016 L2161.82 189.317 L2166.08 189.317 L2166.08 215.243 L2161.82 215.243 L2161.82 211.262 Q2160.27 213.623 2158.21 214.78 Q2156.18 215.914 2153.47 215.914 Q2149 215.914 2146.69 213.137 Q2144.37 210.359 2144.37 205.012 M2155.09 188.692 L2155.09 188.692 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2179.49 211.308 L2195.81 211.308 L2195.81 215.243 L2173.86 215.243 L2173.86 211.308 Q2176.52 208.553 2181.11 203.924 Q2185.71 199.271 2186.89 197.928 Q2189.14 195.405 2190.02 193.669 Q2190.92 191.91 2190.92 190.22 Q2190.92 187.466 2188.98 185.729 Q2187.06 183.993 2183.95 183.993 Q2181.75 183.993 2179.3 184.757 Q2176.87 185.521 2174.09 187.072 L2174.09 182.35 Q2176.92 181.216 2179.37 180.637 Q2181.82 180.058 2183.86 180.058 Q2189.23 180.058 2192.43 182.743 Q2195.62 185.429 2195.62 189.919 Q2195.62 192.049 2194.81 193.97 Q2194.02 195.868 2191.92 198.461 Q2191.34 199.132 2188.24 202.35 Q2185.13 205.544 2179.49 211.308 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2215.25 179.271 Q2212.15 184.595 2210.64 189.804 Q2209.14 195.012 2209.14 200.359 Q2209.14 205.706 2210.64 210.961 Q2212.17 216.192 2215.25 221.493 L2211.55 221.493 Q2208.07 216.053 2206.34 210.799 Q2204.62 205.544 2204.62 200.359 Q2204.62 195.197 2206.34 189.966 Q2208.05 184.734 2211.55 179.271 L2215.25 179.271 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2227.73 181.956 L2227.73 189.317 L2236.5 189.317 L2236.5 192.628 L2227.73 192.628 L2227.73 206.702 Q2227.73 209.873 2228.58 210.776 Q2229.46 211.678 2232.12 211.678 L2236.5 211.678 L2236.5 215.243 L2232.12 215.243 Q2227.19 215.243 2225.32 213.414 Q2223.44 211.563 2223.44 206.702 L2223.44 192.628 L2220.32 192.628 L2220.32 189.317 L2223.44 189.317 L2223.44 181.956 L2227.73 181.956 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2241.43 179.271 L2245.13 179.271 Q2248.61 184.734 2250.32 189.966 Q2252.06 195.197 2252.06 200.359 Q2252.06 205.544 2250.32 210.799 Q2248.61 216.053 2245.13 221.493 L2241.43 221.493 Q2244.51 216.192 2246.01 210.961 Q2247.54 205.706 2247.54 200.359 Q2247.54 195.012 2246.01 189.804 Q2244.51 184.595 2241.43 179.271 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><polyline clip-path="url(#clip580)" style="stroke:#3da44d; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="
+  1968.14,249.803 2119.2,249.803 
+  "/>
+<path clip-path="url(#clip580)" d="M2144.37 256.852 L2144.37 241.157 L2148.63 241.157 L2148.63 256.69 Q2148.63 260.37 2150.07 262.222 Q2151.5 264.051 2154.37 264.051 Q2157.82 264.051 2159.81 261.852 Q2161.82 259.653 2161.82 255.856 L2161.82 241.157 L2166.08 241.157 L2166.08 267.083 L2161.82 267.083 L2161.82 263.102 Q2160.27 265.463 2158.21 266.62 Q2156.18 267.754 2153.47 267.754 Q2149 267.754 2146.69 264.977 Q2144.37 262.199 2144.37 256.852 M2155.09 240.532 L2155.09 240.532 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2189.63 248.449 Q2192.98 249.167 2194.86 251.435 Q2196.75 253.704 2196.75 257.037 Q2196.75 262.153 2193.24 264.954 Q2189.72 267.754 2183.24 267.754 Q2181.06 267.754 2178.75 267.315 Q2176.45 266.898 2174 266.042 L2174 261.528 Q2175.94 262.662 2178.26 263.241 Q2180.57 263.819 2183.1 263.819 Q2187.5 263.819 2189.79 262.083 Q2192.1 260.347 2192.1 257.037 Q2192.1 253.981 2189.95 252.268 Q2187.82 250.532 2184 250.532 L2179.97 250.532 L2179.97 246.69 L2184.19 246.69 Q2187.63 246.69 2189.46 245.324 Q2191.29 243.935 2191.29 241.343 Q2191.29 238.681 2189.39 237.269 Q2187.52 235.833 2184 235.833 Q2182.08 235.833 2179.88 236.25 Q2177.68 236.667 2175.04 237.546 L2175.04 233.38 Q2177.7 232.639 2180.02 232.269 Q2182.36 231.898 2184.42 231.898 Q2189.74 231.898 2192.84 234.329 Q2195.94 236.736 2195.94 240.856 Q2195.94 243.727 2194.3 245.718 Q2192.66 247.685 2189.63 248.449 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2215.25 231.111 Q2212.15 236.435 2210.64 241.644 Q2209.14 246.852 2209.14 252.199 Q2209.14 257.546 2210.64 262.801 Q2212.17 268.032 2215.25 273.333 L2211.55 273.333 Q2208.07 267.893 2206.34 262.639 Q2204.62 257.384 2204.62 252.199 Q2204.62 247.037 2206.34 241.806 Q2208.05 236.574 2211.55 231.111 L2215.25 231.111 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2227.73 233.796 L2227.73 241.157 L2236.5 241.157 L2236.5 244.468 L2227.73 244.468 L2227.73 258.542 Q2227.73 261.713 2228.58 262.616 Q2229.46 263.518 2232.12 263.518 L2236.5 263.518 L2236.5 267.083 L2232.12 267.083 Q2227.19 267.083 2225.32 265.254 Q2223.44 263.403 2223.44 258.542 L2223.44 244.468 L2220.32 244.468 L2220.32 241.157 L2223.44 241.157 L2223.44 233.796 L2227.73 233.796 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /><path clip-path="url(#clip580)" d="M2241.43 231.111 L2245.13 231.111 Q2248.61 236.574 2250.32 241.806 Q2252.06 247.037 2252.06 252.199 Q2252.06 257.384 2250.32 262.639 Q2248.61 267.893 2245.13 273.333 L2241.43 273.333 Q2244.51 268.032 2246.01 262.801 Q2247.54 257.546 2247.54 252.199 Q2247.54 246.852 2246.01 241.644 Q2244.51 236.435 2241.43 231.111 Z" fill="#000000" fill-rule="evenodd" fill-opacity="1" /></svg>
+<pre><code class="language-julia hljs">using BenchmarkTools
+@btime solve(prob);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  155.001 μs (1074 allocations: 89.72 KiB)</code></pre><h3 id="Choosing-a-Good-Solver"><a class="docs-heading-anchor" href="#Choosing-a-Good-Solver">Choosing a Good Solver</a><a id="Choosing-a-Good-Solver-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-a-Good-Solver" title="Permalink"></a></h3><p>Choosing a good solver is required for getting top notch speed. General recommendations can be found on the solver page (for example, the <a href="../../solvers/ode_solve/#ode_solve">ODE Solver Recommendations</a>). The current recommendations can be simplified to a Rosenbrock method (<code>Rosenbrock23</code> or <code>Rodas5</code>) for smaller (&lt;50 ODEs) problems, ESDIRK methods for slightly larger (<code>TRBDF2</code> or <code>KenCarp4</code> for &lt;2000 ODEs), and <code>QNDF</code> for even larger problems. <code>lsoda</code> from <a href="https://github.com/rveltz/LSODA.jl">LSODA.jl</a> is sometimes worth a try for the medium sized category.</p><p>More details on the solver to choose can be found by benchmarking. See the <a href="https://docs.sciml.ai/SciMLBenchmarksOutput/stable/">SciMLBenchmarks</a> to compare many solvers on many problems.</p><p>From this, we try the recommendation of <code>Rosenbrock23()</code> for stiff ODEs at default tolerances:</p><pre><code class="language-julia hljs">@btime solve(prob,Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  74.701 μs (438 allocations: 38.59 KiB)</code></pre><h3 id="Declaring-Jacobian-Functions"><a class="docs-heading-anchor" href="#Declaring-Jacobian-Functions">Declaring Jacobian Functions</a><a id="Declaring-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Declaring-Jacobian-Functions" title="Permalink"></a></h3><p>In order to reduce the Jacobian construction cost, one can describe a Jacobian function by using the <code>jac</code> argument for the <code>ODEFunction</code>. First we have to derive the Jacobian <span>$\frac{df_i}{du_j}$</span> which is <code>J[i,j]</code>. From this we get:</p><pre><code class="language-julia hljs">function rober_jac!(J,u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
   J[1,1] = k₁ * -1
@@ -140,31 +496,48 @@ julia&gt; @btime solve(prob)
   nothing
 end
 f! = ODEFunction(rober!, jac=rober_jac!)
-prob_jac = ODEProblem(f!,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))</code></pre><pre><code class="language-julia-repl hljs">julia&gt; @btime solve(prob_jac,Rosenbrock23())
-57.400 μs (978 allocations: 82.58 KiB)</code></pre><h3 id="Automatic-Derivation-of-Jacobian-Functions"><a class="docs-heading-anchor" href="#Automatic-Derivation-of-Jacobian-Functions">Automatic Derivation of Jacobian Functions</a><a id="Automatic-Derivation-of-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Automatic-Derivation-of-Jacobian-Functions" title="Permalink"></a></h3><p>But that was hard! If you want to take the symbolic Jacobian of numerical code, we can make use of <a href="https://github.com/SciML/ModelingToolkit.jl">ModelingToolkit.jl</a> to symbolic-ify the numerical code and do the symbolic calculation and return the Julia code for this.</p><pre><code class="language-julia hljs">using ModelingToolkit
-de = modelingtoolkitize(prob)</code></pre><p>We can tell it to compute the Jacobian if we want to see the code:</p><pre><code class="language-julia hljs">julia&gt; ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
-:(function (ˍ₋out, ˍ₋arg1, ˍ₋arg2, t)
-      #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:303 =#
-      #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:304 =#
-      let var&quot;x₁(t)&quot; = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[1]), var&quot;x₂(t)&quot; = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[2]), var&quot;x₃(t)&quot; = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg1[3]), α₁ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[1]), α₂ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[2]), α₃ = #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:190 =# @inbounds(ˍ₋arg2[3])
-          #= C:\Users\accou\.julia\dev\Symbolics\src\build_function.jl:378 =#
-          #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:350 =# @inbounds begin
-                  #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:346 =#
-                  ˍ₋out[1] = (*)(-1, α₁)
-                  ˍ₋out[2] = α₁
-                  ˍ₋out[3] = 0
-                  ˍ₋out[4] = (*)(α₃, var&quot;x₃(t)&quot;)
-                  ˍ₋out[5] = (+)((*)((*)(-2, α₂), var&quot;x₂(t)&quot;), (*)((*)(-1, α₃), var&quot;x₃(t)&quot;))
-                  ˍ₋out[6] = (*)((*)(2, α₂), var&quot;x₂(t)&quot;)
-                  ˍ₋out[7] = (*)(α₃, var&quot;x₂(t)&quot;)
-                  ˍ₋out[8] = (*)((*)(-1, α₃), var&quot;x₂(t)&quot;)
-                  ˍ₋out[9] = 0
-                  #= C:\Users\accou\.julia\packages\SymbolicUtils\0KTj4\src\code.jl:348 =#
-                  nothing
+prob_jac = ODEProblem(f!,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Vector{Float64} and tType Float64. In-place: true
+timespan: (0.0, 100000.0)
+u0: 3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0</code></pre><pre><code class="language-julia hljs">@btime solve(prob_jac,Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  65.000 μs (355 allocations: 32.45 KiB)</code></pre><h3 id="Automatic-Derivation-of-Jacobian-Functions"><a class="docs-heading-anchor" href="#Automatic-Derivation-of-Jacobian-Functions">Automatic Derivation of Jacobian Functions</a><a id="Automatic-Derivation-of-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Automatic-Derivation-of-Jacobian-Functions" title="Permalink"></a></h3><p>But that was hard! If you want to take the symbolic Jacobian of numerical code, we can make use of <a href="https://github.com/SciML/ModelingToolkit.jl">ModelingToolkit.jl</a> to symbolic-ify the numerical code and do the symbolic calculation and return the Julia code for this.</p><pre><code class="language-julia hljs">using ModelingToolkit
+de = modelingtoolkitize(prob)</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} x_1\left( t \right)}{\mathrm{d}t} =&amp;  - \alpha_1 x_1\left( t \right) + \alpha_3 x_2\left( t \right) x_3\left( t \right) \\
+\frac{\mathrm{d} x_2\left( t \right)}{\mathrm{d}t} =&amp; \alpha_1 x_1\left( t \right) - \left( x_2\left( t \right) \right)^{2} \alpha_2 - \alpha_3 x_2\left( t \right) x_3\left( t \right) \\
+\frac{\mathrm{d} x_3\left( t \right)}{\mathrm{d}t} =&amp; \left( x_2\left( t \right) \right)^{2} \alpha_2
+\end{align}
+ \]</p><p>We can tell it to compute the Jacobian if we want to see the code:</p><pre><code class="language-julia hljs">ModelingToolkit.generate_jacobian(de)[2] # Second is in-place</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">:(function (ˍ₋out, ˍ₋arg1, ˍ₋arg2, t)
+      #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:349 =#
+      #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:350 =#
+      #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:351 =#
+      begin
+          begin
+              begin
+                  #= /home/runner/.julia/packages/Symbolics/FGTCH/src/build_function.jl:519 =#
+                  #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:398 =# @inbounds begin
+                          #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:394 =#
+                          ˍ₋out[1] = (*)(-1, ˍ₋arg2[1])
+                          ˍ₋out[2] = ˍ₋arg2[1]
+                          ˍ₋out[3] = 0
+                          ˍ₋out[4] = (*)(ˍ₋arg2[3], (getindex)(ˍ₋arg1, 3))
+                          ˍ₋out[5] = (+)((*)((*)(-1, ˍ₋arg2[3]), (getindex)(ˍ₋arg1, 3)), (*)((*)(-2, ˍ₋arg2[2]), (getindex)(ˍ₋arg1, 2)))
+                          ˍ₋out[6] = (*)((*)(2, ˍ₋arg2[2]), (getindex)(ˍ₋arg1, 2))
+                          ˍ₋out[7] = (*)(ˍ₋arg2[3], (getindex)(ˍ₋arg1, 2))
+                          ˍ₋out[8] = (*)((*)(-1, ˍ₋arg2[3]), (getindex)(ˍ₋arg1, 2))
+                          ˍ₋out[9] = 0
+                          #= /home/runner/.julia/packages/SymbolicUtils/qulQp/src/code.jl:396 =#
+                          nothing
+                      end
               end
+          end
       end
-  end)</code></pre><p>Now let&#39;s use that to give the analytical solution Jacobian:</p><pre><code class="language-julia hljs">prob_jac2 = ODEProblem(de,[],(0.0,1e5),jac=true)</code></pre><pre><code class="language-julia-repl hljs">julia&gt; @btime solve(prob_jac2)
-122.600 μs (1425 allocations: 99.34 KiB)</code></pre><p>See the <a href="https://mtk.sciml.ai/dev/">ModelingToolkit.jl documentation</a> for more details.</p><h3 id="Accelerating-Small-ODE-Solves-with-Static-Arrays"><a class="docs-heading-anchor" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays">Accelerating Small ODE Solves with Static Arrays</a><a id="Accelerating-Small-ODE-Solves-with-Static-Arrays-1"></a><a class="docs-heading-anchor-permalink" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays" title="Permalink"></a></h3><p>If the ODE is sufficiently small (&lt;20 ODEs or so), using <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a> for the state variables can greatly enhance the performance. This is done by making <code>u0</code> a <code>StaticArray</code> and writing an out-of-place non-mutating dispatch for static arrays, for the ROBER problem, this looks like:</p><pre><code class="language-julia hljs">using DifferentialEquations, StaticArrays
+  end)</code></pre><p>Now let&#39;s use that to give the analytical solution Jacobian:</p><pre><code class="language-julia hljs">prob_jac2 = ODEProblem(de,[],(0.0,1e5),jac=true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Vector{Float64} and tType Float64. In-place: true
+timespan: (0.0, 100000.0)
+u0: 3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0</code></pre><pre><code class="language-julia hljs">@btime solve(prob_jac2);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  111.401 μs (860 allocations: 61.80 KiB)</code></pre><p>See the <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl documentation</a> for more details.</p><h3 id="Accelerating-Small-ODE-Solves-with-Static-Arrays"><a class="docs-heading-anchor" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays">Accelerating Small ODE Solves with Static Arrays</a><a id="Accelerating-Small-ODE-Solves-with-Static-Arrays-1"></a><a class="docs-heading-anchor-permalink" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays" title="Permalink"></a></h3><p>If the ODE is sufficiently small (&lt;20 ODEs or so), using <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a> for the state variables can greatly enhance the performance. This is done by making <code>u0</code> a <code>StaticArray</code> and writing an out-of-place non-mutating dispatch for static arrays, for the ROBER problem, this looks like:</p><pre><code class="language-julia hljs">using StaticArrays
 function rober_static(u,p,t)
   y₁,y₂,y₃ = u
   k₁,k₂,k₃ = p
@@ -174,11 +547,53 @@ function rober_static(u,p,t)
   SA[du1,du2,du3]
 end
 prob = ODEProblem(rober_static,SA[1.0,0.0,0.0],(0.0,1e5),SA[0.04,3e7,1e4])
-sol = solve(prob,Rosenbrock23())</code></pre><p>If we benchmark this we see a really fast solution with really low allocation counts:</p><pre><code class="language-julia hljs">@btime sol = solve(prob,Rosenbrock23())
-# 12.100 μs (87 allocations: 18.53 KiB)</code></pre><p>This version is thus very amenable to multithreading and other forms of parallelism.</p><h2 id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization"><a class="docs-heading-anchor" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization">Example Accelerating Linear Algebra PDE Semi-Discretization</a><a id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization" title="Permalink"></a></h2><p>In this tutorial we will optimize the right-hand side definition of a PDE semi-discretization.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>We highly recommend looking at the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for details on customizing DifferentialEquations.jl for more efficient large-scale stiff ODE solving. This section will only focus on the user-side code.</p></div></div><p>Let&#39;s optimize the solution of a Reaction-Diffusion PDE&#39;s discretization. In its discretized form, this is the ODE:</p><p class="math-container">\[\begin{align}
+sol = solve(prob,Rosenbrock23())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">retcode: Success
+Interpolation: specialized 2nd order &quot;free&quot; stiffness-aware interpolation
+t: 61-element Vector{Float64}:
+      0.0
+      3.196206628740808e-5
+      0.00014400709336278452
+      0.00025605212043816096
+      0.00048593871402339607
+      0.0007179482102678373
+      0.0010819240251828343
+      0.0014801655107859655
+      0.0020679567717440095
+      0.002843584518457066
+      ⋮
+  25371.93159838571
+  30784.11718374498
+  37217.42390396605
+  44850.61094811346
+  53893.688830057334
+  64593.73530179436
+  77241.71691097679
+  92180.81843146283
+ 100000.0
+u: 61-element Vector{StaticArraysCore.SVector{3, Float64}}:
+ [1.0, 0.0, 0.0]
+ [0.9999987215181657, 1.2780900152625978e-6, 3.9181897521319503e-10]
+ [0.9999942397329006, 5.7185104612947566e-6, 4.175663804739006e-8]
+ [0.9999897579688383, 9.992106612572491e-6, 2.49924549040571e-7]
+ [0.9999805626683271, 1.7833623941038088e-5, 1.6037077316934769e-6]
+ [0.9999712826607852, 2.403488562731424e-5, 4.682453587410618e-6]
+ [0.9999567250114038, 3.0390689334989113e-5, 1.2884299261094982e-5]
+ [0.9999407986095145, 3.388427339038224e-5, 2.531711709494679e-5]
+ [0.9999172960310598, 3.583508669306405e-5, 4.686888224684217e-5]
+ [0.9998862913763157, 3.6412401619257426e-5, 7.729622206475401e-5]
+ ⋮
+ [0.05563508171413299, 2.3546322394505473e-7, 0.944364682822643]
+ [0.04792535215921006, 2.0121496539471113e-7, 0.9520744466258242]
+ [0.04123342367542562, 1.7192789116847065e-7, 0.9587664043966825]
+ [0.03543700020207697, 1.4688362762022167e-7, 0.9645628529142939]
+ [0.03042537309965341, 1.2546809864160579e-7, 0.9695745014322468]
+ [0.026099133126498936, 1.0715608821694989e-7, 0.9739007597174127]
+ [0.022369692367946295, 9.149845157822577e-8, 0.977630216133602]
+ [0.019158563494465552, 7.811096455346327e-8, 0.9808413583945704]
+ [0.017827893845894678, 7.258919980139008e-8, 0.982172033564906]</code></pre><p>If we benchmark this we see a really fast solution with really low allocation counts:</p><pre><code class="language-julia hljs">@btime sol = solve(prob,Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  21.200 μs (87 allocations: 18.53 KiB)</code></pre><p>This version is thus very amenable to multithreading and other forms of parallelism.</p><h2 id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization"><a class="docs-heading-anchor" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization">Example Accelerating Linear Algebra PDE Semi-Discretization</a><a id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization" title="Permalink"></a></h2><p>In this tutorial we will optimize the right-hand side definition of a PDE semi-discretization.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>We highly recommend looking at the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for details on customizing DifferentialEquations.jl for more efficient large-scale stiff ODE solving. This section will only focus on the user-side code.</p></div></div><p>Let&#39;s optimize the solution of a Reaction-Diffusion PDE&#39;s discretization. In its discretized form, this is the ODE:</p><p class="math-container">\[\begin{align}
 du &amp;= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - \alpha u\\
 dv &amp;= D_2 (A_y v + v A_x) + a u^2 + \beta v
-\end{align}\]</p><p>where <span>$u$</span>, <span>$v$</span>, and <span>$A$</span> are matrices. Here, we will use the simplified version where <span>$A$</span> is the tridiagonal stencil <span>$[1,-2,1]$</span>, i.e. it&#39;s the 2D discretization of the LaPlacian. The native code would be something along the lines of:</p><pre><code class="language-julia hljs">using DifferentialEquations, LinearAlgebra
+\end{align}\]</p><p>where <span>$u$</span>, <span>$v$</span>, and <span>$A$</span> are matrices. Here, we will use the simplified version where <span>$A$</span> is the tridiagonal stencil <span>$[1,-2,1]$</span>, i.e. it&#39;s the 2D discretization of the LaPlacian. The native code would be something along the lines of:</p><pre><code class="language-julia hljs">using DifferentialEquations, LinearAlgebra, BenchmarkTools
 # Generate the constants
 p = (1.0,1.0,1.0,10.0,0.001,100.0) # a,α,ubar,β,D1,D2
 N = 100
@@ -206,22 +621,60 @@ r0 = zeros(100,100,2)
 r0[:,:,1] .= uss.+0.1.*rand.()
 r0[:,:,2] .= vss
 
-prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)</code></pre><p>In this version we have encoded our initial condition to be a 3-dimensional array, with <code>u[:,:,1]</code> being the <code>A</code> part and <code>u[:,:,2]</code> being the <code>B</code> part.</p><pre><code class="language-julia hljs">@benchmark solve(prob,Tsit5())
+prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Array{Float64, 3} and tType Float64. In-place: true
+timespan: (0.0, 0.1)
+u0: 100×100×2 Array{Float64, 3}:
+[:, :, 1] =
+ 11.0621  11.0477  11.0149  11.0932  …  11.0496  11.0616  11.0521  11.0184
+ 11.0043  11.0973  11.0797  11.069      11.0156  11.0115  11.0226  11.0144
+ 11.0429  11.0475  11.0572  11.081      11.0497  11.0383  11.0726  11.0438
+ 11.0134  11.0538  11.072   11.0266     11.0195  11.0115  11.0961  11.0903
+ 11.0828  11.0296  11.0328  11.0507     11.0093  11.0598  11.0535  11.0599
+ 11.057   11.0204  11.0961  11.0626  …  11.0533  11.0959  11.0726  11.0463
+ 11.0085  11.0804  11.0649  11.0425     11.0313  11.027   11.0952  11.0384
+ 11.0729  11.0975  11.0054  11.0564     11.05    11.0253  11.002   11.046
+ 11.0003  11.0827  11.048   11.0728     11.0408  11.0984  11.098   11.0422
+ 11.0239  11.0851  11.0239  11.0276     11.0411  11.0016  11.0718  11.0615
+  ⋮                                  ⋱                             
+ 11.0038  11.0419  11.0801  11.0641     11.0088  11.0623  11.0028  11.0218
+ 11.0901  11.0246  11.0413  11.0288     11.01    11.0142  11.0927  11.0441
+ 11.0639  11.0064  11.0641  11.0964     11.0911  11.0506  11.0969  11.0106
+ 11.0989  11.0028  11.0839  11.0413     11.0925  11.0931  11.0336  11.0644
+ 11.0663  11.0097  11.0101  11.0818  …  11.0398  11.0024  11.0565  11.0094
+ 11.09    11.094   11.011   11.0905     11.0764  11.0928  11.0331  11.0357
+ 11.0148  11.0393  11.0015  11.0241     11.0107  11.0624  11.0396  11.0915
+ 11.0232  11.0487  11.0047  11.0148     11.0598  11.0042  11.0951  11.057
+ 11.0438  11.0559  11.0295  11.009      11.0602  11.0981  11.0279  11.08
 
-BenchmarkTools.Trial: 48 samples with 1 evaluation.
- Range (min … max):   96.001 ms … 130.443 ms  ┊ GC (min … max):  7.04% … 16.06%
- Time  (median):     104.225 ms               ┊ GC (median):    10.48%
- Time  (mean ± σ):   105.063 ms ±   6.812 ms  ┊ GC (mean ± σ):   9.42% ±  2.62%
-
-  ▃█▃   █▃█    ▃██   ▃█ ▃▃           ▃
-  ███▇▁▇███▇▇▁▇███▁▇▁██▇██▇▁▁▇▇▇▁▇▁▁▁█▁▁▁▇▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▇ ▁
-  96 ms            Histogram: frequency by time          130 ms &lt;
-
- Memory estimate: 186.83 MiB, allocs estimate: 7341.</code></pre><p>While this version isn&#39;t very efficient,</p><h4 id="We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!"><a class="docs-heading-anchor" href="#We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!">We recommend writing the &quot;high-level&quot; code first, and iteratively optimizing it!</a><a id="We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!-1"></a><a class="docs-heading-anchor-permalink" href="#We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!" title="Permalink"></a></h4><p>The first thing that we can do is get rid of the slicing allocations. The operation <code>r[:,:,1]</code> creates a temporary array instead of a &quot;view&quot;, i.e. a pointer to the already existing memory. To make it a view, add <code>@view</code>. Note that we have to be careful with views because they point to the same memory, and thus changing a view changes the original values:</p><pre><code class="language-julia hljs">A = rand(4)
+[:, :, 2] =
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+  ⋮                             ⋮    ⋱         ⋮                      
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1</code></pre><p>In this version we have encoded our initial condition to be a 3-dimensional array, with <code>u[:,:,1]</code> being the <code>A</code> part and <code>u[:,:,2]</code> being the <code>B</code> part.</p><pre><code class="language-julia hljs">@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  59.870 ms (7648 allocations: 194.47 MiB)</code></pre><p>While this version isn&#39;t very efficient,</p><h4 id="We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!"><a class="docs-heading-anchor" href="#We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!">We recommend writing the &quot;high-level&quot; code first, and iteratively optimizing it!</a><a id="We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!-1"></a><a class="docs-heading-anchor-permalink" href="#We-recommend-writing-the-&quot;high-level&quot;-code-first,-and-iteratively-optimizing-it!" title="Permalink"></a></h4><p>The first thing that we can do is get rid of the slicing allocations. The operation <code>r[:,:,1]</code> creates a temporary array instead of a &quot;view&quot;, i.e. a pointer to the already existing memory. To make it a view, add <code>@view</code>. Note that we have to be careful with views because they point to the same memory, and thus changing a view changes the original values:</p><pre><code class="language-julia hljs">A = rand(4)
 @show A
 B = @view A[1:3]
 B[2] = 2
-@show A</code></pre><p>Notice that changing <code>B</code> changed <code>A</code>. This is something to be careful of, but at the same time we want to use this since we want to modify the output <code>dr</code>. Additionally, the last statement is a purely element-wise operation, and thus we can make use of broadcast fusion there. Let&#39;s rewrite <code>basic_version!</code> to ***avoid slicing allocations*** and to ***use broadcast fusion***:</p><pre><code class="language-julia hljs">function gm2!(dr,r,p,t)
+@show A</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{Float64}:
+ 0.04721508599763091
+ 2.0
+ 0.8290149420144006
+ 0.3599025403932783</code></pre><p>Notice that changing <code>B</code> changed <code>A</code>. This is something to be careful of, but at the same time we want to use this since we want to modify the output <code>dr</code>. Additionally, the last statement is a purely element-wise operation, and thus we can make use of broadcast fusion there. Let&#39;s rewrite <code>basic_version!</code> to ***avoid slicing allocations*** and to ***use broadcast fusion***:</p><pre><code class="language-julia hljs">function gm2!(dr,r,p,t)
   a,α,ubar,β,D1,D2 = p
   u = @view r[:,:,1]
   v = @view r[:,:,2]
@@ -233,18 +686,7 @@ B[2] = 2
   @. dv = Dv + a.*u.*u - β*v
 end
 prob = ODEProblem(gm2!,r0,(0.0,0.1),p)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 58 samples with 1 evaluation.
- Range (min … max):  80.456 ms … 106.830 ms  ┊ GC (min … max): 0.00% … 10.74%
- Time  (median):     85.858 ms               ┊ GC (median):    6.34%
- Time  (mean ± σ):   86.916 ms ±   4.214 ms  ┊ GC (mean ± σ):  6.46% ±  1.75%
-
-              █ ▄
-  ▅▃▁▁▁▁▁▁▁▆▃▆█▃██▆▆▅▃▃▅▃█▆▁▃▁▃▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃ ▁
-  80.5 ms         Histogram: frequency by time          102 ms &lt;
-
- Memory estimate: 119.71 MiB, allocs estimate: 5871.</code></pre><p>Now, most of the allocations are taking place in <code>Du = D1*(Ay*u + u*Ax)</code> since those operations are vectorized and not mutating. We should instead replace the matrix multiplications with <code>mul!</code>. When doing so, we will need to have cache variables to write into. This looks like:</p><pre><code class="language-julia hljs">Ayu = zeros(N,N)
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  47.655 ms (6118 allocations: 124.61 MiB)</code></pre><p>Now, most of the allocations are taking place in <code>Du = D1*(Ay*u + u*Ax)</code> since those operations are vectorized and not mutating. We should instead replace the matrix multiplications with <code>mul!</code>. When doing so, we will need to have cache variables to write into. This looks like:</p><pre><code class="language-julia hljs">Ayu = zeros(N,N)
 uAx = zeros(N,N)
 Du = zeros(N,N)
 Ayv = zeros(N,N)
@@ -266,18 +708,7 @@ function gm3!(dr,r,p,t)
   @. dv = Dv + a*u*u - β*v
 end
 prob = ODEProblem(gm3!,r0,(0.0,0.1),p)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 71 samples with 1 evaluation.
- Range (min … max):  66.051 ms … 78.626 ms  ┊ GC (min … max): 0.00% … 6.51%
- Time  (median):     69.778 ms              ┊ GC (median):    0.00%
- Time  (mean ± σ):   70.563 ms ±  3.392 ms  ┊ GC (mean ± σ):  1.68% ± 2.94%
-
-     ▂▆█    ▂
-  ▄▁▄███▁▆▄▁█▁▁▆█▁▆▆▁▄▁▆▁▄▁▄▄▆▁▄▆▁▁▁▆▁▄▄▁▄█▆▄▁▆▄▆▁▆▁▆▆▁▁▁▁▄▁▄ ▁
-  66.1 ms         Histogram: frequency by time        77.1 ms &lt;
-
- Memory estimate: 29.98 MiB, allocs estimate: 4695.</code></pre><p>But our temporary variables are global variables. We need to either declare the caches as <code>const</code> or localize them. We can localize them by adding them to the parameters, <code>p</code>. It&#39;s easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.</p><pre><code class="language-julia hljs">p = (1.0,1.0,1.0,10.0,0.001,100.0,Ayu,uAx,Du,Ayv,vAx,Dv) # a,α,ubar,β,D1,D2
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  39.913 ms (4894 allocations: 31.21 MiB)</code></pre><p>But our temporary variables are global variables. We need to either declare the caches as <code>const</code> or localize them. We can localize them by adding them to the parameters, <code>p</code>. It&#39;s easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.</p><pre><code class="language-julia hljs">p = (1.0,1.0,1.0,10.0,0.001,100.0,Ayu,uAx,Du,Ayv,vAx,Dv) # a,α,ubar,β,D1,D2
 function gm4!(dr,r,p,t)
   a,α,ubar,β,D1,D2,Ayu,uAx,Du,Ayv,vAx,Dv = p
   u = @view r[:,:,1]
@@ -294,18 +725,7 @@ function gm4!(dr,r,p,t)
   @. dv = Dv + a*u*u - β*v
 end
 prob = ODEProblem(gm4!,r0,(0.0,0.1),p)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 75 samples with 1 evaluation.
- Range (min … max):  63.820 ms … 76.176 ms  ┊ GC (min … max): 0.00% … 6.03%
- Time  (median):     66.711 ms              ┊ GC (median):    0.00%
- Time  (mean ± σ):   67.396 ms ±  3.167 ms  ┊ GC (mean ± σ):  1.55% ± 2.78%
-
-  ▁▁█▁█▃▆         ▁ ▁        ▆         ▁
-  ███████▄▁▁▄▁▇▁▄▁█▄█▁▄▇▁▄▄▄▇█▁▁▁▁▄▁▄▁▇█▁▁▁▄▁▄▄▇▁▁▁▇▁▄▁▁▁▁▁▇▇ ▁
-  63.8 ms         Histogram: frequency by time          74 ms &lt;
-
- Memory estimate: 29.66 MiB, allocs estimate: 1020.</code></pre><p>We could then use the BLAS <code>gemmv</code> to optimize the matrix multiplications some more, but instead let&#39;s devectorize the stencil.</p><pre><code class="language-julia hljs">p = (1.0,1.0,1.0,10.0,0.001,100.0,N)
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  32.769 ms (1069 allocations: 30.88 MiB)</code></pre><p>We could then use the BLAS <code>gemmv</code> to optimize the matrix multiplications some more, but instead let&#39;s devectorize the stencil.</p><pre><code class="language-julia hljs">p = (1.0,1.0,1.0,10.0,0.001,100.0,N)
 function fast_gm!(du,u,p,t)
   a,α,ubar,β,D1,D2,N = p
 
@@ -388,18 +808,8 @@ function fast_gm!(du,u,p,t)
    end
 end
 prob = ODEProblem(fast_gm!,r0,(0.0,0.1),p)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 700 samples with 1 evaluation.
- Range (min … max):  5.433 ms … 26.007 ms  ┊ GC (min … max):  0.00% … 56.34%
- Time  (median):     5.878 ms              ┊ GC (median):     0.00%
- Time  (mean ± σ):   7.138 ms ±  2.348 ms  ┊ GC (mean ± σ):  11.10% ± 13.88%
-
-  ▄▇█▆▃       ▁           ▁▁▁      ▁ ▁▁▂
-  ██████▆▆█▇▇▆███▇▆▆▄▆█▇█▇███▇▆▄█▇██████▆██▇▆▁▄▁▁▁▄▄▁▁▁▁▁▁▁▄ █
-  5.43 ms      Histogram: log(frequency) by time     13.4 ms &lt;
-
- Memory estimate: 29.62 MiB, allocs estimate: 432.</code></pre><p>Notice that in this case fusing the loops and avoiding the linear operators is a major improvement of about 10x! That&#39;s an order of magnitude faster than our original MATLAB/SciPy/R vectorized style code!</p><p>Since this is tedious to do by hand, we note that <a href="https://mtk.sciml.ai/dev/">ModelingToolkit.jl&#39;s symbolic code generation</a> can do this automatically from the basic version:</p><pre><code class="language-julia hljs">function basic_version!(dr,r,p,t)
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  11.873 ms (457 allocations: 30.84 MiB)</code></pre><p>Notice that in this case fusing the loops and avoiding the linear operators is a major improvement of about 10x! That&#39;s an order of magnitude faster than our original MATLAB/SciPy/R vectorized style code!</p><p>Since this is tedious to do by hand, we note that <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl&#39;s symbolic code generation</a> can do this automatically from the basic version:</p><pre><code class="language-julia hljs">using ModelingToolkit
+function basic_version!(dr,r,p,t)
   a,α,ubar,β,D1,D2 = p
   u = r[:,:,1]
   v = r[:,:,2]
@@ -422,64 +832,31 @@ de = modelingtoolkitize(prob)
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!
 
-fastprob = ODEProblem(de,[],(0.0,0.1),jac=true,sparse=true)</code></pre><p>Lastly, we can do other things like multithread the main loops. <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> provides the <code>@turbo</code> macro for doing a lot of SIMD enhancements, and <code>@tturbo</code> is the multithreaded version.</p><h3 id="Optimizing-Algorithm-Choices"><a class="docs-heading-anchor" href="#Optimizing-Algorithm-Choices">Optimizing Algorithm Choices</a><a id="Optimizing-Algorithm-Choices-1"></a><a class="docs-heading-anchor-permalink" href="#Optimizing-Algorithm-Choices" title="Permalink"></a></h3><p>The last thing to do is then ***optimize our algorithm choice***. We have been using <code>Tsit5()</code> as our test algorithm, but in reality this problem is a stiff PDE discretization and thus one recommendation is to use <code>CVODE_BDF()</code>. However, instead of using the default dense Jacobian, we should make use of the sparse Jacobian afforded by the problem. The Jacobian is the matrix <span>$\frac{df_i}{dr_j}$</span>, where <span>$r$</span> is read by the linear index (i.e. down columns). But since the <span>$u$</span> variables depend on the <span>$v$</span>, the band size here is large, and thus this will not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian algorithms. <code>CVODE_BDF</code> allows us to use a sparse Newton-Krylov solver by setting <code>linear_solver = :GMRES</code>.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial goes through these details. This is simply to give a taste of how much optimization opportunity is left on the table!</p></div></div><p>Let&#39;s see how our fast right-hand side scales as we increase the integration time.</p><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,10.0),p)
-@benchmark solve(prob,Tsit5())
-
-BenchmarkTools.Trial: 3 samples with 1 evaluation.
- Range (min … max):  1.578 s …    2.502 s  ┊ GC (min … max): 31.99% … 58.83%
- Time  (median):     1.580 s               ┊ GC (median):    35.16%
- Time  (mean ± σ):   1.887 s ± 532.716 ms  ┊ GC (mean ± σ):  44.74% ± 14.66%
-
-  █                                                        ▁
-  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  1.58 s         Histogram: frequency by time          2.5 s &lt;
-
- Memory estimate: 2.76 GiB, allocs estimate: 39323.</code></pre><pre><code class="language-julia hljs">using Sundials
-@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES))
-
-BenchmarkTools.Trial: 11 samples with 1 evaluation.
- Range (min … max):  450.051 ms … 476.904 ms  ┊ GC (min … max): 0.00% … 0.38%
- Time  (median):     460.246 ms               ┊ GC (median):    0.75%
- Time  (mean ± σ):   461.439 ms ±   9.264 ms  ┊ GC (mean ± σ):  0.56% ± 0.33%
-
-  █    █   █  █ █        █ ██                        █   █    █
-  █▁▁▁▁█▁▁▁█▁▁█▁█▁▁▁▁▁▁▁▁█▁██▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁█▁▁▁▁█ ▁
-  450 ms           Histogram: frequency by time          477 ms &lt;
-
- Memory estimate: 120.93 MiB, allocs estimate: 20000.</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,100.0),p)
+fastprob = ODEProblem(de,[],(0.0,0.1),jac=true,sparse=true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Vector{Float64} and tType Float64. In-place: true
+timespan: (0.0, 0.1)
+u0: 20000-element Vector{Float64}:
+ 11.054231410242812
+ 11.060629360476318
+ 11.082341853861456
+ 11.054756079380462
+ 11.067718931861107
+ 11.029706090018664
+ 11.00208963418531
+ 11.00854626755437
+ 11.087591891477919
+ 11.033935303929166
+  ⋮
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001</code></pre><p>Lastly, we can do other things like multithread the main loops. <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> provides the <code>@turbo</code> macro for doing a lot of SIMD enhancements, and <code>@tturbo</code> is the multithreaded version.</p><h3 id="Optimizing-Algorithm-Choices"><a class="docs-heading-anchor" href="#Optimizing-Algorithm-Choices">Optimizing Algorithm Choices</a><a id="Optimizing-Algorithm-Choices-1"></a><a class="docs-heading-anchor-permalink" href="#Optimizing-Algorithm-Choices" title="Permalink"></a></h3><p>The last thing to do is then ***optimize our algorithm choice***. We have been using <code>Tsit5()</code> as our test algorithm, but in reality this problem is a stiff PDE discretization and thus one recommendation is to use <code>CVODE_BDF()</code>. However, instead of using the default dense Jacobian, we should make use of the sparse Jacobian afforded by the problem. The Jacobian is the matrix <span>$\frac{df_i}{dr_j}$</span>, where <span>$r$</span> is read by the linear index (i.e. down columns). But since the <span>$u$</span> variables depend on the <span>$v$</span>, the band size here is large, and thus this will not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian algorithms. <code>CVODE_BDF</code> allows us to use a sparse Newton-Krylov solver by setting <code>linear_solver = :GMRES</code>.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial goes through these details. This is simply to give a taste of how much optimization opportunity is left on the table!</p></div></div><p>Let&#39;s see how our fast right-hand side scales as we increase the integration time.</p><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,10.0),p)
+@btime solve(prob,Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  5.736 s (39331 allocations: 2.76 GiB)</code></pre><pre><code class="language-julia hljs">using Sundials
+@btime solve(prob,CVODE_BDF(linear_solver=:GMRES));</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  345.469 ms (6962 allocations: 47.14 MiB)</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,100.0),p)
 # Will go out of memory if we don&#39;t turn off `save_everystep`!
-@benchmark solve(prob,Tsit5(),save_everystep=false)
-
-BenchmarkTools.Trial: 2 samples with 1 evaluation.
- Range (min … max):  3.075 s …   3.095 s  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     3.085 s              ┊ GC (median):    0.00%
- Time  (mean ± σ):   3.085 s ± 14.570 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-  █                                                       █
-  █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  3.07 s         Histogram: frequency by time         3.1 s &lt;
-
- Memory estimate: 2.90 MiB, allocs estimate: 60.</code></pre><pre><code class="language-julia hljs">@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false)
-
-BenchmarkTools.Trial: 4 samples with 1 evaluation.
- Range (min … max):  1.342 s …   1.386 s  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     1.352 s              ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.358 s ± 19.636 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-  █    █               █                                  █
-  █▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  1.34 s         Histogram: frequency by time        1.39 s &lt;
-
- Memory estimate: 3.09 MiB, allocs estimate: 49880.</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,500.0),p)
-@benchmark solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false)
-
-BenchmarkTools.Trial: 3 samples with 1 evaluation.
- Range (min … max):  1.817 s …   1.915 s  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     1.825 s              ┊ GC (median):    0.00%
- Time  (mean ± σ):   1.853 s ± 54.179 ms  ┊ GC (mean ± σ):  0.00% ± 0.00%
-
-  █   █                                                   █
-  █▁▁▁█▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█ ▁
-  1.82 s         Histogram: frequency by time        1.91 s &lt;
-
- Memory estimate: 3.83 MiB, allocs estimate: 66931.</code></pre><p>Notice that we&#39;ve eliminated almost all allocations, allowing the code to grow without hitting garbage collection and slowing down.</p><p>Why is <code>CVODE_BDF</code> doing well? What&#39;s happening is that, because the problem is stiff, the number of steps required by the explicit Runge-Kutta method grows rapidly, whereas <code>CVODE_BDF</code> is taking large steps. Additionally, the <code>GMRES</code> linear solver form is quite an efficient way to solve the implicit system in this case. This is problem-dependent, and in many cases using a Krylov method effectively requires a preconditioner, so you need to play around with testing other algorithms and linear solvers to find out what works best with your problem.</p><p>Now continue to the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for more details on optimizing the algorithm choice for such codes.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../ode_example/">« Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../advanced_ode_example/">Solving Large Stiff Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Sunday 4 December 2022 19:38">Sunday 4 December 2022</span>. Using Julia version 1.8.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+@btime solve(prob,Tsit5(),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  6.952 s (68 allocations: 2.90 MiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  2.276 s (38791 allocations: 2.62 MiB)</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!,r0,(0.0,500.0),p)
+@btime solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  3.727 s (64001 allocations: 3.73 MiB)</code></pre><p>Notice that we&#39;ve eliminated almost all allocations, allowing the code to grow without hitting garbage collection and slowing down.</p><p>Why is <code>CVODE_BDF</code> doing well? What&#39;s happening is that, because the problem is stiff, the number of steps required by the explicit Runge-Kutta method grows rapidly, whereas <code>CVODE_BDF</code> is taking large steps. Additionally, the <code>GMRES</code> linear solver form is quite an efficient way to solve the implicit system in this case. This is problem-dependent, and in many cases using a Krylov method effectively requires a preconditioner, so you need to play around with testing other algorithms and linear solvers to find out what works best with your problem.</p><p>Now continue to the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for more details on optimizing the algorithm choice for such codes.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../ode_example/">« Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../advanced_ode_example/">Solving Large Stiff Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Saturday 10 December 2022 07:53">Saturday 10 December 2022</span>. Using Julia version 1.8.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
