@@ -28,6 +28,7 @@ Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 
 [compat]
 BSON = "0.3"
+BoundaryValueDiffEq = "2"
 CSV = "0.10"
 DAEProblemLibrary = "0.1"
 DASKR = "2.9.1"
