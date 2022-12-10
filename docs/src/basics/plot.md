@@ -145,7 +145,7 @@ i.e. no points outside the interval will be plotted.
 
 ### Example
 
-```julia
+```@example plots
 using DifferentialEquations, Plots
 function lorenz(du,u,p,t)
  du[1] = p[1]*(u[2]-u[1])
@@ -166,25 +166,19 @@ xyz = plot(sol, plotdensity=10000, idxs=(1,2,3))
 plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
 ```
 
-![lorenz_plot](../assets/vars_plotting_example.png)
-
 An example using the functions:
 
-```julia
+```@example plots
 f(x,y,z) = (sqrt(x^2+y^2+z^2),x)
 plot(sol,idxs=(f,1,2,3))
 ```
 
-![norm_plot](../assets/normalized.png)
-
 or the norm over time:
 
-```julia
+```@example plots
 f(t,x,y,z) = (t,sqrt(x^2+y^2+z^2))
 plot(sol,idxs=(f,0,1,2,3))
 ```
-
-![normtime plot](https://user-images.githubusercontent.com/1814174/94351101-4667df80-0023-11eb-987d-aca652e32521.png)
 
 ## Animations
 

@@ -453,7 +453,8 @@ given by Dual numbers.
 To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
-```julia
+```@example faq1
+using DifferentialEquations
 function func(du,u,p,t)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
@@ -471,23 +472,16 @@ be Dual numbers whenever `p` is an array of `Dual` numbers, and we do the same
 for the timespan just to show what you'd do if there was parameters-dependent events.
 Then we can take the Jacobian via ForwardDiff.jl:
 
-```julia
+```@example faq1
 using ForwardDiff
 ForwardDiff.jacobian(f,[1.5,1.0])
-
-2×2 Array{Float64,2}:
-  2.16056   0.188569
- -6.25677  -0.697978
 ```
 
-and compare it to Calculus.jl:
+and compare it to FiniteDiff.jl:
 
-```julia
-Calculus.jacobian(f,[1.5,1.0],:central)
-
-2×2 Array{Float64,2}:
-  2.16056   0.188569
- -6.25677  -0.697978
+```@example faq1
+using FiniteDiff
+FiniteDiff.finite_difference_jacobian(f,[1.5,1.0])
 ```
 
 #### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods

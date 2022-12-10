@@ -67,8 +67,11 @@ which outputs a tuple.
 
 ### Examples
 
-```julia
+```@example problem
+using DifferentialEquations
 prob = ODEProblem((u,p,t)->u,(p,t0)->p[1],(p)->(0.0,p[2]),(2.0,1.0))
+```
+```@example problem
 using Distributions
 prob = ODEProblem((u,p,t)->u,(p,t)->Normal(p,1),(0.0,1.0),1.0)
 ```
@@ -96,7 +99,7 @@ However, you may want to modify the problem after it is created.  For
 example, to simulate it for longer timespan.  It can be done by the
 `remake` function:
 
-```julia
+```@example problem
 prob1 = ODEProblem((u,p,t) -> u/2, 1.0, (0.0,1.0))
 prob2 = remake(prob1; tspan=(0.0,2.0))
 ```
