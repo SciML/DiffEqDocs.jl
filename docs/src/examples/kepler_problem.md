@@ -112,7 +112,7 @@ analysis_plot2(sol_, H, L)
 There is a significant fluctuation in the first integrals, when there is no mainfold projection.
 
 ```@example kepler
-function first_integrals_manifold(residual,u)
+function first_integrals_manifold(residual,u,p,t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
 end
@@ -125,7 +125,7 @@ analysis_plot2(sol5, H, L)
 We can see that thanks to the manifold projection, the first integrals' variation is very small, although we are using `RK4` which is not symplectic. But wait, what if we only project to the energy conservation manifold?
 
 ```@example kepler
-function energy_manifold(residual,u)
+function energy_manifold(residual,u,p,t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= 0
 end

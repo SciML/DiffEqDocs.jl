@@ -59,7 +59,7 @@ function is `f`:
 
 ```@example minmax
 using Optimization, OptimizationNLopt, ForwardDiff
-optf = OptimizationFunction(f, AutoForwardDiff())
+optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
 min_guess = 18.0
 optprob = OptimizationProblem(optf, min_guess)
 opt = solve(optprob, NLopt.LD_LBFGS())
@@ -75,7 +75,7 @@ println(opt.u)
 To get the maximum, we just minimize the negative of the function:
 
 ```@example minmax
-optf = OptimizationFunction(f, AutoForwardDiff())
+optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
 min_guess = 22.0
 optprob2 = OptimizationProblem(optf, min_guess)
 opt2 = solve(optprob2, NLopt.LD_LBFGS())
