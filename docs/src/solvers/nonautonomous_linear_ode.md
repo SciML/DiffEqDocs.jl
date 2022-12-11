@@ -67,7 +67,8 @@ Options:
   orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
   
-```julia
+```@example linear_ode
+using DifferentialEquations
 _A = [2 -1;-3 -5]/5
 A = DiffEqArrayOperator(_A)
 prob = ODEProblem(A, [1.0,-1.0], (1.0, 6.0))
@@ -97,7 +98,7 @@ These methods require ``A`` is only dependent on the independent variable, i.e. 
 
 Example:
 
-```julia
+```@example linear_ode
 function update_func(A,u,p,t)
     A[1,1] = cos(t)
     A[2,1] = sin(t)
@@ -128,7 +129,7 @@ These methods can be used when ``A`` is dependent on the state variables, i.e. `
 
 Example:
 
-```julia
+```@example linear_ode
 function update_func(A,u,p,t)
     A[1,1] = 0
     A[2,1] = sin(u[1])
@@ -147,7 +148,7 @@ operators can be solved using specialized adaptive algorithms, like `MagnusAdapt
 
 Example:
 
-```julia
+```@example linear_ode
 function update_func(A,u,p,t)
     A[1,1] = 0
     A[2,1] = 1
