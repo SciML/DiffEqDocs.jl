@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Classical Physics Models · DifferentialEquations.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/DiffEqDocs/stable/examples/classical_physics/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="DifferentialEquations.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">DifferentialEquations.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation</a></li><li><a class="tocitem" href="../../getting_started/">Getting Started with Differential Equations in Julia</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../../tutorials/faster_ode_example/">Code Optimization for Differential Equations</a></li><li><a class="tocitem" href="../../tutorials/advanced_ode_example/">Solving Large Stiff Equations</a></li><li><a class="tocitem" href="../../tutorials/sde_example/">Stochastic Differential Equations</a></li><li><a class="tocitem" href="../../tutorials/rode_example/">Random Ordinary Differential Equations</a></li><li><a class="tocitem" href="../../tutorials/dde_example/">Delay Differential Equations</a></li><li><a class="tocitem" href="../../tutorials/dae_example/">Differential Algebraic Equations</a></li><li><a class="tocitem" href="../../tutorials/discrete_stochastic_example/">Continuous-Time Jump Processes and Gillespie Methods</a></li><li><a class="tocitem" href="../../tutorials/jump_diffusion/">Jump Diffusion Equations</a></li><li><a class="tocitem" href="../../tutorials/bvp_example/">Boundary Value Problems</a></li><li><a class="tocitem" href="../../tutorials/additional/">Additional Tutorials</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><input class="collapse-toggle" id="menuitem-4-1" type="checkbox" checked/><label class="tocitem" for="menuitem-4-1"><span class="docs-label">Beginner</span><i class="docs-chevron"></i></label><ul class="collapsed"><li class="is-active"><a class="tocitem" href>Classical Physics Models</a><ul class="internal"><li><a class="tocitem" href="#First-order-linear-ODE"><span>First order linear ODE</span></a></li><li><a class="tocitem" href="#Second-Order-Linear-ODE"><span>Second Order Linear ODE</span></a></li><li><a class="tocitem" href="#Second-Order-Non-linear-ODE"><span>Second Order Non-linear ODE</span></a></li></ul></li><li><a class="tocitem" href="../conditional_dosing/">Conditional Dosing in Pharmacometrics</a></li><li><a class="tocitem" href="../kepler_problem/">The Kepler Problem</a></li><li><a class="tocitem" href="../outer_solar_system/">Simulating the Outer Solar System</a></li><li><a class="tocitem" href="../min_and_max/">Finding Maxima and Minima of ODEs Solutions</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox"/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Advanced</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../spiking_neural_systems/">Spiking Neural Systems</a></li><li><a class="tocitem" href="../beeler_reuter/">An Implicit/Explicit CUDA-Accelerated Solver for the 2D Beeler-Reuter Model</a></li><li><a class="tocitem" href="../diffusion_implicit_heat_equation/">Solving the heat equation with diffusion-implicit time-stepping</a></li></ul></li></ul></li><li><span class="tocitem">Basics</span><ul><li><a class="tocitem" href="../../basics/overview/">Overview of DifferentialEquations.jl</a></li><li><a class="tocitem" href="../../basics/common_solver_opts/">Common Solver Options (Solve Keyword Arguments)</a></li><li><a class="tocitem" href="../../basics/solution/">Solution Handling</a></li><li><a class="tocitem" href="../../basics/plot/">Plot Functions</a></li><li><a class="tocitem" href="../../basics/integrator/">Integrator Interface</a></li><li><a class="tocitem" href="../../basics/problem/">Problem Interface</a></li><li><a class="tocitem" href="../../basics/faq/">Frequently Asked Questions</a></li><li><a class="tocitem" href="../../basics/compatibility_chart/">Solver Compatibility Chart</a></li></ul></li><li><span class="tocitem">Problem Types</span><ul><li><a class="tocitem" href="../../types/discrete_types/">Discrete Problems</a></li><li><a class="tocitem" href="../../types/ode_types/">ODE Problems</a></li><li><a class="tocitem" href="../../types/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group Problems</a></li><li><a class="tocitem" href="../../types/dynamical_types/">Dynamical, Hamiltonian and 2nd Order ODE Problems</a></li><li><a class="tocitem" href="../../types/split_ode_types/">Split ODE Problems</a></li><li><a class="tocitem" href="../../types/steady_state_types/">Steady State Problems</a></li><li><a class="tocitem" href="../../types/bvp_types/">BVP Problems</a></li><li><a class="tocitem" href="../../types/sde_types/">SDE Problems</a></li><li><a class="tocitem" href="../../types/sdae_types/">SDAE Problems</a></li><li><a class="tocitem" href="../../types/rode_types/">RODE Problems</a></li><li><a class="tocitem" href="../../types/dde_types/">DDE Problems</a></li><li><a class="tocitem" href="../../types/sdde_types/">SDDE Problems</a></li><li><a class="tocitem" href="../../types/dae_types/">DAE Problems</a></li><li><a class="tocitem" href="../../types/jump_types/">Jump Problems</a></li></ul></li><li><span class="tocitem">Solver Algorithms</span><ul><li><a class="tocitem" href="../../solvers/discrete_solve/">Discrete Solvers</a></li><li><a class="tocitem" href="../../solvers/ode_solve/">ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dynamical_solve/">Dynamical, Hamiltonian, and 2nd Order ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/split_ode_solve/">Split ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/steady_state_solve/">Steady State Solvers</a></li><li><a class="tocitem" href="../../solvers/bvp_solve/">BVP Solvers</a></li><li><a class="tocitem" href="../../solvers/jump_solve/">Jump Problem and Jump Diffusion Solvers</a></li><li><a class="tocitem" href="../../solvers/sde_solve/">SDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdae_solve/">SDAE Solvers</a></li><li><a class="tocitem" href="../../solvers/rode_solve/">RODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dde_solve/">DDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdde_solve/">SDDE Solvers</a></li><li><a class="tocitem" href="../../solvers/dae_solve/">DAE Solvers</a></li><li><a class="tocitem" href="../../solvers/benchmarks/">Solver Benchmarks</a></li></ul></li><li><span class="tocitem">Additional Features</span><ul><li><a class="tocitem" href="../../features/performance_overloads/">Jacobians, Gradients, etc.</a></li><li><a class="tocitem" href="../../features/diffeq_arrays/">DiffEq-Specific Array Types</a></li><li><a class="tocitem" href="../../features/diffeq_operator/">DiffEqOperators</a></li><li><a class="tocitem" href="../../features/noise_process/">Noise Processes</a></li><li><a class="tocitem" href="../../features/linear_nonlinear/">Specifying (Non)Linear Solvers and Preconditioners</a></li><li><a class="tocitem" href="../../features/callback_functions/">Event Handling and Callback Functions</a></li><li><a class="tocitem" href="../../features/callback_library/">Callback Library</a></li><li><a class="tocitem" href="../../features/ensemble/">Parallel Ensemble Simulations</a></li><li><a class="tocitem" href="../../features/io/">I/O: Saving and Loading Solution Data</a></li><li><a class="tocitem" href="../../features/low_dep/">Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage</a></li><li><a class="tocitem" href="../../features/progress_bar/">Progress Bar Integration</a></li></ul></li><li><span class="tocitem">Detailed Solver APIs</span><ul><li><a class="tocitem" href="../../api/sundials/">Sundials.jl</a></li><li><a class="tocitem" href="../../api/daskr/">DASKR.jl</a></li></ul></li><li><span class="tocitem">Extra Details</span><ul><li><a class="tocitem" href="../../extras/timestepping/">Timestepping Method Descriptions</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li><a class="is-disabled">Beginner</a></li><li class="is-active"><a href>Classical Physics Models</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Classical Physics Models</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/DiffEqDocs.jl/blob/master/docs/src/examples/classical_physics.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Classical-Physics-Models"><a class="docs-heading-anchor" href="#Classical-Physics-Models">Classical Physics Models</a><a id="Classical-Physics-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Classical-Physics-Models" title="Permalink"></a></h1><p>If you&#39;re getting some cold feet to jump in to DiffEq land, here are some handcrafted differential equations mini problems to hold your hand along the beginning of your journey.</p><h2 id="First-order-linear-ODE"><a class="docs-heading-anchor" href="#First-order-linear-ODE">First order linear ODE</a><a id="First-order-linear-ODE-1"></a><a class="docs-heading-anchor-permalink" href="#First-order-linear-ODE" title="Permalink"></a></h2><h4 id="Radioactive-Decay-of-Carbon-14"><a class="docs-heading-anchor" href="#Radioactive-Decay-of-Carbon-14">Radioactive Decay of Carbon-14</a><a id="Radioactive-Decay-of-Carbon-14-1"></a><a class="docs-heading-anchor-permalink" href="#Radioactive-Decay-of-Carbon-14" title="Permalink"></a></h4><p class="math-container">\[f(t,u) = \frac{du}{dt}\]</p><p>The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq, Plots
+gr()
+
+#Half-life of Carbon-14 is 5,730 years.
+C₁ = 5.730
+
+#Setup
+u₀ = 1.0
+tspan = (0.0, 1.0)
+
+#Define the problem
+radioactivedecay(u,p,t) = -C₁*u
+
+#Pass to solver
+prob = ODEProblem(radioactivedecay,u₀,tspan)
+sol = solve(prob,Tsit5())
+
+#Plot
+plot(sol,linewidth=2,title =&quot;Carbon-14 half-life&quot;, xaxis = &quot;Time in thousands of years&quot;, yaxis = &quot;Percentage left&quot;, label = &quot;Numerical Solution&quot;)
+plot!(sol.t, t-&gt;exp(-C₁*t),lw=3,ls=:dash,label=&quot;Analytical Solution&quot;)</code></pre><h2 id="Second-Order-Linear-ODE"><a class="docs-heading-anchor" href="#Second-Order-Linear-ODE">Second Order Linear ODE</a><a id="Second-Order-Linear-ODE-1"></a><a class="docs-heading-anchor-permalink" href="#Second-Order-Linear-ODE" title="Permalink"></a></h2><h4 id="Simple-Harmonic-Oscillator"><a class="docs-heading-anchor" href="#Simple-Harmonic-Oscillator">Simple Harmonic Oscillator</a><a id="Simple-Harmonic-Oscillator-1"></a><a class="docs-heading-anchor-permalink" href="#Simple-Harmonic-Oscillator" title="Permalink"></a></h4><p>Another classical example is the harmonic oscillator, given by:</p><p class="math-container">\[\ddot{x} + \omega^2 x = 0\]</p><p>with the known analytical solution</p><p class="math-container">\[\begin{align*}
+x(t) &amp;= A\cos(\omega t - \phi) \\
+v(t) &amp;= -A\omega\sin(\omega t - \phi),
+\end{align*}\]</p><p>where</p><p class="math-container">\[A = \sqrt{c_1 + c_2} \qquad\text{and}\qquad \tan \phi = \frac{c_2}{c_1}\]</p><p>with <span>$c_1, c_2$</span> constants determined by the initial conditions such that <span>$c_1$</span> is the initial position and <span>$\omega c_2$</span> is the initial velocity.</p><p>Instead of transforming this to a system of ODEs to solve with <code>ODEProblem</code>, we can use <code>SecondOrderODEProblem</code> as follows.</p><pre><code class="language-julia hljs"># Simple Harmonic Oscillator Problem
+using OrdinaryDiffEq, Plots
+
+#Parameters
+ω = 1
+
+#Initial Conditions
+x₀ = [0.0]
+dx₀ = [π/2]
+tspan = (0.0, 2π)
+
+ϕ = atan((dx₀[1]/ω)/x₀[1])
+A = √(x₀[1]^2 + dx₀[1]^2)
+
+#Define the problem
+function harmonicoscillator(ddu,du,u,ω,t)
+    ddu .= -ω^2 * u
+end
+
+#Pass to solvers
+prob = SecondOrderODEProblem(harmonicoscillator, dx₀, x₀, tspan, ω)
+sol = solve(prob, DPRKN6())
+
+#Plot
+plot(sol, vars=[2,1], linewidth=2, title =&quot;Simple Harmonic Oscillator&quot;, xaxis = &quot;Time&quot;, yaxis = &quot;Elongation&quot;, label = [&quot;x&quot; &quot;dx&quot;])
+plot!(t-&gt;A*cos(ω*t-ϕ), lw=3, ls=:dash, label=&quot;Analytical Solution x&quot;)
+plot!(t-&gt;-A*ω*sin(ω*t-ϕ), lw=3, ls=:dash, label=&quot;Analytical Solution dx&quot;)</code></pre><p>Note that the order of the variables (and initial conditions) is <code>dx</code>, <code>x</code>. Thus, if we want the first series to be <code>x</code>, we have to flip the order with <code>vars=[2,1]</code>.</p><h2 id="Second-Order-Non-linear-ODE"><a class="docs-heading-anchor" href="#Second-Order-Non-linear-ODE">Second Order Non-linear ODE</a><a id="Second-Order-Non-linear-ODE-1"></a><a class="docs-heading-anchor-permalink" href="#Second-Order-Non-linear-ODE" title="Permalink"></a></h2><h4 id="Simple-Pendulum"><a class="docs-heading-anchor" href="#Simple-Pendulum">Simple Pendulum</a><a id="Simple-Pendulum-1"></a><a class="docs-heading-anchor-permalink" href="#Simple-Pendulum" title="Permalink"></a></h4><p>We will start by solving the pendulum problem. In the physics class, we often solve this problem by small angle approximation, i.e. $ sin(\theta) \approx \theta$, because otherwise, we get an elliptic integral which doesn&#39;t have an analytic solution. The linearized form is</p><p class="math-container">\[\ddot{\theta} + \frac{g}{L}{\theta} = 0\]</p><p>But we have numerical ODE solvers! Why not solve the <em>real</em> pendulum?</p><p class="math-container">\[\ddot{\theta} + \frac{g}{L}{\sin(\theta)} = 0\]</p><p>Notice that now we have a second order ODE. In order to use the same method as above, we nee to transform it into a system of first order ODEs by employing the notation <span>$d\theta = \dot{\theta}$</span>.</p><p class="math-container">\[\begin{align*}
+&amp;\dot{\theta} = d{\theta} \\
+&amp;\dot{d\theta} = - \frac{g}{L}{\sin(\theta)}
+\end{align*}\]</p><pre><code class="language-julia hljs"># Simple Pendulum Problem
+using OrdinaryDiffEq, Plots
+
+#Constants
+const g = 9.81
+L = 1.0
+
+#Initial Conditions
+u₀ = [0,π/2]
+tspan = (0.0,6.3)
+
+#Define the problem
+function simplependulum(du,u,p,t)
+    θ = u[1]
+    dθ = u[2]
+    du[1] = dθ
+    du[2] = -(g/L)*sin(θ)
+end
+
+#Pass to solvers
+prob = ODEProblem(simplependulum, u₀, tspan)
+sol = solve(prob,Tsit5())
+
+#Plot
+plot(sol,linewidth=2,title =&quot;Simple Pendulum Problem&quot;, xaxis = &quot;Time&quot;, yaxis = &quot;Height&quot;, label = [&quot;\\theta&quot; &quot;d\\theta&quot;])</code></pre><p>So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.</p><pre><code class="language-julia hljs">p = plot(sol,vars = (1,2), xlims = (-9,9), title = &quot;Phase Space Plot&quot;, xaxis = &quot;Velocity&quot;, yaxis = &quot;Position&quot;, leg=false)
+function phase_plot(prob, u0, p, tspan=2pi)
+    _prob = ODEProblem(prob.f,u0,(0.0,tspan))
+    sol = solve(_prob,Vern9()) # Use Vern9 solver for higher accuracy
+    plot!(p,sol,vars = (1,2), xlims = nothing, ylims = nothing)
+end
+for i in -4pi:pi/2:4π
+    for j in -4pi:pi/2:4π
+        phase_plot(prob, [j,i], p)
+    end
+end
+plot(p,xlims = (-9,9))</code></pre><h4 id="Double-Pendulum"><a class="docs-heading-anchor" href="#Double-Pendulum">Double Pendulum</a><a id="Double-Pendulum-1"></a><a class="docs-heading-anchor-permalink" href="#Double-Pendulum" title="Permalink"></a></h4><p>A more complicated example is given by the double pendulum. The equations governing its motion are given by the following (taken from this <a href="https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum">StackOverflow question</a>)</p><p class="math-container">\[\frac{d}{dt}
+\begin{pmatrix}
+\alpha \\ l_\alpha \\ \beta \\ l_\beta
+\end{pmatrix}=
+\begin{pmatrix}
+2\frac{l_\alpha - (1+\cos\beta)l_\beta}{3-\cos 2\beta} \\
+-2\sin\alpha - \sin(\alpha + \beta) \\
+2\frac{-(1+\cos\beta)l_\alpha + (3+2\cos\beta)l_\beta}{3-\cos2\beta}\\
+-\sin(\alpha+\beta) - 2\sin(\beta)\frac{(l_\alpha-l_\beta)l_\beta}{3-\cos2\beta} + 2\sin(2\beta)\frac{l_\alpha^2-2(1+\cos\beta)l_\alpha l_\beta + (3+2\cos\beta)l_\beta^2}{(3-\cos2\beta)^2}
+\end{pmatrix}\]</p><pre><code class="language-julia hljs">#Double Pendulum Problem
+using OrdinaryDiffEq, Plots
+
+#Constants and setup
+const m₁, m₂, L₁, L₂ = 1, 2, 1, 2
+initial = [0, π/3, 0, 3pi/5]
+tspan = (0.,50.)
+
+#Convenience function for transforming from polar to Cartesian coordinates
+function polar2cart(sol;dt=0.02,l1=L₁,l2=L₂,vars=(2,4))
+    u = sol.t[1]:dt:sol.t[end]
+
+    p1 = l1*map(x-&gt;x[vars[1]], sol.(u))
+    p2 = l2*map(y-&gt;y[vars[2]], sol.(u))
+
+    x1 = l1*sin.(p1)
+    y1 = l1*-cos.(p1)
+    (u, (x1 + l2*sin.(p2),
+     y1 - l2*cos.(p2)))
+end
+
+#Define the Problem
+function double_pendulum(xdot,x,p,t)
+    xdot[1]=x[2]
+    xdot[2]=-((g*(2*m₁+m₂)*sin(x[1])+m₂*(g*sin(x[1]-2*x[3])+2*(L₂*x[4]^2+L₁*x[2]^2*cos(x[1]-x[3]))*sin(x[1]-x[3])))/(2*L₁*(m₁+m₂-m₂*cos(x[1]-x[3])^2)))
+    xdot[3]=x[4]
+    xdot[4]=(((m₁+m₂)*(L₁*x[2]^2+g*cos(x[1]))+L₂*m₂*x[4]^2*cos(x[1]-x[3]))*sin(x[1]-x[3]))/(L₂*(m₁+m₂-m₂*cos(x[1]-x[3])^2))
+end
+
+#Pass to Solvers
+double_pendulum_problem = ODEProblem(double_pendulum, initial, tspan)
+sol = solve(double_pendulum_problem, Vern7(), abs_tol=1e-10, dt=0.05);</code></pre><pre><code class="language-julia hljs">#Obtain coordinates in Cartesian Geometry
+ts, ps = polar2cart(sol, l1=L₁, l2=L₂, dt=0.01)
+plot(ps...)</code></pre><h5 id="Poincaré-section"><a class="docs-heading-anchor" href="#Poincaré-section">Poincaré section</a><a id="Poincaré-section-1"></a><a class="docs-heading-anchor-permalink" href="#Poincaré-section" title="Permalink"></a></h5><p>In this case the phase space is 4 dimensional and it cannot be easily visualized. Instead of looking at the full phase space, we can look at Poincaré sections, which are sections through a higher-dimensional phase space diagram. This helps to understand the dynamics of interactions and is wonderfully pretty.</p><p>The Poincaré section in this is given by the collection of <span>$(β,l_β)$</span> when <span>$α=0$</span> and <span>$\frac{dα}{dt}&gt;0$</span>.</p><pre><code class="language-julia hljs">#Constants and setup
+using OrdinaryDiffEq
+initial2 = [0.01, 0.005, 0.01, 0.01]
+tspan2 = (0.,500.)
+
+#Define the problem
+function double_pendulum_hamiltonian(udot,u,p,t)
+    α  = u[1]
+    lα = u[2]
+    β  = u[3]
+    lβ = u[4]
+    udot .=
+    [2(lα-(1+cos(β))lβ)/(3-cos(2β)),
+    -2sin(α) - sin(α+β),
+    2(-(1+cos(β))lα + (3+2cos(β))lβ)/(3-cos(2β)),
+    -sin(α+β) - 2sin(β)*(((lα-lβ)lβ)/(3-cos(2β))) + 2sin(2β)*((lα^2 - 2(1+cos(β))lα*lβ + (3+2cos(β))lβ^2)/(3-cos(2β))^2)]
+end
+
+# Construct a ContiunousCallback
+condition(u,t,integrator) = u[1]
+affect!(integrator) = nothing
+cb = ContinuousCallback(condition,affect!,nothing,
+                        save_positions = (true,false))
+
+# Construct Problem
+poincare = ODEProblem(double_pendulum_hamiltonian, initial2, tspan2)
+sol2 = solve(poincare, Vern9(), save_everystep = false, save_start=false, save_end=false, callback=cb, abstol=1e-16, reltol=1e-16,)
+
+function poincare_map(prob, u₀, p; callback=cb)
+    _prob = ODEProblem(prob.f, u₀, prob.tspan)
+    sol = solve(_prob, Vern9(), save_everystep = false, save_start=false, save_end=false, callback=cb, abstol=1e-16, reltol=1e-16)
+    scatter!(p, sol, vars=(3,4), markersize = 3, msw=0)
+end</code></pre><pre><code class="language-julia hljs">lβrange = -0.02:0.0025:0.02
+p = scatter(sol2, vars=(3,4), leg=false, markersize = 3, msw=0)
+for lβ in lβrange
+    poincare_map(poincare, [0.01, 0.01, 0.01, lβ], p)
+end
+plot(p, xlabel=&quot;\\beta&quot;, ylabel=&quot;l_\\beta&quot;, ylims=(0, 0.03))</code></pre><h4 id="Hénon-Heiles-System"><a class="docs-heading-anchor" href="#Hénon-Heiles-System">Hénon-Heiles System</a><a id="Hénon-Heiles-System-1"></a><a class="docs-heading-anchor-permalink" href="#Hénon-Heiles-System" title="Permalink"></a></h4><p>The Hénon-Heiles potential occurs when non-linear motion of a star around a galactic center with the motion restricted to a plane.</p><p class="math-container">\[\begin{align}
+\frac{d^2x}{dt^2}&amp;=-\frac{\partial V}{\partial x}\\
+\frac{d^2y}{dt^2}&amp;=-\frac{\partial V}{\partial y}
+\end{align}\]</p><p>where</p><p class="math-container">\[V(x,y)={\frac {1}{2}}(x^{2}+y^{2})+\lambda \left(x^{2}y-{\frac {y^{3}}{3}}\right).\]</p><p>We pick <span>$\lambda=1$</span> in this case, so</p><p class="math-container">\[V(x,y) = \frac{1}{2}(x^2+y^2+2x^2y-\frac{2}{3}y^3).\]</p><p>Then the total energy of the system can be expressed by</p><p class="math-container">\[E = T+V = V(x,y)+\frac{1}{2}(\dot{x}^2+\dot{y}^2).\]</p><p>The total energy should conserve as this system evolves.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq, Plots
+
+#Setup
+initial = [0.,0.1,0.5,0]
+tspan = (0,100.)
+
+#Remember, V is the potential of the system and T is the Total Kinetic Energy, thus E will
+#the total energy of the system.
+V(x,y) = 1//2 * (x^2 + y^2 + 2x^2*y - 2//3 * y^3)
+E(x,y,dx,dy) = V(x,y) + 1//2 * (dx^2 + dy^2);
+
+#Define the function
+function Hénon_Heiles(du,u,p,t)
+    x  = u[1]
+    y  = u[2]
+    dx = u[3]
+    dy = u[4]
+    du[1] = dx
+    du[2] = dy
+    du[3] = -x - 2x*y
+    du[4] = y^2 - y -x^2
+end
+
+#Pass to solvers
+prob = ODEProblem(Hénon_Heiles, initial, tspan)
+sol = solve(prob, Vern9(), abs_tol=1e-16, rel_tol=1e-16);</code></pre><pre><code class="language-julia hljs"># Plot the orbit
+plot(sol, vars=(1,2), title = &quot;The orbit of the Hénon-Heiles system&quot;, xaxis = &quot;x&quot;, yaxis = &quot;y&quot;, leg=false)</code></pre><pre><code class="language-julia hljs">#Optional Sanity check - what do you think this returns and why?
+@show sol.retcode
+
+#Plot -
+plot(sol, vars=(1,3), title = &quot;Phase space for the Hénon-Heiles system&quot;, xaxis = &quot;Position&quot;, yaxis = &quot;Velocity&quot;)
+plot!(sol, vars=(2,4), leg = false)</code></pre><pre><code class="language-julia hljs">#We map the Total energies during the time intervals of the solution (sol.u here) to a new vector
+#pass it to the plotter a bit more conveniently
+energy = map(x-&gt;E(x...), sol.u)
+
+#We use @show here to easily spot erratic behaviour in our system by seeing if the loss in energy was too great.
+@show ΔE = energy[1]-energy[end]
+
+#Plot
+plot(sol.t, energy .- energy[1], title = &quot;Change in Energy over Time&quot;, xaxis = &quot;Time in iterations&quot;, yaxis = &quot;Change in Energy&quot;)</code></pre><h5 id="Symplectic-Integration"><a class="docs-heading-anchor" href="#Symplectic-Integration">Symplectic Integration</a><a id="Symplectic-Integration-1"></a><a class="docs-heading-anchor-permalink" href="#Symplectic-Integration" title="Permalink"></a></h5><p>To prevent energy drift, we can instead use a symplectic integrator. We can directly define and solve the <code>SecondOrderODEProblem</code>:</p><pre><code class="language-julia hljs">function HH_acceleration!(dv,v,u,p,t)
+    x,y  = u
+    dx,dy = dv
+    dv[1] = -x - 2x*y
+    dv[2] = y^2 - y -x^2
+end
+initial_positions = [0.0,0.1]
+initial_velocities = [0.5,0.0]
+prob = SecondOrderODEProblem(HH_acceleration!,initial_velocities,initial_positions,tspan)
+sol2 = solve(prob, KahanLi8(), dt=1/10);</code></pre><p>Notice that we get the same results:</p><pre><code class="language-julia hljs"># Plot the orbit
+plot(sol2, vars=(3,4), title = &quot;The orbit of the Hénon-Heiles system&quot;, xaxis = &quot;x&quot;, yaxis = &quot;y&quot;, leg=false)</code></pre><pre><code class="language-julia hljs">plot(sol2, vars=(3,1), title = &quot;Phase space for the Hénon-Heiles system&quot;, xaxis = &quot;Position&quot;, yaxis = &quot;Velocity&quot;)
+plot!(sol2, vars=(4,2), leg = false)</code></pre><p>but now the energy change is essentially zero:</p><pre><code class="language-julia hljs">energy = map(x-&gt;E(x[3], x[4], x[1], x[2]), sol2.u)
+#We use @show here to easily spot erratic behaviour in our system by seeing if the loss in energy was too great.
+@show ΔE = energy[1]-energy[end]
+
+#Plot
+plot(sol2.t, energy .- energy[1], title = &quot;Change in Energy over Time&quot;, xaxis = &quot;Time in iterations&quot;, yaxis = &quot;Change in Energy&quot;)</code></pre><p>And let&#39;s try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn&#39;t symplectic.</p><pre><code class="language-julia hljs">sol3 = solve(prob, DPRKN6());
+energy = map(x-&gt;E(x[3], x[4], x[1], x[2]), sol3.u)
+@show ΔE = energy[1]-energy[end]
+gr()
+plot(sol3.t, energy .- energy[1], title = &quot;Change in Energy over Time&quot;, xaxis = &quot;Time in iterations&quot;, yaxis = &quot;Change in Energy&quot;)</code></pre><p>Note that we are using the <code>DPRKN6</code> sovler at <code>reltol=1e-3</code> (the default), yet it has a smaller energy variation than <code>Vern9</code> at <code>abs_tol=1e-16, rel_tol=1e-16</code>. Therefore, using specialized solvers to solve its particular problem is very efficient.</p><pre><code class="language-julia hljs">using SciMLTutorials
+SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../tutorials/additional/">« Additional Tutorials</a><a class="docs-footer-nextpage" href="../conditional_dosing/">Conditional Dosing in Pharmacometrics »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Sunday 11 December 2022 18:57">Sunday 11 December 2022</span>. Using Julia version 1.8.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
