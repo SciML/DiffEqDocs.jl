@@ -40,8 +40,8 @@ We would have `A.x[1]==y` and `A.x[2]==z`. Broadcasting like `f.(A)` is efficien
 In this example we will show using heterogeneous units in dynamics equations. Our
 arrays will be:
 
-```julia
-using Unitful, RecursiveArrayTools, DiffEqBase, OrdinaryDiffEq
+```@example diffeq_arrays
+using Unitful, RecursiveArrayTools, DifferentialEquations
 using LinearAlgebra
 
 r0 = [1131.340, -2282.343, 6672.423]u"km"
@@ -55,7 +55,7 @@ Here, `r0` is the initial positions, and `v0` are the initial velocities. `rv0`
 is the `ArrayPartition` initial condition. We now write our update function in
 terms of the `ArrayPartition`:
 
-```julia
+```@example diffeq_arrays
 function f(dy, y, μ, t)
     r = norm(y.x[1])
     dy.x[1] .= y.x[2]
@@ -70,7 +70,7 @@ broadcasting will be efficient.
 
 Now to solve our equations, we do the same thing as always in DiffEq:
 
-```julia
+```@example diffeq_arrays
 prob = ODEProblem(f, rv0, (0.0u"s", Δt), μ)
 sol = solve(prob, Vern8())
 ```
