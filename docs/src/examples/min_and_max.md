@@ -61,7 +61,7 @@ function is `f`:
 using Optimization, OptimizationNLopt, ForwardDiff
 optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
 min_guess = 18.0
-optprob = OptimizationProblem(optf, [min_guess])
+optprob = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
 opt = solve(optprob, NLopt.LD_LBFGS())
 ```
 
@@ -79,7 +79,7 @@ fminus(t,_) = -sol(first(t),idxs=4)
 
 optf = OptimizationFunction(fminus, Optimization.AutoForwardDiff())
 min_guess = 22.0
-optprob2 = OptimizationProblem(optf, [min_guess])
+optprob2 = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
 opt2 = solve(optprob2, NLopt.LD_LBFGS())
 ```
 
