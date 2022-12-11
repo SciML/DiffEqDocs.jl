@@ -69,8 +69,3 @@ sol = solve(prob,Tsit5(),tstops=[4.0],callback=cb)
 using Plots; gr()
 plot(sol)
 ```
-
-```@example dosing, echo = false, skip="notebook"
-using SciMLTutorials
-SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
-```

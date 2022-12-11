@@ -147,8 +147,3 @@ analysis_plot2(sol7, H, L)
 ```
 
 Again, we see what we expect.
-
-```@example kepler, echo = false, skip="notebook"
-using SciMLTutorials
-SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
-```
