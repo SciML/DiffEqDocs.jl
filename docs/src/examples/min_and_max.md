@@ -2,7 +2,9 @@
 
 ### Setup
 
-In this tutorial we will show how to use Optim.jl to find the maxima and minima of solutions. Let's take a look at the double pendulum:
+In this tutorial we will show how to use
+[Optimization.jl](https://docs.sciml.ai/Optimization/stable/) to find the maxima and minima
+of solutions. Let's take a look at the double pendulum:
 
 ```@example minmax
 #Constants and setup
@@ -52,25 +54,31 @@ Let's fine out what some of the local maxima and minima are. Optim.jl can be use
 f = (t) -> sol(t,idxs=4)
 ```
 
-`first(t)` is the same as `t[1]` which transforms the array of size 1 into a number. `idxs=4` is the same as `sol(first(t))[4]` but does the calculation without a temporary array and thus is faster. To find a local minima, we can simply call Optim on this function. Let's find a local minimum:
+`first(t)` is the same as `t[1]` which transforms the array of size 1 into a number. `idxs=4` is the same as `sol(first(t))[4]` but does the calculation without a temporary array and thus is faster. To find a local minima, we can solve the optimization problem where the loss
+function is `f`:
 
 ```@example minmax
-using Optim
-opt = optimize(f,18.0,22.0)
+using Optimization, OptimizationNLopt
+optf = OptimizationFunction(f, AutoForwardDiff())
+min_guess = 18.0
+optprob = OptimizationProblem(optf, min_guess)
+opt = solve(optprob, NLopt.LD_LBFGS())
 ```
 
-From this printout we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We can get these in code-form via:
+From this printout we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We
+can get these in code-form via:
 
 ```@example minmax
-println(opt.minimizer)
-println(opt.minimum)
+println(opt.u)
 ```
 
 To get the maximum, we just minimize the negative of the function:
 
 ```@example minmax
-f = (t) -> -sol(first(t),idxs=4)
-opt2 = optimize(f,0.0,22.0)
+optf = OptimizationFunction(f, AutoForwardDiff())
+min_guess = 22.0
+optprob2 = OptimizationProblem(optf, min_guess)
+opt2 = solve(optprob2, NLopt.LD_LBFGS())
 ```
 
 Let's add the maxima and minima to the plots:
@@ -81,39 +89,21 @@ scatter!([opt.minimizer],[opt.minimum],label="Local Min")
 scatter!([opt2.minimizer],[-opt2.minimum],label="Local Max")
 ```
 
-Brent's method will locally minimize over the full interval. If we instead want a local maxima nearest to a point, we can use `BFGS()`. In this case, we need to optimize a vector `[t]`, and thus dereference it to a number using `first(t)`.
-
-```@example minmax
-f = (t) -> -sol(first(t),idxs=4)
-opt = optimize(f,[20.0],BFGS())
-```
-
 ### Global Optimization
 
-If we instead want to find global maxima and minima, we need to look somewhere else. For this there are many choices. A pure Julia option is BlackBoxOptim.jl, but I will use NLopt.jl. Following the NLopt.jl tutorial but replacing their function with out own:
+If we instead want to find global maxima and minima, we need to look somewhere else. For
+this there are many choices. A pure Julia option are the
+[BlackBoxOptim solvers within Optimization.jl](https://docs.sciml.ai/Optimization/stable/optimization_packages/blackboxoptim/),
+but I will continue the story with the  OptimizationNLopt methods. To do this, we simply
+swap out to one of the
+[global optimizers in the list](https://docs.sciml.ai/Optimization/stable/optimization_packages/nlopt/)
+Let's try `GN_ORIG_DIRECT_L`:
 
 ```@example minmax
-import NLopt, ForwardDiff
+opt = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
+opt2 = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
 
-count = 0 # keep track of # function evaluations
-
-function g(t::Vector, grad::Vector)
-  if length(grad) > 0
-    #use ForwardDiff for the gradients
-    grad[1] = ForwardDiff.derivative((t)->sol(first(t),idxs=4),t)
-  end
-  sol(first(t),idxs=4)
-end
-opt = NLopt.Opt(:GN_ORIG_DIRECT_L, 1)
-NLopt.lower_bounds!(opt, [0.0])
-NLopt.upper_bounds!(opt, [40.0])
-NLopt.xtol_rel!(opt,1e-8)
-NLopt.min_objective!(opt, g)
-(minf,minx,ret) = NLopt.optimize(opt,[20.0])
-println(minf," ",minx," ",ret)
-NLopt.max_objective!(opt, g)
-(maxf,maxx,ret) = NLopt.optimize(opt,[20.0])
-println(maxf," ",maxx," ",ret)
+@show opt.u, opt2.u
 ```
 
 ```@example minmax

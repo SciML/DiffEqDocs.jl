@@ -172,7 +172,7 @@ prob = SplitODEProblem(
     tspan,
     params
 )
-alg = IMEXEuler(linsolve=LinSolveFactorize(lu!))
+alg = IMEXEuler()
 println("Solving...")
 sol = solve(
     prob,
