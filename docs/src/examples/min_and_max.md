@@ -51,7 +51,7 @@ plot(sol, vars=(3,4), leg=false)
 Let's fine out what some of the local maxima and minima are. Optim.jl can be used to minimize functions, and the solution type has a continuous interpolation which can be used. Let's look for the local optima for the 4th variable around `t=20`. Thus our optimization function is:
 
 ```@example minmax
-f = (t) -> sol(t,idxs=4)
+f(t,_) = sol(first(t),idxs=4)
 ```
 
 `first(t)` is the same as `t[1]` which transforms the array of size 1 into a number. `idxs=4` is the same as `sol(first(t))[4]` but does the calculation without a temporary array and thus is faster. To find a local minima, we can solve the optimization problem where the loss
@@ -61,7 +61,7 @@ function is `f`:
 using Optimization, OptimizationNLopt, ForwardDiff
 optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
 min_guess = 18.0
-optprob = OptimizationProblem(optf, min_guess)
+optprob = OptimizationProblem(optf, [min_guess])
 opt = solve(optprob, NLopt.LD_LBFGS())
 ```
 
@@ -75,9 +75,11 @@ println(opt.u)
 To get the maximum, we just minimize the negative of the function:
 
 ```@example minmax
-optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
+fminus(t,_) = -sol(first(t),idxs=4)
+
+optf = OptimizationFunction(fminus, Optimization.AutoForwardDiff())
 min_guess = 22.0
-optprob2 = OptimizationProblem(optf, min_guess)
+optprob2 = OptimizationProblem(optf, [min_guess])
 opt2 = solve(optprob2, NLopt.LD_LBFGS())
 ```
 
