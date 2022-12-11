@@ -58,7 +58,7 @@ f = (t) -> sol(t,idxs=4)
 function is `f`:
 
 ```@example minmax
-using Optimization, OptimizationNLopt
+using Optimization, OptimizationNLopt, ForwardDiff
 optf = OptimizationFunction(f, AutoForwardDiff())
 min_guess = 18.0
 optprob = OptimizationProblem(optf, min_guess)

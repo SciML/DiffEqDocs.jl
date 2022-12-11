@@ -137,7 +137,7 @@ analysis_plot2(sol6, H, L)
 There is almost no energy variation but angular momentum varies quite bit. How about only project to the angular momentum conservation manifold?
 
 ```@example kepler
-function angular_manifold(residual,u)
+function angular_manifold(residual,u,p,t)
     residual[1:2] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
