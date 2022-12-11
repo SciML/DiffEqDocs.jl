@@ -25,11 +25,13 @@ Optimization = "7f7a1694-90dd-40f0-9382-eb1efda571ba"
 OptimizationNLopt = "4e6fcdb7-1186-4e1f-a706-475e75c168bb"
 OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+RecursiveArrayTools = "731186ca-8d62-57ce-b412-fbd966d074cd"
 SDEProblemLibrary = "c72e72a9-a271-4b2b-8966-303ed956772e"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 AlgebraicMultigrid = "0.5"

@@ -296,17 +296,14 @@ Now we build and solve the `EnsembleProblem` with this base problem and `prob_fu
 
 ```julia
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
-sim = solve(ensemble_prob,Tsit5(),EnsembleDistributed(),trajectories=100)
+sim = solve(ensemble_prob,Tsit5(),EnsembleDistributed(),trajectories=10)
 ```
 
-We can use the plot recipe to plot what the 100 ODEs look like:
+We can use the plot recipe to plot what the 10 ODEs look like:
 
 ```julia
-plotly()
 plot(sim,linealpha=0.4)
 ```
-
-![monte_carlo_plot](../assets/monte_carlo_plot.png)
 
 We note that if we wanted to find out what the initial condition was for a given
 trajectory, we can retrieve it from the solution. `sim[i]` returns the `i`th
@@ -324,14 +321,15 @@ approach, which will make use of the different cores within a single computer.
 Because the memory is shared across the different threads, it is not necessary to
 use the `@everywhere` macro. Instead, the same problem can be implemented simply as:
 
-```julia
+```@example ensemble1_2
 using DifferentialEquations
 prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 function prob_func(prob,i,repeat)
   remake(prob,u0=rand()*prob.u0)
 end
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
-sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=100)
+sim = solve(ensemble_prob,Tsit5(),EnsembleThreads(),trajectories=10)
+using Plots; plot(sim)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
@@ -348,7 +346,7 @@ some index in `1:100`, and it's different for each trajectory.
 So, if we wanted to use a grid of evenly spaced initial conditions from `0` to `1`,
 we could simply index the `linspace` type:
 
-```julia
+```@example ensemble1_3
 initial_conditions = range(0, stop=1, length=100)
 function prob_func(prob,i,repeat)
   remake(prob,u0=initial_conditions[i])
@@ -363,7 +361,7 @@ Let's solve the same SDE but with varying parameters. Let's create a Lotka-Volte
 system with multiplicative noise. Our Lotka-Volterra system will have as its
 drift component:
 
-```julia
+```@example ensemble2
 function f(du,u,p,t)
   du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
   du[2] = -3 * u[2] + u[1]*u[2]
@@ -372,7 +370,7 @@ end
 
 For our noise function we will use multiplicative noise:
 
-```julia
+```@example ensemble2
 function g(du,u,p,t)
   du[1] = p[3]*u[1]
   du[2] = p[4]*u[2]
@@ -381,7 +379,8 @@ end
 
 Now we build the SDE with these functions:
 
-```julia
+```@example ensemble2
+using DifferentialEquations
 p = [1.5,1.0,0.1,0.1]
 prob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)
 ```
@@ -392,7 +391,7 @@ the parameters for the amount of noise using `0.3rand(2)` as our parameters.
 Once again, we do this with a `prob_func`, and here we modify the parameters in
 `prob.p`:
 
-```julia
+```@example ensemble2
 # `p` is a global variable, referencing it would be type unstable.
 # Using a let block defines a small local scope in which we can
 # capture that local `p` which isn't redefined anywhere in that local scope.
@@ -400,34 +399,28 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 prob_func = let p=p
     (prob,i,repeat) -> begin
         x = 0.3rand(2)
-        remake(prob, p=[p[1], p[2], x])
+        remake(prob, p=[p[1], p[2], x[1], x[2]])
     end
 end
 ```
 
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
-```julia
+```@example ensemble2
 ensemble_prob = EnsembleProblem(prob,prob_func=prob_func)
 sim = solve(ensemble_prob,SRIW1(),trajectories=10)
-using Plots; plotly()
 using Plots; plot(sim,linealpha=0.6,color=:blue,idxs=(0,1),title="Phase Space Plot")
 plot!(sim,linealpha=0.6,color=:red,idxs=(0,2),title="Phase Space Plot")
 ```
-
-![monte_lotka_blue](../assets/monte_carlo_blue.png)
 
 We can then summarize this information with the mean/variance bounds using a
 `EnsembleSummary` plot. We will take the mean/quantile at every `0.1` time
 units and directly plot the summary:
 
-```julia
+```@example ensemble2
 summ = EnsembleSummary(sim,0:0.1:10)
-pyplot() # Note that plotly does not support ribbon plots
 plot(summ,fillalpha=0.5)
 ```
-
-![monte_carlo_quantile](../assets/monte_carlo_quantile.png)
 
 Note that here we used the quantile bounds, which default to `[0.05,0.95]` in
 the `EnsembleSummary` constructor. We can change to standard error of the mean
@@ -440,15 +433,16 @@ the standard error of the mean for the final time point below our tolerance
 `0.5`. Since we only care about the endpoint, we can tell the `output_func`
 to discard the rest of the data.
 
-```julia
+```@example ensemble3
 function output_func(sol,i)
-  last(sol)
+  last(sol), false
 end
 ```
 
 Our `prob_func` will simply randomize the initial condition:
 
-```julia
+```@example ensemble3
+using DifferentialEquations
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 
@@ -461,7 +455,8 @@ Our reduction function will append the data from the current batch to the previo
 batch, and declare convergence if the standard error of the mean is calculated
 as sufficiently small:
 
-```julia
+```@example ensemble3
+using Statistics
 function reduction(u,batch,I)
   u = append!(u,batch)
   finished = (var(u) / sqrt(last(I))) / mean(u) < 0.5
@@ -471,7 +466,7 @@ end
 
 Then we can define and solve the problem:
 
-```julia
+```@example ensemble3
 prob2 = EnsembleProblem(prob,prob_func=prob_func,output_func=output_func,reduction=reduction,u_init=Vector{Float64}())
 sim = solve(prob2,Tsit5(),trajectories=10000,batch_size=20)
 ```
@@ -487,7 +482,7 @@ between batches. For example, say we only care about the mean at the end once
 again. Instead of saving the solution at the end for each trajectory, we can instead
 save the running summation of the endpoints:
 
-```julia
+```@example ensemble3
 function reduction(u,batch,I)
   u+sum(batch),false
 end
@@ -505,7 +500,7 @@ In this example we will show how to analyze a `EnsembleSolution`. First, let's
 generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x2`
 system of linear stochastic differential equations:
 
-```julia
+```@example ensemble4
 function f(du,u,p,t)
   for i = 1:length(u)
     du[i] = 1.01*u[i]
@@ -516,6 +511,7 @@ function σ(du,u,p,t)
     du[i] = .87*u[i]
   end
 end
+using DifferentialEquations
 prob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2Dlinear
 ```
 
@@ -524,7 +520,7 @@ with `trajectories=10`. Since we wish to compare values at the timesteps, we nee
 to make sure the steps all hit the same times. Thus we set `adaptive=false` and
 explicitly give a `dt`.
 
-```julia
+```@example ensemble4
 prob2 = EnsembleProblem(prob)
 sim = solve(prob2,SRIW1(),dt=1//2^(3),trajectories=10,adaptive=false)
 ```
@@ -534,25 +530,26 @@ compatible with adaptive timestepping. Using adaptivity is usually more efficien
 
 We can compute the mean and the variance at the 3rd timestep using:
 
-```julia
+```@example ensemble4
+using DifferentialEquations.EnsembleAnalysis
 m,v = timestep_meanvar(sim,3)
 ```
 
 or we can compute the mean and the variance at the `t=0.5` using:
 
-```julia
+```@example ensemble4
 m,v = timepoint_meanvar(sim,0.5)
 ```
 
 We can get a series for the mean and the variance at each time step using:
 
-```julia
+```@example ensemble4
 m_series,v_series = timeseries_steps_meanvar(sim)
 ```
 
 or at chosen values of `t`:
 
-```julia
+```@example ensemble4
 ts = 0:0.1:1
 m_series = timeseries_point_mean(sim,ts)
 ```
@@ -560,20 +557,20 @@ m_series = timeseries_point_mean(sim,ts)
 Note that these mean and variance series can be directly plotted. We can
 compute covariance matrices similarly:
 
-```julia
+```@example ensemble4
 timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt
 timeseries_point_meancov(sim,0:1//2^(3):1,0:1//2^(3):1) # Use time points, interpolate
 ```
 
 For general analysis, we can build a `EnsembleSummary` type.
 
-```julia
+```@example ensemble4
 summ = EnsembleSummary(sim)
 ```
 
 will summarize at each time step, while
 
-```julia
+```@example ensemble4
 summ = EnsembleSummary(sim,0.0:0.1:1.0)
 ```
 
@@ -582,25 +579,19 @@ visualize the results we can plot it. Since there are 8 components to
 the differential equation, this can get messy, so let's only plot the
 3rd component:
 
-```julia
-plot(summ;idxs=3)
+```@example ensemble4
+using Plots; plot(summ;idxs=3)
 ```
-
-![monte_ribbon](../assets/monte_ribbon.png)
 
 We can change to errorbars instead of ribbons and plot two different
 indices:
 
-```julia
+```@example ensemble4
 plot(summ;idxs=(3,5),error_style=:bars)
 ```
 
-![monte_bars](../assets/monte_bars.png)
-
 Or we can simply plot the mean of every component over time:
 
-```julia
+```@example ensemble4
 plot(summ;error_style=:none)
 ```
-
-![monte_means](../assets/monte_means.png)

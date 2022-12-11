@@ -76,7 +76,7 @@ and `terminate!` can be used to cause the simulation to stop.
 Assume we have a patient whose internal drug concentration follows exponential decay, i.e. the linear ODE with
 a negative coefficient:
 
-```julia
+```@example callback1
 using DifferentialEquations
 function f(du,u,p,t)
     du[1] = -u[1]
@@ -88,47 +88,38 @@ sol = solve(prob,Tsit5())
 using Plots; plot(sol)
 ```
 
-![Linear Decay](../assets/lineardecay.png)
-
 Now assume we wish to give the patient a dose of 10 at time `t==4`. For this,
 we can use a `DiscreteCallback` which will only be true at `t==4`:
 
-```julia
+```@example callback1
 condition(u,t,integrator) = t==4
 affect!(integrator) = integrator.u[1] += 10
 cb = DiscreteCallback(condition,affect!)
 ```
 
-
-
 If we then solve with this callback enabled, we see no change:
 
-```julia
+```@example callback1
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
-
-![Linear Decay](../assets/lineardecay.png)
-
 
 The reason there is no change is because the `DiscreteCallback` only applies at
 a specific time, and the integrator never hit that time. Thus we would like to
 force the ODE solver to step exactly at `t=4` so that the condition can be applied.
 We can do that with the `tstops` argument:
 
-```julia
+```@example callback1
 sol = solve(prob,Tsit5(),callback=cb,tstops=[4.0])
 plot(sol)
 ```
-
-![Linear Decay Dose](../assets/lineardecay_dose.png)
 
 and thus we achieve the desired result.
 
 Performing multiple doses then just requires that we have multiple points which
 are hit. For example, to dose at time `t=4` and `t=8`, we can do the following:
 
-```julia
+```@example callback1
 dosetimes = [4.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
@@ -137,14 +128,12 @@ sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
 
-![Linear Decay Dose](../assets/lineardecay_2dose.png)
-
 We can then use this mechanism to make the model arbitrarily complex. For
 example, let's say there's now 3 dose times, but the dose only triggers if the
 current concentration is below 1.0. Additionally, the dose is now `10t` instead
 of just `10`. This model is implemented as simply:
 
-```julia
+```@example callback1
 dosetimes = [4.0,6.0,8.0]
 condition(u,t,integrator) = t ∈ dosetimes && (u[1] < 1.0)
 affect!(integrator) = integrator.u[1] += 10integrator.t
@@ -152,8 +141,6 @@ cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb,tstops=dosetimes)
 plot(sol)
 ```
-
-![Linear Decay Dose](../assets/lineardecay_2dose_complex.png)
 
 #### PresetTimeCallback
 
@@ -163,15 +150,13 @@ The `PresetTimeCallback(tstops,affect!)` takes an array of times and an `affect!
 function to apply. Thus to do the simple 2 dose example with this callback, we
 could do the following:
 
-```julia
+```@example callback1
 dosetimes = [4.0,8.0]
 affect!(integrator) = integrator.u[1] += 10
 cb = PresetTimeCallback(dosetimes,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
 plot(sol)
 ```
-
-![Linear Decay Dose](../assets/lineardecay_2dose.png)
 
 Notice that this version will automatically set the `tstops` for you.
 
@@ -182,7 +167,7 @@ parameters. Our parameterized ODE system is as follows:
 
 Our ODE function will use this field as follows:
 
-```julia
+```@example callback2
 function f(du,u,p,t)
     du[1] = -0.5*u[1] + p
     du[2] = -0.5*u[2]
@@ -195,7 +180,7 @@ the value of `p`, and at `t=8.0` we will want to decrease the value of `p`. Usin
 the [`DiscreteCallback` interface](@ref discrete_callback), we code these conditions
 as follows:
 
-```julia
+```@example callback2
 const tstop1 = [5.]
 const tstop2 = [8.]
 
@@ -213,7 +198,7 @@ Now we have to apply an effect when these conditions are reached. When `conditio
 is hit (at `t=5.0`), we will increase `p` to 1.5. When `condition2` is reached,
 we will decrease `p` to `-1.5`. This is done via the functions:
 
-```julia
+```@example callback2
 function affect!(integrator)
   integrator.p = 1.5
 end
@@ -225,7 +210,8 @@ end
 
 With these functions we can build our callbacks:
 
-```julia
+```@example callback2
+using DifferentialEquations
 save_positions = (true,true)
 
 cb = DiscreteCallback(condition, affect!, save_positions=save_positions)
@@ -239,7 +225,7 @@ cbs = CallbackSet(cb,cb2)
 
 Now we define our initial condition. We will start at `[10.0;10.0]` with `p=0.0`.
 
-```julia
+```@example callback2
 u0 = [10.0;10.0]
 p = 0.0
 prob = ODEProblem(f,u0,(0.0,10.0),p)
@@ -248,12 +234,11 @@ prob = ODEProblem(f,u0,(0.0,10.0),p)
 Lastly we solve the problem. Note that we must pass `tstop` values of `5.0` and
 `8.0` to ensure the solver hits those timepoints exactly:
 
-```julia
+```@example callback2
 const tstop = [5.;8.]
 sol = solve(prob,Tsit5(),callback = cbs, tstops=tstop)
+using Plots; plot(sol)
 ```
-
-![data_array_plot](../assets/data_array.png)
 
 It's clear from the plot how the controls affected the outcome.
 
@@ -271,7 +256,7 @@ implement in `affect!`.
 
 Since the effect is supposed to occur every timestep, we use the trivial condition:
 
-```julia
+```@example callback3
 condition = function (u,t,integrator)
     true
 end
@@ -281,7 +266,7 @@ which always returns true. For our effect we will overload the call on a type.
 This type will have a value for the current maximum. By doing it this way, we
 can store the current state for the running maximum. The code is as follows:
 
-```julia
+```@example callback3
 mutable struct AutoAbstolAffect{T}
   curmax::T
 end
@@ -298,7 +283,7 @@ the absolute tolerance of the integrator as the algorithm states.
 
 Lastly, we can wrap it in a nice little constructor:
 
-```julia
+```@example callback3
 function AutoAbstol(save=true;init_curmax=1e-6)
   affect! = AutoAbstolAffect(init_curmax)
   condtion = (u,t,integrator) -> true
@@ -310,8 +295,9 @@ end
 This creates the `DiscreteCallback` from the `affect!` and `condition` functions
 that we implemented. Now
 
-```julia
-cb = AutoAbstol(save=true;init_curmax=1e-6)
+```@example callback3
+using DifferentialEquations
+cb = AutoAbstol(true;init_curmax=1e-6)
 ```
 
 returns the callback that we created. We can then solve an equation using this
@@ -319,15 +305,23 @@ by simply passing it with the `callback` keyword argument. Using the integrator
 interface rather than the solve interface, we can step through one by one
 to watch the absolute tolerance increase:
 
-```julia
+```@example callback3
+function g(u,p,t)
+  -u[1]
+end
+u0 = 10.0
+const V = 1
+prob = ODEProblem(g,u0,(0.0,10.0))
 integrator = init(prob,BS3(),callback=cb)
 at1 = integrator.opts.abstol
 step!(integrator)
 at2 = integrator.opts.abstol
-@test at1 < at2
+at1 <= at2
+```
+```@example callback3
 step!(integrator)
 at3 = integrator.opts.abstol
-@test at2 < at3
+at2 <= at3
 ```
 
 Note that this example is contained in the [Callback Library](@ref callback_library),
@@ -341,7 +335,7 @@ Let's look at the bouncing ball. Let the first variable `y` is the height which
 changes by `v` the velocity, where the velocity is always changing at `-g` which
 is the gravitational constant. This is the equation:
 
-```julia
+```@example callback4
 function f(du,u,p,t)
   du[1] = u[2]
   du[2] = -p
@@ -354,7 +348,7 @@ that's how it's specified. If a generalization is needed we can talk about
 this (but it needs to be "root-findable"). For here it's clear that we just
 want to check if the ball's height ever hits zero:
 
-```julia
+```@example callback4
 function condition(u,t,integrator) # Event when event_f(u,t) == 0
   u[1]
 end
@@ -367,7 +361,7 @@ points, allowing for the rootfinding behavior to occur.
 Now we have to say what to do when the event occurs. In this case we just
 flip the velocity (the second variable)
 
-```julia
+```@example callback4
 function affect!(integrator)
   integrator.u[2] = -integrator.u[2]
 end
@@ -375,22 +369,21 @@ end
 
 The callback is thus specified by:
 
-```julia
+```@example callback4
+using DifferentialEquations
 cb = ContinuousCallback(condition,affect!)
 ```
 
 Then you can solve and plot:
 
-```julia
+```@example callback4
 u0 = [50.0,0.0]
 tspan = (0.0,15.0)
 p = 9.8
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
-plot(sol)
+using Plots; plot(sol)
 ```
-
-![BallBounce](../assets/ballbounce.png)
 
 As you can see from the resulting image, DifferentialEquations.jl is smart enough
 to use the interpolation to hone in on the time of the event and apply the event
@@ -401,15 +394,13 @@ will save the value(s) at the discontinuity.
 The callback is robust to having multiple discontinuities occur. For example,
 we can integrate for long time periods and get the desired behavior:
 
-```julia
+```@example callback4
 u0 = [50.0,0.0]
 tspan = (0.0,100.0)
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb)
-plot(sol,plotdensity=10000)
+plot(sol)
 ```
-
-![bounce_long](../assets/bounce_long.png)
 
 #### Handling Changing Dynamics and Exactness
 
@@ -417,26 +408,23 @@ Let's make a version of the bouncing ball where the ball sticks to the ground.
 We can do this by introducing a parameter `p` to send the velocity to zero on
 the bounce. This looks as follows:
 
-```julia
+```@example callback4
 function dynamics!(du, u, p, t)
-	du[1] = u[2]
-	du[2] = p[1] * -9.8
+  du[1] = u[2]
+  du[2] = p[1] * -9.8
 end
 function floor_aff!(int)
     int.p[1] = 0
     int.u[2] = 0
     @show int.u[1], int.t
 end
-floor_event = ContinuousCallback(floor_cond, floor_aff!)
+floor_event = ContinuousCallback(condition, floor_aff!)
 u0 = [1.0,0.0]
 p = [1.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
 sol = solve(prob, Tsit5(), callback=floor_event)
 plot(sol)
-@show sol[end] # [4.329177480185359e-16, 0.0]
 ```
-
-![sticky bounce](https://user-images.githubusercontent.com/1814174/122674462-58864100-d1a3-11eb-8946-3acb240d8d51.png)
 
 Notice that at the end, the ball is not at `0.0` like the condition would let
 you believe, but instead it's at `4.329177480185359e-16`. From the printing
@@ -447,13 +435,13 @@ zero? If you instead would have run the simulation to
 value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
 `rootfind` argument of the callback:
 
-```julia
-floor_event = ContinuousCallback(floor_cond, floor_aff!,rootfind=SciMLBase.RightRootFind)
+```@example callback4
+floor_event = ContinuousCallback(condition, floor_aff!,rootfind=SciMLBase.RightRootFind)
 u0 = [1.0,0.0]
 p = [1.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
 sol = solve(prob, Tsit5(), callback=floor_event)
-@show sol[end] # [-1.2647055847076505e-15, 0.0]
+sol[end] # [-1.2647055847076505e-15, 0.0]
 ```
 
 What this means is that there is not 64-bit floating point number `t` such that
@@ -465,19 +453,19 @@ require that the condition is exactly satisfied after the event, you will want
 to add such a change to the `affect!` function. For example, the error correction
 in this case is to add `int.u[1] = 0` to the `affect!`, i.e.:
 
-```julia
+```@example callback4
 function floor_aff!(int)
     int.p[1] = 0
     int.u[1] = 0
     int.u[2] = 0
     @show int.u[1], int.t
 end
-floor_event = ContinuousCallback(floor_cond, floor_aff!)
+floor_event = ContinuousCallback(condition, floor_aff!)
 u0 = [1.0,0.0]
 p = [1.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 1.75), p)
 sol = solve(prob, Tsit5(), callback=floor_event)
-@show sol[end] # [0.0,0.0]
+sol[end] # [0.0,0.0]
 ```
 
 and now the sticky behavior is perfect to the floating point.
@@ -490,27 +478,23 @@ we should have Zeno-like behavior and see an accumulation point of bounces. We
 will use some extra parameters to count the number of bounces (to infinity) and
 find the accumulation point. Let's watch!
 
-```julia
+```@example callback4
 function dynamics!(du, u, p, t)
-	du[1] = u[2]
-	du[2] = -9.8
+  du[1] = u[2]
+  du[2] = -9.8
 end
-floor_cond(u, t, int) = u[1]
 function floor_aff!(int)
     int.u[2] *= -0.5
     int.p[1] += 1
     int.p[2] = int.t
 end
-floor_event = ContinuousCallback(floor_cond, floor_aff!)
+floor_event = ContinuousCallback(condition, floor_aff!)
 u0 = [1.0,0.0]
 p = [0.0,0.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 2.), p)
 sol = solve(prob, Tsit5(), callback=floor_event)
 plot(sol)
-@show p # [8.0, 1.3482031881786312]
 ```
-
-![ball floor](https://user-images.githubusercontent.com/1814174/122674606-e2360e80-d1a3-11eb-9e91-51b00eee1dcc.png)
 
 From the readout we can see the ball only bounced 8 times before it went below
 the floor, what happened? What happened is floating point error. Because one
@@ -548,12 +532,11 @@ velocity to exactly zero.
 With these floating point corrections in mind, the accumulation calculations
 looks as follows:
 
-```julia
+```@example callback4
 function dynamics!(du, u, p, t)
-	du[1] = u[2]
-	du[2] = p[1] * -9.8
+  du[1] = u[2]
+  du[2] = p[1] * -9.8
 end
-floor_cond(u, t, int) = u[1]
 function floor_aff!(int)
     int.u[2] *= -0.5
     if int.dt > 1e-12
@@ -566,30 +549,25 @@ function floor_aff!(int)
     int.p[2] += 1
     int.p[3] = int.t
 end
-floor_event = ContinuousCallback(floor_cond, floor_aff!)
+floor_event = ContinuousCallback(condition, floor_aff!)
 u0 = [1.0,0.0]
 p = [1.0,0.0,0.0]
 prob = ODEProblem{true}(dynamics!, u0, (0., 2.), p)
 sol = solve(prob, Tsit5(), callback=floor_event)
 plot(sol)
-@show p # [0.0, 41.0, 1.355261854357056]
 ```
-
-![bounce accumulation](https://user-images.githubusercontent.com/1814174/122675006-89677580-d1a5-11eb-9ba2-fd83c14dbb3e.png)
 
 With this corrected version, we see that after 41 bounces the accumulation
 point is reached at `t = 1.355261854357056`. To really see the accumulation,
 let's zoom in:
 
-```julia
+```@example callback4
 p1 = plot(sol,idxs=1,tspan=(1.25,1.40))
 p2 = plot(sol,idxs=1,tspan=(1.35,1.36))
 p3 = plot(sol,idxs=1,tspan=(1.354,1.35526))
 p4 = plot(sol,idxs=1,tspan=(1.35526,1.35526185))
 plot(p1,p2,p3,p4)
 ```
-
-![bounce accumulation zoom](https://user-images.githubusercontent.com/1814174/122675034-a7cd7100-d1a5-11eb-8403-dd37a83e5aae.png)
 
 I think Zeno would be proud of our solution.
 
@@ -601,7 +579,8 @@ in a callback.
 
 In this example we will solve the differential equation:
 
-```julia
+```@example callback4
+using DifferentialEquations
 u0 = [1.,0.]
 function fun2(du,u,p,t)
    du[2] = -u[1]
@@ -617,56 +596,52 @@ the sine part, `u[2]` becomes positive. There are two things we may be looking f
 A `DiscreteCallback` will cause this to halt at the first step such that the condition
 is satisfied. For example, we could use:
 
-```julia
+```@example callback4
 condition(u,t,integrator) = u[2]>0
 affect!(integrator) = terminate!(integrator)
 cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
 ```
 
-![discrete_terminate](../assets/discrete_terminate.png)
-
 However, in many cases we wish to halt exactly at the point of time that the
 condition is satisfied. To do that, we use a continuous callback. The condition
 must thus be a function which is zero at the point we want to halt. Thus we
 use the following:
 
-```julia
+```@example callback4
 condition(u,t,integrator) = u[2]
 affect!(integrator) = terminate!(integrator)
 cb = ContinuousCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
+using Plots; plot(sol)
 ```
-
-![simple_terminate](../assets/simple_terminate.png)
 
 Note that this uses rootfinding to approximate the "exact" moment of the crossing.
 Analytically we know the value is `pi`, and here the integration terminates at
 
-```julia
+```@example callback4
 sol.t[end] # 3.1415902502224307
 ```
 
 Using a more accurate integration increases the accuracy of this prediction:
 
-```julia
+```@example callback4
 sol = solve(prob,Vern8(),callback=cb,reltol=1e-12,abstol=1e-12)
-sol.t[end] # 3.1415926535896035
 #π = 3.141592653589703...
+sol.t[end] # 3.1415926535896035
 ```
 
 Now say we wish to find the when the first period is over, i.e. we want to ignore
 the upcrossing and only stop on the downcrossing. We do this by ignoring the
 `affect!` and only passing an `affect!` for the second:
 
-```julia
+```@example callback4
 condition(u,t,integrator) = u[2]
 affect!(integrator) = terminate!(integrator)
 cb = ContinuousCallback(condition,nothing,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
+plot(sol)
 ```
-
-![downcrossing_terminate](../assets/downcrossing_terminate.png)
 
 Notice that passing only one `affect!` is the same as
 `ContinuousCallback(condition,affect!,affect!)`, i.e. both upcrossings and
@@ -682,7 +657,7 @@ like to tackle here is a cell population. We start with 1 cell with a protein `X
 which increases linearly with time with rate parameter `α`. Since we are going
 to be changing the size of the population, we write the model in the general form:
 
-```julia
+```@example callback5
 const α = 0.3
 function f(du,u,p,t)
   for i in 1:length(u)
@@ -694,7 +669,7 @@ end
 Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
-```julia
+```@example callback5
 function condition(u,t,integrator) # Event when event_f(u,t) == 0
   1-maximum(u)
 end
@@ -707,7 +682,7 @@ into two cells, giving a random amount of protein to each one. We can do this
 by resizing the cache (adding 1 to the length of all of the caches) and setting
 the values of these two cells at the time of the event:
 
-```julia
+```@example callback5
 function affect!(integrator)
   u = integrator.u
   resize!(integrator,length(u)+1)
@@ -724,7 +699,8 @@ is used to change the length of all of the internal caches (which includes `u`)
 to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:
 
-```julia
+```@example callback5
+using DifferentialEquations
 callback = ContinuousCallback(condition,affect!)
 u0 = [0.2]
 tspan = (0.0,10.0)
@@ -737,23 +713,20 @@ plot from the solution object directly. For example, let's make a plot of how
 many cells there are at each time. Since these are discrete values, we calculate
 and plot them directly:
 
-```julia
+```@example callback5
+using Plots
 plot(sol.t,map((x)->length(x),sol[:]),lw=3,
      ylabel="Number of Cells",xlabel="Time")
 ```
 
-![NumberOfCells](../assets/numcells.png)
-
 Now let's check-in on a cell. We can still use the interpolation to get a nice
 plot of the concentration of cell 1 over time. This is done with the command:
 
-```julia
+```@example callback5
 ts = range(0, stop=10, length=100)
 plot(ts,map((x)->x[1],sol.(ts)),lw=3,
      ylabel="Amount of X in Cell 1",xlabel="Time")
 ```
-
-![Cell1](../assets/cell1.png)
 
 Notice that every time it hits 1 the cell divides, giving cell 1 a random amount
 of `X` which then grows until the next division.
@@ -773,7 +746,7 @@ This allows you to build sophisticated models of populations with births and dea
 
 This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as -
 
-```julia
+```@example callback6
 function f(du,u,p,t)
   du[1] = u[2]
   du[2] = -p
@@ -784,7 +757,7 @@ end
 
 where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `u[3]` denotes `x`-coordinate and `u[4]` denotes velocity in `x`-direction. We will make a `VectorContinuousCallback` of length 2 - one for `x` axis collision, one for walls parallel to `y` axis.
 
-```julia
+```@example callback6
 function condition(out,u,t,integrator) # Event when event_f(u,t) == 0
   out[1] = u[1]
   out[2] = (u[3] - 10.0)u[3]
@@ -797,21 +770,18 @@ function affect!(integrator, idx)
     integrator.u[4] = -0.9integrator.u[4]
   end
 end
-
+using DifferentialEquations
 cb = VectorContinuousCallback(condition,affect!,2)
 ```
 
 It is evident that `out[2]` will be zero when `u[3]` (x-coordinate) is either `0.0` or `10.0`. And when that happens, we flip the velocity with some coefficient of restitution (`0.9`).
 
 Completeting rest of the code-
-```julia
+```@example callback6
 u0 = [50.0,0.0,0.0,2.0]
 tspan = (0.0,15.0)
 p = 9.8
 prob = ODEProblem(f,u0,tspan,p)
 sol = solve(prob,Tsit5(),callback=cb,dt=1e-3,adaptive=false)
-plot(sol,idxs=(1,3))
+using Plots; plot(sol,idxs=(1,3))
 ```
-And you get the following output:
-
-![Cell1](../assets/ball2.png)
