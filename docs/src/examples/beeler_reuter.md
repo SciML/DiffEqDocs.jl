@@ -28,7 +28,7 @@ Let's start by developing a CPU only IMEX solver. The main idea is to use the *D
 
 First, we define the model constants:
 
-```@example beeler
+```julia
 const v0 = -84.624
 const v1 = 10.0
 const C_K1 = 1.0f0
@@ -51,8 +51,8 @@ Note that the constants are defined as `Float32` and not `Float64`. The reason i
 
 Next, we define a struct to contain our state. `BeelerReuterCpu` is a functor and we will define a deriv function as its associated function.
 
-```@example beeler
-mutable struct BeelerReuterCpu <: Function
+```julia
+mutable struct BeelerReuterCpu
     t::Float64              # the last timestep time to calculate Δt
     diff_coef::Float64      # the diffusion-coefficient (coupling strength)
 
@@ -92,7 +92,7 @@ end
 
 The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced. Note that we could have also used [DiffEqOperators.jl](https://github.com/JuliaDiffEq/DiffEqOperators.jl) to automate this step.
 
-```@example beeler
+```julia
 # 5-point stencil
 function laplacian(Δu, u)
     n1, n2 = size(u)
@@ -154,7 +154,7 @@ $$g(t + \Delta{t}) = g(t) + \Delta{t}\frac{dg}{dt}.$$
 
 `rush_larsen` is a helper function that use the Rush-Larsen method to integrate the gating variables.
 
-```@example beeler
+```julia
 @inline function rush_larsen(g, α, β, Δt)
     inf = α/(α+β)
     τ = 1f0 / (α+β)
@@ -164,7 +164,7 @@ end
 
 The gating variables are updated as below. The details of how to calculate $\alpha$ and $\beta$ are based on the Beeler-Reuter model and not of direct interest to this tutorial.
 
-```@example beeler
+```julia
 function update_M_cpu(g, v, Δt)
     # the condition is needed here to prevent NaN when v == 47.0
     α = isapprox(v, 47.0f0) ? 10.0f0 : -(v+47.0f0) / (exp(-0.1f0*(v+47.0f0)) - 1.0f0)
@@ -205,7 +205,7 @@ end
 
 The intracelleular calcium is not technically a gating variable, but we can use a similar explicit exponential integrator for it.
 
-```@example beeler
+```julia
 function update_C_cpu(g, d, f, v, Δt)
     ECa = D_Ca - 82.3f0 - 13.0278f0 * log(g)
     kCa = C_s * g_s * d * f
@@ -236,7 +236,7 @@ Now, it is time to define the derivative function as an associated function of *
 
 Here, every time step is called three times. We distinguish between two types of calls to the deriv function. When $t$ changes, the gating variables are updated by calling `update_gates_cpu`:
 
-```@example beeler
+```julia
 function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
     let Δt = Float32(Δt)
         n1, n2 = size(u)
@@ -260,7 +260,7 @@ end
 
 On the other hand, du is updated at each time step, since it is independent of $\Delta{t}$.
 
-```@example beeler
+```julia
 # iK1 is the inward-rectifying potassium current
 function calc_iK1(v)
     ea = exp(0.04f0*(v+85f0))
@@ -314,7 +314,7 @@ end
 
 Finally, we put everything together is our deriv function, which is a call on `BeelerReuterCpu`.
 
-```@example beeler
+```julia
 function (f::BeelerReuterCpu)(du, u, p, t)
     Δt = t - f.t
 
@@ -337,7 +337,7 @@ end
 
 Time to test! We need to define the starting transmembrane potential with the help of global constants **v0** and **v1**, which represent the resting and activated potentials.
 
-```@example beeler
+```julia
 const N = 192;
 u0 = fill(v0, (N, N));
 u0[90:102,90:102] .= v1;   # a small square in the middle of the domain
@@ -345,14 +345,14 @@ u0[90:102,90:102] .= v1;   # a small square in the middle of the domain
 
 The initial condition is a small square in the middle of the domain.
 
-```@example beeler
+```julia
 using Plots
 heatmap(u0)
 ```
 
 Next, the problem is defined:
 
-```@example beeler
+```julia
 using DifferentialEquations, Sundials
 
 deriv_cpu = BeelerReuterCpu(u0, 1.0);
@@ -361,11 +361,11 @@ prob = ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 
 For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
 
-```@example beeler
+```julia
 @time sol = solve(prob, CVODE_BDF(linear_solver=:GMRES), saveat=100.0);
 ```
 
-```@example beeler
+```julia
 heatmap(sol.u[end])
 ```
 
@@ -399,7 +399,7 @@ The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global
 
 We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
 
-```@example beeler
+```julia
 using CUDA
 
 mutable struct BeelerReuterGpu <: Function
@@ -447,7 +447,7 @@ end
 
 The Laplacian function remains unchanged. The main change to the explicit gating solvers is that *exp* and *expm1* functions are prefixed by *CUDAnative.*. This is a technical nuisance that will hopefully be resolved in future.
 
-```@example beeler
+```julia
 function rush_larsen_gpu(g, α, β, Δt)
     inf = α/(α+β)
     τ = 1.0/(α+β)
@@ -503,7 +503,7 @@ end
 
 Similarly, we modify the functions to calculate the individual currents by adding CUDAnative prefix.
 
-```@example beeler
+```julia
 # iK1 is the inward-rectifying potassium current
 function calc_iK1(v)
     ea = CUDAnative.exp(0.04f0*(v+85f0))
@@ -563,7 +563,7 @@ A CUDA programmer is free to interpret the calculated index however it fits the 
 In the GPU version of the solver, each thread works on a single element of the medium, indexed by a (x,y) pair.
 `update_gates_gpu` and `update_du_gpu` are very similar to their CPU counterparts but are in fact CUDA kernels where the *for* loops are replaced with CUDA specific indexing. Note that CUDA kernels cannot return a valve; hence, *nothing* at the end.
 
-```@example beeler
+```julia
 function update_gates_gpu(u, XI, M, H, J, D, F, C, Δt)
     i = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
     j = (blockIdx().y-UInt32(1)) * blockDim().y + threadIdx().y
@@ -608,7 +608,7 @@ end
 
 Finally, the deriv function is modified to copy *u* to GPU and copy *du* back and to invoke CUDA kernels.
 
-```@example beeler
+```julia
 function (f::BeelerReuterGpu)(du, u, p, t)
     L = 16   # block size
     Δt = t - f.t
@@ -636,7 +636,7 @@ end
 
 Ready to test!
 
-```@example beeler
+```julia
 using DifferentialEquations, Sundials
 
 deriv_gpu = BeelerReuterGpu(u0, 1.0);
@@ -644,7 +644,7 @@ prob = ODEProblem(deriv_gpu, u0, (0.0, 50.0));
 @time sol = solve(prob, CVODE_BDF(linear_solver=:GMRES), saveat=100.0);
 ```
 
-```@example beeler
+```julia
 heatmap(sol.u[end])
 ```
 
@@ -652,7 +652,7 @@ heatmap(sol.u[end])
 
 We achieve around a 6x speedup with running the explicit portion of our IMEX solver on a GPU. The major bottleneck of this technique is the communication between CPU and GPU. In its current form, not all of the internals of the method utilize GPU acceleration. In particular, the implicit equations solved by GMRES are performed on the CPU. This partial CPU nature also increases the amount of data transfer that is required between the GPU and CPU (performed every f call). Compiling the full ODE solver to the GPU would solve both of these issues and potentially give a much larger speedup. [JuliaDiffEq developers are currently working on solutions to alleviate these issues](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/), but these will only be compatible with native Julia solvers (and not Sundials).
 
-```@example beeler, echo = false, skip="notebook"
+```julia, echo = false, skip="notebook"
 using SciMLTutorials
 SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
 ```
