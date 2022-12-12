@@ -103,7 +103,7 @@ Let's try `GN_ORIG_DIRECT_L`:
 
 ```@example minmax
 gopt = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
-gopt2 = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
+gopt2 = solve(optprob2, NLopt.GN_ORIG_DIRECT_L())
 
 @show gopt.u, gopt2.u
 ```
