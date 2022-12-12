@@ -317,7 +317,7 @@ end
 
 #Pass to solvers
 prob = ODEProblem(Hénon_Heiles, initial, tspan)
-sol = solve(prob, Vern9(), abstol=1e-16, rel_tol=1e-16);
+sol = solve(prob, Vern9(), abstol=1e-16, reltol=1e-16);
 ```
 
 ```@example physics
@@ -396,9 +396,4 @@ gr()
 plot(sol3.t, energy .- energy[1], title = "Change in Energy over Time", xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
-Note that we are using the `DPRKN6` sovler at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, rel_tol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.
-
-```@example physics, echo = false, skip="notebook"
-using SciMLTutorials
-SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
-```
+Note that we are using the `DPRKN6` sovler at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.
