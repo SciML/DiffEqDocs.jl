@@ -10,7 +10,7 @@ $$f(t,u) = \frac{du}{dt}$$
 
 The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation.
 
-```julia
+```@example physics
 using OrdinaryDiffEq, Plots
 gr()
 
@@ -58,7 +58,7 @@ $c_1$ is the initial position and $\omega c_2$ is the initial velocity.
 Instead of transforming this to a system of ODEs to solve with `ODEProblem`,
 we can use `SecondOrderODEProblem` as follows.
 
-```julia
+```@example physics
 # Simple Harmonic Oscillator Problem
 using OrdinaryDiffEq, Plots
 
@@ -112,7 +112,7 @@ $$\begin{align*}
 &\dot{d\theta} = - \frac{g}{L}{\sin(\theta)}
 \end{align*}$$
 
-```julia
+```@example physics
 # Simple Pendulum Problem
 using OrdinaryDiffEq, Plots
 
@@ -142,7 +142,7 @@ plot(sol,linewidth=2,title ="Simple Pendulum Problem", xaxis = "Time", yaxis = "
 
 So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.
 
-```julia
+```@example physics
 p = plot(sol,vars = (1,2), xlims = (-9,9), title = "Phase Space Plot", xaxis = "Velocity", yaxis = "Position", leg=false)
 function phase_plot(prob, u0, p, tspan=2pi)
     _prob = ODEProblem(prob.f,u0,(0.0,tspan))
@@ -173,7 +173,7 @@ $$\frac{d}{dt}
 -\sin(\alpha+\beta) - 2\sin(\beta)\frac{(l_\alpha-l_\beta)l_\beta}{3-\cos2\beta} + 2\sin(2\beta)\frac{l_\alpha^2-2(1+\cos\beta)l_\alpha l_\beta + (3+2\cos\beta)l_\beta^2}{(3-\cos2\beta)^2}
 \end{pmatrix}$$
 
-```julia
+```@example physics
 #Double Pendulum Problem
 using OrdinaryDiffEq, Plots
 
@@ -205,10 +205,10 @@ end
 
 #Pass to Solvers
 double_pendulum_problem = ODEProblem(double_pendulum, initial, tspan)
-sol = solve(double_pendulum_problem, Vern7(), abs_tol=1e-10, dt=0.05);
+sol = solve(double_pendulum_problem, Vern7(), abstol=1e-10, dt=0.05);
 ```
 
-```julia
+```@example physics
 #Obtain coordinates in Cartesian Geometry
 ts, ps = polar2cart(sol, l1=L₁, l2=L₂, dt=0.01)
 plot(ps...)
@@ -223,7 +223,7 @@ This helps to understand the dynamics of interactions and is wonderfully pretty.
 
 The Poincaré section in this is given by the collection of $(β,l_β)$ when $α=0$ and $\frac{dα}{dt}>0$.
 
-```julia
+```@example physics
 #Constants and setup
 using OrdinaryDiffEq
 initial2 = [0.01, 0.005, 0.01, 0.01]
@@ -259,7 +259,7 @@ function poincare_map(prob, u₀, p; callback=cb)
 end
 ```
 
-```julia
+```@example physics
 lβrange = -0.02:0.0025:0.02
 p = scatter(sol2, vars=(3,4), leg=false, markersize = 3, msw=0)
 for lβ in lβrange
@@ -291,7 +291,7 @@ $$E = T+V = V(x,y)+\frac{1}{2}(\dot{x}^2+\dot{y}^2).$$
 
 The total energy should conserve as this system evolves.
 
-```julia
+```@example physics
 using OrdinaryDiffEq, Plots
 
 #Setup
@@ -317,15 +317,15 @@ end
 
 #Pass to solvers
 prob = ODEProblem(Hénon_Heiles, initial, tspan)
-sol = solve(prob, Vern9(), abs_tol=1e-16, rel_tol=1e-16);
+sol = solve(prob, Vern9(), abstol=1e-16, reltol=1e-16);
 ```
 
-```julia
+```@example physics
 # Plot the orbit
 plot(sol, vars=(1,2), title = "The orbit of the Hénon-Heiles system", xaxis = "x", yaxis = "y", leg=false)
 ```
 
-```julia
+```@example physics
 #Optional Sanity check - what do you think this returns and why?
 @show sol.retcode
 
@@ -334,7 +334,7 @@ plot(sol, vars=(1,3), title = "Phase space for the Hénon-Heiles system", xaxis 
 plot!(sol, vars=(2,4), leg = false)
 ```
 
-```julia
+```@example physics
 #We map the Total energies during the time intervals of the solution (sol.u here) to a new vector
 #pass it to the plotter a bit more conveniently
 energy = map(x->E(x...), sol.u)
@@ -350,7 +350,7 @@ plot(sol.t, energy .- energy[1], title = "Change in Energy over Time", xaxis = "
 
 To prevent energy drift, we can instead use a symplectic integrator. We can directly define and solve the `SecondOrderODEProblem`:
 
-```julia
+```@example physics
 function HH_acceleration!(dv,v,u,p,t)
     x,y  = u
     dx,dy = dv
@@ -365,19 +365,19 @@ sol2 = solve(prob, KahanLi8(), dt=1/10);
 
 Notice that we get the same results:
 
-```julia
+```@example physics
 # Plot the orbit
 plot(sol2, vars=(3,4), title = "The orbit of the Hénon-Heiles system", xaxis = "x", yaxis = "y", leg=false)
 ```
 
-```julia
+```@example physics
 plot(sol2, vars=(3,1), title = "Phase space for the Hénon-Heiles system", xaxis = "Position", yaxis = "Velocity")
 plot!(sol2, vars=(4,2), leg = false)
 ```
 
 but now the energy change is essentially zero:
 
-```julia
+```@example physics
 energy = map(x->E(x[3], x[4], x[1], x[2]), sol2.u)
 #We use @show here to easily spot erratic behaviour in our system by seeing if the loss in energy was too great.
 @show ΔE = energy[1]-energy[end]
@@ -388,7 +388,7 @@ plot(sol2.t, energy .- energy[1], title = "Change in Energy over Time", xaxis = 
 
 And let's try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn't symplectic.
 
-```julia
+```@example physics
 sol3 = solve(prob, DPRKN6());
 energy = map(x->E(x[3], x[4], x[1], x[2]), sol3.u)
 @show ΔE = energy[1]-energy[end]
@@ -396,9 +396,4 @@ gr()
 plot(sol3.t, energy .- energy[1], title = "Change in Energy over Time", xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
-Note that we are using the `DPRKN6` sovler at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abs_tol=1e-16, rel_tol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.
-
-```julia, echo = false, skip="notebook"
-using SciMLTutorials
-SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
-```
+Note that we are using the `DPRKN6` sovler at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.
