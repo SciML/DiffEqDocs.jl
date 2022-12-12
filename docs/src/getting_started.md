@@ -225,13 +225,6 @@ using Plots
 plot(sol)
 ```
 
-If you are in Juno, this will plot to the plot pane. To open an interactive GUI
-(dependent on the backend), use the `gui` command:
-
-```julia
-gui()
-```
-
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
 Additional DiffEq-specific controls are documented [at the plotting page](@ref plot).
 

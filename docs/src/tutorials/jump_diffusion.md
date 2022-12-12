@@ -1,3 +1,5 @@
 # Jump Diffusion Equations
 
-See the [JumpProcesses.jl](https://docs.sciml.ai/JumpProcesses/stable/tutorials/jump_diffusion/) documentation for more information about jump diffusion.
+```@raw html
+<meta http-equiv="Refresh" content="0; url='https://docs.sciml.ai/JumpProcesses/stable/tutorials/jump_diffusion/'" />
+```

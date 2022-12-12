@@ -1,4 +1,4 @@
-# DifferentialEquations.jl: Scientific Machine Learning (SciML) Enabled Simulation and Estimation
+# DifferentialEquations.jl: Efficient Differential Equation Solving in Julia
 
 This is a suite for numerically solving differential equations written in Julia
 and available for use in Julia, Python, and R. The
@@ -94,7 +94,7 @@ be grateful if you could cite our work.
 
 is necessary for any use of DifferentialEquations.jl or the packages that are
 maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl, DiffEqDevTools.jl, etc.).
-Additionally, many of the solvers utilize novel algorithms, and if these algorithms 
+Additionally, many of the solvers utilize novel algorithms, and if these algorithms
 are used we asked that you cite the methods. [Please see our citation page for guidelines](http://sciml.ai/citing.html).
 
 ## Getting Started: Installation And First Steps
@@ -194,21 +194,6 @@ installation of DifferentialEquations.jl will happen on the first invocation of 
 Currently, use from R supported a subset of DifferentialEquations.jl which is documented
 [through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html).
 
-### IJulia Notebook Tutorials
-
-You can access extra tutorials supplied in the
-[DiffEqTutorials.jl repository](https://github.com/SciML/DiffEqTutorials.jl)
-via the commands:
-
-```julia
-using Pkg
-pkg"add https://github.com/SciML/SciMLTutorials.jl"
-using SciMLTutorials
-SciMLTutorials.open_notebooks()
-```
-
-Or you can view the webpages for the rendered tutorials at the links found in the repository.
-
 ### Video Tutorial
 
 [![Video Tutorial](https://user-images.githubusercontent.com/1814174/36342812-bdfd0606-13b8-11e8-9eff-ff219de909e5.PNG)](https://youtu.be/KPEqYtEd-zY)
@@ -243,7 +228,7 @@ such as `OrdinaryDiffEq.jl` for the pure Julia ODE solvers, and decrease the com
 the rest (note: the interface is exactly the same, except using a solver other than those in OrdinaryDiffEq.jl
 will error). We recommend that downstream packages only rely on exactly the packages they need.
 
-The other strategy is to use [PackageCompiler.jl](https://julialang.github.io/PackageCompiler.jl/dev/) to create 
+The other strategy is to use [PackageCompiler.jl](https://julialang.github.io/PackageCompiler.jl/dev/) to create
 a system image that precompiles the whole package. To do this, one simply does:
 
 ```julia
@@ -253,7 +238,7 @@ PackageCompiler.create_sysimage([:DifferentialEquations,:Plots];replace_default=
 
 Note that there are some drawbacks to adding a package in your system image, for example
 the package will never update until you manually rebuild the system image again. For more
-information on the consequences, 
+information on the consequences,
 [see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/dev/sysimages/#Drawbacks-to-custom-sysimages-1)
 
 ### Basics
@@ -411,7 +396,7 @@ Pkg.status(;mode = PKGMODE_MANIFEST) # hide
 </details>
 ```
 ```@raw html
-You can also download the 
+You can also download the
 <a href="
 ```
 ```@eval
