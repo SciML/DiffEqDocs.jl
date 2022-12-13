@@ -533,7 +533,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
   and in case of inexact Jacobians a second order W method.
 - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   4th order interpolant.
-- `Rodas5P - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+- `Rodas5P` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
   4th order interpolant. Has improved stability in the adaptive time stepping embedding.
 
 #### Rosenbrock-W Methods
