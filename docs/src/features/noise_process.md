@@ -8,6 +8,6 @@ in the SDE and RODE solvers. Additionally, the noise processes themselves can
 be simulated and solved using the DiffEq common interface (including the Monte
 Carlo interface).
 
-For more details, see [DiffEqNoiseProcess.jl](noise.sciml.ai/dev)
+For more details, see [DiffEqNoiseProcess.jl](https://docs.sciml.ai/DiffEqNoiseProcess/)
 
 
