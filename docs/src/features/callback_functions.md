@@ -10,12 +10,12 @@ types can be used to build libraries of extension behavior.
 The callback types are defined as follows. There are three primitive callback types: the `ContinuousCallback`, `DiscreteCallback` and the `VectorContinuousCallback`:
 
 - The [`ContinuousCallback`](@ref) is applied when a given continuous *condition function* hits zero. This hitting can happen even within 
-  an integration step and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements 
-  what is known in other problem solving environments as an *Event*.
+  an integration step, and the solver must be able to detect it and adjust the integration step accordingly. This type of callback implements 
+  what is known in other problem-solving environments as an *Event*.
 - The [`DiscreteCallback`](@ref) is applied when its *condition function* is `true`, but the condition is only evaluated at the end of every 
   integration step.
-- The [`VectorContinuousCallback`](@ref) works like a vector of `ContinuousCallbacks` and lets the user specify a vector of continuous callbacks
-  each with simultanious rootfinding equations. The effect that is applied is the effect corresponding to the first/earliest condition that is
+- The [`VectorContinuousCallback`](@ref) works like a vector of `ContinuousCallbacks` and lets the user specify a vector of continuous callbacks,
+  each with simultaneous rootfinding equations. The effect that is applied is the effect corresponding to the first (earliest) condition that is
   satisfied. A `VectorContinuousCallback` is more efficient than a `CallbackSet` of `ContinuousCallback`s as the number of callbacks grows. As 
   such, it's a slightly more involved definition which gives better scaling.
 
@@ -58,7 +58,7 @@ or a `CallbackSet`.
 ### Note About Saving
 
 When a callback is supplied, the default saving behavior is turned off. This is
-because otherwise events would "double save" one of the values. To re-enable
+because otherwise, events would “double save” one of the values. To re-enable
 the standard saving behavior, one must have the first `save_positions` value
 be true for at least one callback.
 
@@ -343,10 +343,8 @@ end
 ```
 
 All we have to do in order to specify the event is to have a function which
-should always be positive with an event occurring at 0. For now at least
-that's how it's specified. If a generalization is needed we can talk about
-this (but it needs to be "root-findable"). For here it's clear that we just
-want to check if the ball's height ever hits zero:
+should always be positive, with an event occurring at 0. 
+We thus want to check if the ball's height ever hits zero:
 
 ```@example callback4
 function condition(u,t,integrator) # Event when event_f(u,t) == 0
@@ -358,7 +356,7 @@ Notice that here we used the values `u` instead of the value from the `integrato
 This is because the values `u,t` will be appropriately modified at the interpolation
 points, allowing for the rootfinding behavior to occur.
 
-Now we have to say what to do when the event occurs. In this case we just
+Now we have to say what to do when the event occurs. In this case, we just
 flip the velocity (the second variable)
 
 ```@example callback4
@@ -387,8 +385,8 @@ using Plots; plot(sol)
 
 As you can see from the resulting image, DifferentialEquations.jl is smart enough
 to use the interpolation to hone in on the time of the event and apply the event
-back at the correct time. Thus one does not have to worry about the adaptive timestepping
-"overshooting" the event as this is handled for you. Notice that the event macro
+back at the correct time. Thus, one does not have to worry about the adaptive timestepping
+“overshooting” the event, as this is handled for you. Notice that the event macro
 will save the value(s) at the discontinuity.
 
 The callback is robust to having multiple discontinuities occur. For example,
@@ -428,9 +426,9 @@ plot(sol)
 
 Notice that at the end, the ball is not at `0.0` like the condition would let
 you believe, but instead it's at `4.329177480185359e-16`. From the printing
-inside of the affect function, we can see that this is the value it had at the
+inside the affect function, we can see that this is the value it had at the
 event time `t=0.4517539514526232`. Why did the event handling not make it exactly
-zero? If you instead would have run the simulation to
+zero? If you instead had run the simulation to
 `nextfloat(0.4517539514526232) = 0.45175395145262326`, we would see that the
 value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
 `rootfind` argument of the callback:
@@ -444,10 +442,10 @@ sol = solve(prob, Tsit5(), callback=floor_event)
 sol[end] # [-1.2647055847076505e-15, 0.0]
 ```
 
-What this means is that there is not 64-bit floating point number `t` such that
+What this means is that there is no 64-bit floating-point number `t` such that
 the condition is zero! By default, if there is no `t` such that `condition=0`,
-then rootfinder defaults to choosing the floating point number exactly before
-the exactly before the event (`LeftRootFind`). This way manifold constraints are
+then the rootfinder defaults to choosing the floating-point number exactly before
+the event (`LeftRootFind`). This way manifold constraints are
 preserved by default (i.e. the ball never goes below the floor). However, if you
 require that the condition is exactly satisfied after the event, you will want
 to add such a change to the `affect!` function. For example, the error correction
@@ -468,7 +466,7 @@ sol = solve(prob, Tsit5(), callback=floor_event)
 sol[end] # [0.0,0.0]
 ```
 
-and now the sticky behavior is perfect to the floating point.
+and now the sticky behavior is perfect to the floating-point.
 
 #### Handling Accumulation Points
 
@@ -496,12 +494,12 @@ sol = solve(prob, Tsit5(), callback=floor_event)
 plot(sol)
 ```
 
-From the readout we can see the ball only bounced 8 times before it went below
-the floor, what happened? What happened is floating point error. Because one
-cannot guarantee that floating point numbers exist to make the `condition=0`,
+From the readout, we can see the ball only bounced 8 times before it went below
+the floor, what happened? What happened is floating-point error. Because one
+cannot guarantee that floating-point numbers exist to make the `condition=0`,
 a heuristic is used to ensure that a zero is not accidentally detected at
-`nextfloat(t)` after the simulation restarts (otherwise it would repeatly find
-the same event!). However, sooner or later the ability to detect minute floating
+`nextfloat(t)` after the simulation restarts (otherwise it would repeatedly find
+the same event!). However, sooner or later, the ability to detect minute floating
 point differences will crash, and what should be infinitely many bounces finally
 misses a bounce.
 
@@ -510,26 +508,26 @@ This leads to two questions:
 1. How can you improve the accuracy of an accumulation calculation?
 2. How can you make it gracefully continue?
 
-For (1), note that floating point accuracy is dependent on the current `dt`. If
+For (1), note that floating-point accuracy is dependent on the current `dt`. If
 you know that an accumulation point is coming, one can use `set_proposed_dt!`
 to shrink the `dt` value and help find the next bounce point. You can use
 `t - tprev` to know the length of the previous interval for this calculation.
 For this example, we can set the proposed `dt` to `(t - tprev)/10` to ensure
-an ever increasing accuracy of the check.
+an ever-increasing accuracy of the check.
 
 However, at some point we will hit machine epsilon, the value where
 `t + eps(t) == t`, so we cannot measure infinitely many bounces and instead will
-be limited by the floating point accuracy of our number representation. Using
+be limited by the floating-point accuracy of our number representation. Using
 alternative number types like
 [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl) can allow for this
-to be done at very high accuracy, but still not infinite. Thus what we need to
+to be done at very high accuracy, but still not infinite. Thus, what we need to
 do is determine a tolerance after which we assume the accumulation has been
-reached and define the exit behavior. In this case we will say when the
+reached and define the exit behavior. In this case, we will say when the
 `dt<1e-12`, we are almost at the edge of Float64 accuracy
 (`eps(1.0) = 2.220446049250313e-16`), so we will change the position and
 velocity to exactly zero.
 
-With these floating point corrections in mind, the accumulation calculations
+With these floating-point corrections in mind, the accumulation calculation
 looks as follows:
 
 ```@example callback4
@@ -557,7 +555,7 @@ sol = solve(prob, Tsit5(), callback=floor_event)
 plot(sol)
 ```
 
-With this corrected version, we see that after 41 bounces the accumulation
+With this corrected version, we see that after 41 bounces, the accumulation
 point is reached at `t = 1.355261854357056`. To really see the accumulation,
 let's zoom in:
 
@@ -573,11 +571,11 @@ I think Zeno would be proud of our solution.
 
 ### Example 2: Terminating an Integration
 
-In many cases you might want to terminate an integration when some condition is
+Often, you might want to terminate an integration when some condition is
 satisfied. To terminate an integration, use `terminate!(integrator)` as the `affect!`
 in a callback.
 
-In this example we will solve the differential equation:
+In this example, we will solve the differential equation:
 
 ```@example callback4
 using DifferentialEquations
@@ -603,9 +601,9 @@ cb = DiscreteCallback(condition,affect!)
 sol = solve(prob,Tsit5(),callback=cb)
 ```
 
-However, in many cases we wish to halt exactly at the point of time that the
-condition is satisfied. To do that, we use a continuous callback. The condition
-must thus be a function which is zero at the point we want to halt. Thus we
+However, we often wish to halt exactly at the point of time that the
+condition is satisfied. To achieve that, we use a continuous callback. The condition
+must thus be a function which is zero at the point we want to halt. Thus, we
 use the following:
 
 ```@example callback4
@@ -616,7 +614,7 @@ sol = solve(prob,Tsit5(),callback=cb)
 using Plots; plot(sol)
 ```
 
-Note that this uses rootfinding to approximate the "exact" moment of the crossing.
+Note that this uses rootfinding to approximate the “exact” moment of the crossing.
 Analytically we know the value is `pi`, and here the integration terminates at
 
 ```@example callback4
@@ -631,7 +629,7 @@ sol = solve(prob,Vern8(),callback=cb,reltol=1e-12,abstol=1e-12)
 sol.t[end] # 3.1415926535896035
 ```
 
-Now say we wish to find the when the first period is over, i.e. we want to ignore
+Now say we wish to find when the first period is over, i.e. we want to ignore
 the upcrossing and only stop on the downcrossing. We do this by ignoring the
 `affect!` and only passing an `affect!` for the second:
 
@@ -654,8 +652,8 @@ because the first event is an upcrossing.
 Another interesting issue is with models of changing sizes. The ability to handle
 such events is a unique feature of DifferentialEquations.jl! The problem we would
 like to tackle here is a cell population. We start with 1 cell with a protein `X`
-which increases linearly with time with rate parameter `α`. Since we are going
-to be changing the size of the population, we write the model in the general form:
+which increases linearly with time with rate parameter `α`. Since we will
+be changing the size of the population, we write the model in the general form:
 
 ```@example callback5
 const α = 0.3
@@ -719,7 +717,7 @@ plot(sol.t,map((x)->length(x),sol[:]),lw=3,
      ylabel="Number of Cells",xlabel="Time")
 ```
 
-Now let's check-in on a cell. We can still use the interpolation to get a nice
+Now let's check in on a cell. We can still use the interpolation to get a nice
 plot of the concentration of cell 1 over time. This is done with the command:
 
 ```@example callback5
@@ -776,7 +774,7 @@ cb = VectorContinuousCallback(condition,affect!,2)
 
 It is evident that `out[2]` will be zero when `u[3]` (x-coordinate) is either `0.0` or `10.0`. And when that happens, we flip the velocity with some coefficient of restitution (`0.9`).
 
-Completeting rest of the code-
+Completing the rest of the code
 ```@example callback6
 u0 = [50.0,0.0,0.0,2.0]
 tspan = (0.0,15.0)

@@ -8,7 +8,7 @@ details how to make that choice.
 !!! note
 
     We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
-    tutorial which goes through these options in a real-world example.
+    tutorial, which goes through these options in a real-world example.
 
 !!! warning
 
@@ -69,7 +69,7 @@ Additionally, `precs` must supply the dispatch:
 Pl,Pr = precs(W,du,u,p,t,::Nothing,::Nothing,::Nothing,solverdata)
 ```
 
-which is used in the solver setup phase in order to construct the integrator
+which is used in the solver setup phase to construct the integrator
 type with the preconditioners `(Pl,Pr)`.
 
 The default is `precs=DEFAULT_PRECS` where the default preconditioner function
@@ -81,7 +81,7 @@ DEFAULT_PRECS(W,du,u,p,t,newW,Plprev,Prprev,solverdata) = nothing,nothing
 
 ## Nonlinear Solvers: `nlsolve` Specification
 
-All of the Julia-based implicit solvers (OrdinaryDiffEq.jl, StochasticDiffEq.jl, etc.)
+All the Julia-based implicit solvers (OrdinaryDiffEq.jl, StochasticDiffEq.jl, etc.)
 allow for choosing the nonlinear solver that is used to handle the implicit system.
 While fully modifiable and customizable, most users should stick to the pre-defined
 nonlinear solver choices. These are:
@@ -89,7 +89,7 @@ nonlinear solver choices. These are:
 - `NLNewton(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5, new_W_dt_cutoff=1//5)`: A quasi-Newton method. The default.
 - `NLAnderson(; κ=1//100, max_iter=10, max_history::Int=5, aa_start::Int=1, droptol=nothing, fast_convergence_cutoff=1//5)`:
   Anderson acceleration. While more stable than functional iteration, this method
-  is less stable than Newton's method but does not require a Jacobian.
+  is less stable than Newton's method, but does not require a Jacobian.
 - `NLFunctional(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5)`: This method
-  is the least stable but does not require Jacobians. Should only be used for
+  is the least stable, but does not require a Jacobian. It should only be used for
   non-stiff ODEs.

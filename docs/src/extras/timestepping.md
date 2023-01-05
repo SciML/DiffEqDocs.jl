@@ -29,10 +29,10 @@ error is larger than the tolerances, and the step is accepted if
 
 ## Integral Controller (Standard Controller)
 
-The proportional control algorithm is the "standard algorithm" for adaptive
+The proportional control algorithm is the “standard algorithm” for adaptive
 timestepping. Note that it is not the default in DifferentialEquations.jl
 because it is usually awful for performance, but it is explained first because
-it is the most widely taught algorithm and others build off of its techniques.
+it is the most widely taught algorithm and others build on its techniques.
 
 The control simply changes `dt` proportional to the error. There is an
 exponentiation based on the order of the algorithm which goes back to a result
@@ -44,12 +44,12 @@ qtmp = integrator.EEst^(1/(alg_adaptive_order(integrator.alg)+1))/integrator.opt
 integrator.dtnew = integrator.dt/q
 ```
 
-Thus `q` is the scaling factor for `dt`, and it must be between `qmin` and `qmax`.
+Thus, `q` is the scaling factor for `dt`, and it must be between `qmin` and `qmax`.
 `gamma` is the safety factor, `0.9`, for how much `dt` is decreased below the
-theoretical "optimal" value.
+theoretical “optimal” value.
 
-Since proportional control is "jagged", i.e. can cause large changes between
-one step to the next, it can effect the stability of explicit methods. Thus
+Since proportional control is “jagged”, i.e. can cause large changes between
+one step to the next, it can effect the stability of explicit methods. Thus,
 it's only applied by default to low order implicit solvers.
 
 ```@docs
@@ -130,7 +130,7 @@ integrator.erracc = max(1e-2,integrator.EEst)
 integrator.dt/qacc
 ```
 
-When it rejects, its the same as the proportional control:
+When it rejects, it is the same as the proportional control:
 
 ```julia
 if integrator.success_iter == 0

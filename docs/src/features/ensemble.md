@@ -26,7 +26,7 @@ EnsembleProblem(prob::DEProblem;
   designates whether to rerun.
 * `prob_func`: The function by which the problem is to be modified. `prob`
   is the problem, `i` is the unique id `1:trajectories` for the problem, and
-  `repeat` is the iteration of the repeat. At first it is `1`, but if
+  `repeat` is the iteration of the repeat. At first, it is `1`, but if
   `rerun` was true this will be `2`, `3`, etc. counting the number of times
   problem `i` has been repeated.
 * `reduction`: This function determines how to reduce the data in each batch.
@@ -34,13 +34,13 @@ EnsembleProblem(prob::DEProblem;
   determines whether the simulation has converged. If `true`, the simulation
   will exit early. By default, this is always `false`.
 * `safetycopy`: Determines whether a safety `deepcopy` is called on the `prob`
-  before the `prob_func`. By default this is true for any user-given `prob_func`,
+  before the `prob_func`. By default, this is true for any user-given `prob_func`,
   as without this, modifying the arguments of something in the `prob_func`, such
   as parameters or caches stored within the user function, are not necessarily
   thread-safe. If you know that your function is thread-safe, then setting this
   to `false` can improve performance when used with threads. For nested problems,
   e.g., SDE problems with custom noise processes, `deepcopy` might be
-  insufficient. In such cases use a custom `prob_func`.
+  insufficient. In such cases, use a custom `prob_func`.
 
 One can specify a function `prob_func` which changes the problem. For example:
 
@@ -65,7 +65,7 @@ end
 
 If your function is a `ParameterizedFunction`,
 you can do similar modifications to `prob.f` to perform a parameter search. The `output_func`
-is a reduction function. It's arguments are the generated solution and the unique
+is a reduction function. Its arguments are the generated solution and the unique
 index for the run. For example, if we wish to only save the 2nd coordinate
 at the end of each solution, we can do:
 
@@ -73,7 +73,7 @@ at the end of each solution, we can do:
 output_func(sol,i) = (sol[end,2],false)
 ```
 
-Thus the ensemble simulation would return as its data an array which is the
+Thus, the ensemble simulation would return as its data an array which is the
 end value of the 2nd dependent variable for each of the runs.
 
 ### Solving the Problem
@@ -101,7 +101,7 @@ are handled. Currently, the ensemble algorithm types are:
 * `EnsembleDistributed()` - Uses `pmap` internally. It will use as many processors as you
   have Julia processes. To add more processes, use `addprocs(n)`. See Julia's
   documentation for more details. Recommended for the case when each trajectory
-  calculation isn't "too quick" (at least about a millisecond each?).
+  calculation isn't “too quick” (at least about a millisecond each?).
 * `EnsembleSplitThreads()` - This uses threading on each process, splitting the problem
   into `nprocs()` even parts. This is for solving many quick trajectories on a
   multi-node machine. It's recommended you have one process on each node.
@@ -129,7 +129,7 @@ along. A useful argument to use is `linealpha` which will change the transparenc
 of the plots. An additional argument is `idxs` which allows you to choose which
 components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
-of the odd components. An other additional argument is `zcolors` (an alias of `marker_z`) which allows
+of the odd components. Another additional argument is `zcolors` (an alias of `marker_z`) which allows
 you to pass a `zcolor` for each series. For details about `zcolor` see the
 [Series documentation for Plots.jl](http://docs.juliaplots.org/dev/attributes/).
 
@@ -259,7 +259,7 @@ around the mean.
 Let's test the sensitivity of the linear ODE to its initial condition. To do this,
 we would like to solve the linear ODE 100 times and plot what the trajectories
 look like. Let's start by opening up some extra processes so that way the computation
-will be parallelized. Here we will choose to use distributed parallelism which means
+will be parallelized. Here we will choose to use distributed parallelism, which means
 that the required functions must be made available to all processes. This can be
 achieved with
 [`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
@@ -273,7 +273,7 @@ addprocs()
 @everywhere using DifferentialEquations
 ```
 
-Now let's define the linear ODE which is our base problem:
+Now let's define the linear ODE, which is our base problem:
 
 ```julia
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
@@ -283,7 +283,7 @@ prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
 For our ensemble simulation, we would like to change the initial condition around.
 This is done through the `prob_func`. This function takes in the base problem
 and modifies it to create the new problem that the trajectory actually solves.
-Here we will take the base problem, multiply the initial condition by a `rand()`,
+Here, we will take the base problem, multiply the initial condition by a `rand()`,
 and use that for calculating the trajectory:
 
 ```julia
@@ -338,7 +338,7 @@ the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](http
 
 ### Pre-Determined Initial Conditions
 
-In many cases, you may already know what initial conditions you want to use. This
+Often, you may already know what initial conditions you want to use. This
 can be specified by the `i` argument of the `prob_func`. This `i` is the unique
 index of each trajectory. So, if we have `trajectories=100`, then we have `i` as
 some index in `1:100`, and it's different for each trajectory.
@@ -357,7 +357,7 @@ It's worth noting that if you run this code successfully, there will be no visib
 
 ## Example 2: Solving an SDE with Different Parameters
 
-Let's solve the same SDE but with varying parameters. Let's create a Lotka-Volterra
+Let's solve the same SDE, but with varying parameters. Let's create a Lotka-Volterra
 system with multiplicative noise. Our Lotka-Volterra system will have as its
 drift component:
 
@@ -368,7 +368,7 @@ function f(du,u,p,t)
 end
 ```
 
-For our noise function we will use multiplicative noise:
+For our noise function, we will use multiplicative noise:
 
 ```@example ensemble2
 function g(du,u,p,t)
@@ -386,7 +386,7 @@ prob = SDEProblem(f,g,[1.0,1.0],(0.0,10.0),p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment
-is keep the same parameters in the deterministic component each time, but very
+is keep the same parameters in the deterministic component each time, but vary
 the parameters for the amount of noise using `0.3rand(2)` as our parameters.
 Once again, we do this with a `prob_func`, and here we modify the parameters in
 `prob.p`:
@@ -428,7 +428,7 @@ bounds using `ci_type=:SEM` in the plot recipe.
 
 ## Example 3: Using the Reduction to Halt When Estimator is Within Tolerance
 
-In this problem we will solve the equation just as many times as needed to get
+In this problem, we will solve the equation just as many times as needed to get
 the standard error of the mean for the final time point below our tolerance
 `0.5`. Since we only care about the endpoint, we can tell the `output_func`
 to discard the rest of the data.
@@ -496,8 +496,8 @@ be the mean.
 
 ## Example 4: Using the Analysis Tools
 
-In this example we will show how to analyze a `EnsembleSolution`. First, let's
-generate a 10 solution Monte Carlo experiment. For our problem we will use a `4x2`
+In this example, we will show how to analyze a `EnsembleSolution`. First, let's
+generate a 10 solution Monte Carlo experiment. For our problem, we will use a `4x2`
 system of linear stochastic differential equations:
 
 ```@example ensemble4
@@ -517,7 +517,7 @@ prob = SDEProblem(f,σ,ones(4,2)/2,(0.0,1.0)) #prob_sde_2Dlinear
 
 To solve this 10 times, we use the `EnsembleProblem` constructor and solve
 with `trajectories=10`. Since we wish to compare values at the timesteps, we need
-to make sure the steps all hit the same times. Thus we set `adaptive=false` and
+to make sure the steps all hit the same times. We thus set `adaptive=false` and
 explicitly give a `dt`.
 
 ```@example ensemble4
@@ -575,7 +575,7 @@ summ = EnsembleSummary(sim,0.0:0.1:1.0)
 ```
 
 will summarize at the `0.1` time points using the interpolations. To
-visualize the results we can plot it. Since there are 8 components to
+visualize the results, we can plot it. Since there are 8 components to
 the differential equation, this can get messy, so let's only plot the
 3rd component:
 

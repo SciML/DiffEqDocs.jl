@@ -2,8 +2,8 @@
 
 In many cases, a standard array may not be enough to fully hold the data for a
 model. Many of the solvers in DifferentialEquations.jl (only the native Julia
-methods) allow you to solve problems on `AbstractArray` types which allow you
-to extend the meaning of an array. This page describes some of the `AbstractArray`
+methods) allow you to solve problems on `AbstractArray` types, which allow you
+to extend the meaning of an array. This page describes some `AbstractArray`
 types which can be helpful for modeling differential equations problems.
 
 ## ArrayPartitions
@@ -18,8 +18,8 @@ A = ArrayPartition(x::AbstractArray...)
 ```
 
 where `x` is an array of arrays. Then, `A` will act like a single array, and its
-broadcast will be type stable, allowing for it to be used inside of the native Julia
-DiffEq solvers in an efficient way. This is a good way to generate an array which
+broadcast will be type stable, allowing for it to be efficiently used inside
+the native Julia DiffEq solvers. This is a good way to generate an array which
 has different units for different parts, or different amounts of precision.
 
 ### Usage
@@ -37,7 +37,7 @@ We would have `A.x[1]==y` and `A.x[2]==z`. Broadcasting like `f.(A)` is efficien
 
 ### Example: Dynamics Equations
 
-In this example we will show using heterogeneous units in dynamics equations. Our
+In this example, we will show using heterogeneous units in dynamics equations. Our
 arrays will be:
 
 ```@example diffeq_arrays
