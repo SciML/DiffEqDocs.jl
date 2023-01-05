@@ -16,12 +16,12 @@ done by using the `specialization` arguments of the `AbstractDEProblem`
 constructors.
 
 For example, with the `ODEProblem` we have `ODEProblem{iip,specialize}(...)`.
-The this second type parameter controls the specialization level with the
+This second type parameter controls the specialization level with the
 following choices:
 
 - `SciMLBase.AutoSpecialize`: the default. Uses a late wrapping scheme to
   hit a balance between runtime and compile time.
-- `SciMLBase.NoSpecialize`: this will never specialize on the constituant
+- `SciMLBase.NoSpecialize`: this will never specialize on the constituent
   functions, having the least compile time but the highest runtime.
 - `SciMLBase.FullSpecialize`: this will fully re-specialize the solver
   on the given ODE, achieving the fastest runtimes while increasing the
@@ -38,7 +38,7 @@ The solvers include some
 
 - standard solvers for non-stiff problems such as `Tsit5()`
 - standard solvers for stiff problems such as `Rosenbrock23()`
-- standard solvers with stiffnes detction such as `AutoTsit5(Rosenbrock23())`
+- standard solvers with stiffness detection such as `AutoTsit5(Rosenbrock23())`
 - low-storage methods for conservation laws such as `SSPRK43()`
   (precompilation disabled by default)
 
@@ -67,8 +67,8 @@ This will create a `LocalPreferences.toml` file next to the currently active
 ## Decreasing Dependency Size by Direct Dependence on Specific Solvers
 
 DifferentialEquations.jl is a large library containing the functionality of
-many different solver and addon packages. However in many cases you may want
-to cut down on the size of the dependency and only use the parts of the
+many different solver and add-on packages. However, often you may want
+to cut down on the size of the dependency and only use the parts of
 the library which are essential to your application. This is possible
 due to SciML's modular package structure.
 
@@ -96,13 +96,13 @@ will work if these are the only features you are using.
 
 In general, you will always need SciMLBase.jl, since it defines all of the
 fundamental types, but the solvers will automatically reexport it.
-For solvers, you typically only need that solver package.
+For solvers, you typically only require that solver package.
 So SciMLBase+Sundials, SciMLBase+LSODA, etc. will get you the common interface
 with that specific solver setup. SciMLBase.jl is a very lightweight dependency,
 so there is no issue here!
 
-For the addon packages, you will normally need SciMLBase, the solver package
-you choose, and the addon package. So for example, for predefined callbacks you
+For the add-on packages, you will normally need SciMLBase, the solver package
+you choose, and the add-on package. So for example, for predefined callbacks you
 would likely want SciMLBase+OrdinaryDiffEq+DiffEqCallbacks. If you aren't sure
 which package a specific command is from, then use `@which`. For example, from
 the callback docs we have:
@@ -154,6 +154,6 @@ sim = solve(ensemble_prob,Euler(),trajectories=100,callback=cb,dt=1/10)
 instead of the full `using DifferentialEquations`. Note that due to the way
 Julia dependencies work, any internal function in the package will work. The only
 dependencies you need to explicitly `using` are the functions you are specifically
-calling. Thus this method can be used to determine all of the DiffEq packages
+calling. Thus, this method can be used to determine all of the DiffEq packages
 you are using.
 
