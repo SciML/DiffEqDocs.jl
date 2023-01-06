@@ -28,7 +28,7 @@ that one uses `MethodOfSteps(Vern6())`. Benchmarks show that going to higher ord
 
 ### Stiff DDEs and Differential-Algebraic Delay Equations (DADEs)
 
-For stiff DDEs, the SDIRK and Rosenbrock methods are very efficient as they will
+For stiff DDEs, the SDIRK and Rosenbrock methods are very efficient, as they will
 reuse the Jacobian in the unconstrained stepping iterations. One should choose
 from the methods which have stiff-aware interpolants for better stability.
 `MethodOfSteps(Rosenbrock23())` is a good low order method choice. Additionally,
@@ -75,6 +75,6 @@ keyword arguments `abstol` and `reltol` when solving the DDE problem, and increa
 the maximal number of iterations by specifying the keyword argument `max_iter` in
 the `MethodOfSteps` algorithm, can help ensure that the steps are correct. If the problem
 still is not correctly converging, one should lower `dtmax`. For problems with only
-constant delays, in the worst case scenario, one may need to set `constrained = true` which
+constant delays, in the worst-case scenario, one may need to set `constrained = true` which
 will constrain timesteps to at most the size of the minimal lag and hence forces more
 stability at the cost of smaller timesteps.

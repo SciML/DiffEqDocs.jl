@@ -2,7 +2,7 @@
 
 ## Recommended Methods
 
-For medium to low accuracy small numbers of DAEs in constant mass matrices form,
+For medium to low accuracy small numbers of DAEs in constant mass matrix form,
 the  `Rosenbrock23` and `Rodas4` methods are good choices which will get good
 efficiency if the mass matrix is constant. `Rosenbrock23` is better for low
 accuracy (error tolerance `<1e-4`) and `Rodas4` is better for high accuracy.
@@ -24,10 +24,10 @@ but still needs more optimizations.
 For all OrdinaryDiffEq.jl methods, an initialization scheme can be set with a
 common keyword argument `initializealg`. The choices are:
 
-- `BrownFullBasicInit`: For Index-1 DAEs implicit DAEs and and semi-explicit
+- `BrownFullBasicInit`: For Index-1 DAEs implicit DAEs and semi-explicit
   DAEs in mass matrix form. Keeps the differential variables constant. Requires
   `du0` when used on a `DAEProblem`.
-- `ShampineCollocationInit`: For Index-1 DAEs implicit DAEs and and semi-explicit
+- `ShampineCollocationInit`: For Index-1 DAEs implicit DAEs and semi-explicit
   DAEs in mass matrix form. Changes both the differential and algebraic variables.
 - `NoInit`: Explicitly opts-out of DAE initialization.
 
@@ -48,8 +48,8 @@ extra options for the solvers, see the ODE solver page.
 !!! note
 
     The standard Hermite interpolation used for ODE methods in OrdinaryDiffEq.jl
-    is not applicable to the algebraic variables. Thus for the following mass-matrix
-    methods, use the interplation (thus `saveat`) with caution if the default
+    is not applicable to the algebraic variables. Thus, for the following mass-matrix
+    methods, use the interpolation (thus `saveat`) with caution if the default
     Hermite interpolation is used. All methods which mention a specialized interpolation
     (and implicit ODE methods) are safe.
 
@@ -85,7 +85,7 @@ extra options for the solvers, see the ODE solver page.
 #### Rosenbrock-W Methods
 
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very stiff equations with oscillations at low tolerances. 2nd order stiff-aware interpolation.
-- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution. 2nd order stiff-aware interpolation.
+- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildly stiff equations without oscillations at low tolerances. Note that this method is prone to instability in the presence of oscillations, so use with caution. 2nd order stiff-aware interpolation.
 - `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
 - `ROS34PW1a` - A 4th order L-stable Rosenbrock-W method.
 - `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.

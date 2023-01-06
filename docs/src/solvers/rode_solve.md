@@ -3,7 +3,7 @@
 ## Recommended Methods
 
 Currently, the only implemented method is the `RandomEM` method in StochasticDiffEq.jl.
-It is strong order alpha for a alpha-Holder continuous noise process.
+It is strong order alpha for an alpha-Holder continuous noise process.
 
 ## Full List of Methods
 

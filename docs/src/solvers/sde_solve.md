@@ -3,17 +3,17 @@
 ## Recommended Methods
 
 For most Ito diagonal and scalar noise problems where a good amount of accuracy is
-required and mild stiffness may be an issue, the `SOSRI` algorithm should
+required and where mild stiffness may be an issue, the `SOSRI` algorithm should
 do well. If the problem has additive noise, then `SOSRA` will be the
 optimal algorithm. At low tolerances (`<1e-4`?) `SRA3` will be more efficient,
 though `SOSRA` is more robust to stiffness. For commutative noise, `RKMilCommute`
-is a strong order 1.0 method which utilizes the commutivity property to greatly
+is a strong order 1.0 method which utilizes the commutativity property to greatly
 speed up the stochastic iterated integral approximation and can choose between Ito
 and Stratonovich. For non-commutative noise, difficult problems usually require adaptive
 time stepping in order to be efficient. In this case, `LambaEM` and `LambaEulerHeun`
 are adaptive and handle general non-diagonal problems (for Ito and Stratonovich
-interpretations respectively). If adaptivity isn't necessary, the `EM` and
-`EulerHeun` are good choices (for Ito and Stratonovich interpretations
+interpretations, respectively). If adaptivity isn't necessary, the `EM` and
+`EulerHeun` are good choices (for Ito and Stratonovich interpretations,
 respectively).
 
 For stiff problems with additive noise, the high order adaptive method
@@ -32,11 +32,11 @@ and thus is symmetric (and almost symplectic) and will lead to less error when
 noise is sufficiently small. However, `theta=1/2` is not L-stable in the drift
 term, and thus one can receive more stability (L-stability in the drift term)
 with `theta=1`, but with a tradeoff of error efficiency in the low noise case.
-In addition, the option `symplectic=true` will turns these methods into an
-implicit Midpoint extension which is symplectic in distribution but has an
+In addition, the option `symplectic=true` will turn these methods into an
+implicit Midpoint extension, which is symplectic in distribution but has an
 accuracy tradeoff.
 
-If only an estimation for the expected value of the solution is required, i.e.,
+If only an estimate of the expected value of the solution is required, i.e.,
 if one is only interested in an accurate draw from the distribution induced by
 a given SDE, the use of high weak order solvers is recommended. Specifically,
 `DRI1` is preferred for a high number of Wiener processes. The weak stochastic
@@ -88,7 +88,7 @@ approximation. The choices are:
   Kastner, F. and Rößler, A., LevyArea.jl, [10.5281/ZENODO.5883748](https://zenodo.org/record/5883749#.Yg-d698xmu4).
   The package supports the schemes: `Fourier()`, `Milstein()`, `Wiktorsson()`,`MronRoe()`.
   The optimal algorithm is automatically selected based on the dimension of the Brownian
-  process and the step size. By passing a specific scheme, e.g. `ii_approx=Fourier()`
+  process and the step size. By passing a specific scheme, e.g., `ii_approx=Fourier()`
   methods can be manually selected. One must be careful when using the Levy area
   approximations in conjunction with adaptivity (`adaptive=true`) because the Levy area
   approximations draw random numbers that do not reflect the random numbers taken in a
@@ -193,24 +193,24 @@ For `SRA` and `SRI`, the following option is allowed:
 #### S-ROCK Methods
 
 - `SROCK1` - is a fixed step size stabilized explicit method for stiff problems. Defaults to
-  solving th Ito problem but `SROCK1(interpretation=:Stratonovich)` can make it solve
+  solving the Ito problem but `SROCK1(interpretation=:Stratonovich)` can make it solve
   the Stratonovich problem. Strong order of convergence is 0.5 and weak order 1, but is
-  optimised to get order 1 in case os scalar/diagonal noise.
-- `SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization thus can
+  optimized to get order 1 in case of scalar/diagonal noise.
+- `SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization, and can thus
   handle stiff problems. Only for Ito problems. Defaults to strong and weak order 1.0,
   but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`. This method can handle
   1-dimensional, diagonal and non-diagonal noise.
 - `SROCK2` - is a weak second order and strong first order fixed step stabilized method for
-  stiff Ito problems.This method can handle 1-dimensional, diagonal and non-diagonal noise.
+  stiff Ito problems. This method can handle 1-dimensional, diagonal and non-diagonal noise.
 - `SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
-  and weak order 1. This method has a better stability domain then `SROCK1`. Also it allows
+  and weak order 1. This method has a better stability domain then `SROCK1`. Also, it allows
   special post-processing techniques in case of ergodic dynamical systems, in the context of
   ergodic Brownian dynamics, to achieve order 2 accuracy. `SKSROCK(;post_processing=true)`
-  will make use of post processing. By default it doesn't use post processing. Post processing is
+  will make use of post-processing. By default, it doesn't use post-processing. Post-processing is
   optional and under development. The rest of the method is completely functional and can handle
   1-dimensional, diagonal and non-diagonal noise.  
-- `TangXiaoSROCK2` - is a fixed step size stabilized expicit method for stiff problems. Only for
-  Ito problems. Weak order of 2 and strog order of 1. Has 5 versions with different stability
+- `TangXiaoSROCK2` - is a fixed step size stabilized explicit method for stiff problems. Only for
+  Ito problems. Weak order of 2 and strong order of 1. Has 5 versions with different stability
   domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5. Under Development.
 
 #### Stiff Methods
@@ -260,7 +260,7 @@ For `SRA` and `SRI`, the following option is allowed:
 
 The following methods require analytic derivatives of the diffusion term.
 
-- `PCEuler` - The predictor corrector euler method. Strong Order 0.5 in the Ito
+- `PCEuler` - The predictor corrector Euler method. Strong Order 0.5 in the Ito
   sense. Requires the ggprime function, which is defined as
   ```math
     \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
@@ -271,7 +271,7 @@ The following methods require analytic derivatives of the diffusion term.
   ```
   where ``\vec g^{(j)}`` is the noise vector for the j'th noise channel and ``\bar{\mathcal{J}}`` is the Jacobian of the j'th   noise vector.
 
-  The default settings for the drift implicitness is `theta=0.5` and
+  The default settings for the drift implicitness are `theta=0.5` and
   the diffusion implicitness is `eta=0.5`.  
 
 #### High Weak Order Methods
@@ -340,7 +340,7 @@ choice_function(integrator) = (Int(integrator.dt<0.001) + 1)
 alg_switch = StochasticCompositeAlgorithm((EM(),RKMil()),choice_function)
 ```
 
-The `choice_function` takes in an `integrator` and thus all of the features
+The `choice_function` takes in an `integrator` and thus all the features
 available in the [Integrator Interface](@ref integrator)
 can be used in the choice function.
 
@@ -353,7 +353,7 @@ limitations compared to StochasticDiffEq.jl.
   - `SimpleEM` - A fixed timestep solve method for Euler-Maruyama. Only works
     with non-colored Gaussian noise.
 
-Note that this setup is not automatically included with DifferentialEquaitons.jl.
+Note that this setup is not automatically included with DifferentialEquations.jl.
 To use the following algorithms, you must install and use SimpleDiffEq.jl:
 
 ```julia
@@ -366,7 +366,7 @@ using SimpleDiffEq
 Bridge.jl is a set of fixed timestep algorithms written in Julia. These methods
 are made and optimized for out-of-place functions on immutable (static vector)
 types. Note that this setup is not automatically included with
-DifferentialEquaitons.jl. To use the following algorithms, you must install and
+DifferentialEquations.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
