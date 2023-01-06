@@ -22,7 +22,7 @@ The functions should be specified as `f1(dv,v,u,p,t)` and `f2(du,v,u,p,t)`
 specified by the solver), and `f2` is independent of `t` and `u`. This includes
 discretizations arising from `SecondOrderODEProblem`s where the velocity is not
 used in the acceleration function, and Hamiltonians where the potential is
-(or can be) time-dependent but the kinetic energy is only dependent on `v`.
+(or can be) time-dependent, but the kinetic energy is only dependent on `v`.
 
 Note that some methods assume that the integral of `f2` is a quadratic form. That
 means that `f2=v'*M*v`, i.e. ``\int f_2 = \frac{1}{2} m v^2``, giving `du = v`. This is
@@ -33,10 +33,10 @@ kinetic energy".
 
 ## Recommendations
 
-When energy conservation is required, use a symplectic method. Otherwise the
+When energy conservation is required, use a symplectic method. Otherwise, the
 Runge-Kutta-Nyström methods will be more efficient. Energy is mostly conserved
-by Runge-Kutta-Nyström methods, but is not conserved for long time integrations.
-Thus it is suggested that for shorter integrations you use Runge-Kutta-Nyström
+by Runge-Kutta-Nyström methods, but is not conserved for long-time integrations.
+Thus, it is suggested that for shorter integrations you use Runge-Kutta-Nyström
 methods as well.
 
 As a go-to method for efficiency, `DPRKN6` is a good choice. `DPRKN12` is a good
@@ -50,9 +50,9 @@ can be a good choice as it minimizes the number of evaluations.
 For symplectic methods, higher order algorithms are the most efficient when higher
 accuracy is needed, and when less accuracy is needed lower order methods do better.
 Optimized efficiency methods take more steps and thus have more force calculations
-for the same order, but have smaller error. Thus the "optimized efficiency"
+for the same order, but have smaller error. Thus, the “optimized efficiency”
 algorithms are recommended if your force calculation is not too sufficiency large,
-while the other methods are recommend when force calculations are really large
+while the other methods are recommended when force calculations are really large
 (for example, like in MD simulations `VelocityVerlet` is very popular since it only
 requires one force calculation per timestep). A good go-to method would be `McAte5`,
 and a good high order choice is `KahanLi8`.
@@ -67,7 +67,7 @@ page for more details.
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a
-"free" interpolation means that no extra steps are required for the
+“free” interpolation means that no extra steps are required for the
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
@@ -79,10 +79,10 @@ steps are computed lazily (i.e. not during the solve).
   timestep only.
 - `IRKN4`: 4th order explicit two-step Runge-Kutta-Nyström method. Can be more
   efficient for smooth problems. Fixed timestep only.
-- `ERKN4`: 4th order Runge-Kutta-Nyström method which is integrates the periodic
+- `ERKN4`: 4th order Runge-Kutta-Nyström method which integrates the periodic
   properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
   problems.
-- `ERKN5`: 5th order Runge-Kutta-Nyström method which is integrates the periodic
+- `ERKN5`: 5th order Runge-Kutta-Nyström method which integrates the periodic
   properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
   problems.
 - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta-Nyström method.
@@ -112,7 +112,7 @@ Note that all symplectic integrators are fixed timestep only.
 - `CalvoSanz4`: Optimized efficiency 4th order explicit symplectic integrator.
 - `McAte42`: 4th order explicit symplectic integrator. (Broken)
 - `McAte5`: Optimized efficiency 5th order explicit symplectic integrator.
-  Requires quadratic kinetic energy
+  Requires quadratic kinetic energy.
 - `Yoshida6`: 6th order explicit symplectic integrator.
 - `KahanLi6`: Optimized efficiency 6th order explicit symplectic integrator.
 - `McAte8`: 8th order explicit symplectic integrator.

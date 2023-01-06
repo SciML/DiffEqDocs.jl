@@ -34,7 +34,7 @@ large time steps as the steady state approaches.
   relative tolerances specify the termination conditions on the
   derivative's closeness to zero.  This internally uses the
   `TerminateSteadyState` callback from the Callback Library.  The
-  simulated time for which given ODE is solved can be limited by
+  simulated time for which the given ODE is solved can be limited by
   `tspan`.  If `tspan` is a number, it is equivalent to passing
   `(zero(tspan), tspan)`.
 

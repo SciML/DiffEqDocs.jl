@@ -16,7 +16,7 @@ or you may just be curious. This guide is to help you choose the right algorithm
 When the stiffness of the problem is unknown, it is recommended you use a
 stiffness detection and auto-switching algorithm. These methods are multi-paradigm
 and allow for efficient solution of both stiff and non-stiff problems. The cost
-for auto-switching is very minimal but the choices are restrained and so they
+for auto-switching is very minimal, but the choices are restrained. They
 are a good go-to method when applicable.
 
 For default tolerances, `AutoTsit5(Rosenbrock23())` is a good choice. For lower
@@ -41,7 +41,7 @@ that can cut out extra overhead and is recommended in those scenarios.
 For high accuracy non-stiff solving (`BigFloat` and tolerances like `<1e-12`),
 we recommend the `Vern9` method. If a high-order method is needed with a high
 order interpolant, then you should choose `Vern9` which is Order 9 with an
-Order 9 interpolant. If you need extremely high accuracy (`<1e-30`?) and do
+Order 9 interpolant. If you require extremely high accuracy (`<1e-30`?) and do
 not need an interpolant, try the `Feagin12` or `Feagin14` methods. Note that the
 Feagin methods are the only high-order optimized methods which do not include a
 high-order interpolant (they do include a 3rd order Hermite interpolation if
@@ -65,10 +65,10 @@ stiffness, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
 systems `TRBDF2` will be more efficient. `QNDF` or `FBDF` can be the most efficient
-the largest systems or most expensive `f`.
+for the largest systems or most expensive `f`.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5P`,
-`Rodas4P` (the former is more efficient but the later is more reliable),
+`Rodas4P` (the former is more efficient, but the latter is more reliable),
 `Kvaerno5`, or `KenCarp4`. As native DifferentialEquations.jl solvers,
 many Julia numeric types (such as BigFloats,
 [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
@@ -79,7 +79,7 @@ For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is use
 use `radau`.
 
 For asymptotically large systems of ODEs (`N>1000`?)
-where `f` is very costly and the complex eigenvalues are minimal (low oscillations),
+where `f` is very costly, and the complex eigenvalues are minimal (low oscillations),
 in that case `QNDF` or `FBDF` will be the most efficient.
 `QNDF` and `FBDF` will also do surprisingly well if the solution is smooth. However,
 this method can handle less stiffness than other methods and its Newton iterations
@@ -91,12 +91,12 @@ may fail at low accuracy situations. Other choices to consider in this regime ar
 `ImplicitMidpoint` is a symmetric and symplectic integrator.
 `Trapezoid` is a symmetric (almost symplectic) integrator with adaptive
 timestepping. `ImplicitEuler` is an extension to the common algorithm with
-adaptive timestepping and efficient quasi-Newton Jacobian re-usage which is fully
+adaptive timestepping, and efficient quasi-Newton Jacobian re-usage which is fully
 strong-stability preserving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
 parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
-situations which is 3rd order. Similarly between `Rodas5` and Rodas5P`. `ROS3P`
+situations which are 3rd order. Similarly, between `Rodas5` and Rodas5P`. `ROS3P`
 is only third order and achieves 3rd order on such problems and can thus be more
 efficient in this case.
 
@@ -126,13 +126,13 @@ library methods are as follows:
 
 Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 3rd order Hermite polynomial interpolation. The algorithms denoted as having a
-"free" interpolation means that no extra steps are required for the
+“free” interpolation means that no extra steps are required for the
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
 The OrdinaryDiffEq.jl algorithms achieve the highest performance for non-stiff
 equations while being the most generic: accepting the most Julia-based types,
-allow for sophisticated event handling, etc. On stiff ODEs these algorithms
+allow for sophisticated event handling, etc. On stiff ODEs, these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
@@ -143,16 +143,16 @@ problems.
   adaptivity.
 - `Heun` - The second order Heun's method. Uses embedded Euler method for
   adaptivity.
-- `Ralston` - The optimized second order midpoint method. Uses embedded Euler.
+- `Ralston` - The optimized second order midpoint method. Uses embedded Euler
   method for adaptivity.
 - `RK4` - The canonical Runge-Kutta Order 4 method. Uses a defect control for
   adaptive stepping using maximum error over the whole interval.
 - `BS3` - Bogacki-Shampine 3/2 method.
-- `OwrenZen3` - Owren-Zennaro optimized interpolantion 3/2 method (free 3th
+- `OwrenZen3` - Owren-Zennaro optimized interpolation 3/2 method (free 3rd
   order interpolant).
-- `OwrenZen4` - Owren-Zennaro optimized interpolantion 4/3 method (free 4th
+- `OwrenZen4` - Owren-Zennaro optimized interpolation 4/3 method (free 4th
   order interpolant).
-- `OwrenZen5` - Owren-Zennaro optimized interpolantion 5/4 method (free 5th
+- `OwrenZen5` - Owren-Zennaro optimized interpolation 5/4 method (free 5th
   order interpolant).
 - `DP5` - Dormand-Prince's 5/4 Runge-Kutta method. (free 4th order interpolant).
 - `Tsit5` - Tsitouras 5/4 Runge-Kutta method. (free 4th order interpolant).
@@ -162,7 +162,7 @@ problems.
 - `FRK65(w=0)` - Zero Dissipation Runge-Kutta of 6th order. Takes an optional
   argument `w` to for the periodicity phase, in which case this method results in
   zero numerical dissipation.
-- `PFRK87(w=0)` - Phase-fitted Runge-Kutta Runge-Kutta of 8th order. Takes an optional
+- `PFRK87(w=0)` - Phase-fitted Runge-Kutta of 8th order. Takes an optional
   argument `w` to for the periodicity phase, in which case this method results in
   zero numerical dissipation.
 - `RKO65` - Tsitouras' Runge-Kutta-Oliver 6 stage 5th order method. This method is robust on problems
@@ -185,13 +185,13 @@ solve(prob,alg)
 Additionally, the following algorithms have a lazy interpolant:
 
 - `BS5` - Bogacki-Shampine 5/4 Runge-Kutta method. (lazy 5th order interpolant).
-- `Vern6` - Verner's "Most Efficient" 6/5 Runge-Kutta method. (lazy 6th order
+- `Vern6` - Verner's “Most Efficient” 6/5 Runge-Kutta method. (lazy 6th order
   interpolant).
-- `Vern7` - Verner's "Most Efficient" 7/6 Runge-Kutta method. (lazy 7th order
+- `Vern7` - Verner's “Most Efficient” 7/6 Runge-Kutta method. (lazy 7th order
   interpolant).
-- `Vern8` - Verner's "Most Efficient" 8/7 Runge-Kutta method. (lazy 8th order
+- `Vern8` - Verner's “Most Efficient” 8/7 Runge-Kutta method. (lazy 8th order
   interpolant)
-- `Vern9` - Verner's "Most Efficient" 9/8 Runge-Kutta method. (lazy 9th order
+- `Vern9` - Verner's “Most Efficient” 9/8 Runge-Kutta method. (lazy 9th order
   interpolant)
 
 These methods require a few extra steps in order to compute the high order
@@ -248,18 +248,18 @@ requires that simultaneous calls to `f` are thread-safe.
   of Ketcheson (SSP coefficient 6, free 3rd order Hermite interpolant).
   Fixed timestep only.
 - `SSPRKMSVS32` - 3-stage, 2nd order SSP-optimal linear multistep method.
-  (SSP coefficent 0.5, 3rd order Hermite interpolant). Fixed timestep only.
+  (SSP coefficient 0.5, 3rd order Hermite interpolant). Fixed timestep only.
 - `SSPRKMSVS43` - 4-stage, 3rd order SSP-optimal linear multistep method.
-  (SSP coefficent 0.33, 3rd order Hermite interpolant). Fixed timestep only.
+  (SSP coefficient 0.33, 3rd order Hermite interpolant). Fixed timestep only.
 
 The SSP coefficients of the methods can be queried as `ssp_coefficient(alg)`.
 All explicit SSP methods take two optional arguments
 `SSPXY(stage_limiter!, step_limiter!)`, where `stage_limiter!` and `step_limiter`
 are functions taking arguments of the form `limiter!(u, integrator, p, t)`. Here, `u` is the
 new solution value (updated inplace) after an explicit Euler stage / the whole
-time step , `integrator` the ODE integrator, and
+time step, `integrator` the ODE integrator, and
 `t` the current time. These limiters can be used to enforce physical constraints,
-e.g. the positivity preserving limiters of Zhang and Shu (Zhang, Xiangxiong, and
+e.g., the positivity preserving limiters of Zhang and Shu (Zhang, Xiangxiong, and
 Chi-Wang Shu. "Maximum-principle-satisfying and positivity-preserving high-order
 schemes for conservation laws: survey and new developments." Proceedings of the
 Royal Society of London A: Mathematical, Physical and Engineering Sciences. The
@@ -267,7 +267,7 @@ Royal Society, 2011.).
 
 #### Low-Storage Methods
 
-- `ORK256` - 5-stage, second order low-storage method for wave propogation
+- `ORK256` - 5-stage, second order low-storage method for wave propagation
   equations. Fixed timestep only. Like SSPRK methods, ORK256 also takes optional
   arguments `stage_limiter!`, `step_limiter!`, where `stage_limiter!` and
   `step_limiter!` are functions of the form `limiter!(u, integrator, p, t)`.
@@ -312,38 +312,38 @@ Royal Society, 2011.).
   scheme. Fixed timestep only. Like SSPRK methods, SHLDDRK64 also takes optional arguments `stage_limiter!`, `step_limiter!`.
 - `RK46NL` - 6-stage, fourth order low-stage, low-dissipation, low-dispersion
   scheme. Fixed timestep only.
-- `ParsaniKetchesonDeconinck3S32` - 3-stage, second order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S32` - 3-stage, second order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S82` - 8-stage, second order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S82` - 8-stage, second order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S53` - 5-stage, third order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S53` - 5-stage, third order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S173` - 17-stage, third order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S173` - 17-stage, third order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S94` - 9-stage, fourth order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S94` - 9-stage, fourth order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S184` - 18-stage, fourth order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S184` - 18-stage, fourth order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S105` - 10-stage, fifth order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S105` - 10-stage, fifth order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimised for for the
+- `ParsaniKetchesonDeconinck3S205` - 20-stage, fifth order (3S) low-storage scheme, optimized for the
   spectral difference method applied to wave propagation problems.
-- `CKLLSRK43_2` - 4-stage, third order low-storage scheme, optimised for compressible Navier–Stokes equations..
-- `CKLLSRK54_3C` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK95_4S` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK95_4C` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK95_4M` - 9-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK54_3C_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK54_3M_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK54_3N_3R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK85_4C_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK85_4M_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK85_4P_3R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK54_3N_4R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK54_3M_4R` - 5-stage, fourth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK65_4M_4R` - 6-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK85_4FM_4R` - 8-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
-- `CKLLSRK75_4M_5R` - 7-stage, fifth order low-storage scheme, optimised for compressible Navier–Stokes equations.
+- `CKLLSRK43_2` - 4-stage, third order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3C` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK95_4S` - 9-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK95_4C` - 9-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK95_4M` - 9-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3C_3R` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3M_3R` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3N_3R` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK85_4C_3R` - 8-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK85_4M_3R` - 8-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK85_4P_3R` - 8-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3N_4R` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK54_3M_4R` - 5-stage, fourth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK65_4M_4R` - 6-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK85_4FM_4R` - 8-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
+- `CKLLSRK75_4M_5R` - 7-stage, fifth order low-storage scheme, optimized for compressible Navier–Stokes equations.
 - `RDPK3Sp35` - 5-stage, third order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
   Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 - `RDPK3SpFSAL35` - 5-stage, third order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
@@ -357,7 +357,7 @@ Royal Society, 2011.).
 - `RDPK3SpFSAL510` - 10-stage, fifth order low-storage scheme with embedded error estimator, optimized for compressible fluid mechanics.
   Like SSPRK methods, this method also takes optional arguments `stage_limiter!` and `step_limiter!`.
 
-__NOTE__: All the 2N Methods (`ORK256`, `CarpenterKennedy2N54`, `NDBLSRK124`, `NDBLSRK134`, `NDBLSRK144`, `DGLDDRK73_C`, `DGLDDRK84_C`, `DGLDDRK84_F` and `SHLDDRK64`) work on the basic principle of being able to perform step `S1 = S1 + F(S2)` in just 2 registers. Certain optimizations have been done to achieve this theoritical limit (when `alias_u0` is set) but have a limitation that `du` should always be on the left hand side (assignments only) in the implementation.
+__NOTE__: All the 2N Methods (`ORK256`, `CarpenterKennedy2N54`, `NDBLSRK124`, `NDBLSRK134`, `NDBLSRK144`, `DGLDDRK73_C`, `DGLDDRK84_C`, `DGLDDRK84_F` and `SHLDDRK64`) work on the basic principle of being able to perform the step `S1 = S1 + F(S2)` in just 2 registers. Certain optimizations have been done to achieve this theoretical limit (when `alias_u0` is set) but have a limitation that `du` should always be on the left-hand side (assignments only) in the implementation.
 
 Example - This is an invalid implementation for 2N methods:
 
@@ -368,7 +368,7 @@ function f(du,u,p,t)
 end
 ```
 
-If you don't wish to have the optimization and have to use `du` on the RHS, please set the keyword argument `williamson_condition` to `false` in the algorithm (by default it is set to `true`). In this case 3 registers worth memory would be needed instead.
+If you don't wish to have the optimization and have to use `du` on the RHS, please set the keyword argument `williamson_condition` to `false` in the algorithm (by default it is set to `true`). In this case, 3 registers worth of memory would be needed instead.
 
 Example :
 
@@ -376,7 +376,7 @@ Example :
 alg = CarpenterKennedy2N54(;williamson_condition=false)
 ```
 
-So the above implementation of `f` becomes valid.
+So, the above implementation of `f` becomes valid.
 
 #### Parallelized Explicit Extrapolation Methods
 
@@ -388,7 +388,7 @@ The following are adaptive order, adaptive step size extrapolation methods:
   following Hairer's `ODEX` in the adaptivity behavior.
 
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
-algorithm. The `sequence_factor` denotes which even multiple of sequence to take while evaluating internal discretisations.
+algorithm. The `sequence_factor` denotes which even multiple of sequence to take while evaluating internal discretizations.
 `threading` denotes whether to automatically multithread the `f` evaluations,
 allowing for a high degree of within-method parallelism. The defaults are:
 
@@ -504,7 +504,8 @@ These methods require a choice of `dt`.
 
 - `PDIRK44` - A 2 processor 4th order diagonally non-adaptive implicit method.
 
-These methods also have option `nlsolve` same as SDIRK methods. These methods also need `f` to be thread safe. It parallelises the `nlsolve` calls inside the method.
+These methods also have option `nlsolve` same as SDIRK methods. These methods also require `f`
+to be thread safe. It parallelizes the `nlsolve` calls inside the method.
 
 #### Rosenbrock Methods
 
@@ -541,7 +542,7 @@ These methods also have option `nlsolve` same as SDIRK methods. These methods al
 - `Rosenbrock23` - An Order 2/3 L-Stable Rosenbrock-W method which is good for very
   stiff equations with oscillations at low tolerances. 2nd order stiff-aware
   interpolation.
-- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildy
+- `Rosenbrock32` - An Order 3/2 A-Stable Rosenbrock-W method which is good for mildly
   stiff equations without oscillations at low tolerances. Note that this method
   is prone to instability in the presence of oscillations, so use with caution.
   2nd order stiff-aware interpolation.
@@ -588,7 +589,7 @@ The following are adaptive order, adaptive step size extrapolation methods:
 These methods have arguments for `max_order`, `min_order`, and `init_order` on the adaptive order
 algorithm. `threading` denotes whether to automatically multithread the `f` evaluations
 and J/W instantiations+factorizations, allowing for a high degree of
-within-method parallelism. We recommend to switch to multi-threading when the system consists of more than ~ 150 ODES.
+within-method parallelism. We recommend switching to multi-threading when the system consists of more than ~ 150 ODES.
 The defaults are:
 
 - `max_order=10`
@@ -636,8 +637,8 @@ These methods are all fixed timestepping only.
 
 The methods are intended for semilinear problems constructed by
 [`SplitODEProblem`](@ref split_ode_prob) or `SplitODEFunction`. They can
-also be used for a general nonlinear problem, in which case the jacobian of the right
-hand side is used as the linear operator in each time step.
+also be used for a general nonlinear problem, in which case the Jacobian of the
+right-hand side is used as the linear operator in each time step.
 
 Except for `ETD2`, all methods come with these options, which can be set in the methods'
 constructor:
@@ -645,11 +646,11 @@ constructor:
 - `krylov` - boolean, default: `false`. Determines whether Krylov approximation or operator
   caching is used, the latter only available for semilinear problems. `krylov=true` is much
   faster for larger systems and is thus recommended whenever there are >100 ODEs.
-- `m` - integer, default: `30`. Controls the size of Krylov subsapce.
+- `m` - integer, default: `30`. Controls the size of Krylov subspace.
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
-  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
-- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
+- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit Jacobian
   is not given. See [Extra Options](#Extra-Options-1) for more details.
 
 #### Adaptive Exponential Rosenbrock Methods
@@ -657,8 +658,8 @@ constructor:
 - `Exprb32` - 3rd order adaptive Exponential-Rosenbrock scheme.
 - `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
 
-The exponential rosenbrock methods cannot be applied to semilinear problems. Options for the
-solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1)
+The exponential Rosenbrock methods cannot be applied to semilinear problems. Options for the
+solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1),
 except that Krylov approximation is always used.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
@@ -670,19 +671,19 @@ These methods are all fixed timestepping only.
 - `EPIRK4s3B` - 4th order EPIRK scheme with stiff order 4.
 - `EPIRK5P1` - 5th order EPIRK scheme.
 - `EPIRK5P2` - 5th order EPIRK scheme.
-- `EPIRK5s3` - 5th order "horizontal" EPIRK scheme with stiff order 5. Broken.
+- `EPIRK5s3` - 5th order “horizontal” EPIRK scheme with stiff order 5. Broken.
 - `EXPRB53s3`- 5th order EPIRK scheme with stiff order 5.
 
 Options:
 
 - `adaptive_krylov` - boolean, default: `true`. Determines if the adaptive Krylov algorithm
   with timestepping of Neisen & Wright is used.
-- `m` - integer, default: `30`. Controls the size of Krylov subsapce, or the size for the
+- `m` - integer, default: `30`. Controls the size of Krylov subspace, or the size for the
   first step if `adaptive_krylov=true`.
 - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
-  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/jacobian is hermitian,
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
   then the Lanczos algorithm will always be used and the IOP setting is ignored.
-- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit jacobian
+- `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit Jacobian
   is not given. See [Extra Options](#Extra-Options-1) for more details.
 
 It should be noted that many of the methods are still at an experimental stage of development,
@@ -722,7 +723,7 @@ Sundials CVODE integrator.
 
 #### Extra Options
 
-All of the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
+All the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
 solver, see [the manual page on solver specification](@ref linear_nonlinear).
 
@@ -809,7 +810,7 @@ when going from non-stiff to stiff and divided when going stiff to non-stiff.
 
 These methods require a `Autoalg(stiffalg)` to be chosen as the method to switch
 to when the ODE is stiff. It can be any of the OrdinaryDiffEq.jl one-step stiff
-methods and has all of the arguments of the `AutoSwitch` algorithm.
+methods and has all the arguments of the `AutoSwitch` algorithm.
 
 - `AutoTsit5` - `Tsit5` with automated switching.
 - `AutoDP5` - `DP5` with automated switching.
@@ -842,7 +843,7 @@ using Sundials
 The Sundials suite is built around multistep methods. These methods are more efficient
 than other methods when the cost of the function calculations is really high, but
 for less costly functions the cost of nurturing the timestep overweighs the benefits.
-However, the BDF method is a classic method for stiff equations and "generally works".
+However, the BDF method is a classic method for stiff equations and “generally works”.
 
   - `CVODE_BDF` - CVode Backward Differentiation Formula (BDF) solver.
   - `CVODE_Adams` - CVode Adams-Moulton solver.
@@ -926,8 +927,8 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
     form. Not compatible with events.
   - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
     interface. Only allows `solve`.
-  - `SimpleRK4` - A fixed timestep barebones RK4 implementation with integrators.
-  - `LoopRK4` - A fixed timestep barebones RK4. Not compatible with events or
+  - `SimpleRK4` - A fixed timestep bare-bones RK4 implementation with integrators.
+  - `LoopRK4` - A fixed timestep bare-bones RK4. Not compatible with events or
     the integrator interface.
   - `GPURK4` - A fully static RK4 for specialized compilation to accelerators
     like GPUs and TPUs.
@@ -1082,14 +1083,14 @@ using GeometricIntegratorsDiffEq
 - `GILobattoIIIE(s)`
 - `GILobattoIIIF(s)`
 - `GISRK3` - 3-stage order 4 symmetric Runge-Kutta method
-- `GISSPRK3` - 3rd orer explicit SSP method
+- `GISSPRK3` - 3rd order explicit SSP method
 - `GICrankNicholson
 - `GIKraaijevangerSpijker`
 - `GIQinZhang`
 - `GICrouzeix`
 - `GIGLRK(s)` - Gauss-Legendre Runge-Kutta method of order 2s
 
-Note that all of these methods require the user supplies `dt`.
+Note that all these methods require the user supplies `dt`.
 
 ### BridgeDiffEq.jl
 
@@ -1139,13 +1140,13 @@ use QuDiffEq.jl:
 using QuDiffEq
 ```
 
-- `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series aprroximation (for the quantum circuit).
-- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratc differential equations. `k` selects the order in the Taylor series aprroximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution.
+- `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series approximation (for the quantum circuit).
+- `QuNLDE(k,ϵ)`- Algorithm uses forward Euler to solve quadratic differential equations. `k` selects the order in the Taylor series approximation (for the quantum circuit). `ϵ` sets the precision for Hamiltonian evolution.
 
 ### NeuralPDE.jl
 
 This method trains a neural network using Flux.jl to approximate the solution of the
-ODE. Currently this method isn't competitive but it is a fun curiosity that will be
+ODE. Currently, this method isn't competitive, but it is a fun curiosity that will be
 improved with future integration with Zygote.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
@@ -1158,7 +1159,7 @@ using NeuralPDE
 ```
 
 - `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
-  `chain` under the hood which must be supplied by the user. Defaults to using the ADAM
+  `chain` under the hood, which must be supplied by the user. Defaults to using the ADAM
   optimization method, but the user can pass any Flux.jl optimizer.
 
 ### List of Supplied Tableaus
@@ -1173,7 +1174,7 @@ using DiffEqDevTools
 ```
 
 For the most useful and common algorithms, a hand-optimized version is supplied
-in OrdinaryDiffEq.jl which is recommended for general uses (i.e. use `DP5`
+in OrdinaryDiffEq.jl, which is recommended for general uses (i.e. use `DP5`
 instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
 serve as a good method for comparing between tableaus and understanding the
 pros/cons of the methods. Implemented are every published tableau (that I know

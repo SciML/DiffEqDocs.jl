@@ -35,16 +35,16 @@ the problem, though for large enough PDEs the `ARKODE` method with
 - `SBDF3` : 3rd order IMEX BDF method. Fixed time step only. In development.
 - `SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
 - `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
-- `KenCarp4`: An A-L stable stiffly-accurate 4rd order ESDIRK method.
+- `KenCarp4`: An A-L stable stiffly-accurate 4th order ESDIRK method.
 - `KenCarp47` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
-- `KenCarp5`: An A-L stable stiffly-accurate 5rd order ESDIRK method.
+- `KenCarp5`: An A-L stable stiffly-accurate 5th order ESDIRK method.
 - `KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
 
 ### Sundials.jl
 
 - `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
   of available options, please see
-  [its ODE solver page](https://diffeq.sciml.ai/dev/solvers/ode_solve/#ode_solve_sundials)
+  [its ODE solver page](https://diffeq.sciml.ai/dev/solvers/ode_solve/#ode_solve_sundials).
 
 ## Semilinear ODE
 
@@ -86,9 +86,9 @@ defaults to 30. For example
 LawsonEuler(krylov=true, m=50)
 ```
 
-constructs a Lawson-Euler method which uses a size-50 Krylov subspace. Note that `m`
+constructs a Lawson-Euler method, which uses a size-50 Krylov subspace. Note that `m`
 only sets an upper bound to the Krylov subspace size. If a convergence criterion is met
-(determined by the `reltol` of the integrator), "happy breakdown" will occur and the
+(determined by the `reltol` of the integrator), “happy breakdown” will occur and the
 Krylov subspace will only be constructed partially.
 
 For more advanced control over the Krylov algorithms, you can change the length of the

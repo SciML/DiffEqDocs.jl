@@ -42,7 +42,7 @@ stiff equations when the SDAE is specified in mass matrix form.
   theta method which defaults to `theta=1` or the Trapezoid method on the drift
   term. This method defaults to `symplectic=false`, but when true and `theta=1/2`
   this is the implicit Midpoint method on the drift term and is symplectic in
-  distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
+  distribution. Can handle all forms of noise, including non-diagonal, Q scalar,
   and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
 - `SKenCarp` - Adaptive L-stable drift-implicit strong order 1.5 for additive
   Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
@@ -53,4 +53,4 @@ stiff equations when the SDAE is specified in mass matrix form.
 †: Does not step to the interval endpoint. This can cause issues with discontinuity
 detection, and [discrete variables need to be updated appropriately](@ref diffeq_arrays).
 
-\*:  Note that although `SKenCarp` uses the same table as `KenCarp3`, solving a ODE problem using `SKenCarp` by setting `g(du,u,p,t) = du .= 0` will take much more steps than `KenCarp3` because error estimator of `SKenCarp` is different (because of noise terms) and default value of `qmax` (maximum permissible ratio of relaxing/tightening `dt` for adaptive steps) is smaller for StochasticDiffEq algorithms.
+\*:  Note that although `SKenCarp` uses the same table as `KenCarp3`, solving a ODE problem using `SKenCarp` by setting `g(du,u,p,t) = du .= 0` will take many more steps than `KenCarp3` because error estimator of `SKenCarp` is different (because of noise terms) and default value of `qmax` (maximum permissible ratio of relaxing/tightening `dt` for adaptive steps) is smaller for StochasticDiffEq algorithms.
