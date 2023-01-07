@@ -84,7 +84,7 @@ Both Runge-Kutta-Nyström and Runge-Kutta integrator do not conserve energy nor 
 
 ## Manifold Projection
 
-In this example, we know that energy and angular momentum should be conserved. We can achieve this through mainfold projection. As the name implies, it is a procedure to project the ODE solution to a manifold. Let's start with a base case, where mainfold projection isn't being used.
+In this example, we know that energy and angular momentum should be conserved. We can achieve this through manifold projection. As the name implies, it is a procedure to project the ODE solution to a manifold. Let's start with a base case, where manifold projection isn't being used.
 
 ```@example kepler
 using DiffEqCallbacks
@@ -134,7 +134,7 @@ sol6 = solve(prob2, RK4(), dt=1//5, adaptive=false, callback=energy_cb)
 analysis_plot2(sol6, H, L)
 ```
 
-There is almost no energy variation but angular momentum varies quite bit. How about only project to the angular momentum conservation manifold?
+There is almost no energy variation, but angular momentum varies quite a bit. How about only project to the angular momentum conservation manifold?
 
 ```@example kepler
 function angular_manifold(residual,u,p,t)

@@ -3,7 +3,7 @@
 This chart is for documenting the compatibility of the component solver packages
 to the common interface. An `x` means that the option is implemented or the
 add-on functionality will work with the given solver. A blank means that
-the option has not been implemented or that a given add-on has not been tested
+the option has not been implemented, or that a given add-on has not been tested
 with a given package. If there are any errors in this chart, please file an
 issue or submit a pull-request.
 
@@ -46,8 +46,8 @@ issue or submit a pull-request.
 | Plotting and solution handling         | x                 | x           | x      | x               | x        | x                   | x              | x        | x          
 
 * x: Full compatibility
-* p: Partial compatibility, only in nonstiff methods unless the Jacobian is provided.
-* n: General compatibility, but not compatible with routines which.
+* p: Partial compatibility, only in nonstiff methods, unless the Jacobian is provided.
+* n: General compatibility, but not compatible with routines which
   require being able to autodifferentiate through the entire solver.
 * 0: Not possible. This is generally due to underlying inflexibility in a wrapped
   library.

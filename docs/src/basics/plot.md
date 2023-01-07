@@ -15,7 +15,7 @@ plot(sol) # Plots the solution
 Many of the types defined in the DiffEq universe, such as
 `ODESolution`, `ConvergenceSimulation` `WorkPrecision`, etc. have plot recipes
 to handle the default plotting behavior. Plots can be customized using
-[all of the keyword arguments provided by Plots.jl](http://docs.juliaplots.org/dev/supported/).
+[all the keyword arguments provided by Plots.jl](http://docs.juliaplots.org/dev/supported/).
 For example, we can change the plotting backend to the GR package and put a title
 on the plot by doing:
 
@@ -40,7 +40,7 @@ of evenly-spaced points (in time) to plot. For example:
 plot(sol,denseplot=false)
 ```
 
-means "only plot the points which the solver stepped to", while:
+means “only plot the points which the solver stepped to”, while:
 
 ```julia
 plot(sol,plotdensity=1000)
@@ -67,9 +67,9 @@ and return a tuple. If no function is given, for example,
 idxs = [(0,1), (1,3), (4,5)]
 ```
 
-this would mean "plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁`, and
+this would mean “plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁`, and
 `var₅(var₄)` vs `var₄` all on the same graph, putting the independent variables
-(`t`, `var₁` and `var₄`) on the x-axis." While this can be used for everything,
+(`t`, `var₁` and `var₄`) on the x-axis.” While this can be used for everything,
 the following conveniences are provided:
 
 * Everywhere in a tuple position where we only find an integer, this
@@ -140,7 +140,7 @@ plot(sol,tspan=(0.0,40.0))
 ```
 
 only plots between `t=0.0` and `t=40.0`. If `denseplot=true` these bounds will be respected
-exactly. Otherwise the first point inside and last point inside the interval will be plotted,
+exactly. Otherwise, the first point inside and last point inside the interval will be plotted,
 i.e. no points outside the interval will be plotted.
 
 ### Example
@@ -218,7 +218,7 @@ Phase plots can be done similarly, for example:
 plot(sol[i,:],sol[j,:],sol[k,:])
 ```
 
-is a 3d phase plot between variables `i`, `j`, and `k`.
+is a 3D phase plot between variables `i`, `j`, and `k`.
 
 Notice that this does not use the interpolation. When not using the plot recipe,
 the interpolation must be done manually. For example:

@@ -58,7 +58,7 @@ T(b) = \frac{β \sin(γ b)}{γ^2 α}+c_1 b+c_2 = T_{top} \\
 c_2 = T_{top}-\left(\frac{β \sin(γ b)}{γ^2 α}+c_1 b\right)
 ```
 
-And now let's define this in a julia function:
+And now let's define this in a Julia function:
 ```@example diffusionimplicit
 function T_analytic(z) # Analytic steady state solution
     c1 = ∇T_bottom-β*cos(γ*a)/(γ*α)
@@ -69,7 +69,7 @@ end
 
 ## Derive the temporal discretization
 
-Here, we'll derivation the matrix form of the temporal discretization we wish to use (diffusion-implicit and explicit Euler):
+Here, we'll derive the matrix form of the temporal discretization we wish to use (diffusion-implicit and explicit Euler):
 ```math
 ∂_t T = α ∇²T + S \\
 (T^{n+1}-T^n) = Δt (α  ∇²T^{n+1} + S) \\
@@ -157,7 +157,7 @@ function rhs!(dT, T, params, t)
 end;
 ```
 
-Next, we'll pacakge up parameters needed in the RHS function, define the ODE problem, and solve.
+Next, we'll package up parameters needed in the RHS function, define the ODE problem, and solve.
 ```@example diffusionimplicit
 params = (;n)
 

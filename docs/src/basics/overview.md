@@ -32,7 +32,7 @@ will solve using `Rational{BigInt}` for the timesteps and `BigFloat` for the
 independent variables. A wide variety of number types are compatible with the
 solvers such as complex numbers, unitful numbers (via Unitful.jl),
 decimals (via DecFP), dual numbers, and many more which may not have been tested
-yet (thanks to the power of multiple dispatch!). For information on type-compatibilty,
+yet (thanks to the power of multiple dispatch!). For information on type-compatibility,
 please see the solver pages for the specific problems.
 
 ## Solving the Problems
@@ -48,12 +48,12 @@ Into the command, one passes the differential equation problem that they defined
 `prob`, optionally choose an algorithm `alg` (a default is given if not
 chosen), and change the properties of the solver using keyword arguments. The common
 arguments which are accepted by most methods is defined in [the common solver options manual page](@ref solver_options).
-The solver returns a solution object `sol` which hold all of the details for the solution.
+The solver returns a solution object `sol` which hold all the details for the solution.
 
 ## Analyzing the Solution
 
 With the solution object, you do the analysis as you please! The solution type
-has a common interface which makes handling the solution similar between the
+has a common interface, which makes handling the solution similar between the
 different types of differential equations. Tools such as interpolations
 are seamlessly built into the solution interface to make analysis easy. This
 interface is described in the [solution handling manual page](@ref solution).
@@ -62,14 +62,14 @@ Plotting functionality is provided by a recipe to Plots.jl. To
 use plot solutions, simply call the `plot(sol)` and the plotter will generate
 appropriate plots. If `save_everystep` was used, the plotters can
 generate animations of the solutions to evolution equations using the `animate(sol)`
-command. Plots can be customized using all of the keyword arguments
+command. Plots can be customized using all the keyword arguments
 provided by Plots.jl. Please see Plots.jl's documentation for more information.
 
 ## Add-on Tools
 
 One of the most compelling features of DifferentialEquations.jl is that the
-common solver interface allows one to build tools which are "algorithm and
-problem agnostic". For example, one of the provided tools allows for performing
+common solver interface allows one to build tools which are “algorithm and
+problem agnostic”. For example, one of the provided tools allows for performing
 parameter estimation on `ODEProblem`s. Since the `solve` interface is the
 same for the different algorithms, one can use any of the associated solving algorithms.
 This modular structure allows one to mix and match overarching analysis tools
@@ -90,6 +90,6 @@ which are unique and the results of recent publications! Please check out the
 for more information on using the development tools.
 
 Note that DifferentialEquations.jl allows for distributed development, meaning that
-algorithms which "plug-into ecosystem" don't have to be a part of the major packages.
+algorithms which “plug-into the ecosystem” don't have to be a part of the major packages.
 If you are interested in adding your work to the ecosystem, checkout the [developer documentation](https://devdocs.sciml.ai/dev/)
 for more information.

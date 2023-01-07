@@ -27,38 +27,38 @@ How to handle this? 99.99% of the time this has been debugged, it has turned out
 to be an error in the user's model! A missing minus sign, an incorrect term,
 etc. There are many other behaviors to watch out for. In some ODEs, increasing
 a parameter can cause a bifurcation so that the solution diverges. With
-`u'=a*u`, if `a` is negative then it nicely falls to zero, but if `a` is positive
-the solution quickly diverges to infinity! This means, double check your parameters
+`u'=a*u`, if `a` is negative then, it nicely falls to zero, but if `a` is positive
+the solution quickly diverges to infinity! This means, double-check your parameters
 are indexed correctly!
 
 **Note: if you see these warnings during a parameter estimation process, this is
 likely the underlying problem. Simply check `sol.retcode != :Success` and throw
-an `Inf` cost and most optimizers will reject steps in those parameter regimes!**
+an `Inf` cost. Most optimizers will then reject steps in those parameter regimes!**
 
-There are a few other things to check as well. In many cases, the stability of
+There are a few other things to check as well. Often, the stability of
 an ODE solve improves as you decrease the tolerance, so you may want to try a
 smaller `abstol` and `reltol`. One behavior to watch out for is that if your
 model is a differential-algebraic equation and your DAE is of high index (say
-index>1), this can impact the numerical solution. In this case you may want to
-use the [ModelingToolkit.jl index reduction tools](https://docs.sciml.ai/ModelingToolkit/stable/examples/modelingtoolkitize_index_reduction/)
+index>1), this can impact the numerical solution. In this case, you may want to
+use the [ModelingToolkit.jl index reduction tools](https://mtk.sciml.ai/dev/mtkitize_tutorials/modelingtoolkitize_index_reduction/)
 to improve the numerical stability of a solve. In addition, if it's a highly
-stiff ODE/DAE that is large and you're using a matrix-free solver (such as GMRES),
+stiff ODE/DAE that is large, and you're using a matrix-free solver (such as GMRES),
 make sure the tolerance of the GMRES is well-tuned and an appropriate preconditioner
 is applied. Finally, try other solvers. They all have different stability, so try
 `Tsit5()`, `Vern7()`, `QNDF()`, `Rodas5()`, `TRBDF2()`, `KenCarp4()`, `Sundials.CVODE_BDF()`,
 etc. and see what works.
 
-If none of this works out, double check that your ODE truly has the behavior
+If none of this works out, double-check that your ODE truly has the behavior
 that you believe it should. This is one of the most common issues: your intuition
 may be deceiving. For example, `u' = -sqrt(u)` with `u(0)=1` cannot hit zero
 because its derivative shrinks to zero, right? Wrong! [It will hit zero in a finite
 time, after which the solution is undefined and does not have a purely real solution](https://www.wolframalpha.com/input/?i=u%27%3D-sqrt%28u%29).
-`u' = u^2 - 100u` will "usually" go to zero, but if `u(0)>10` then it will go to
+`u' = u^2 - 100u` will “usually” go to zero, but if `u(0)>10` then it will go to
 infinity. Plot out your diverging solution and see whether the asymtopics are
-correct: if `u[i]` gets big, do you equations make `u'[i]` positive and growing?
-That's would be a problem!
+correct: if `u[i]` gets big, do your equations make `u'[i]` positive and growing?
+That would be a problem!
 
-Let's say you don't believe you made an error at all and you want to file a bug
+Let's say you don't believe you made an error at all, and you want to file a bug
 report. To do so, you'll first want to prove that it's isolated to a solver.
 If it's a solver issue, then you shouldn't see it happen with every single solver.
 Do you think it's an issue with the Julia solvers? Well fortunately,
@@ -85,10 +85,10 @@ most likely not the ODE solvers. Or rather, to put it in meme form:
 
 ![](https://user-images.githubusercontent.com/1814174/120933617-eb65ac80-c6c8-11eb-85f7-ef98688d054c.jpg)
 
-Don't be like Patrick. If after trying these ideas your ODE solve still seems
-to have issues and you haven't narrowed it down, feel free to ask on the
+Don't be like Patrick. If after trying these ideas, your ODE solve still seems
+to have issues, and you haven't narrowed it down, feel free to ask on the
 [Julia Discourse](https://discourse.julialang.org/) to get some help diagnosing
-it. If you did find a solver issue, please open an issue on the Github repository.
+it. If you did find a solver issue, please open an issue on the GitHub repository.
 
 #### A larger maxiters seems to be needed, but it's already high?
 
@@ -97,12 +97,12 @@ If you see:
 >Interrupted. Larger maxiters is needed.
 
 Note that it could quite possibly arise just from having a very long timespan.
-If you check `sol.t` from the returned object and it looks like it's stepping
+If you check `sol.t` from the returned object, and it looks like it's stepping
 at reasonable lengths, feel free to just pass `maxiters=...` into solve to
 bump it up from the default of `Int(1e5)`.
 
 But if your `maxiters` is already high, then the problem is likely that your model
-is stiff. A stiff ODE requires very small time steps from many explicit solvers,
+is stiff. A stiff ODE requires very small timesteps from many explicit solvers,
 such as `Tsit5()`, `Vern7()`, etc., and thus those methods are not appropriate
 for this kind of problem. You will want to change to a different method, like
 `Rodas5()`, `Rosenbrock23()`, `TRBDF2()`, `KenCarp4()`, or `QNDF()`.
@@ -110,15 +110,15 @@ for this kind of problem. You will want to change to a different method, like
 #### My ODE goes negative but should stay positive, what tools can help?
 
 There are many tools to help! However, let's first focus on one piece first:
-when you say "should" be positive, what do you mean by "should"? If you mean
-"mathematically you can prove that the ODE with these values and these initial
-conditions will have a solution that is positive for all time" then yes, you're
-looking in the right place. If by "should" you mean "it's a model of biochemical
-reactions so the concentration should always be positive", well ask yourself
+when you say “should” be positive, what do you mean by “should”? If you mean
+“mathematically you can prove that the ODE with these values and these initial
+conditions will have a solution that is positive for all time”, then yes, you're
+looking in the right place. If by “should” you mean “it's a model of biochemical
+reactions, so the concentration should always be positive”, then ask yourself
 first, did you write down a model where it will always be positive?
 
 The following set of tools are designed to accuracy enforce positivity in ODE
-models which mathematically should be positive in the true solution. If they
+models, which mathematically should be positive in the true solution. If they
 encounter a model that is actually going negative, they will work really hard
 to get a positive but correct solution, which is impossible, so they will simply
 error out. This can be more subtle than you think. Solving `u'=-sqrt(u)` is
@@ -204,12 +204,12 @@ The next question is whether it matters. Generally, your system has to be large
 for parallelism to matter. Using a multithreaded array for broadcast we find
 helpful around `N>1000`, though the Sundials manual says `N>100,000`. For high
 order Runge-Kutta methods it's likely lower than the Sundials estimate because
-of more operations packed into each internal step, but as always that will need
+of more operations packed into each internal step, but as always, that will need
 more benchmarks to be precise and will depend on the problem being solved. GPUs
 generally require some intensive parallel operation in the user's `f` function
-to be viable, for example a matrix multiplication for a stencil computation
-in a PDE. If you're simply solving some ODE element-wise on a big array it likely
-won't do much or it will slow things down just due to how GPUs work.
+to be viable, for example, a matrix multiplication for a stencil computation
+in a PDE. If you're simply solving some ODE element-wise on a big array, it likely
+won't do much, or it will slow things down just due to how GPUs work.
 DistributedArrays require parallel linear solves to really matter, and thus are
 only recommended when you have a problem that cannot fit into memory or are using
 a stiff solver with a Krylov method for the linear solves.
@@ -236,9 +236,9 @@ using LinearAlgebra
 LinearAlgebra.BLAS.set_num_threads(4)
 ```
 
-Additionally, in some cases Intel's MKL might be a faster BLAS than the standard
+Additionally, sometimes Intel's MKL might be a faster BLAS than the standard
 BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
-can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl) which will accelerate
+can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl), which will accelerate
 the linear algebra routines. This is done via:
 
 ```julia
@@ -264,8 +264,8 @@ system up to use [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.j
 This is demonstrated
 [in the ODE tutorial](@ref ode_other_types)
 with static matrices. Static vectors/arrays are stack-allocated, and thus creating
-new arrays is free and the compiler doesn't have to heap-allocate any of the
-temporaries (that's the expensive part!). These have specialized super fast
+new arrays is free, and the compiler doesn't have to heap-allocate any of the
+temporaries (that's the expensive part!). These have specialized superfast
 dispatches for arithmetic operations and extra things like LU-factorizations,
 and thus they are preferred when possible. However, they lose efficiency if they
 grow too large.
@@ -287,7 +287,7 @@ type-instabilities, you should do:
 @code_warntype f(du,u,p,t)
 ```
 
-and read the printout to see if there's any types that aren't inferred by the
+and read the printout to see if there are any types that aren't inferred by the
 compiler, and fix them. If you have any global variables, you should make them
 `const`. As for allocations, some common things that allocate
 are:
@@ -305,7 +305,7 @@ For an example of optimizing a function resulting from a PDE discretization, see
 #### The stiff solver takes forever to take steps for my PDE discretization
 
 The solvers for stiff solvers require solving a nonlinear equation each step.
-In order to do so, they have to do a few Newton steps. By default, these methods
+To do so, they have to do a few Newton steps. By default, these methods
 assume that the Jacobian is dense, automatically calculate the Jacobian for you,
 and do a dense factorization. However, in many cases you may want to use alternatives
 that are more tuned for your problem.
@@ -327,7 +327,7 @@ special matrix, such as a banded or tridiagonal matrix, if it satisfies a specia
 structure. If you only know the Jacobian is sparse, using automated sparsity
 detection can help with identifying the sparsity pattern. See the [stiff ODE tutorial](@ref stiff)
 for more details. Lastly, using `LinSolveGMRES()` can help if a sparsity pattern
-cannot be obtained but the matrix is large, or if the sparsity cannot fit into
+cannot be obtained, but the matrix is large, or if the sparsity cannot fit into
 memory. Once again, a good reference for how to handle PDE discretizations can be found
 [at this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
 
@@ -355,7 +355,7 @@ function f(du,u,p,t)
 end
 ```
 
-Then in a callback you can make the `affect!` function modify `integrator.prob.p`.
+Then in a callback, you can make the `affect!` function modify `integrator.prob.p`.
 For example, we can make it change when `u[2]<0.5` via:
 
 ```julia
@@ -363,16 +363,16 @@ condition(t,u,integrator) = u[2] - 0.5
 affect!(integrator) = integrator.p = 1
 ```
 
-Then it will change betweeen the two ODE choices for `du1` at that moment.
+Then it will change between the two ODE choices for `du1` at that moment.
 Another way to do this is to make the ODE functions all be the same type
 via FunctionWrappers.jl, but that is unnecessary. With the way that modern
 processors work, there exists branch prediction and thus execution of a conditional
 is free if it's predictable which branch will be taken. In this case, almost every
 call to `f` takes the `p==0` route until the callback, at which point it is
-almost always the `else` route. Therefore the processor will effectively get
+almost always the `else` route. Therefore, the processor will effectively get
 rid of the computational cost associated with this, so you're likely over-optimizing
-if you're going further (unless this change happens every step, but even then
-this is probably the cheapest part of the computation...).
+if you're going further (unless this change happens every step, but even then,
+this is probably the cheapest part of the computation…).
 
 ## Numerical Error
 
@@ -383,7 +383,7 @@ internal adaptive time stepping engine how precise of a solution you want.
 Generally, `reltol` is the relative accuracy while `abstol` is the accuracy when
 `u` is near zero. *These tolerances are local tolerances and thus are not global
 guarantees*. However, a good rule of thumb is that the total solution accuracy
-is 1-2 digits less than the relative tolerances. Thus for the defaults
+is 1-2 digits less than the relative tolerances. Thus, for the defaults
 `abstol=1e-6` and `reltol=1e-3`, you can expect a global accuracy of about 1-2
 digits. This is standard across the board and applies to the native Julia methods,
 the wrapped Fortran and C++ methods, the calls to MATLAB/Python/R, etc.
@@ -417,12 +417,12 @@ Yes, symplectic integrators do not exactly conserve energy. It is a common
 misconception that they do. What symplectic integrators actually do is solve
 for a trajectory which rests on a symplectic manifold that is perturbed from
 the true solution's manifold by the truncation error. This means that symplectic
-integrators do not experience (very much) long time drift, but their orbit is
-not exactly the same as the true solution in phase space and thus you will
+integrators do not experience (very much) longtime drift, but their orbit is
+not exactly the same as the true solution in phase space, and thus you will
 see differences in energy that tend to look periodic. There is a small drift
-which grows linearly and is related to floating point error, but this drift
+which grows linearly and is related to floating-point error, but this drift
 is much less than standard methods. This is why symplectic methods are recommended
-for long time integration.
+for longtime integration.
 
 For conserving energy, there are a few things you can do. First of all, the energy
 error is related to the integration error, so simply solving with higher accuracy
@@ -434,7 +434,7 @@ thing you can do is use
 
 #### How to get to zero error
 
-You can't. For floating point numbers, you shouldn't use below `abstol=1e-14`
+You can't. For floating-point numbers, you shouldn't use below `abstol=1e-14`
 and `reltol=1e-14`. If you need lower than that, use arbitrary precision numbers
 like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 
@@ -467,9 +467,9 @@ end
 ```
 
 This function takes in new parameters and spits out the solution at the end.
-We make the inital condition `eltype(p).([1.0,1.0])` so that way it's typed to
+We make the initial condition `eltype(p).([1.0,1.0])` so that way it's typed to
 be Dual numbers whenever `p` is an array of `Dual` numbers, and we do the same
-for the timespan just to show what you'd do if there was parameters-dependent events.
+for the timespan just to show what you'd do if there were parameters-dependent events.
 Then we can take the Jacobian via ForwardDiff.jl:
 
 ```@example faq1
@@ -486,7 +486,7 @@ FiniteDiff.finite_difference_jacobian(f,[1.5,1.0])
 
 #### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods
 
-This is because you're using a cache which is not compatible with autodifferentiaion
+This is because you're using a cache which is incompatible with autodifferentiation
 via ForwardDiff.jl. For example, if we use the ODE function:
 
 ```julia
@@ -500,13 +500,13 @@ prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), zeros(5,5)))
 solve(prob, Rosenbrock23())
 ```
 
-Here we use a cached temporary array in order to avoid the allocations of matrix
+Here we use a cached temporary array to avoid the allocations of matrix
 multiplication. When autodifferentiation occurs, the element type of `u` is
 `Dual` numbers, so `A*u` produces `Dual` numbers, so the error arises when it
 tries to write into `tmp`. There are two ways to avoid this. The first way,
 the easy way, is to just turn off autodifferentiation with the `autodiff=false`
 option in the solver. Every solver which uses autodifferentiation has this option.
-Thus we'd solve this with:
+Thus, we'd solve this with:
 
 ```julia
 prob = ODEProblem(f,ones(5, 5),(0.0,1.0))
@@ -544,7 +544,7 @@ or
 ```
 ERROR: ArgumentError: pattern of the matrix changed
 ```
-though an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g., 
+though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g., 
 
 ```julia
 solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
@@ -554,9 +554,12 @@ For more details about possible linear solvers, consult the [LinearSolve.jl docu
 
 ## Odd Error Messages
 
-#### "Error Exception: `llvmcall` must be compiled to be called" when running the debugger?
+#### “Error Exception: `llvmcall` must be compiled to be called” when running the debugger?
 
-The debugger is incompatible with `llvmcall` which is used in the `AutoSpecialize` form that is used to reduce the compile times.
-In order to make use of the debugger, make use of the `FullSpecialize` form. I.e., change `prob = ODEProblem(lorenz!,u0,tspan)`
-to `prob = ODEProblem{true, SciMLBase.FullSpecialize}(lorenz!,u0,tspan)`. We plan to have a fix for this but for now the workaround
-should be sufficient for all cases.
+The debugger is incompatible with `llvmcall` which is used in the `AutoSpecialize` form
+that is used to reduce the compile times.
+In order to make use of the debugger, make use of the `FullSpecialize` form.
+I.e., change `prob = ODEProblem(lorenz!,u0,tspan)`
+to `prob = ODEProblem{true, SciMLBase.FullSpecialize}(lorenz!,u0,tspan)`.
+We plan to have a fix for this, but for now,
+the workaround should be sufficient for all cases.

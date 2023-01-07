@@ -2,19 +2,19 @@
 
 ## Background
 
-[SciML](https://github.com/SciML) is a suite of optimized Julia libraries to solve ordinary differential equations (ODE). *SciML* provides a large number of explicit and implicit solvers suited for different types of ODE problems. It is possible to reduce a system of partial differential equations into an ODE problem by employing the [method of lines (MOL)](https://en.wikipedia.org/wiki/Method_of_lines). The essence of MOL is to discretize the spatial derivatives (by finite difference, finite volume or finite element methods) into algebraic equations and to keep the time derivatives as is. The resulting differential equations are left with only one independent variable (time) and can be solved with an ODE solver. [Solving Systems of Stochastic PDEs and using GPUs in Julia](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/) is a brief introduction to MOL and using GPUs to accelerate PDE solving in *JuliaDiffEq*. Here we expand on this introduction by developing an implicit/explicit (IMEX) solver for a 2D cardiac electrophysiology model and show how to use [CUDA](https://github.com/JuliaGPU/CUDA.jl) libraries to run the explicit part of the model on a GPU.
+[SciML](https://github.com/SciML) is a suite of optimized Julia libraries to solve ordinary differential equations (ODE). *SciML* provides many explicit and implicit solvers suited for different types of ODE problems. It is possible to reduce a system of partial differential equations into an ODE problem by employing the [method of lines (MOL)](https://en.wikipedia.org/wiki/Method_of_lines). The essence of MOL is to discretize the spatial derivatives (by finite difference, finite volume or finite element methods) into algebraic equations and to keep the time derivatives as is. The resulting differential equations are left with only one independent variable (time) and can be solved with an ODE solver. [Solving Systems of Stochastic PDEs and using GPUs in Julia](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/) is a brief introduction to MOL and using GPUs to accelerate PDE solving in *JuliaDiffEq*. Here we expand on this introduction by developing an implicit/explicit (IMEX) solver for a 2D cardiac electrophysiology model and show how to use [CUDA](https://github.com/JuliaGPU/CUDA.jl) libraries to run the explicit part of the model on a GPU.
 
-Note that this tutorial does not use the [higher order IMEX methods built into DifferentialEquations.jl](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1) but instead shows how to hand-split an equation when the explicit portion has an analytical solution (or approxiate), which is common in many scenarios.
+Note that this tutorial does not use the [higher order IMEX methods built into DifferentialEquations.jl](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1), but instead shows how to hand-split an equation when the explicit portion has an analytical solution (or approximate), which is common in many scenarios.
 
-There are hundreds of ionic models that describe cardiac electrical activity in various degrees of detail. Most are based on the classic [Hodgkin-Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model) and define the time-evolution of different state variables in the form of nonlinear first-order ODEs. The state vector for these models includes the transmembrane potential, gating variables, and ionic concentrations. The coupling between cells is through the transmembrame potential only and is described as a reaction-diffusion equation, which is a parabolic PDE,
+There are hundreds of ionic models that describe cardiac electrical activity in various degrees of detail. Most are based on the classic [Hodgkin-Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model) and define the time-evolution of different state variables in the form of nonlinear first-order ODEs. The state vector for these models includes the transmembrane potential, gating variables, and ionic concentrations. The coupling between cells is through the transmembrane potential only and is described as a reaction-diffusion equation, which is a parabolic PDE,
 
 $$\partial V / \partial t = \nabla (D  \nabla V) - \frac {I_\text{ion}} {C_m},$$
 
-where $V$ is the transmembrane potential, $D$ is a diffusion tensor, $I_\text{ion}$ is the sum of the transmembrane currents and is calculated from the ODEs, and $C_m$ is the membrane capacitance and is usually assumed to be constant. Here we model a uniform and isotropic medium. Therefore, the model can be simplified to,
+where $V$ is the transmembrane potential, $D$ is a diffusion tensor, $I_\text{ion}$ is the sum of the transmembrane currents and is calculated from the ODEs, and $C_m$ is the membrane capacitance, usually assumed to be constant. Here, we model a uniform and isotropic medium. Therefore, the model can be simplified to,
 
 $$\partial V / \partial t = D \Delta{V} - \frac {I_\text{ion}} {C_m},$$
 
-where $D$ is now a scalar. By nature, these models have to deal with different time scales and are therefore classified as *stiff*. Commonly, they are solved using the explicit Euler method, usually with a closed form for the integration of the gating variables (the Rush-Larsen method, see below). We can also solve these problems using implicit or semi-implicit PDE solvers (e.g., the [Crank-Nicholson method](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method) combined with an iterative solver). Higher order explicit methods such as Runge-Kutta and linear multi-step methods cannot overcome the stiffness and are not particularly helpful.
+where $D$ is now a scalar. By nature, these models have to deal with different time scales and are therefore classified as *stiff*. Commonly, they are solved using the explicit Euler method, typically with a closed form for the integration of the gating variables (the Rush-Larsen method, see below). We can also solve these problems using implicit or semi-implicit PDE solvers (e.g., the [Crank-Nicholson method](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method) combined with an iterative solver). Higher order explicit methods such as Runge-Kutta and linear multistep methods cannot overcome the stiffness and are not particularly helpful.
 
 In this tutorial, we first develop a CPU-only IMEX solver and then show how to move the explicit part to a GPU.
 
@@ -24,7 +24,7 @@ We have chosen the [Beeler-Reuter ventricular ionic model](https://www.ncbi.nlm.
 
 ## CPU-Only Beeler-Reuter Solver
 
-Let's start by developing a CPU only IMEX solver. The main idea is to use the *DifferentialEquations* framework to handle the implicit part of the equation and code the analytical approximation for explicit part separately. If no analytical approximation was known for the explicit part, one could use methods from [this list](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1).
+Let's start by developing a CPU only IMEX solver. The main idea is to use the *DifferentialEquations* framework to handle the implicit part of the equation and code the analytical approximation for the explicit part separately. If no analytical approximation was known for the explicit part, one could use methods from [this list](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1).
 
 First, we define the model constants:
 
@@ -49,7 +49,7 @@ Note that the constants are defined as `Float32` and not `Float64`. The reason i
 
 ### The State Structure
 
-Next, we define a struct to contain our state. `BeelerReuterCpu` is a functor and we will define a deriv function as its associated function.
+Next, we define a struct to contain our state. `BeelerReuterCpu` is a functor, and we will define a deriv function as its associated function.
 
 ```julia
 mutable struct BeelerReuterCpu
@@ -126,7 +126,7 @@ end
 
 ### The Rush-Larsen Method
 
-We use an explicit solver for all the state variables except for the transmembrane potential which is solved with the help of an implicit solver. The explicit solver is a domain-specific exponential method, the Rush-Larsen method. This method utilizes an approximation on the model in order to transform the IMEX equation into a form suitable for an implicit ODE solver. This combination of implicit and explicit methods forms a specialized IMEX solver. For general IMEX integration, please see the [IMEX solvers documentation](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1). While we could have used the general model to solve the current problem, for this specific model, the transformation approach is more efficient and is of practical interest.
+We use an explicit solver for all the state variables except for the transmembrane potential, which is solved with the help of an implicit solver. The explicit solver is a domain-specific exponential method, the Rush-Larsen method. This method utilizes an approximation on the model in order to transform the IMEX equation into a form suitable for an implicit ODE solver. This combination of implicit and explicit methods forms a specialized IMEX solver. For general IMEX integration, please see the [IMEX solvers documentation](https://docs.sciml.ai/latest/solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE-1). While we could have used the general model to solve the current problem, for this specific model, the transformation approach is more efficient and is of practical interest.
 
 The [Rush-Larsen](https://ieeexplore.ieee.org/document/4122859/) method replaces the explicit Euler integration for the gating variables with direct integration. The starting point is the general ODE for the gating variables in Hodgkin-Huxley style ODEs,
 
@@ -144,11 +144,11 @@ and,
 
 $$\tau_g = \frac{1}{(\alpha + \beta)}.$$
 
-Assuing that $g_\infty$ and $\tau_g$ are constant for the duration of a single time step ($\Delta{t}$), which is a reasonable assumption for most cardiac models, we can integrate directly to have,
+Assuming that $g_\infty$ and $\tau_g$ are constant for the duration of a single time step ($\Delta{t}$), which is a reasonable assumption for most cardiac models, we can integrate directly to have,
 
 $$g(t + \Delta{t}) = g_{\infty} - \left(g_{\infty} - g(\Delta{t})\right)\,e^{-\Delta{t}/\tau_g}.$$
 
-This is the Rush-Larsen technique. Note that as $\Delta{t} \rightarrow 0$, this equations morphs into the explicit Euler formula,
+This is the Rush-Larsen technique. Note that as $\Delta{t} \rightarrow 0$, this equation morphs into the explicit Euler formula,
 
 $$g(t + \Delta{t}) = g(t) + \Delta{t}\frac{dg}{dt}.$$
 
@@ -203,7 +203,7 @@ function update_XI_cpu(g, v, Δt)
 end
 ```
 
-The intracelleular calcium is not technically a gating variable, but we can use a similar explicit exponential integrator for it.
+The intracellular calcium is not technically a gating variable, but we can use a similar explicit exponential integrator for it.
 
 ```julia
 function update_C_cpu(g, d, f, v, Δt)
@@ -371,17 +371,17 @@ heatmap(sol.u[end])
 
 ## CPU/GPU Beeler-Reuter Solver
 
-GPUs are great for embarrassingly parallel problems but not so much for highly coupled models. We plan to keep the implicit part on CPU and run the decoupled explicit code on a GPU with the help of the CUDAnative library.
+GPUs are great for embarrassingly parallel problems, but not so much for highly coupled models. We plan to keep the implicit part on CPU and run the decoupled explicit code on a GPU with the help of the CUDAnative library.
 
 ### GPUs and CUDA
 
 It this section, we present a brief summary of how GPUs (specifically NVIDIA GPUs) work and how to program them using the Julia CUDA interface. The readers who are familiar with these basic concepts may skip this section.
 
-Let's start by looking at the hardware of a typical high-end GPU, GTX 1080. It has four Graphics Processing Clusters (equivalent to a discrete CPU), each harboring five Streaming Multiprocessor (similar to a CPU core). Each SM has 128 single-precision CUDA cores. Therefore, GTX 1080 has a total of 4 x 5 x 128 = 2560 CUDA cores. The maximum  theoretical throughput for a GTX 1080 is reported as 8.87 TFLOPS. This figure is calculated for a boost clock frequency of 1.733 MHz as 2 x 2560 x 1.733 MHz = 8.87 TFLOPS. The factor 2 is included because two single floating point operations, a multiplication and an addition, can be done in a clock cycle as part of a fused-multiply-addition FMA operation. GTX 1080 also has 8192 MB of global memory accessible to all the cores (in addition to local and shared memory on each SM).
+Let's start by looking at the hardware of a typical high-end GPU, GTX 1080. It has four Graphics Processing Clusters (equivalent to a discrete CPU), each harboring five Streaming Multiprocessor (similar to a CPU core). Each SM has 128 single-precision CUDA cores. Therefore, GTX 1080 has a total of 4 x 5 x 128 = 2560 CUDA cores. The maximum  theoretical throughput for a GTX 1080 is reported as 8.87 TFLOPS. This figure is calculated for a boost clock frequency of 1.733 MHz as 2 x 2560 x 1.733 MHz = 8.87 TFLOPS. The factor 2 is included because two single floating-point operations, a multiplication and an addition, can be done in a clock cycle as part of a fused-multiply-addition FMA operation. GTX 1080 also has 8192 MB of global memory accessible to all the cores (in addition to local and shared memory on each SM).
 
 A typical CUDA application has the following flow:
 
-1. Define and initialize the problem domain tensors (multi-dimensional arrays) in CPU memory.
+1. Define and initialize the problem domain tensors (multidimensional arrays) in CPU memory.
 2. Allocate corresponding tensors in the GPU global memory.
 3. Transfer the input tensors from CPU to the corresponding GPU tensors.
 4. Invoke CUDA kernels (i.e., the GPU functions callable from CPU) that operate on the GPU tensors.
@@ -389,15 +389,15 @@ A typical CUDA application has the following flow:
 6. Process tensors on CPU.
 7. Repeat steps 3-6 as needed.
 
-Some libraries, such as [ArrayFire](https://github.com/arrayfire/arrayfire), hide the complexicities of steps 2-5 behind a higher level of abstraction. However, here we take a lower level route. By using [CUDA](https://github.com/JuliaGPU/CUDA.jl), we achieve a finer-grained control and higher performance. In return, we need to implement each step manually.
+Some libraries, such as [ArrayFire](https://github.com/arrayfire/arrayfire), hide the complexities of steps 2-5 behind a higher level of abstraction. However, here we take a lower level route. By using [CUDA](https://github.com/JuliaGPU/CUDA.jl), we achieve a finer-grained control and higher performance. In return, we need to implement each step manually.
 
-*CuArray* is a thin abstraction layer over the CUDA API and allows us to define GPU-side tensors and copy data to and from them but does not provide for operations on tensors. *CUDAnative* is a compiler that translates Julia functions designated as CUDA kernels into ptx (a high-level CUDA assembly language).
+*CuArray* is a thin abstraction layer over the CUDA API and allows us to define GPU-side tensors and copy data to and from them, but does not provide for operations on tensors. *CUDAnative* is a compiler that translates Julia functions designated as CUDA kernels into ptx (a high-level CUDA assembly language).
 
 ### The CUDA Code
 
-The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global memory accesses. The implicit solver is currently CPU only, but it only needs access to the transmembrane potential. The rest of state variables reside on the GPU memory.
+The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global memory accesses. The implicit solver is currently CPU only, but it only requires access to the transmembrane potential. The rest of state variables reside on the GPU memory.
 
-We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
+We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
 
 ```julia
 using CUDA
@@ -445,7 +445,7 @@ mutable struct BeelerReuterGpu <: Function
 end
 ```
 
-The Laplacian function remains unchanged. The main change to the explicit gating solvers is that *exp* and *expm1* functions are prefixed by *CUDAnative.*. This is a technical nuisance that will hopefully be resolved in future.
+The Laplacian function remains unchanged. The main change to the explicit gating solvers is that *exp* and *expm1* functions are prefixed by *CUDAnative.*. This is a technical nuisance that will hopefully be resolved in the future.
 
 ```julia
 function rush_larsen_gpu(g, α, β, Δt)
@@ -537,14 +537,14 @@ end
 
 A CUDA program does not directly deal with GPCs and SMs. The logical view of a CUDA program is in the term of *blocks* and *threads*. We have to specify the number of block and threads when running a CUDA *kernel*. Each thread runs on a single CUDA core. Threads are logically bundled into blocks, which are in turn specified on a grid. The grid stands for the entirety of the domain of interest.
 
-Each thread can find its logical coordinate by using few pre-defined indexing variables (*threadIdx*, *blockIdx*, *blockDim* and *gridDim*) in C/C++ and the corresponding functions (e.g., `threadIdx()`) in Julia. There variables and functions are defined automatically for each thread and may return a different value depending on the calling thread. The return value of these functions is a 1, 2, or 3 dimensional structure whose elements can be accessed as `.x`, `.y`, and `.z` (for a 1-dimensional case, `.x` reports the actual index and `.y` and `.z` simply return 1). For example, if we deploy a kernel in 128 blocks and with 256 threads per block, each thread will see
+Each thread can find its logical coordinate by using few pre-defined indexing variables (*threadIdx*, *blockIdx*, *blockDim* and *gridDim*) in C/C++ and the corresponding functions (e.g., `threadIdx()`) in Julia. Their variables and functions are defined automatically for each thread and may return a different value depending on the calling thread. The return value of these functions is a 1-, 2-, or 3-dimensional structure whose elements can be accessed as `.x`, `.y`, and `.z` (for a 1-dimensional case, `.x` reports the actual index and `.y` and `.z` simply return 1). For example, if we deploy a kernel in 128 blocks and with 256 threads per block, each thread will see
 
 ```
     gridDim.x = 128;
     blockDim=256;
 ```
 
-while `blockIdx.x` ranges from 0 to 127 in C/C++ and 1 to 128 in Julia. Similarly, `threadIdx.x` will be between 0 to 255 in C/C++ (of course, in Julia the range will be 1 to 256).
+while `blockIdx.x` ranges from 0 to 127 in C/C++ and 1 to 128 in Julia. Similarly, `threadIdx.x` will be between 0 and 255 in C/C++ (of course, in Julia the range will be 1 to 256).
 
 A C/C++ thread can calculate its index as
 
@@ -561,7 +561,7 @@ In Julia, we have to take into account base 1. Therefore, we use the following f
 A CUDA programmer is free to interpret the calculated index however it fits the application, but in practice, it is usually interpreted as an index into input tensors.
 
 In the GPU version of the solver, each thread works on a single element of the medium, indexed by a (x,y) pair.
-`update_gates_gpu` and `update_du_gpu` are very similar to their CPU counterparts but are in fact CUDA kernels where the *for* loops are replaced with CUDA specific indexing. Note that CUDA kernels cannot return a valve; hence, *nothing* at the end.
+`update_gates_gpu` and `update_du_gpu` are very similar to their CPU counterparts but are in fact CUDA kernels where the *for* loops are replaced with CUDA-specific indexing. Note that CUDA kernels cannot return a valve; hence, *nothing* at the end.
 
 ```julia
 function update_gates_gpu(u, XI, M, H, J, D, F, C, Δt)
@@ -650,7 +650,7 @@ heatmap(sol.u[end])
 
 ## Summary
 
-We achieve around a 6x speedup with running the explicit portion of our IMEX solver on a GPU. The major bottleneck of this technique is the communication between CPU and GPU. In its current form, not all of the internals of the method utilize GPU acceleration. In particular, the implicit equations solved by GMRES are performed on the CPU. This partial CPU nature also increases the amount of data transfer that is required between the GPU and CPU (performed every f call). Compiling the full ODE solver to the GPU would solve both of these issues and potentially give a much larger speedup. [JuliaDiffEq developers are currently working on solutions to alleviate these issues](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/), but these will only be compatible with native Julia solvers (and not Sundials).
+We achieve around a 6x speedup with running the explicit portion of our IMEX solver on a GPU. The major bottleneck of this technique is the communication between CPU and GPU. In its current form, not all the internals of the method utilize GPU acceleration. In particular, the implicit equations solved by GMRES are performed on the CPU. This partial CPU nature also increases the amount of data transfer that is required between the GPU and CPU (performed every f call). Compiling the full ODE solver to the GPU would solve both of these issues and potentially give a much larger speedup. [JuliaDiffEq developers are currently working on solutions to alleviate these issues](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/), but these will only be compatible with native Julia solvers (and not Sundials).
 
 ```julia, echo = false, skip="notebook"
 using SciMLTutorials
