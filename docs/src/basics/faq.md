@@ -40,7 +40,7 @@ an ODE solve improves as you decrease the tolerance, so you may want to try a
 smaller `abstol` and `reltol`. One behavior to watch out for is that if your
 model is a differential-algebraic equation and your DAE is of high index (say
 index>1), this can impact the numerical solution. In this case you may want to
-use the [ModelingToolkit.jl index reduction tools](https://mtk.sciml.ai/dev/mtkitize_tutorials/modelingtoolkitize_index_reduction/)
+use the [ModelingToolkit.jl index reduction tools](https://docs.sciml.ai/ModelingToolkit/stable/examples/modelingtoolkitize_index_reduction/)
 to improve the numerical stability of a solve. In addition, if it's a highly
 stiff ODE/DAE that is large and you're using a matrix-free solver (such as GMRES),
 make sure the tolerance of the GMRES is well-tuned and an appropriate preconditioner
