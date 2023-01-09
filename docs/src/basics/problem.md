@@ -22,7 +22,7 @@ For example, this can be done at the problem level like:
 ODEProblem{true}(f,u0,tspan,p)
 ```
 
-which declares that `isinplace=true`. Similarly this can be done at the
+which declares that `isinplace=true`. Similarly, this can be done at the
 DEFunction level. For example:
 
 ```julia
@@ -35,7 +35,7 @@ Throughout DifferentialEquations.jl, the types that are given in a problem are
 the types used for the solution. If an initial value `u0` is needed for a problem,
 then the state variable `u` will match the type of that `u0`. Similarly, if
 time exists in a problem the type for `t` will be derived from the types of the
-`tspan`. Parameters `p` can be any type and the type will be matching how it's
+`tspan`. Parameters `p` can be any type, and the type will be matching how it's
 defined in the problem.
 
 For internal matrices, such as Jacobians and Brownian caches, these also match

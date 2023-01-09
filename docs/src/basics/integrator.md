@@ -27,10 +27,10 @@ which will take one successful step. Additionally:
 step!(integrator,dt[,stop_at_tdt=false])
 ```
 
-passing a `dt` will make the integrator keep stepping until `integrator.t+dt`, and
+passing a `dt` will make the integrator continue to step until `integrator.t+dt`, and
 setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator.t+dt`
 
-To check whether or not the integration step was successful, you can
+To check whether the integration step was successful, you can
 call `check_error(integrator)` which returns one of the
 [return codes](@ref retcodes).
 
@@ -74,10 +74,10 @@ for (u,t) in TimeChoiceIterator(integrator,ts)
 end
 ```
 
-Lastly, one can dynamically control the "endpoint". The initialization simply makes
+Lastly, one can dynamically control the “endpoint”. The initialization simply makes
 `prob.tspan[2]` the last value of `tstop`, and many of the iterators are made to stop
 at the final `tstop` value. However, `step!` will always take a step, and one
-can dynamically add new values of `tstops` by modifiying the variable in the
+can dynamically add new values of `tstops` by modifying the variable in the
 options field: `add_tstop!(integrator,new_t)`.
 
 Finally, to solve to the last `tstop`, call `solve!(integrator)`. Doing `init`
@@ -91,7 +91,7 @@ SciMLBase.check_error!
 
 ## Handing Integrators
 
-The `integrator<:DEIntegrator` type holds all of the information for the intermediate solution
+The `integrator<:DEIntegrator` type holds all the information for the intermediate solution
 of the differential equation. Useful fields are:
 
 * `t` - time of the proposed step
@@ -111,7 +111,7 @@ specific problem. For example, when solving an `ODEProblem`, `f` will be an
 creating the `ODEProblem`, please use `SciMLBase.unwrapped_f(integrator.f.f)`.
 
 The `p` is the (parameter) data which is provided by the user as a keyword arg in
-`init`. `opts` holds all of the common solver options, and can be mutated to
+`init`. `opts` holds all the common solver options, and can be mutated to
 change the solver characteristics. For example, to modify the absolute tolerance
 for the future timesteps, one can do:
 
@@ -121,8 +121,8 @@ integrator.opts.abstol = 1e-9
 
 The `sol` field holds the current solution. This current solution includes the
 interpolation function if available, and thus `integrator.sol(t)` lets one
-interpolate efficiently over the whole current solution. Additionally, a
-a "current interval interpolation function" is provided on the `integrator` type
+interpolate efficiently over the whole current solution. Additionally,
+a “current interval interpolation function” is provided on the `integrator` type
 via `integrator(t,deriv::Type=Val{0};idxs=nothing,continuity=:left)`.
 This uses only the solver information from the interval
 `[tprev,t]` to compute the interpolation, and is allowed to extrapolate beyond
@@ -132,7 +132,7 @@ that interval.
 
 Be cautious: one should not directly mutate the `t` and `u` fields of the integrator.
 Doing so will destroy the accuracy of the interpolator and can harm certain algorithms.
-Instead if one wants to introduce discontinuous changes, one should use the
+Instead, if one wants to introduce discontinuous changes, one should use the
 [callbacks](@ref callbacks). Modifications within a callback
 `affect!` surrounded by saves provides an error-free handling of the discontinuity.
 
@@ -152,20 +152,20 @@ SciMLBase.set_ut!
 The integrator and the solution have very different actions because they have
 very different meanings. The `typeof(sol) <: DESolution` type is a type with
 history: it stores
-all of the (requested) timepoints and interpolates/acts using the values closest
+all the (requested) timepoints and interpolates/acts using the values closest
 in time. On the other hand, the `typeof(integrator)<:DEIntegrator` type is a
 local object. It only knows the times of the interval it currently spans,
 the current caches and values, and the current state of the solver
 (the current options, tolerances, etc.). These serve very different purposes:
 
-* The `integrator`'s interpolation can extrapolate, both forward and backward in
+* The `integrator`'s interpolation can extrapolate, both forward and backward
   in time. This is used to estimate events and is internally used for predictions.
 * The `integrator` is fully mutable upon iteration. This means that every time
   an iterator affect is used, it will take timesteps from the current time. This
   means that `first(integrator)!=first(integrator)` since the `integrator` will
   step once to evaluate the left and then step once more (not backtracking).
   This allows the iterator to keep dynamically stepping, though one should note
-  that it may violate some immutablity assumptions commonly made about iterators.
+  that it may violate some immutability assumptions commonly made about iterators.
 
 If one wants the solution object, then one can find it in `integrator.sol`.
 
@@ -231,7 +231,7 @@ get_du!
 
 !!! warning
 
-    Note that not all of these functions will be implemented for every algorithm.
+    Note that not all these functions will be implemented for every algorithm.
     Some have hard limitations. For example, Sundials.jl cannot resize problems.
     When a function is not limited, an error will be thrown.
 
@@ -254,7 +254,7 @@ end
 ```
 
 which will only enter the loop body at the values in `tstops` (here, `prob.tspan[2]==1.0`
-and thus there are two values of `tstops` which are hit). Addtionally, one can
+and thus there are two values of `tstops` which are hit). Additionally, one can
 `solve!` only to `0.5` via:
 
 ```julia

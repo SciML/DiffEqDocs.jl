@@ -2,7 +2,7 @@
 
 ### Setup
 
-In this tutorial we will show how to use
+In this tutorial, we will show how to use
 [Optimization.jl](https://docs.sciml.ai/Optimization/stable/) to find the maxima and minima
 of solutions. Let's take a look at the double pendulum:
 
@@ -48,13 +48,13 @@ plot(sol, vars=(3,4), leg=false)
 
 ### Local Optimization
 
-Let's fine out what some of the local maxima and minima are. Optim.jl can be used to minimize functions, and the solution type has a continuous interpolation which can be used. Let's look for the local optima for the 4th variable around `t=20`. Thus our optimization function is:
+Let's find out what some of the local maxima and minima are. Optim.jl can be used to minimize functions, and the solution type has a continuous interpolation which can be used. Let's look for the local optima for the 4th variable around `t=20`. Thus, our optimization function is:
 
 ```@example minmax
 f(t,_) = sol(first(t),idxs=4)
 ```
 
-`first(t)` is the same as `t[1]` which transforms the array of size 1 into a number. `idxs=4` is the same as `sol(first(t))[4]` but does the calculation without a temporary array and thus is faster. To find a local minima, we can solve the optimization problem where the loss
+`first(t)` is the same as `t[1]` which transforms the array of size 1 into a number. `idxs=4` is the same as `sol(first(t))[4]` but does the calculation without a temporary array and thus is faster. To find a local minimum, we can solve the optimization problem where the loss
 function is `f`:
 
 ```@example minmax
@@ -65,7 +65,7 @@ optprob = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
 opt = solve(optprob, NLopt.LD_LBFGS())
 ```
 
-From this printout we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We
+From this printout, we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We
 can get these in code-form via:
 
 ```@example minmax
@@ -93,12 +93,12 @@ scatter!([opt2.u],[-opt2.minimum],label="Local Max")
 
 ### Global Optimization
 
-If we instead want to find global maxima and minima, we need to look somewhere else. For
-this there are many choices. A pure Julia option are the
+If we instead want to find global maxima and minima, we need to look somewhere else.
+There are many choices for this. A pure Julia option are the
 [BlackBoxOptim solvers within Optimization.jl](https://docs.sciml.ai/Optimization/stable/optimization_packages/blackboxoptim/),
 but I will continue the story with the  OptimizationNLopt methods. To do this, we simply
 swap out to one of the
-[global optimizers in the list](https://docs.sciml.ai/Optimization/stable/optimization_packages/nlopt/)
+[global optimizers in the list](https://docs.sciml.ai/Optimization/stable/optimization_packages/nlopt/).
 Let's try `GN_ORIG_DIRECT_L`:
 
 ```@example minmax

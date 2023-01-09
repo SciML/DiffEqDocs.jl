@@ -104,7 +104,7 @@ But we have numerical ODE solvers! Why not solve the *real* pendulum?
 $$\ddot{\theta} + \frac{g}{L}{\sin(\theta)} = 0$$
 
 Notice that now we have a second order ODE.
-In order to use the same method as above, we nee to transform it into a system
+In order to use the same method as above, we need to transform it into a system
 of first order ODEs by employing the notation $d\theta = \dot{\theta}$.
 
 $$\begin{align*}
@@ -160,7 +160,7 @@ plot(p,xlims = (-9,9))
 #### Double Pendulum
 
 A more complicated example is given by the double pendulum. The equations governing
-its motion are given by the following (taken from this [StackOverflow question](https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum))
+its motion are given by the following (taken from this [Stack Overflow question](https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum))
 
 $$\frac{d}{dt}
 \begin{pmatrix}
@@ -216,7 +216,7 @@ plot(ps...)
 
 ##### Poincaré section
 
-In this case the phase space is 4 dimensional and it cannot be easily visualized.
+In this case, the phase space is 4 dimensional, and it cannot be easily visualized.
 Instead of looking at the full phase space, we can look at Poincaré sections,
 which are sections through a higher-dimensional phase space diagram.
 This helps to understand the dynamics of interactions and is wonderfully pretty.
@@ -270,7 +270,7 @@ plot(p, xlabel="\\beta", ylabel="l_\\beta", ylims=(0, 0.03))
 
 #### Hénon-Heiles System
 
-The Hénon-Heiles potential occurs when non-linear motion of a star around a galactic center with the motion restricted to a plane.
+The Hénon-Heiles potential occurs when non-linear motion of a star around a galactic center, with the motion restricted to a plane.
 
 $$\begin{align}
 \frac{d^2x}{dt^2}&=-\frac{\partial V}{\partial x}\\
@@ -339,7 +339,7 @@ plot!(sol, vars=(2,4), leg = false)
 #pass it to the plotter a bit more conveniently
 energy = map(x->E(x...), sol.u)
 
-#We use @show here to easily spot erratic behaviour in our system by seeing if the loss in energy was too great.
+#We use @show here to easily spot erratic behavior in our system by seeing if the loss in energy was too great.
 @show ΔE = energy[1]-energy[end]
 
 #Plot
@@ -396,4 +396,4 @@ gr()
 plot(sol3.t, energy .- energy[1], title = "Change in Energy over Time", xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
-Note that we are using the `DPRKN6` sovler at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.
+Note that we are using the `DPRKN6` solver at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.

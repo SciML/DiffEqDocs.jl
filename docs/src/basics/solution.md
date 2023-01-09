@@ -2,7 +2,7 @@
 
 ## Accessing the Values
 
-The solution type has a lot of built in functionality to help analysis. For example,
+The solution type has a lot of built-in functionality to help analysis. For example,
 it has an array interface for accessing the values. Internally, the solution type
 has two important fields:
 
@@ -27,7 +27,7 @@ to access the value at timestep `j` (if the timeseries was saved), and
 sol.t[j]
 ```
 
-to access the value of `t` at timestep `j`. For multi-dimensional systems, this
+to access the value of `t` at timestep `j`. For multidimensional systems, this
 will address first by component and lastly by time, and thus
 
 ```julia
@@ -93,7 +93,7 @@ Note that the interpolating function allows for `t` to be a vector and uses this
 sol(t,deriv=Val{0};idxs=nothing,continuity=:left)
 ```
 
-The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done by hand for each algorithm. Open an issue if there's a specific one you need). `continuity` describes whether to satisfy left or right continuity when a discontinuity is saved. The default is `:left`, i.e. grab the value before the callback's change, but can be changed to `:right`. `idxs` allows you to choose the indices the interpolation should solve for. For example,
+The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done manually for each algorithm. Open an issue if there's a specific one you need). `continuity` describes whether to satisfy left or right continuity when a discontinuity is saved. The default is `:left`, i.e. grab the value before the callback's change, but can be changed to `:right`. `idxs` allows you to choose the indices the interpolation should solve for. For example,
 
 ```julia
 sol(t,idxs=1:2:5)
@@ -142,7 +142,7 @@ The solution interface also includes some special fields. The problem object
 `prob` and the algorithm used to solve the problem `alg` are included in the
 solution. Additionally, the field `dense` is a boolean which states whether
 the interpolation functionality is available. Further, the field `destats`
-contains the internal statistics for the solution process such as the number
+contains the internal statistics for the solution process, such as the number
 of linear solves and convergence failures. Lastly, there is a mutable state
 `tslocation` which controls the plot recipe behavior. By default, `tslocation=0`.
 Its values have different meanings between partial and ordinary differential equations:
