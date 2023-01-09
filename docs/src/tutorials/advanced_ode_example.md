@@ -1,7 +1,7 @@
 # [Solving Large Stiff Equations](@id stiff)
 
 This tutorial is for getting into the extra features for solving large stiff ordinary
-differential equations in an efficient manner. Solving stiff ordinary
+differential equations efficiently. Solving stiff ordinary
 differential equations requires specializing the linear solver on properties of
 the Jacobian in order to cut down on the ``\mathcal{O}(n^3)`` linear solve and
 the ``\mathcal{O}(n^2)`` back-solves. Note that these same functions and
@@ -110,7 +110,7 @@ prob_ode_brusselator_2d = ODEProblem(brusselator_2d_loop,u0,(0.,11.5),p)
 ## Choosing Jacobian Types
 
 When one is using an implicit or semi-implicit differential equation solver,
-the Jacobian must be built at many iterations and this can be one of the most
+the Jacobian must be built at many iterations, and this can be one of the most
 expensive steps. There are two pieces that must be optimized in order to reach
 maximal efficiency when solving stiff equations: the sparsity pattern and the
 construction of the Jacobian. The construction is filling the matrix
@@ -142,7 +142,7 @@ One of the useful companion tools for DifferentialEquations.jl is
 [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
 This allows for automatic declaration of Jacobian sparsity types. To see this
 in action, we can give an example `du` and `u` and call `jacobian_sparsity`
-on our function with the example arguments and it will kick out a sparse matrix
+on our function with the example arguments, and it will kick out a sparse matrix
 with our pattern, that we can turn into our `jac_prototype`.
 
 ```@example stiff1
@@ -151,7 +151,7 @@ du0 = copy(u0)
 jac_sparsity = Symbolics.jacobian_sparsity((du,u)->brusselator_2d_loop(du,u,p,0.0),du0,u0)
 ```
 
-Notice Julia gives a nice print out of the sparsity pattern. That's neat, and
+Notice that Julia gives a nice print out of the sparsity pattern. That's neat, and
 would be tedious to build by hand! Now we just pass it to the `ODEFunction`
 like as before:
 
@@ -182,7 +182,7 @@ or `TRBDF2(linsolve = UMFPACKFactorization())`.
 ## Using Jacobian-Free Newton-Krylov
 
 A completely different way to optimize the linear solvers for large sparse
-matrices is to use a Krylov subpsace method. This requires choosing a linear
+matrices is to use a Krylov subspace method. This requires choosing a linear
 solver for changing to a Krylov method. To swap the linear solver out, we use
 the `linsolve` command and choose the GMRES linear solver.
 
@@ -192,7 +192,7 @@ nothing # hide
 ```
 
 Notice that this acceleration does not require the definition of a sparsity
-pattern and can thus be an easier way to scale for large problems. For more
+pattern, and can thus be an easier way to scale for large problems. For more
 information on linear solver choices, see the
 [linear solver documentation](@ref linear_nonlinear). `linsolve` choices are any
 valid [LinearSolve.jl](http://linearsolve.sciml.ai/dev/) solver.
@@ -235,8 +235,8 @@ Notice a few things about this preconditioner. This preconditioner uses the
 sparse Jacobian, and thus we set `concrete_jac=true` to tell the algorithm to
 generate the Jacobian (otherwise, a Jacobian-free algorithm is used with GMRES
 by default). Then `newW = true` whenever a new `W` matrix is computed, and
-`newW=nothing` during the startup phase of the solver. Thus we do a check
-`newW === nothing || newW` and when true, it's only at these points when we
+`newW=nothing` during the startup phase of the solver. Thus, we do a check
+`newW === nothing || newW` and when true, it's only at these points when
 we update the preconditioner, otherwise we just pass on the previous version.
 We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix (matching
 `jac_prototype`, thus `SpraseMatrixCSC`) which we can use in the preconditioner's
@@ -299,7 +299,7 @@ the linear solver choice is done with a Symbol in the `linear_solver` from a
 preset list. Particular choices of note are `:Band` for a banded matrix and
 `:GMRES` for using GMRES. If you are using Sundials, `:GMRES` will not require
 defining the JacVecOperator, and instead will always make use of a Jacobian-Free
-Newton Krylov (with numerical differentiation). Thus on this problem we could do:
+Newton Krylov (with numerical differentiation). Thus, on this problem we could do:
 
 ```@example stiff1
 using Sundials
@@ -368,7 +368,7 @@ function precilu(z,r,p,t,y,fy,gamma,delta,lr)
 end
 ```
 
-We then simply pass these functions to the Sundials solver with a choice of
+We then simply pass these functions to the Sundials solver, with a choice of
 `prec_side=1` to indicate that it is a left-preconditioner:
 
 ```julia

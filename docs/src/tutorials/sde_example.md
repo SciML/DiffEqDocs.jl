@@ -9,7 +9,7 @@ introductions can be found by [checking out SciMLTutorials.jl](https://github.co
 
 ## Example 1: Scalar SDEs
 
-In this example we will solve the equation
+In this example, we will solve the equation
 
 ```math
 du = f(u,p,t)dt + g(u,p,t)dW
@@ -52,7 +52,7 @@ One unique feature of DifferentialEquations.jl is that higher-order methods for
 stochastic differential equations are included. For reference, let's also give
 the `SDEProblem` the analytical solution. We can do this by making a test problem.
 This can be a good way to judge how accurate the algorithms are, or is used to
-test convergence of the algorithms for methods developers. Thus we define the problem
+test convergence of the algorithms for methods developers. Thus, we define the problem
 object with:
 
 ```@example sde
@@ -76,7 +76,7 @@ sol = solve(prob,SRIW1(),dt=dt,adaptive=false)
 plot(sol,plot_analytic=true)
 ```
 
-By default, the higher order methods have adaptivity. Thus one can use
+By default, the higher order methods have adaptivity. Thus, one can use
 
 ```@example sde
 sol = solve(prob,SRIW1())
@@ -103,7 +103,7 @@ ensembleprob = EnsembleProblem(prob)
 ```
 
 The solver commands are defined [at the Parallel Ensemble Simulations page](@ref ensemble).
-For example we can choose to have 1000 trajectories via `trajectories=1000`. In addition,
+For example, we can choose to have 1000 trajectories via `trajectories=1000`. In addition,
 this will automatically parallelize using Julia native parallelism if extra processes
 are added via `addprocs()`, but we can change this to use multithreading via
 `EnsembleThreads()`. Together, this looks like:
@@ -131,7 +131,7 @@ summ = EnsembleSummary(sol,0:0.01:1;quantiles=[0.25,0.75])
 plot!(summ,labels="Middle 50%",legend=true)
 ```
 
-Additionally we can easily calculate the correlation between the values at `t=0.2`
+Additionally, we can easily calculate the correlation between the values at `t=0.2`
 and `t=0.7` via
 
 ```@example sde
@@ -150,7 +150,7 @@ generalizes to systems of equations is done in the same way as ODEs. Here, `g`
 is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
 is diagonal noise where `g` is a diagonal matrix. This means that every function in
 the system gets a different random number. Instead of handling matrices in this case,
-we simply define both `f` and `g` as in-place functions. Thus `f(du,u,p,t)` gives a
+we simply define both `f` and `g` as in-place functions. Thus, `f(du,u,p,t)` gives a
 vector of `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
 `du2` for which `du2.*W` is the stochastic portion of the equation.
 
@@ -193,8 +193,8 @@ is a valid noise function, which will once again give diagonal noise by `du2.*W`
 
 ## Example 3: Systems of SDEs with Scalar Noise
 
-In this example we'll solve a system of SDEs with scalar noise. This means that
-the same noise process is applied to all SDEs. First we need to define a
+In this example, we'll solve a system of SDEs with scalar noise. This means that
+the same noise process is applied to all SDEs. We need to define a
 scalar noise process
 [using the Noise Process interface](@ref noise_process).
 Since we want a `WienerProcess` that starts at `0.0` at time `0.0`, we use the
@@ -223,7 +223,7 @@ and scalar noise where a single random variable is applied to all dependent vari
 However, a more general type of noise allows for the terms to linearly mixed via `g`
 being a matrix.
 
-(Note that nonlinear mixings are not SDEs but fall under the more general class of
+Note that nonlinear mixings are not SDEs but fall under the more general class of
 random ordinary differential equations (RODEs) which have a
 [separate set of solvers](@ref rode_example).
 
@@ -264,7 +264,7 @@ the same random number in the first and second SDEs.
 
 The matrix itself is determined by the keyword argument `noise_rate_prototype` in the `SDEProblem`
 constructor. This is a prototype for the type that `du` will be in `g`. This can
-be any `AbstractMatrix` type. Thus for example, we can define the problem as
+be any `AbstractMatrix` type. Thus, we can define the problem as
 
 ```@example sde4
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
@@ -346,7 +346,7 @@ This is then used to build the SDE:
 SDEProblem(f,g,ones(2),tspan,noise=heston_noise)
 ```
 
-Of course, to fully define this problem we need to define our constants. Constructors
+Of course, to fully define this problem, we need to define our constants. Constructors
 for making common models like this easier to define can be found in the modeling
 toolkits. For example, the `HestonProblem` is pre-defined as part of the
 [financial modeling tools](@ref financial_models).

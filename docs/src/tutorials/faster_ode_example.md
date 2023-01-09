@@ -16,8 +16,8 @@ list:
 - [What scientists must know about hardware to write fast code](https://biojulia.net/post/hardware/)
 
 User-side optimizations are important because, for sufficiently difficult problems,
-most of the time will be spent inside of your `f` function, the function you are
-trying to solve. "Efficient" integrators are those that reduce the required
+most time will be spent inside your `f` function, the function you are
+trying to solve. “Efficient” integrators are those that reduce the required
 number of `f` calls to hit the error tolerance. The main ideas for optimizing
 your DiffEq code, or any Julia function, are the following:
 
@@ -67,16 +67,16 @@ The `BenchmarkTools.jl` package's `@benchmark` runs the code multiple times to
 get an accurate measurement. The minimum time is the time it takes when your
 OS and other background processes aren't getting in the way. Notice that in
 this case it takes about 5ms to solve and allocates around 11.11 MiB. However,
-if we were to use this inside of a real user code we'd see a lot of time spent
-doing garbage collection (GC) to clean up all of the arrays we made. Even if we
-turn off saving we have these allocations.
+if we were to use this inside of a real user code, we'd see a lot of time spent
+doing garbage collection (GC) to clean up all the arrays we made. Even if we
+turn off saving, we have these allocations.
 
 ```@example faster_ode
 @btime solve(prob,Tsit5(),save_everystep=false);
 nothing # hide
 ```
 
-The problem of course is that arrays are created every time our derivative
+The problem, of course, is that arrays are created every time our derivative
 function is called. This function is called multiple times per step and is thus
 the main source of memory usage. To fix this, we can use the in-place form to
 ***make our code non-allocating***:
@@ -126,16 +126,16 @@ prob = ODEProblem(lorenz!,u0,tspan)
 nothing # hide
 ```
 
-Since that's all setup allocations the user-side optimization is complete.
+Since that's all setup allocations, the user-side optimization is complete.
 
 ### Further Optimizations of Small Non-Stiff ODEs with StaticArrays
 
-Allocations are only expensive if they are "heap allocations". For a more
+Allocations are only expensive if they are “heap allocations”. For a more
 in-depth definition of heap allocations,
-[there are a lot of sources online](http://net-informations.com/faq/net/stack-heap.htm).
+[there are many sources online](http://net-informations.com/faq/net/stack-heap.htm).
 But a good working definition is that heap allocations are variable-sized slabs
 of memory which have to be pointed to, and this pointer indirection costs time.
-Additionally, the heap has to be managed and the garbage controllers has to
+Additionally, the heap has to be managed, and the garbage controllers has to
 actively keep track of what's on the heap.
 
 However, there's an alternative to heap allocations, known as stack allocations.
@@ -147,7 +147,7 @@ the stack has essentially no cost!
 Arrays have to be heap allocated because their size (and thus the amount of
 memory they take up) is determined at runtime. But there are structures in
 Julia which are stack-allocated. `struct`s for example are stack-allocated
-"value-type"s. `Tuple`s are a stack-allocated collection. The most useful data
+“value-type”s. `Tuple`s are a stack-allocated collection. The most useful data
 structure for DiffEq though is the `StaticArray` from the package
 [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl). These arrays
 have their length determined at compile-time. They are created using macros
@@ -162,14 +162,14 @@ typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})
 Notice that the `3` after `SVector` gives the size of the `SVector`. It cannot
 be changed. Additionally, `SVector`s are immutable, so we have to create a new
 `SVector` to change values. But remember, we don't have to worry about
-allocations because this data structure is stack-allocated. `SArray`s have a
-lot of extra optimizations as well: they have fast matrix multiplication,
+allocations because this data structure is stack-allocated. `SArray`s have
+numerous extra optimizations as well: they have fast matrix multiplication,
 fast QR factorizations, etc. which directly make use of the information about
-the size of the array. Thus, when possible they should be used.
+the size of the array. Thus, when possible, they should be used.
 
-Unfortunately static arrays can only be used for sufficiently small arrays.
+Unfortunately, static arrays can only be used for sufficiently small arrays.
 After a certain size, they are forced to heap allocate after some instructions
-and their compile time balloons. Thus static arrays shouldn't be used if your
+and their compile time balloons. Thus, static arrays shouldn't be used if your
 system has more than ~20 variables. Additionally, only the native Julia
 algorithms can fully utilize static arrays.
 
@@ -202,9 +202,9 @@ nothing # hide
 nothing # hide
 ```
 
-And that's pretty much all there is to it. With static arrays you don't have to
+And that's pretty much all there is to it. With static arrays, you don't have to
 worry about allocating, so use operations like `*` and don't worry about fusing
-operations (discussed in the next section). Do "the vectorized code" of
+operations (discussed in the next section). Do “the vectorized code” of
 R/MATLAB/Python and your code in this case will be fast, or directly use the
 numbers/values.
 
@@ -249,14 +249,14 @@ nothing # hide
 ```
 ### Choosing a Good Solver
 
-Choosing a good solver is required for getting top notch speed. General
+Choosing a good solver is required for getting top-notch speed. General
 recommendations can be found on the solver page (for example, the
 [ODE Solver Recommendations](@ref ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
 (`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
 for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
 larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
-sometimes worth a try for the medium sized category.
+sometimes worth a try for the medium-sized category.
 
 More details on the solver to choose can be found by benchmarking. See the
 [SciMLBenchmarks](https://docs.sciml.ai/SciMLBenchmarksOutput/stable/) to
@@ -274,7 +274,7 @@ nothing # hide
 
 In order to reduce the Jacobian construction cost, one can describe a Jacobian
 function by using the `jac` argument for the `ODEFunction`. First we have to
-derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this we get:
+derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this, we get:
 
 ```@example faster_ode2
 function rober_jac!(J,u,p,t)
@@ -352,7 +352,7 @@ prob = ODEProblem(rober_static,SA[1.0,0.0,0.0],(0.0,1e5),SA[0.04,3e7,1e4])
 sol = solve(prob,Rosenbrock23())
 ```
 
-If we benchmark this we see a really fast solution with really low allocation
+If we benchmark this, we see a really fast solution with really low allocation
 counts:
 
 ```@example faster_ode2
@@ -364,7 +364,7 @@ This version is thus very amenable to multithreading and other forms of parallel
 
 ## Example Accelerating Linear Algebra PDE Semi-Discretization
 
-In this tutorial we will optimize the right-hand side definition of a PDE
+In this tutorial, we will optimize the right-hand side definition of a PDE
 semi-discretization.
 
 !!! note
@@ -386,7 +386,7 @@ dv &= D_2 (A_y v + v A_x) + a u^2 + \beta v
 
 where ``u``, ``v``, and ``A`` are matrices. Here, we will use the simplified
 version where ``A`` is the tridiagonal stencil ``[1,-2,1]``, i.e. it's the 2D
-discretization of the LaPlacian. The native code would be something along the
+discretization of the Laplacian. The native code would be something along the
 lines of:
 
 ```@example faster_ode3
@@ -421,7 +421,7 @@ r0[:,:,2] .= vss
 prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)
 ```
 
-In this version we have encoded our initial condition to be a 3-dimensional
+In this version, we have encoded our initial condition to be a 3-dimensional
 array, with `u[:,:,1]` being the `A` part and `u[:,:,2]` being the `B` part.
 
 ```@example faster_ode3
@@ -431,10 +431,10 @@ nothing # hide
 
 While this version isn't very efficient,
 
-#### We recommend writing the "high-level" code first, and iteratively optimizing it!
+#### We recommend writing the “high-level” code first, and iteratively optimizing it!
 
 The first thing that we can do is get rid of the slicing allocations. The
-operation `r[:,:,1]` creates a temporary array instead of a "view", i.e. a
+operation `r[:,:,1]` creates a temporary array instead of a “view”, i.e. a
 pointer to the already existing memory. To make it a view, add `@view`. Note
 that we have to be careful with views because they point to the same memory,
 and thus changing a view changes the original values:
