@@ -6,7 +6,7 @@ this material.
 
 ## Example 1 : Solving Scalar Equations
 
-In this example we will solve the equation
+In this example, we will solve the equation
 
 ```math
 \frac{du}{dt} = f(u,p,t)
@@ -111,12 +111,12 @@ which will only save the final time point.
 
 #### Choosing a Solver Algorithm
 
-DifferentialEquations.jl has a method for choosing the default solver algorithm
+DifferentialEquations.jl has a method for choosing the default solver algorithm,
 which will find an efficient method to solve your problem. To help users receive
 the right algorithm, DifferentialEquations.jl offers a method for choosing
-algorithms through hints. This default chooser utilizes the precisions of the
+algorithms through hints. This default chooser utilizes the precision of the
 number types and the keyword arguments (such as the tolerances) to select an
-algorithm. Additionally one can provide `alg_hints` to help choose good defaults
+algorithm. Additionally, one can provide `alg_hints` to help choose good defaults
 using properties of the problem and necessary features for the solution.
 For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
@@ -128,7 +128,7 @@ sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)
 You can also explicitly choose the algorithm to use. DifferentialEquations.jl
 offers a much wider variety of solver algorithms than traditional differential
 equations libraries. Many of these algorithms are from recent research and have
-been shown to be more efficient than the "standard" algorithms.
+been shown to be more efficient than the “standard” algorithms.
 For example, we can choose a 5th order Tsitouras method:
 
 ```@example ODE2
@@ -143,7 +143,7 @@ via:
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
 ```
 
-In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
+In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
 
 - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
   is a good algorithm to use if you know nothing about the equation.
@@ -154,13 +154,13 @@ In DifferentialEquations.jl, some good "go-to" choices for ODEs are:
 - `BS3()` for fast low accuracy non-stiff.
 - `Vern7()` for high accuracy non-stiff.
 - `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
-- `KenCarp4()` or `TRBDF2()` for medium sized (100-2000 ODEs) stiff equations
+- `KenCarp4()` or `TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
 - `RadauIIA5()` for really high accuracy stiff equations
 - `QNDF()` for large stiff equations
 
 For a comprehensive list of the available algorithms and detailed recommendations,
-[Please see the solver documentation](@ref ode_solve). Every problem
-type has an associated page detailing all of the solvers associated with the problem.
+[please see the solver documentation](@ref ode_solve). Every problem
+type has an associated page detailing all the solvers associated with the problem.
 
 ### Step 3: Analyzing the Solution
 
@@ -228,11 +228,11 @@ plot(sol)
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
 Additional DiffEq-specific controls are documented [at the plotting page](@ref plot).
 
-For example, from the Plots.jl attribute page we see that the line width can be
+For example, from the Plots.jl attribute page, we see that the line width can be
 set via the argument `linewidth`. Additionally, a title can be set with `title`.
 Thus we add these to our plot command to get the correct output, fix up some
 axis labels, and change the legend (note we can disable the legend with
-`legend=false`) to get a nice looking plot:
+`legend=false`) to get a nice-looking plot:
 
 ```@example ODE2
 plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
@@ -247,7 +247,7 @@ plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
 
 ## Example 2: Solving Systems of Equations
 
-In this example we will solve the Lorenz equations:
+In this example, we will solve the Lorenz equations:
 
 ```math
 \begin{aligned}
@@ -293,7 +293,7 @@ using Plots
 plot(sol,idxs=(1,2,3))
 ```
 
-Note that the default plot for multi-dimensional systems is an overlay of
+Note that the default plot for multidimensional systems is an overlay of
 each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
@@ -301,11 +301,11 @@ the variable choices interface once more:
 plot(sol,idxs=(0,2))
 ```
 
-Note that here "variable 0" corresponds to the independent variable ("time").
+Note that here “variable 0” corresponds to the independent variable (“time”).
 
 ## Defining Parameterized Functions
 
-In many cases you may want to explicitly have parameters associated with your
+Often, you want to explicitly have parameters associated with your
 differential equations. This can be used by things like
 [parameter estimation routines](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/).
 In this case, you use the `p` values via the syntax:
@@ -467,7 +467,7 @@ is the value of the 5th component (by linear indexing) at the 3rd timepoint, or
 sol[2,1,:]
 ```
 
-is the timeseries for the component which is the 2nd row and 1 column.
+is the timeseries for the component, which is the 2nd row and 1 column.
 
 ## Going Beyond ODEs: How to Use the Documentation
 

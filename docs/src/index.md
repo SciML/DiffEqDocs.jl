@@ -24,7 +24,7 @@ include:
 
 The well-optimized DifferentialEquations solvers benchmark as some of the fastest
 implementations, using classic algorithms and ones from recent research which
-routinely outperform the "standard" C/Fortran methods, and include algorithms
+routinely outperform the “standard” C/Fortran methods, and include algorithms
 optimized for high-precision and HPC applications. At the same time, it wraps
 the classic C/Fortran methods, making it easy to switch over to them whenever
 necessary. Solving differential equations with different methods from
@@ -75,7 +75,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
 ## Supporting and Citing
 
 The software in this ecosystem was developed as part of academic research.
-If you would like to help support it, please star the repository as such
+If you would like to help support it, please star the repository, as such
 metrics may help us secure funding in the future. If you use SciML
 software as part of your research, teaching, or other activities, we would
 be grateful if you could cite our work.
@@ -95,7 +95,7 @@ be grateful if you could cite our work.
 is necessary for any use of DifferentialEquations.jl or the packages that are
 maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl, DiffEqDevTools.jl, etc.).
 Additionally, many of the solvers utilize novel algorithms, and if these algorithms
-are used we asked that you cite the methods. [Please see our citation page for guidelines](http://sciml.ai/citing.html).
+are used, we ask that you cite the methods. [Please see our citation page for guidelines](http://sciml.ai/citing.html).
 
 ## Getting Started: Installation And First Steps
 
@@ -116,7 +116,7 @@ using DifferentialEquations
 This will add solvers and dependencies
 for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Supported
 Equations section below). If you are interested in only one type of equation
-solvers of `DifferentialEquations.jl` or simply want a more lightweight
+solver of `DifferentialEquations.jl` or simply want a more lightweight
 version, see the
 [Reduced Compile Time and Low Dependency Usage](@ref low_dep)
 page.
@@ -125,9 +125,9 @@ To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
 [ODE tutorial](@ref ode_example)**. Example IJulia notebooks
 [can also be found in DiffEqTutorials.jl](https://github.com/SciML/DiffEqTutorials.jl).
-If you find any example where there seems to be an error, please open an issue.
+If you find any example where there appears to be an error, please open an issue.
 
-For the most up to date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
+For the most up-to-date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
 
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information on how to get to the bleeding edge is found in the
@@ -154,7 +154,7 @@ interpreter then run:
 >>> diffeqpy.install()
 ```
 
-and you're good! In addition, to improve the performance of your code it is
+and you're good! In addition, to improve the performance of your code, it is
 recommended that you use Numba to JIT compile your derivative functions. To
 install Numba, use:
 
@@ -220,13 +220,13 @@ Depth = 2
 
 ### Removing and Reducing Compile Times
 
-In some situations one may wish to decrease the compile time associated with DifferentialEquations.jl
-usage. If that's the case, there's two strategies to employ. One strategy is to use the
+In some situations, one may wish to decrease the compile time associated with DifferentialEquations.jl
+usage. If that's the case, there are two strategies to employ. One strategy is to use the
 [low dependency usage](https://diffeq.sciml.ai/stable/features/low_dep/). DifferentialEquations.jl
 is a metapackage composed of many smaller packages, and thus one could directly use a single component,
 such as `OrdinaryDiffEq.jl` for the pure Julia ODE solvers, and decrease the compile times by ignoring
-the rest (note: the interface is exactly the same, except using a solver other than those in OrdinaryDiffEq.jl
-will error). We recommend that downstream packages only rely on exactly the packages they need.
+the rest (note: the interface is exactly the same, except using a solver apart from those in OrdinaryDiffEq.jl
+will error). We recommend that downstream packages rely solely on the packages they need.
 
 The other strategy is to use [PackageCompiler.jl](https://julialang.github.io/PackageCompiler.jl/dev/) to create
 a system image that precompiles the whole package. To do this, one simply does:
@@ -236,10 +236,10 @@ using PackageCompiler
 PackageCompiler.create_sysimage([:DifferentialEquations,:Plots];replace_default=true)
 ```
 
-Note that there are some drawbacks to adding a package in your system image, for example
+Note that there are some drawbacks to adding a package in your system image. For example,
 the package will never update until you manually rebuild the system image again. For more
 information on the consequences,
-[see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/dev/sysimages/#Drawbacks-to-custom-sysimages-1)
+[see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/dev/sysimages/#Drawbacks-to-custom-sysimages-1).
 
 ### Basics
 

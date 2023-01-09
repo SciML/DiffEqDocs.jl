@@ -9,7 +9,7 @@ introductions can be found by [checking out SciMLTutorials.jl](https://github.co
 
 ## Example 1: Scalar RODEs
 
-In this example we will solve the equation
+In this example, we will solve the equation
 
 ```math
 du = f(u,p,t,W)dt
@@ -33,7 +33,7 @@ plot(sol)
 The random process defaults to a Gaussian/Wiener process, so there is nothing
 else required here! See the documentation on
 [`NoiseProcess`es](@ref noise_process) for details on how to define
-other noise proceses.
+other noise processes.
 
 ## Example 2: Systems of RODEs
 

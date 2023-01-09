@@ -20,7 +20,7 @@ Mu' = f(u,p,t)
 ```
 
 where ``M`` is known as the mass matrix. Let's solve the Robertson equation.
-In previous tutorials we wrote this equation as:
+In previous tutorials, we wrote this equation as:
 
 ```math
 \begin{aligned}
@@ -72,7 +72,7 @@ plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 
 ## Implicitly-Defined Differential-Algebraic Equations (DAEs)
 
-In this example we will solve the Robertson equation in its implicit form:
+In this example, we will solve the Robertson equation in its implicit form:
 
 ```math
 f(du,u,p,t) = 0
@@ -104,7 +104,7 @@ with initial conditions ``y_1(0) = 1``, ``y_2(0) = 0``, ``y_3(0) = 0``,
 The workflow for DAEs is the same as for the other types of equations, where all
 you need to know is how to define the problem. A `DAEProblem` is specified by defining
 an in-place update `f(out,du,u,p,t)` which uses the values to mutate `out` as the
-output. To makes this into a DAE, we move all of the variables to one side.
+output. To makes this into a DAE, we move all the variables to one side.
 Thus, we can define the function:
 
 ```@example dae

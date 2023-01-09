@@ -7,7 +7,7 @@ introductions can be found by [checking out SciMLTutorials.jl](https://docs.scim
 
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
-In this example we will solve the ODE that satisfies the boundary condition in the form of
+In this example, we will solve the ODE that satisfies the boundary condition in the form of
 
 ```math
 \begin{aligned}
@@ -37,7 +37,7 @@ end
 ### Boundary Condition
 
 There are two problem types available:
- - A problem type for general boundary conditions `BVProblem` ( including conditions that may be anywhere/ everywhere on the integration interval ).
+ - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval).
  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`
 
 #### `BVProblem`
@@ -68,8 +68,8 @@ end
 bvp3 = BVProblem(simplependulum!, bc3!, u₀_2, tspan)
 sol3 = solve(bvp3, Shooting(Vern7()))
 ```
-The initial guess can also be supplied via a function of `t` or a previous solution type, this is espacially handy for parameter analysis.
-We changed `u` to `sol` to emphasize the fact that in this case the boundary condition can be written on the solution object. Thus all of the features on the solution type such as interpolations are available when using the `Shooting` method (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
+The initial guess can also be supplied via a function of `t` or a previous solution type, this is especially handy for parameter analysis.
+We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using the `Shooting` method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
 
 ```@example bvp
 plot(sol3)
@@ -77,7 +77,7 @@ plot(sol3)
 
 #### `TwoPointBVProblem`
 
-Defining a similar problem as `TwoPointBVProblem` is shown in the following example. At the moment `MIRK4` is the only solver for `TwoPointBVProblem`s.
+Defining a similar problem as `TwoPointBVProblem` is shown in the following example. Currently, `MIRK4` is the only solver for `TwoPointBVProblem`s.
 
 ```@example bvp
 function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending

@@ -15,7 +15,7 @@ past and depends on parameters `p` and time `t`. The function signature for a de
 differential equation is `f(u, h, p, t)` for not in-place computations, and
 `f(du, u, h, p, t)` for in-place computations.
 
-In this example we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
+In this example, we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
 
 ```math
 \begin{aligned}
@@ -26,10 +26,10 @@ dx_{2} &= \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q
 \end{aligned}
 ```
 
-For this problem we note that ``\tau`` is constant, and thus we can use a method
+For this problem, we note that ``\tau`` is constant, and thus we can use a method
 which exploits this behavior. We first write out the equation using the appropriate
 function signature. Most of the equation writing is the same, though we use the
-history function by first interpolating and then choosing the components. Thus
+history function by first interpolating and then choosing the components. Thus,
 the `i`th component at time `t-tau` is given by `h(p, t-tau)[i]`. Components with
 no delays are written as in the ODE.
 
@@ -86,7 +86,7 @@ prob = DDEProblem(bc_model,u0,h,tspan,p; constant_lags=lags)
 
 An efficient way to solve this problem (given the constant lags) is with the
 MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl
-ODE solver method into a method for delay differential equations which is highly
+ODE solver method into a method for delay differential equations, which is highly
 efficient due to sweet compiler magic. A good choice is the order 5 method `Tsit5()`:
 
 ```@example dde
@@ -95,7 +95,7 @@ alg = MethodOfSteps(Tsit5())
 
 For lower tolerance solving, one can use the `BS3()` algorithm to good
 effect (this combination is similar to the MATLAB `dde23`, but more efficient
-tableau), and for high tolerances the `Vern6()` algorithm will give an 6th order
+tableau), and for high tolerances the `Vern6()` algorithm will give a 6th order
 solution.
 
 To solve the problem with this algorithm, we do the same thing we'd do with other
@@ -162,7 +162,7 @@ h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
 
 where `idxs` can be an integer for which variable in the history to compute,
 and here for any number `idxs` we give back `1.0`. Note that if we wanted to use
-past values of the `i`th derivative then we would call the history function
+past values of the `i`th derivative, then we would call the history function
 `h(p, t, Val{i})` in our DDE function and would have to define a dispatch like
 
 ```@example dde
@@ -173,19 +173,19 @@ to say that derivatives before `t0` are zero for any index. Again, we could
 use an in-place function instead or only compute specific indices by passing
 an `idxs` keyword.
 
-The functional forms for the history function are discussed also
+The functional forms for the history function are also discussed
 [on the DDEProblem page](@ref dde_prob).
 
 ### Undeclared Delays and State-Dependent Delays via Residual Control
 
 You might have noticed DifferentialEquations.jl allows you to solve problems
-with undeclared delays since you can interpolate `h` at any value. This is
+with undeclared delays, since you can interpolate `h` at any value. This is
 a feature, but use it with caution. Undeclared delays can increase the error
 in the solution. It's recommended that you use a method with a residual control,
-such as `MethodOfSteps(RK4())` whenever there are undeclared delays. With this
+such as `MethodOfSteps(RK4())` whenever there are undeclared delays. With this,
 you can use interpolated derivatives, solve functional differential equations
 by using quadrature on the interpolant, etc. However, note that residual control
-solves with a low level of accuracy, so the tolerances should be made very small
+solves with a low level of accuracy, so the tolerances should be made very small,
 and the solution should not be trusted for more than 2-3 decimal places.
 
 Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
@@ -204,7 +204,7 @@ Note that this method can solve problems with state-dependent delays.
 
 State-dependent delays are problems where the delay is allowed to be a function
 of the current state. They can be more efficiently solved with discontinuity
-tracking. To do this in DifferentialEquations.jl, requires to pass lag functions
+tracking. To do this, in DifferentialEquations.jl, requires passing lag functions
 `g(u,p,t)` as keyword `dependent_lags` to the `DDEProblem` definition. Other than
 that, everything else is the same, and one solves that problem using the common
 interface.
@@ -218,5 +218,5 @@ alg = MethodOfSteps(Tsit5())
 sol = solve(prob,alg)
 ```
 
-Here we treated the single lag `t-tau` as a state-dependent delay. Of course, you
+Here, we treated the single lag `t-tau` as a state-dependent delay. Of course, you
 can then replace that tuple of functions with whatever functions match your lags.
