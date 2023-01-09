@@ -59,7 +59,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
 
 ## Contributing
 - If you're interested in contributing, please see the
-  [Developer Documentation.](https://devdocs.sciml.ai/dev/)
+  [Developer Documentation.](https://docs.sciml.ai/DiffEqDevDocs/stable/)
 - Please refer to the
   [SciML ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://github.com/SciML/ColPrac/blob/master/README.md)
   for guidance on PRs, issues, and other matters relating to contributing to SciML.
