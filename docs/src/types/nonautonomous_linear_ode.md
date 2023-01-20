@@ -1,7 +1,7 @@
 # [Non-autonomous Linear ODE / Lie Group Problems](@id nonauto_dynamical_prob)
 
 Non-autonomous linear ODEs show up in a lot of scientific problems where
-the differential equation lives on a manifold such as Lie Group. In these
+the differential equation lives on a manifold, such as a Lie Group. In these
 situations, specialized solvers can be utilized to enforce physical bounds
 on the solution and enhance the solving.
 
@@ -48,7 +48,7 @@ end
 ```
 
 has a state-dependent linear operator. Note that many other `AbstractDiffEqOperator`s
-can be used and `DiffEqArrayOperator` is just one version that represents `A` via
+can be used, and `DiffEqArrayOperator` is just one version that represents `A` via
 a matrix (other choices are matrix-free).
 
 Note that if ``A`` is a constant, then it is sufficient to supply ``A`` directly without
