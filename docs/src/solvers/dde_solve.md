@@ -42,8 +42,8 @@ The Rosenbrock methods are good choices in these situations.
 
 Lags are declared separately from their use. One can use any lag by simply using
 the interpolant of `h` at that point. However, one should use caution in order
-to achieve the best accuracy. When lags are declared, the solvers can more
-efficiently be more accurate. Constant delays are propagated until the
+to achieve the best accuracy. When lags are declared, the solvers can be more
+efficient and accurate. Constant delays are propagated until the
 order is higher than the order of the integrator. If state-dependent delays are
 declared, the algorithm will detect discontinuities arising from these delays and
 adjust the step size such that these discontinuities are included in the mesh, if
