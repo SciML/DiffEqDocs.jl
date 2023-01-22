@@ -92,9 +92,11 @@ steps are computed lazily (i.e. not during the solve).
   Fixed timestep only.
 - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta-Nyström method.
   Fixed timestep only.
+- `DPRKN4`: 4th order explicit adaptive Runge-Kutta-Nyström method.
 - `DPRKN5`: 5th order explicit adaptive Runge-Kutta-Nyström method.
 - `DPRKN6`: 6th order explicit adaptive Runge-Kutta-Nyström method. Free 6th
   order interpolant.
+- `DPRKN6FM`: 6th order explicit adaptive Runge-Kutta-Nyström method.
 - `DPRKN8`: 8th order explicit adaptive Runge-Kutta-Nyström method.
 - `DPRKN12`: 12th order explicit adaptive Runge-Kutta-Nyström method.
 
