@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Solving Large Stiff Equations · DifferentialEquations.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/DiffEqDocs/stable/tutorials/advanced_ode_example/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="DifferentialEquations.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">DifferentialEquations.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">DifferentialEquations.jl: Efficient Differential Equation Solving in Julia</a></li><li><a class="tocitem" href="../../getting_started/">Getting Started with Differential Equations in Julia</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../faster_ode_example/">Code Optimization for Differential Equations</a></li><li class="is-active"><a class="tocitem" href>Solving Large Stiff Equations</a><ul class="internal"><li><a class="tocitem" href="#Definition-of-the-Brusselator-Equation"><span>Definition of the Brusselator Equation</span></a></li><li><a class="tocitem" href="#Choosing-Jacobian-Types"><span>Choosing Jacobian Types</span></a></li><li><a class="tocitem" href="#Declaring-a-Sparse-Jacobian-with-Automatic-Sparsity-Detection"><span>Declaring a Sparse Jacobian with Automatic Sparsity Detection</span></a></li><li><a class="tocitem" href="#Using-Jacobian-Free-Newton-Krylov"><span>Using Jacobian-Free Newton-Krylov</span></a></li><li><a class="tocitem" href="#Adding-a-Preconditioner"><span>Adding a Preconditioner</span></a></li><li><a class="tocitem" href="#Sundials-Specific-Handling"><span>Sundials-Specific Handling</span></a></li></ul></li><li><a class="tocitem" href="../sde_example/">Stochastic Differential Equations</a></li><li><a class="tocitem" href="../rode_example/">Random Ordinary Differential Equations</a></li><li><a class="tocitem" href="../dde_example/">Delay Differential Equations</a></li><li><a class="tocitem" href="../dae_example/">Differential Algebraic Equations</a></li><li><a class="tocitem" href="../jump_diffusion/">Jump Diffusion Equations</a></li><li><a class="tocitem" href="../bvp_example/">Boundary Value Problems</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><input class="collapse-toggle" id="menuitem-4-1" type="checkbox"/><label class="tocitem" for="menuitem-4-1"><span class="docs-label">Beginner</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/classical_physics/">Classical Physics Models</a></li><li><a class="tocitem" href="../../examples/conditional_dosing/">Conditional Dosing in Pharmacometrics</a></li><li><a class="tocitem" href="../../examples/kepler_problem/">The Kepler Problem</a></li><li><a class="tocitem" href="../../examples/outer_solar_system/">Simulating the Outer Solar System</a></li><li><a class="tocitem" href="../../examples/min_and_max/">Finding Maxima and Minima of ODEs Solutions</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox"/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Advanced</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/spiking_neural_systems/">Spiking Neural Systems</a></li><li><a class="tocitem" href="../../examples/beeler_reuter/">An Implicit/Explicit CUDA-Accelerated Solver for the 2D Beeler-Reuter Model</a></li><li><a class="tocitem" href="../../examples/diffusion_implicit_heat_equation/">Solving the heat equation with diffusion-implicit time-stepping</a></li></ul></li></ul></li><li><span class="tocitem">Basics</span><ul><li><a class="tocitem" href="../../basics/overview/">Overview of DifferentialEquations.jl</a></li><li><a class="tocitem" href="../../basics/common_solver_opts/">Common Solver Options (Solve Keyword Arguments)</a></li><li><a class="tocitem" href="../../basics/solution/">Solution Handling</a></li><li><a class="tocitem" href="../../basics/plot/">Plot Functions</a></li><li><a class="tocitem" href="../../basics/integrator/">Integrator Interface</a></li><li><a class="tocitem" href="../../basics/problem/">Problem Interface</a></li><li><a class="tocitem" href="../../basics/faq/">Frequently Asked Questions</a></li><li><a class="tocitem" href="../../basics/compatibility_chart/">Solver Compatibility Chart</a></li></ul></li><li><span class="tocitem">Problem Types</span><ul><li><a class="tocitem" href="../../types/discrete_types/">Discrete Problems</a></li><li><a class="tocitem" href="../../types/ode_types/">ODE Problems</a></li><li><a class="tocitem" href="../../types/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group Problems</a></li><li><a class="tocitem" href="../../types/dynamical_types/">Dynamical, Hamiltonian and 2nd Order ODE Problems</a></li><li><a class="tocitem" href="../../types/split_ode_types/">Split ODE Problems</a></li><li><a class="tocitem" href="../../types/steady_state_types/">Steady State Problems</a></li><li><a class="tocitem" href="../../types/bvp_types/">BVP Problems</a></li><li><a class="tocitem" href="../../types/sde_types/">SDE Problems</a></li><li><a class="tocitem" href="../../types/sdae_types/">SDAE Problems</a></li><li><a class="tocitem" href="../../types/rode_types/">RODE Problems</a></li><li><a class="tocitem" href="../../types/dde_types/">DDE Problems</a></li><li><a class="tocitem" href="../../types/sdde_types/">SDDE Problems</a></li><li><a class="tocitem" href="../../types/dae_types/">DAE Problems</a></li></ul></li><li><span class="tocitem">Solver Algorithms</span><ul><li><a class="tocitem" href="../../solvers/discrete_solve/">Discrete Solvers</a></li><li><a class="tocitem" href="../../solvers/ode_solve/">ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dynamical_solve/">Dynamical, Hamiltonian, and 2nd Order ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/split_ode_solve/">Split ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/steady_state_solve/">Steady State Solvers</a></li><li><a class="tocitem" href="../../solvers/bvp_solve/">BVP Solvers</a></li><li><a class="tocitem" href="../../solvers/sde_solve/">SDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdae_solve/">SDAE Solvers</a></li><li><a class="tocitem" href="../../solvers/rode_solve/">RODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dde_solve/">DDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdde_solve/">SDDE Solvers</a></li><li><a class="tocitem" href="../../solvers/dae_solve/">DAE Solvers</a></li><li><a class="tocitem" href="../../solvers/benchmarks/">Solver Benchmarks</a></li></ul></li><li><span class="tocitem">Additional Features</span><ul><li><a class="tocitem" href="../../features/performance_overloads/">Jacobians, Gradients, etc.</a></li><li><a class="tocitem" href="../../features/diffeq_arrays/">DiffEq-Specific Array Types</a></li><li><a class="tocitem" href="../../features/diffeq_operator/">DiffEqOperators</a></li><li><a class="tocitem" href="../../features/noise_process/">Noise Processes</a></li><li><a class="tocitem" href="../../features/linear_nonlinear/">Specifying (Non)Linear Solvers and Preconditioners</a></li><li><a class="tocitem" href="../../features/callback_functions/">Event Handling and Callback Functions</a></li><li><a class="tocitem" href="../../features/callback_library/">Callback Library</a></li><li><a class="tocitem" href="../../features/ensemble/">Parallel Ensemble Simulations</a></li><li><a class="tocitem" href="../../features/io/">I/O: Saving and Loading Solution Data</a></li><li><a class="tocitem" href="../../features/low_dep/">Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage</a></li><li><a class="tocitem" href="../../features/progress_bar/">Progress Bar Integration</a></li></ul></li><li><span class="tocitem">Detailed Solver APIs</span><ul><li><a class="tocitem" href="../../api/sundials/">Sundials.jl</a></li><li><a class="tocitem" href="../../api/daskr/">DASKR.jl</a></li></ul></li><li><span class="tocitem">Extra Details</span><ul><li><a class="tocitem" href="../../extras/timestepping/">Timestepping Method Descriptions</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Solving Large Stiff Equations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Solving Large Stiff Equations</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/DiffEqDocs.jl/blob/master/docs/src/tutorials/advanced_ode_example.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="stiff"><a class="docs-heading-anchor" href="#stiff">Solving Large Stiff Equations</a><a id="stiff-1"></a><a class="docs-heading-anchor-permalink" href="#stiff" title="Permalink"></a></h1><p>This tutorial is for getting into the extra features for solving large stiff ordinary differential equations efficiently. Solving stiff ordinary differential equations requires specializing the linear solver on properties of the Jacobian in order to cut down on the <span>$\mathcal{O}(n^3)$</span> linear solve and the <span>$\mathcal{O}(n^2)$</span> back-solves. Note that these same functions and controls also extend to stiff SDEs, DDEs, DAEs, etc. This tutorial is for large-scale models, such as those derived for semi-discretizations of partial differential equations (PDEs). For example, we will use the stiff Brusselator partial differential equation (BRUSS).</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>This tutorial is for advanced users to dive into advanced features! DifferentialEquations.jl automates most of this usage, so we recommend users try <code>solve(prob)</code> with the automatic algorithm first!</p></div></div><h2 id="Definition-of-the-Brusselator-Equation"><a class="docs-heading-anchor" href="#Definition-of-the-Brusselator-Equation">Definition of the Brusselator Equation</a><a id="Definition-of-the-Brusselator-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Definition-of-the-Brusselator-Equation" title="Permalink"></a></h2><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Feel free to skip this section: it simply defines the example problem.</p></div></div><p>The Brusselator PDE is defined as follows:</p><p class="math-container">\[\begin{align}
+\frac{\partial u}{\partial t} &amp;= 1 + u^2v - 4.4u + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}) + f(x, y, t)\\
+\frac{\partial v}{\partial t} &amp;= 3.4u - u^2v + \alpha(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2})
+\end{align}\]</p><p>where</p><p class="math-container">\[f(x, y, t) = \begin{cases}
+5 &amp; \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1 \\
+0 &amp; \quad \text{else}
+\end{cases}\]</p><p>and the initial conditions are</p><p class="math-container">\[\begin{align}
+u(x, y, 0) &amp;= 22\cdot (y(1-y))^{3/2} \\
+v(x, y, 0) &amp;= 27\cdot (x(1-x))^{3/2}
+\end{align}\]</p><p>with the periodic boundary condition</p><p class="math-container">\[\begin{align}
+u(x+1,y,t) &amp;= u(x,y,t) \\
+u(x,y+1,t) &amp;= u(x,y,t)
+\end{align}\]</p><p>on a timespan of <span>$t \in [0,11.5]$</span>.</p><p>To solve this PDE, we will discretize it into a system of ODEs with the finite difference method. We discretize <code>u</code> and <code>v</code> into arrays of the values at each time point: <code>u[i,j] = u(i*dx,j*dy)</code> for some choice of <code>dx</code>/<code>dy</code>, and same for <code>v</code>. Then our ODE is defined with <code>U[i,j,k] = [u v]</code>. The second derivative operator, the Laplacian, discretizes to become a tridiagonal matrix with <code>[1 -2 1]</code> and a <code>1</code> in the top right and bottom left corners. The nonlinear functions are then applied at each point in space (they are broadcast). Use <code>dx=dy=1/32</code>.</p><p>The resulting <code>ODEProblem</code> definition is:</p><pre><code class="language-julia hljs">using DifferentialEquations, LinearAlgebra, SparseArrays
+
+const N = 32
+const xyd_brusselator = range(0,stop=1,length=N)
+brusselator_f(x, y, t) = (((x-0.3)^2 + (y-0.6)^2) &lt;= 0.1^2) * (t &gt;= 1.1) * 5.
+limit(a, N) = a == N+1 ? 1 : a == 0 ? N : a
+function brusselator_2d_loop(du, u, p, t)
+  A, B, alpha, dx = p
+  alpha = alpha/dx^2
+  @inbounds for I in CartesianIndices((N, N))
+    i, j = Tuple(I)
+    x, y = xyd_brusselator[I[1]], xyd_brusselator[I[2]]
+    ip1, im1, jp1, jm1 = limit(i+1, N), limit(i-1, N), limit(j+1, N), limit(j-1, N)
+    du[i,j,1] = alpha*(u[im1,j,1] + u[ip1,j,1] + u[i,jp1,1] + u[i,jm1,1] - 4u[i,j,1]) +
+                B + u[i,j,1]^2*u[i,j,2] - (A + 1)*u[i,j,1] + brusselator_f(x, y, t)
+    du[i,j,2] = alpha*(u[im1,j,2] + u[ip1,j,2] + u[i,jp1,2] + u[i,jm1,2] - 4u[i,j,2]) +
+                A*u[i,j,1] - u[i,j,1]^2*u[i,j,2]
+    end
+end
+p = (3.4, 1., 10., step(xyd_brusselator))
+
+function init_brusselator_2d(xyd)
+  N = length(xyd)
+  u = zeros(N, N, 2)
+  for I in CartesianIndices((N, N))
+    x = xyd[I[1]]
+    y = xyd[I[2]]
+    u[I,1] = 22*(y*(1-y))^(3/2)
+    u[I,2] = 27*(x*(1-x))^(3/2)
+  end
+  u
+end
+u0 = init_brusselator_2d(xyd_brusselator)
+prob_ode_brusselator_2d = ODEProblem(brusselator_2d_loop,u0,(0.,11.5),p)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Array{Float64, 3} and tType Float64. In-place: true
+timespan: (0.0, 11.5)
+u0: 32×32×2 Array{Float64, 3}:
+[:, :, 1] =
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ ⋮                                  ⋱                      ⋮         
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+
+[:, :, 2] =
+ 0.0       0.0       0.0       0.0       …  0.0       0.0       0.0
+ 0.148923  0.148923  0.148923  0.148923     0.148923  0.148923  0.148923
+ 0.400332  0.400332  0.400332  0.400332     0.400332  0.400332  0.400332
+ 0.697746  0.697746  0.697746  0.697746     0.697746  0.697746  0.697746
+ 1.01722   1.01722   1.01722   1.01722      1.01722   1.01722   1.01722
+ 1.34336   1.34336   1.34336   1.34336   …  1.34336   1.34336   1.34336
+ 1.66501   1.66501   1.66501   1.66501      1.66501   1.66501   1.66501
+ 1.97352   1.97352   1.97352   1.97352      1.97352   1.97352   1.97352
+ 2.26207   2.26207   2.26207   2.26207      2.26207   2.26207   2.26207
+ 2.52509   2.52509   2.52509   2.52509      2.52509   2.52509   2.52509
+ ⋮                                       ⋱            ⋮         
+ 2.26207   2.26207   2.26207   2.26207      2.26207   2.26207   2.26207
+ 1.97352   1.97352   1.97352   1.97352      1.97352   1.97352   1.97352
+ 1.66501   1.66501   1.66501   1.66501   …  1.66501   1.66501   1.66501
+ 1.34336   1.34336   1.34336   1.34336      1.34336   1.34336   1.34336
+ 1.01722   1.01722   1.01722   1.01722      1.01722   1.01722   1.01722
+ 0.697746  0.697746  0.697746  0.697746     0.697746  0.697746  0.697746
+ 0.400332  0.400332  0.400332  0.400332     0.400332  0.400332  0.400332
+ 0.148923  0.148923  0.148923  0.148923  …  0.148923  0.148923  0.148923
+ 0.0       0.0       0.0       0.0          0.0       0.0       0.0</code></pre><h2 id="Choosing-Jacobian-Types"><a class="docs-heading-anchor" href="#Choosing-Jacobian-Types">Choosing Jacobian Types</a><a id="Choosing-Jacobian-Types-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-Jacobian-Types" title="Permalink"></a></h2><p>When one is using an implicit or semi-implicit differential equation solver, the Jacobian must be built at many iterations, and this can be one of the most expensive steps. There are two pieces that must be optimized in order to reach maximal efficiency when solving stiff equations: the sparsity pattern and the construction of the Jacobian. The construction is filling the matrix <code>J</code> with values, while the sparsity pattern is what <code>J</code> to use.</p><p>The sparsity pattern is given by a prototype matrix, the <code>jac_prototype</code>, which will be copied to be used as <code>J</code>. The default is for <code>J</code> to be a <code>Matrix</code>, i.e. a dense matrix. However, if you know the sparsity of your problem, then you can pass a different matrix type. For example, a <code>SparseMatrixCSC</code> will give a sparse matrix. Other sparse matrix types include:</p><ul><li>Bidiagonal</li><li>Tridiagonal</li><li>SymTridiagonal</li><li>BandedMatrix (<a href="https://github.com/JuliaMatrices/BandedMatrices.jl">BandedMatrices.jl</a>)</li><li>BlockBandedMatrix (<a href="https://github.com/JuliaMatrices/BlockBandedMatrices.jl">BlockBandedMatrices.jl</a>)</li></ul><p>DifferentialEquations.jl will internally use this matrix type, making the factorizations faster by using the specialized forms.</p><h2 id="Declaring-a-Sparse-Jacobian-with-Automatic-Sparsity-Detection"><a class="docs-heading-anchor" href="#Declaring-a-Sparse-Jacobian-with-Automatic-Sparsity-Detection">Declaring a Sparse Jacobian with Automatic Sparsity Detection</a><a id="Declaring-a-Sparse-Jacobian-with-Automatic-Sparsity-Detection-1"></a><a class="docs-heading-anchor-permalink" href="#Declaring-a-Sparse-Jacobian-with-Automatic-Sparsity-Detection" title="Permalink"></a></h2><p>Jacobian sparsity is declared by the <code>jac_prototype</code> argument in the <code>ODEFunction</code>. Note that you should only do this if the sparsity is high, for example, 0.1% of the matrix is non-zeros, otherwise the overhead of sparse matrices can be higher than the gains from sparse differentiation!</p><p>One of the useful companion tools for DifferentialEquations.jl is <a href="https://github.com/JuliaSymbolics/Symbolics.jl">Symbolics.jl</a>. This allows for automatic declaration of Jacobian sparsity types. To see this in action, we can give an example <code>du</code> and <code>u</code> and call <code>jacobian_sparsity</code> on our function with the example arguments, and it will kick out a sparse matrix with our pattern, that we can turn into our <code>jac_prototype</code>.</p><pre><code class="language-julia hljs">using Symbolics
+du0 = copy(u0)
+jac_sparsity = Symbolics.jacobian_sparsity((du,u)-&gt;brusselator_2d_loop(du,u,p,0.0),du0,u0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2048×2048 SparseArrays.SparseMatrixCSC{Bool, Int64} with 12288 stored entries:
+⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀
+⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄
+⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙
+⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷</code></pre><p>Notice that Julia gives a nice print out of the sparsity pattern. That&#39;s neat, and would be tedious to build by hand! Now we just pass it to the <code>ODEFunction</code> like as before:</p><pre><code class="language-julia hljs">f = ODEFunction(brusselator_2d_loop;jac_prototype=float.(jac_sparsity))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(::ODEFunction{true, SciMLBase.FullSpecialize, typeof(Main.brusselator_2d_loop), LinearAlgebra.UniformScaling{Bool}, Nothing, Nothing, Nothing, Nothing, Nothing, SparseArrays.SparseMatrixCSC{Float64, Int64}, SparseArrays.SparseMatrixCSC{Float64, Int64}, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, typeof(SciMLBase.DEFAULT_OBSERVED), Nothing, Nothing}) (generic function with 1 method)</code></pre><p>Build the <code>ODEProblem</code>:</p><pre><code class="language-julia hljs">prob_ode_brusselator_2d_sparse = ODEProblem(f,u0,(0.,11.5),p)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Array{Float64, 3} and tType Float64. In-place: true
+timespan: (0.0, 11.5)
+u0: 32×32×2 Array{Float64, 3}:
+[:, :, 1] =
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ ⋮                                  ⋱                      ⋮         
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534  …  0.568534  0.326197  0.121344  0.0
+ 0.0  0.121344  0.326197  0.568534     0.568534  0.326197  0.121344  0.0
+
+[:, :, 2] =
+ 0.0       0.0       0.0       0.0       …  0.0       0.0       0.0
+ 0.148923  0.148923  0.148923  0.148923     0.148923  0.148923  0.148923
+ 0.400332  0.400332  0.400332  0.400332     0.400332  0.400332  0.400332
+ 0.697746  0.697746  0.697746  0.697746     0.697746  0.697746  0.697746
+ 1.01722   1.01722   1.01722   1.01722      1.01722   1.01722   1.01722
+ 1.34336   1.34336   1.34336   1.34336   …  1.34336   1.34336   1.34336
+ 1.66501   1.66501   1.66501   1.66501      1.66501   1.66501   1.66501
+ 1.97352   1.97352   1.97352   1.97352      1.97352   1.97352   1.97352
+ 2.26207   2.26207   2.26207   2.26207      2.26207   2.26207   2.26207
+ 2.52509   2.52509   2.52509   2.52509      2.52509   2.52509   2.52509
+ ⋮                                       ⋱            ⋮         
+ 2.26207   2.26207   2.26207   2.26207      2.26207   2.26207   2.26207
+ 1.97352   1.97352   1.97352   1.97352      1.97352   1.97352   1.97352
+ 1.66501   1.66501   1.66501   1.66501   …  1.66501   1.66501   1.66501
+ 1.34336   1.34336   1.34336   1.34336      1.34336   1.34336   1.34336
+ 1.01722   1.01722   1.01722   1.01722      1.01722   1.01722   1.01722
+ 0.697746  0.697746  0.697746  0.697746     0.697746  0.697746  0.697746
+ 0.400332  0.400332  0.400332  0.400332     0.400332  0.400332  0.400332
+ 0.148923  0.148923  0.148923  0.148923  …  0.148923  0.148923  0.148923
+ 0.0       0.0       0.0       0.0          0.0       0.0       0.0</code></pre><p>Now let&#39;s see how the version with sparsity compares to the version without:</p><pre><code class="language-julia hljs">using BenchmarkTools # for @btime
+@btime solve(prob_ode_brusselator_2d,TRBDF2(),save_everystep=false);
+@btime solve(prob_ode_brusselator_2d_sparse,TRBDF2(),save_everystep=false);
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KLUFactorization()),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  6.128 s (4859 allocations: 98.90 MiB)
+  1.331 s (64295 allocations: 18.67 MiB)
+  1.122 s (73739 allocations: 17.48 MiB)</code></pre><p>Note that depending on the properties of the sparsity pattern, one may want to try alternative linear solvers such as <code>TRBDF2(linsolve = KLUFactorization())</code> or <code>TRBDF2(linsolve = UMFPACKFactorization())</code>.</p><h2 id="Using-Jacobian-Free-Newton-Krylov"><a class="docs-heading-anchor" href="#Using-Jacobian-Free-Newton-Krylov">Using Jacobian-Free Newton-Krylov</a><a id="Using-Jacobian-Free-Newton-Krylov-1"></a><a class="docs-heading-anchor-permalink" href="#Using-Jacobian-Free-Newton-Krylov" title="Permalink"></a></h2><p>A completely different way to optimize the linear solvers for large sparse matrices is to use a Krylov subspace method. This requires choosing a linear solver for changing to a Krylov method. To swap the linear solver out, we use the <code>linsolve</code> command and choose the GMRES linear solver.</p><pre><code class="language-julia hljs">@btime solve(prob_ode_brusselator_2d,KenCarp47(linsolve=KrylovJL_GMRES()),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  900.372 ms (172469 allocations: 31.02 MiB)</code></pre><p>Notice that this acceleration does not require the definition of a sparsity pattern, and can thus be an easier way to scale for large problems. For more information on linear solver choices, see the <a href="../../features/linear_nonlinear/#linear_nonlinear">linear solver documentation</a>. <code>linsolve</code> choices are any valid <a href="http://linearsolve.sciml.ai/dev/">LinearSolve.jl</a> solver.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Switching to a Krylov linear solver will automatically change the ODE solver into Jacobian-free mode, dramatically reducing the memory required. This can be overridden by adding <code>concrete_jac=true</code> to the algorithm.</p></div></div><h2 id="Adding-a-Preconditioner"><a class="docs-heading-anchor" href="#Adding-a-Preconditioner">Adding a Preconditioner</a><a id="Adding-a-Preconditioner-1"></a><a class="docs-heading-anchor-permalink" href="#Adding-a-Preconditioner" title="Permalink"></a></h2><p>Any <a href="http://linearsolve.sciml.ai/dev/basics/Preconditioners/">LinearSolve.jl-compatible preconditioner</a> can be used as a preconditioner in the linear solver interface. To define preconditioners, one must define a <code>precs</code> function in compatible stiff ODE solvers which returns the left and right preconditioners, matrices which approximate the inverse of <code>W = I - gamma*J</code> used in the solution of the ODE. An example of this with using <a href="https://github.com/haampie/IncompleteLU.jl">IncompleteLU.jl</a> is as follows:</p><pre><code class="language-julia hljs">using IncompleteLU
+function incompletelu(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    Pl = ilu(convert(AbstractMatrix,W), τ = 50.0)
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+# Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
+Base.eltype(::IncompleteLU.ILUFactorization{Tv,Ti}) where {Tv,Ti} = Tv
+
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=incompletelu,concrete_jac=true),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  391.872 ms (53501 allocations: 58.01 MiB)</code></pre><p>Notice a few things about this preconditioner. This preconditioner uses the sparse Jacobian, and thus we set <code>concrete_jac=true</code> to tell the algorithm to generate the Jacobian (otherwise, a Jacobian-free algorithm is used with GMRES by default). Then <code>newW = true</code> whenever a new <code>W</code> matrix is computed, and <code>newW=nothing</code> during the startup phase of the solver. Thus, we do a check <code>newW === nothing || newW</code> and when true, it&#39;s only at these points when we update the preconditioner, otherwise we just pass on the previous version. We use <code>convert(AbstractMatrix,W)</code> to get the concrete <code>W</code> matrix (matching <code>jac_prototype</code>, thus <code>SpraseMatrixCSC</code>) which we can use in the preconditioner&#39;s definition. Then we use <code>IncompleteLU.ilu</code> on that sparse matrix to generate the preconditioner. We return <code>Pl,nothing</code> to say that our preconditioner is a left preconditioner, and that there is no right preconditioning.</p><p>This method thus uses both the Krylov solver and the sparse Jacobian. Not only that, it is faster than both implementations! IncompleteLU is fussy in that it requires a well-tuned <code>τ</code> parameter. Another option is to use <a href="https://github.com/JuliaLinearAlgebra/AlgebraicMultigrid.jl">AlgebraicMultigrid.jl</a> which is more automatic. The setup is very similar to before:</p><pre><code class="language-julia hljs">using AlgebraicMultigrid
+function algebraicmultigrid(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    Pl = aspreconditioner(ruge_stuben(convert(AbstractMatrix,W)))
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid,concrete_jac=true),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  569.304 ms (51130 allocations: 128.54 MiB)</code></pre><p>or with a Jacobi smoother:</p><pre><code class="language-julia hljs">function algebraicmultigrid2(W,du,u,p,t,newW,Plprev,Prprev,solverdata)
+  if newW === nothing || newW
+    A = convert(AbstractMatrix,W)
+    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A, presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,1)))))
+  else
+    Pl = Plprev
+  end
+  Pl,nothing
+end
+
+@btime solve(prob_ode_brusselator_2d_sparse,KenCarp47(linsolve=KrylovJL_GMRES(),precs=algebraicmultigrid2,concrete_jac=true),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  532.190 ms (55075 allocations: 130.02 MiB)</code></pre><p>For more information on the preconditioner interface, see the <a href="../../features/linear_nonlinear/#linear_nonlinear">linear solver documentation</a>.</p><h2 id="Sundials-Specific-Handling"><a class="docs-heading-anchor" href="#Sundials-Specific-Handling">Sundials-Specific Handling</a><a id="Sundials-Specific-Handling-1"></a><a class="docs-heading-anchor-permalink" href="#Sundials-Specific-Handling" title="Permalink"></a></h2><p>While much of the setup makes the transition to using Sundials automatic, there are some differences between the pure Julia implementations and the Sundials implementations which must be taken note of. These are all detailed in the <a href="http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1">Sundials solver documentation</a>, but here we will highlight the main details which one should make note of.</p><p>Defining a sparse matrix and a Jacobian for Sundials works just like any other package. The core difference is in the choice of the linear solver. With Sundials, the linear solver choice is done with a Symbol in the <code>linear_solver</code> from a preset list. Particular choices of note are <code>:Band</code> for a banded matrix and <code>:GMRES</code> for using GMRES. If you are using Sundials, <code>:GMRES</code> will not require defining the JacVecOperator, and instead will always make use of a Jacobian-Free Newton Krylov (with numerical differentiation). Thus, on this problem we could do:</p><pre><code class="language-julia hljs">using Sundials
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(),save_everystep=false);
+# Simplest speedup: use :LapackDense
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:LapackDense),save_everystep=false);
+# GMRES Version: Doesn&#39;t require any extra stuff!
+@btime solve(prob_ode_brusselator_2d,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  17.809 s (51290 allocations: 2.43 MiB)
+  3.505 s (51290 allocations: 2.43 MiB)
+  246.624 ms (51109 allocations: 2.35 MiB)</code></pre><p>Notice that using sparse matrices with Sundials requires an analytical Jacobian function. We will use <a href="https://mtk.sciml.ai/dev/">ModelingToolkit.jl</a>&#39;s <code>modelingtoolkitize</code> to automatically generate this:</p><pre><code class="language-julia hljs">using ModelingToolkit
+prob_ode_brusselator_2d_mtk = ODEProblem(modelingtoolkitize(prob_ode_brusselator_2d_sparse),[],(0.0,11.5),jac=true,sparse=true);
+# @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly</code></pre><h3 id="Using-Preconditioners-with-Sundials"><a class="docs-heading-anchor" href="#Using-Preconditioners-with-Sundials">Using Preconditioners with Sundials</a><a id="Using-Preconditioners-with-Sundials-1"></a><a class="docs-heading-anchor-permalink" href="#Using-Preconditioners-with-Sundials" title="Permalink"></a></h3><p>Details for setting up a preconditioner with Sundials can be found at the <a href="../../solvers/ode_solve/#ode_solve_sundials">Sundials solver page</a>. Sundials algorithms are very different from the standard Julia-based algorithms in that they require the user does all handling of the Jacobian matrix. To do this, you must define a <code>psetup</code> function that sets up the preconditioner and then a <code>prec</code> function that is the action of the preconditioner on a vector. For the <code>psetup</code> function, we need to first compute the <code>W = I - gamma*J</code> matrix before computing the preconditioner on it. For the ILU example above, this is done for Sundials like:</p><pre><code class="language-julia hljs">using LinearAlgebra
+u0 = prob_ode_brusselator_2d_mtk.u0
+p  = prob_ode_brusselator_2d_mtk.p
+const jaccache = prob_ode_brusselator_2d_mtk.f.jac(u0,p,0.0)
+const W = I - 1.0*jaccache
+
+prectmp = ilu(W, τ = 50.0)
+const preccache = Ref(prectmp)
+
+function psetupilu(p, t, u, du, jok, jcurPtr, gamma)
+  if jok
+    prob_ode_brusselator_2d_mtk.f.jac(jaccache,u,p,t)
+    jcurPtr[] = true
+
+    # W = I - gamma*J
+    @. W = -gamma*jaccache
+    idxs = diagind(W)
+    @. @view(W[idxs]) = @view(W[idxs]) + 1
+
+    # Build preconditioner on W
+    preccache[] = ilu(W, τ = 5.0)
+  end
+end</code></pre><p>Then the preconditioner action is to simply use the <code>ldiv!</code> of the generated preconditioner:</p><pre><code class="language-julia hljs">function precilu(z,r,p,t,y,fy,gamma,delta,lr)
+  ldiv!(z,preccache[],r)
+end</code></pre><p>We then simply pass these functions to the Sundials solver, with a choice of <code>prec_side=1</code> to indicate that it is a left-preconditioner:</p><pre><code class="language-julia hljs">@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precilu,psetup=psetupilu,prec_side=1),save_everystep=false);</code></pre><p>And similarly for algebraic multigrid:</p><pre><code class="language-julia hljs">prectmp2 = aspreconditioner(ruge_stuben(W, presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1)))))
+const preccache2 = Ref(prectmp2)
+function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
+  if jok
+    prob_ode_brusselator_2d_mtk.f.jac(jaccache,u,p,t)
+    jcurPtr[] = true
+
+    # W = I - gamma*J
+    @. W = -gamma*jaccache
+    idxs = diagind(W)
+    @. @view(W[idxs]) = @view(W[idxs]) + 1
+
+    # Build preconditioner on W
+    preccache2[] = aspreconditioner(ruge_stuben(W, presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1))), postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,1)))))
+  end
+end
+
+function precamg(z,r,p,t,y,fy,gamma,delta,lr)
+  ldiv!(z,preccache2[],r)
+end
+
+@btime solve(prob_ode_brusselator_2d_sparse,CVODE_BDF(linear_solver=:GMRES,prec=precamg,psetup=psetupamg,prec_side=1),save_everystep=false);</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../faster_ode_example/">« Code Optimization for Differential Equations</a><a class="docs-footer-nextpage" href="../sde_example/">Stochastic Differential Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Sunday 29 January 2023 12:06">Sunday 29 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
