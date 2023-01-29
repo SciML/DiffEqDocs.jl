@@ -1,0 +1,6 @@
+steps:
+  - label: ":pipeline: Launch Documentation Builds"
+    command: buildkite-agent pipeline upload .buildkite/documentation.yml
+    agents:
+      queue: "juliaecosystem"
+      sandbox_capable: true
