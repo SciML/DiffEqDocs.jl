@@ -347,7 +347,7 @@ should always be positive, with an event occurring at 0.
 We thus want to check if the ball's height ever hits zero:
 
 ```@example callback4
-function condition(u,t,integrator) # Event when event_f(u,t) == 0
+function condition(u,t,integrator) # Event when condition(u,t,integrator) == 0
   u[1]
 end
 ```
@@ -668,7 +668,7 @@ Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
 ```@example callback5
-function condition(u,t,integrator) # Event when event_f(u,t) == 0
+function condition(u,t,integrator) # Event when condition(u,t,integrator) == 0
   1-maximum(u)
 end
 ```
@@ -756,7 +756,7 @@ end
 where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `u[3]` denotes `x`-coordinate and `u[4]` denotes velocity in `x`-direction. We will make a `VectorContinuousCallback` of length 2 - one for `x` axis collision, one for walls parallel to `y` axis.
 
 ```@example callback6
-function condition(out,u,t,integrator) # Event when event_f(u,t) == 0
+function condition(out,u,t,integrator) # Event when condition(out,u,t,integrator) == 0
   out[1] = u[1]
   out[2] = (u[3] - 10.0)u[3]
 end
