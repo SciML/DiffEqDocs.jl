@@ -174,6 +174,9 @@ problems.
 - `Feagin10` - Feagin's 10th-order Runge-Kutta method.
 - `Feagin12` - Feagin's 12th-order Runge-Kutta method.
 - `Feagin14` - Feagin's 14th-order Runge-Kutta method.
+- `MSRK5` - Stepanov 5th-order Runge-Kutta method.
+- `MSRK6` - Stepanov 6th-order Runge-Kutta method.
+- `Stepanov5` - Stepanov adaptive 5th-order Runge-Kutta method.
 
 Example usage:
 
