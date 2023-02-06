@@ -22,8 +22,8 @@ To use the progress bars outside of Juno, use [TerminalLoggers.jl](https://githu
 [Follow these directions to add TerminalLogging to your startup.jl](https://julialogging.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1),
 if you want it enabled by default.
 
-Otherwise, follow the example down below. Note that `global_logger` is initialized 
-before any other Julia call. This step is crucial. Otherwise, no logging will 
+Otherwise, follow the example down below. Note that `global_logger` is initialized
+before any other Julia call. This step is crucial. Otherwise, no logging will
 appear in the terminal.
 
 ```julia
@@ -33,12 +33,10 @@ global_logger(TerminalLogger())
 
 using OrdinaryDiffEq
 
-solve(
-    ODEProblem((u, p, t) -> (sleep(0.01); -u), 1.0, nothing),
-    Euler();
-    dt = 0.5,
-    tspan = (0.0, 1000.0),
-    progress = true,
-    progress_steps = 1,
-)
+solve(ODEProblem((u, p, t) -> (sleep(0.01); -u), 1.0, nothing),
+      Euler();
+      dt = 0.5,
+      tspan = (0.0, 1000.0),
+      progress = true,
+      progress_steps = 1)
 ```

@@ -25,26 +25,26 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 ### OrdinaryDiffEq.jl
 
-- `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
-  of splits.
-- `IMEXEuler` : 1st order explicit Euler mixed with implicit Euler. Fixed time
-  step only.
-- `CNAB2`: Crank-Nicolson Adams Bashforth Order 2. Fixed time step only.
-- `CNLF`: Crank-Nicolson Leapfrog of Order 2. Fixed time step only.
-- `SBDF2` : 2nd order IMEX BDF method. Fixed time step only.
-- `SBDF3` : 3rd order IMEX BDF method. Fixed time step only. In development.
-- `SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
-- `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
-- `KenCarp4`: An A-L stable stiffly-accurate 4th order ESDIRK method.
-- `KenCarp47` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
-- `KenCarp5`: An A-L stable stiffly-accurate 5th order ESDIRK method.
-- `KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
+  - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
+    of splits.
+  - `IMEXEuler` : 1st order explicit Euler mixed with implicit Euler. Fixed time
+    step only.
+  - `CNAB2`: Crank-Nicolson Adams Bashforth Order 2. Fixed time step only.
+  - `CNLF`: Crank-Nicolson Leapfrog of Order 2. Fixed time step only.
+  - `SBDF2` : 2nd order IMEX BDF method. Fixed time step only.
+  - `SBDF3` : 3rd order IMEX BDF method. Fixed time step only. In development.
+  - `SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
+  - `KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
+  - `KenCarp4`: An A-L stable stiffly-accurate 4th order ESDIRK method.
+  - `KenCarp47` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
+  - `KenCarp5`: An A-L stable stiffly-accurate 5th order ESDIRK method.
+  - `KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
 
 ### Sundials.jl
 
-- `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
-  of available options, please see
-  [its ODE solver page](https://diffeq.sciml.ai/dev/solvers/ode_solve/#ode_solve_sundials).
+  - `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
+    of available options, please see
+    [its ODE solver page](https://diffeq.sciml.ai/dev/solvers/ode_solve/#ode_solve_sundials).
 
 ## Semilinear ODE
 
@@ -62,14 +62,14 @@ The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
 
-- `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
-- `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
-- `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
-- `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
-- `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
-- `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
-- `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
-  timestepping only.
+  - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
+  - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+  - `ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
+  - `ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
+  - `ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
+  - `ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
+  - `HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
+    timestepping only.
 
 Note that the generic algorithms `GenericIIF1` and `GenericIIF2` allow for a choice of `nlsolve`.
 
@@ -83,7 +83,7 @@ can also manually set the size of the Krylov subspace by setting the `m` paramet
 defaults to 30. For example
 
 ```julia
-LawsonEuler(krylov=true, m=50)
+LawsonEuler(krylov = true, m = 50)
 ```
 
 constructs a Lawson-Euler method, which uses a size-50 Krylov subspace. Note that `m`

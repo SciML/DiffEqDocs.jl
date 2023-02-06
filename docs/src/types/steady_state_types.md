@@ -1,7 +1,7 @@
 # Steady State Problems
 
 !!! note
-
+    
     For a more complete documentation on nonlinear solvers for steady state problems,
     see [NonlinearSolve.jl](https://docs.sciml.ai/NonlinearSolve/stable/)
 

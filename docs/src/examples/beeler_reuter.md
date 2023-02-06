@@ -73,15 +73,15 @@ mutable struct BeelerReuterCpu
         self.t = 0.0
         self.diff_coef = diff_coef
 
-        self.C = fill(0.0001f0, (ny,nx))
-        self.M = fill(0.01f0, (ny,nx))
-        self.H = fill(0.988f0, (ny,nx))
-        self.J = fill(0.975f0, (ny,nx))
-        self.D = fill(0.003f0, (ny,nx))
-        self.F = fill(0.994f0, (ny,nx))
-        self.XI = fill(0.0001f0, (ny,nx))
+        self.C = fill(0.0001f0, (ny, nx))
+        self.M = fill(0.01f0, (ny, nx))
+        self.H = fill(0.988f0, (ny, nx))
+        self.J = fill(0.975f0, (ny, nx))
+        self.D = fill(0.003f0, (ny, nx))
+        self.F = fill(0.994f0, (ny, nx))
+        self.XI = fill(0.0001f0, (ny, nx))
 
-        self.Δu = zeros(ny,nx)
+        self.Δu = zeros(ny, nx)
 
         return self
     end
@@ -98,29 +98,30 @@ function laplacian(Δu, u)
     n1, n2 = size(u)
 
     # internal nodes
-    for j = 2:n2-1
-        for i = 2:n1-1
-            @inbounds  Δu[i,j] = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j]
+    for j in 2:(n2 - 1)
+        for i in 2:(n1 - 1)
+            @inbounds Δu[i, j] = u[i + 1, j] + u[i - 1, j] + u[i, j + 1] + u[i, j - 1] -
+                                 4 * u[i, j]
         end
     end
 
     # left/right edges
-    for i = 2:n1-1
-        @inbounds Δu[i,1] = u[i+1,1] + u[i-1,1] + 2*u[i,2] - 4*u[i,1]
-        @inbounds Δu[i,n2] = u[i+1,n2] + u[i-1,n2] + 2*u[i,n2-1] - 4*u[i,n2]
+    for i in 2:(n1 - 1)
+        @inbounds Δu[i, 1] = u[i + 1, 1] + u[i - 1, 1] + 2 * u[i, 2] - 4 * u[i, 1]
+        @inbounds Δu[i, n2] = u[i + 1, n2] + u[i - 1, n2] + 2 * u[i, n2 - 1] - 4 * u[i, n2]
     end
 
     # top/bottom edges
-    for j = 2:n2-1
-        @inbounds Δu[1,j] = u[1,j+1] + u[1,j-1] + 2*u[2,j] - 4*u[1,j]
-        @inbounds Δu[n1,j] = u[n1,j+1] + u[n1,j-1] + 2*u[n1-1,j] - 4*u[n1,j]
+    for j in 2:(n2 - 1)
+        @inbounds Δu[1, j] = u[1, j + 1] + u[1, j - 1] + 2 * u[2, j] - 4 * u[1, j]
+        @inbounds Δu[n1, j] = u[n1, j + 1] + u[n1, j - 1] + 2 * u[n1 - 1, j] - 4 * u[n1, j]
     end
 
     # corners
-    @inbounds Δu[1,1] = 2*(u[2,1] + u[1,2]) - 4*u[1,1]
-    @inbounds Δu[n1,1] = 2*(u[n1-1,1] + u[n1,2]) - 4*u[n1,1]
-    @inbounds Δu[1,n2] = 2*(u[2,n2] + u[1,n2-1]) - 4*u[1,n2]
-    @inbounds Δu[n1,n2] = 2*(u[n1-1,n2] + u[n1,n2-1]) - 4*u[n1,n2]
+    @inbounds Δu[1, 1] = 2 * (u[2, 1] + u[1, 2]) - 4 * u[1, 1]
+    @inbounds Δu[n1, 1] = 2 * (u[n1 - 1, 1] + u[n1, 2]) - 4 * u[n1, 1]
+    @inbounds Δu[1, n2] = 2 * (u[2, n2] + u[1, n2 - 1]) - 4 * u[1, n2]
+    @inbounds Δu[n1, n2] = 2 * (u[n1 - 1, n2] + u[n1, n2 - 1]) - 4 * u[n1, n2]
 end
 ```
 
@@ -156,9 +157,9 @@ $$g(t + \Delta{t}) = g(t) + \Delta{t}\frac{dg}{dt}.$$
 
 ```julia
 @inline function rush_larsen(g, α, β, Δt)
-    inf = α/(α+β)
-    τ = 1f0 / (α+β)
-    return clamp(g + (g - inf) * expm1(-Δt/τ), 0f0, 1f0)
+    inf = α / (α + β)
+    τ = 1.0f0 / (α + β)
+    return clamp(g + (g - inf) * expm1(-Δt / τ), 0.0f0, 1.0f0)
 end
 ```
 
@@ -167,38 +168,38 @@ The gating variables are updated as below. The details of how to calculate $\alp
 ```julia
 function update_M_cpu(g, v, Δt)
     # the condition is needed here to prevent NaN when v == 47.0
-    α = isapprox(v, 47.0f0) ? 10.0f0 : -(v+47.0f0) / (exp(-0.1f0*(v+47.0f0)) - 1.0f0)
-    β = (40.0f0 * exp(-0.056f0*(v+72.0f0)))
+    α = isapprox(v, 47.0f0) ? 10.0f0 : -(v + 47.0f0) / (exp(-0.1f0 * (v + 47.0f0)) - 1.0f0)
+    β = (40.0f0 * exp(-0.056f0 * (v + 72.0f0)))
     return rush_larsen(g, α, β, Δt)
 end
 
 function update_H_cpu(g, v, Δt)
-    α = 0.126f0 * exp(-0.25f0*(v+77.0f0))
-    β = 1.7f0 / (exp(-0.082f0*(v+22.5f0)) + 1.0f0)
-   return rush_larsen(g, α, β, Δt)
+    α = 0.126f0 * exp(-0.25f0 * (v + 77.0f0))
+    β = 1.7f0 / (exp(-0.082f0 * (v + 22.5f0)) + 1.0f0)
+    return rush_larsen(g, α, β, Δt)
 end
 
 function update_J_cpu(g, v, Δt)
-    α = (0.55f0 * exp(-0.25f0*(v+78.0f0))) / (exp(-0.2f0*(v+78.0f0)) + 1.0f0)
-    β = 0.3f0 / (exp(-0.1f0*(v+32.0f0)) + 1.0f0)
+    α = (0.55f0 * exp(-0.25f0 * (v + 78.0f0))) / (exp(-0.2f0 * (v + 78.0f0)) + 1.0f0)
+    β = 0.3f0 / (exp(-0.1f0 * (v + 32.0f0)) + 1.0f0)
     return rush_larsen(g, α, β, Δt)
 end
 
 function update_D_cpu(g, v, Δt)
-    α = γ * (0.095f0 * exp(-0.01f0*(v-5.0f0))) / (exp(-0.072f0*(v-5.0f0)) + 1.0f0)
-    β = γ * (0.07f0 * exp(-0.017f0*(v+44.0f0))) / (exp(0.05f0*(v+44.0f0)) + 1.0f0)
+    α = γ * (0.095f0 * exp(-0.01f0 * (v - 5.0f0))) / (exp(-0.072f0 * (v - 5.0f0)) + 1.0f0)
+    β = γ * (0.07f0 * exp(-0.017f0 * (v + 44.0f0))) / (exp(0.05f0 * (v + 44.0f0)) + 1.0f0)
     return rush_larsen(g, α, β, Δt)
 end
 
 function update_F_cpu(g, v, Δt)
-    α = γ * (0.012f0 * exp(-0.008f0*(v+28.0f0))) / (exp(0.15f0*(v+28.0f0)) + 1.0f0)
-    β = γ * (0.0065f0 * exp(-0.02f0*(v+30.0f0))) / (exp(-0.2f0*(v+30.0f0)) + 1.0f0)
+    α = γ * (0.012f0 * exp(-0.008f0 * (v + 28.0f0))) / (exp(0.15f0 * (v + 28.0f0)) + 1.0f0)
+    β = γ * (0.0065f0 * exp(-0.02f0 * (v + 30.0f0))) / (exp(-0.2f0 * (v + 30.0f0)) + 1.0f0)
     return rush_larsen(g, α, β, Δt)
 end
 
 function update_XI_cpu(g, v, Δt)
-    α = (0.0005f0 * exp(0.083f0*(v+50.0f0))) / (exp(0.057f0*(v+50.0f0)) + 1.0f0)
-    β = (0.0013f0 * exp(-0.06f0*(v+20.0f0))) / (exp(-0.04f0*(v+20.0f0)) + 1.0f0)
+    α = (0.0005f0 * exp(0.083f0 * (v + 50.0f0))) / (exp(0.057f0 * (v + 50.0f0)) + 1.0f0)
+    β = (0.0013f0 * exp(-0.06f0 * (v + 20.0f0))) / (exp(-0.04f0 * (v + 20.0f0)) + 1.0f0)
     return rush_larsen(g, α, β, Δt)
 end
 ```
@@ -211,8 +212,8 @@ function update_C_cpu(g, d, f, v, Δt)
     kCa = C_s * g_s * d * f
     iCa = kCa * (v - ECa)
     inf = 1.0f-7 * (0.07f0 - g)
-    τ = 1f0 / 0.07f0
-    return g + (g - inf) * expm1(-Δt/τ)
+    τ = 1.0f0 / 0.07f0
+    return g + (g - inf) * expm1(-Δt / τ)
 end
 ```
 
@@ -240,18 +241,18 @@ Here, every time step is called three times. We distinguish between two types of
 function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
     let Δt = Float32(Δt)
         n1, n2 = size(u)
-        for j = 1:n2
-            for i = 1:n1
-                v = Float32(u[i,j])
+        for j in 1:n2
+            for i in 1:n1
+                v = Float32(u[i, j])
 
-                XI[i,j] = update_XI_cpu(XI[i,j], v, Δt)
-                M[i,j] = update_M_cpu(M[i,j], v, Δt)
-                H[i,j] = update_H_cpu(H[i,j], v, Δt)
-                J[i,j] = update_J_cpu(J[i,j], v, Δt)
-                D[i,j] = update_D_cpu(D[i,j], v, Δt)
-                F[i,j] = update_F_cpu(F[i,j], v, Δt)
+                XI[i, j] = update_XI_cpu(XI[i, j], v, Δt)
+                M[i, j] = update_M_cpu(M[i, j], v, Δt)
+                H[i, j] = update_H_cpu(H[i, j], v, Δt)
+                J[i, j] = update_J_cpu(J[i, j], v, Δt)
+                D[i, j] = update_D_cpu(D[i, j], v, Δt)
+                F[i, j] = update_F_cpu(F[i, j], v, Δt)
 
-                C[i,j] = update_C_cpu(C[i,j], D[i,j], F[i,j], v, Δt)
+                C[i, j] = update_C_cpu(C[i, j], D[i, j], F[i, j], v, Δt)
             end
         end
     end
@@ -263,19 +264,20 @@ On the other hand, du is updated at each time step, since it is independent of $
 ```julia
 # iK1 is the inward-rectifying potassium current
 function calc_iK1(v)
-    ea = exp(0.04f0*(v+85f0))
-    eb = exp(0.08f0*(v+53f0))
-    ec = exp(0.04f0*(v+53f0))
-    ed = exp(-0.04f0*(v+23f0))
-    return 0.35f0 * (4f0*(ea-1f0)/(eb + ec)
-            + 0.2f0 * (isapprox(v, -23f0) ? 25f0 : (v+23f0) / (1f0-ed)))
+    ea = exp(0.04f0 * (v + 85.0f0))
+    eb = exp(0.08f0 * (v + 53.0f0))
+    ec = exp(0.04f0 * (v + 53.0f0))
+    ed = exp(-0.04f0 * (v + 23.0f0))
+    return 0.35f0 * (4.0f0 * (ea - 1.0f0) / (eb + ec)
+            +
+            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed)))
 end
 
 # ix1 is the time-independent background potassium current
 function calc_ix1(v, xi)
-    ea = exp(0.04f0*(v+77f0))
-    eb = exp(0.04f0*(v+35f0))
-    return xi * 0.8f0 * (ea-1f0) / eb
+    ea = exp(0.04f0 * (v + 77.0f0))
+    eb = exp(0.04f0 * (v + 35.0f0))
+    return xi * 0.8f0 * (ea - 1.0f0) / eb
 end
 
 # iNa is the sodium current (similar to the classic Hodgkin-Huxley model)
@@ -292,21 +294,21 @@ end
 function update_du_cpu(du, u, XI, M, H, J, D, F, C)
     n1, n2 = size(u)
 
-    for j = 1:n2
-        for i = 1:n1
-            v = Float32(u[i,j])
+    for j in 1:n2
+        for i in 1:n1
+            v = Float32(u[i, j])
 
             # calculating individual currents
             iK1 = calc_iK1(v)
-            ix1 = calc_ix1(v, XI[i,j])
-            iNa = calc_iNa(v, M[i,j], H[i,j], J[i,j])
-            iCa = calc_iCa(v, D[i,j], F[i,j], C[i,j])
+            ix1 = calc_ix1(v, XI[i, j])
+            iNa = calc_iNa(v, M[i, j], H[i, j], J[i, j])
+            iCa = calc_iCa(v, D[i, j], F[i, j], C[i, j])
 
             # total current
             I_sum = iK1 + ix1 + iNa + iCa
 
             # the reaction part of the reaction-diffusion equation
-            du[i,j] = -I_sum / C_m
+            du[i, j] = -I_sum / C_m
         end
     end
 end
@@ -340,7 +342,7 @@ Time to test! We need to define the starting transmembrane potential with the he
 ```julia
 const N = 192;
 u0 = fill(v0, (N, N));
-u0[90:102,90:102] .= v1;   # a small square in the middle of the domain
+u0[90:102, 90:102] .= v1;   # a small square in the middle of the domain
 ```
 
 The initial condition is a small square in the middle of the domain.
@@ -362,7 +364,7 @@ prob = ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
 
 ```julia
-@time sol = solve(prob, CVODE_BDF(linear_solver=:GMRES), saveat=100.0);
+@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
@@ -381,13 +383,13 @@ Let's start by looking at the hardware of a typical high-end GPU, GTX 1080. It h
 
 A typical CUDA application has the following flow:
 
-1. Define and initialize the problem domain tensors (multidimensional arrays) in CPU memory.
-2. Allocate corresponding tensors in the GPU global memory.
-3. Transfer the input tensors from CPU to the corresponding GPU tensors.
-4. Invoke CUDA kernels (i.e., the GPU functions callable from CPU) that operate on the GPU tensors.
-5. Transfer the result tensors from GPU back to CPU.
-6. Process tensors on CPU.
-7. Repeat steps 3-6 as needed.
+ 1. Define and initialize the problem domain tensors (multidimensional arrays) in CPU memory.
+ 2. Allocate corresponding tensors in the GPU global memory.
+ 3. Transfer the input tensors from CPU to the corresponding GPU tensors.
+ 4. Invoke CUDA kernels (i.e., the GPU functions callable from CPU) that operate on the GPU tensors.
+ 5. Transfer the result tensors from GPU back to CPU.
+ 6. Process tensors on CPU.
+ 7. Repeat steps 3-6 as needed.
 
 Some libraries, such as [ArrayFire](https://github.com/arrayfire/arrayfire), hide the complexities of steps 2-5 behind a higher level of abstraction. However, here we take a lower level route. By using [CUDA](https://github.com/JuliaGPU/CUDA.jl), we achieve a finer-grained control and higher performance. In return, we need to implement each step manually.
 
@@ -427,18 +429,18 @@ mutable struct BeelerReuterGpu <: Function
         self.t = 0.0
         self.diff_coef = diff_coef
 
-        self.d_C = CuArray(fill(0.0001f0, (ny,nx)))
-        self.d_M = CuArray(fill(0.01f0, (ny,nx)))
-        self.d_H = CuArray(fill(0.988f0, (ny,nx)))
-        self.d_J = CuArray(fill(0.975f0, (ny,nx)))
-        self.d_D = CuArray(fill(0.003f0, (ny,nx)))
-        self.d_F = CuArray(fill(0.994f0, (ny,nx)))
-        self.d_XI = CuArray(fill(0.0001f0, (ny,nx)))
+        self.d_C = CuArray(fill(0.0001f0, (ny, nx)))
+        self.d_M = CuArray(fill(0.01f0, (ny, nx)))
+        self.d_H = CuArray(fill(0.988f0, (ny, nx)))
+        self.d_J = CuArray(fill(0.975f0, (ny, nx)))
+        self.d_D = CuArray(fill(0.003f0, (ny, nx)))
+        self.d_F = CuArray(fill(0.994f0, (ny, nx)))
+        self.d_XI = CuArray(fill(0.0001f0, (ny, nx)))
 
         self.d_u = CuArray(u0)
-        self.d_du = CuArray(zeros(ny,nx))
+        self.d_du = CuArray(zeros(ny, nx))
 
-        self.Δv = zeros(ny,nx)
+        self.Δv = zeros(ny, nx)
 
         return self
     end
@@ -449,45 +451,53 @@ The Laplacian function remains unchanged. The main change to the explicit gating
 
 ```julia
 function rush_larsen_gpu(g, α, β, Δt)
-    inf = α/(α+β)
-    τ = 1.0/(α+β)
-    return clamp(g + (g - inf) * CUDAnative.expm1(-Δt/τ), 0f0, 1f0)
+    inf = α / (α + β)
+    τ = 1.0 / (α + β)
+    return clamp(g + (g - inf) * CUDAnative.expm1(-Δt / τ), 0.0f0, 1.0f0)
 end
 
 function update_M_gpu(g, v, Δt)
     # the condition is needed here to prevent NaN when v == 47.0
-    α = isapprox(v, 47.0f0) ? 10.0f0 : -(v+47.0f0) / (CUDAnative.exp(-0.1f0*(v+47.0f0)) - 1.0f0)
-    β = (40.0f0 * CUDAnative.exp(-0.056f0*(v+72.0f0)))
+    α = isapprox(v, 47.0f0) ? 10.0f0 :
+        -(v + 47.0f0) / (CUDAnative.exp(-0.1f0 * (v + 47.0f0)) - 1.0f0)
+    β = (40.0f0 * CUDAnative.exp(-0.056f0 * (v + 72.0f0)))
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
 function update_H_gpu(g, v, Δt)
-    α = 0.126f0 * CUDAnative.exp(-0.25f0*(v+77.0f0))
-    β = 1.7f0 / (CUDAnative.exp(-0.082f0*(v+22.5f0)) + 1.0f0)
+    α = 0.126f0 * CUDAnative.exp(-0.25f0 * (v + 77.0f0))
+    β = 1.7f0 / (CUDAnative.exp(-0.082f0 * (v + 22.5f0)) + 1.0f0)
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
 function update_J_gpu(g, v, Δt)
-    α = (0.55f0 * CUDAnative.exp(-0.25f0*(v+78.0f0))) / (CUDAnative.exp(-0.2f0*(v+78.0f0)) + 1.0f0)
-    β = 0.3f0 / (CUDAnative.exp(-0.1f0*(v+32.0f0)) + 1.0f0)
+    α = (0.55f0 * CUDAnative.exp(-0.25f0 * (v + 78.0f0))) /
+        (CUDAnative.exp(-0.2f0 * (v + 78.0f0)) + 1.0f0)
+    β = 0.3f0 / (CUDAnative.exp(-0.1f0 * (v + 32.0f0)) + 1.0f0)
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
 function update_D_gpu(g, v, Δt)
-    α = γ * (0.095f0 * CUDAnative.exp(-0.01f0*(v-5.0f0))) / (CUDAnative.exp(-0.072f0*(v-5.0f0)) + 1.0f0)
-    β = γ * (0.07f0 * CUDAnative.exp(-0.017f0*(v+44.0f0))) / (CUDAnative.exp(0.05f0*(v+44.0f0)) + 1.0f0)
+    α = γ * (0.095f0 * CUDAnative.exp(-0.01f0 * (v - 5.0f0))) /
+        (CUDAnative.exp(-0.072f0 * (v - 5.0f0)) + 1.0f0)
+    β = γ * (0.07f0 * CUDAnative.exp(-0.017f0 * (v + 44.0f0))) /
+        (CUDAnative.exp(0.05f0 * (v + 44.0f0)) + 1.0f0)
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
 function update_F_gpu(g, v, Δt)
-    α = γ * (0.012f0 * CUDAnative.exp(-0.008f0*(v+28.0f0))) / (CUDAnative.exp(0.15f0*(v+28.0f0)) + 1.0f0)
-    β = γ * (0.0065f0 * CUDAnative.exp(-0.02f0*(v+30.0f0))) / (CUDAnative.exp(-0.2f0*(v+30.0f0)) + 1.0f0)
+    α = γ * (0.012f0 * CUDAnative.exp(-0.008f0 * (v + 28.0f0))) /
+        (CUDAnative.exp(0.15f0 * (v + 28.0f0)) + 1.0f0)
+    β = γ * (0.0065f0 * CUDAnative.exp(-0.02f0 * (v + 30.0f0))) /
+        (CUDAnative.exp(-0.2f0 * (v + 30.0f0)) + 1.0f0)
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
 function update_XI_gpu(g, v, Δt)
-    α = (0.0005f0 * CUDAnative.exp(0.083f0*(v+50.0f0))) / (CUDAnative.exp(0.057f0*(v+50.0f0)) + 1.0f0)
-    β = (0.0013f0 * CUDAnative.exp(-0.06f0*(v+20.0f0))) / (CUDAnative.exp(-0.04f0*(v+20.0f0)) + 1.0f0)
+    α = (0.0005f0 * CUDAnative.exp(0.083f0 * (v + 50.0f0))) /
+        (CUDAnative.exp(0.057f0 * (v + 50.0f0)) + 1.0f0)
+    β = (0.0013f0 * CUDAnative.exp(-0.06f0 * (v + 20.0f0))) /
+        (CUDAnative.exp(-0.04f0 * (v + 20.0f0)) + 1.0f0)
     return rush_larsen_gpu(g, α, β, Δt)
 end
 
@@ -496,8 +506,8 @@ function update_C_gpu(c, d, f, v, Δt)
     kCa = C_s * g_s * d * f
     iCa = kCa * (v - ECa)
     inf = 1.0f-7 * (0.07f0 - c)
-    τ = 1f0 / 0.07f0
-    return c + (c - inf) * CUDAnative.expm1(-Δt/τ)
+    τ = 1.0f0 / 0.07f0
+    return c + (c - inf) * CUDAnative.expm1(-Δt / τ)
 end
 ```
 
@@ -506,19 +516,20 @@ Similarly, we modify the functions to calculate the individual currents by addin
 ```julia
 # iK1 is the inward-rectifying potassium current
 function calc_iK1(v)
-    ea = CUDAnative.exp(0.04f0*(v+85f0))
-    eb = CUDAnative.exp(0.08f0*(v+53f0))
-    ec = CUDAnative.exp(0.04f0*(v+53f0))
-    ed = CUDAnative.exp(-0.04f0*(v+23f0))
-    return 0.35f0 * (4f0*(ea-1f0)/(eb + ec)
-            + 0.2f0 * (isapprox(v, -23f0) ? 25f0 : (v+23f0) / (1f0-ed)))
+    ea = CUDAnative.exp(0.04f0 * (v + 85.0f0))
+    eb = CUDAnative.exp(0.08f0 * (v + 53.0f0))
+    ec = CUDAnative.exp(0.04f0 * (v + 53.0f0))
+    ed = CUDAnative.exp(-0.04f0 * (v + 23.0f0))
+    return 0.35f0 * (4.0f0 * (ea - 1.0f0) / (eb + ec)
+            +
+            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed)))
 end
 
 # ix1 is the time-independent background potassium current
 function calc_ix1(v, xi)
-    ea = CUDAnative.exp(0.04f0*(v+77f0))
-    eb = CUDAnative.exp(0.04f0*(v+35f0))
-    return xi * 0.8f0 * (ea-1f0) / eb
+    ea = CUDAnative.exp(0.04f0 * (v + 77.0f0))
+    eb = CUDAnative.exp(0.04f0 * (v + 35.0f0))
+    return xi * 0.8f0 * (ea - 1.0f0) / eb
 end
 
 # iNa is the sodium current (similar to the classic Hodgkin-Huxley model)
@@ -565,41 +576,41 @@ In the GPU version of the solver, each thread works on a single element of the m
 
 ```julia
 function update_gates_gpu(u, XI, M, H, J, D, F, C, Δt)
-    i = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
-    j = (blockIdx().y-UInt32(1)) * blockDim().y + threadIdx().y
+    i = (blockIdx().x - UInt32(1)) * blockDim().x + threadIdx().x
+    j = (blockIdx().y - UInt32(1)) * blockDim().y + threadIdx().y
 
-    v = Float32(u[i,j])
+    v = Float32(u[i, j])
 
     let Δt = Float32(Δt)
-        XI[i,j] = update_XI_gpu(XI[i,j], v, Δt)
-        M[i,j] = update_M_gpu(M[i,j], v, Δt)
-        H[i,j] = update_H_gpu(H[i,j], v, Δt)
-        J[i,j] = update_J_gpu(J[i,j], v, Δt)
-        D[i,j] = update_D_gpu(D[i,j], v, Δt)
-        F[i,j] = update_F_gpu(F[i,j], v, Δt)
+        XI[i, j] = update_XI_gpu(XI[i, j], v, Δt)
+        M[i, j] = update_M_gpu(M[i, j], v, Δt)
+        H[i, j] = update_H_gpu(H[i, j], v, Δt)
+        J[i, j] = update_J_gpu(J[i, j], v, Δt)
+        D[i, j] = update_D_gpu(D[i, j], v, Δt)
+        F[i, j] = update_F_gpu(F[i, j], v, Δt)
 
-        C[i,j] = update_C_gpu(C[i,j], D[i,j], F[i,j], v, Δt)
+        C[i, j] = update_C_gpu(C[i, j], D[i, j], F[i, j], v, Δt)
     end
     nothing
 end
 
 function update_du_gpu(du, u, XI, M, H, J, D, F, C)
-    i = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
-    j = (blockIdx().y-UInt32(1)) * blockDim().y + threadIdx().y
+    i = (blockIdx().x - UInt32(1)) * blockDim().x + threadIdx().x
+    j = (blockIdx().y - UInt32(1)) * blockDim().y + threadIdx().y
 
-    v = Float32(u[i,j])
+    v = Float32(u[i, j])
 
     # calculating individual currents
     iK1 = calc_iK1(v)
-    ix1 = calc_ix1(v, XI[i,j])
-    iNa = calc_iNa(v, M[i,j], H[i,j], J[i,j])
-    iCa = calc_iCa(v, D[i,j], F[i,j], C[i,j])
+    ix1 = calc_ix1(v, XI[i, j])
+    iNa = calc_iNa(v, M[i, j], H[i, j], J[i, j])
+    iCa = calc_iCa(v, D[i, j], F[i, j], C[i, j])
 
     # total current
     I_sum = iK1 + ix1 + iNa + iCa
 
     # the reaction part of the reaction-diffusion equation
-    du[i,j] = -I_sum / C_m
+    du[i, j] = -I_sum / C_m
     nothing
 end
 ```
@@ -616,16 +627,18 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     ny, nx = size(u)
 
     if Δt != 0 || t == 0
-        @cuda blocks=(ny÷L,nx÷L) threads=(L,L) update_gates_gpu(
-            f.d_u, f.d_XI, f.d_M, f.d_H, f.d_J, f.d_D, f.d_F, f.d_C, Δt)
+        @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
+                                                                      f.d_H, f.d_J, f.d_D,
+                                                                      f.d_F, f.d_C, Δt)
         f.t = t
     end
 
     laplacian(f.Δv, u)
 
     # calculate the reaction portion
-    @cuda blocks=(ny÷L,nx÷L) threads=(L,L) update_du_gpu(
-        f.d_du, f.d_u, f.d_XI, f.d_M, f.d_H, f.d_J, f.d_D, f.d_F, f.d_C)
+    @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_du_gpu(f.d_du, f.d_u, f.d_XI, f.d_M,
+                                                               f.d_H, f.d_J, f.d_D, f.d_F,
+                                                               f.d_C)
 
     copyto!(du, f.d_du)
 
@@ -641,7 +654,7 @@ using DifferentialEquations, Sundials
 
 deriv_gpu = BeelerReuterGpu(u0, 1.0);
 prob = ODEProblem(deriv_gpu, u0, (0.0, 50.0));
-@time sol = solve(prob, CVODE_BDF(linear_solver=:GMRES), saveat=100.0);
+@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
@@ -654,5 +667,5 @@ We achieve around a 6x speedup with running the explicit portion of our IMEX sol
 
 ```julia, echo = false, skip="notebook"
 using SciMLTutorials
-SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder],WEAVE_ARGS[:file])
+SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder], WEAVE_ARGS[:file])
 ```

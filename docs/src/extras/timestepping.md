@@ -39,9 +39,10 @@ exponentiation based on the order of the algorithm which goes back to a result
 by Cechino for the optimal stepsize to reduce the error. The algorithm is:
 
 ```julia
-qtmp = integrator.EEst^(1/(alg_adaptive_order(integrator.alg)+1))/integrator.opts.gamma
-@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qtmp))
-integrator.dtnew = integrator.dt/q
+qtmp = integrator.EEst^(1 / (alg_adaptive_order(integrator.alg) + 1)) /
+       integrator.opts.gamma
+@fastmath q = max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), qtmp))
+integrator.dtnew = integrator.dt / q
 ```
 
 Thus, `q` is the scaling factor for `dt`, and it must be between `qmin` and `qmax`.
@@ -66,13 +67,15 @@ for explicit solvers, and it's applied by default to the Rosenbrock methods
 as well. The form for the updates is:
 
 ```julia
-EEst,beta1,q11,qold,beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,integrator.qold,integrator.opts.beta2
+EEst, beta1, q11, qold, beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,
+                                integrator.qold, integrator.opts.beta2
 @fastmath q11 = EEst^beta1
-@fastmath q = q11/(qold^beta2)
+@fastmath q = q11 / (qold^beta2)
 integrator.q11 = q11
-@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),q/integrator.opts.gamma))
+@fastmath q = max(inv(integrator.opts.qmax),
+                  min(inv(integrator.opts.qmin), q / integrator.opts.gamma))
 if q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min
-  q = one(q)
+    q = one(q)
 end
 q
 ```
@@ -100,12 +103,14 @@ for algorithms like the (E)SDIRK methods.
 ```julia
 gamma = integrator.opts.gamma
 niters = integrator.cache.newton_iters
-fac = min(gamma,(1+2*integrator.alg.max_newton_iter)*gamma/(niters+2*integrator.alg.max_newton_iter))
-expo = 1/(alg_order(integrator.alg)+1)
-qtmp = (integrator.EEst^expo)/fac
-@fastmath q = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qtmp))
+fac = min(gamma,
+          (1 + 2 * integrator.alg.max_newton_iter) * gamma /
+          (niters + 2 * integrator.alg.max_newton_iter))
+expo = 1 / (alg_order(integrator.alg) + 1)
+qtmp = (integrator.EEst^expo) / fac
+@fastmath q = max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), qtmp))
 if q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min
-  q = one(q)
+    q = one(q)
 end
 integrator.qold = q
 q
@@ -118,25 +123,27 @@ following logic is applied:
 
 ```julia
 if integrator.success_iter > 0
-  expo = 1/(alg_adaptive_order(integrator.alg)+1)
-  qgus=(integrator.dtacc/integrator.dt)*(((integrator.EEst^2)/integrator.erracc)^expo)
-  qgus = max(inv(integrator.opts.qmax),min(inv(integrator.opts.qmin),qgus/integrator.opts.gamma))
-  qacc=max(q,qgus)
+    expo = 1 / (alg_adaptive_order(integrator.alg) + 1)
+    qgus = (integrator.dtacc / integrator.dt) *
+           (((integrator.EEst^2) / integrator.erracc)^expo)
+    qgus = max(inv(integrator.opts.qmax),
+               min(inv(integrator.opts.qmin), qgus / integrator.opts.gamma))
+    qacc = max(q, qgus)
 else
-  qacc = q
+    qacc = q
 end
 integrator.dtacc = integrator.dt
-integrator.erracc = max(1e-2,integrator.EEst)
-integrator.dt/qacc
+integrator.erracc = max(1e-2, integrator.EEst)
+integrator.dt / qacc
 ```
 
 When it rejects, it is the same as the proportional control:
 
 ```julia
 if integrator.success_iter == 0
-  integrator.dt *= 0.1
+    integrator.dt *= 0.1
 else
-  integrator.dt = integrator.dt/integrator.qold
+    integrator.dt = integrator.dt / integrator.qold
 end
 ```
 

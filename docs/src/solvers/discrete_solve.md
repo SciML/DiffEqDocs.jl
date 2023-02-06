@@ -21,11 +21,11 @@ all the extras like callbacks and saving support (but does have an integrator in
 
 ### OrdinaryDiffEq.jl
 
-- `FunctionMap`: A basic function map which implements the full common interface.
+  - `FunctionMap`: A basic function map which implements the full common interface.
 
-OrdinaryDiffEq.jl also contains the `FunctionMap` algorithm which lets you 
-It has a piecewise constant interpolation and allows for all the 
-callback/event handling capabilities (of course, with `rootfind=false`. If a 
+OrdinaryDiffEq.jl also contains the `FunctionMap` algorithm which lets you
+It has a piecewise constant interpolation and allows for all the
+callback/event handling capabilities (of course, with `rootfind=false`. If a
 `ContinuousCallback` is given, it's always assumed `rootfind=false`).
 
 The constructor is:
@@ -41,7 +41,7 @@ Every step is the update
 u_{n+1} = f(t_{n+1},u_n).
 ```
 
-If in addition `scale_by_time` is marked `true` (default is false), 
+If in addition `scale_by_time` is marked `true` (default is false),
 then every step is the update:
 
 ```math
@@ -54,5 +54,5 @@ piecewise constant.
 
 ### SimpleDiffEq.jl
 
-- `SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
-  and has an integrator interface version, but does not support callbacks or saving controls.
+  - `SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
+    and has an integrator interface version, but does not support callbacks or saving controls.

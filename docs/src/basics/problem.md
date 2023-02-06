@@ -19,14 +19,14 @@ constructor allows for manually specifying the in-placeness of the function.
 For example, this can be done at the problem level like:
 
 ```julia
-ODEProblem{true}(f,u0,tspan,p)
+ODEProblem{true}(f, u0, tspan, p)
 ```
 
 which declares that `isinplace=true`. Similarly, this can be done at the
 DEFunction level. For example:
 
 ```julia
-ODEFunction{true}(f,jac=myjac)
+ODEFunction{true}(f, jac = myjac)
 ```
 
 ## Type Specifications
@@ -49,7 +49,7 @@ Note that the initial condition can be written as a function of parameters and
 initial time:
 
 ```julia
-u0(p,t0)
+u0(p, t0)
 ```
 
 and be resolved before going to the solver. Additionally, the initial condition
@@ -69,11 +69,12 @@ which outputs a tuple.
 
 ```@example problem
 using DifferentialEquations
-prob = ODEProblem((u,p,t)->u,(p,t0)->p[1],(p)->(0.0,p[2]),(2.0,1.0))
+prob = ODEProblem((u, p, t) -> u, (p, t0) -> p[1], (p) -> (0.0, p[2]), (2.0, 1.0))
 ```
+
 ```@example problem
 using Distributions
-prob = ODEProblem((u,p,t)->u,(p,t)->Normal(p,1),(0.0,1.0),1.0)
+prob = ODEProblem((u, p, t) -> u, (p, t) -> Normal(p, 1), (0.0, 1.0), 1.0)
 ```
 
 ## Lower Level `__init` and `__solve`
@@ -82,9 +83,9 @@ At the high level, known problematic problems will emit warnings before entering
 the solver to better clarify the error to the user. The following cases are
 checked if the solver is adaptive:
 
-- Integer times warn
-- Dual numbers must be in the initial conditions and timespans
-- Measurements.jl values must be in the initial conditions and timespans
+  - Integer times warn
+  - Dual numbers must be in the initial conditions and timespans
+  - Measurements.jl values must be in the initial conditions and timespans
 
 If there is an exception to these rules, please file an issue. If one wants to
 go around the high level solve interface and its warnings, one can call `__init`
@@ -100,18 +101,17 @@ example, to simulate it for longer timespan.  It can be done by the
 `remake` function:
 
 ```@example problem
-prob1 = ODEProblem((u,p,t) -> u/2, 1.0, (0.0,1.0))
-prob2 = remake(prob1; tspan=(0.0,2.0))
+prob1 = ODEProblem((u, p, t) -> u / 2, 1.0, (0.0, 1.0))
+prob2 = remake(prob1; tspan = (0.0, 2.0))
 ```
 
 A general syntax of `remake` is
 
 ```julia
 modified_problem = remake(original_problem;
-  field_1 = value_1,
-  field_2 = value_2,
-  ...
-)
+                          field_1 = value_1,
+                          field_2 = value_2,
+                          ...)
 ```
 
 where `field_N` and `value_N` are renamed to appropriate field names

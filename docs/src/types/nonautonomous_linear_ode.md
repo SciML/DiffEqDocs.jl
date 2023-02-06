@@ -13,9 +13,9 @@ These algorithms require a Non-autonomous linear ODE of the form:
 u^\prime = A(u,p,t)u
 ```
 
-Where ``A`` is an [AbstractDiffEqOperator](@ref DiffEqOperators) that is 
-multiplied against ``u``. Many algorithms specialize on the form of ``A``, 
-such as ``A`` being a constant or ``A`` being only time-dependent (``A(t)``). 
+Where ``A`` is an [AbstractDiffEqOperator](@ref DiffEqOperators) that is
+multiplied against ``u``. Many algorithms specialize on the form of ``A``,
+such as ``A`` being a constant or ``A`` being only time-dependent (``A(t)``).
 
 ### Construction
 
@@ -24,14 +24,14 @@ is represented by an `AbstractDiffEqOperator` (note: this means that any standar
 ODE solver can also be applied to problems written in this form). As an example:
 
 ```julia
-function update_func(A,u,p,t)
-    A[1,1] = cos(t)
-    A[2,1] = sin(t)
-    A[1,2] = -sin(t)
-    A[2,2] = cos(t)
+function update_func(A, u, p, t)
+    A[1, 1] = cos(t)
+    A[2, 1] = sin(t)
+    A[1, 2] = -sin(t)
+    A[2, 2] = cos(t)
 end
-A = DiffEqArrayOperator(ones(2,2),update_func=update_func)
-prob = ODEProblem(A, ones(2), (10, 50.))
+A = DiffEqArrayOperator(ones(2, 2), update_func = update_func)
+prob = ODEProblem(A, ones(2), (10, 50.0))
 ```
 
 defines a quasi-linear ODE ``u^\prime = A(t)u`` where the components of ``A`` are
@@ -39,11 +39,11 @@ the given functions. Using that formulation, we can see that the general form is
 ``u^\prime = A(u,p,t)u``, for example:
 
 ```julia
-function update_func(A,u,p,t)
-    A[1,1] = 0
-    A[2,1] = 1
-    A[1,2] = -2*(1 - cos(u[2]) - u[2]*sin(u[2]))
-    A[2,2] = 0
+function update_func(A, u, p, t)
+    A[1, 1] = 0
+    A[2, 1] = 1
+    A[1, 2] = -2 * (1 - cos(u[2]) - u[2] * sin(u[2]))
+    A[2, 2] = 0
 end
 ```
 

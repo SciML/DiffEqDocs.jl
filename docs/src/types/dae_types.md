@@ -20,7 +20,7 @@ To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 ```julia
 using DiffEqProblemLibrary.DAEProblemLibrary, Sundials
 prob = DAEProblemLibrary.prob_dae_resrob
-sol = solve(prob,IDA())
+sol = solve(prob, IDA())
 ```
 
 ```@meta

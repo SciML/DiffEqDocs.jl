@@ -12,9 +12,9 @@ For guidelines on debugging ODE solve issues, see
 First of all, don't panic. You may have experienced one of the following warnings:
 
 > dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
->
+> 
 > NaN dt detected. Likely a NaN value in the state, parameters, or derivative value caused this outcome.
->
+> 
 > Instability detected. Aborting
 
 These are all pointing to a similar behavior: for some reason or another, the
@@ -65,14 +65,14 @@ Do you think it's an issue with the Julia solvers? Well fortunately,
 DifferentialEquations.jl offers direct unmodified wrappers to almost all previously
 built solvers, so if you think it's a Julia issue, try running your ODE through:
 
-- Sundials.jl, a wrapper for the C++ SUNDIALS library though `CVODE_Adams`,
-  `CVODE_BDF`, `IDA`, and `ARKODE`.
-- ODEInterfaceDiffEq.jl, a wrapper for the classic Hairer Fortran codes like
-  `dorpi5`, `dop853`, `radau`, `rodas`, etc.
-- LSODA.jl, a wrapper for the classic `lsoda` algorithm.
-- MATLABDiffEq.jl, a wrapper for the MATLAB ODE solvers `ode45`, `ode15s`, etc.
-- SciPyDiffEq.jl, a wrapper for SciPy's `odeint` (LSODA) and other methods (LSODE, etc.).
-- deSolveDiffEq.jl, a wrapper for the commonly used R library.
+  - Sundials.jl, a wrapper for the C++ SUNDIALS library though `CVODE_Adams`,
+    `CVODE_BDF`, `IDA`, and `ARKODE`.
+  - ODEInterfaceDiffEq.jl, a wrapper for the classic Hairer Fortran codes like
+    `dorpi5`, `dop853`, `radau`, `rodas`, etc.
+  - LSODA.jl, a wrapper for the classic `lsoda` algorithm.
+  - MATLABDiffEq.jl, a wrapper for the MATLAB ODE solvers `ode45`, `ode15s`, etc.
+  - SciPyDiffEq.jl, a wrapper for SciPy's `odeint` (LSODA) and other methods (LSODE, etc.).
+  - deSolveDiffEq.jl, a wrapper for the commonly used R library.
 
 And many more. Testing this is as simple as changing `solve(prob,Tsit5())` to
 `solve(prob,lsoda())`, so please give this a try. If you translated your code
@@ -94,7 +94,7 @@ it. If you did find a solver issue, please open an issue on the GitHub repositor
 
 If you see:
 
->Interrupted. Larger maxiters is needed.
+> Interrupted. Larger maxiters is needed.
 
 Note that it could quite possibly arise just from having a very long timespan.
 If you check `sol.t` from the returned object, and it looks like it's stepping
@@ -147,7 +147,7 @@ result! One thing you may see though is:
 
 or
 
->Interrupted. Larger maxiters is needed.
+> Interrupted. Larger maxiters is needed.
 
 What this means is that enforcing positivity is not possible. It keeps rejecting
 steps that go negative, reducing `dt`, taking another step, rejecting, reducing,
@@ -169,7 +169,7 @@ interpolating backwards until it can no longer and end with a `dtmin` issue.
 Finally, note that ODE solvers will not be more correct than tolerance, and so
 one should expect that if the solution is supposed to be positive but `abstol=1e-12`,
 you may end up with `u[i]=-1e-12`. That is okay,
-[that is expected behavior of numerical solvers](https://www.radford.edu/~thompson/RP/nonnegative.pdf),
+[that is expected behavior of numerical solvers](https://www.radford.edu/%7Ethompson/RP/nonnegative.pdf),
 the ODE solver is still doing its job. If this is a major issue for your application,
 you may want to write your model to be robust to this behavior, such as changing
 `sqrt(u[i])` to `sqrt(max(0,u[i]))`. You should also consider transforming your
@@ -276,7 +276,7 @@ should be able to do:
 
 ```julia
 du = similar(u0)
-@time f(du,u0,p,t)
+@time f(du, u0, p, t)
 ```
 
 and see close to zero allocations and close to zero memory allocated. If you see
@@ -284,7 +284,7 @@ more, then you might have a type-instability or have temporary arrays. To find
 type-instabilities, you should do:
 
 ```julia
-@code_warntype f(du,u,p,t)
+@code_warntype f(du, u, p, t)
 ```
 
 and read the printout to see if there are any types that aren't inferred by the
@@ -292,12 +292,12 @@ compiler, and fix them. If you have any global variables, you should make them
 `const`. As for allocations, some common things that allocate
 are:
 
-- Array slicing, like `u[1:5]`. Instead, use `@view u[1:5]`
-- Matrix multiplication with `*`. Instead of `A*b`, use `mul!(c,A,b)` for some
-  pre-allocated cache vector `c`.
-- Non-broadcasted expressions. Every expression on arrays should `.=` into another
-  array, or it should be re-written to loop and do computations with scalar (or
-  static array) values.
+  - Array slicing, like `u[1:5]`. Instead, use `@view u[1:5]`
+  - Matrix multiplication with `*`. Instead of `A*b`, use `mul!(c,A,b)` for some
+    pre-allocated cache vector `c`.
+  - Non-broadcasted expressions. Every expression on arrays should `.=` into another
+    array, or it should be re-written to loop and do computations with scalar (or
+    static array) values.
 
 For an example of optimizing a function resulting from a PDE discretization, see
 [this blog post](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/).
@@ -345,13 +345,13 @@ There are a few ways to do this. The simplest way is to just have a parameter to
 switch between the two. For example:
 
 ```julia
-function f(du,u,p,t)
-  if p == 0
-    du[1] = 2u[1]
-  else
-    du[1] = -2u[1]
-  end
-  du[2] = -u[2]
+function f(du, u, p, t)
+    if p == 0
+        du[1] = 2u[1]
+    else
+        du[1] = -2u[1]
+    end
+    du[2] = -u[2]
 end
 ```
 
@@ -359,7 +359,7 @@ Then in a callback, you can make the `affect!` function modify `integrator.prob.
 For example, we can make it change when `u[2]<0.5` via:
 
 ```julia
-condition(t,u,integrator) = u[2] - 0.5
+condition(t, u, integrator) = u[2] - 0.5
 affect!(integrator) = integrator.p = 1
 ```
 
@@ -395,13 +395,13 @@ There are a few ways that you can handle this problem. One way is to get a more
 exact solution. Thus instead of
 
 ```julia
-sol = solve(prob,alg)
+sol = solve(prob, alg)
 ```
 
 use
 
 ```julia
-sol = solve(prob,alg,abstol=1e-10,reltol=1e-10)
+sol = solve(prob, alg, abstol = 1e-10, reltol = 1e-10)
 ```
 
 Of course, there's always a tradeoff between accuracy and efficiency, so play
@@ -455,14 +455,14 @@ of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
 ```@example faq1
 using DifferentialEquations
-function func(du,u,p,t)
-  du[1] = p[1] * u[1] - p[2] * u[1]*u[2]
-  du[2] = -3 * u[2] + u[1]*u[2]
+function func(du, u, p, t)
+    du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
+    du[2] = -3 * u[2] + u[1] * u[2]
 end
 function f(p)
-  prob = ODEProblem(func,eltype(p).([1.0,1.0]),(0.0,10.0),p)
-  # Lower tolerances to show the methods converge to the same value
-  solve(prob,Tsit5(),save_everystep=false,abstol=1e-12,reltol=1e-12)[end]
+    prob = ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
+    # Lower tolerances to show the methods converge to the same value
+    solve(prob, Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
 end
 ```
 
@@ -474,14 +474,14 @@ Then we can take the Jacobian via ForwardDiff.jl:
 
 ```@example faq1
 using ForwardDiff
-ForwardDiff.jacobian(f,[1.5,1.0])
+ForwardDiff.jacobian(f, [1.5, 1.0])
 ```
 
 and compare it to FiniteDiff.jl:
 
 ```@example faq1
 using FiniteDiff
-FiniteDiff.finite_difference_jacobian(f,[1.5,1.0])
+FiniteDiff.finite_difference_jacobian(f, [1.5, 1.0])
 ```
 
 #### I get Dual number errors when I solve my ODE with Rosenbrock or SDIRK methods
@@ -496,7 +496,7 @@ function foo(du, u, (A, tmp), t)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), zeros(5,5)))
+prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
 solve(prob, Rosenbrock23())
 ```
 
@@ -509,8 +509,8 @@ option in the solver. Every solver which uses autodifferentiation has this optio
 Thus, we'd solve this with:
 
 ```julia
-prob = ODEProblem(f,ones(5, 5),(0.0,1.0))
-sol = solve(prob,Rosenbrock23(autodiff=false))
+prob = ODEProblem(f, ones(5, 5), (0.0, 1.0))
+sol = solve(prob, Rosenbrock23(autodiff = false))
 ```
 
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
@@ -523,13 +523,14 @@ to solve this issue, e.g.,
 ```julia
 using LinearAlgebra, OrdinaryDiffEq, PreallocationTools
 function foo(du, u, (A, tmp), t)
-    tmp = get_tmp(tmp, first(u)*t)
+    tmp = get_tmp(tmp, first(u) * t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0., 1.0), (ones(5,5), PreallocationTools.dualcache(zeros(5,5))))
-solve(prob, TRBDF2()
+prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0),
+                  (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
+solve(prob, TRBDF2())
 ```
 
 ## Sparse Jacobians
@@ -537,17 +538,21 @@ solve(prob, TRBDF2()
 #### I get errors when I try to solve my problem using sparse Jacobians
 
 This is likely because you're using a Jacobian matrix with a sparsity structure that changes, which is incompatible with the default linear solver for sparse matrices.  If the linear solver catches the issue, you'll see the error message
+
 ```
 ERROR: ArgumentError: The pattern of the original matrix must match the pattern of the refactor.
 ```
+
 or
+
 ```
 ERROR: ArgumentError: pattern of the matrix changed
 ```
-though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g., 
+
+though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g.,
 
 ```julia
-solve(prob, Rodas4(linsolve=KLUFactorization(;reuse_symbolic=false))
+solve(prob, Rodas4(linsolve = KLUFactorization(; reuse_symbolic = false)))
 ```
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/)

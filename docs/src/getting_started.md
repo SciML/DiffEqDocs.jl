@@ -26,16 +26,16 @@ the solution. The full code for solving this problem is:
 
 ```@example ODE1
 using DifferentialEquations
-f(u,p,t) = 1.01*u
-u0 = 1/2
-tspan = (0.0,1.0)
-prob = ODEProblem(f,u0,tspan)
-sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8)
+f(u, p, t) = 1.01 * u
+u0 = 1 / 2
+tspan = (0.0, 1.0)
+prob = ODEProblem(f, u0, tspan)
+sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
 
 using Plots
-plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
-     xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
-plot!(sol.t, t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
+plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 where the pieces are described below.
@@ -47,10 +47,10 @@ the initial condition, and the timespan to solve over:
 
 ```@example ODE2
 using DifferentialEquations
-f(u,p,t) = 1.01*u
-u0 = 1/2
-tspan = (0.0,1.0)
-prob = ODEProblem(f,u0,tspan)
+f(u, p, t) = 1.01 * u
+u0 = 1 / 2
+tspan = (0.0, 1.0)
+prob = ODEProblem(f, u0, tspan)
 ```
 
 Note that DifferentialEquations.jl will choose the types for the problem based on
@@ -87,7 +87,7 @@ we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
 ```@example ODE2
-sol = solve(prob,reltol=1e-6)
+sol = solve(prob, reltol = 1e-6)
 ```
 
 There are many controls for handling outputs. For example, we can choose to have
@@ -95,7 +95,7 @@ the solver save every `0.1` time points by setting `saveat=0.1`. Chaining this
 with the tolerance choice looks like:
 
 ```@example ODE2
-sol = solve(prob,reltol=1e-6,saveat=0.1)
+sol = solve(prob, reltol = 1e-6, saveat = 0.1)
 ```
 
 More generally, `saveat` can be any collection of time points to save at.
@@ -104,7 +104,7 @@ up the solution. In addition, if we only care about the endpoint, we can turn
 off intermediate saving in general:
 
 ```@example ODE2
-sol = solve(prob,reltol=1e-6,save_everystep=false)
+sol = solve(prob, reltol = 1e-6, save_everystep = false)
 ```
 
 which will only save the final time point.
@@ -122,7 +122,7 @@ For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
 ```@example ODE2
-sol = solve(prob,alg_hints=[:stiff],reltol=1e-8,abstol=1e-8)
+sol = solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8)
 ```
 
 You can also explicitly choose the algorithm to use. DifferentialEquations.jl
@@ -132,7 +132,7 @@ been shown to be more efficient than the “standard” algorithms.
 For example, we can choose a 5th order Tsitouras method:
 
 ```@example ODE2
-sol = solve(prob,Tsit5())
+sol = solve(prob, Tsit5())
 ```
 
 Note that the solver controls can be combined with the algorithm choice. Thus
@@ -140,23 +140,23 @@ we can for example solve the problem using `Tsit5()` with a lower tolerance
 via:
 
 ```@example ODE2
-sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8)
+sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
 ```
 
 In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
 
-- `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
-  is a good algorithm to use if you know nothing about the equation.
-- `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
-  efficient for high accuracy.
-- `Tsit5()` for standard non-stiff. This is the first algorithm to try in
-  most cases.
-- `BS3()` for fast low accuracy non-stiff.
-- `Vern7()` for high accuracy non-stiff.
-- `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
-- `KenCarp4()` or `TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
-- `RadauIIA5()` for really high accuracy stiff equations
-- `QNDF()` for large stiff equations
+  - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
+    is a good algorithm to use if you know nothing about the equation.
+  - `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
+    efficient for high accuracy.
+  - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
+    most cases.
+  - `BS3()` for fast low accuracy non-stiff.
+  - `Vern7()` for high accuracy non-stiff.
+  - `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
+  - `KenCarp4()` or `TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
+  - `RadauIIA5()` for really high accuracy stiff equations
+  - `QNDF()` for large stiff equations
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [please see the solver documentation](@ref ode_solve). Every problem
@@ -183,13 +183,13 @@ Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
 ```@example ODE2
-[t+u for (u,t) in tuples(sol)]
+[t + u for (u, t) in tuples(sol)]
 ```
 
 or more generally
 
 ```@example ODE2
-[t+2u for (u,t) in zip(sol.u,sol.t)]
+[t + 2u for (u, t) in zip(sol.u, sol.t)]
 ```
 
 allows one to use more parts of the solution type. The object that is returned by
@@ -235,14 +235,14 @@ axis labels, and change the legend (note we can disable the legend with
 `legend=false`) to get a nice-looking plot:
 
 ```@example ODE2
-plot(sol,linewidth=5,title="Solution to the linear ODE with a thick line",
-     xaxis="Time (t)",yaxis="u(t) (in μm)",label="My Thick Line!") # legend=false
+plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 ```
 
 We can then add to the plot using the `plot!` command:
 
 ```@example ODE2
-plot!(sol.t,t->0.5*exp(1.01t),lw=3,ls=:dash,label="True Solution!")
+plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 ## Example 2: Solving Systems of Equations
@@ -267,10 +267,10 @@ The way we do this is we simply write the output to the 1st input of the functio
 For example, our Lorenz equation problem would be defined by the function:
 
 ```@example ODE3
-function lorenz!(du,u,p,t)
- du[1] = 10.0*(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
+function lorenz!(du, u, p, t)
+    du[1] = 10.0 * (u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
 ```
 
@@ -278,9 +278,9 @@ and then we can use this function in a problem:
 
 ```@example ODE3
 using DifferentialEquations
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,100.0)
-prob = ODEProblem(lorenz!,u0,tspan)
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz!, u0, tspan)
 sol = solve(prob)
 ```
 
@@ -290,7 +290,7 @@ we can choose to do a 3D phase space plot between the different variables:
 
 ```@example ODE3
 using Plots
-plot(sol,idxs=(1,2,3))
+plot(sol, idxs = (1, 2, 3))
 ```
 
 Note that the default plot for multidimensional systems is an overlay of
@@ -298,7 +298,7 @@ each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
 ```@example ODE3
-plot(sol,idxs=(0,2))
+plot(sol, idxs = (0, 2))
 ```
 
 Note that here “variable 0” corresponds to the independent variable (“time”).
@@ -311,31 +311,31 @@ differential equations. This can be used by things like
 In this case, you use the `p` values via the syntax:
 
 ```@example ODE3
-function parameterized_lorenz!(du,u,p,t)
- du[1] = p[1]*(u[2]-u[1])
- du[2] = u[1]*(p[2]-u[3]) - u[2]
- du[3] = u[1]*u[2] - p[3]*u[3]
+function parameterized_lorenz!(du, u, p, t)
+    du[1] = p[1] * (u[2] - u[1])
+    du[2] = u[1] * (p[2] - u[3]) - u[2]
+    du[3] = u[1] * u[2] - p[3] * u[3]
 end
 ```
 
 and then we add the parameters to the `ODEProblem`:
 
 ```@example ODE3
-u0 = [1.0,0.0,0.0]
-tspan = (0.0,1.0)
-p = [10.0,28.0,8/3]
-prob = ODEProblem(parameterized_lorenz!,u0,tspan,p)
+u0 = [1.0, 0.0, 0.0]
+tspan = (0.0, 1.0)
+p = [10.0, 28.0, 8 / 3]
+prob = ODEProblem(parameterized_lorenz!, u0, tspan, p)
 ```
 
 We can make our functions look nicer by doing a few tricks. For example:
 
 ```@example ODE3
-function parameterized_lorenz!(du,u,p,t)
-  x,y,z = u
-  σ,ρ,β = p
-  du[1] = dx = σ*(y-x)
-  du[2] = dy = x*(ρ-z) - y
-  du[3] = dz = x*y - β*z
+function parameterized_lorenz!(du, u, p, t)
+    x, y, z = u
+    σ, ρ, β = p
+    du[1] = dx = σ * (y - x)
+    du[2] = dy = x * (ρ - z) - y
+    du[3] = dz = x * y - β * z
 end
 ```
 
@@ -349,6 +349,7 @@ and bifurcation plotting. This makes DifferentialEquations.jl a full-stop soluti
 for differential equation analysis which also achieves high performance.
 
 ## Example 3: Solving Nonhomogeneous Equations using Parameterized Functions
+
 Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
@@ -357,6 +358,7 @@ Parameterized functions can also be used for building **nonhomogeneous ordinary 
 \frac{\mathrm{d}\omega(t)}{\mathrm{d}t} &= - \frac{3}{2}\frac{g}{l}\sin\theta(t) + \frac{3}{ml^2}M(t)
 \end{aligned},
 ```
+
 where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitational acceleration.
 
 ```@example ODE4
@@ -367,22 +369,22 @@ l = 1.0                             # length [m]
 m = 1.0                             # mass [kg]
 g = 9.81                            # gravitational acceleration [m/s²]
 
-function pendulum!(du,u,p,t)
+function pendulum!(du, u, p, t)
     du[1] = u[2]                    # θ'(t) = ω(t)
-    du[2] = -3g/(2l)*sin(u[1]) + 3/(m*l^2)*p(t) # ω'(t) = -3g/(2l) sin θ(t) + 3/(ml^2)M(t)
+    du[2] = -3g / (2l) * sin(u[1]) + 3 / (m * l^2) * p(t) # ω'(t) = -3g/(2l) sin θ(t) + 3/(ml^2)M(t)
 end
 
 θ₀ = 0.01                           # initial angular deflection [rad]
 ω₀ = 0.0                            # initial angular velocity [rad/s]
 u₀ = [θ₀, ω₀]                       # initial state vector
-tspan = (0.0,10.0)                  # time interval
+tspan = (0.0, 10.0)                  # time interval
 
-M = t->0.1sin(t)                    # external torque [Nm]
+M = t -> 0.1sin(t)                    # external torque [Nm]
 
-prob = ODEProblem(pendulum!,u₀,tspan,M)
+prob = ODEProblem(pendulum!, u₀, tspan, M)
 sol = solve(prob)
 
-plot(sol,linewidth=2,xaxis="t",label=["θ [rad]" "ω [rad/s]"],layout=(2,1))
+plot(sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
 ```
 
 Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
@@ -400,14 +402,14 @@ We can define a matrix of linear ODEs as follows:
 ```@example ODE4
 using DifferentialEquations
 using Plots
-A  = [1. 0  0 -5
-      4 -2  4 -3
-     -4  0  0  1
-      5 -2  2  3]
-u0 = rand(4,2)
-tspan = (0.0,1.0)
-f(u,p,t) = A*u
-prob = ODEProblem(f,u0,tspan)
+A = [1.0 0 0 -5
+     4 -2 4 -3
+     -4 0 0 1
+     5 -2 2 3]
+u0 = rand(4, 2)
+tspan = (0.0, 1.0)
+f(u, p, t) = A * u
+prob = ODEProblem(f, u0, tspan)
 ```
 
 Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by
@@ -424,7 +426,7 @@ function `mul!`:
 
 ```@example ODE4
 using LinearAlgebra
-f(du,u,p,t) = mul!(du,A,u)
+f(du, u, p, t) = mul!(du, A, u)
 ```
 
 Additionally, we can use non-traditional array types as well. For example,
@@ -435,14 +437,14 @@ above, with the only change being the type for the initial condition and constan
 
 ```@example ODE4
 using StaticArrays
-A  = @SMatrix [ 1.0  0.0 0.0 -5.0
-                4.0 -2.0 4.0 -3.0
-               -4.0  0.0 0.0  1.0
-                5.0 -2.0 2.0  3.0]
-u0 = @SMatrix rand(4,2)
-tspan = (0.0,1.0)
-f2(u,p,t) = A*u
-prob = ODEProblem(f2,u0,tspan)
+A = @SMatrix [1.0 0.0 0.0 -5.0
+              4.0 -2.0 4.0 -3.0
+              -4.0 0.0 0.0 1.0
+              5.0 -2.0 2.0 3.0]
+u0 = @SMatrix rand(4, 2)
+tspan = (0.0, 1.0)
+f2(u, p, t) = A * u
+prob = ODEProblem(f2, u0, tspan)
 sol = solve(prob)
 plot(sol)
 ```
@@ -458,13 +460,13 @@ as well. The last value is the timestep, and the beginning values are for the co
 This means
 
 ```@example ODE4
-sol[5,3]
+sol[5, 3]
 ```
 
 is the value of the 5th component (by linear indexing) at the 3rd timepoint, or
 
 ```@example ODE4
-sol[2,1,:]
+sol[2, 1, :]
 ```
 
 is the timeseries for the component, which is the 2nd row and 1 column.
@@ -492,11 +494,11 @@ In many cases, the common workflow only starts with solving the differential equ
 Many common setups have built-in solutions in DifferentialEquations.jl. For example,
 check out the features for:
 
-- [Handling, parallelizing, and analyzing large Ensemble experiments](@ref ensemble)
-- [Saving the output to tabular formats like DataFrames and CSVs](@ref io)
-- [Event handling](@ref callbacks)
-- [Parameter estimation (inverse problems)](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
-- [Quantification of numerical uncertainty and error](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
+  - [Handling, parallelizing, and analyzing large Ensemble experiments](@ref ensemble)
+  - [Saving the output to tabular formats like DataFrames and CSVs](@ref io)
+  - [Event handling](@ref callbacks)
+  - [Parameter estimation (inverse problems)](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
+  - [Quantification of numerical uncertainty and error](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
 
 Many more are defined in the relevant sections of the docs. Please explore the rest
 of the documentation, including tutorials for getting started with other types

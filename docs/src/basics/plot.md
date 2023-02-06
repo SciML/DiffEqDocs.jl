@@ -21,7 +21,7 @@ on the plot by doing:
 
 ```julia
 gr()
-plot(sol,title="I Love DiffEqs!")
+plot(sol, title = "I Love DiffEqs!")
 ```
 
 Then to save the plot, use `savefig`, for example:
@@ -37,13 +37,13 @@ to use the dense function for generating the plot, and `plotdensity` is the numb
 of evenly-spaced points (in time) to plot. For example:
 
 ```julia
-plot(sol,denseplot=false)
+plot(sol, denseplot = false)
 ```
 
 means “only plot the points which the solver stepped to”, while:
 
 ```julia
-plot(sol,plotdensity=1000)
+plot(sol, plotdensity = 1000)
 ```
 
 means to plot 1000 points using the dense function (since `denseplot=true` by
@@ -55,7 +55,7 @@ In the plot command, one can choose the variables to be plotted in each plot. Th
 master form is:
 
 ```julia
-idxs = [(f1,0,1), (f2,1,3), (f3,4,5)]
+idxs = [(f1, 0, 1), (f2, 1, 3), (f3, 4, 5)]
 ```
 
 which could be used to plot `f1(var₀, var₁)`, `f2(var₁, var₃)`, and
@@ -64,7 +64,7 @@ or the independent variable). Functions `f1`, `f2` and `f3` should take in scala
 and return a tuple. If no function is given, for example,
 
 ```julia
-idxs = [(0,1), (1,3), (4,5)]
+idxs = [(0, 1), (1, 3), (4, 5)]
 ```
 
 this would mean “plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁`, and
@@ -72,12 +72,12 @@ this would mean “plot `var₁(t)` vs `t` (*time*), `var₃(var₁)` vs `var₁
 (`t`, `var₁` and `var₄`) on the x-axis.” While this can be used for everything,
 the following conveniences are provided:
 
-* Everywhere in a tuple position where we only find an integer, this
-  variable is plotted as a function of time.  For example, the list above
-  is equivalent to:
+  - Everywhere in a tuple position where we only find an integer, this
+    variable is plotted as a function of time.  For example, the list above
+    is equivalent to:
 
 ```julia
-idxs = [1, (1,3), (4,5)]
+idxs = [1, (1, 3), (4, 5)]
 ```
 
 and
@@ -89,40 +89,40 @@ idxs = [1, 3, 4]
 is the most concise way to plot the variables 1, 3, and 4 as a function
 of time.
 
-* It is possible to omit the list if only one plot is wanted: `(2,3)`
-  and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
+  - It is possible to omit the list if only one plot is wanted: `(2,3)`
+    and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
 
-* A tuple containing one or several lists will be expanded by
-  associating corresponding elements of the lists with each other:
+  - A tuple containing one or several lists will be expanded by
+    associating corresponding elements of the lists with each other:
 
 ```julia
-idxs = ([1,2,3], [4,5,6])
+idxs = ([1, 2, 3], [4, 5, 6])
 ```
 
 is equivalent to
 
 ```julia
-idxs = [(1,4), (2,5), (3,6)]
+idxs = [(1, 4), (2, 5), (3, 6)]
 ```
 
 and
 
 ```julia
-idxs = (1, [2,3,4])
+idxs = (1, [2, 3, 4])
 ```
 
 is equivalent to
 
 ```julia
-idxs = [(1,2), (1,3), (1,4)]
+idxs = [(1, 2), (1, 3), (1, 4)]
 ```
 
-* Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
-  For example, `idxs=(:x,:y)` will replace the symbols with the integer values for
-  components `:x` and `:y`.
+  - Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
+    For example, `idxs=(:x,:y)` will replace the symbols with the integer values for
+    components `:x` and `:y`.
 
-* n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
-  5-dimensional plot between the associated variables.
+  - n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
+    5-dimensional plot between the associated variables.
 
 ### Complex Numbers and High Dimensional Plots
 
@@ -136,7 +136,7 @@ more details on the extra controls that exist.
 A plotting timespan can be chosen by the `tspan` argument in `plot`. For example:
 
 ```julia
-plot(sol,tspan=(0.0,40.0))
+plot(sol, tspan = (0.0, 40.0))
 ```
 
 only plots between `t=0.0` and `t=40.0`. If `denseplot=true` these bounds will be respected
@@ -147,37 +147,37 @@ i.e. no points outside the interval will be plotted.
 
 ```@example plots
 using DifferentialEquations, Plots
-function lorenz(du,u,p,t)
- du[1] = p[1]*(u[2]-u[1])
- du[2] = u[1]*(p[2]-u[3]) - u[2]
- du[3] = u[1]*u[2] - p[3]*u[3]
+function lorenz(du, u, p, t)
+    du[1] = p[1] * (u[2] - u[1])
+    du[2] = u[1] * (p[2] - u[3]) - u[2]
+    du[3] = u[1] * u[2] - p[3] * u[3]
 end
 
-u0 = [1., 5., 10.]
-tspan = (0., 100.)
-p = (10.0,28.0,8/3)
-prob = ODEProblem(lorenz, u0, tspan,p)
+u0 = [1.0, 5.0, 10.0]
+tspan = (0.0, 100.0)
+p = (10.0, 28.0, 8 / 3)
+prob = ODEProblem(lorenz, u0, tspan, p)
 sol = solve(prob)
-xyzt = plot(sol, plotdensity=10000,lw=1.5)
-xy = plot(sol, plotdensity=10000, idxs=(1,2))
-xz = plot(sol, plotdensity=10000, idxs=(1,3))
-yz = plot(sol, plotdensity=10000, idxs=(2,3))
-xyz = plot(sol, plotdensity=10000, idxs=(1,2,3))
-plot(plot(xyzt,xyz),plot(xy, xz, yz, layout=(1,3),w=1), layout=(2,1))
+xyzt = plot(sol, plotdensity = 10000, lw = 1.5)
+xy = plot(sol, plotdensity = 10000, idxs = (1, 2))
+xz = plot(sol, plotdensity = 10000, idxs = (1, 3))
+yz = plot(sol, plotdensity = 10000, idxs = (2, 3))
+xyz = plot(sol, plotdensity = 10000, idxs = (1, 2, 3))
+plot(plot(xyzt, xyz), plot(xy, xz, yz, layout = (1, 3), w = 1), layout = (2, 1))
 ```
 
 An example using the functions:
 
 ```@example plots
-f(x,y,z) = (sqrt(x^2+y^2+z^2),x)
-plot(sol,idxs=(f,1,2,3))
+f(x, y, z) = (sqrt(x^2 + y^2 + z^2), x)
+plot(sol, idxs = (f, 1, 2, 3))
 ```
 
 or the norm over time:
 
 ```@example plots
-f(t,x,y,z) = (t,sqrt(x^2+y^2+z^2))
-plot(sol,idxs=(f,0,1,2,3))
+f(t, x, y, z) = (t, sqrt(x^2 + y^2 + z^2))
+plot(sol, idxs = (f, 0, 1, 2, 3))
 ```
 
 ## Animations
@@ -193,7 +193,7 @@ saves every 4th frame via:
 ```julia
 #]add ImageMagick # You may need to install ImageMagick.jl before your first time using it!
 #using ImageMagick # Some installations require using ImageMagick for good animations
-animate(sol,lw=3,every=4)
+animate(sol, lw = 3, every = 4)
 ```
 
 Please see [Plots.jl's documentation](https://juliaplots.github.io/) for more information
@@ -208,14 +208,14 @@ use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can
 do the following to plot the timeseries:
 
 ```julia
-plot(sol.t,sol')
+plot(sol.t, sol')
 ```
 
 since these plot along the columns, and `sol'` has the timeseries along the column.
 Phase plots can be done similarly, for example:
 
 ```julia
-plot(sol[i,:],sol[j,:],sol[k,:])
+plot(sol[i, :], sol[j, :], sol[k, :])
 ```
 
 is a 3D phase plot between variables `i`, `j`, and `k`.
@@ -225,8 +225,8 @@ the interpolation must be done manually. For example:
 
 ```julia
 n = 101 #number of timepoints
-ts = range(0, stop=1, length=n)
-plot(sol(ts,idxs=i),sol(ts,idxs=j),sol(ts,idxs=k))
+ts = range(0, stop = 1, length = n)
+plot(sol(ts, idxs = i), sol(ts, idxs = j), sol(ts, idxs = k))
 ```
 
 is the phase space using values `0.01` apart in time.

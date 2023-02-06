@@ -23,18 +23,18 @@ DAE.
 
 ```julia
 const mm_A = [-2.0 1 4
-            4 -2 1
-            0 0 0]
-function f!(du,u,p,t)
-  du[1] = u[1]
-  du[2] = u[2]
-  du[3] = u[1] + u[2] + u[3] - 1
+              4 -2 1
+              0 0 0]
+function f!(du, u, p, t)
+    du[1] = u[1]
+    du[2] = u[2]
+    du[3] = u[1] + u[2] + u[3] - 1
 end
 
-function g!(du,u,p,t)
-  @. du = 0.1
+function g!(du, u, p, t)
+    @. du = 0.1
 end
 
-prob = SDEProblem(SDEFunction(f!,g!;mass_matrix=mm_A),g!,
-                  ones(3),(0.0,1.0))
+prob = SDEProblem(SDEFunction(f!, g!; mass_matrix = mm_A), g!,
+                  ones(3), (0.0, 1.0))
 ```

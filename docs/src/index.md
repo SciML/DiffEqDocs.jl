@@ -6,21 +6,21 @@ purpose of this package is to supply efficient Julia implementations of solvers
 for various differential equations. Equations within the realm of this package
 include:
 
-- Discrete equations (function maps, discrete stochastic (Gillespie/Markov)
-  simulations)
-- Ordinary differential equations (ODEs)
-- Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
-- Stochastic ordinary differential equations (SODEs or SDEs)
-- Stochastic differential-algebraic equations (SDAEs)
-- Random differential equations (RODEs or RDEs)
-- Differential algebraic equations (DAEs)
-- Delay differential equations (DDEs)
-- Neutral, retarded, and algebraic delay differential equations (NDDEs, RDDEs, and DDAEs)
-- Stochastic delay differential equations (SDDEs)
-- Experimental support for stochastic neutral, retarded, and algebraic delay differential equations (SNDDEs, SRDDEs, and SDDAEs)
-- Mixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)
-- (Stochastic) partial differential equations ((S)PDEs) (with both finite
-  difference and finite element methods)
+  - Discrete equations (function maps, discrete stochastic (Gillespie/Markov)
+    simulations)
+  - Ordinary differential equations (ODEs)
+  - Split and Partitioned ODEs (Symplectic integrators, IMEX Methods)
+  - Stochastic ordinary differential equations (SODEs or SDEs)
+  - Stochastic differential-algebraic equations (SDAEs)
+  - Random differential equations (RODEs or RDEs)
+  - Differential algebraic equations (DAEs)
+  - Delay differential equations (DDEs)
+  - Neutral, retarded, and algebraic delay differential equations (NDDEs, RDDEs, and DDAEs)
+  - Stochastic delay differential equations (SDDEs)
+  - Experimental support for stochastic neutral, retarded, and algebraic delay differential equations (SNDDEs, SRDDEs, and SDDAEs)
+  - Mixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)
+  - (Stochastic) partial differential equations ((S)PDEs) (with both finite
+    difference and finite element methods)
 
 The well-optimized DifferentialEquations solvers benchmark as some of the fastest
 implementations, using classic algorithms and ones from recent research which
@@ -33,44 +33,47 @@ allowing for easy benchmarking to ensure you are using the fastest method possib
 
 DifferentialEquations.jl integrates with the Julia package sphere with:
 
-- GPU acceleration through [CUDA.jl](https://cuda.juliagpu.org/stable/) and [DiffEqGPU.jl](https://docs.sciml.ai/DiffEqGPU/dev/)
-- Automated sparsity detection with [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
-- Automatic Jacobian coloring with [SparseDiffTools.jl](https://docs.sciml.ai/SparseDiffTools/stable/), allowing for fast solutions
-  to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
-- Allowing the specification of linear solvers for maximal efficiency with [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/)
-- Progress meter integration with the Visual Studio Code IDE for estimated time to solution
-- Automatic plotting of time series and phase plots
-- Built-in interpolations
-- Wraps for common C/Fortran methods like Sundials and Hairer's radau
-- Arbitrary precision with BigFloats and Arbfloats
-- Arbitrary array types, allowing the definition of differential equations on
-  matrices and distributed arrays
-- Unit checked arithmetic with Unitful
+  - GPU acceleration through [CUDA.jl](https://cuda.juliagpu.org/stable/) and [DiffEqGPU.jl](https://docs.sciml.ai/DiffEqGPU/dev/)
+  - Automated sparsity detection with [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
+  - Automatic Jacobian coloring with [SparseDiffTools.jl](https://docs.sciml.ai/SparseDiffTools/stable/), allowing for fast solutions
+    to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
+  - Allowing the specification of linear solvers for maximal efficiency with [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/)
+  - Progress meter integration with the Visual Studio Code IDE for estimated time to solution
+  - Automatic plotting of time series and phase plots
+  - Built-in interpolations
+  - Wraps for common C/Fortran methods like Sundials and Hairer's radau
+  - Arbitrary precision with BigFloats and Arbfloats
+  - Arbitrary array types, allowing the definition of differential equations on
+    matrices and distributed arrays
+  - Unit checked arithmetic with Unitful
 
 Additionally, DifferentialEquations.jl comes with built-in analysis features, including:
 
-- [Forward and Adjoint Sensitivity Analysis (Automatic Differentiation)](https://docs.sciml.ai/SciMLSensitivity/stable/) for fast gradient computations
-- [Parameter Estimation and Bayesian Analysis](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
-- Neural differential equations with [DiffEqFlux.jl](https://docs.sciml.ai/DiffEqFlux/stable/)
-  for efficient scientific machine learning (scientific ML) and scientific AI.
-- Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
-- [Global Sensitivity Analysis](https://docs.sciml.ai/GlobalSensitivity/stable/)
-- [Uncertainty Quantification](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
+  - [Forward and Adjoint Sensitivity Analysis (Automatic Differentiation)](https://docs.sciml.ai/SciMLSensitivity/stable/) for fast gradient computations
+  - [Parameter Estimation and Bayesian Analysis](https://docs.sciml.ai/Overview/stable/highlevels/inverse_problems/)
+  - Neural differential equations with [DiffEqFlux.jl](https://docs.sciml.ai/DiffEqFlux/stable/)
+    for efficient scientific machine learning (scientific ML) and scientific AI.
+  - Automatic distributed, multithreaded, and GPU [Parallel Ensemble Simulations](@ref ensemble)
+  - [Global Sensitivity Analysis](https://docs.sciml.ai/GlobalSensitivity/stable/)
+  - [Uncertainty Quantification](https://docs.sciml.ai/Overview/stable/highlevels/uncertainty_quantification/)
 
 ## Contributing
-- If you're interested in contributing, please see the
-  [Developer Documentation.](https://docs.sciml.ai/DiffEqDevDocs/stable/)
-- Please refer to the
-  [SciML ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://github.com/SciML/ColPrac/blob/master/README.md)
-  for guidance on PRs, issues, and other matters relating to contributing to SciML.
-- See the [SciML Style Guide](https://github.com/SciML/SciMLStyle) for common coding practices and other style decisions.
-- There are a few community forums:
-    - The #diffeq-bridged and #sciml-bridged channels in the
-      [Julia Slack](https://julialang.org/slack/)
-    - The #diffeq-bridged and #sciml-bridged channels in the
-      [Julia Zulip](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged)
-    - On the [Julia Discourse forums](https://discourse.julialang.org)
-    - See also [SciML Community page](https://sciml.ai/community/)
+
+  - If you're interested in contributing, please see the
+    [Developer Documentation.](https://docs.sciml.ai/DiffEqDevDocs/stable/)
+
+  - Please refer to the
+    [SciML ColPrac: Contributor's Guide on Collaborative Practices for Community Packages](https://github.com/SciML/ColPrac/blob/master/README.md)
+    for guidance on PRs, issues, and other matters relating to contributing to SciML.
+  - See the [SciML Style Guide](https://github.com/SciML/SciMLStyle) for common coding practices and other style decisions.
+  - There are a few community forums:
+    
+      + The #diffeq-bridged and #sciml-bridged channels in the
+        [Julia Slack](https://julialang.org/slack/)
+      + The #diffeq-bridged and #sciml-bridged channels in the
+        [Julia Zulip](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged)
+      + On the [Julia Discourse forums](https://discourse.julialang.org)
+      + See also [SciML Community page](https://sciml.ai/community/)
 
 ## Supporting and Citing
 
@@ -102,6 +105,7 @@ are used, we ask that you cite the methods. [Please see our citation page for gu
 ### Installing from Julia
 
 To install the package, use the following command inside the Julia REPL:
+
 ```julia
 using Pkg
 Pkg.add("DifferentialEquations")
@@ -233,7 +237,7 @@ a system image that precompiles the whole package. To do this, one simply does:
 
 ```julia
 using PackageCompiler
-PackageCompiler.create_sysimage([:DifferentialEquations,:Plots];replace_default=true)
+PackageCompiler.create_sysimage([:DifferentialEquations, :Plots]; replace_default = true)
 ```
 
 Note that there are some drawbacks to adding a package in your system image. For example,
@@ -260,7 +264,6 @@ Pages = [
     ]
 Depth = 2
 ```
-
 
 ### Problem Types
 
@@ -346,75 +349,91 @@ Depth = 2
 JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many
 individuals. Significant contributions have been made by the following individuals:
 
-- Chris Rackauckas (@ChrisRackauckas) (lead developer)
-- Yingbo Ma (@YingboMa)
-- David Widmann (@devmotion)
-- Hendrik Ranocha (@ranocha)
-- Ethan Levien (@elevien)
-- Tom Short (@tshort)
-- @dextorious
-- Samuel Isaacson (@isaacsas)
+  - Chris Rackauckas (@ChrisRackauckas) (lead developer)
+  - Yingbo Ma (@YingboMa)
+  - David Widmann (@devmotion)
+  - Hendrik Ranocha (@ranocha)
+  - Ethan Levien (@elevien)
+  - Tom Short (@tshort)
+  - @dextorious
+  - Samuel Isaacson (@isaacsas)
 
 #### Google Summer of Code Alumni
 
-- Yingbo Ma (@YingboMa)
-- Shivin Srivastava (@shivin9)
-- Ayush Pandey (@Ayush-iitkgp)
-- Xingjian Guo (@MSeeker1340)
-- Shubham Maddhashiya (@sipah00)
-- Vaibhav Kumar Dixit (@Vaibhavdixit02)
+  - Yingbo Ma (@YingboMa)
+  - Shivin Srivastava (@shivin9)
+  - Ayush Pandey (@Ayush-iitkgp)
+  - Xingjian Guo (@MSeeker1340)
+  - Shubham Maddhashiya (@sipah00)
+  - Vaibhav Kumar Dixit (@Vaibhavdixit02)
 
 ## Reproducibility
+
 ```@raw html
 <details><summary>The documentation of this SciML package was built using these direct dependencies,</summary>
 ```
+
 ```@example
 using Pkg # hide
 Pkg.status() # hide
 ```
+
 ```@raw html
 </details>
 ```
+
 ```@raw html
 <details><summary>and using this machine and Julia version.</summary>
 ```
+
 ```@example
 using InteractiveUtils # hide
 versioninfo() # hide
 ```
+
 ```@raw html
 </details>
 ```
+
 ```@raw html
 <details><summary>A more complete overview of all dependencies and their versions is also provided.</summary>
 ```
+
 ```@example
 using Pkg # hide
-Pkg.status(;mode = PKGMODE_MANIFEST) # hide
+Pkg.status(; mode = PKGMODE_MANIFEST) # hide
 ```
+
 ```@raw html
 </details>
 ```
+
 ```@raw html
 You can also download the
 <a href="
 ```
+
 ```@eval
 using TOML
-version = TOML.parse(read("../../Project.toml",String))["version"]
-name = TOML.parse(read("../../Project.toml",String))["name"]
-link = "https://github.com/SciML/"*name*".jl/tree/gh-pages/v"*version*"/assets/Manifest.toml"
+version = TOML.parse(read("../../Project.toml", String))["version"]
+name = TOML.parse(read("../../Project.toml", String))["name"]
+link = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
+       "/assets/Manifest.toml"
 ```
+
 ```@raw html
 ">manifest</a> file and the
 <a href="
 ```
+
 ```@eval
 using TOML
-version = TOML.parse(read("../../Project.toml",String))["version"]
-name = TOML.parse(read("../../Project.toml",String))["name"]
-link = "https://github.com/SciML/"*name*".jl/tree/gh-pages/v"*version*"/assets/Project.toml"
+version = TOML.parse(read("../../Project.toml", String))["version"]
+name = TOML.parse(read("../../Project.toml", String))["name"]
+link = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
+       "/assets/Project.toml"
 ```
+
 ```@raw html
 ">project</a> file.
 ```

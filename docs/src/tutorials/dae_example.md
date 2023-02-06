@@ -7,7 +7,7 @@ introductions can be found by
 [checking out SciMLTutorials.jl](https://docs.sciml.ai/SciMLTutorialsOutput/stable/).
 
 !!! note
-
+    
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 ## Mass-Matrix Differential-Algebraic Equations (DAEs)
@@ -47,25 +47,26 @@ last row of `M` is just zero. We can implement this form as:
 ```@example dae
 using DifferentialEquations
 using Plots
-function rober(du,u,p,t)
-  y₁,y₂,y₃ = u
-  k₁,k₂,k₃ = p
-  du[1] = -k₁*y₁ + k₃*y₂*y₃
-  du[2] =  k₁*y₁ - k₃*y₂*y₃ - k₂*y₂^2
-  du[3] =  y₁ + y₂ + y₃ - 1
-  nothing
+function rober(du, u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    du[1] = -k₁ * y₁ + k₃ * y₂ * y₃
+    du[2] = k₁ * y₁ - k₃ * y₂ * y₃ - k₂ * y₂^2
+    du[3] = y₁ + y₂ + y₃ - 1
+    nothing
 end
-M = [1. 0  0
-     0  1. 0
-     0  0  0]
-f = ODEFunction(rober,mass_matrix=M)
-prob_mm = ODEProblem(f,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
-sol = solve(prob_mm,Rodas5(),reltol=1e-8,abstol=1e-8)
+M = [1.0 0 0
+     0 1.0 0
+     0 0 0]
+f = ODEFunction(rober, mass_matrix = M)
+prob_mm = ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+sol = solve(prob_mm, Rodas5(), reltol = 1e-8, abstol = 1e-8)
 
-plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
+plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```
 
 !!! note
+    
     If your mass matrix is singular, i.e. your system is a DAE, then you
     need to make sure you choose
     [a solver that is compatible with DAEs](@ref dae_solve_full)
@@ -108,10 +109,10 @@ output. To makes this into a DAE, we move all the variables to one side.
 Thus, we can define the function:
 
 ```@example dae
-function f2(out,du,u,p,t)
-  out[1] = - 0.04u[1]              + 1e4*u[2]*u[3] - du[1]
-  out[2] = + 0.04u[1] - 3e7*u[2]^2 - 1e4*u[2]*u[3] - du[2]
-  out[3] = u[1] + u[2] + u[3] - 1.0
+function f2(out, du, u, p, t)
+    out[1] = -0.04u[1] + 1e4 * u[2] * u[3] - du[1]
+    out[2] = +0.04u[1] - 3e7 * u[2]^2 - 1e4 * u[2] * u[3] - du[2]
+    out[3] = u[1] + u[2] + u[3] - 1.0
 end
 ```
 
@@ -120,14 +121,14 @@ with initial conditions
 ```@example dae
 u₀ = [1.0, 0, 0]
 du₀ = [-0.04, 0.04, 0.0]
-tspan = (0.0,100000.0)
+tspan = (0.0, 100000.0)
 ```
 
 and make the `DAEProblem`:
 
 ```@example dae
-differential_vars = [true,true,false]
-prob = DAEProblem(f2,du₀,u₀,tspan,differential_vars=differential_vars)
+differential_vars = [true, true, false]
+prob = DAEProblem(f2, du₀, u₀, tspan, differential_vars = differential_vars)
 ```
 
 `differential_vars` is an option which states which of the variables are differential,
@@ -142,7 +143,7 @@ and plot. Here we will use the IDA solver from Sundials:
 
 ```@example dae
 using Sundials
-sol = solve(prob,IDA())
+sol = solve(prob, IDA())
 ```
 
 In order to clearly see all the features of this solution, it should be plotted
@@ -150,5 +151,5 @@ on a logarithmic scale. We'll also plot each on a different subplot, to allow
 scaling the y-axis appropriately.
 
 ```@example dae
-plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
+plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```
