@@ -1,7 +1,7 @@
 # [Code Optimization for Differential Equations](@id speed)
 
 !!! note
-
+    
     See [this FAQ](@ref faq_performance)
     for information on common pitfalls and how to improve performance.
 
@@ -11,9 +11,9 @@ Before starting this tutorial, we recommend the reader to check out one of the
 many tutorials for optimization Julia code. The following is an incomplete
 list:
 
-- [The Julia Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips/)
-- [MIT 18.337 Course Notes on Optimizing Serial Code](https://mitmath.github.io/18337/lecture2/optimizing)
-- [What scientists must know about hardware to write fast code](https://biojulia.net/post/hardware/)
+  - [The Julia Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips/)
+  - [MIT 18.337 Course Notes on Optimizing Serial Code](https://mitmath.github.io/18337/lecture2/optimizing)
+  - [What scientists must know about hardware to write fast code](https://biojulia.net/post/hardware/)
 
 User-side optimizations are important because, for sufficiently difficult problems,
 most time will be spent inside your `f` function, the function you are
@@ -21,13 +21,13 @@ trying to solve. “Efficient” integrators are those that reduce the required
 number of `f` calls to hit the error tolerance. The main ideas for optimizing
 your DiffEq code, or any Julia function, are the following:
 
-- Make it non-allocating
-- Use StaticArrays for small arrays
-- Use broadcast fusion
-- Make it type-stable
-- Reduce redundant calculations
-- Make use of BLAS calls
-- Optimize algorithm choice
+  - Make it non-allocating
+  - Use StaticArrays for small arrays
+  - Use broadcast fusion
+  - Make it type-stable
+  - Reduce redundant calculations
+  - Make use of BLAS calls
+  - Optimize algorithm choice
 
 We'll discuss these strategies in the context of differential equations.
 Let's start with small systems.
@@ -38,11 +38,11 @@ Let's take the classic Lorenz system. Let's start by naively writing the
 system in its out-of-place form:
 
 ```@example faster_ode
-function lorenz(u,p,t)
- dx = 10.0*(u[2]-u[1])
- dy = u[1]*(28.0-u[3]) - u[2]
- dz = u[1]*u[2] - (8/3)*u[3]
- [dx,dy,dz]
+function lorenz(u, p, t)
+    dx = 10.0 * (u[2] - u[1])
+    dy = u[1] * (28.0 - u[3]) - u[2]
+    dz = u[1] * u[2] - (8 / 3) * u[3]
+    [dx, dy, dz]
 end
 ```
 
@@ -56,10 +56,10 @@ choice of function:
 
 ```@example faster_ode
 using DifferentialEquations, BenchmarkTools
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,100.0)
-prob = ODEProblem(lorenz,u0,tspan)
-@btime solve(prob,Tsit5());
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz, u0, tspan)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
@@ -72,7 +72,7 @@ doing garbage collection (GC) to clean up all the arrays we made. Even if we
 turn off saving, we have these allocations.
 
 ```@example faster_ode
-@btime solve(prob,Tsit5(),save_everystep=false);
+@btime solve(prob, Tsit5(), save_everystep = false);
 nothing # hide
 ```
 
@@ -82,11 +82,11 @@ the main source of memory usage. To fix this, we can use the in-place form to
 ***make our code non-allocating***:
 
 ```@example faster_ode
-function lorenz!(du,u,p,t)
-  du[1] = 10.0*(u[2]-u[1])
-  du[2] = u[1]*(28.0-u[3]) - u[2]
-  du[3] = u[1]*u[2] - (8/3)*u[3]
-  nothing
+function lorenz!(du, u, p, t)
+    du[1] = 10.0 * (u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+    nothing
 end
 ```
 
@@ -95,7 +95,7 @@ When the in-place form is used, DifferentialEquations.jl takes a different
 internal route that minimizes the internal allocations as well.
 
 !!! note
-
+    
     Notice that nothing is returned. When in in-place form, the ODE solver ignores
     the return. Instead, make sure that the original `du` array is mutated instead
     of constructing a new array
@@ -103,15 +103,15 @@ internal route that minimizes the internal allocations as well.
 When we benchmark this function, we will see quite a difference.
 
 ```@example faster_ode
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,100.0)
-prob = ODEProblem(lorenz!,u0,tspan)
-@btime solve(prob,Tsit5());
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob,Tsit5(),save_everystep=false);
+@btime solve(prob, Tsit5(), save_everystep = false);
 nothing # hide
 ```
 
@@ -120,9 +120,9 @@ some allocations and this is due to the construction of the integration cache.
 But this doesn't scale with the problem size:
 
 ```@example faster_ode
-tspan = (0.0,500.0) # 5x longer than before
-prob = ODEProblem(lorenz!,u0,tspan)
-@btime solve(prob,Tsit5(),save_everystep=false);
+tspan = (0.0, 500.0) # 5x longer than before
+prob = ODEProblem(lorenz!, u0, tspan)
+@btime solve(prob, Tsit5(), save_everystep = false);
 nothing # hide
 ```
 
@@ -155,7 +155,7 @@ attached to normal array expressions, for example:
 
 ```@example faster_ode
 using StaticArrays
-A = SA[2.0,3.0,5.0]
+A = SA[2.0, 3.0, 5.0]
 typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})
 ```
 
@@ -178,11 +178,11 @@ want to use the out-of-place allocating form, but this time we want to output
 a static array:
 
 ```@example faster_ode
-function lorenz_static(u,p,t)
- dx = 10.0*(u[2]-u[1])
- dy = u[1]*(28.0-u[3]) - u[2]
- dz = u[1]*u[2] - (8/3)*u[3]
- SA[dx,dy,dz]
+function lorenz_static(u, p, t)
+    dx = 10.0 * (u[2] - u[1])
+    dy = u[1] * (28.0 - u[3]) - u[2]
+    dz = u[1] * u[2] - (8 / 3) * u[3]
+    SA[dx, dy, dz]
 end
 ```
 
@@ -190,15 +190,15 @@ To make the solver internally use static arrays, we simply give it a static
 array as the initial condition:
 
 ```@example faster_ode
-u0 = SA[1.0,0.0,0.0]
-tspan = (0.0,100.0)
-prob = ODEProblem(lorenz_static,u0,tspan)
-@btime solve(prob,Tsit5());
+u0 = SA[1.0, 0.0, 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz_static, u0, tspan)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob,Tsit5(),save_everystep=false);
+@btime solve(prob, Tsit5(), save_everystep = false);
 nothing # hide
 ```
 
@@ -229,17 +229,17 @@ For example:
 ```@example faster_ode2
 using DifferentialEquations
 using Plots
-function rober!(du,u,p,t)
-  y₁,y₂,y₃ = u
-  k₁,k₂,k₃ = p
-  du[1] = -k₁*y₁+k₃*y₂*y₃
-  du[2] =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
-  du[3] =  k₂*y₂^2
-  nothing
+function rober!(du, u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    du[1] = -k₁ * y₁ + k₃ * y₂ * y₃
+    du[2] = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
+    du[3] = k₂ * y₂^2
+    nothing
 end
-prob = ODEProblem(rober!,[1.0,0.0,0.0],(0.0,1e5),[0.04,3e7,1e4])
+prob = ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1e5), [0.04, 3e7, 1e4])
 sol = solve(prob)
-plot(sol,tspan=(1e-2,1e5),xscale=:log10)
+plot(sol, tspan = (1e-2, 1e5), xscale = :log10)
 ```
 
 ```@example faster_ode2
@@ -247,6 +247,7 @@ using BenchmarkTools
 @btime solve(prob);
 nothing # hide
 ```
+
 ### Choosing a Good Solver
 
 Choosing a good solver is required for getting top-notch speed. General
@@ -266,7 +267,7 @@ From this, we try the recommendation of `Rosenbrock23()` for stiff ODEs at
 default tolerances:
 
 ```@example faster_ode2
-@btime solve(prob,Rosenbrock23());
+@btime solve(prob, Rosenbrock23());
 nothing # hide
 ```
 
@@ -277,25 +278,26 @@ function by using the `jac` argument for the `ODEFunction`. First we have to
 derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this, we get:
 
 ```@example faster_ode2
-function rober_jac!(J,u,p,t)
-  y₁,y₂,y₃ = u
-  k₁,k₂,k₃ = p
-  J[1,1] = k₁ * -1
-  J[2,1] = k₁
-  J[3,1] = 0
-  J[1,2] = y₃ * k₃
-  J[2,2] = y₂ * k₂ * -2 + y₃ * k₃ * -1
-  J[3,2] = y₂ * 2 * k₂
-  J[1,3] = k₃ * y₂
-  J[2,3] = k₃ * y₂ * -1
-  J[3,3] = 0
-  nothing
+function rober_jac!(J, u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    J[1, 1] = k₁ * -1
+    J[2, 1] = k₁
+    J[3, 1] = 0
+    J[1, 2] = y₃ * k₃
+    J[2, 2] = y₂ * k₂ * -2 + y₃ * k₃ * -1
+    J[3, 2] = y₂ * 2 * k₂
+    J[1, 3] = k₃ * y₂
+    J[2, 3] = k₃ * y₂ * -1
+    J[3, 3] = 0
+    nothing
 end
-f! = ODEFunction(rober!, jac=rober_jac!)
-prob_jac = ODEProblem(f!,[1.0,0.0,0.0],(0.0,1e5),(0.04,3e7,1e4))
+f! = ODEFunction(rober!, jac = rober_jac!)
+prob_jac = ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
 ```
+
 ```@example faster_ode2
-@btime solve(prob_jac,Rosenbrock23());
+@btime solve(prob_jac, Rosenbrock23());
 nothing # hide
 ```
 
@@ -320,7 +322,7 @@ ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
 Now let's use that to give the analytical solution Jacobian:
 
 ```@example faster_ode2
-prob_jac2 = ODEProblem(de,[],(0.0,1e5),jac=true)
+prob_jac2 = ODEProblem(de, [], (0.0, 1e5), jac = true)
 ```
 
 ```@example faster_ode2
@@ -340,23 +342,23 @@ for static arrays, for the ROBER problem, this looks like:
 
 ```@example faster_ode2
 using StaticArrays
-function rober_static(u,p,t)
-  y₁,y₂,y₃ = u
-  k₁,k₂,k₃ = p
-  du1 = -k₁*y₁+k₃*y₂*y₃
-  du2 =  k₁*y₁-k₂*y₂^2-k₃*y₂*y₃
-  du3 =  k₂*y₂^2
-  SA[du1,du2,du3]
+function rober_static(u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    du1 = -k₁ * y₁ + k₃ * y₂ * y₃
+    du2 = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
+    du3 = k₂ * y₂^2
+    SA[du1, du2, du3]
 end
-prob = ODEProblem(rober_static,SA[1.0,0.0,0.0],(0.0,1e5),SA[0.04,3e7,1e4])
-sol = solve(prob,Rosenbrock23())
+prob = ODEProblem(rober_static, SA[1.0, 0.0, 0.0], (0.0, 1e5), SA[0.04, 3e7, 1e4])
+sol = solve(prob, Rosenbrock23())
 ```
 
 If we benchmark this, we see a really fast solution with really low allocation
 counts:
 
 ```@example faster_ode2
-@btime sol = solve(prob,Rosenbrock23());
+@btime sol = solve(prob, Rosenbrock23());
 nothing # hide
 ```
 
@@ -368,7 +370,7 @@ In this tutorial, we will optimize the right-hand side definition of a PDE
 semi-discretization.
 
 !!! note
-
+    
     We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
     tutorial for details on customizing DifferentialEquations.jl for more
     efficient large-scale stiff ODE solving. This section will only focus on the
@@ -392,40 +394,41 @@ lines of:
 ```@example faster_ode3
 using DifferentialEquations, LinearAlgebra, BenchmarkTools
 # Generate the constants
-p = (1.0,1.0,1.0,10.0,0.001,100.0) # a,α,ubar,β,D1,D2
+p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
-Ax = Array(Tridiagonal([1.0 for i in 1:N-1],[-2.0 for i in 1:N],[1.0 for i in 1:N-1]))
+Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
+                       [1.0 for i in 1:(N - 1)]))
 Ay = copy(Ax)
-Ax[2,1] = 2.0
-Ax[end-1,end] = 2.0
-Ay[1,2] = 2.0
-Ay[end,end-1] = 2.0
+Ax[2, 1] = 2.0
+Ax[end - 1, end] = 2.0
+Ay[1, 2] = 2.0
+Ay[end, end - 1] = 2.0
 
-function basic_version!(dr,r,p,t)
-  a,α,ubar,β,D1,D2 = p
-  u = r[:,:,1]
-  v = r[:,:,2]
-  Du = D1*(Ay*u + u*Ax)
-  Dv = D2*(Ay*v + v*Ax)
-  dr[:,:,1] = Du .+ a.*u.*u./v .+ ubar .- α*u
-  dr[:,:,2] = Dv .+ a.*u.*u .- β*v
+function basic_version!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = r[:, :, 1]
+    v = r[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
+    dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
 end
 
-a,α,ubar,β,D1,D2 = p
-uss = (ubar+β)/α
-vss = (a/β)*uss^2
-r0 = zeros(100,100,2)
-r0[:,:,1] .= uss.+0.1.*rand.()
-r0[:,:,2] .= vss
+a, α, ubar, β, D1, D2 = p
+uss = (ubar + β) / α
+vss = (a / β) * uss^2
+r0 = zeros(100, 100, 2)
+r0[:, :, 1] .= uss .+ 0.1 .* rand.()
+r0[:, :, 2] .= vss
 
-prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)
+prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
 ```
 
 In this version, we have encoded our initial condition to be a 3-dimensional
 array, with `u[:,:,1]` being the `A` part and `u[:,:,2]` being the `B` part.
 
 ```@example faster_ode3
-@btime solve(prob,Tsit5());
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
@@ -454,19 +457,19 @@ we can make use of broadcast fusion there. Let's rewrite `basic_version!` to
 ***avoid slicing allocations*** and to ***use broadcast fusion***:
 
 ```@example faster_ode3
-function gm2!(dr,r,p,t)
-  a,α,ubar,β,D1,D2 = p
-  u = @view r[:,:,1]
-  v = @view r[:,:,2]
-  du = @view dr[:,:,1]
-  dv = @view dr[:,:,2]
-  Du = D1*(Ay*u + u*Ax)
-  Dv = D2*(Ay*v + v*Ax)
-  @. du = Du + a.*u.*u./v + ubar - α*u
-  @. dv = Dv + a.*u.*u - β*v
+function gm2!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    @. du = Du + a .* u .* u ./ v + ubar - α * u
+    @. dv = Dv + a .* u .* u - β * v
 end
-prob = ODEProblem(gm2!,r0,(0.0,0.1),p)
-@btime solve(prob,Tsit5());
+prob = ODEProblem(gm2!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
@@ -476,143 +479,159 @@ matrix multiplications with `mul!`. When doing so, we will need to have cache
 variables to write into. This looks like:
 
 ```@example faster_ode3
-Ayu = zeros(N,N)
-uAx = zeros(N,N)
-Du = zeros(N,N)
-Ayv = zeros(N,N)
-vAx = zeros(N,N)
-Dv = zeros(N,N)
-function gm3!(dr,r,p,t)
-  a,α,ubar,β,D1,D2 = p
-  u = @view r[:,:,1]
-  v = @view r[:,:,2]
-  du = @view dr[:,:,1]
-  dv = @view dr[:,:,2]
-  mul!(Ayu,Ay,u)
-  mul!(uAx,u,Ax)
-  mul!(Ayv,Ay,v)
-  mul!(vAx,v,Ax)
-  @. Du = D1*(Ayu + uAx)
-  @. Dv = D2*(Ayv + vAx)
-  @. du = Du + a*u*u./v + ubar - α*u
-  @. dv = Dv + a*u*u - β*v
+Ayu = zeros(N, N)
+uAx = zeros(N, N)
+Du = zeros(N, N)
+Ayv = zeros(N, N)
+vAx = zeros(N, N)
+Dv = zeros(N, N)
+function gm3!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    mul!(Ayu, Ay, u)
+    mul!(uAx, u, Ax)
+    mul!(Ayv, Ay, v)
+    mul!(vAx, v, Ax)
+    @. Du = D1 * (Ayu + uAx)
+    @. Dv = D2 * (Ayv + vAx)
+    @. du = Du + a * u * u ./ v + ubar - α * u
+    @. dv = Dv + a * u * u - β * v
 end
-prob = ODEProblem(gm3!,r0,(0.0,0.1),p)
-@btime solve(prob,Tsit5());
+prob = ODEProblem(gm3!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
 But our temporary variables are global variables. We need to either declare the caches as `const` or localize them. We can localize them by adding them to the parameters, `p`. It's easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.
 
 ```@example faster_ode3
-p = (1.0,1.0,1.0,10.0,0.001,100.0,Ayu,uAx,Du,Ayv,vAx,Dv) # a,α,ubar,β,D1,D2
-function gm4!(dr,r,p,t)
-  a,α,ubar,β,D1,D2,Ayu,uAx,Du,Ayv,vAx,Dv = p
-  u = @view r[:,:,1]
-  v = @view r[:,:,2]
-  du = @view dr[:,:,1]
-  dv = @view dr[:,:,2]
-  mul!(Ayu,Ay,u)
-  mul!(uAx,u,Ax)
-  mul!(Ayv,Ay,v)
-  mul!(vAx,v,Ax)
-  @. Du = D1*(Ayu + uAx)
-  @. Dv = D2*(Ayv + vAx)
-  @. du = Du + a*u*u./v + ubar - α*u
-  @. dv = Dv + a*u*u - β*v
+p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0, Ayu, uAx, Du, Ayv, vAx, Dv) # a,α,ubar,β,D1,D2
+function gm4!(dr, r, p, t)
+    a, α, ubar, β, D1, D2, Ayu, uAx, Du, Ayv, vAx, Dv = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    mul!(Ayu, Ay, u)
+    mul!(uAx, u, Ax)
+    mul!(Ayv, Ay, v)
+    mul!(vAx, v, Ax)
+    @. Du = D1 * (Ayu + uAx)
+    @. Dv = D2 * (Ayv + vAx)
+    @. du = Du + a * u * u ./ v + ubar - α * u
+    @. dv = Dv + a * u * u - β * v
 end
-prob = ODEProblem(gm4!,r0,(0.0,0.1),p)
-@btime solve(prob,Tsit5());
+prob = ODEProblem(gm4!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
 We could then use the BLAS `gemmv` to optimize the matrix multiplications some more, but instead let's devectorize the stencil.
 
 ```@example faster_ode3
-p = (1.0,1.0,1.0,10.0,0.001,100.0,N)
-function fast_gm!(du,u,p,t)
-  a,α,ubar,β,D1,D2,N = p
+p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0, N)
+function fast_gm!(du, u, p, t)
+    a, α, ubar, β, D1, D2, N = p
 
-  @inbounds for j in 2:N-1, i in 2:N-1
-    du[i,j,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
-              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-  end
+    @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+        du[i, j, 1] = D1 *
+                      (u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
+                       4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
 
-  @inbounds for j in 2:N-1, i in 2:N-1
-    du[i,j,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
-            a*u[i,j,1]^2 - β*u[i,j,2]
-  end
+    @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+        du[i, j, 2] = D2 *
+                      (u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
+                       4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
 
-  @inbounds for j in 2:N-1
-    i = 1
-    du[1,j,1] = D1*(2u[i+1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
-            a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-  end
-  @inbounds for j in 2:N-1
-    i = 1
-    du[1,j,2] = D2*(2u[i+1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
-            a*u[i,j,1]^2 - β*u[i,j,2]
-  end
-  @inbounds for j in 2:N-1
-    i = N
-    du[end,j,1] = D1*(2u[i-1,j,1] + u[i,j+1,1] + u[i,j-1,1] - 4u[i,j,1]) +
-           a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-  end
-  @inbounds for j in 2:N-1
-    i = N
-    du[end,j,2] = D2*(2u[i-1,j,2] + u[i,j+1,2] + u[i,j-1,2] - 4u[i,j,2]) +
-           a*u[i,j,1]^2 - β*u[i,j,2]
-  end
+    @inbounds for j in 2:(N - 1)
+        i = 1
+        du[1, j, 1] = D1 *
+                      (2u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = 1
+        du[1, j, 2] = D2 *
+                      (2u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = N
+        du[end, j, 1] = D1 *
+                        (2u[i - 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = N
+        du[end, j, 2] = D2 *
+                        (2u[i - 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
 
-  @inbounds for i in 2:N-1
-    j = 1
-    du[i,1,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
-              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-  end
-  @inbounds for i in 2:N-1
-    j = 1
-    du[i,1,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
-              a*u[i,j,1]^2 - β*u[i,j,2]
-  end
-  @inbounds for i in 2:N-1
-    j = N
-    du[i,end,1] = D1*(u[i-1,j,1] + u[i+1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
-             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-  end
-  @inbounds for i in 2:N-1
-    j = N
-    du[i,end,2] = D2*(u[i-1,j,2] + u[i+1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
-             a*u[i,j,1]^2 - β*u[i,j,2]
-  end
+    @inbounds for i in 2:(N - 1)
+        j = 1
+        du[i, 1, 1] = D1 *
+                      (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = 1
+        du[i, 1, 2] = D2 *
+                      (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = N
+        du[i, end, 1] = D1 *
+                        (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = N
+        du[i, end, 2] = D2 *
+                        (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
 
-  @inbounds begin
-    i = 1; j = 1
-    du[1,1,1] = D1*(2u[i+1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
-              a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-    du[1,1,2] = D2*(2u[i+1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
-              a*u[i,j,1]^2 - β*u[i,j,2]
+    @inbounds begin
+        i = 1
+        j = 1
+        du[1, 1, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[1, 1, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
 
-    i = 1; j = N
-    du[1,N,1] = D1*(2u[i+1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
-             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-    du[1,N,2] = D2*(2u[i+1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
-             a*u[i,j,1]^2 - β*u[i,j,2]
+        i = 1
+        j = N
+        du[1, N, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[1, N, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
 
-    i = N; j = 1
-    du[N,1,1] = D1*(2u[i-1,j,1] + 2u[i,j+1,1] - 4u[i,j,1]) +
-             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-    du[N,1,2] = D2*(2u[i-1,j,2] + 2u[i,j+1,2] - 4u[i,j,2]) +
-             a*u[i,j,1]^2 - β*u[i,j,2]
+        i = N
+        j = 1
+        du[N, 1, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[N, 1, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
 
-    i = N; j = N
-    du[end,end,1] = D1*(2u[i-1,j,1] + 2u[i,j-1,1] - 4u[i,j,1]) +
-             a*u[i,j,1]^2/u[i,j,2] + ubar - α*u[i,j,1]
-    du[end,end,2] = D2*(2u[i-1,j,2] + 2u[i,j-1,2] - 4u[i,j,2]) +
-             a*u[i,j,1]^2 - β*u[i,j,2]
-   end
+        i = N
+        j = N
+        du[end, end, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                          a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[end, end, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                          a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
 end
-prob = ODEProblem(fast_gm!,r0,(0.0,0.1),p)
-@btime solve(prob,Tsit5());
+prob = ODEProblem(fast_gm!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
@@ -626,30 +645,30 @@ do this automatically from the basic version:
 
 ```@example faster_ode3
 using ModelingToolkit
-function basic_version!(dr,r,p,t)
-  a,α,ubar,β,D1,D2 = p
-  u = r[:,:,1]
-  v = r[:,:,2]
-  Du = D1*(Ay*u + u*Ax)
-  Dv = D2*(Ay*v + v*Ax)
-  dr[:,:,1] = Du .+ a.*u.*u./v .+ ubar .- α*u
-  dr[:,:,2] = Dv .+ a.*u.*u .- β*v
+function basic_version!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = r[:, :, 1]
+    v = r[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
+    dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
 end
 
-a,α,ubar,β,D1,D2 = p
-uss = (ubar+β)/α
-vss = (a/β)*uss^2
-r0 = zeros(100,100,2)
-r0[:,:,1] .= uss.+0.1.*rand.()
-r0[:,:,2] .= vss
+a, α, ubar, β, D1, D2 = p
+uss = (ubar + β) / α
+vss = (a / β) * uss^2
+r0 = zeros(100, 100, 2)
+r0[:, :, 1] .= uss .+ 0.1 .* rand.()
+r0[:, :, 2] .= vss
 
-prob = ODEProblem(basic_version!,r0,(0.0,0.1),p)
+prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
 de = modelingtoolkitize(prob)
 
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!
 
-fastprob = ODEProblem(de,[],(0.0,0.1),jac=true,sparse=true)
+fastprob = ODEProblem(de, [], (0.0, 0.1), jac = true, sparse = true)
 ```
 
 Lastly, we can do other things like multithread the main loops.
@@ -671,7 +690,7 @@ algorithms. `CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
 setting `linear_solver = :GMRES`.
 
 !!! note
-
+    
     The [Solving Large Stiff Equations](@ref stiff) tutorial goes through these
     details. This is simply to give a taste of how much optimization opportunity
     is left on the table!
@@ -679,32 +698,32 @@ setting `linear_solver = :GMRES`.
 Let's see how our fast right-hand side scales as we increase the integration time.
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!,r0,(0.0,10.0),p)
-@btime solve(prob,Tsit5());
+prob = ODEProblem(fast_gm!, r0, (0.0, 10.0), p)
+@btime solve(prob, Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode3
 using Sundials
-@btime solve(prob,CVODE_BDF(linear_solver=:GMRES));
+@btime solve(prob, CVODE_BDF(linear_solver = :GMRES));
 nothing # hide
 ```
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!,r0,(0.0,100.0),p)
+prob = ODEProblem(fast_gm!, r0, (0.0, 100.0), p)
 # Will go out of memory if we don't turn off `save_everystep`!
-@btime solve(prob,Tsit5(),save_everystep=false);
+@btime solve(prob, Tsit5(), save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
-@btime solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);
+@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!,r0,(0.0,500.0),p)
-@btime solve(prob,CVODE_BDF(linear_solver=:GMRES),save_everystep=false);
+prob = ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
+@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
 nothing # hide
 ```
 

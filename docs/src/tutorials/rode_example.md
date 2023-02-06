@@ -4,7 +4,7 @@ This tutorial will introduce you to the functionality for solving RODEs. Other
 introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
 
 !!! note
-
+    
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 ## Example 1: Scalar RODEs
@@ -20,13 +20,13 @@ where ``f(u,p,t,W)=2u\sin(W)`` and ``W(t)`` is a Wiener process (Gaussian proces
 ```@example rode
 using DifferentialEquations
 using Plots
-function f3(u,p,t,W)
-  2u*sin(W)
+function f3(u, p, t, W)
+    2u * sin(W)
 end
 u0 = 1.00
-tspan = (0.0,5.0)
-prob = RODEProblem(f3,u0,tspan)
-sol = solve(prob,RandomEM(),dt=1/100)
+tspan = (0.0, 5.0)
+prob = RODEProblem(f3, u0, tspan)
+sol = solve(prob, RandomEM(), dt = 1 / 100)
 plot(sol)
 ```
 
@@ -43,14 +43,14 @@ efficient for systems. The signature is `f(du,u,p,t,W)`. For example,
 ```@example rode2
 using DifferentialEquations
 using Plots
-function f(du,u,p,t,W)
-  du[1] = 2u[1]*sin(W[1] - W[2])
-  du[2] = -2u[2]*cos(W[1] + W[2])
+function f(du, u, p, t, W)
+    du[1] = 2u[1] * sin(W[1] - W[2])
+    du[2] = -2u[2] * cos(W[1] + W[2])
 end
-u0 = [1.00;1.00]
-tspan = (0.0,5.0)
-prob = RODEProblem(f,u0,tspan)
-sol = solve(prob,RandomEM(),dt=1/100)
+u0 = [1.00; 1.00]
+tspan = (0.0, 5.0)
+prob = RODEProblem(f, u0, tspan)
+sol = solve(prob, RandomEM(), dt = 1 / 100)
 plot(sol)
 ```
 
@@ -61,13 +61,13 @@ random process:
 ```@example rode3
 using DifferentialEquations
 using Plots
-function f(du,u,p,t,W)
-  du[1] = -2W[3]*u[1]*sin(W[1] - W[2])
-  du[2] = -2u[2]*cos(W[1] + W[2])
+function f(du, u, p, t, W)
+    du[1] = -2W[3] * u[1] * sin(W[1] - W[2])
+    du[2] = -2u[2] * cos(W[1] + W[2])
 end
-u0 = [1.00;1.00]
-tspan = (0.0,5.0)
-prob = RODEProblem(f,u0,tspan,rand_prototype=zeros(3))
-sol = solve(prob,RandomEM(),dt=1/100)
+u0 = [1.00; 1.00]
+tspan = (0.0, 5.0)
+prob = RODEProblem(f, u0, tspan, rand_prototype = zeros(3))
+sol = solve(prob, RandomEM(), dt = 1 / 100)
 plot(sol)
 ```

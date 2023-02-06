@@ -6,7 +6,7 @@ Solves for the steady states in the problem defined by `prob` using the algorith
 `alg`. If no algorithm is given, a default algorithm will be chosen.
 
 !!! note
-
+    
     For a more complete documentation on nonlinear solvers for steady state problems,
     see [NonlinearSolve.jl](https://docs.sciml.ai/NonlinearSolve/stable/)
 
@@ -24,25 +24,25 @@ large time steps as the steady state approaches.
 
 ### SteadyStateDiffEq.jl
 
-- `SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
-  to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
-  keyword argument. (This method is deprecated: use NonlinearSolve.jl instead).
-- `DynamicSS` : Uses an ODE solver to find the steady state. Automatically
-  terminates when close to the steady state.
-  `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
-  ODE algorithm is given as the first argument.  The absolute and
-  relative tolerances specify the termination conditions on the
-  derivative's closeness to zero.  This internally uses the
-  `TerminateSteadyState` callback from the Callback Library.  The
-  simulated time for which the given ODE is solved can be limited by
-  `tspan`.  If `tspan` is a number, it is equivalent to passing
-  `(zero(tspan), tspan)`.
+  - `SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
+    to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
+    keyword argument. (This method is deprecated: use NonlinearSolve.jl instead).
+  - `DynamicSS` : Uses an ODE solver to find the steady state. Automatically
+    terminates when close to the steady state.
+    `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
+    ODE algorithm is given as the first argument.  The absolute and
+    relative tolerances specify the termination conditions on the
+    derivative's closeness to zero.  This internally uses the
+    `TerminateSteadyState` callback from the Callback Library.  The
+    simulated time for which the given ODE is solved can be limited by
+    `tspan`.  If `tspan` is a number, it is equivalent to passing
+    `(zero(tspan), tspan)`.
 
 Example usage:
 
 ```julia
-sol = solve(prob,SSRootfind())
-sol = solve(prob,DynamicSS(Tsit5()))
+sol = solve(prob, SSRootfind())
+sol = solve(prob, DynamicSS(Tsit5()))
 using Sundials
-sol = solve(prob,DynamicSS(CVODE_BDF()),dt=1.0)
+sol = solve(prob, DynamicSS(CVODE_BDF()), dt = 1.0)
 ```

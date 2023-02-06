@@ -4,7 +4,7 @@ This tutorial will introduce you to the functionality for solving delay differen
 equations.
 
 !!! note
-
+    
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
 
 Delay differential equations are equations which have a delayed argument. To allow
@@ -37,21 +37,21 @@ Thus, the function for this model is given by:
 
 ```@example dde
 using DifferentialEquations
-function bc_model(du,u,h,p,t)
-  p0,q0,v0,d0,p1,q1,v1,d1,d2,beta0,beta1,tau = p
-  hist3 = h(p, t-tau)[3]
-  du[1] = (v0/(1+beta0*(hist3^2))) * (p0 - q0)*u[1] - d0*u[1]
-  du[2] = (v0/(1+beta0*(hist3^2))) * (1 - p0 + q0)*u[1] +
-          (v1/(1+beta1*(hist3^2))) * (p1 - q1)*u[2] - d1*u[2]
-  du[3] = (v1/(1+beta1*(hist3^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
+function bc_model(du, u, h, p, t)
+    p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau = p
+    hist3 = h(p, t - tau)[3]
+    du[1] = (v0 / (1 + beta0 * (hist3^2))) * (p0 - q0) * u[1] - d0 * u[1]
+    du[2] = (v0 / (1 + beta0 * (hist3^2))) * (1 - p0 + q0) * u[1] +
+            (v1 / (1 + beta1 * (hist3^2))) * (p1 - q1) * u[2] - d1 * u[2]
+    du[3] = (v1 / (1 + beta1 * (hist3^2))) * (1 - p1 + q1) * u[2] - d2 * u[3]
 end
 ```
 
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDEProblem(f, u0, h, tspan, p=SciMLBase.NullParameters();
-                  constant_lags=[], dependent_lags=[], kwargs...)
+prob = DDEProblem(f, u0, h, tspan, p = SciMLBase.NullParameters();
+                  constant_lags = [], dependent_lags = [], kwargs...)
 ```
 
 is very similar to ODEs, where we now have to give the lags and a function `h`.
@@ -72,16 +72,23 @@ lags = [tau]
 
 Next, we choose to solve on the timespan `(0.0,10.0)` and create the problem type:
 
-
 ```@example dde
-p0 = 0.2; q0 = 0.3; v0 = 1; d0 = 5
-p1 = 0.2; q1 = 0.3; v1 = 1; d1 = 1
-d2 = 1; beta0 = 1; beta1 = 1
-p = (p0,q0,v0,d0,p1,q1,v1,d1,d2,beta0,beta1,tau)
-tspan = (0.0,10.0)
-u0 = [1.0,1.0,1.0]
+p0 = 0.2;
+q0 = 0.3;
+v0 = 1;
+d0 = 5;
+p1 = 0.2;
+q1 = 0.3;
+v1 = 1;
+d1 = 1;
+d2 = 1;
+beta0 = 1;
+beta1 = 1;
+p = (p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau)
+tspan = (0.0, 10.0)
+u0 = [1.0, 1.0, 1.0]
 
-prob = DDEProblem(bc_model,u0,h,tspan,p; constant_lags=lags)
+prob = DDEProblem(bc_model, u0, h, tspan, p; constant_lags = lags)
 ```
 
 An efficient way to solve this problem (given the constant lags) is with the
@@ -102,7 +109,7 @@ To solve the problem with this algorithm, we do the same thing we'd do with othe
 methods on the common interface:
 
 ```@example dde
-sol = solve(prob,alg)
+sol = solve(prob, alg)
 ```
 
 Note that everything available to OrdinaryDiffEq.jl can be used here, including
@@ -123,19 +130,19 @@ case, we must supply the history initial conditions as in-place as well. For the
 previous example, that's simply
 
 ```@example dde
-h(out, p, t) = (out.=1.0)
+h(out, p, t) = (out .= 1.0)
 ```
 
 and then our DDE is:
 
 ```@example dde
 const out = zeros(3) # Define a cache variable
-function bc_model(du,u,h,p,t)
-  h(out, p, t-tau) # updates out to be the correct history function
-  du[1] = (v0/(1+beta0*(out[3]^2))) * (p0 - q0)*u[1] - d0*u[1]
-  du[2] = (v0/(1+beta0*(out[3]^2))) * (1 - p0 + q0)*u[1] +
-          (v1/(1+beta1*(out[3]^2))) * (p1 - q1)*u[2] - d1*u[2]
-  du[3] = (v1/(1+beta1*(out[3]^2))) * (1 - p1 + q1)*u[2] - d2*u[3]
+function bc_model(du, u, h, p, t)
+    h(out, p, t - tau) # updates out to be the correct history function
+    du[1] = (v0 / (1 + beta0 * (out[3]^2))) * (p0 - q0) * u[1] - d0 * u[1]
+    du[2] = (v0 / (1 + beta0 * (out[3]^2))) * (1 - p0 + q0) * u[1] +
+            (v1 / (1 + beta1 * (out[3]^2))) * (p1 - q1) * u[2] - d1 * u[2]
+    du[3] = (v1 / (1 + beta1 * (out[3]^2))) * (1 - p1 + q1) * u[2] - d2 * u[3]
 end
 ```
 
@@ -145,19 +152,19 @@ we can instead ask specifically for that value by passing the keyword `idxs = 3`
 The DDE function `bc_model` is now:
 
 ```@example dde
-function bc_model(du,u,h,p,t)
-  u3_past_sq = h(p, t-tau; idxs=3)^2
-  du[1] = (v0/(1+beta0*(u3_past_sq))) * (p0 - q0)*u[1] - d0*u[1]
-  du[2] = (v0/(1+beta0*(u3_past_sq))) * (1 - p0 + q0)*u[1] +
-          (v1/(1+beta1*(u3_past_sq))) * (p1 - q1)*u[2] - d1*u[2]
-  du[3] = (v1/(1+beta1*(u3_past_sq))) * (1 - p1 + q1)*u[2] - d2*u[3]
+function bc_model(du, u, h, p, t)
+    u3_past_sq = h(p, t - tau; idxs = 3)^2
+    du[1] = (v0 / (1 + beta0 * (u3_past_sq))) * (p0 - q0) * u[1] - d0 * u[1]
+    du[2] = (v0 / (1 + beta0 * (u3_past_sq))) * (1 - p0 + q0) * u[1] +
+            (v1 / (1 + beta1 * (u3_past_sq))) * (p1 - q1) * u[2] - d1 * u[2]
+    du[3] = (v1 / (1 + beta1 * (u3_past_sq))) * (1 - p1 + q1) * u[2] - d2 * u[3]
 end
 ```
 
 Note that this requires that we define the historical values
 
 ```@example dde
-h(p, t; idxs=nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
+h(p, t; idxs = nothing) = typeof(idxs) <: Number ? 1.0 : ones(3)
 ```
 
 where `idxs` can be an integer for which variable in the history to compute,
@@ -193,9 +200,9 @@ Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
 from above with residual control:
 
 ```@example dde
-prob = DDEProblem(bc_model,u0,h,tspan)
+prob = DDEProblem(bc_model, u0, h, tspan)
 alg = MethodOfSteps(RK4())
-sol = solve(prob,alg)
+sol = solve(prob, alg)
 ```
 
 Note that this method can solve problems with state-dependent delays.
@@ -213,9 +220,9 @@ We can solve the above problem with dependent delay tracking by declaring the
 dependent lags and solving with a `MethodOfSteps` algorithm:
 
 ```@example dde
-prob = DDEProblem(bc_model,u0,h,tspan; dependent_lags = ((u,p,t) -> tau,))
+prob = DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -> tau,))
 alg = MethodOfSteps(Tsit5())
-sol = solve(prob,alg)
+sol = solve(prob, alg)
 ```
 
 Here, we treated the single lag `t-tau` as a state-dependent delay. Of course, you

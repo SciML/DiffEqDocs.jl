@@ -6,35 +6,37 @@ For our model, we will use the simple decay equation. We will write this in the 
 
 ```@example dosing
 using DifferentialEquations
-function f(du,u,p,t)
+function f(du, u, p, t)
     du[1] = -u[1]
 end
 u0 = [10.0]
 const V = 1
-prob = ODEProblem(f,u0,(0.0,10.0))
+prob = ODEProblem(f, u0, (0.0, 10.0))
 ```
 
 Let's see what the solution looks like without any events.
 
 ```@example dosing
-sol = solve(prob,Tsit5())
-using Plots; gr()
+sol = solve(prob, Tsit5())
+using Plots;
+gr();
 plot(sol)
 ```
 
 We see that at time `t=4`, the patient should receive a dose. Let's code up that event. We need to check at `t=4` if the concentration `u[1]/4` is `<4`, and if so, add `10` to `u[1]`. We do this with the following:
 
 ```@example dosing
-condition(u,t,integrator) = t==4 && u[1]/V<4
+condition(u, t, integrator) = t == 4 && u[1] / V < 4
 affect!(integrator) = integrator.u[1] += 10
-cb = DiscreteCallback(condition,affect!)
+cb = DiscreteCallback(condition, affect!)
 ```
 
 Now we will give this callback to the solver, and tell it to stop at `t=4` so that way the condition can be checked:
 
 ```@example dosing
-sol = solve(prob,Tsit5(),tstops=[4.0],callback=cb)
-using Plots; gr()
+sol = solve(prob, Tsit5(), tstops = [4.0], callback = cb)
+using Plots;
+gr();
 plot(sol)
 ```
 
@@ -48,24 +50,26 @@ println(sol(4.000000000001))
 Now let's model a patient whose decay rate for the drug is lower:
 
 ```@example dosing
-function f(du,u,p,t)
-    du[1] = -u[1]/6
+function f(du, u, p, t)
+    du[1] = -u[1] / 6
 end
 u0 = [10.0]
 const V = 1
-prob = ODEProblem(f,u0,(0.0,10.0))
+prob = ODEProblem(f, u0, (0.0, 10.0))
 ```
 
 ```@example dosing
-sol = solve(prob,Tsit5())
-using Plots; gr()
+sol = solve(prob, Tsit5())
+using Plots;
+gr();
 plot(sol)
 ```
 
 Under the same criteria, with the same event, this patient will not receive a second dose:
 
 ```@example dosing
-sol = solve(prob,Tsit5(),tstops=[4.0],callback=cb)
-using Plots; gr()
+sol = solve(prob, Tsit5(), tstops = [4.0], callback = cb)
+using Plots;
+gr();
 plot(sol)
 ```

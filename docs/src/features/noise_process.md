@@ -9,5 +9,3 @@ be simulated and solved using the DiffEq common interface (including the Monte
 Carlo interface).
 
 For more details, see [DiffEqNoiseProcess.jl](https://docs.sciml.ai/DiffEqNoiseProcess/)
-
-

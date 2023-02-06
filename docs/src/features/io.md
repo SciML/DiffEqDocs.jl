@@ -13,19 +13,19 @@ let's solve a 4x2 system of ODEs and get the DataFrame:
 
 ```@example IO
 using OrdinaryDiffEq, DataFrames
-f_2dlinear = (du,u,p,t) -> du.=1.01u;
-tspan = (0.0,1.0)
-prob = ODEProblem(f_2dlinear,rand(2,2),tspan);
-sol =solve(prob,Euler();dt=1//2^(4));
+f_2dlinear = (du, u, p, t) -> du .= 1.01u;
+tspan = (0.0, 1.0)
+prob = ODEProblem(f_2dlinear, rand(2, 2), tspan);
+sol = solve(prob, Euler(); dt = 1 // 2^(4));
 df = DataFrame(sol)
 ```
 
 If we set `syms` in the DiffEqFunction, then those names will be used:
 
 ```@example IO
-f = ODEFunction(f_2dlinear,syms=[:a,:b,:c,:d])
-prob = ODEProblem(f,rand(2,2),(0.0,1.0));
-sol =solve(prob,Euler();dt=1//2^(4));
+f = ODEFunction(f_2dlinear, syms = [:a, :b, :c, :d])
+prob = ODEProblem(f, rand(2, 2), (0.0, 1.0));
+sol = solve(prob, Euler(); dt = 1 // 2^(4));
 df = DataFrame(sol)
 ```
 
@@ -34,7 +34,7 @@ Additionally, this data can be saved to a CSV:
 
 ```@example IO
 using CSV
-CSV.write("out.csv",df)
+CSV.write("out.csv", df)
 ```
 
 ## JLD2 and BSON.jl
@@ -43,7 +43,7 @@ JLD2.jl and BSON.jl will work with the full solution type if you bring the requi
 back into scope before loading. For example, if we save the solution:
 
 ```@example IO
-sol = solve(prob,Euler();dt=1//2^(4))
+sol = solve(prob, Euler(); dt = 1 // 2^(4))
 using JLD2
 @save "out.jld2" sol
 ```
@@ -61,10 +61,11 @@ JLD2.@load "out.jld2" sol
 The example with BSON.jl is:
 
 ```@example IO
-sol = solve(prob,Euler();dt=1//2^(4))
+sol = solve(prob, Euler(); dt = 1 // 2^(4))
 using BSON
-bson("test.bson",Dict(:sol=>sol))
+bson("test.bson", Dict(:sol => sol))
 ```
+
 ```@example IO
 # New session
 using OrdinaryDiffEq
@@ -88,5 +89,5 @@ the solution type is currently not compatible with JLD.
 
 ```julia
 using JLD
-JLD.save("out.jld","sol",sol)
+JLD.save("out.jld", "sol", sol)
 ```

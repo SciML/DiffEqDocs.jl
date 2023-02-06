@@ -2,9 +2,9 @@
 
 The general workflow for using the package is as follows:
 
-* Define a problem
-* Solve the problem
-* Analyze the output
+  - Define a problem
+  - Solve the problem
+  - Analyze the output
 
 ## Defining Problems
 
@@ -21,8 +21,8 @@ over some time interval `tspan` with some initial condition `u0`, and therefore
 the `ODEProblem` is defined by those components:
 
 ```julia
-prob = ODEProblem(f,u0,tspan)
-prob = ODEProblem(f,u0,tspan,p)
+prob = ODEProblem(f, u0, tspan)
+prob = ODEProblem(f, u0, tspan, p)
 ```
 
 Note that the number types in the solution will match the types you designate
@@ -41,7 +41,7 @@ Each type of differential equation has its own problem type which allow the solv
 to dispatch to the right methods. The common interface for calling the solvers is:
 
 ```julia
-sol = solve(prob,alg;kwargs)
+sol = solve(prob, alg; kwargs)
 ```
 
 Into the command, one passes the differential equation problem that they defined

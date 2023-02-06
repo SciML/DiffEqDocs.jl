@@ -10,7 +10,7 @@ continue solving as one sees fit.
 To initialize an integrator, use the syntax:
 
 ```julia
-integrator = init(prob,alg;kwargs...)
+integrator = init(prob, alg; kwargs...)
 ```
 
 The keyword args which are accepted are the same as the [solver options](@ref solver_options)
@@ -24,7 +24,7 @@ step!(integrator)
 which will take one successful step. Additionally:
 
 ```julia
-step!(integrator,dt[,stop_at_tdt=false])
+step!(integrator, dt, stop_at_tdt = false)
 ```
 
 passing a `dt` will make the integrator continue to step until `integrator.t+dt`, and
@@ -38,29 +38,31 @@ This type also implements an iterator interface, so one can step `n` times
 (or to the last `tstop`) using the `take` iterator:
 
 ```julia
-for i in take(integrator,n) end
+for i in take(integrator, n)
+end
 ```
 
 One can loop to the end by using `solve!(integrator)` or using the iterator interface:
 
 ```julia
-for i in integrator end
+for i in integrator
+end
 ```
 
 In addition, some helper iterators are provided to help monitor the solution. For
 example, the `tuples` iterator lets you view the values:
 
 ```julia
-for (u,t) in tuples(integrator)
-  @show u,t
+for (u, t) in tuples(integrator)
+    @show u, t
 end
 ```
 
 and the `intervals` iterator lets you view the full interval:
 
 ```julia
-for (uprev,tprev,u,t) in intervals(integrator)
-  @show tprev,t
+for (uprev, tprev, u, t) in intervals(integrator)
+    @show tprev, t
 end
 ```
 
@@ -68,9 +70,9 @@ Additionally, you can make the iterator return specific time points via the
 `TimeChoiceIterator`:
 
 ```julia
-ts = range(0, stop=1, length=11)
-for (u,t) in TimeChoiceIterator(integrator,ts)
-  @show u,t
+ts = range(0, stop = 1, length = 11)
+for (u, t) in TimeChoiceIterator(integrator, ts)
+    @show u, t
 end
 ```
 
@@ -94,16 +96,16 @@ SciMLBase.check_error!
 The `integrator<:DEIntegrator` type holds all the information for the intermediate solution
 of the differential equation. Useful fields are:
 
-* `t` - time of the proposed step
-* `u` - value at the proposed step
-* `p` - user-provided data
-* `opts` - common solver options
-* `alg` - the algorithm associated with the solution
-* `f` - the function being solved
-* `sol` - the current state of the solution
-* `tprev` - the last timepoint
-* `uprev` - the value at the last timepoint
-* `tdir` - the sign for the direction of time
+  - `t` - time of the proposed step
+  - `u` - value at the proposed step
+  - `p` - user-provided data
+  - `opts` - common solver options
+  - `alg` - the algorithm associated with the solution
+  - `f` - the function being solved
+  - `sol` - the current state of the solution
+  - `tprev` - the last timepoint
+  - `uprev` - the value at the last timepoint
+  - `tdir` - the sign for the direction of time
 
 The function `f` is usually a wrapper of the function provided when creating the
 specific problem. For example, when solving an `ODEProblem`, `f` will be an
@@ -158,14 +160,14 @@ local object. It only knows the times of the interval it currently spans,
 the current caches and values, and the current state of the solver
 (the current options, tolerances, etc.). These serve very different purposes:
 
-* The `integrator`'s interpolation can extrapolate, both forward and backward
-  in time. This is used to estimate events and is internally used for predictions.
-* The `integrator` is fully mutable upon iteration. This means that every time
-  an iterator affect is used, it will take timesteps from the current time. This
-  means that `first(integrator)!=first(integrator)` since the `integrator` will
-  step once to evaluate the left and then step once more (not backtracking).
-  This allows the iterator to keep dynamically stepping, though one should note
-  that it may violate some immutability assumptions commonly made about iterators.
+  - The `integrator`'s interpolation can extrapolate, both forward and backward
+    in time. This is used to estimate events and is internally used for predictions.
+  - The `integrator` is fully mutable upon iteration. This means that every time
+    an iterator affect is used, it will take timesteps from the current time. This
+    means that `first(integrator)!=first(integrator)` since the `integrator` will
+    step once to evaluate the left and then step once more (not backtracking).
+    This allows the iterator to keep dynamically stepping, though one should note
+    that it may violate some immutability assumptions commonly made about iterators.
 
 If one wants the solution object, then one can find it in `integrator.sol`.
 
@@ -230,7 +232,7 @@ get_du!
 ```
 
 !!! warning
-
+    
     Note that not all these functions will be implemented for every algorithm.
     Some have hard limitations. For example, Sundials.jl cannot resize problems.
     When a function is not limited, an error will be thrown.
@@ -240,16 +242,16 @@ get_du!
 The following options can additionally be specified in `init` (or be mutated in
 the `opts`) for further control of the integrator:
 
-* `advance_to_tstop`: This makes `step!` continue to the next value in `tstop`.
-* `stop_at_next_tstop`: This forces the iterators to stop at the next value of `tstop`.
+  - `advance_to_tstop`: This makes `step!` continue to the next value in `tstop`.
+  - `stop_at_next_tstop`: This forces the iterators to stop at the next value of `tstop`.
 
 For example, if one wants to iterate but only stop at specific values, one can
 choose:
 
 ```julia
-integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5],advance_to_tstop=true)
-for (u,t) in tuples(integrator)
-  @test t ∈ [0.5,1.0]
+integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
+for (u, t) in tuples(integrator)
+    @test t ∈ [0.5, 1.0]
 end
 ```
 
@@ -258,7 +260,7 @@ and thus there are two values of `tstops` which are hit). Additionally, one can
 `solve!` only to `0.5` via:
 
 ```julia
-integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])
+integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
 integrator.opts.stop_at_next_tstop = true
 solve!(integrator)
 ```
@@ -283,16 +285,17 @@ one should try the following:
 using DifferentialEquations, DiffEqProblemLibrary, Plots
 
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((u,p,t)->1.01u,0.5,(0.0,1.0))
+prob = ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
 using Plots
-integrator = init(prob,Tsit5();dt=1//2^(4),tstops=[0.5])
-pyplot(show=true)
+integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
+pyplot(show = true)
 plot(integrator)
 for i in integrator
-  display(plot!(integrator,idxs=(0,1),legend=false))
+    display(plot!(integrator, idxs = (0, 1), legend = false))
 end
-step!(integrator); plot!(integrator,idxs=(0,1),legend=false)
+step!(integrator);
+plot!(integrator, idxs = (0, 1), legend = false);
 savefig("iteratorplot.png")
 ```
 

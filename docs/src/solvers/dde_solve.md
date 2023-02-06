@@ -11,7 +11,7 @@ The recommended method for DDE problems are the `MethodOfSteps` algorithms.
 These are constructed from an OrdinaryDiffEq.jl algorithm as follows:
 
 ```julia
-MethodOfSteps(alg; constrained=false, fpsolve=NLFunctional(; max_iter=10))
+MethodOfSteps(alg; constrained = false, fpsolve = NLFunctional(; max_iter = 10))
 ```
 
 where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
@@ -58,14 +58,14 @@ since it will use a rejection-based approach to adapt to the delay discontinuiti
 
 ## Special Keyword Arguments
 
-- `discontinuity_interp_points` - Number of interpolation points used to track
-  discontinuities arising from dependent delays. Defaults to 10. Only relevant
-  if dependent delays are declared.
+  - `discontinuity_interp_points` - Number of interpolation points used to track
+    discontinuities arising from dependent delays. Defaults to 10. Only relevant
+    if dependent delays are declared.
 
-- `discontinuity_abstol` and `discontinuity_reltol` - These are absolute and
-  relative tolerances used by the check whether the time point at the beginning
-  of the current step is a discontinuity arising from dependent delays. Defaults
-  to 1/10^12 and 0. Only relevant if dependent delays are declared.
+  - `discontinuity_abstol` and `discontinuity_reltol` - These are absolute and
+    relative tolerances used by the check whether the time point at the beginning
+    of the current step is a discontinuity arising from dependent delays. Defaults
+    to 1/10^12 and 0. Only relevant if dependent delays are declared.
 
 ### Note
 

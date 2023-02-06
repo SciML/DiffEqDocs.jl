@@ -30,7 +30,7 @@ Thus for
 
 ```julia
 using RecursiveArrayTools
-A = ArrayPartition(y,z)
+A = ArrayPartition(y, z)
 ```
 
 We would have `A.x[1]==y` and `A.x[2]==z`. Broadcasting like `f.(A)` is efficient.
@@ -46,9 +46,9 @@ using LinearAlgebra
 
 r0 = [1131.340, -2282.343, 6672.423]u"km"
 v0 = [-5.64305, 4.30333, 2.42879]u"km/s"
-Δt = 86400.0*365u"s"
+Δt = 86400.0 * 365u"s"
 μ = 398600.4418u"km^3/s^2"
-rv0 = ArrayPartition(r0,v0)
+rv0 = ArrayPartition(r0, v0)
 ```
 
 Here, `r0` is the initial positions, and `v0` are the initial velocities. `rv0`

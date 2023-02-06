@@ -27,13 +27,13 @@ equations.
 ### Constructors
 
 ```julia
-HamiltonianProblem{T}(H,p0,q0,tspan,param=nothing;kwargs...)
+HamiltonianProblem{T}(H, p0, q0, tspan, param = nothing; kwargs...)
 ```
 
 ### Fields
 
-* `H`: The Hamiltonian `H(p,q,params)` which returns a scalar.
-* `p0`: The initial momentums.
-* `q0`: The initial positions.
-* `tspan`: The timespan for the problem.
-* `param`: Defaults to `nothing`. `param` will be passed to `H`'s `params`.
+  - `H`: The Hamiltonian `H(p,q,params)` which returns a scalar.
+  - `p0`: The initial momentums.
+  - `q0`: The initial positions.
+  - `tspan`: The timespan for the problem.
+  - `param`: Defaults to `nothing`. `param` will be passed to `H`'s `params`.

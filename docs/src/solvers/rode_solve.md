@@ -11,10 +11,10 @@ It is strong order alpha for an alpha-Holder continuous noise process.
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
-- `RandomEM`- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity.
+  - `RandomEM`- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity.
 
 Example usage:
 
 ```julia
-sol = solve(prob,RandomEM(),dt=1/100)
+sol = solve(prob, RandomEM(), dt = 1 / 100)
 ```
