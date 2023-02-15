@@ -81,11 +81,13 @@ The software in this ecosystem was developed as part of academic research.
 If you would like to help support it, please star the repository, as such
 metrics may help us secure funding in the future. If you use SciML
 software as part of your research, teaching, or other activities, we would
-be grateful if you could cite our work.
+be grateful if you could cite our work as necessary for any use of DifferentialEquations.jl 
+or the packages that are maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl, 
+DiffEqDevTools.jl, etc.).
 
 ```bibtex
 @article{rackauckas2017differentialequations,
-  title={Differentialequations.jl--a performant and feature-rich ecosystem for solving differential equations in julia},
+  title={Differential{E}quations.jl--a performant and feature-rich ecosystem for solving differential equations in {J}ulia},
   author={Rackauckas, Christopher and Nie, Qing},
   journal={Journal of Open Research Software},
   volume={5},
@@ -95,8 +97,6 @@ be grateful if you could cite our work.
 }
 ```
 
-is necessary for any use of DifferentialEquations.jl or the packages that are
-maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl, DiffEqDevTools.jl, etc.).
 Additionally, many of the solvers utilize novel algorithms, and if these algorithms
 are used, we ask that you cite the methods. [Please see our citation page for guidelines](http://sciml.ai/citing.html).
 
