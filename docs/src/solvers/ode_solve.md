@@ -72,7 +72,7 @@ At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5P`,
 `Kvaerno5`, or `KenCarp4`. As native DifferentialEquations.jl solvers,
 many Julia numeric types (such as BigFloats,
 [ArbFloats](https://github.com/JuliaArbTypes/ArbFloats.jl), or
-[DecFP](https://github.com/stevengj/DecFP.jl)) will work. When the equation is
+[DecFP](https://github.com/JuliaMath/DecFP.jl)) will work. When the equation is
 defined via the `@ode_def` macro, these will be the most efficient.
 
 For faster solving at low tolerances (`<1e-9`) but when `Vector{Float64}` is used,
@@ -627,7 +627,7 @@ on/off multithreading.
 
   - `PDIRK44`: a 4th order 2-processor DIRK method.
 
-#### Exponential Runge-Kutta Methods
+#### [Exponential Runge-Kutta Methods](@id exp_RK)
 
 These methods are all fixed timestepping only.
 
@@ -655,7 +655,7 @@ constructor:
     orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
   - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit Jacobian
-    is not given. See [Extra Options](#Extra-Options-1) for more details.
+    is not given. See [Extra Options](@ref extra_options_ode) for more details.
 
 #### Adaptive Exponential Rosenbrock Methods
 
@@ -663,7 +663,7 @@ constructor:
   - `Exprb43` - 4th order adaptive Exponential-Rosenbrock scheme.
 
 The exponential Rosenbrock methods cannot be applied to semilinear problems. Options for the
-solvers are the same as [Exponential Runge-Kutta Methods](#Exponential-Runge-Kutta-Methods-1),
+solvers are the same as [Exponential Runge-Kutta Methods](@ref exp_RK),
 except that Krylov approximation is always used.
 
 #### Exponential Propagation Iterative Runge-Kutta Methods (EPIRK)
@@ -688,7 +688,7 @@ Options:
     orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
   - `autodiff` and `chunksize`: autodiff control if problem is not semilinear and explicit Jacobian
-    is not given. See [Extra Options](#Extra-Options-1) for more details.
+    is not given. See [Extra Options](@ref extra_options_ode) for more details.
 
 It should be noted that many of the methods are still at an experimental stage of development,
 and thus should be used with caution.
@@ -725,7 +725,7 @@ Sundials CVODE integrator.
   - `SSPSDIRK2` - A second order A-L stable symplectic SDIRK method with the strong
     stability preserving (SSP) property (SSP coefficient 2). Fixed timestep only.
 
-#### Extra Options
+#### [Extra Options](@id extra_options_ode)
 
 All the Rosenbrock and SDIRK methods allow for specification of `linsolve`:
 the linear solver which is used. For more information on specifying the linear
@@ -740,7 +740,7 @@ Additionally, the Rosenbrock and SDIRK methods have differentiation
 controls. In each of these, `autodiff` can be set to turn on/off
 autodifferentiation, and `chunk_size` can be used to set the chunksize of the Dual
 numbers (see the
-[documentation for ForwardDiff.jl for details](http://www.juliadiff.org/ForwardDiff.jl/stable/user/advanced/#Configuring-Chunk-Size-1)).
+[documentation for ForwardDiff.jl for details](https://juliadiff.org/ForwardDiff.jl/stable/user/advanced/#Configuring-Chunk-Size)).
 In addition, the Rosenbrock and SDIRK methods can set `diff_type`, which is the
 type of numerical differentiation that is used (when autodifferentiation is
 disabled). The choices are `Val{:central}`, `Val{:forward}` or `Val{:complex}`.
@@ -1181,7 +1181,7 @@ using NeuralPDE
 ### List of Supplied Tableaus
 
 A large variety of tableaus have been supplied by default, via DiffEqDevTools.jl.
-The list of tableaus can be found in [the developer docs](https://devdocs.juliadiffeq.org/dev/internals/tableaus/).
+The list of tableaus can be found in [the developer docs](https://docs.sciml.ai/DiffEqDevDocs/stable/internals/tableaus/).
 To use them, note you must install the library:
 
 ```julia

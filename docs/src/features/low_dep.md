@@ -29,7 +29,7 @@ following choices:
     running long computations, such as in optimization loops.
 
 For more information on the specialization levels, please see
-[the SciMLBase documentation on specialization levels](https://scimlbase.sciml.ai/stable/interfaces/Problems/#Specialization-Levels).
+[the SciMLBase documentation on specialization levels](https://docs.sciml.ai/SciMLBase/stable/interfaces/Problems/#Specialization-Levels).
 
 DifferentialEquations.jl and its ODE package OrdinaryDiffEq.jl precompile
 some standard problem types and solvers. The problem types include the

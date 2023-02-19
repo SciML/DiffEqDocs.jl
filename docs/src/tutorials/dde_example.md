@@ -15,7 +15,7 @@ past and depends on parameters `p` and time `t`. The function signature for a de
 differential equation is `f(u, h, p, t)` for not in-place computations, and
 `f(du, u, h, p, t)` for in-place computations.
 
-In this example, we will solve [a model of breast cancer growth kinetics](http://www.nature.com/articles/srep02473):
+In this example, we will solve [a model of breast cancer growth kinetics](https://idp.nature.com/authorize?response_type=cookie&client_id=grover&redirect_uri=https%3A%2F%2Fwww.nature.com%2Farticles%2Fsrep02473):
 
 ```math
 \begin{aligned}

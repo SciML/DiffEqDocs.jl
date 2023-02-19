@@ -104,7 +104,7 @@ Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
     is saved. Defaults to true.
   - `delta`: The `delta` adaptivity parameter for the natural error estimator.
     Determines the balance between drift and diffusion error. For more details, see
-    [the publication](http://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
+    [the publication](https://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
   - `seed`: Sets the seed for the random number generator. This overrides any seed
     set in the `SDEProblem`.
 

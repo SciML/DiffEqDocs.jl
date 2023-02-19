@@ -132,7 +132,7 @@ components of the solution to plot. For example, if the differential equation
 is a vector of 9 values, `idxs=1:2:9` will plot only the solutions
 of the odd components. Another additional argument is `zcolors` (an alias of `marker_z`) which allows
 you to pass a `zcolor` for each series. For details about `zcolor` see the
-[Series documentation for Plots.jl](http://docs.juliaplots.org/dev/attributes/).
+[Series documentation for Plots.jl](https://docs.juliaplots.org/stable/attributes/).
 
 ## Analyzing an Ensemble Experiment
 

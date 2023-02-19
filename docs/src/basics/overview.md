@@ -86,10 +86,10 @@ finalized results to large audiences. The tools for algorithm development allow 
 easy convergence testing, benchmarking, and higher order analysis (stability plotting,
 etc.). This is one of the reasons why DifferentialEquations.jl contains many algorithms
 which are unique and the results of recent publications! Please check out the
-[developer documentation](https://devdocs.sciml.ai/dev/)
+[developer documentation](https://docs.sciml.ai/DiffEqDevDocs/stable/)
 for more information on using the development tools.
 
 Note that DifferentialEquations.jl allows for distributed development, meaning that
 algorithms which “plug-into the ecosystem” don't have to be a part of the major packages.
-If you are interested in adding your work to the ecosystem, checkout the [developer documentation](https://devdocs.sciml.ai/dev/)
+If you are interested in adding your work to the ecosystem, checkout the [developer documentation](https://docs.sciml.ai/DiffEqDevDocs/stable/)
 for more information.

@@ -15,7 +15,7 @@ plot(sol) # Plots the solution
 Many of the types defined in the DiffEq universe, such as
 `ODESolution`, `ConvergenceSimulation` `WorkPrecision`, etc. have plot recipes
 to handle the default plotting behavior. Plots can be customized using
-[all the keyword arguments provided by Plots.jl](http://docs.juliaplots.org/dev/supported/).
+[all the keyword arguments provided by Plots.jl](https://docs.juliaplots.org/stable/generated/attributes_plot/).
 For example, we can change the plotting backend to the GR package and put a title
 on the plot by doing:
 
@@ -196,7 +196,7 @@ saves every 4th frame via:
 animate(sol, lw = 3, every = 4)
 ```
 
-Please see [Plots.jl's documentation](https://juliaplots.github.io/) for more information
+Please see [Plots.jl's documentation](https://juliaplots.org/) for more information
 on the available attributes.
 
 ## Plotting Without the Plot Recipe

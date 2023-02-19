@@ -35,7 +35,7 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
 
   - GPU acceleration through [CUDA.jl](https://cuda.juliagpu.org/stable/) and [DiffEqGPU.jl](https://docs.sciml.ai/DiffEqGPU/dev/)
   - Automated sparsity detection with [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
-  - Automatic Jacobian coloring with [SparseDiffTools.jl](https://docs.sciml.ai/SparseDiffTools/stable/), allowing for fast solutions
+  - Automatic Jacobian coloring with [SparseDiffTools.jl](https://docs.sciml.ai/SparseDiffTools/dev/), allowing for fast solutions
     to problems with sparse or structured (Tridiagonal, Banded, BlockBanded, etc.) Jacobians
   - Allowing the specification of linear solvers for maximal efficiency with [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/)
   - Progress meter integration with the Visual Studio Code IDE for estimated time to solution
@@ -81,8 +81,8 @@ The software in this ecosystem was developed as part of academic research.
 If you would like to help support it, please star the repository, as such
 metrics may help us secure funding in the future. If you use SciML
 software as part of your research, teaching, or other activities, we would
-be grateful if you could cite our work as necessary for any use of DifferentialEquations.jl 
-or the packages that are maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl, 
+be grateful if you could cite our work as necessary for any use of DifferentialEquations.jl
+or the packages that are maintained as part of its suite (OrdinaryDiffEq.jl, Sundials.jl,
 DiffEqDevTools.jl, etc.).
 
 ```bibtex
@@ -98,7 +98,7 @@ DiffEqDevTools.jl, etc.).
 ```
 
 Additionally, many of the solvers utilize novel algorithms, and if these algorithms
-are used, we ask that you cite the methods. [Please see our citation page for guidelines](http://sciml.ai/citing.html).
+are used, we ask that you cite the methods. [Please see our citation page for guidelines](https://sciml.ai/citing.html).
 
 ## Getting Started: Installation And First Steps
 
@@ -128,14 +128,14 @@ page.
 To understand the package in more detail, check out the following tutorials in
 this manual. **It is highly recommended that new users start with the
 [ODE tutorial](@ref ode_example)**. Example IJulia notebooks
-[can also be found in DiffEqTutorials.jl](https://github.com/SciML/DiffEqTutorials.jl).
+[can also be found in SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
 If you find any example where there appears to be an error, please open an issue.
 
 For the most up-to-date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
 
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information on how to get to the bleeding edge is found in the
-[developer documentation](https://juliadiffeq.github.io/DiffEqDevDocs.jl/dev/index.html#Bleeding-Edge-1).
+[developer documentation](https://docs.sciml.ai/DiffEqDevDocs/stable/contributing/ecosystem_overview/).
 
 ### Installing from Python
 
@@ -178,7 +178,7 @@ for more information.
 
 Use of DifferentialEquations.jl from the R programming language is available through the
 [diffeqr](https://github.com/SciML/diffeqr) module.
-[diffeqr is registered into CRAN](https://CRAN.R-project.org/package=diffeqr).
+[diffeqr is registered into CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html).
 Thus to add the package, use:
 
 ```R
@@ -206,7 +206,7 @@ Currently, use from R supported a subset of DifferentialEquations.jl which is do
 
 The following tutorials will introduce you to the functionality of
 DifferentialEquations.jl. More examples can be found by
-[checking out the IJulia notebooks in the examples folder](https://github.com/SciML/DiffEqTutorials.jl).
+[checking out the IJulia notebooks in the examples folder](https://github.com/SciML/SciMLTutorials.jl).
 
 ```@contents
 Pages = [
@@ -243,7 +243,7 @@ PackageCompiler.create_sysimage([:DifferentialEquations, :Plots]; replace_defaul
 Note that there are some drawbacks to adding a package in your system image. For example,
 the package will never update until you manually rebuild the system image again. For more
 information on the consequences,
-[see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/dev/sysimages/#Drawbacks-to-custom-sysimages-1).
+[see this portion of the PackageCompiler manual](https://julialang.github.io/PackageCompiler.jl/stable/sysimages.html#Drawbacks-to-custom-sysimages).
 
 ### Basics
 

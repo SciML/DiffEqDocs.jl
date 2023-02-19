@@ -129,8 +129,8 @@ give a sparse matrix. Other sparse matrix types include:
   - Bidiagonal
   - Tridiagonal
   - SymTridiagonal
-  - BandedMatrix ([BandedMatrices.jl](https://github.com/JuliaMatrices/BandedMatrices.jl))
-  - BlockBandedMatrix ([BlockBandedMatrices.jl](https://github.com/JuliaMatrices/BlockBandedMatrices.jl))
+  - BandedMatrix ([BandedMatrices.jl](https://github.com/JuliaLinearAlgebra/BandedMatrices.jl))
+  - BlockBandedMatrix ([BlockBandedMatrices.jl](https://github.com/JuliaLinearAlgebra/BlockBandedMatrices.jl))
 
 DifferentialEquations.jl will internally use this matrix
 type, making the factorizations faster by using the specialized forms.
@@ -202,7 +202,7 @@ Notice that this acceleration does not require the definition of a sparsity
 pattern, and can thus be an easier way to scale for large problems. For more
 information on linear solver choices, see the
 [linear solver documentation](@ref linear_nonlinear). `linsolve` choices are any
-valid [LinearSolve.jl](http://linearsolve.sciml.ai/dev/) solver.
+valid [LinearSolve.jl](https://linearsolve.sciml.ai/dev/) solver.
 
 !!! note
     
@@ -212,7 +212,7 @@ valid [LinearSolve.jl](http://linearsolve.sciml.ai/dev/) solver.
 
 ## Adding a Preconditioner
 
-Any [LinearSolve.jl-compatible preconditioner](http://linearsolve.sciml.ai/dev/basics/Preconditioners/)
+Any [LinearSolve.jl-compatible preconditioner](https://docs.sciml.ai/LinearSolve/stable/basics/Preconditioners/)
 can be used as a preconditioner in the linear solver interface. To define
 preconditioners, one must define a `precs` function in compatible stiff ODE
 solvers which returns the left and right preconditioners, matrices which
@@ -307,7 +307,7 @@ For more information on the preconditioner interface, see the
 While much of the setup makes the transition to using Sundials automatic, there
 are some differences between the pure Julia implementations and the Sundials
 implementations which must be taken note of. These are all detailed in the
-[Sundials solver documentation](http://docs.juliadiffeq.org/dev/solvers/ode_solve#Sundials.jl-1),
+[Sundials solver documentation](https://docs.sciml.ai/DiffEqDocs/stable/api/sundials/),
 but here we will highlight the main details which one should make note of.
 
 Defining a sparse matrix and a Jacobian for Sundials works just like any other

@@ -13,7 +13,7 @@ SciMLBase.DAESolution
 
 ## Example Problems
 
-Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/src/dae_premade_problems.jl).
+Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/lib/DAEProblemLibrary).
 
 To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 
