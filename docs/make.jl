@@ -27,14 +27,18 @@ makedocs(modules = [
              "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoHires/demohires.pdf",
              "https://www.radford.edu/%7Ethompson/RP/nonnegative.pdf",
              "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoOrego/demoorego.pdf",
+             "https://zenodo.org/record/5883749#.Yg-d698xmu4",
+             "https://www.sciencedirect.com/science/article/abs/pii/S0375960109009591",
+             "https://www.sciencedirect.com/science/article/abs/pii/0375960176901018",
          ],
          strict = [
              :doctest,
              :linkcheck,
              :parse_error,
              :example_block,
+             :cross_references,
              # Other available options are
-             # :autodocs_block, :cross_references, :docs_block, :eval_block, :example_block, :footnote, :meta_block, :missing_docs, :setup_block
+             # :autodocs_block, :docs_block, :eval_block, :example_block, :footnote, :meta_block, :missing_docs, :setup_block
          ],
          doctest = false, clean = true,
          format = Documenter.HTML(analytics = "UA-90474609-3",

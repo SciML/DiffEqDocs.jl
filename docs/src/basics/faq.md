@@ -443,7 +443,7 @@ like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
 #### Native Julia solvers compatibility with autodifferentiation
 
 Yes, they are compatible with automatic differentiation! Take a look at the
-[sensitivity analysis](@ref sensitivity) page for more details.
+[sensitivity analysis](https://docs.sciml.ai/SciMLSensitivity/stable/) page for more details.
 
 If the algorithm does not have differentiation of parameter-dependent events,
 then you simply need to make the initial condition have elements of Dual numbers.
