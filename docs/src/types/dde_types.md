@@ -12,7 +12,7 @@ SciMLBase.DDEFunction
 
 ## Example Problems
 
-Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/src/dde).
+Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl).
 
 To use a sample problem, such as `prob_ode_linear`, you can do something like:
 

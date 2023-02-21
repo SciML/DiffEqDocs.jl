@@ -20,6 +20,14 @@ makedocs(modules = [
              OrdinaryDiffEq,
              Sundials, DASKR,
          ],
+         linkcheck = true,
+         linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
+             "https://biojulia.net/post/hardware/",
+             "https://archimede.dm.uniba.it/~testset/report/pollu.pdf",
+             "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoHires/demohires.pdf",
+             "https://www.radford.edu/%7Ethompson/RP/nonnegative.pdf",
+             "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoOrego/demoorego.pdf",
+         ],
          strict = [
              :doctest,
              :linkcheck,
@@ -34,6 +42,7 @@ makedocs(modules = [
                                   canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
          sitename = "DifferentialEquations.jl",
          authors = "Chris Rackauckas",
+         draft = true,
          pages = pages)
 
 #Redirect old links

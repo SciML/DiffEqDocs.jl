@@ -225,7 +225,7 @@ using Plots
 plot(sol)
 ```
 
-The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.github.io/).
+The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.org/).
 Additional DiffEq-specific controls are documented [at the plotting page](@ref plot).
 
 For example, from the Plots.jl attribute page, we see that the line width can be

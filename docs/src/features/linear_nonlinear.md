@@ -15,14 +15,14 @@ details how to make that choice.
     These options do not apply to the Sundials differential equation solvers
     (`CVODE_BDF`, `CVODE_Adams`, `ARKODE`, and `IDA`). For complete descriptions
     of similar functionality for Sundials, see the
-    [Sundials ODE solver documentation](@id ode_solve_sundials) and
-    [Sundials DAE solver documentation](@id dae_solve_sundials).
+    [Sundials ODE solver documentation](@ref ode_solve_sundials) and
+    [Sundials DAE solver documentation](@ref dae_solve_sundials).
 
 ## Linear Solvers: `linsolve` Specification
 
 For linear solvers, DifferentialEquations.jl uses
 [LinearSolve.jl](https://github.com/SciML/LinearSolve.jl). Any
-[LinearSolve.jl algorithm](http://linearsolve.sciml.ai/dev/solvers/solvers/)
+[LinearSolve.jl algorithm](https://linearsolve.sciml.ai/dev/solvers/solvers/)
 can be used as the linear solver simply by passing the algorithm choice to
 linsolve. For example, the following tells `TRBDF2` to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
 
@@ -31,12 +31,12 @@ TRBDF2(linsolve = KLUFactorization())
 ```
 
 Many choices exist, including GPU offloading, so consult the
-[LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/) for more details
+[LinearSolve.jl documentation](https://linearsolve.sciml.ai/dev/) for more details
 on the choices.
 
 ## Preconditioners: `precs` Specification
 
-Any [LinearSolve.jl-compatible preconditioner](http://linearsolve.sciml.ai/dev/basics/Preconditioners/)
+Any [LinearSolve.jl-compatible preconditioner](https://docs.sciml.ai/LinearSolve/stable/basics/Preconditioners/)
 can be used as a left or right preconditioner. Preconditioners are specified by
 the `Pl,Pr = precs(W,du,u,p,t,newW,Plprev,Prprev,solverdata)` function where
 the arguments are defined as:

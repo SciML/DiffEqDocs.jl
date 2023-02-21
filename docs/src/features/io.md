@@ -6,7 +6,7 @@ existing functionality for doing so.
 
 ## Tabular Data: IterableTables
 
-An interface to [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl)
+An interface to [IterableTables.jl](https://github.com/queryverse/IterableTables.jl)
 is provided. This IterableTables link allows you to use a solution
 type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs and get the DataFrame:

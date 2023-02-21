@@ -191,7 +191,7 @@ algorithms utilize standard arithmetical functions. Both additionally utilize
 the user's norm specified via the common interface options and, if a stiff
 solver, ForwardDiff/DiffEqDiffTools for the Jacobian calculation, and Base linear
 factorizations for the linear solve. For your type, you may likely need to give
-a [better form of the norm](@ref advanced_adaptive_stepsize_control),
+a [better form of the norm](https://docs.sciml.ai/DiffEqDocs/stable/extras/timestepping/#Common-Setup),
 [Jacobian](@ref performance_overloads),
 or [linear solve calculations](@ref linear_nonlinear)
 to fully utilize parallelism.
@@ -238,7 +238,7 @@ LinearAlgebra.BLAS.set_num_threads(4)
 
 Additionally, sometimes Intel's MKL might be a faster BLAS than the standard
 BLAS that ships with Julia (OpenBLAS). To switch your BLAS implementation, you
-can use [MKL.jl](https://github.com/JuliaComputing/MKL.jl), which will accelerate
+can use [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl), which will accelerate
 the linear algebra routines. This is done via:
 
 ```julia
@@ -427,7 +427,7 @@ for longtime integration.
 For conserving energy, there are a few things you can do. First of all, the energy
 error is related to the integration error, so simply solving with higher accuracy
 will reduce the error. The results in the
-[DiffEqBenchmarks](https://github.com/SciML/DiffEqBenchmarks.jl) show
+[SciMLBenchmarks](https://github.com/SciML/SciMLBenchmarks.jl) show
 that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
 [the ManifoldProjection callback from the callback library](@ref callback_library).
@@ -555,7 +555,7 @@ though, an `Error: SingularException` is also possible if the linear solver fail
 solve(prob, Rodas4(linsolve = KLUFactorization(; reuse_symbolic = false)))
 ```
 
-For more details about possible linear solvers, consult the [LinearSolve.jl documentation](http://linearsolve.sciml.ai/dev/)
+For more details about possible linear solvers, consult the [LinearSolve.jl documentation](https://docs.sciml.ai/LinearSolve/stable/)
 
 ## Odd Error Messages
 
