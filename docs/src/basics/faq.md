@@ -427,7 +427,7 @@ for longtime integration.
 For conserving energy, there are a few things you can do. First of all, the energy
 error is related to the integration error, so simply solving with higher accuracy
 will reduce the error. The results in the
-[DiffEqBenchmarks](https://github.com/SciML/SciMLBenchmarks.jl) show
+[SciMLBenchmarks](https://github.com/SciML/SciMLBenchmarks.jl) show
 that using a `DPRKN` method with low tolerance can be a great choice. Another
 thing you can do is use
 [the ManifoldProjection callback from the callback library](@ref callback_library).
