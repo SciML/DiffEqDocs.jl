@@ -350,4 +350,4 @@ SDEProblem(f, g, ones(2), tspan, noise = heston_noise)
 Of course, to fully define this problem, we need to define our constants. Constructors
 for making common models like this easier to define can be found in the modeling
 toolkits. For example, the `HestonProblem` is pre-defined as part of the
-[financial modeling tools](@ref financial_models).
+[financial modeling tools](https://github.com/SciML/DiffEqFinancial.jl).

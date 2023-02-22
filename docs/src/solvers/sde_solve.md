@@ -43,7 +43,7 @@ a given SDE, the use of high weak order solvers is recommended. Specifically,
 Runge-Kutta solvers with weak order 2 due to Roessler are adaptive. All other
 high weak order solvers currently require a fixed step size.
 
-## Special Noise Forms
+## [Special Noise Forms](@id special_noise_forms)
 
 Some solvers are for specialized forms of noise. Diagonal noise is the default
 setup. Non-diagonal noise is specified via setting `noise_rate_prototype` to
@@ -69,7 +69,7 @@ I(h) = \int_0^h\int_0^sdW^1_tdW^2_s
 in these schemes.
 
 The approximation of these iterated integrals can be avoided, if the diffusion matrix
-satisfies the special commutativity condition given [above](@ref special noise forms).
+satisfies the special commutativity condition given [above](@ref special_noise_forms).
 Because of this, many methods are only applicable to problems that satisfy the commutativity
 condition. In other words, many methods can only handle specific noise cases, like
 diagonal noise or commutative noise, because of how this iterated integral approximation
