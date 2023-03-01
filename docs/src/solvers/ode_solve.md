@@ -496,6 +496,10 @@ These methods require a choice of `dt`.
   - `Kvaerno5` - An A-L stable stiffly-accurate 5th order ESDIRK method
   - `KenCarp5` - An A-L stable stiffly-accurate 5th order ESDIRK method with splitting
   - `KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
+  - `ESDIRK54I8L2SA` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method
+  - `ESDIRK436L2SA2` - An A-L stable stiffly-accurate 4th order six-stage ESDIRK method
+  - `ESDIRK437L2SA` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method
+  - `ESDIRK547L2SA2` - An A-L stable stiffly-accurate 5th order seven-stage ESDIRK method
 
 #### Fully-Implicit Runge-Kutta Methods (FIRK)
 
