@@ -20,7 +20,7 @@ These correspond to partitioned equations of motion:
 
 or, for `SecondOrderODEProblem`,
 ```math
-\frac{d^u}{dt^2} = f(d0,u,p,t)
+\frac{d^2u}{dt^2} = f(u,p,t)
 ```
 
 The functions should be specified as `f1(dv,v,u,p,t)` and `f2(du,v,u,p,t)`
