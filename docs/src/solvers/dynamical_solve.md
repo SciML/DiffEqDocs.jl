@@ -18,6 +18,11 @@ These correspond to partitioned equations of motion:
 \frac{du}{dt} = f_2(v) \\
 ```
 
+or, for `SecondOrderODEProblem`,
+```math
+\frac{d^u}{dt^2} = f(d0,u,p,t)
+```
+
 The functions should be specified as `f1(dv,v,u,p,t)` and `f2(du,v,u,p,t)`
 (in the inplace form), where `f1` is independent of `v` (unless
 specified by the solver), and `f2` is independent of `t` and `u`. This includes
