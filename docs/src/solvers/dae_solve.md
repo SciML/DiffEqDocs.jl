@@ -79,7 +79,7 @@ extra options for the solvers, see the ODE solver page.
     inexact Jacobians a second order W method.
   - `Rodas5` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
     4th order interpolant.
-  - `Rodas5P - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
+  - `Rodas5P` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
     4th order interpolant. Has improved stability in the adaptive time stepping embedding.
 
 #### Rosenbrock-W Methods
