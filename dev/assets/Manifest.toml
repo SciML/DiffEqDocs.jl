@@ -383,7 +383,7 @@ version = "2.26.0"
 
 [[deps.DiffEqDocs]]
 deps = ["Documenter"]
-path = "/var/lib/buildkite-agent/builds/gpuci-13/julialang/diffeqdocs-dot-jl"
+path = "/var/lib/buildkite-agent/builds/gpuci-6/julialang/diffeqdocs-dot-jl"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
 version = "7.7.0"
 
@@ -1834,9 +1834,9 @@ version = "0.2.0"
 
 [[deps.VectorizationBase]]
 deps = ["ArrayInterface", "CPUSummary", "HostCPUFeatures", "IfElse", "LayoutPointers", "Libdl", "LinearAlgebra", "SIMDTypes", "Static", "StaticArrayInterface"]
-git-tree-sha1 = "952ba509a61d1ebb26381ac459c5c6e838ed43c4"
+git-tree-sha1 = "a2d69abfc8b9b71a5db110f9757d0cd4a27877c0"
 uuid = "3d5dd08c-fd9d-11e8-17fa-ed2836048c2f"
-version = "0.21.60"
+version = "0.21.61"
 
 [[deps.VertexSafeGraphs]]
 deps = ["Graphs"]
