@@ -46,7 +46,6 @@ makedocs(modules = [
                                   canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
          sitename = "DifferentialEquations.jl",
          authors = "Chris Rackauckas",
-         draft = true,
          pages = pages)
 
 #Redirect old links
