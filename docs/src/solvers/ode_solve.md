@@ -96,7 +96,7 @@ strong-stability preserving (SSP) for hyperbolic PDEs.
 
 Notice that `Rodas4` loses accuracy on discretizations of nonlinear
 parabolic PDEs, and thus it's suggested you replace it with `Rodas4P` in those
-situations which are 3rd order. Similarly, between `Rodas5` and Rodas5P`. `ROS3P`
+situations which are 3rd order. Similarly, between `Rodas5` and `Rodas5P`. `ROS3P`
 is only third order and achieves 3rd order on such problems and can thus be more
 efficient in this case.
 
