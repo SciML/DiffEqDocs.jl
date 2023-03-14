@@ -95,7 +95,7 @@ For the interior domain, a central and second-order finite difference stencil is
 ∇² = \left[\frac{1}{Δz²}, \frac{-2}{Δz²}, \frac{1}{Δz²}\right] \\
 ```
 
-At the boundaries, we need to modify the stencil to account for Dirichlet and Neumann BCs. Using the following index denotion:
+At the boundaries, we need to modify the stencil to account for Dirichlet and Neumann BCs. Using the following index denotation:
 
   - `i` first interior index
   - `b` boundary index

@@ -116,7 +116,7 @@ sol_ = solve(prob2, RK4(), dt = 1 // 5, adaptive = false)
 analysis_plot2(sol_, H, L)
 ```
 
-There is a significant fluctuation in the first integrals, when there is no mainfold projection.
+There is a significant fluctuation in the first integrals, when there is no manifold projection.
 
 ```@example kepler
 function first_integrals_manifold(residual, u, p, t)
