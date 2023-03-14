@@ -59,8 +59,8 @@ mutable struct BeelerReuterCpu
     C::Array{Float32, 2}    # intracellular calcium concentration
     M::Array{Float32, 2}    # sodium current activation gate (m)
     H::Array{Float32, 2}    # sodium current inactivation gate (h)
-    J::Array{Float32, 2}    # sodium current slow inactivaiton gate (j)
-    D::Array{Float32, 2}    # calcium current activaiton gate (d)
+    J::Array{Float32, 2}    # sodium current slow inactivation gate (j)
+    D::Array{Float32, 2}    # calcium current activation gate (d)
     F::Array{Float32, 2}    # calcium current inactivation gate (f)
     XI::Array{Float32, 2}   # inward-rectifying potassium current (iK1)
 
@@ -411,8 +411,8 @@ mutable struct BeelerReuterGpu <: Function
     d_C::CuArray{Float32, 2}    # intracellular calcium concentration
     d_M::CuArray{Float32, 2}    # sodium current activation gate (m)
     d_H::CuArray{Float32, 2}    # sodium current inactivation gate (h)
-    d_J::CuArray{Float32, 2}    # sodium current slow inactivaiton gate (j)
-    d_D::CuArray{Float32, 2}    # calcium current activaiton gate (d)
+    d_J::CuArray{Float32, 2}    # sodium current slow inactivation gate (j)
+    d_D::CuArray{Float32, 2}    # calcium current activation gate (d)
     d_F::CuArray{Float32, 2}    # calcium current inactivation gate (f)
     d_XI::CuArray{Float32, 2}   # inward-rectifying potassium current (iK1)
 

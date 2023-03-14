@@ -287,9 +287,9 @@ Lastly, we can wrap it in a nice little constructor:
 ```@example callback3
 function AutoAbstol(save = true; init_curmax = 1e-6)
     affect! = AutoAbstolAffect(init_curmax)
-    condtion = (u, t, integrator) -> true
+    condition = (u, t, integrator) -> true
     save_positions = (save, false)
-    DiscreteCallback(condtion, affect!, save_positions = save_positions)
+    DiscreteCallback(condition, affect!, save_positions = save_positions)
 end
 ```
 

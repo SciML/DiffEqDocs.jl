@@ -54,7 +54,7 @@ may be deceiving. For example, `u' = -sqrt(u)` with `u(0)=1` cannot hit zero
 because its derivative shrinks to zero, right? Wrong! [It will hit zero in a finite
 time, after which the solution is undefined and does not have a purely real solution](https://www.wolframalpha.com/input/?i=u%27%3D-sqrt%28u%29).
 `u' = u^2 - 100u` will “usually” go to zero, but if `u(0)>10` then it will go to
-infinity. Plot out your diverging solution and see whether the asymtopics are
+infinity. Plot out your diverging solution and see whether the asymptotics are
 correct: if `u[i]` gets big, do your equations make `u'[i]` positive and growing?
 That would be a problem!
 
