@@ -35,7 +35,7 @@ EnsembleProblem(prob::DEProblem;
     to the batches. The second part of the output determines whether the simulation 
     has converged. If `true`, the simulation will exit early. By default, this is 
     always `false`.
-  - `u_init`: The initial form fo the object that gets updated in-place inside the 
+  - `u_init`: The initial form of the object that gets updated in-place inside the 
     `reduction` function.
   - `safetycopy`: Determines whether a safety `deepcopy` is called on the `prob`
     before the `prob_func`. By default, this is true for any user-given `prob_func`,
