@@ -91,7 +91,7 @@ SciMLBase.check_error
 SciMLBase.check_error!
 ```
 
-## Handing Integrators
+## Handling Integrators
 
 The `integrator<:DEIntegrator` type holds all the information for the intermediate solution
 of the differential equation. Useful fields are:
