@@ -184,8 +184,7 @@ for automatically transforming your equations.
 Yes. The `*`DiffEq.jl libraries (OrdinaryDiffEq.jl, StochasticDiffEq.jl, and
 DelayDiffEq.jl) are all written to be generic to the array and number types.
 This means they will adopt the implementation that is given by the array type.
-The in-place algorithms internally utilize Julia's broadcast (with some exceptions
-due to a Julia bug for now, see [this issue](https://github.com/SciML/OrdinaryDiffEq.jl/issues/106))
+The in-place algorithms internally utilize Julia's broadcast
 and Julia's `mul!` in-place matrix multiplication function. The out-of-place
 algorithms utilize standard arithmetical functions. Both additionally utilize
 the user's norm specified via the common interface options and, if a stiff
