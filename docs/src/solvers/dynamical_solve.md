@@ -19,6 +19,7 @@ These correspond to partitioned equations of motion:
 ```
 
 or, for `SecondOrderODEProblem`,
+
 ```math
 \frac{d^2u}{dt^2} = f(u,p,t)
 ```
