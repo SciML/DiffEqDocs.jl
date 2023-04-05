@@ -30,12 +30,12 @@ EnsembleProblem(prob::DEProblem;
     `rerun` was true this will be `2`, `3`, etc. counting the number of times
     problem `i` has been repeated.
   - `reduction`: This function determines how to reduce the data in each batch.
-    Defaults to appending the `data` into `u`, initialised via `u_data`, from 
-    the batches. `I` is a range of indices giving the trajectories corresponding 
-    to the batches. The second part of the output determines whether the simulation 
-    has converged. If `true`, the simulation will exit early. By default, this is 
+    Defaults to appending the `data` into `u`, initialised via `u_data`, from
+    the batches. `I` is a range of indices giving the trajectories corresponding
+    to the batches. The second part of the output determines whether the simulation
+    has converged. If `true`, the simulation will exit early. By default, this is
     always `false`.
-  - `u_init`: The initial form of the object that gets updated in-place inside the 
+  - `u_init`: The initial form of the object that gets updated in-place inside the
     `reduction` function.
   - `safetycopy`: Determines whether a safety `deepcopy` is called on the `prob`
     before the `prob_func`. By default, this is true for any user-given `prob_func`,

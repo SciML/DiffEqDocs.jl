@@ -125,6 +125,7 @@ These methods can be used when ``A`` is dependent on the state variables, i.e. `
   - `RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
   - `LieRK4` - Fourth order Lie Runge-Kutta method.
   - `CG2` - Second order Crouch–Grossman method.
+  - `CG4a` - Fourth order Crouch-Grossman method.
   - `MagnusAdapt4` - Fourth Order Adaptive Magnus method.
 
 Example:

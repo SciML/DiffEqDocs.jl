@@ -177,6 +177,10 @@ problems.
   - `MSRK5` - Stepanov 5th-order Runge-Kutta method.
   - `MSRK6` - Stepanov 6th-order Runge-Kutta method.
   - `Stepanov5` - Stepanov adaptive 5th-order Runge-Kutta method.
+  - `SIR54` - 5th order explicit Runge-Kutta method suited for SIR-type epidemic models.
+  - `Alshina2` - Alshina 2nd-order Runge-Kutta method.
+  - `Alshina3` - Alshina 3rd-order Runge-Kutta method.
+  - `Alshina6` - Alshina 6th-order Runge-Kutta method.
 
 Example usage:
 
