@@ -150,3 +150,63 @@ end
 ```@docs
 PredictiveController
 ```
+
+## Abstract Controller
+
+The `AbstractController` type allows one to implement custom adaptive
+timestepping schemes easily. This can be useful if one wants to use
+a priori error estimates, for instance.
+
+To implement a custom controller, subtype `AbstractController` for the
+specific DE system.
+
+```julia
+struct CustomController <: AbstractController
+end
+```
+
+and overload
+
+```julia
+function stepsize_controller!(integrator, controller::CustomController, alg)
+    ...
+    nothing
+end
+function step_accept_controller!(integrator, controller::CustomController, alg)
+    ...
+    nothing
+end
+function step_reject_controller!(integrator, controller::CustomController, alg)
+    ...
+    nothing
+end
+```
+
+For instance, the PI controller for SDEs can be reproduced by
+
+```julia
+struct CustomController <: StochasticDiffEq.AbstractController
+end
+
+function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
+    integrator.q11 = DiffEqBase.value(DiffEqBase.fastpow(integrator.EEst, controller.beta1))
+    integrator.q = DiffEqBase.value(integrator.q11 / DiffEqBase.fastpow(integrator.qold, controller.beta2))
+    integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), integrator.q / integrator.opts.gamma)))
+    nothing
+end
+
+function StochasticDiffEq.step_accept_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
+    integrator.dtnew = DiffEqBase.value(integrator.dt/integrator.q) * oneunit(integrator.dt)
+    nothing
+end
+
+function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
+    integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin), integrator.q11 / integrator.opts.gamma)
+end
+```
+
+and used via
+
+```julia
+sol = solve(prob, EM(), dt=dt, adaptive=true, controller=CustomController())
+```
