@@ -188,25 +188,33 @@ For instance, the PI controller for SDEs can be reproduced by
 struct CustomController <: StochasticDiffEq.AbstractController
 end
 
-function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
+function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator,
+                                               controller::CustomController, alg)
     integrator.q11 = DiffEqBase.value(DiffEqBase.fastpow(integrator.EEst, controller.beta1))
-    integrator.q = DiffEqBase.value(integrator.q11 / DiffEqBase.fastpow(integrator.qold, controller.beta2))
-    integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), integrator.q / integrator.opts.gamma)))
+    integrator.q = DiffEqBase.value(integrator.q11 /
+                                    DiffEqBase.fastpow(integrator.qold, controller.beta2))
+    integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax),
+                                        min(inv(integrator.opts.qmin),
+                                            integrator.q / integrator.opts.gamma)))
     nothing
 end
 
-function StochasticDiffEq.step_accept_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
-    integrator.dtnew = DiffEqBase.value(integrator.dt/integrator.q) * oneunit(integrator.dt)
+function StochasticDiffEq.step_accept_controller!(integrator::StochasticDiffEq.SDEIntegrator,
+                                                  controller::CustomController, alg)
+    integrator.dtnew = DiffEqBase.value(integrator.dt / integrator.q) *
+                       oneunit(integrator.dt)
     nothing
 end
 
-function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator, controller::CustomController, alg)
-    integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin), integrator.q11 / integrator.opts.gamma)
+function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator,
+                                 controller::CustomController, alg)
+    integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin),
+                           integrator.q11 / integrator.opts.gamma)
 end
 ```
 
 and used via
 
 ```julia
-sol = solve(prob, EM(), dt=dt, adaptive=true, controller=CustomController())
+sol = solve(prob, EM(), dt = dt, adaptive = true, controller = CustomController())
 ```
