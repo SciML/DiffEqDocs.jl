@@ -29,7 +29,7 @@ error is larger than the tolerances, and the step is accepted if
 
 ## Integral Controller (Standard Controller)
 
-The proportional control algorithm is the “standard algorithm” for adaptive
+The integral control algorithm is the “standard algorithm” for adaptive
 timestepping. Note that it is not the default in DifferentialEquations.jl
 because it is usually awful for performance, but it is explained first because
 it is the most widely taught algorithm and others build on its techniques.
