@@ -14,42 +14,42 @@
 }</code></pre><p>Additionally, many of the solvers utilize novel algorithms, and if these algorithms are used, we ask that you cite the methods. <a href="https://sciml.ai/citing.html">Please see our citation page for guidelines</a>.</p><h2 id="Getting-Started:-Installation-And-First-Steps"><a class="docs-heading-anchor" href="#Getting-Started:-Installation-And-First-Steps">Getting Started: Installation And First Steps</a><a id="Getting-Started:-Installation-And-First-Steps-1"></a><a class="docs-heading-anchor-permalink" href="#Getting-Started:-Installation-And-First-Steps" title="Permalink"></a></h2><h3 id="Installing-from-Julia"><a class="docs-heading-anchor" href="#Installing-from-Julia">Installing from Julia</a><a id="Installing-from-Julia-1"></a><a class="docs-heading-anchor-permalink" href="#Installing-from-Julia" title="Permalink"></a></h3><p>To install the package, use the following command inside the Julia REPL:</p><pre><code class="language-julia hljs">using Pkg
 Pkg.add(&quot;DifferentialEquations&quot;)</code></pre><p>To load the package, use the command:</p><pre><code class="language-julia hljs">using DifferentialEquations</code></pre><p>This will add solvers and dependencies for all kinds of Differential Equations (e.g. ODEs or SDEs etc., see the Supported Equations section below). If you are interested in only one type of equation solver of <code>DifferentialEquations.jl</code> or simply want a more lightweight version, see the <a href="features/low_dep/#low_dep">Reduced Compile Time and Low Dependency Usage</a> page.</p><p>To understand the package in more detail, check out the following tutorials in this manual. <strong>It is highly recommended that new users start with the <a href="getting_started/#ode_example">ODE tutorial</a></strong>. Example IJulia notebooks <a href="https://github.com/SciML/SciMLTutorials.jl">can also be found in SciMLTutorials.jl</a>. If you find any example where there appears to be an error, please open an issue.</p><p>For the most up-to-date information on using the package, please join <a href="https://gitter.im/JuliaDiffEq/Lobby">the Gitter channel</a>.</p><p>Using the bleeding edge for the latest features and development is only recommended for power users. Information on how to get to the bleeding edge is found in the <a href="https://docs.sciml.ai/DiffEqDevDocs/stable/contributing/ecosystem_overview/">developer documentation</a>.</p><h3 id="Installing-from-Python"><a class="docs-heading-anchor" href="#Installing-from-Python">Installing from Python</a><a id="Installing-from-Python-1"></a><a class="docs-heading-anchor-permalink" href="#Installing-from-Python" title="Permalink"></a></h3><p>Use of DifferentialEquations.jl from the Python programming language is available through the <a href="https://github.com/SciML/diffeqpy">diffeqpy</a> module. To install diffeqpy, use pip:</p><pre><code class="nohighlight hljs">pip install diffeqpy</code></pre><p>Using diffeqpy requires that Julia is installed and in the path, along with DifferentialEquations.jl and PyCall.jl. To install Julia, download a generic binary from <a href="https://julialang.org/downloads/">the JuliaLang site</a> and add it to your path. To install Julia packages required for diffeqpy, open up Python interpreter then run:</p><pre><code class="language-pycon hljs">&gt;&gt;&gt; import diffeqpy
 &gt;&gt;&gt; diffeqpy.install()</code></pre><p>and you&#39;re good! In addition, to improve the performance of your code, it is recommended that you use Numba to JIT compile your derivative functions. To install Numba, use:</p><pre><code class="nohighlight hljs">pip install numba</code></pre><p>diffeqpy supports the majority of DifferentialEquations.jl with very similar syntax, see <a href="https://github.com/SciML/diffeqpy">the diffeqpy README for more details</a>. One important point to note is that Numba is generally an order of magnitude slower than Julia in terms of  the generated differential equation solver code, and thus it is recommended to use <code>julia.Main.eval</code> for Julia-side derivative function implementations for maximal efficiency. See <a href="https://sciml.ai/news/2018/04/30/Jupyter/">this blog post</a> for more information.</p><h3 id="Installing-from-R"><a class="docs-heading-anchor" href="#Installing-from-R">Installing from R</a><a id="Installing-from-R-1"></a><a class="docs-heading-anchor-permalink" href="#Installing-from-R" title="Permalink"></a></h3><p>Use of DifferentialEquations.jl from the R programming language is available through the <a href="https://github.com/SciML/diffeqr">diffeqr</a> module. <a href="https://cran.r-project.org/web/packages/diffeqr/index.html">diffeqr is registered into CRAN</a>. Thus to add the package, use:</p><pre><code class="language-R hljs">install.packages(&quot;diffeqr&quot;)</code></pre><p>To install the master branch of the package (for developers), use:</p><pre><code class="language-R hljs">devtools::install_github(&#39;SciML/diffeqr&#39;, build_vignettes=T)</code></pre><p>You will need a working installation of Julia in your path. To install Julia, download a generic binary from <a href="https://julialang.org/downloads/">the JuliaLang site</a> and add it to your path. The download and installation of DifferentialEquations.jl will happen on the first invocation of <code>diffeqr::diffeq_setup()</code>.</p><p>Currently, use from R supported a subset of DifferentialEquations.jl which is documented <a href="https://cran.r-project.org/web/packages/diffeqr/index.html">through CRAN</a>.</p><h3 id="Video-Tutorial"><a class="docs-heading-anchor" href="#Video-Tutorial">Video Tutorial</a><a id="Video-Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Video-Tutorial" title="Permalink"></a></h3><p><a href="https://youtu.be/KPEqYtEd-zY"><img src="https://user-images.githubusercontent.com/1814174/36342812-bdfd0606-13b8-11e8-9eff-ff219de909e5.PNG" alt="Video Tutorial"/></a></p><h3 id="Tutorials"><a class="docs-heading-anchor" href="#Tutorials">Tutorials</a><a id="Tutorials-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorials" title="Permalink"></a></h3><p>The following tutorials will introduce you to the functionality of DifferentialEquations.jl. More examples can be found by <a href="https://github.com/SciML/SciMLTutorials.jl">checking out the IJulia notebooks in the examples folder</a>.</p><ul><li><a href="tutorials/sde_example/#Stochastic-Differential-Equations">Stochastic Differential Equations</a></li><li class="no-marker"><ul><li><a href="tutorials/sde_example/#Example-1:-Scalar-SDEs">Example 1: Scalar SDEs</a></li><li><a href="tutorials/sde_example/#Example-2:-Systems-of-SDEs-with-Diagonal-Noise">Example 2: Systems of SDEs with Diagonal Noise</a></li><li><a href="tutorials/sde_example/#Example-3:-Systems-of-SDEs-with-Scalar-Noise">Example 3: Systems of SDEs with Scalar Noise</a></li><li><a href="tutorials/sde_example/#Example-4:-Systems-of-SDEs-with-Non-Diagonal-Noise">Example 4: Systems of SDEs with Non-Diagonal Noise</a></li><li><a href="tutorials/sde_example/#Example-4:-Colored-Noise">Example 4: Colored Noise</a></li></ul></li><li><a href="tutorials/dde_example/#Delay-Differential-Equations">Delay Differential Equations</a></li><li><a href="tutorials/dae_example/#Differential-Algebraic-Equations">Differential Algebraic Equations</a></li><li class="no-marker"><ul><li><a href="tutorials/dae_example/#Mass-Matrix-Differential-Algebraic-Equations-(DAEs)">Mass-Matrix Differential-Algebraic Equations (DAEs)</a></li><li><a href="tutorials/dae_example/#Implicitly-Defined-Differential-Algebraic-Equations-(DAEs)">Implicitly-Defined Differential-Algebraic Equations (DAEs)</a></li></ul></li><li><a href="tutorials/jump_diffusion/#Jump-Diffusion-Equations">Jump Diffusion Equations</a></li><li><a href="tutorials/bvp_example/#Boundary-Value-Problems">Boundary Value Problems</a></li><li class="no-marker"><ul><li><a href="tutorials/bvp_example/#Example-1:-Simple-Pendulum">Example 1: Simple Pendulum</a></li></ul></li></ul><h3 id="Removing-and-Reducing-Compile-Times"><a class="docs-heading-anchor" href="#Removing-and-Reducing-Compile-Times">Removing and Reducing Compile Times</a><a id="Removing-and-Reducing-Compile-Times-1"></a><a class="docs-heading-anchor-permalink" href="#Removing-and-Reducing-Compile-Times" title="Permalink"></a></h3><p>In some situations, one may wish to decrease the compile time associated with DifferentialEquations.jl usage. If that&#39;s the case, there are two strategies to employ. One strategy is to use the <a href="https://diffeq.sciml.ai/stable/features/low_dep/">low dependency usage</a>. DifferentialEquations.jl is a metapackage composed of many smaller packages, and thus one could directly use a single component, such as <code>OrdinaryDiffEq.jl</code> for the pure Julia ODE solvers, and decrease the compile times by ignoring the rest (note: the interface is exactly the same, except using a solver apart from those in OrdinaryDiffEq.jl will error). We recommend that downstream packages rely solely on the packages they need.</p><p>The other strategy is to use <a href="https://julialang.github.io/PackageCompiler.jl/dev/">PackageCompiler.jl</a> to create a system image that precompiles the whole package. To do this, one simply does:</p><pre><code class="language-julia hljs">using PackageCompiler
-PackageCompiler.create_sysimage([:DifferentialEquations, :Plots]; replace_default = true)</code></pre><p>Note that there are some drawbacks to adding a package in your system image. For example, the package will never update until you manually rebuild the system image again. For more information on the consequences, <a href="https://julialang.github.io/PackageCompiler.jl/stable/sysimages.html#Drawbacks-to-custom-sysimages">see this portion of the PackageCompiler manual</a>.</p><h3 id="Basics"><a class="docs-heading-anchor" href="#Basics">Basics</a><a id="Basics-1"></a><a class="docs-heading-anchor-permalink" href="#Basics" title="Permalink"></a></h3><p>These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.</p><ul><li><a href="basics/overview/#Overview-of-DifferentialEquations.jl">Overview of DifferentialEquations.jl</a></li><li class="no-marker"><ul><li><a href="basics/overview/#Defining-Problems">Defining Problems</a></li><li><a href="basics/overview/#Solving-the-Problems">Solving the Problems</a></li><li><a href="basics/overview/#Analyzing-the-Solution">Analyzing the Solution</a></li><li><a href="basics/overview/#Add-on-Tools">Add-on Tools</a></li><li><a href="basics/overview/#Development-and-Testing-Tools">Development and Testing Tools</a></li></ul></li><li><a href="basics/common_solver_opts/#solver_options">Common Solver Options (Solve Keyword Arguments)</a></li><li><a href="basics/solution/#solution">Solution Handling</a></li><li class="no-marker"><ul><li><a href="basics/solution/#Accessing-the-Values">Accessing the Values</a></li><li><a href="basics/solution/#Array-Interface">Array Interface</a></li><li><a href="basics/solution/#Using-the-AbstractArray-Interface">Using the AbstractArray Interface</a></li><li><a href="basics/solution/#Interpolations-and-Calculating-Derivatives">Interpolations and Calculating Derivatives</a></li><li><a href="basics/solution/#Comprehensions">Comprehensions</a></li><li><a href="basics/solution/#Special-Fields">Special Fields</a></li><li><a href="basics/solution/#Differential-Equation-Solver-Statistics-(destats)">Differential Equation Solver Statistics (destats)</a></li><li><a href="basics/solution/#retcodes">Return Codes (RetCodes)</a></li><li><a href="basics/solution/#Problem-Specific-Features">Problem-Specific Features</a></li></ul></li><li><a href="basics/plot/#plot">Plot Functions</a></li><li class="no-marker"><ul><li><a href="basics/plot/#Standard-Plots-Using-the-Plot-Recipe">Standard Plots Using the Plot Recipe</a></li><li><a href="basics/plot/#Density">Density</a></li><li><a href="basics/plot/#plot_vars">Choosing Variables</a></li><li><a href="basics/plot/#Animations">Animations</a></li><li><a href="basics/plot/#Plotting-Without-the-Plot-Recipe">Plotting Without the Plot Recipe</a></li></ul></li><li><a href="basics/integrator/#integrator">Integrator Interface</a></li><li class="no-marker"><ul><li><a href="basics/integrator/#Initialization-and-Stepping">Initialization and Stepping</a></li><li><a href="basics/integrator/#Handling-Integrators">Handling Integrators</a></li><li><a href="basics/integrator/#Function-Interface">Function Interface</a></li><li><a href="basics/integrator/#Additional-Options">Additional Options</a></li><li><a href="basics/integrator/#Plot-Recipe">Plot Recipe</a></li></ul></li><li><a href="basics/problem/#Problem-Interface">Problem Interface</a></li><li class="no-marker"><ul><li><a href="basics/problem/#In-place-vs-Out-of-Place-Function-Definition-Forms">In-place vs Out-of-Place Function Definition Forms</a></li><li><a href="basics/problem/#Type-Specifications">Type Specifications</a></li><li><a href="basics/problem/#Functional-and-Condensed-Problem-Inputs">Functional and Condensed Problem Inputs</a></li><li><a href="basics/problem/#Lower-Level-__init-and-__solve">Lower Level <code>__init</code> and <code>__solve</code></a></li><li><a href="basics/problem/#Modification-of-problem-types">Modification of problem types</a></li></ul></li><li><a href="basics/faq/#faq">Frequently Asked Questions</a></li><li class="no-marker"><ul><li><a href="basics/faq/#faq_stability">Stability and Divergence of ODE Solves</a></li><li><a href="basics/faq/#faq_performance">Performance</a></li><li><a href="basics/faq/#Complicated-Models">Complicated Models</a></li><li><a href="basics/faq/#Numerical-Error">Numerical Error</a></li><li><a href="basics/faq/#Autodifferentiation-and-Dual-Numbers">Autodifferentiation and Dual Numbers</a></li><li><a href="basics/faq/#Sparse-Jacobians">Sparse Jacobians</a></li><li><a href="basics/faq/#Odd-Error-Messages">Odd Error Messages</a></li></ul></li><li><a href="basics/compatibility_chart/#Solver-Compatibility-Chart">Solver Compatibility Chart</a></li></ul><h3 id="Problem-Types"><a class="docs-heading-anchor" href="#Problem-Types">Problem Types</a><a id="Problem-Types-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-Types" title="Permalink"></a></h3><p>These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.</p><ul><li><a href="types/discrete_types/#Discrete-Problems">Discrete Problems</a></li><li class="no-marker"><ul><li><a href="types/discrete_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/ode_types/#ode_prob">ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/ode_types/#Solution-Type">Solution Type</a></li><li><a href="types/ode_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/dynamical_types/#dynamical_prob">Dynamical, Hamiltonian and 2nd Order ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/dynamical_types/#Solution-Type">Solution Type</a></li><li><a href="types/dynamical_types/#Hamiltonian-Problems">Hamiltonian Problems</a></li></ul></li><li><a href="types/split_ode_types/#split_ode_prob">Split ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/split_ode_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/steady_state_types/#Steady-State-Problems">Steady State Problems</a></li><li class="no-marker"><ul><li><a href="types/steady_state_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/bvp_types/#BVP-Problems">BVP Problems</a></li><li class="no-marker"><ul><li><a href="types/bvp_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/sde_types/#SDE-Problems">SDE Problems</a></li><li class="no-marker"><ul><li><a href="types/sde_types/#Solution-Type">Solution Type</a></li><li><a href="types/sde_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/rode_types/#rode_problem">RODE Problems</a></li><li class="no-marker"><ul><li><a href="types/rode_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/dde_types/#dde_prob">DDE Problems</a></li><li class="no-marker"><ul><li><a href="types/dde_types/#Solution-Type">Solution Type</a></li><li><a href="types/dde_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/dae_types/#DAE-Problems">DAE Problems</a></li><li class="no-marker"><ul><li><a href="types/dae_types/#Solution-Type">Solution Type</a></li><li><a href="types/dae_types/#Example-Problems">Example Problems</a></li></ul></li></ul><h3 id="Solver-Algorithms"><a class="docs-heading-anchor" href="#Solver-Algorithms">Solver Algorithms</a><a id="Solver-Algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Solver-Algorithms" title="Permalink"></a></h3><p>These pages describe the solvers and available algorithms in detail.</p><ul><li><a href="solvers/discrete_solve/#Discrete-Solvers">Discrete Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/discrete_solve/#DiscreteProblems">DiscreteProblems</a></li><li><a href="solvers/discrete_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/discrete_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/ode_solve/#ode_solve">ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/ode_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/ode_solve/#Translations-from-MATLAB/Python/R">Translations from MATLAB/Python/R</a></li><li><a href="solvers/ode_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/dynamical_solve/#Dynamical,-Hamiltonian,-and-2nd-Order-ODE-Solvers">Dynamical, Hamiltonian, and 2nd Order ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dynamical_solve/#Recommendations">Recommendations</a></li><li><a href="solvers/dynamical_solve/#Standard-ODE-Integrators">Standard ODE Integrators</a></li><li><a href="solvers/dynamical_solve/#Specialized-OrdinaryDiffEq.jl-Integrators">Specialized OrdinaryDiffEq.jl Integrators</a></li></ul></li><li><a href="solvers/split_ode_solve/#split_ode_solve">Split ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE">Implicit-Explicit (IMEX) ODE</a></li><li><a href="solvers/split_ode_solve/#Semilinear-ODE">Semilinear ODE</a></li></ul></li><li><a href="solvers/steady_state_solve/#Steady-State-Solvers">Steady State Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/steady_state_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/steady_state_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/bvp_solve/#BVP-Solvers">BVP Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/bvp_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/bvp_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/sde_solve/#sde_solve">SDE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/sde_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/sde_solve/#special_noise_forms">Special Noise Forms</a></li><li><a href="solvers/sde_solve/#Iterated-Integral-Approximations">Iterated Integral Approximations</a></li><li><a href="solvers/sde_solve/#Special-Keyword-Arguments">Special Keyword Arguments</a></li><li><a href="solvers/sde_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/rode_solve/#RODE-Solvers">RODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/rode_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/rode_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/dde_solve/#DDE-Solvers">DDE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dde_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/dde_solve/#Special-Keyword-Arguments">Special Keyword Arguments</a></li></ul></li><li><a href="solvers/dae_solve/#DAE-Solvers">DAE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dae_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/dae_solve/#dae_solve_full">Full List of Methods</a></li></ul></li><li><a href="solvers/benchmarks/#Solver-Benchmarks">Solver Benchmarks</a></li></ul><h3 id="Additional-Features"><a class="docs-heading-anchor" href="#Additional-Features">Additional Features</a><a id="Additional-Features-1"></a><a class="docs-heading-anchor-permalink" href="#Additional-Features" title="Permalink"></a></h3><p>These sections discuss extra performance enhancements, event handling, and other in-depth features.</p><ul><li><a href="features/performance_overloads/#performance_overloads">Jacobians, Gradients, etc.</a></li><li class="no-marker"><ul><li><a href="features/performance_overloads/#Built-In-Jacobian-Options">Built-In Jacobian Options</a></li><li><a href="features/performance_overloads/#Passing-Jacobian-Function-Definitions">Passing Jacobian Function Definitions</a></li></ul></li><li><a href="features/diffeq_arrays/#diffeq_arrays">DiffEq-Specific Array Types</a></li><li class="no-marker"><ul><li><a href="features/diffeq_arrays/#ArrayPartitions">ArrayPartitions</a></li><li><a href="features/diffeq_arrays/#MultiScaleArrays">MultiScaleArrays</a></li></ul></li><li><a href="features/diffeq_operator/#DiffEqOperators">DiffEqOperators</a></li><li class="no-marker"><ul><li><a href="features/diffeq_operator/#Using-DiffEqOperators">Using DiffEqOperators</a></li><li><a href="features/diffeq_operator/#Constructors">Constructors</a></li><li><a href="features/diffeq_operator/#Formal-Properties-of-DiffEqOperators">Formal Properties of DiffEqOperators</a></li></ul></li><li><a href="features/noise_process/#noise_process">Noise Processes</a></li><li><a href="features/linear_nonlinear/#linear_nonlinear">Specifying (Non)Linear Solvers and Preconditioners</a></li><li class="no-marker"><ul><li><a href="features/linear_nonlinear/#Linear-Solvers:-linsolve-Specification">Linear Solvers: <code>linsolve</code> Specification</a></li><li><a href="features/linear_nonlinear/#Preconditioners:-precs-Specification">Preconditioners: <code>precs</code> Specification</a></li><li><a href="features/linear_nonlinear/#Nonlinear-Solvers:-nlsolve-Specification">Nonlinear Solvers: <code>nlsolve</code> Specification</a></li></ul></li><li><a href="features/callback_functions/#callbacks">Event Handling and Callback Functions</a></li><li class="no-marker"><ul><li><a href="features/callback_functions/#The-Callback-Types">The Callback Types</a></li><li><a href="features/callback_functions/#Using-Callbacks">Using Callbacks</a></li><li><a href="features/callback_functions/#DiscreteCallback-Examples">DiscreteCallback Examples</a></li><li><a href="features/callback_functions/#ContinuousCallback-Examples">ContinuousCallback Examples</a></li><li><a href="features/callback_functions/#VectorContinuousCallback-Example">VectorContinuousCallback Example</a></li></ul></li><li><a href="features/callback_library/#callback_library">Callback Library</a></li><li><a href="features/ensemble/#ensemble">Parallel Ensemble Simulations</a></li><li class="no-marker"><ul><li><a href="features/ensemble/#Performing-an-Ensemble-Simulation">Performing an Ensemble Simulation</a></li><li><a href="features/ensemble/#Analyzing-an-Ensemble-Experiment">Analyzing an Ensemble Experiment</a></li><li><a href="features/ensemble/#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions">Example 1: Solving an ODE With Different Initial Conditions</a></li><li><a href="features/ensemble/#Example-2:-Solving-an-SDE-with-Different-Parameters">Example 2: Solving an SDE with Different Parameters</a></li><li><a href="features/ensemble/#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance">Example 3: Using the Reduction to Halt When Estimator is Within Tolerance</a></li><li><a href="features/ensemble/#Example-4:-Using-the-Analysis-Tools">Example 4: Using the Analysis Tools</a></li></ul></li><li><a href="features/io/#io">I/O: Saving and Loading Solution Data</a></li><li class="no-marker"><ul><li><a href="features/io/#Tabular-Data:-IterableTables">Tabular Data: IterableTables</a></li><li><a href="features/io/#JLD2-and-BSON.jl">JLD2 and BSON.jl</a></li><li><a href="features/io/#JLD">JLD</a></li></ul></li><li><a href="features/low_dep/#low_dep">Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage</a></li><li class="no-marker"><ul><li><a href="features/low_dep/#Controlling-Function-Specialization-and-Precompilation">Controlling Function Specialization and Precompilation</a></li><li><a href="features/low_dep/#Decreasing-Dependency-Size-by-Direct-Dependence-on-Specific-Solvers">Decreasing Dependency Size by Direct Dependence on Specific Solvers</a></li></ul></li><li><a href="features/progress_bar/#Progress-Bar-Integration">Progress Bar Integration</a></li><li class="no-marker"><ul><li><a href="features/progress_bar/#Using-Progress-Bars-Outside-Juno">Using Progress Bars Outside Juno</a></li></ul></li></ul><h3 id="Extra-Details"><a class="docs-heading-anchor" href="#Extra-Details">Extra Details</a><a id="Extra-Details-1"></a><a class="docs-heading-anchor-permalink" href="#Extra-Details" title="Permalink"></a></h3><p>These are just assorted extra explanations for the curious.</p><ul><li><a href="extras/timestepping/#timestepping">Timestepping Method Descriptions</a></li><li class="no-marker"><ul><li><a href="extras/timestepping/#Common-Setup">Common Setup</a></li><li><a href="extras/timestepping/#Integral-Controller-(Standard-Controller)">Integral Controller (Standard Controller)</a></li><li><a href="extras/timestepping/#Proportional-Integral-Controller-(PI-Controller)">Proportional-Integral Controller (PI Controller)</a></li><li><a href="extras/timestepping/#Proportional-Integral-Derivative-Controller-(PID-Controller)">Proportional-Integral-Derivative Controller (PID Controller)</a></li><li><a href="extras/timestepping/#Gustafsson-Acceleration">Gustafsson Acceleration</a></li><li><a href="extras/timestepping/#Abstract-Controller">Abstract Controller</a></li></ul></li></ul><h2 id="Acknowledgements"><a class="docs-heading-anchor" href="#Acknowledgements">Acknowledgements</a><a id="Acknowledgements-1"></a><a class="docs-heading-anchor-permalink" href="#Acknowledgements" title="Permalink"></a></h2><h4 id="Core-Contributors"><a class="docs-heading-anchor" href="#Core-Contributors">Core Contributors</a><a id="Core-Contributors-1"></a><a class="docs-heading-anchor-permalink" href="#Core-Contributors" title="Permalink"></a></h4><p>JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:</p><ul><li>Chris Rackauckas (@ChrisRackauckas) (lead developer)</li><li>Yingbo Ma (@YingboMa)</li><li>David Widmann (@devmotion)</li><li>Hendrik Ranocha (@ranocha)</li><li>Ethan Levien (@elevien)</li><li>Tom Short (@tshort)</li><li>@dextorious</li><li>Samuel Isaacson (@isaacsas)</li></ul><h4 id="Google-Summer-of-Code-Alumni"><a class="docs-heading-anchor" href="#Google-Summer-of-Code-Alumni">Google Summer of Code Alumni</a><a id="Google-Summer-of-Code-Alumni-1"></a><a class="docs-heading-anchor-permalink" href="#Google-Summer-of-Code-Alumni" title="Permalink"></a></h4><ul><li>Yingbo Ma (@YingboMa)</li><li>Shivin Srivastava (@shivin9)</li><li>Ayush Pandey (@Ayush-iitkgp)</li><li>Xingjian Guo (@MSeeker1340)</li><li>Shubham Maddhashiya (@sipah00)</li><li>Vaibhav Kumar Dixit (@Vaibhavdixit02)</li></ul><h2 id="Reproducibility"><a class="docs-heading-anchor" href="#Reproducibility">Reproducibility</a><a id="Reproducibility-1"></a><a class="docs-heading-anchor-permalink" href="#Reproducibility" title="Permalink"></a></h2><details><summary>The documentation of this SciML package was built using these direct dependencies,</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `/var/lib/buildkite-agent/builds/gpuci-10/julialang/diffeqdocs-dot-jl/docs/Project.toml`
+PackageCompiler.create_sysimage([:DifferentialEquations, :Plots]; replace_default = true)</code></pre><p>Note that there are some drawbacks to adding a package in your system image. For example, the package will never update until you manually rebuild the system image again. For more information on the consequences, <a href="https://julialang.github.io/PackageCompiler.jl/stable/sysimages.html#Drawbacks-to-custom-sysimages">see this portion of the PackageCompiler manual</a>.</p><h3 id="Basics"><a class="docs-heading-anchor" href="#Basics">Basics</a><a id="Basics-1"></a><a class="docs-heading-anchor-permalink" href="#Basics" title="Permalink"></a></h3><p>These pages introduce you to the core of DifferentialEquations.jl and the common interface. It explains the general workflow, options which are generally available, and the general tools for analysis.</p><ul><li><a href="basics/overview/#Overview-of-DifferentialEquations.jl">Overview of DifferentialEquations.jl</a></li><li class="no-marker"><ul><li><a href="basics/overview/#Defining-Problems">Defining Problems</a></li><li><a href="basics/overview/#Solving-the-Problems">Solving the Problems</a></li><li><a href="basics/overview/#Analyzing-the-Solution">Analyzing the Solution</a></li><li><a href="basics/overview/#Add-on-Tools">Add-on Tools</a></li><li><a href="basics/overview/#Development-and-Testing-Tools">Development and Testing Tools</a></li></ul></li><li><a href="basics/common_solver_opts/#solver_options">Common Solver Options (Solve Keyword Arguments)</a></li><li><a href="basics/solution/#solution">Solution Handling</a></li><li class="no-marker"><ul><li><a href="basics/solution/#Accessing-the-Values">Accessing the Values</a></li><li><a href="basics/solution/#Array-Interface">Array Interface</a></li><li><a href="basics/solution/#Using-the-AbstractArray-Interface">Using the AbstractArray Interface</a></li><li><a href="basics/solution/#Interpolations-and-Calculating-Derivatives">Interpolations and Calculating Derivatives</a></li><li><a href="basics/solution/#Comprehensions">Comprehensions</a></li><li><a href="basics/solution/#Special-Fields">Special Fields</a></li><li><a href="basics/solution/#Differential-Equation-Solver-Statistics-(destats)">Differential Equation Solver Statistics (destats)</a></li><li><a href="basics/solution/#retcodes">Return Codes (RetCodes)</a></li><li><a href="basics/solution/#Problem-Specific-Features">Problem-Specific Features</a></li></ul></li><li><a href="basics/plot/#plot">Plot Functions</a></li><li class="no-marker"><ul><li><a href="basics/plot/#Standard-Plots-Using-the-Plot-Recipe">Standard Plots Using the Plot Recipe</a></li><li><a href="basics/plot/#Density">Density</a></li><li><a href="basics/plot/#plot_vars">Choosing Variables</a></li><li><a href="basics/plot/#Animations">Animations</a></li><li><a href="basics/plot/#Plotting-Without-the-Plot-Recipe">Plotting Without the Plot Recipe</a></li></ul></li><li><a href="basics/integrator/#integrator">Integrator Interface</a></li><li class="no-marker"><ul><li><a href="basics/integrator/#Initialization-and-Stepping">Initialization and Stepping</a></li><li><a href="basics/integrator/#Handling-Integrators">Handling Integrators</a></li><li><a href="basics/integrator/#Function-Interface">Function Interface</a></li><li><a href="basics/integrator/#Additional-Options">Additional Options</a></li><li><a href="basics/integrator/#Plot-Recipe">Plot Recipe</a></li></ul></li><li><a href="basics/problem/#Problem-Interface">Problem Interface</a></li><li class="no-marker"><ul><li><a href="basics/problem/#In-place-vs-Out-of-Place-Function-Definition-Forms">In-place vs Out-of-Place Function Definition Forms</a></li><li><a href="basics/problem/#Type-Specifications">Type Specifications</a></li><li><a href="basics/problem/#Functional-and-Condensed-Problem-Inputs">Functional and Condensed Problem Inputs</a></li><li><a href="basics/problem/#Lower-Level-__init-and-__solve">Lower Level <code>__init</code> and <code>__solve</code></a></li><li><a href="basics/problem/#Modification-of-problem-types">Modification of problem types</a></li></ul></li><li><a href="basics/faq/#faq">Frequently Asked Questions</a></li><li class="no-marker"><ul><li><a href="basics/faq/#faq_stability">Stability and Divergence of ODE Solves</a></li><li><a href="basics/faq/#faq_performance">Performance</a></li><li><a href="basics/faq/#Complicated-Models">Complicated Models</a></li><li><a href="basics/faq/#Numerical-Error">Numerical Error</a></li><li><a href="basics/faq/#Autodifferentiation-and-Dual-Numbers">Autodifferentiation and Dual Numbers</a></li><li><a href="basics/faq/#Sparse-Jacobians">Sparse Jacobians</a></li><li><a href="basics/faq/#Odd-Error-Messages">Odd Error Messages</a></li></ul></li><li><a href="basics/compatibility_chart/#Solver-Compatibility-Chart">Solver Compatibility Chart</a></li></ul><h3 id="Problem-Types"><a class="docs-heading-anchor" href="#Problem-Types">Problem Types</a><a id="Problem-Types-1"></a><a class="docs-heading-anchor-permalink" href="#Problem-Types" title="Permalink"></a></h3><p>These pages describe building the problem types to define differential equations for the solvers, and the special features of the different solution types.</p><ul><li><a href="types/discrete_types/#Discrete-Problems">Discrete Problems</a></li><li class="no-marker"><ul><li><a href="types/discrete_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/ode_types/#ode_prob">ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/ode_types/#Solution-Type">Solution Type</a></li><li><a href="types/ode_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/dynamical_types/#dynamical_prob">Dynamical, Hamiltonian and 2nd Order ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/dynamical_types/#Solution-Type">Solution Type</a></li><li><a href="types/dynamical_types/#Hamiltonian-Problems">Hamiltonian Problems</a></li></ul></li><li><a href="types/split_ode_types/#split_ode_prob">Split ODE Problems</a></li><li class="no-marker"><ul><li><a href="types/split_ode_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/steady_state_types/#Steady-State-Problems">Steady State Problems</a></li><li class="no-marker"><ul><li><a href="types/steady_state_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/bvp_types/#BVP-Problems">BVP Problems</a></li><li class="no-marker"><ul><li><a href="types/bvp_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/sde_types/#SDE-Problems">SDE Problems</a></li><li class="no-marker"><ul><li><a href="types/sde_types/#Solution-Type">Solution Type</a></li><li><a href="types/sde_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/rode_types/#rode_problem">RODE Problems</a></li><li class="no-marker"><ul><li><a href="types/rode_types/#Solution-Type">Solution Type</a></li></ul></li><li><a href="types/dde_types/#dde_prob">DDE Problems</a></li><li class="no-marker"><ul><li><a href="types/dde_types/#Solution-Type">Solution Type</a></li><li><a href="types/dde_types/#Example-Problems">Example Problems</a></li></ul></li><li><a href="types/dae_types/#DAE-Problems">DAE Problems</a></li><li class="no-marker"><ul><li><a href="types/dae_types/#Solution-Type">Solution Type</a></li><li><a href="types/dae_types/#Example-Problems">Example Problems</a></li></ul></li></ul><h3 id="Solver-Algorithms"><a class="docs-heading-anchor" href="#Solver-Algorithms">Solver Algorithms</a><a id="Solver-Algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Solver-Algorithms" title="Permalink"></a></h3><p>These pages describe the solvers and available algorithms in detail.</p><ul><li><a href="solvers/discrete_solve/#Discrete-Solvers">Discrete Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/discrete_solve/#DiscreteProblems">DiscreteProblems</a></li><li><a href="solvers/discrete_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/discrete_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/ode_solve/#ode_solve">ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/ode_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/ode_solve/#Translations-from-MATLAB/Python/R">Translations from MATLAB/Python/R</a></li><li><a href="solvers/ode_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/dynamical_solve/#Dynamical,-Hamiltonian,-and-2nd-Order-ODE-Solvers">Dynamical, Hamiltonian, and 2nd Order ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dynamical_solve/#Recommendations">Recommendations</a></li><li><a href="solvers/dynamical_solve/#Standard-ODE-Integrators">Standard ODE Integrators</a></li><li><a href="solvers/dynamical_solve/#Specialized-OrdinaryDiffEq.jl-Integrators">Specialized OrdinaryDiffEq.jl Integrators</a></li></ul></li><li><a href="solvers/split_ode_solve/#split_ode_solve">Split ODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/split_ode_solve/#Implicit-Explicit-(IMEX)-ODE">Implicit-Explicit (IMEX) ODE</a></li><li><a href="solvers/split_ode_solve/#Semilinear-ODE">Semilinear ODE</a></li></ul></li><li><a href="solvers/steady_state_solve/#Steady-State-Solvers">Steady State Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/steady_state_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/steady_state_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/bvp_solve/#BVP-Solvers">BVP Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/bvp_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/bvp_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/sde_solve/#sde_solve">SDE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/sde_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/sde_solve/#special_noise_forms">Special Noise Forms</a></li><li><a href="solvers/sde_solve/#Iterated-Integral-Approximations">Iterated Integral Approximations</a></li><li><a href="solvers/sde_solve/#Special-Keyword-Arguments">Special Keyword Arguments</a></li><li><a href="solvers/sde_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/rode_solve/#RODE-Solvers">RODE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/rode_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/rode_solve/#Full-List-of-Methods">Full List of Methods</a></li></ul></li><li><a href="solvers/dde_solve/#DDE-Solvers">DDE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dde_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/dde_solve/#Special-Keyword-Arguments">Special Keyword Arguments</a></li></ul></li><li><a href="solvers/dae_solve/#DAE-Solvers">DAE Solvers</a></li><li class="no-marker"><ul><li><a href="solvers/dae_solve/#Recommended-Methods">Recommended Methods</a></li><li><a href="solvers/dae_solve/#dae_solve_full">Full List of Methods</a></li></ul></li><li><a href="solvers/benchmarks/#Solver-Benchmarks">Solver Benchmarks</a></li></ul><h3 id="Additional-Features"><a class="docs-heading-anchor" href="#Additional-Features">Additional Features</a><a id="Additional-Features-1"></a><a class="docs-heading-anchor-permalink" href="#Additional-Features" title="Permalink"></a></h3><p>These sections discuss extra performance enhancements, event handling, and other in-depth features.</p><ul><li><a href="features/performance_overloads/#performance_overloads">Jacobians, Gradients, etc.</a></li><li class="no-marker"><ul><li><a href="features/performance_overloads/#Built-In-Jacobian-Options">Built-In Jacobian Options</a></li><li><a href="features/performance_overloads/#Passing-Jacobian-Function-Definitions">Passing Jacobian Function Definitions</a></li></ul></li><li><a href="features/diffeq_arrays/#diffeq_arrays">DiffEq-Specific Array Types</a></li><li class="no-marker"><ul><li><a href="features/diffeq_arrays/#ArrayPartitions">ArrayPartitions</a></li><li><a href="features/diffeq_arrays/#MultiScaleArrays">MultiScaleArrays</a></li></ul></li><li><a href="features/diffeq_operator/#DiffEqOperators">DiffEqOperators</a></li><li class="no-marker"><ul><li><a href="features/diffeq_operator/#Using-DiffEqOperators">Using DiffEqOperators</a></li><li><a href="features/diffeq_operator/#Constructors">Constructors</a></li><li><a href="features/diffeq_operator/#Formal-Properties-of-DiffEqOperators">Formal Properties of DiffEqOperators</a></li></ul></li><li><a href="features/noise_process/#noise_process">Noise Processes</a></li><li><a href="features/linear_nonlinear/#linear_nonlinear">Specifying (Non)Linear Solvers and Preconditioners</a></li><li class="no-marker"><ul><li><a href="features/linear_nonlinear/#Linear-Solvers:-linsolve-Specification">Linear Solvers: <code>linsolve</code> Specification</a></li><li><a href="features/linear_nonlinear/#Preconditioners:-precs-Specification">Preconditioners: <code>precs</code> Specification</a></li><li><a href="features/linear_nonlinear/#Nonlinear-Solvers:-nlsolve-Specification">Nonlinear Solvers: <code>nlsolve</code> Specification</a></li></ul></li><li><a href="features/callback_functions/#callbacks">Event Handling and Callback Functions</a></li><li class="no-marker"><ul><li><a href="features/callback_functions/#The-Callback-Types">The Callback Types</a></li><li><a href="features/callback_functions/#Using-Callbacks">Using Callbacks</a></li><li><a href="features/callback_functions/#DiscreteCallback-Examples">DiscreteCallback Examples</a></li><li><a href="features/callback_functions/#ContinuousCallback-Examples">ContinuousCallback Examples</a></li><li><a href="features/callback_functions/#VectorContinuousCallback-Example">VectorContinuousCallback Example</a></li></ul></li><li><a href="features/callback_library/#callback_library">Callback Library</a></li><li><a href="features/ensemble/#ensemble">Parallel Ensemble Simulations</a></li><li class="no-marker"><ul><li><a href="features/ensemble/#Performing-an-Ensemble-Simulation">Performing an Ensemble Simulation</a></li><li><a href="features/ensemble/#Analyzing-an-Ensemble-Experiment">Analyzing an Ensemble Experiment</a></li><li><a href="features/ensemble/#Example-1:-Solving-an-ODE-With-Different-Initial-Conditions">Example 1: Solving an ODE With Different Initial Conditions</a></li><li><a href="features/ensemble/#Example-2:-Solving-an-SDE-with-Different-Parameters">Example 2: Solving an SDE with Different Parameters</a></li><li><a href="features/ensemble/#Example-3:-Using-the-Reduction-to-Halt-When-Estimator-is-Within-Tolerance">Example 3: Using the Reduction to Halt When Estimator is Within Tolerance</a></li><li><a href="features/ensemble/#Example-4:-Using-the-Analysis-Tools">Example 4: Using the Analysis Tools</a></li></ul></li><li><a href="features/io/#io">I/O: Saving and Loading Solution Data</a></li><li class="no-marker"><ul><li><a href="features/io/#Tabular-Data:-IterableTables">Tabular Data: IterableTables</a></li><li><a href="features/io/#JLD2-and-BSON.jl">JLD2 and BSON.jl</a></li><li><a href="features/io/#JLD">JLD</a></li></ul></li><li><a href="features/low_dep/#low_dep">Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage</a></li><li class="no-marker"><ul><li><a href="features/low_dep/#Controlling-Function-Specialization-and-Precompilation">Controlling Function Specialization and Precompilation</a></li><li><a href="features/low_dep/#Decreasing-Dependency-Size-by-Direct-Dependence-on-Specific-Solvers">Decreasing Dependency Size by Direct Dependence on Specific Solvers</a></li></ul></li><li><a href="features/progress_bar/#Progress-Bar-Integration">Progress Bar Integration</a></li><li class="no-marker"><ul><li><a href="features/progress_bar/#Using-Progress-Bars-Outside-Juno">Using Progress Bars Outside Juno</a></li></ul></li></ul><h3 id="Extra-Details"><a class="docs-heading-anchor" href="#Extra-Details">Extra Details</a><a id="Extra-Details-1"></a><a class="docs-heading-anchor-permalink" href="#Extra-Details" title="Permalink"></a></h3><p>These are just assorted extra explanations for the curious.</p><ul><li><a href="extras/timestepping/#timestepping">Timestepping Method Descriptions</a></li><li class="no-marker"><ul><li><a href="extras/timestepping/#Common-Setup">Common Setup</a></li><li><a href="extras/timestepping/#Integral-Controller-(Standard-Controller)">Integral Controller (Standard Controller)</a></li><li><a href="extras/timestepping/#Proportional-Integral-Controller-(PI-Controller)">Proportional-Integral Controller (PI Controller)</a></li><li><a href="extras/timestepping/#Proportional-Integral-Derivative-Controller-(PID-Controller)">Proportional-Integral-Derivative Controller (PID Controller)</a></li><li><a href="extras/timestepping/#Gustafsson-Acceleration">Gustafsson Acceleration</a></li><li><a href="extras/timestepping/#Abstract-Controller">Abstract Controller</a></li></ul></li></ul><h2 id="Acknowledgements"><a class="docs-heading-anchor" href="#Acknowledgements">Acknowledgements</a><a id="Acknowledgements-1"></a><a class="docs-heading-anchor-permalink" href="#Acknowledgements" title="Permalink"></a></h2><h4 id="Core-Contributors"><a class="docs-heading-anchor" href="#Core-Contributors">Core Contributors</a><a id="Core-Contributors-1"></a><a class="docs-heading-anchor-permalink" href="#Core-Contributors" title="Permalink"></a></h4><p>JuliaDiffEq and DifferentialEquations.jl has been a collaborative effort by many individuals. Significant contributions have been made by the following individuals:</p><ul><li>Chris Rackauckas (@ChrisRackauckas) (lead developer)</li><li>Yingbo Ma (@YingboMa)</li><li>David Widmann (@devmotion)</li><li>Hendrik Ranocha (@ranocha)</li><li>Ethan Levien (@elevien)</li><li>Tom Short (@tshort)</li><li>@dextorious</li><li>Samuel Isaacson (@isaacsas)</li></ul><h4 id="Google-Summer-of-Code-Alumni"><a class="docs-heading-anchor" href="#Google-Summer-of-Code-Alumni">Google Summer of Code Alumni</a><a id="Google-Summer-of-Code-Alumni-1"></a><a class="docs-heading-anchor-permalink" href="#Google-Summer-of-Code-Alumni" title="Permalink"></a></h4><ul><li>Yingbo Ma (@YingboMa)</li><li>Shivin Srivastava (@shivin9)</li><li>Ayush Pandey (@Ayush-iitkgp)</li><li>Xingjian Guo (@MSeeker1340)</li><li>Shubham Maddhashiya (@sipah00)</li><li>Vaibhav Kumar Dixit (@Vaibhavdixit02)</li></ul><h2 id="Reproducibility"><a class="docs-heading-anchor" href="#Reproducibility">Reproducibility</a><a id="Reproducibility-1"></a><a class="docs-heading-anchor-permalink" href="#Reproducibility" title="Permalink"></a></h2><details><summary>The documentation of this SciML package was built using these direct dependencies,</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `/var/lib/buildkite-agent/builds/gpuci-16/julialang/diffeqdocs-dot-jl/docs/Project.toml`
   [2169fc97] AlgebraicMultigrid v0.5.1
   [fbb218c0] BSON v0.3.7
   [6e4b80f9] BenchmarkTools v1.3.2
-  [764a87c0] BoundaryValueDiffEq v2.11.0
-  [336ed68f] CSV v0.10.10
+⌅ [764a87c0] BoundaryValueDiffEq v2.11.0
+  [336ed68f] CSV v0.10.11
   [dfb8ca35] DAEProblemLibrary v0.1.0
   [165a45c3] DASKR v2.9.1
   [f42792ee] DDEProblemLibrary v0.1.2
   [a93c6f00] DataFrames v1.5.0
-  [2b5f629d] DiffEqBase v6.124.0
+  [2b5f629d] DiffEqBase v6.125.1
   [459566f4] DiffEqCallbacks v2.26.1
-  [d91efeb5] DiffEqDocs v7.7.1 `/var/lib/buildkite-agent/builds/gpuci-10/julialang/diffeqdocs-dot-jl`
-  [0c46a032] DifferentialEquations v7.7.0
-  [31c24e10] Distributions v0.25.89
+  [d91efeb5] DiffEqDocs v7.7.1 `/var/lib/buildkite-agent/builds/gpuci-16/julialang/diffeqdocs-dot-jl`
+  [0c46a032] DifferentialEquations v7.8.0
+  [31c24e10] Distributions v0.25.95
   [e30172f5] Documenter v0.27.24
-  [6a86dc24] FiniteDiff v2.20.0
+  [6a86dc24] FiniteDiff v2.21.1
   [f6369f11] ForwardDiff v0.10.35
   [40713840] IncompleteLU v0.2.1
   [033835bb] JLD2 v0.4.31
   [faf0f6d7] JumpProblemLibrary v0.1.3
 ⌃ [961ee093] ModelingToolkit v8.46.1
   [fdc4e326] ODEProblemLibrary v0.1.7
-  [7f7a1694] Optimization v3.14.1
-  [4e6fcdb7] OptimizationNLopt v0.1.5
-  [1dea7af3] OrdinaryDiffEq v6.51.1
-  [91a5bcdd] Plots v1.38.11
-  [731186ca] RecursiveArrayTools v2.38.4
+  [7f7a1694] Optimization v3.15.0
+  [4e6fcdb7] OptimizationNLopt v0.1.6
+  [1dea7af3] OrdinaryDiffEq v6.53.1
+  [91a5bcdd] Plots v1.38.16
+  [731186ca] RecursiveArrayTools v2.38.5
   [c72e72a9] SDEProblemLibrary v0.1.3
-  [0bca4576] SciMLBase v1.91.7
-  [90137ffa] StaticArrays v1.5.24
-  [c3572dad] Sundials v4.17.0
+  [0bca4576] SciMLBase v1.92.5
+  [90137ffa] StaticArrays v1.5.26
+  [c3572dad] Sundials v4.19.0
 ⌅ [0c5d862f] Symbolics v4.14.0
-  [1986cc42] Unitful v1.13.1
-Info Packages marked with ⌃ and ⌅ have new versions available, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated`</code></pre></details><details><summary>and using this machine and Julia version.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Julia Version 1.9.0
-Commit 8e630552924 (2023-05-07 11:25 UTC)
+  [1986cc42] Unitful v1.14.0
+Info Packages marked with ⌃ and ⌅ have new versions available, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated`</code></pre></details><details><summary>and using this machine and Julia version.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Julia Version 1.9.1
+Commit 147bdf428cd (2023-06-07 08:27 UTC)
 Platform Info:
   OS: Linux (x86_64-linux-gnu)
   CPU: 48 × AMD EPYC 7402 24-Core Processor
@@ -62,31 +62,32 @@ Environment:
   JULIA_DEPOT_PATH = /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61
   LD_LIBRARY_PATH = /usr/local/nvidia/lib:/usr/local/nvidia/lib64
   JULIA_PKG_SERVER =
-  JULIA_IMAGE_THREADS = 1</code></pre></details><details><summary>A more complete overview of all dependencies and their versions is also provided.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `/var/lib/buildkite-agent/builds/gpuci-10/julialang/diffeqdocs-dot-jl/docs/Manifest.toml`
+  JULIA_IMAGE_THREADS = 1</code></pre></details><details><summary>A more complete overview of all dependencies and their versions is also provided.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `/var/lib/buildkite-agent/builds/gpuci-16/julialang/diffeqdocs-dot-jl/docs/Manifest.toml`
+  [47edcb42] ADTypes v0.1.3
   [a4c015fc] ANSIColoredPrinters v0.0.1
 ⌅ [c3fe647b] AbstractAlgebra v0.27.10
   [1520ce14] AbstractTrees v0.4.4
-  [79e6a3ab] Adapt v3.6.1
+  [79e6a3ab] Adapt v3.6.2
   [2169fc97] AlgebraicMultigrid v0.5.1
   [dce04be8] ArgCheck v2.3.0
   [ec485272] ArnoldiMethod v0.2.0
-  [4fba245c] ArrayInterface v7.4.3
+  [4fba245c] ArrayInterface v7.4.8
   [30b0a656] ArrayInterfaceCore v0.1.29
-⌃ [4c555306] ArrayLayouts v0.8.18
+  [4c555306] ArrayLayouts v1.0.6
   [15f4f7f2] AutoHashEquals v0.2.0
   [fbb218c0] BSON v0.3.7
-⌃ [aae01518] BandedMatrices v0.17.18
-  [198e06fe] BangBang v0.3.37
+  [aae01518] BandedMatrices v0.17.28
+  [198e06fe] BangBang v0.3.39
   [9718e550] Baselet v0.1.1
   [6e4b80f9] BenchmarkTools v1.3.2
   [e2ed5e7c] Bijections v0.1.4
   [d1d4a3ce] BitFlags v0.1.7
   [62783981] BitTwiddlingConvenienceFunctions v0.1.5
-  [764a87c0] BoundaryValueDiffEq v2.11.0
+⌅ [764a87c0] BoundaryValueDiffEq v2.11.0
   [fa961155] CEnum v0.4.2
-  [2a0fbf3d] CPUSummary v0.2.2
+  [2a0fbf3d] CPUSummary v0.2.3
   [00ebfdb7] CSTParser v3.3.6
-  [336ed68f] CSV v0.10.10
+  [336ed68f] CSV v0.10.11
   [49dc2e85] Calculus v0.5.1
 ⌅ [479239e8] Catalyst v12.3.2
   [d360d2e6] ChainRulesCore v1.16.0
@@ -99,12 +100,12 @@ Environment:
   [5ae59095] Colors v0.12.10
   [861a8166] Combinatorics v1.0.2
   [a80b9123] CommonMark v0.8.12
-  [38540f10] CommonSolve v0.2.3
+  [38540f10] CommonSolve v0.2.4
   [bbf7d656] CommonSubexpressions v0.3.0
   [34da2185] Compat v4.6.1
   [b152e2b5] CompositeTypes v0.1.3
-  [a33af91c] CompositionsBase v0.1.1
-  [f0e56b4a] ConcurrentUtilities v2.1.1
+  [a33af91c] CompositionsBase v0.1.2
+  [f0e56b4a] ConcurrentUtilities v2.2.0
   [88cd18e8] ConsoleProgressMonitor v0.1.2
   [187b0558] ConstructionBase v1.5.2
   [d38c429a] Contour v0.6.2
@@ -113,30 +114,28 @@ Environment:
   [dfb8ca35] DAEProblemLibrary v0.1.0
   [165a45c3] DASKR v2.9.1
   [f42792ee] DDEProblemLibrary v0.1.2
-  [9a962f9c] DataAPI v1.14.0
+  [9a962f9c] DataAPI v1.15.0
   [a93c6f00] DataFrames v1.5.0
   [864edb3b] DataStructures v0.18.13
   [e2d170a0] DataValueInterfaces v1.0.0
   [244e2a9f] DefineSingletons v0.1.2
   [bcd4f6db] DelayDiffEq v5.42.0
   [8bb1440f] DelimitedFiles v1.9.1
-  [2b5f629d] DiffEqBase v6.124.0
+  [2b5f629d] DiffEqBase v6.125.1
   [459566f4] DiffEqCallbacks v2.26.1
-  [d91efeb5] DiffEqDocs v7.7.1 `/var/lib/buildkite-agent/builds/gpuci-10/julialang/diffeqdocs-dot-jl`
-  [77a26b50] DiffEqNoiseProcess v5.16.0
+  [d91efeb5] DiffEqDocs v7.7.1 `/var/lib/buildkite-agent/builds/gpuci-16/julialang/diffeqdocs-dot-jl`
+  [77a26b50] DiffEqNoiseProcess v5.17.1
   [163ba53b] DiffResults v1.1.0
-  [b552c78f] DiffRules v1.13.0
-  [0c46a032] DifferentialEquations v7.7.0
+  [b552c78f] DiffRules v1.15.1
+  [0c46a032] DifferentialEquations v7.8.0
   [b4f34e82] Distances v0.10.8
-  [31c24e10] Distributions v0.25.89
+  [31c24e10] Distributions v0.25.95
   [ffbed154] DocStringExtensions v0.9.3
   [e30172f5] Documenter v0.27.24
 ⌅ [5b8099bc] DomainSets v0.5.15
   [fa6b7ba4] DualNumbers v0.6.8
   [7c1d4256] DynamicPolynomials v0.4.6
   [4e289a0a] EnumX v1.0.4
-⌅ [7da242da] Enzyme v0.11.0
-  [f151be2c] EnzymeCore v0.3.0
   [d4d017d3] ExponentialUtilities v1.24.0
   [e2ba6199] ExprTools v0.1.9
   [c87230d0] FFMPEG v0.4.1
@@ -145,48 +144,44 @@ Environment:
   [29a986be] FastLapackInterface v1.2.9
   [5789e2e9] FileIO v1.16.1
   [48062228] FilePathsBase v0.9.20
-⌅ [1a297f60] FillArrays v0.13.11
-  [6a86dc24] FiniteDiff v2.20.0
+  [1a297f60] FillArrays v1.2.0
+  [6a86dc24] FiniteDiff v2.21.1
   [53c48c17] FixedPointNumbers v0.8.4
   [59287772] Formatting v0.4.2
   [f6369f11] ForwardDiff v0.10.35
   [069b7b12] FunctionWrappers v1.1.3
   [77dc65aa] FunctionWrappersWrappers v0.1.3
-  [46192b85] GPUArraysCore v0.1.4
-  [61eb1bfa] GPUCompiler v0.19.3
-  [28b8d3ca] GR v0.72.4
+  [46192b85] GPUArraysCore v0.1.5
+  [28b8d3ca] GR v0.72.7
   [c145ed77] GenericSchur v0.5.3
   [c27321d9] Glob v1.3.1
   [86223c79] Graphs v1.8.0
   [42e2da0e] Grisu v1.0.2
 ⌅ [0b43b601] Groebner v0.2.11
   [d5909c97] GroupsCore v0.4.0
-  [cd3eb016] HTTP v1.8.0
-  [3e5b6fbb] HostCPUFeatures v0.1.14
-  [34004b35] HypergeometricFunctions v0.3.15
-  [b5f81e59] IOCapture v0.2.2
+  [cd3eb016] HTTP v1.9.6
+  [3e5b6fbb] HostCPUFeatures v0.1.15
+  [34004b35] HypergeometricFunctions v0.3.17
+  [b5f81e59] IOCapture v0.2.3
   [615f187c] IfElse v0.1.1
   [40713840] IncompleteLU v0.2.1
   [d25df0c9] Inflate v0.1.3
   [22cec73e] InitialValues v0.3.1
   [842dd82b] InlineStrings v1.4.0
-  [18e54dd8] IntegerMathUtils v0.1.0
+  [18e54dd8] IntegerMathUtils v0.1.1
 ⌅ [8197267c] IntervalSets v0.7.3
   [41ab1584] InvertedIndices v1.3.0
   [92d709cd] IrrationalConstants v0.2.2
-  [42fd0dbc] IterativeSolvers v0.9.2
   [82899510] IteratorInterfaceExtensions v1.0.0
   [033835bb] JLD2 v0.4.31
   [1019f520] JLFzf v0.1.5
   [692b3bcd] JLLWrappers v1.4.1
   [682c06a0] JSON v0.21.4
-  [98e50ef6] JuliaFormatter v1.0.29
+  [98e50ef6] JuliaFormatter v1.0.34
   [faf0f6d7] JumpProblemLibrary v0.1.3
   [ccbc3e58] JumpProcesses v9.6.3
   [ef3ab10e] KLU v0.4.0
-  [ba0b0d4f] Krylov v0.9.0
-  [0b1a1467] KrylovKit v0.6.0
-  [929cbde3] LLVM v5.0.0
+  [ba0b0d4f] Krylov v0.9.1
   [b964fa9f] LaTeXStrings v1.3.0
   [2ee39098] LabelledArrays v1.14.0
   [984bce1d] LambertW v0.4.6
@@ -196,13 +191,13 @@ Environment:
   [1d6d02ad] LeftChildRightSiblingTrees v0.2.0
   [2d8b4e74] LevyArea v1.0.0
   [d3d80556] LineSearches v7.2.0
-  [7ed4a6bd] LinearSolve v1.42.0
-  [2ab3a3ac] LogExpFunctions v0.3.23
+  [7ed4a6bd] LinearSolve v2.1.13
+  [2ab3a3ac] LogExpFunctions v0.3.24
   [e6f89c97] LoggingExtras v1.0.0
-  [bdcacae8] LoopVectorization v0.12.158
+  [bdcacae8] LoopVectorization v0.12.159
   [1914dd2f] MacroTools v0.5.10
   [d125e4d3] ManualMemory v0.1.8
-  [b8f27783] MathOptInterface v1.15.1
+  [b8f27783] MathOptInterface v1.17.1
   [fdba3010] MathProgBase v0.7.8
   [739be429] MbedTLS v1.1.7
   [442fdcdd] Measures v0.3.2
@@ -217,30 +212,29 @@ Environment:
   [76087f3c] NLopt v0.6.5
   [2774e3e8] NLsolve v4.5.1
   [77ba4419] NaNMath v1.0.2
-  [8913a72c] NonlinearSolve v1.6.0
+  [8913a72c] NonlinearSolve v1.8.0
   [fdc4e326] ODEProblemLibrary v0.1.7
-⌅ [d8793406] ObjectFile v0.3.7
   [6fe1bfb0] OffsetArrays v1.12.9
   [4d8831e6] OpenSSL v1.4.1
-  [429524aa] Optim v1.7.5
-  [7f7a1694] Optimization v3.14.1
-  [4e6fcdb7] OptimizationNLopt v0.1.5
+  [429524aa] Optim v1.7.6
+  [7f7a1694] Optimization v3.15.0
+  [4e6fcdb7] OptimizationNLopt v0.1.6
   [bac558e1] OrderedCollections v1.6.0
-  [1dea7af3] OrdinaryDiffEq v6.51.1
+  [1dea7af3] OrdinaryDiffEq v6.53.1
   [90014a1f] PDMats v0.11.17
   [d96e819e] Parameters v0.12.3
-  [69de0a69] Parsers v2.5.8
+  [69de0a69] Parsers v2.7.0
   [b98c9c47] Pipe v1.3.0
   [ccf2f8ad] PlotThemes v3.1.0
   [995b91a9] PlotUtils v1.3.5
-  [91a5bcdd] Plots v1.38.11
+  [91a5bcdd] Plots v1.38.16
   [e409e4f3] PoissonRandom v0.4.4
   [f517fe37] Polyester v0.7.3
   [1d0040c9] PolyesterWeave v0.2.1
   [2dfb63ee] PooledArrays v1.4.2
   [85a6dd25] PositiveFactorizations v0.2.4
   [d236fae5] PreallocationTools v0.4.12
-  [aea7be01] PrecompileTools v1.1.1
+  [aea7be01] PrecompileTools v1.1.2
   [21216c6a] Preferences v1.4.0
   [08abe8d2] PrettyTables v2.2.4
   [27ebfcd6] Primes v0.5.3
@@ -252,7 +246,7 @@ Environment:
   [e6cf234a] RandomNumbers v1.5.3
   [3cdcf5f2] RecipesBase v1.3.4
   [01d81517] RecipesPipeline v0.6.12
-  [731186ca] RecursiveArrayTools v2.38.4
+  [731186ca] RecursiveArrayTools v2.38.5
   [f2c3362d] RecursiveFactorization v0.2.18
   [189a3867] Reexport v1.2.2
   [42d2dcc6] Referenceables v0.1.2
@@ -260,40 +254,39 @@ Environment:
   [ae029012] Requires v1.3.0
   [ae5879a3] ResettableStacks v1.1.1
   [79098fc4] Rmath v0.7.1
-  [7e49a35a] RuntimeGeneratedFunctions v0.5.7
+  [7e49a35a] RuntimeGeneratedFunctions v0.5.11
   [c72e72a9] SDEProblemLibrary v0.1.3
   [94e857df] SIMDTypes v0.1.0
-  [476501e8] SLEEFPirates v0.6.38
-  [0bca4576] SciMLBase v1.91.7
-  [e9a6253c] SciMLNLSolve v0.1.6
-  [c0aeaf25] SciMLOperators v0.2.4
+  [476501e8] SLEEFPirates v0.6.39
+  [0bca4576] SciMLBase v1.92.5
+  [e9a6253c] SciMLNLSolve v0.1.7
+  [c0aeaf25] SciMLOperators v0.2.12
   [6c6a2e73] Scratch v1.2.0
-  [91c51154] SentinelArrays v1.3.18
+  [91c51154] SentinelArrays v1.4.0
   [efcf1570] Setfield v1.1.1
   [992d4aef] Showoff v1.0.3
   [777ac1f9] SimpleBufferStream v1.1.0
-  [727e6d20] SimpleNonlinearSolve v0.1.14
+  [727e6d20] SimpleNonlinearSolve v0.1.15
   [699a6c99] SimpleTraits v0.9.4
   [ce78b400] SimpleUnPack v1.1.0
   [66db9d55] SnoopPrecompile v1.0.3
   [a2af1166] SortingAlgorithms v1.1.0
-⌅ [47a9eef4] SparseDiffTools v1.31.0
+  [47a9eef4] SparseDiffTools v2.4.0
   [e56a9233] Sparspak v0.3.9
   [276daf66] SpecialFunctions v2.2.0
   [171d559e] SplittablesBase v0.1.15
-  [aedffcd0] Static v0.8.6
+  [aedffcd0] Static v0.8.7
   [0d7ed370] StaticArrayInterface v1.4.0
-  [90137ffa] StaticArrays v1.5.24
+  [90137ffa] StaticArrays v1.5.26
   [1e83bf80] StaticArraysCore v1.4.0
   [82ae8749] StatsAPI v1.6.0
-⌅ [2913bbd2] StatsBase v0.33.21
+  [2913bbd2] StatsBase v0.34.0
   [4c63d2b9] StatsFuns v1.3.0
   [9672c7b4] SteadyStateDiffEq v1.15.0
-  [789caeaf] StochasticDiffEq v6.60.0
-  [7792a7ef] StrideArraysCore v0.4.13
+  [789caeaf] StochasticDiffEq v6.61.0
+  [7792a7ef] StrideArraysCore v0.4.15
   [892a3eda] StringManipulation v0.3.0
-  [53d494c1] StructIO v0.3.0
-  [c3572dad] Sundials v4.17.0
+  [c3572dad] Sundials v4.19.0
   [2efcf032] SymbolicIndexingInterface v0.2.2
 ⌅ [d1185830] SymbolicUtils v0.19.11
 ⌅ [0c5d862f] Symbolics v4.14.0
@@ -315,7 +308,8 @@ Environment:
   [5c2747f8] URIs v1.4.2
   [3a884ed6] UnPack v1.0.2
   [1cfade01] UnicodeFun v0.4.1
-  [1986cc42] Unitful v1.13.1
+  [1986cc42] Unitful v1.14.0
+  [45397f5d] UnitfulLatexify v1.6.3
   [41fe7b60] Unzip v0.2.0
   [3d5dd08c] VectorizationBase v0.21.64
   [19fa3120] VertexSafeGraphs v0.2.0
@@ -325,14 +319,13 @@ Environment:
   [6e34b625] Bzip2_jll v1.0.8+0
   [83423d85] Cairo_jll v1.16.1+1
   [655fdf9c] DASKR_jll v1.0.0+0
-⌅ [7cc45869] Enzyme_jll v0.0.53+0
   [2e619515] Expat_jll v2.4.8+0
   [b22a6f82] FFMPEG_jll v4.4.2+2
   [a3f928ae] Fontconfig_jll v2.13.93+0
   [d7e528f0] FreeType2_jll v2.10.4+0
   [559328eb] FriBidi_jll v1.0.10+0
   [0656b61e] GLFW_jll v3.3.8+0
-  [d2c73de3] GR_jll v0.72.4+0
+  [d2c73de3] GR_jll v0.72.7+0
   [78b55507] Gettext_jll v0.21.0+0
   [7746bdde] Glib_jll v2.74.0+2
   [3b182d85] Graphite2_jll v1.3.14+0
@@ -340,7 +333,7 @@ Environment:
   [aacddb02] JpegTurbo_jll v2.1.91+0
   [c1c5ebd0] LAME_jll v3.100.1+0
   [88015f11] LERC_jll v3.0.0+1
-  [dad2f222] LLVMExtra_jll v0.0.21+0
+  [1d63c593] LLVMOpenMP_jll v15.0.4+0
   [dd4b983a] LZO_jll v2.10.1+0
 ⌅ [e9f186c6] Libffi_jll v3.2.2+1
   [d4300ac3] Libgcrypt_jll v1.8.7+0
@@ -352,10 +345,10 @@ Environment:
   [38a345b3] Libuuid_jll v2.36.0+0
   [079eb43e] NLopt_jll v2.7.1+0
   [e7412a2a] Ogg_jll v1.3.5+1
-⌅ [458c3c95] OpenSSL_jll v1.1.20+0
+⌅ [458c3c95] OpenSSL_jll v1.1.21+0
   [efe28fd5] OpenSpecFun_jll v0.5.5+0
   [91d4177d] Opus_jll v1.3.2+0
-  [30392449] Pixman_jll v0.40.1+0
+  [30392449] Pixman_jll v0.42.2+0
   [ea2cea3b] Qt5Base_jll v5.15.3+2
   [f50d1b31] Rmath_jll v0.4.0+0
   [fb77eaff] Sundials_jll v5.2.1+0
@@ -403,7 +396,6 @@ Environment:
   [7b1f6079] FileWatching
   [9fa8497b] Future
   [b77e0a4c] InteractiveUtils
-  [4af54fe1] LazyArtifacts
   [b27032c2] LibCURL v0.6.3
   [76f85450] LibGit2
   [8f399da3] Libdl
@@ -439,9 +431,9 @@ Environment:
   [efcefdf7] PCRE2_jll v10.42.0+0
   [bea87d4a] SuiteSparse_jll v5.10.1+6
   [83775a58] Zlib_jll v1.2.13+0
-  [8e850b90] libblastrampoline_jll v5.7.0+0
+  [8e850b90] libblastrampoline_jll v5.8.0+0
   [8e850ede] nghttp2_jll v1.48.0+0
   [3f19e933] p7zip_jll v17.4.0+0
 Info Packages marked with ⌃ and ⌅ have new versions available, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated -m`</code></pre></details>You can also download the
 <a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.7.1/assets/Manifest.toml">manifest</a> file and the
-<a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.7.1/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="getting_started/">Getting Started with Differential Equations in Julia »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Tuesday 9 May 2023 17:10">Tuesday 9 May 2023</span>. Using Julia version 1.9.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<a href="https://github.com/SciML/DiffEqDocs.jl/tree/gh-pages/v7.7.1/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="getting_started/">Getting Started with Differential Equations in Julia »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Thursday 15 June 2023 04:05">Thursday 15 June 2023</span>. Using Julia version 1.9.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
