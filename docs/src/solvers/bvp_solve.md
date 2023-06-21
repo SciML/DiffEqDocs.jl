@@ -25,3 +25,7 @@ improve the efficiency.
     tableau, solved using a trust region dogleg method from NLsolve.jl.
   - `MIRK4` - A 4th order collocation method using an implicit Runge-Kutta tableau
     with a sparse Jacobian. Compatible only with two-point boundary value problems.
+  - `GeneralMIRK6` - A 6th order collocation method using an implicit Runge-Kutta
+    tableau, solved using a trust region dogleg method from NLsolve.jl.
+  - `MIRK6` - A 6th order collocation method using an implicit Runge-Kutta tableau
+    with a sparse Jacobian. Compatible only with two-point boundary value problems.
