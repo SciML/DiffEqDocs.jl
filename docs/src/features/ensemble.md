@@ -14,10 +14,10 @@ To perform a simulation on an ensemble of trajectories, define a `EnsembleProble
 
 ```julia
 EnsembleProblem(prob::DEProblem;
-                output_func = (sol, i) -> (sol, false),
-                prob_func = (prob, i, repeat) -> (prob),
-                reduction = (u, data, I) -> (append!(u, data), false),
-                u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
+    output_func = (sol, i) -> (sol, false),
+    prob_func = (prob, i, repeat) -> (prob),
+    reduction = (u, data, I) -> (append!(u, data), false),
+    u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
 ```
 
   - `output_func`: The function determines what is saved from the solution to the
@@ -474,7 +474,7 @@ Then we can define and solve the problem:
 
 ```@example ensemble3
 prob2 = EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
-                        reduction = reduction, u_init = Vector{Float64}())
+    reduction = reduction, u_init = Vector{Float64}())
 sim = solve(prob2, Tsit5(), trajectories = 10000, batch_size = 20)
 ```
 
@@ -494,7 +494,7 @@ function reduction(u, batch, I)
     u + sum(batch), false
 end
 prob2 = EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
-                        reduction = reduction, u_init = 0.0)
+    reduction = reduction, u_init = 0.0)
 sim2 = solve(prob2, Tsit5(), trajectories = 100, batch_size = 20)
 ```
 

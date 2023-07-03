@@ -84,7 +84,7 @@ function brusselator_2d_loop(du, u, p, t)
         i, j = Tuple(I)
         x, y = xyd_brusselator[I[1]], xyd_brusselator[I[2]]
         ip1, im1, jp1, jm1 = limit(i + 1, N), limit(i - 1, N), limit(j + 1, N),
-                             limit(j - 1, N)
+        limit(j - 1, N)
         du[i, j, 1] = alpha * (u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] -
                        4u[i, j, 1]) +
                       B + u[i, j, 1]^2 * u[i, j, 2] - (A + 1) * u[i, j, 1] +
@@ -153,7 +153,7 @@ with our pattern, that we can turn into our `jac_prototype`.
 using Symbolics
 du0 = copy(u0)
 jac_sparsity = Symbolics.jacobian_sparsity((du, u) -> brusselator_2d_loop(du, u, p, 0.0),
-                                           du0, u0)
+    du0, u0)
 ```
 
 Notice that Julia gives a nice print out of the sparsity pattern. That's neat, and
@@ -177,7 +177,7 @@ using BenchmarkTools # for @btime
 @btime solve(prob_ode_brusselator_2d, TRBDF2(), save_everystep = false);
 @btime solve(prob_ode_brusselator_2d_sparse, TRBDF2(), save_everystep = false);
 @btime solve(prob_ode_brusselator_2d_sparse, KenCarp47(linsolve = KLUFactorization()),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -194,7 +194,7 @@ the `linsolve` command and choose the GMRES linear solver.
 
 ```@example stiff1
 @btime solve(prob_ode_brusselator_2d, KenCarp47(linsolve = KrylovJL_GMRES()),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -235,8 +235,8 @@ end
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -271,8 +271,8 @@ function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -283,10 +283,10 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
         A = convert(AbstractMatrix, W)
         Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
-                                                                                presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                                                                                                                                  1))),
-                                                                                postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                                                                                                                                   1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
+                1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
+                1)))))
     else
         Pl = Plprev
     end
@@ -294,8 +294,8 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -323,10 +323,10 @@ using Sundials
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(), save_everystep = false);
 # Simplest speedup: use :LapackDense
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :LapackDense),
-             save_everystep = false);
+    save_everystep = false);
 # GMRES Version: Doesn't require any extra stuff!
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :GMRES),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -337,7 +337,7 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 ```@example stiff1
 using ModelingToolkit
 prob_ode_brusselator_2d_mtk = ODEProblem(modelingtoolkitize(prob_ode_brusselator_2d_sparse),
-                                         [], (0.0, 11.5), jac = true, sparse = true);
+    [], (0.0, 11.5), jac = true, sparse = true);
 # @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide
 ```
@@ -393,18 +393,18 @@ We then simply pass these functions to the Sundials solver, with a choice of
 
 ```julia
 @btime solve(prob_ode_brusselator_2d_sparse,
-             CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
-                       prec_side = 1), save_everystep = false);
+    CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
+        prec_side = 1), save_everystep = false);
 ```
 
 And similarly for algebraic multigrid:
 
 ```julia
 prectmp2 = aspreconditioner(ruge_stuben(W,
-                                        presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                          1))),
-                                        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                           1)))))
+    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+        1))),
+    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+        1)))))
 const preccache2 = Ref(prectmp2)
 function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
     if jok
@@ -418,10 +418,10 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
 
         # Build preconditioner on W
         preccache2[] = aspreconditioner(ruge_stuben(W,
-                                                    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                                      1))),
-                                                    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                                       1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+                1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+                1)))))
     end
 end
 
@@ -430,6 +430,6 @@ function precamg(z, r, p, t, y, fy, gamma, delta, lr)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
-                       prec_side = 1), save_everystep = false);
+    CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
+        prec_side = 1), save_everystep = false);
 ```

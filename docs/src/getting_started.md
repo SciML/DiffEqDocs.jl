@@ -34,7 +34,7 @@ sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
 
 using Plots
 plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
@@ -236,7 +236,7 @@ axis labels, and change the legend (note we can disable the legend with
 
 ```@example ODE2
 plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 ```
 
 We can then add to the plot using the `plot!` command:
@@ -403,9 +403,9 @@ We can define a matrix of linear ODEs as follows:
 using DifferentialEquations
 using Plots
 A = [1.0 0 0 -5
-     4 -2 4 -3
-     -4 0 0 1
-     5 -2 2 3]
+    4 -2 4 -3
+    -4 0 0 1
+    5 -2 2 3]
 u0 = rand(4, 2)
 tspan = (0.0, 1.0)
 f(u, p, t) = A * u
@@ -438,9 +438,9 @@ above, with the only change being the type for the initial condition and constan
 ```@example ODE4
 using StaticArrays
 A = @SMatrix [1.0 0.0 0.0 -5.0
-              4.0 -2.0 4.0 -3.0
-              -4.0 0.0 0.0 1.0
-              5.0 -2.0 2.0 3.0]
+    4.0 -2.0 4.0 -3.0
+    -4.0 0.0 0.0 1.0
+    5.0 -2.0 2.0 3.0]
 u0 = @SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u

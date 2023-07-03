@@ -34,9 +34,9 @@ plot_orbit(sol) = plot(sol, vars = (3, 4), lab = "Orbit", title = "Kepler Proble
 
 function plot_first_integrals(sol, H, L)
     plot(initial_first_integrals[1] .- map(u -> H(u[2, :], u[1, :]), sol.u),
-         lab = "Energy variation", title = "First Integrals")
+        lab = "Energy variation", title = "First Integrals")
     plot!(initial_first_integrals[2] .- map(u -> L(u[2, :], u[1, :]), sol.u),
-          lab = "Angular momentum variation")
+        lab = "Angular momentum variation")
 end
 analysis_plot(sol, H, L) = plot(plot_orbit(sol), plot_first_integrals(sol, H, L))
 ```
@@ -98,9 +98,9 @@ end
 
 function plot_first_integrals2(sol, H, L)
     plot(initial_first_integrals[1] .- map(u -> H(u[1:2], u[3:4]), sol.u),
-         lab = "Energy variation", title = "First Integrals")
+        lab = "Energy variation", title = "First Integrals")
     plot!(initial_first_integrals[2] .- map(u -> L(u[1:2], u[3:4]), sol.u),
-          lab = "Angular momentum variation")
+        lab = "Angular momentum variation")
 end
 
 analysis_plot2(sol, H, L) = plot(plot_orbit2(sol), plot_first_integrals2(sol, H, L))

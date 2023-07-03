@@ -38,6 +38,6 @@ pmul = [1.0, -4.0, -2.0, 10.0, -1.3, -1.2, 1.1]
 padd = [1.0, -4.0, -2.0, 10.0, -0.0, -0.0, 0.1]
 
 prob = SDDEProblem(hayes_modelf, hayes_modelg, [1.0], h, tspan, pmul;
-                   constant_lags = (pmul[1],));
+    constant_lags = (pmul[1],));
 sol = solve(prob, RKMil())
 ```

@@ -68,12 +68,12 @@ as well. The form for the updates is:
 
 ```julia
 EEst, beta1, q11, qold, beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,
-                                integrator.qold, integrator.opts.beta2
+integrator.qold, integrator.opts.beta2
 @fastmath q11 = EEst^beta1
 @fastmath q = q11 / (qold^beta2)
 integrator.q11 = q11
 @fastmath q = max(inv(integrator.opts.qmax),
-                  min(inv(integrator.opts.qmin), q / integrator.opts.gamma))
+    min(inv(integrator.opts.qmin), q / integrator.opts.gamma))
 if q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min
     q = one(q)
 end
@@ -104,8 +104,8 @@ for algorithms like the (E)SDIRK methods.
 gamma = integrator.opts.gamma
 niters = integrator.cache.newton_iters
 fac = min(gamma,
-          (1 + 2 * integrator.alg.max_newton_iter) * gamma /
-          (niters + 2 * integrator.alg.max_newton_iter))
+    (1 + 2 * integrator.alg.max_newton_iter) * gamma /
+    (niters + 2 * integrator.alg.max_newton_iter))
 expo = 1 / (alg_order(integrator.alg) + 1)
 qtmp = (integrator.EEst^expo) / fac
 @fastmath q = max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), qtmp))
@@ -127,7 +127,7 @@ if integrator.success_iter > 0
     qgus = (integrator.dtacc / integrator.dt) *
            (((integrator.EEst^2) / integrator.erracc)^expo)
     qgus = max(inv(integrator.opts.qmax),
-               min(inv(integrator.opts.qmin), qgus / integrator.opts.gamma))
+        min(inv(integrator.opts.qmin), qgus / integrator.opts.gamma))
     qacc = max(q, qgus)
 else
     qacc = q
@@ -189,27 +189,27 @@ struct CustomController <: StochasticDiffEq.AbstractController
 end
 
 function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-                                               controller::CustomController, alg)
+    controller::CustomController, alg)
     integrator.q11 = DiffEqBase.value(DiffEqBase.fastpow(integrator.EEst, controller.beta1))
     integrator.q = DiffEqBase.value(integrator.q11 /
                                     DiffEqBase.fastpow(integrator.qold, controller.beta2))
     integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax),
-                                        min(inv(integrator.opts.qmin),
-                                            integrator.q / integrator.opts.gamma)))
+        min(inv(integrator.opts.qmin),
+            integrator.q / integrator.opts.gamma)))
     nothing
 end
 
 function StochasticDiffEq.step_accept_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-                                                  controller::CustomController, alg)
+    controller::CustomController, alg)
     integrator.dtnew = DiffEqBase.value(integrator.dt / integrator.q) *
                        oneunit(integrator.dt)
     nothing
 end
 
 function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-                                 controller::CustomController, alg)
+    controller::CustomController, alg)
     integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin),
-                           integrator.q11 / integrator.opts.gamma)
+        integrator.q11 / integrator.opts.gamma)
 end
 ```
 

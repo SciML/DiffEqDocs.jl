@@ -56,8 +56,8 @@ function rober(du, u, p, t)
     nothing
 end
 M = [1.0 0 0
-     0 1.0 0
-     0 0 0]
+    0 1.0 0
+    0 0 0]
 f = ODEFunction(rober, mass_matrix = M)
 prob_mm = ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
 sol = solve(prob_mm, Rodas5(), reltol = 1e-8, abstol = 1e-8)
