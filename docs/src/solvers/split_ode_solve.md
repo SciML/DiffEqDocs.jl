@@ -54,7 +54,7 @@ The Semilinear ODE is a `SplitODEProblem` with one linear operator and one nonli
 \frac{du}{dt} =  Au + f(t,u)
 ```
 
-See the documentation page for [DiffEqOperators](@ref)
+See the documentation page for [SciMLOperators]([@ref](https://docs.sciml.ai/SciMLOperators/stable/))
 for details about how to define linear operators from a matrix or finite difference
 discretization of derivative operators.
 
