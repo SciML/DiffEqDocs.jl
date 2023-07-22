@@ -30,8 +30,8 @@ sol = solve(prob, Tsit5())
 
 #Plot
 plot(sol, linewidth = 2, title = "Carbon-14 half-life",
-     xaxis = "Time in thousands of years", yaxis = "Percentage left",
-     label = "Numerical Solution")
+    xaxis = "Time in thousands of years", yaxis = "Percentage left",
+    label = "Numerical Solution")
 plot!(sol.t, t -> exp(-C₁ * t), lw = 3, ls = :dash, label = "Analytical Solution")
 ```
 
@@ -86,7 +86,7 @@ sol = solve(prob, DPRKN6())
 
 #Plot
 plot(sol, vars = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
-     xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"])
+    xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"])
 plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
 plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
 ```
@@ -141,14 +141,14 @@ sol = solve(prob, Tsit5())
 
 #Plot
 plot(sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
-     yaxis = "Height", label = ["\\theta" "d\\theta"])
+    yaxis = "Height", label = ["\\theta" "d\\theta"])
 ```
 
 So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.
 
 ```@example physics
 p = plot(sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
-         xaxis = "Velocity", yaxis = "Position", leg = false)
+    xaxis = "Velocity", yaxis = "Position", leg = false)
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODEProblem(prob.f, u0, (0.0, tspan))
     sol = solve(_prob, Vern9()) # Use Vern9 solver for higher accuracy
@@ -197,7 +197,7 @@ function polar2cart(sol; dt = 0.02, l1 = L₁, l2 = L₂, vars = (2, 4))
     x1 = l1 * sin.(p1)
     y1 = l1 * -cos.(p1)
     (u, (x1 + l2 * sin.(p2),
-         y1 - l2 * cos.(p2)))
+        y1 - l2 * cos.(p2)))
 end
 
 #Define the Problem
@@ -256,17 +256,17 @@ end
 condition(u, t, integrator) = u[1]
 affect!(integrator) = nothing
 cb = ContinuousCallback(condition, affect!, nothing,
-                        save_positions = (true, false))
+    save_positions = (true, false))
 
 # Construct Problem
 poincare = ODEProblem(double_pendulum_hamiltonian, initial2, tspan2)
 sol2 = solve(poincare, Vern9(), save_everystep = false, save_start = false,
-             save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
+    save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
 
 function poincare_map(prob, u₀, p; callback = cb)
     _prob = ODEProblem(prob.f, u₀, prob.tspan)
     sol = solve(_prob, Vern9(), save_everystep = false, save_start = false,
-                save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
+        save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
     scatter!(p, sol, vars = (3, 4), markersize = 3, msw = 0)
 end
 ```
@@ -335,7 +335,7 @@ sol = solve(prob, Vern9(), abstol = 1e-16, reltol = 1e-16);
 ```@example physics
 # Plot the orbit
 plot(sol, vars = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
-     yaxis = "y", leg = false)
+    yaxis = "y", leg = false)
 ```
 
 ```@example physics
@@ -344,7 +344,7 @@ plot(sol, vars = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis 
 
 #Plot -
 plot(sol, vars = (1, 3), title = "Phase space for the Hénon-Heiles system",
-     xaxis = "Position", yaxis = "Velocity")
+    xaxis = "Position", yaxis = "Velocity")
 plot!(sol, vars = (2, 4), leg = false)
 ```
 
@@ -358,7 +358,7 @@ energy = map(x -> E(x...), sol.u)
 
 #Plot
 plot(sol.t, energy .- energy[1], title = "Change in Energy over Time",
-     xaxis = "Time in iterations", yaxis = "Change in Energy")
+    xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
 ##### Symplectic Integration
@@ -383,12 +383,12 @@ Notice that we get the same results:
 ```@example physics
 # Plot the orbit
 plot(sol2, vars = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
-     yaxis = "y", leg = false)
+    yaxis = "y", leg = false)
 ```
 
 ```@example physics
 plot(sol2, vars = (3, 1), title = "Phase space for the Hénon-Heiles system",
-     xaxis = "Position", yaxis = "Velocity")
+    xaxis = "Position", yaxis = "Velocity")
 plot!(sol2, vars = (4, 2), leg = false)
 ```
 
@@ -401,7 +401,7 @@ energy = map(x -> E(x[3], x[4], x[1], x[2]), sol2.u)
 
 #Plot
 plot(sol2.t, energy .- energy[1], title = "Change in Energy over Time",
-     xaxis = "Time in iterations", yaxis = "Change in Energy")
+    xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
 And let's try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn't symplectic.
@@ -412,7 +412,7 @@ energy = map(x -> E(x[3], x[4], x[1], x[2]), sol3.u)
 @show ΔE = energy[1] - energy[end]
 gr()
 plot(sol3.t, energy .- energy[1], title = "Change in Energy over Time",
-     xaxis = "Time in iterations", yaxis = "Change in Energy")
+    xaxis = "Time in iterations", yaxis = "Change in Energy")
 ```
 
 Note that we are using the `DPRKN6` solver at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.

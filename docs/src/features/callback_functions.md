@@ -718,7 +718,7 @@ and plot them directly:
 ```@example callback5
 using Plots
 plot(sol.t, map((x) -> length(x), sol[:]), lw = 3,
-     ylabel = "Number of Cells", xlabel = "Time")
+    ylabel = "Number of Cells", xlabel = "Time")
 ```
 
 Now let's check in on a cell. We can still use the interpolation to get a nice
@@ -727,7 +727,7 @@ plot of the concentration of cell 1 over time. This is done with the command:
 ```@example callback5
 ts = range(0, stop = 10, length = 100)
 plot(ts, map((x) -> x[1], sol.(ts)), lw = 3,
-     ylabel = "Amount of X in Cell 1", xlabel = "Time")
+    ylabel = "Amount of X in Cell 1", xlabel = "Time")
 ```
 
 Notice that every time it hits 1 the cell divides, giving cell 1 a random amount

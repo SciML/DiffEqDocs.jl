@@ -109,9 +109,9 @@ A general syntax of `remake` is
 
 ```julia
 modified_problem = remake(original_problem;
-                          field_1 = value_1,
-                          field_2 = value_2,
-                          ...)
+    field_1 = value_1,
+    field_2 = value_2,
+    ...)
 ```
 
 where `field_N` and `value_N` are renamed to appropriate field names

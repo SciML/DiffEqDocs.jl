@@ -528,7 +528,7 @@ function foo(du, u, (A, tmp), t)
     nothing
 end
 prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0),
-                  (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
+    (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
 solve(prob, TRBDF2())
 ```
 

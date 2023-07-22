@@ -93,5 +93,5 @@ nonlinear solver choices. These are:
   - `NLFunctional(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5)`: This method
     is the least stable, but does not require a Jacobian. It should only be used for
     non-stiff ODEs.
-    
+
 The `NLNewton` solver allows for relaxation via the `relax` keyword parameter. Numerical values of `relax` must lie in the half open unit interval `[0,1)` where `0` corresponds to no relaxation. Alternatively, `relax` may be set to a line search algorithm from [LineSearches.jl](https://julianlsolvers.github.io/LineSearches.jl/stable/) in order to include a line search relaxation step in the Newton iterations. For example, the well known Newton-Armijo iterative scheme can be employed by setting `relax=BackTracking()` where `BackTracking` is provided by `LineSearches`.

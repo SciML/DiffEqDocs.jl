@@ -34,9 +34,9 @@ global_logger(TerminalLogger())
 using OrdinaryDiffEq
 
 solve(ODEProblem((u, p, t) -> (sleep(0.01); -u), 1.0, nothing),
-      Euler();
-      dt = 0.5,
-      tspan = (0.0, 1000.0),
-      progress = true,
-      progress_steps = 1)
+    Euler();
+    dt = 0.5,
+    tspan = (0.0, 1000.0),
+    progress = true,
+    progress_steps = 1)
 ```

@@ -416,7 +416,7 @@ To override, utilize the keyword arguments. For example:
 
 ```julia
 alg = ExtrapolationMidpointDeuflhard(max_order = 7, min_order = 4, init_order = 4,
-                                     sequence = :bulirsch, threading = false)
+    sequence = :bulirsch, threading = false)
 solve(prob, alg)
 ```
 
@@ -619,7 +619,7 @@ To override, utilize the keyword arguments. For example:
 
 ```julia
 alg = ImplicitDeuflhardExtrapolation(max_order = 7, min_order = 4, init_order = 4,
-                                     sequence = :bulirsch)
+    sequence = :bulirsch)
 solve(prob, alg)
 ```
 
@@ -802,9 +802,9 @@ following options:
 
 ```julia
 AutoSwitch(nonstiffalg::nAlg, stiffalg::sAlg;
-           maxstiffstep = 10, maxnonstiffstep = 3,
-           nonstifftol::T = 9 // 10, stifftol::T = 9 // 10,
-           dtfac = 2.0, stiffalgfirst = false)
+    maxstiffstep = 10, maxnonstiffstep = 3,
+    nonstifftol::T = 9 // 10, stifftol::T = 9 // 10,
+    dtfac = 2.0, stiffalgfirst = false)
 ```
 
 The `nonstiffalg` must have an appropriate stiffness estimate built into the

@@ -397,7 +397,7 @@ using DifferentialEquations, LinearAlgebra, BenchmarkTools
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
 Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
-                       [1.0 for i in 1:(N - 1)]))
+    [1.0 for i in 1:(N - 1)]))
 Ay = copy(Ax)
 Ax[2, 1] = 2.0
 Ax[end - 1, end] = 2.0
