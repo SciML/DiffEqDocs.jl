@@ -13,7 +13,7 @@ list:
 
   - [The Julia Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips/)
   - [MIT 18.337 Course Notes on Optimizing Serial Code](https://mitmath.github.io/18337/lecture2/optimizing)
-  - [What scientists must know about hardware to write fast code](https://biojulia.dev/post/hardware/)
+  - [What scientists must know about hardware to write fast code](https://viralinstruction.com/posts/hardware/)
 
 User-side optimizations are important because, for sufficiently difficult problems,
 most time will be spent inside your `f` function, the function you are
