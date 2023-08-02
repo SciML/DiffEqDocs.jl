@@ -1,5 +1,6 @@
 using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq
-import ODEProblemLibrary, SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary
+import ODEProblemLibrary,
+    SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
 
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
@@ -17,6 +18,7 @@ makedocs(modules = [
         SDEProblemLibrary,
         DDEProblemLibrary,
         DAEProblemLibrary,
+        BVProblemLibrary,
         OrdinaryDiffEq,
         Sundials, DASKR,
     ],
