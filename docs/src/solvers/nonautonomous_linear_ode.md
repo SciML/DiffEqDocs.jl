@@ -70,9 +70,9 @@ Options:
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
-using DifferentialEquations
+using DifferentialEquations, SciMLOperators
 _A = [2 -1; -3 -5] / 5
-A = DiffEqArrayOperator(_A)
+A = MatrixOperator(_A)
 prob = ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
 sol = solve(prob, LinearExponential())
 ```
