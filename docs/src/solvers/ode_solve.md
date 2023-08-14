@@ -34,8 +34,8 @@ is very important, consider the `OwrenZen5` method. For fast solving at higher
 tolerances, we recommend `BS3` (or `OwrenZen3` if the interpolation error is
 important). For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
 we recommend `Vern6`, `Vern7`, or `Vern8` as efficient choices. For very small
-non-stiff ODEs, `SimpleATsit5()` (available in the `SimpleDiffEq` package)
-is a simplified implementation of `Tsit5`
+non-stiff ODEs, `SimpleATsit5()`, `GPUVern7()`, or `GPUVern9()` 
+(available in the `SimpleDiffEq` package) is a simplified implementation of `Tsit5`
 that can cut out extra overhead and is recommended in those scenarios.
 
 For high accuracy non-stiff solving (`BigFloat` and tolerances like `<1e-12`),
