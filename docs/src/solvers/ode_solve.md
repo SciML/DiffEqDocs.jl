@@ -943,10 +943,19 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
     form. Not compatible with events.
   - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
     interface. Only allows `solve`.
+  - `SimpleEuler` - A fixed timestep bare-bones Euler implementation with integrators.
+  - `LoopEuler` - A fixed timestep bare-bones Euler. Not compatible with events or
+    the integrator interface.
+  - `GPUEuler` - A fully static Euler for specialized compilation to accelerators
+    like GPUs and TPUs.
   - `SimpleRK4` - A fixed timestep bare-bones RK4 implementation with integrators.
   - `LoopRK4` - A fixed timestep bare-bones RK4. Not compatible with events or
     the integrator interface.
   - `GPURK4` - A fully static RK4 for specialized compilation to accelerators
+    like GPUs and TPUs.
+  - `GPUVern7` - A fully static Vern7 for specialized compilation to accelerators
+    like GPUs and TPUs.
+  - `GPUVern9` - A fully static Vern9 for specialized compilation to accelerators
     like GPUs and TPUs.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
