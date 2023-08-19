@@ -20,7 +20,8 @@ condition and its numerical results cannot always be trusted.
 ### BoundaryValueDiffEq.jl
 
   - `Shooting` - A wrapper over initial value problem solvers, it reduces bvp to an initial value problem and solves the ivp.
-  - `MIRK3` - A 3rd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian
+  - `MIRK2` - A 2nd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK3` - A 3rd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
   - `MIRK4` - A 4th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
   - `MIRK5` - A 5th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
   - `MIRK6` - A 6th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
