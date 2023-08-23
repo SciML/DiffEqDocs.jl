@@ -687,8 +687,8 @@ the values of these two cells at the time of the event:
 ```@example callback5
 function affect!(integrator)
     u = integrator.u
-    resize!(integrator, length(u) + 1)
     maxidx = findmax(u)[2]
+    resize!(integrator, length(u) + 1)
     Θ = rand()
     u[maxidx] = Θ
     u[end] = 1 - Θ
