@@ -589,14 +589,14 @@ the differential equation, this can get messy, so let's only plot the
 
 ```@example ensemble4
 using Plots;
-plot(summ; idxs = 3);
+plot(summ; trajectories = 3);
 ```
 
 We can change to errorbars instead of ribbons and plot two different
 indices:
 
 ```@example ensemble4
-plot(summ; idxs = (3, 5), error_style = :bars)
+plot(summ; trajectories = (3, 5), error_style = :bars)
 ```
 
 Or we can simply plot the mean of every component over time:
