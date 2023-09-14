@@ -63,7 +63,7 @@ Options:
       + :simple - uses simple Krylov approximations with fixed subspace size `m`.
       + :adaptive - uses adaptive Krylov approximations with internal timestepping.
 
-  - `m` - integer, default: `30`. Controls the size of Krylov subspace if
+  - `m` - integer, default: `10`. Controls the size of Krylov subspace if
     `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
   - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
     orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
