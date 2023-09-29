@@ -58,7 +58,7 @@ object with:
 ```@example sde
 f_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
 ff = SDEFunction(f, g, analytic = f_analytic)
-prob = SDEProblem(ff, g, u₀, (0.0, 1.0))
+prob = SDEProblem(ff, u₀, (0.0, 1.0))
 ```
 
 and then we pass this information to the solver and plot:
