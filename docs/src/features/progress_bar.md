@@ -18,35 +18,35 @@ and find tough locations for the solvers.
 
 ## Using Progress Bars with VS Code
 
-If using VS Code, progress bars are enabled via the [ProgressLoggers.jl](https://github.com/JuliaLogging/ProgressLogging.jl) package. 
+If using VS Code, progress bars are enabled via the [ProgressLoggers.jl](https://github.com/JuliaLogging/ProgressLogging.jl) package.
 For example:
 
 ```julia
 using OrdinaryDiffEq, ProgressLogging
-function lorenz!(du,u,p,t)
- du[1] = 10.0(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,1000000.0)
-prob = ODEProblem(lorenz!,u0,tspan)
-sol = solve(prob,Tsit5(), progress=true)
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true)
 ```
 
 ## Using Progress Bars in the Terminal
 
 ```julia
 using OrdinaryDiffEq, TerminalLoggers
-function lorenz!(du,u,p,t)
- du[1] = 10.0(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,1000000.0)
-prob = ODEProblem(lorenz!,u0,tspan)
-sol = solve(prob,Tsit5(), progress=true)
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true)
 ```
 
 To use progress bars in the terminal, use [TerminalLoggers.jl](https://github.com/JuliaLogging/TerminalLoggers.jl).
@@ -63,13 +63,13 @@ using Logging: global_logger
 using TerminalLoggers: TerminalLogger
 global_logger(TerminalLogger())
 
-function lorenz!(du,u,p,t)
- du[1] = 10.0(u[2]-u[1])
- du[2] = u[1]*(28.0-u[3]) - u[2]
- du[3] = u[1]*u[2] - (8/3)*u[3]
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
-u0 = [1.0;0.0;0.0]
-tspan = (0.0,1000000.0)
-prob = ODEProblem(lorenz!,u0,tspan)
-sol = solve(prob,Tsit5(), progress=true, maxiters = 1e8)
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true, maxiters = 1e8)
 ```
