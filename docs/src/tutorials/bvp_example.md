@@ -51,14 +51,14 @@ function bc1!(residual, u, p, t)
     residual[2] = u[end][1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
-sol1 = solve(bvp1, GeneralMIRK4(), dt = 0.05)
+sol1 = solve(bvp1, MIRK4(), dt = 0.05)
 plot(sol1)
 ```
 
 The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example.
 
 <!-- add examples of more general initial conditions -->
-We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. `GeneralMIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
+We need to use `MIRK4` or `Shooting` methods to solve `BVProblem`. `MIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
 If you can have a good initial guess, `Shooting` method works very well.
 
 ```@example bvp
