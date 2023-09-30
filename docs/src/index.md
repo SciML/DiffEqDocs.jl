@@ -131,7 +131,7 @@ this manual. **It is highly recommended that new users start with the
 [can also be found in SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
 If you find any example where there appears to be an error, please open an issue.
 
-For the most up-to-date information on using the package, please join [the Gitter channel](https://gitter.im/JuliaDiffEq/Lobby).
+For the most up-to-date information on using the package, please join [the Julia Zulip channel](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged).
 
 Using the bleeding edge for the latest features and development is only recommended
 for power users. Information on how to get to the bleeding edge is found in the
@@ -408,32 +408,19 @@ Pkg.status(; mode = PKGMODE_MANIFEST) # hide
 </details>
 ```
 
-```@raw html
-You can also download the
-<a href="
-```
-
 ```@eval
 using TOML
+using Markdown
 version = TOML.parse(read("../../Project.toml", String))["version"]
 name = TOML.parse(read("../../Project.toml", String))["name"]
-link = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
-       "/assets/Manifest.toml"
-```
-
-```@raw html
-">manifest</a> file and the
-<a href="
-```
-
-```@eval
-using TOML
-version = TOML.parse(read("../../Project.toml", String))["version"]
-name = TOML.parse(read("../../Project.toml", String))["name"]
-link = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
-       "/assets/Project.toml"
-```
-
-```@raw html
-">project</a> file.
+link_manifest = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
+                "/assets/Manifest.toml"
+link_project = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *
+               "/assets/Project.toml"
+Markdown.parse("""You can also download the
+[manifest]($link_manifest)
+file and the
+[project]($link_project)
+file.
+""")
 ```
