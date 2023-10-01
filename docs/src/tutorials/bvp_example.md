@@ -84,7 +84,7 @@ plot(sol3)
 Defining a similar problem as `TwoPointBVProblem` is shown in the following example.
 
 ```@example bvp
-function bc2!((resid_a, resid_b), (u_a, u_b), p, t) # u[1] is the beginning of the time span, and u[end] is the ending
+function bc2!((resid_a, resid_b), (u_a, u_b), p) # u[1] is the beginning of the time span, and u[end] is the ending
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
     resid_b[2] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
