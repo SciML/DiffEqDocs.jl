@@ -84,13 +84,14 @@ plot(sol3)
 Defining a similar problem as `TwoPointBVProblem` is shown in the following example.
 
 ```@example bvp
-function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending
-    residual[1] = u[1][1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
-    residual[2] = u[end][1] - pi / 2 # the solution at the end of the time span should be pi/2
+function bc2!((resid_a, resid_b), (u_a, u_b), p, t) # u[1] is the beginning of the time span, and u[end] is the ending
+    resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
+    resid_b[2] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi / 2, pi / 2], tspan)
 sol2 = solve(bvp2, MIRK4(), dt = 0.05)
 plot(sol2)
 ```
 
-Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )` and `p` holds the parameters of the given problem.
+Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )`, `resid` is similar, 
+and `p` holds the parameters of the given problem.
