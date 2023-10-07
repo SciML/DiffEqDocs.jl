@@ -81,17 +81,27 @@ plot(sol3)
 
 #### `TwoPointBVProblem`
 
-Defining a similar problem as `TwoPointBVProblem` is shown in the following example.
+`TwoPointBVProblem` is operationally the same as `BVProblem` but allows for the solver
+to specialize on the common form of being a two-point BVP, i.e. a BVP which only has
+boundary conditions at the start and the finish of the time interval.
+Defining a similar problem as `TwoPointBVProblem` is shown in the following example:
 
 ```@example bvp
-function bc2!((resid_a, resid_b), (u_a, u_b), p) # u[1] is the beginning of the time span, and u[end] is the ending
+function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
-    resid_b[2] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
-bvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi / 2, pi / 2], tspan)
+function bc2b!(resid_a, u_b, p) # u_b is at the ending of the time span
+    resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
+end
+bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
+                         bcresid_prototype = (zeros(1), zeros(1)))
 sol2 = solve(bvp2, MIRK4(), dt = 0.05)
 plot(sol2)
 ```
 
-Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )`, `resid` is similar, 
-and `p` holds the parameters of the given problem.
+Note here that `bc2a!` is a boundary condition for the first time point, and `bc2b!` is a boundary condition
+for the final time point. `bcresid_prototype` is a prototype array which is passed in order to know the size of
+`resid_a` and `resid_b`. In this case, we have one residual term for the start and one for the final time point,
+and thus we have `bcresid_prototype = (zeros(1), zeros(1))`. If we wanted to only have boundary conditions at the
+final time, we could instead have done `bcresid_prototype = (zeros(0), zeros(2))`.
+
