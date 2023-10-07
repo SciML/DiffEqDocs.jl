@@ -33,18 +33,9 @@ makedocs(modules = [
         "https://www.sciencedirect.com/science/article/abs/pii/S0375960109009591",
         "https://www.sciencedirect.com/science/article/abs/pii/0375960176901018",
     ],
-    strict = [
-        :doctest,
-        :linkcheck,
-        :parse_error,
-        :example_block,
-        :cross_references,
-        # Other available options are
-        # :autodocs_block, :docs_block, :eval_block, :example_block, :footnote, :meta_block, :missing_docs, :setup_block
-    ],
     doctest = false, clean = true,
-    format = Documenter.HTML(analytics = "UA-90474609-3",
-        assets = ["assets/favicon.ico"],
+    warnonly = [:missing_docs],
+    format = Documenter.HTML(assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
     sitename = "DifferentialEquations.jl",
     authors = "Chris Rackauckas",

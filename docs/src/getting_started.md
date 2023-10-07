@@ -504,4 +504,4 @@ Many more are defined in the relevant sections of the docs. Please explore the r
 of the documentation, including tutorials for getting started with other types
 of equations. In addition, to get help, please either
 [file an issue at the main repository](https://github.com/SciML/DifferentialEquations.jl)
-or [come have an informal discussion at our Gitter chatroom](https://gitter.im/JuliaDiffEq/Lobby).
+or [come have an informal discussion at the Julia Zulip chatroom](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged).
