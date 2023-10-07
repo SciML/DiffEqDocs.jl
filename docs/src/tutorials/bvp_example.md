@@ -90,7 +90,7 @@ Defining a similar problem as `TwoPointBVProblem` is shown in the following exam
 function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
 end
-function bc2b!(resid_a, u_b, p) # u_b is at the ending of the time span
+function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
     resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
