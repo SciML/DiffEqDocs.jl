@@ -3,7 +3,7 @@
 ## Recommended Methods
 
 The `MIRK` methods are recommended in most scenarios given their improved stability properties over the other methods. They have adaptivty and sparsity handling which allows for them to handle large-scale and difficult problems. However, they are not compatible with callbacks / event handling (i.e. discontinuities), and in such cases [Shooting methods](https://en.wikipedia.org/wiki/Shooting_method) are required. There are single shooting methods and multiple shooting methods available in BoundaryValueDiffEq.jl. Shooting methods should be used with an appropriate ODE solver such as `Shooting(Tsit5())` or `MultipleShooting(5, FBDF())`. Additionally,
-in many cases, single shooting method `Shooting` may be faster if it converges, though it is a lot less numerically robust. Multiple shooting method `MultipleShooting` is more stable and robust than single shooting method `Shooting`.
+in many cases, single shooting method `Shooting` may be faster than collocation methods if it converges, though it is a lot less numerically robust. Multiple shooting method `MultipleShooting` is more stable and robust than single shooting method `Shooting`.
 
 ## Full List of Methods
 
