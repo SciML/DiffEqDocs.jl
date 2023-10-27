@@ -1,8 +1,5 @@
 # Boundary Value Problems
 
-This tutorial will introduce you to the functionality for solving BVPs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://docs.sciml.ai/SciMLTutorialsOutput/stable/).
-
 !!! note
     
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
