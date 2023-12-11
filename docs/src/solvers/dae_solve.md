@@ -1,4 +1,4 @@
-# DAE Solvers
+# Mass Matrix and Fully Implicit DAE Solvers
 
 ## Recommended Methods
 
@@ -48,10 +48,9 @@ extra options for the solvers, see the ODE solver page.
 !!! note
     
     The standard Hermite interpolation used for ODE methods in OrdinaryDiffEq.jl
-    is not applicable to the algebraic variables. Thus, for the following mass-matrix
-    methods, use the interpolation (thus `saveat`) with caution if the default
-    Hermite interpolation is used. All methods which mention a specialized interpolation
-    (and implicit ODE methods) are safe.
+    falls back to a linear interpolation on the differential variables. If the
+    mass matrix is non-diagonal, the Hermite interpolation does not have a fallback
+    and will error.
 
 #### Rosenbrock Methods
 
@@ -93,10 +92,8 @@ extra options for the solvers, see the ODE solver page.
   - `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
 
 !!! note
-    
-
-`Rosenbrock23` and `Rosenbrock32` have a stiff-aware interpolation but this interpolation is not safe for the algebraic variables.
-Thus use the interpolation (thus `saveat`) with caution if the default Hermite interpolation is used.
+    `Rosenbrock23` and `Rosenbrock32` have a stiff-aware interpolation but this interpolation is not safe for the algebraic variables.
+    Thus use the interpolation (and therefore `saveat`) with caution if the default Hermite interpolation is used.
 
 #### FIRK Methods
 
