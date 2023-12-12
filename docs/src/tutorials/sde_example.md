@@ -9,18 +9,17 @@
 In this example, we will solve the equation
 
 ```math
-du = f(u,p,t)dt + g(u,p,t)dW
+du = f(u,p,t)dt + g(u,p,t)dW,
 ```
 
-where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic Calculus that the
+where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic calculus that the
 solution to this equation is
 
 ```math
-u(t,Wₜ)=u₀\exp((α-\frac{β^2}{2})t+βWₜ)
+u(t,Wₜ)=u₀\exp\left[\left(α-\frac{β^2}{2}\right)t+βWₜ\right].
 ```
 
-To solve this numerically, we define a problem type by giving it the equation
-and the initial condition:
+To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)` and the initial condition:
 
 ```@example sde
 using DifferentialEquations
@@ -31,7 +30,7 @@ f(u, p, t) = α * u
 g(u, p, t) = β * u
 dt = 1 // 2^(4)
 tspan = (0.0, 1.0)
-prob = SDEProblem(f, g, u₀, (0.0, 1.0))
+prob = SDEProblem(f, g, u₀, tspan)
 ```
 
 The `solve` interface is then the same as with ODEs. Here we will use the classic
@@ -82,7 +81,7 @@ plot(sol, plot_analytic = true)
 
 Here we allowed the solver to automatically determine a starting `dt`. This estimate
 at the beginning is conservative (small) to ensure accuracy. We can instead start
-the method with a larger `dt` by passing in a value for the starting `dt`:
+the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt)
