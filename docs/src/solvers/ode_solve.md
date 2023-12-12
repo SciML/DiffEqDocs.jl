@@ -107,17 +107,17 @@ library methods are as follows:
 
   - `ode23` --> `BS3()`
   - `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
-  - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
+  - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas5P()` is more efficient
   - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
   - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-  - `ode15s`/`vode` --> `QNDF()` or `FBDF()`, though in many cases `Rodas4()`,
+  - `ode15s`/`vode` --> `QNDF()` or `FBDF()`, though in many cases `Rodas5P()`,
     `KenCarp4()`, `TRBDF2()`, or `RadauIIA5()` are more efficient
   - `ode23t` --> `Trapezoid()`
   - `ode23tb` --> `TRBDF2()`
   - `lsoda` --> `lsoda()`, though `AutoTsit5(Rosenbrock23())` or `AutoVern7(Rodas5())`
     may be more efficient. Note that `lsoda()` requires the LSODA.jl extension, which
     can be added via `]add LSODA; using LSODA`.
-  - `ode15i` --> `IDA()` or `DFBDF()`, though in many cases `Rodas4()` can handle
+  - `ode15i` --> `IDA()` or `DFBDF()`, though in many cases `Rodas5P()` can handle
     the DAE and is significantly more efficient.
 
 ## Full List of Methods
