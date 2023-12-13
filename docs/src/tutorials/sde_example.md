@@ -139,18 +139,13 @@ timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coe
 A system of SDEs
 
 ```math
-du = f(u,p,t)dt + g(u,p,t)dW
+du = f(u,p,t)dt + g(u,p,t)dW,
 ```
+where `g` is now a matrix, can be numerically integrated in the same way as ODEs. A common scenario, which is the default for DifferentialEquations.jl,
+is when every variable in the system gets a different random kick. `g` is then diagonal and we can simply define `f` and `g` as in-place functions. `f(du,u,p,t)` specifies the deterministic change in the vector `du` and `g(du2,u,p,t)` gives
+the stochastic part `du2 .* W`.
 
-can be numerically integrated in the same way as ODEs. Here, `g`
-is now a matrix of values. One common case, which is the default for DifferentialEquations.jl,
-is diagonal noise where `g` is a diagonal matrix. This means that every variable in
-the system gets a different random number. In this case, Instead of handling matrices in this case,
-we simply define both `f` and `g` as in-place functions. Thus, `f(du,u,p,t)` gives a
-vector `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
-`du2` for the stochastic part `du2 .* W` of the equation.
-
-For example, consider a stochastic version of the Lorenz equations, where we introduce a simple additive noise `3*N(0,dt)`, where `N` is the normal distribution, and `dt` is the time step. This is done via:
+For example, consider a stochastic version of the Lorenz equations. We introduce a simple additive noise `3*N(0,dt)`, where `N` is the normal distribution, and `dt` is the time step. This is done via:
 
 ```@example sde2
 using DifferentialEquations
