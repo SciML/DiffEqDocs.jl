@@ -136,41 +136,38 @@ timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coe
 
 ## Example 2: Systems of SDEs with Diagonal Noise
 
-More generally, an SDE
+A system of SDEs
 
 ```math
 du = f(u,p,t)dt + g(u,p,t)dW
 ```
 
-generalizes to systems of equations is done in the same way as ODEs. Here, `g`
-is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
-is diagonal noise where `g` is a diagonal matrix. This means that every function in
-the system gets a different random number. Instead of handling matrices in this case,
+can be numerically integrated in the same way as ODEs. Here, `g`
+is now a matrix of values. One common case, which is the default for DifferentialEquations.jl,
+is diagonal noise where `g` is a diagonal matrix. This means that every variable in
+the system gets a different random number. In this case, Instead of handling matrices in this case,
 we simply define both `f` and `g` as in-place functions. Thus, `f(du,u,p,t)` gives a
-vector of `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
-`du2` for which `du2.*W` is the stochastic portion of the equation.
+vector `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
+`du2` for the stochastic part `du2 .* W` of the equation.
 
-For example, the Lorenz equation with additive noise has the same deterministic
-portion as the Lorenz equations, but adds an additive noise, which is simply
-`3*N(0,dt)` where `N` is the normal distribution `dt` is the time step, to each
-step of the equation. This is done via:
+For example, consider a stochastic version of the Lorenz equations, where we introduce a simple additive noise `3*N(0,dt)`, where `N` is the normal distribution, and `dt` is the time step. This is done via:
 
 ```@example sde2
 using DifferentialEquations
 using Plots
-function lorenz(du, u, p, t)
-    du[1] = 10.0(u[2] - u[1])
+function lorenz!(du, u, p, t)
+    du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
     du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
 
-function σ_lorenz(du, u, p, t)
+function σ_lorenz!(du, u, p, t)
     du[1] = 3.0
     du[2] = 3.0
     du[3] = 3.0
 end
 
-prob_sde_lorenz = SDEProblem(lorenz, σ_lorenz, [1.0, 0.0, 0.0], (0.0, 10.0))
+prob_sde_lorenz = SDEProblem(lorenz!, σ_lorenz!, [1.0, 0.0, 0.0], (0.0, 10.0))
 sol = solve(prob_sde_lorenz)
 plot(sol, idxs = (1, 2, 3))
 ```
@@ -178,7 +175,7 @@ plot(sol, idxs = (1, 2, 3))
 Note that it's okay for the noise function to mix terms. For example
 
 ```@example sde2
-function σ_lorenz(du, u, p, t)
+function σ_lorenz!(du, u, p, t)
     du[1] = sin(u[3]) * 3.0
     du[2] = u[2] * u[1] * 3.0
     du[3] = 3.0
