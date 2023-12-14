@@ -162,7 +162,7 @@ the solution calling solve at each step.
 ## Differential Equation Solver Statistics (destats)
 
 ```@docs
-DiffEqBase.DEStats
+SciMLBase.DEStats
 ```
 
 ## [Return Codes (RetCodes)](@id retcodes)
