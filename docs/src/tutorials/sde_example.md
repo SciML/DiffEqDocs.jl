@@ -136,16 +136,24 @@ timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coe
 
 ## Example 2: Systems of SDEs with Diagonal Noise
 
-A system of SDEs
+In general, a system of SDEs
 
 ```math
 du = f(u,p,t)dt + g(u,p,t)dW,
 ```
-where `g` is now a matrix, can be numerically integrated in the same way as ODEs. A common scenario, which is the default for DifferentialEquations.jl,
-is when every variable in the system gets a different random kick. `g` is then diagonal and we can simply define `f` and `g` as in-place functions. `f(du,u,p,t)` specifies the deterministic change in the vector `du` and `g(du2,u,p,t)` gives
-the stochastic part `du2 .* W`.
 
-For example, consider a stochastic version of the Lorenz equations. We introduce a simple additive noise `3*N(0,dt)`, where `N` is the normal distribution, and `dt` is the time step. This is done via:
+where `g` is now a matrix of values, is numerically integrated in the
+same way as ODEs. A common scenario is when we have diagnol noise, which
+is the default for DifferentialEquations.jl. Physically this means that
+every variable in the system gets a random kick. Consequently, `g` is a
+diagonal matrix and we can handle this in a simple manner by defining
+the deterministic part `f(du,u,p,t)` and the stochastic part
+`g(du2,u,p,t)` as in-place functions.
+
+For example, the Lorenz equation with additive noise has the same deterministic
+portion as the Lorenz equations, but adds an additive noise, which is simply
+`3*N(0,dt)` where `N` is the normal distribution `dt` is the time step, to each
+step of the equation. This is done via:
 
 ```@example sde2
 using DifferentialEquations
