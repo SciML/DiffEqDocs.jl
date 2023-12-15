@@ -45,19 +45,20 @@ plot(sol)
 ### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
-stochastic differential equations are included. For reference, let's also give
-the `SDEProblem` the analytical solution. We can do this by making a test problem.
-This can be a good way to judge how accurate the algorithms are, or is used to
-test convergence of the algorithms for methods developers. Thus, we define the problem
+stochastic differential equations are included. We can compare accuray of 
+the `EM()` method and the higher-order `SRIW1()` method with the analytical solution
+by passing it to the `SDEProblem`.
+This is a good way to judge the accuracy of a given algorithm, and is also useful
+to test convergence of new methods being developed. Thus, we define the problem
 object with:
 
 ```@example sde
-f_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
-ff = SDEFunction(f, g, analytic = f_analytic)
+u_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
+ff = SDEFunction(f, g, analytic = u_analytic)
 prob = SDEProblem(ff, u₀, (0.0, 1.0))
 ```
 
-and then we pass this information to the solver and plot:
+We pass this information to the solver and compare the `EM()` solution with the analytic one:
 
 ```@example sde
 #We can plot using the classic Euler-Maruyama algorithm as follows:
@@ -65,7 +66,7 @@ sol = solve(prob, EM(), dt = dt)
 plot(sol, plot_analytic = true)
 ```
 
-We can choose a higher-order solver for a more accurate result:
+Now, we choose a higher-order solver `SRIW1()` for a more accurate result:
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt, adaptive = false)
