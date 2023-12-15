@@ -19,7 +19,7 @@ solution to this equation is
 u(t,Wₜ)=u₀\exp\left[\left(α-\frac{β^2}{2}\right)t+βWₜ\right].
 ```
 
-To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)` and the initial condition:
+To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)`, and the initial condition:
 
 ```@example sde
 using DifferentialEquations
@@ -33,7 +33,7 @@ tspan = (0.0, 1.0)
 prob = SDEProblem(f, g, u₀, tspan)
 ```
 
-The `solve` interface is then the same as with ODEs. Here we will use the classic
+The `solve` interface is then the same as ODEs. Here, we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```@example sde
@@ -79,7 +79,7 @@ sol = solve(prob, SRIW1())
 plot(sol, plot_analytic = true)
 ```
 
-Here we allowed the solver to automatically determine a starting `dt`. This estimate
+Here, we allowed the solver to automatically determine a starting `dt`. This estimate
 at the beginning is conservative (small) to ensure accuracy. We can instead start
 the method with a larger `dt` by passing it to `solve`:
 
@@ -151,7 +151,7 @@ the deterministic part `f(du,u,p,t)` and the stochastic part
 `g(du2,u,p,t)` as in-place functions.
 
 Consider for example a stochastic variant of the Lorenz equations, where we introduce a
-simple additive noise to each of `x,y,z`, which is simply `3*N(0,dt)`. Here `N` is the normal
+simple additive noise to each of `x,y,z`, which is simply `3*N(0,dt)`. Here, `N` is the normal
 distribution and `dt` is the time step. This is done as follows:
 
 ```@example sde2
