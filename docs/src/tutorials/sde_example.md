@@ -45,12 +45,11 @@ plot(sol)
 ### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
-stochastic differential equations are included. We can compare accuray of 
-the `EM()` method and the higher-order `SRIW1()` method with the analytical solution
-by passing it to the `SDEProblem`.
+stochastic differential equations are included. To illustrate it, let us compare the 
+accuray of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
 This is a good way to judge the accuracy of a given algorithm, and is also useful
-to test convergence of new methods being developed. Thus, we define the problem
-object with:
+to test convergence of new methods being developed. To setup our problem, we define
+`u_analytic(u₀, p, t, W)` and pass it to the `SDEFunction` as:
 
 ```@example sde
 u_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
@@ -58,31 +57,31 @@ ff = SDEFunction(f, g, analytic = u_analytic)
 prob = SDEProblem(ff, u₀, (0.0, 1.0))
 ```
 
-We pass this information to the solver and compare the `EM()` solution with the analytic one:
+We can now compare the `EM()` solution with the analytic one:
 
 ```@example sde
-#We can plot using the classic Euler-Maruyama algorithm as follows:
 sol = solve(prob, EM(), dt = dt)
 plot(sol, plot_analytic = true)
 ```
 
-Now, we choose a higher-order solver `SRIW1()` for a more accurate result:
+Now, we choose a higher-order solver `SRIW1()` for better accuracy. By default,
+the higher order methods are adaptive. Let's first switch off adaptivity and
+compare the numerical and analytic solutions :
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt, adaptive = false)
 plot(sol, plot_analytic = true)
 ```
 
-By default, the higher order methods have adaptivity. Thus, one can use
+Now, let's allow the solver to automatically determine a starting `dt`. This estimate
+at the beginning is conservative (small) to ensure accuracy.
 
 ```@example sde
 sol = solve(prob, SRIW1())
 plot(sol, plot_analytic = true)
 ```
 
-Here, we allowed the solver to automatically determine a starting `dt`. This estimate
-at the beginning is conservative (small) to ensure accuracy. We can instead start
-the method with a larger `dt` by passing it to `solve`:
+We can instead start the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt)
