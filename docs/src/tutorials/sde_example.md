@@ -19,7 +19,7 @@ solution to this equation is
 u(t,Wₜ)=u₀\exp\left[\left(α-\frac{β^2}{2}\right)t+βWₜ\right].
 ```
 
-To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)` and the initial condition:
+To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)`, and the initial condition:
 
 ```@example sde
 using DifferentialEquations
@@ -33,7 +33,7 @@ tspan = (0.0, 1.0)
 prob = SDEProblem(f, g, u₀, tspan)
 ```
 
-The `solve` interface is then the same as with ODEs. Here we will use the classic
+The `solve` interface is then the same as ODEs. Here, we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```@example sde
@@ -45,43 +45,43 @@ plot(sol)
 ### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
-stochastic differential equations are included. For reference, let's also give
-the `SDEProblem` the analytical solution. We can do this by making a test problem.
-This can be a good way to judge how accurate the algorithms are, or is used to
-test convergence of the algorithms for methods developers. Thus, we define the problem
-object with:
+stochastic differential equations are included. To illustrate it, let us compare the 
+accuray of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
+This is a good way to judge the accuracy of a given algorithm, and is also useful
+to test convergence of new methods being developed. To setup our problem, we define
+`u_analytic(u₀, p, t, W)` and pass it to the `SDEFunction` as:
 
 ```@example sde
-f_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
-ff = SDEFunction(f, g, analytic = f_analytic)
+u_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
+ff = SDEFunction(f, g, analytic = u_analytic)
 prob = SDEProblem(ff, u₀, (0.0, 1.0))
 ```
 
-and then we pass this information to the solver and plot:
+We can now compare the `EM()` solution with the analytic one:
 
 ```@example sde
-#We can plot using the classic Euler-Maruyama algorithm as follows:
 sol = solve(prob, EM(), dt = dt)
 plot(sol, plot_analytic = true)
 ```
 
-We can choose a higher-order solver for a more accurate result:
+Now, we choose a higher-order solver `SRIW1()` for better accuracy. By default,
+the higher order methods are adaptive. Let's first switch off adaptivity and
+compare the numerical and analytic solutions :
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt, adaptive = false)
 plot(sol, plot_analytic = true)
 ```
 
-By default, the higher order methods have adaptivity. Thus, one can use
+Now, let's allow the solver to automatically determine a starting `dt`. This estimate
+at the beginning is conservative (small) to ensure accuracy.
 
 ```@example sde
 sol = solve(prob, SRIW1())
 plot(sol, plot_analytic = true)
 ```
 
-Here we allowed the solver to automatically determine a starting `dt`. This estimate
-at the beginning is conservative (small) to ensure accuracy. We can instead start
-the method with a larger `dt` by passing it to `solve`:
+We can instead start the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt)
@@ -151,7 +151,7 @@ the deterministic part `f(du,u,p,t)` and the stochastic part
 `g(du2,u,p,t)` as in-place functions.
 
 Consider for example a stochastic variant of the Lorenz equations, where we introduce a
-simple additive noise to each of `x,y,z`, which is simply `3*N(0,dt)`. Here `N` is the normal
+simple additive noise to each of `x,y,z`, which is simply `3*N(0,dt)`. Here, `N` is the normal
 distribution and `dt` is the time step. This is done as follows:
 
 ```@example sde2
