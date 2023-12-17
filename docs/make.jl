@@ -32,7 +32,8 @@ makedocs(modules = [
         "https://zenodo.org/record/5883749#.Yg-d698xmu4",
         "https://www.sciencedirect.com/science/article/abs/pii/S0375960109009591",
         "https://www.sciencedirect.com/science/article/abs/pii/0375960176901018",
-        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001024"
+        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001024",
+        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001383",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs],
