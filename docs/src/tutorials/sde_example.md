@@ -46,7 +46,7 @@ plot(sol)
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
 stochastic differential equations are included. To illustrate it, let us compare the 
-accuray of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
+accuracy of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
 This is a good way to judge the accuracy of a given algorithm, and is also useful
 to test convergence of new methods being developed. To setup our problem, we define
 `u_analytic(u₀, p, t, W)` and pass it to the `SDEFunction` as:
@@ -143,7 +143,7 @@ du = f(u,p,t)dt + g(u,p,t)dW,
 ```
 
 where `g` is now a matrix of values, is numerically integrated in the
-same way as ODEs. A common scenario is when we have diagnol noise, which
+same way as ODEs. A common scenario is when we have diagonal noise, which
 is the default for DifferentialEquations.jl. Physically this means that
 every variable in the system gets a different random kick. Consequently, `g` is a
 diagonal matrix and we can handle this in a simple manner by defining
