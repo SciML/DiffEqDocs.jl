@@ -29,5 +29,5 @@ off via the keyword argument `adaptive = false`.
 
 ODEInterface.jl can be used seamlessly with BoundaryValueDiffEq.jl, after we define our model using `BVProblem` or `TwoPointBVProblem`, we can directly call the solvers from ODEInterface.jl.
 
-  - `BVPM2` - FORTRAN code for solving two-point boundary value problems. `BVPM2` is only compatiable with `TwoPointBVProblem`.
+  - `BVPM2` - FORTRAN code for solving two-point boundary value problems. `BVPM2` is only compatible with `TwoPointBVProblem`.
   - `BVPSOL` - FORTRAN77 code which solves highly nonlinear two point boundary value problems using a local linear solver (condensing algorithm) or a global sparse linear solver for the solution of the arising linear subproblems, by Peter Deuflhard, Georg Bader, Lutz Weimann. `BVPSOL` should be used with `TwoPointBVProblem` and initial guess.
