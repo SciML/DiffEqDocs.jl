@@ -35,7 +35,7 @@ where
 
 ```math
 f(x, y, t) = \begin{cases}
-5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1 \\
+5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1\\
 0 & \quad \text{else}
 \end{cases}.
 ```
@@ -46,13 +46,12 @@ u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
 v(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
 \end{align},
 ```
-
-with the periodic boundary conditions
+and the periodic boundary conditions
 
 ```math
 \begin{align}
 u(x+1,y,t) &= u(x,y,t) \\
-u(x,y+1,t) &= u(x,y,t)
+u(x,y+1,t) &= u(x,y,t).
 \end{align}
 ```
 
