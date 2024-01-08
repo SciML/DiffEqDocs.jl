@@ -39,7 +39,7 @@ f(x, y, t) = \begin{cases}
 0 & \quad \text{else}
 \end{cases}.
 ```
-The above equations are to be solved for a time interval ``t \in [0, 11.5]`` subject to the initial conditions
+The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
 ```math
 \begin{align}
 u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
@@ -59,10 +59,12 @@ u(x,y+1,t) &= u(x,y,t)
 To solve this PDE, we will discretize it into a system of ODEs with the finite
 difference method. We discretize the unit square domain with $N$ grid points in each direction.
 `u[i,j]` and `v[i,j]` then represent the value of the discretized field at a given point in time, i.e.
-```math
-u[i,j] &= u(i*dx,j*dy) \\
-v[i,j] &= v(i*dx,j*dy), \\
+
 ```
+u[i,j] = u(i*dx,j*dy)
+v[i,j] = v(i*dx,j*dy)
+```
+
 where `dx = dy = 1/N`. To implement our ODE system, we collect both `u` and `v` in a single array `U` of size `(N,N,2)` with `U[i,j,1] = u[i,j]` and `U[i,j,2] = v[i,j]`. This approach can be easily generalized to PDEs with larger number of field variables.
 
 Using a three-point stencil, the Laplacian (second derivative) operator discretizes into a tridiagonal matrix with elements `[1 -2 1]` and a `1` in the top, bottom, left, and right corners coming from the periodic boundary conditions. The nonlinear terms are implemented pointwise in a straightforward manner.
