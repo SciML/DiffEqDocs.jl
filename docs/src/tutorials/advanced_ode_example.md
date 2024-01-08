@@ -22,12 +22,12 @@ differential equation (BRUSS).
     
     Feel free to skip this section: it simply defines the example problem.
 
-The Brusselator PDE is defined as follows:
+The Brusselator PDE is defined on a unit square periodic domain as follows:
 
 ```math
 \begin{align}
-\frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}) + f(x, y, t)\\
-\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2})
+\frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha\left(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}\right) + f(x, y, t),\\
+\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha\left(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2}\right),
 \end{align}
 ```
 
@@ -37,19 +37,17 @@ where
 f(x, y, t) = \begin{cases}
 5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1 \\
 0 & \quad \text{else}
-\end{cases}
+\end{cases}.
 ```
-
-and the initial conditions are
-
+The above equations are to be solved for a time interval ``t \in [0, 11.5]`` subject to the initial conditions
 ```math
 \begin{align}
 u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
 v(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
-\end{align}
+\end{align},
 ```
 
-with the periodic boundary condition
+with the periodic boundary conditions
 
 ```math
 \begin{align}
@@ -58,15 +56,16 @@ u(x,y+1,t) &= u(x,y,t)
 \end{align}
 ```
 
-on a timespan of ``t \in [0,11.5]``.
-
 To solve this PDE, we will discretize it into a system of ODEs with the finite
-difference method. We discretize `u` and `v` into arrays of the values at each
-time point: `u[i,j] = u(i*dx,j*dy)` for some choice of `dx`/`dy`, and same for
-`v`. Then our ODE is defined with `U[i,j,k] = [u v]`. The second derivative
-operator, the Laplacian, discretizes to become a tridiagonal matrix with
-`[1 -2 1]` and a `1` in the top right and bottom left corners. The nonlinear functions
-are then applied at each point in space (they are broadcast). Use `dx=dy=1/32`.
+difference method. We discretize the unit square domain with $N$ grid points in each direction.
+`u[i,j]` and `v[i,j]` then represent the value of the discretized field at a given point in time, i.e.
+```math
+u[i,j] &= u(i*dx,j*dy) \\
+v[i,j] &= v(i*dx,j*dy), \\
+```
+where `dx = dy = 1/N`. To implement our ODE system, we collect both `u` and `v` in a single array `U` of size `(N,N,2)` with `U[i,j,1] = u[i,j]` and `U[i,j,2] = v[i,j]`. This approach can be easily generalized to PDEs with larger number of field variables.
+
+Using a three-point stencil, the Laplacian (second derivative) operator discretizes into a tridiagonal matrix with elements `[1 -2 1]` and a `1` in the top, bottom, left, and right corners coming from the periodic boundary conditions. The nonlinear terms are implemented pointwise in a straightforward manner.
 
 The resulting `ODEProblem` definition is:
 
