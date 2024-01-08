@@ -56,7 +56,7 @@ u(x,y+1,t) &= u(x,y,t).
 ```
 
 To solve this PDE, we will discretize it into a system of ODEs with the finite
-difference method. We discretize the unit square domain with $N$ grid points in each direction.
+difference method. We discretize the unit square domain with `N` grid points in each direction.
 `u[i,j]` and `v[i,j]` then represent the value of the discretized field at a given point in time, i.e.
 
 ```
