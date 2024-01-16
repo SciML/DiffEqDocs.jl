@@ -26,8 +26,8 @@ The Brusselator PDE is defined on a unit square periodic domain as follows:
 
 ```math
 \begin{align}
-\frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha\left(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}\right) + f(x, y, t),\\
-\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha\left(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2}\right),
+\frac{\partial U}{\partial t} &= 1 + U^2V - 4.4U + \alpha \nabla^2 U + f(x, y, t),\\
+\frac{\partial V}{\partial t} &= 3.4U - U^2V + \alpha \nabla^2 V,
 \end{align}
 ```
 
@@ -37,36 +37,36 @@ where
 f(x, y, t) = \begin{cases}
 5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1\\
 0 & \quad \text{else}
-\end{cases}.
+\end{cases}, \mathrm{and}
 ```
-The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
+$\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$ is the two dimensional Laplacian operator. The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
 ```math
 \begin{align}
-u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
-v(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
+U(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
+V(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
 \end{align},
 ```
 and the periodic boundary conditions
 
 ```math
 \begin{align}
-u(x+1,y,t) &= u(x,y,t) \\
-u(x,y+1,t) &= u(x,y,t).
+U(x+1,y,t) &= U(x,y,t) \\
+V(x,y+1,t) &= V(x,y,t).
 \end{align}
 ```
 
 To solve this PDE, we will discretize it into a system of ODEs with the finite
 difference method. We discretize the unit square domain with `N` grid points in each direction.
-`u[i,j]` and `v[i,j]` then represent the value of the discretized field at a given point in time, i.e.
+`U[i,j]` and `V[i,j]` then represent the value of the discretized field at a given point in time, i.e.
 
 ```
-u[i,j] = u(i*dx,j*dy)
-v[i,j] = v(i*dx,j*dy)
+U[i,j] = U(i*dx,j*dy)
+V[i,j] = V(i*dx,j*dy)
 ```
 
-where `dx = dy = 1/N`. To implement our ODE system, we collect both `u` and `v` in a single array `U` of size `(N,N,2)` with `U[i,j,1] = u[i,j]` and `U[i,j,2] = v[i,j]`. This approach can be easily generalized to PDEs with larger number of field variables.
+where `dx = dy = 1/N`. To implement our ODE system, we collect both `U` and `V` in a single array `u` of size `(N,N,2)` with `u[i,j,1] = U[i,j]` and `u[i,j,2] = V[i,j]`. This approach can be easily generalized to PDEs with larger number of field variables.
 
-Using a three-point stencil, the Laplacian (second derivative) operator discretizes into a tridiagonal matrix with elements `[1 -2 1]` and a `1` in the top, bottom, left, and right corners coming from the periodic boundary conditions. The nonlinear terms are implemented pointwise in a straightforward manner.
+Using a three-point stencil, the Laplacian operator discretizes into a tridiagonal matrix with elements `[1 -2 1]` and a `1` in the top, bottom, left, and right corners coming from the periodic boundary conditions. The nonlinear terms are implemented pointwise in a straightforward manner.
 
 The resulting `ODEProblem` definition is:
 
