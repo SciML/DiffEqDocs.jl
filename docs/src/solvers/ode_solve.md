@@ -526,7 +526,7 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
   - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
   - `Rodas3P` - 3rd order A-stable and stiffly stable Rosenbrock method with a
     stiff-aware 3rd order interpolant and additional error test for interpolation.
-    Keeps high accuracy on discretizations of nonlinear parabolic PDEs.
+    Keeps accuracy on discretizations of linear parabolic PDEs.
   - `RosShamp4`- An A-stable 4th order Rosenbrock method.
   - `Veldd4` - A 4th order D-stable Rosenbrock method.
   - `Velds4` - A 4th order A-stable Rosenbrock method.
@@ -560,9 +560,9 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     stiff equations without oscillations at low tolerances. Note that this method
     is prone to instability in the presence of oscillations, so use with caution.
     2nd order stiff-aware interpolation.
-  - `Rodas23W` - An Order 2/3 L-Stable Rosenbrock-W method which is good for DAEs and
-    discretizations of nonlinear parabolic PDEs. 2nd order stiff-aware
-    interpolation and additional error test for interpolation.
+  - `Rodas23W` - An Order 2/3 L-Stable Rosenbrock-W method for stiff ODEs and DAEs
+    in mass matrix form. 2nd order stiff-aware interpolation and additional error
+    test for interpolation.
   - `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
   - `ROS34PW1a` - A 4th order L-stable Rosenbrock-W method.
   - `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.
