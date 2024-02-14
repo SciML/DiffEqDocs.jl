@@ -45,7 +45,7 @@ plot(sol)
 ### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
-stochastic differential equations are included. To illustrate it, let us compare the 
+stochastic differential equations are included. To illustrate it, let us compare the
 accuracy of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
 This is a good way to judge the accuracy of a given algorithm, and is also useful
 to test convergence of new methods being developed. To setup our problem, we define

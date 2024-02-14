@@ -91,7 +91,7 @@ function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
     resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
-                         bcresid_prototype = (zeros(1), zeros(1)))
+    bcresid_prototype = (zeros(1), zeros(1)))
 sol2 = solve(bvp2, MIRK4(), dt = 0.05)
 plot(sol2)
 ```
@@ -101,4 +101,3 @@ for the final time point. `bcresid_prototype` is a prototype array which is pass
 `resid_a` and `resid_b`. In this case, we have one residual term for the start and one for the final time point,
 and thus we have `bcresid_prototype = (zeros(1), zeros(1))`. If we wanted to only have boundary conditions at the
 final time, we could instead have done `bcresid_prototype = (zeros(0), zeros(2))`.
-

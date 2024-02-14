@@ -92,6 +92,7 @@ extra options for the solvers, see the ODE solver page.
   - `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
 
 !!! note
+    
     `Rosenbrock23` and `Rosenbrock32` have a stiff-aware interpolation but this interpolation is not safe for the algebraic variables.
     Thus use the interpolation (and therefore `saveat`) with caution if the default Hermite interpolation is used.
 

@@ -1,6 +1,6 @@
 using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq
 import ODEProblemLibrary,
-    SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
+       SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
 
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
@@ -11,7 +11,8 @@ ENV["GKSwstype"] = "100"
 
 include("pages.jl")
 
-makedocs(modules = [
+makedocs(
+    modules = [
         DiffEqBase,
         SciMLBase,
         ODEProblemLibrary,
@@ -20,7 +21,7 @@ makedocs(modules = [
         DAEProblemLibrary,
         BVProblemLibrary,
         OrdinaryDiffEq,
-        Sundials, DASKR,
+        Sundials, DASKR
     ],
     linkcheck = true,
     linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
@@ -33,7 +34,7 @@ makedocs(modules = [
         "https://www.sciencedirect.com/science/article/abs/pii/S0375960109009591",
         "https://www.sciencedirect.com/science/article/abs/pii/0375960176901018",
         "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001024",
-        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001383",
+        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001383"
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs],

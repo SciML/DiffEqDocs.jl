@@ -403,9 +403,9 @@ We can define a matrix of linear ODEs as follows:
 using DifferentialEquations
 using Plots
 A = [1.0 0 0 -5
-    4 -2 4 -3
-    -4 0 0 1
-    5 -2 2 3]
+     4 -2 4 -3
+     -4 0 0 1
+     5 -2 2 3]
 u0 = rand(4, 2)
 tspan = (0.0, 1.0)
 f(u, p, t) = A * u
@@ -438,9 +438,9 @@ above, with the only change being the type for the initial condition and constan
 ```@example ODE4
 using StaticArrays
 A = @SMatrix [1.0 0.0 0.0 -5.0
-    4.0 -2.0 4.0 -3.0
-    -4.0 0.0 0.0 1.0
-    5.0 -2.0 2.0 3.0]
+              4.0 -2.0 4.0 -3.0
+              -4.0 0.0 0.0 1.0
+              5.0 -2.0 2.0 3.0]
 u0 = @SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u
