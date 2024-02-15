@@ -23,8 +23,8 @@ DAE.
 
 ```julia
 const mm_A = [-2.0 1 4
-    4 -2 1
-    0 0 0]
+              4 -2 1
+              0 0 0]
 function f!(du, u, p, t)
     du[1] = u[1]
     du[2] = u[2]

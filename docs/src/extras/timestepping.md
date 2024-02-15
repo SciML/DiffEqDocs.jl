@@ -189,7 +189,7 @@ struct CustomController <: StochasticDiffEq.AbstractController
 end
 
 function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-    controller::CustomController, alg)
+        controller::CustomController, alg)
     integrator.q11 = DiffEqBase.value(DiffEqBase.fastpow(integrator.EEst, controller.beta1))
     integrator.q = DiffEqBase.value(integrator.q11 /
                                     DiffEqBase.fastpow(integrator.qold, controller.beta2))
@@ -199,15 +199,16 @@ function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEI
     nothing
 end
 
-function StochasticDiffEq.step_accept_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-    controller::CustomController, alg)
+function StochasticDiffEq.step_accept_controller!(
+        integrator::StochasticDiffEq.SDEIntegrator,
+        controller::CustomController, alg)
     integrator.dtnew = DiffEqBase.value(integrator.dt / integrator.q) *
                        oneunit(integrator.dt)
     nothing
 end
 
 function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-    controller::CustomController, alg)
+        controller::CustomController, alg)
     integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin),
         integrator.q11 / integrator.opts.gamma)
 end
