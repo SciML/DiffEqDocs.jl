@@ -56,30 +56,30 @@ They can make discontinuous changes to the model when certain conditions are met
 
 ```@example spikingneural
 function thr(u, t, integrator)
-    integrator.u > integrator.p[4]
+    u - integrator.p[4]
 end
 
 function reset!(integrator)
     integrator.u = integrator.p[2]
 end
 
-threshold = DiscreteCallback(thr, reset!)
-current_step = PresetTimeCallback([2, 15], integrator -> integrator.p[5] += 210.0)
+threshold = ContinuousCallback(thr, reset!, nothing)
+current_step = PresetTimeCallback([2, 15], integrator -> integrator.p[5] += 150.0)
 cb = CallbackSet(current_step, threshold)
 ```
 
-Our condition is `thr(u,t,integrator)` and the condition kicks in when `integrator.u > integrator.p[4]` where `p[4]` is our threshold parameter `Vth`. Our effect of the condition is `reset!(integrator)`. It sets `u` back to the equilibrium potential `p[2]`. We then wrap both the condition and the effect into a `DiscreteCallback` called threshold. There is one more callback called `PresetTimeCallback` that is particularly useful. This one increases the input `p[5]` at `t=2` and `t=15` by `210.0`. Both callbacks are then combined into a `CallbackSet`. We are almost done to simulate our system, we just need to put numbers on our initial voltage and parameters.
+Our condition is `thr(u,t,integrator)` and the condition kicks in when `integrator.u > integrator.p[4]` where `p[4]` is our threshold parameter `Vth`. Our effect of the condition is `reset!(integrator)`. It sets `u` back to the equilibrium potential `p[2]`. We then wrap both the condition and the effect into a `DiscreteCallback` called threshold. There is one more callback called `PresetTimeCallback` that is particularly useful. This one increases the input `p[5]` at `t=2` and `t=15` by `150.0`. Both callbacks are then combined into a `CallbackSet`. We are almost done to simulate our system, we just need to put numbers on our initial voltage and parameters.
 
 ```@example spikingneural
 u0 = -75
 tspan = (0.0, 40.0)
 # p = (gL, EL, C, Vth, I)
-p = [10.0, -75.0, 5.0, -55.0, 0]
+p = [5.0, -75.0, 50.0, -55.0, 0]
 
 prob = ODEProblem(lif, u0, tspan, p, callback = cb)
 ```
 
-Our initial voltage is `u0 = - 75`, which will be the same as our equilibrium potential, so we start at a stable point. Then we define the timespan we want to simulate. The timescale of the LIF as it is defined conforms roughly to milliseconds. Then we define our parameters as `p = [10.0, -75.0, 5.0, -55.0, 0]`. Remember that `gL, EL, C, Vth, I = p`. Finally, we wrap everything into a call to `ODEProblem`. Can't forget the `CallbackSet`. With that, our model is defined. Now we just need to solve it with a quick call to `solve`.
+Our initial voltage is `u0 = - 75`, which will be the same as our equilibrium potential, so we start at a stable point. Then we define the timespan we want to simulate. The timescale of the LIF as it is defined conforms roughly to milliseconds. Then we define our parameters as `p = [5.0, -75.0, 50.0, -55.0, 0]`. Remember that `gL, EL, C, Vth, I = p`. Finally, we wrap everything into a call to `ODEProblem`. Can't forget the `CallbackSet`. With that, our model is defined. Now we just need to solve it with a quick call to `solve`.
 
 ```@example spikingneural
 sol = solve(prob)
@@ -91,7 +91,7 @@ First of all the `solve` output tells us if solving the system generally worked.
 plot(sol)
 ```
 
-We see that the model is resting at `-75` while there is no input. At `t=2` the input increases by `210` and the model starts to spike. Spiking does not start immediately because the input first has to charge the membrane capacitance. Notice how once spiking starts, it rapidly becomes extremely regular. Increasing the input again at `t=15` increases firing as we would expect, but it is still extremely regular. This is one of the features of the LIF. The firing frequency is regular for constant input and a linear function of the input strength. There are ways to make LIF models less regular. For example, we could use certain noise types at the input. We could also simulate a large number of LIF models and connect them synaptically. Instead of going into those topics, we will move on to the Izhikevich model, which is known for its ability to generate a large variety of spiking dynamics during constant inputs.
+We see that the model is resting at `-75` while there is no input. At `t=2` the input increases by `150` and the model starts to spike. Spiking does not start immediately because the input first has to charge the membrane capacitance. Notice how once spiking starts, it rapidly becomes extremely regular. Increasing the input again at `t=15` increases firing as we would expect, but it is still extremely regular. This is one of the features of the LIF. The firing frequency is regular for constant input and a linear function of the input strength. There are ways to make LIF models less regular. For example, we could use certain noise types at the input. We could also simulate a large number of LIF models and connect them synaptically. Instead of going into those topics, we will move on to the Izhikevich model, which is known for its ability to generate a large variety of spiking dynamics during constant inputs.
 
 ## The Izhikevich Model
 
