@@ -555,7 +555,7 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     with an embedded strongly A-stable 2nd order method.
   - `ROS2PR` - A 2nd order stiffly accurate Rosenbrock-Wanner method with 3 internal stages with Rinf=0.
     For problems with medium stiffness the convergence behaviour is very poor
-    and it is recommended to use ROS2S instead.
+    and it is recommended to use `ROS2S` instead.
   - `ROS3PR` - A 3nd order stiffly accurate Rosenbrock-Wanner method 
     with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
   - `Scholz47` - A 3nd order stiffly accurate Rosenbrock-Wanner method 
