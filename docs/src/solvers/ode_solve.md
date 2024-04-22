@@ -550,6 +550,25 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     4th order interpolant.
   - `Rodas5P` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
     4th order interpolant. Has improved stability in the adaptive time stepping embedding.
+  - `ROS2` - A 2nd order L-stable Rosenbrock-Wanner method with 2 internal stages.
+  - `ROS3` - A 3rd order L-stable Rosenbrock-Wanner method with 3 internal stages
+    with an embedded strongly A-stable 2nd order method.
+  - `ROS2PR` - A 2nd order stiffly accurate Rosenbrock-Wanner method with 3 internal stages with Rinf=0.
+    For problems with medium stiffness the convergence behaviour is very poor
+    and it is recommended to use `ROS2S` instead.
+  - `ROS3PR` - A 3nd order stiffly accurate Rosenbrock-Wanner method 
+    with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
+  - `Scholz47` - A 3nd order stiffly accurate Rosenbrock-Wanner method 
+    with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
+    Convergence with order 4 for the stiff case, but has a poor accuracy.
+  - `ROS3PRL` - A 3nd order stiffly accurate Rosenbrock-Wanner method with 4 internal stages
+    with B_PR consistent of order 2 with Rinf=0. The order of convergence decreases if medium stiff problems
+    are considered, but it has good results for very stiff cases.
+  - `ROS3PRL2` - A 3nd order stiffly accurate Rosenbrock-Wanner method with 4 internal stages
+    with B_PR consistent of order 3. The order of convergence does NOT decreases if 
+    medium stiff problems are considered as it does for ROS3PRL.
+
+
 
 #### Rosenbrock-W Methods
 
@@ -568,7 +587,10 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
   - `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.
   - `ROS34PW2` - A 4th order stiffy accurate Rosenbrock-W method for PDAEs.
   - `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
-
+  - `ROS34PRw` - A 3nd order stiffly accurate Rosenbrock-Wanner W-method with 4 internal stages with B_PR consistent of order 2
+  - `ROS2S` - A 2nd order stiffly accurate Rosenbrock-Wanner W-method 
+    with 3 internal stages with B_PR consistent of order 2 with Rinf=0.
+    
 #### Stabilized Explicit Methods
 
   - `ROCK2` - Second order stabilized Runge-Kutta method. Exhibits high stability
