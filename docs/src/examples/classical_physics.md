@@ -85,7 +85,7 @@ prob = SecondOrderODEProblem(harmonicoscillator, dx₀, x₀, tspan, ω)
 sol = solve(prob, DPRKN6())
 
 #Plot
-plot(sol, vars = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
+plot(sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
     xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"])
 plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
 plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
@@ -147,12 +147,12 @@ plot(sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
 So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.
 
 ```@example physics
-p = plot(sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
+p = plot(sol, idxs = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
     xaxis = "Velocity", yaxis = "Position", leg = false)
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODEProblem(prob.f, u0, (0.0, tspan))
     sol = solve(_prob, Vern9()) # Use Vern9 solver for higher accuracy
-    plot!(p, sol, vars = (1, 2), xlims = nothing, ylims = nothing)
+    plot!(p, sol, idxs = (1, 2), xlims = nothing, ylims = nothing)
 end
 for i in (-4pi):(pi / 2):(4π)
     for j in (-4pi):(pi / 2):(4π)
@@ -267,13 +267,13 @@ function poincare_map(prob, u₀, p; callback = cb)
     _prob = ODEProblem(prob.f, u₀, prob.tspan)
     sol = solve(_prob, Vern9(), save_everystep = false, save_start = false,
         save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
-    scatter!(p, sol, vars = (3, 4), markersize = 3, msw = 0)
+    scatter!(p, sol, idxs = (3, 4), markersize = 3, msw = 0)
 end
 ```
 
 ```@example physics
 lβrange = -0.02:0.0025:0.02
-p = scatter(sol2, vars = (3, 4), leg = false, markersize = 3, msw = 0)
+p = scatter(sol2, idxs = (3, 4), leg = false, markersize = 3, msw = 0)
 for lβ in lβrange
     poincare_map(poincare, [0.01, 0.01, 0.01, lβ], p)
 end
@@ -334,7 +334,7 @@ sol = solve(prob, Vern9(), abstol = 1e-16, reltol = 1e-16);
 
 ```@example physics
 # Plot the orbit
-plot(sol, vars = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
+plot(sol, idxs = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
     yaxis = "y", leg = false)
 ```
 
@@ -343,9 +343,9 @@ plot(sol, vars = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis 
 @show sol.retcode
 
 #Plot -
-plot(sol, vars = (1, 3), title = "Phase space for the Hénon-Heiles system",
+plot(sol, idxs = (1, 3), title = "Phase space for the Hénon-Heiles system",
     xaxis = "Position", yaxis = "Velocity")
-plot!(sol, vars = (2, 4), leg = false)
+plot!(sol, idxs = (2, 4), leg = false)
 ```
 
 ```@example physics
@@ -382,14 +382,14 @@ Notice that we get the same results:
 
 ```@example physics
 # Plot the orbit
-plot(sol2, vars = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
+plot(sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
     yaxis = "y", leg = false)
 ```
 
 ```@example physics
-plot(sol2, vars = (3, 1), title = "Phase space for the Hénon-Heiles system",
+plot(sol2, idxs = (3, 1), title = "Phase space for the Hénon-Heiles system",
     xaxis = "Position", yaxis = "Velocity")
-plot!(sol2, vars = (4, 2), leg = false)
+plot!(sol2, idxs = (4, 2), leg = false)
 ```
 
 but now the energy change is essentially zero:
