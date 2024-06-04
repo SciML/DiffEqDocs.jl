@@ -558,7 +558,7 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     and it is recommended to use `ROS2S` instead.
   - `ROS3PR` - A 3nd order stiffly accurate Rosenbrock-Wanner method
     with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
-  - `Scholz47` - A 3nd order stiffly accurate Rosenbrock-Wanner method
+  - `Scholz4_7` - A 3nd order stiffly accurate Rosenbrock-Wanner method
     with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
     Convergence with order 4 for the stiff case, but has a poor accuracy.
   - `ROS3PRL` - A 3nd order stiffly accurate Rosenbrock-Wanner method with 4 internal stages
