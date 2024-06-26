@@ -18,7 +18,7 @@ and find tough locations for the solvers.
 
 ## Using Progress Bars with VS Code
 
-If using VS Code, progress bars are enabled via the [ProgressLoggers.jl](https://github.com/JuliaLogging/ProgressLogging.jl) package.
+If using VS Code, progress bars are enabled via the [ProgressLogging.jl](https://github.com/JuliaLogging/ProgressLogging.jl) package.
 For example:
 
 ```julia
