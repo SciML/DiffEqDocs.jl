@@ -317,7 +317,7 @@ function f(du, u, p, t)
 end
 function g(du, u, p, t)
     du[1] = √u[2] * u[1]
-    du[2] = Θ * √u[2]
+    du[2] = σ * √u[2]
 end
 ```
 
