@@ -101,7 +101,7 @@ Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
 ## Special Keyword Arguments
 
   - `save_noise`: Determines whether the values of `W` are saved whenever the timeseries
-    is saved. Defaults to true.
+    is saved. Defaults to false.
   - `delta`: The `delta` adaptivity parameter for the natural error estimator.
     Determines the balance between drift and diffusion error. For more details, see
     [the publication](https://chrisrackauckas.com/assets/Papers/ChrisRackauckas-AdaptiveSRK.pdf).
