@@ -189,3 +189,11 @@ error state of the solution. The retcodes are as follows:
 
 Extra fields for solutions of specific problems are specified in the appropriate
 problem definition page.
+
+## Solution Function Stripping
+By default solution objects store functions, making them difficult to serialize. Using the function 
+`strip_solution(sol)`, a copy of the solution that does not contain any functions is created.
+
+```@docs
+SciMLBase.strip_solution
+```
