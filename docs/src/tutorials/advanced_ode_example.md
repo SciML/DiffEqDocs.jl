@@ -145,23 +145,30 @@ Note that you should only do this if the sparsity is high, for example, 0.1%
 of the matrix is non-zeros, otherwise the overhead of sparse matrices can be higher
 than the gains from sparse differentiation!
 
-One of the useful companion tools for DifferentialEquations.jl is
-[Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
-This allows for automatic declaration of Jacobian sparsity types. To see this
-in action, we can give an example `du` and `u` and call `jacobian_sparsity`
-on our function with the example arguments, and it will kick out a sparse matrix
-with our pattern, that we can turn into our `jac_prototype`.
+[ADTypes.jl](https://github.com/SciML/ADTypes.jl) provides a [common interface for automatic sparsity detection](https://sciml.github.io/ADTypes.jl/stable/#Sparsity-detector) 
+via its function `jacobian_sparsity`.
+This function can be called using sparsity detectors from [SparseConnectivityTracer.jl](https://github.com/adrhill/SparseConnectivityTracer.jl) 
+or [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
+
+We can give an example `du` and `u` and call `jacobian_sparsity` on our function with the example arguments,
+and it will kick out a sparse matrix with our pattern, that we can turn into our `jac_prototype`.
+
+Let's try SparseConnectivityTracer's [`TracerSparsityDetector`](https://adrianhill.de/SparseConnectivityTracer.jl/stable/user/api/#SparseConnectivityTracer.TracerSparsityDetector):
 
 ```@example stiff1
-using Symbolics
+using SparseConnectivityTracer, ADTypes
+detector = TracerSparsityDetector()
 du0 = copy(u0)
-jac_sparsity = Symbolics.jacobian_sparsity((du, u) -> brusselator_2d_loop(du, u, p, 0.0),
-    du0, u0)
+jac_sparsity = ADTypes.jacobian_sparsity(
+    (du, u) -> brusselator_2d_loop(du, u, p, 0.0), du0, u0, detector)
 ```
 
-Notice that Julia gives a nice print out of the sparsity pattern. That's neat, and
-would be tedious to build by hand! Now we just pass it to the `ODEFunction`
-like as before:
+Using a different backend for sparsity detection just requires swapping out the detector,
+e.g. for Symbolics' [`SymbolicsSparsityDetector`](https://docs.sciml.ai/Symbolics/stable/manual/sparsity_detection/#Symbolics.SymbolicsSparsityDetector).
+
+Notice that Julia gives a nice print out of the sparsity pattern. 
+That's neat, and would be tedious to build by hand! 
+Now we just pass it to the `ODEFunction` like as before:
 
 ```@example stiff1
 f = ODEFunction(brusselator_2d_loop; jac_prototype = float.(jac_sparsity))
