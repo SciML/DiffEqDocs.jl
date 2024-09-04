@@ -1,7 +1,7 @@
 # [Timestepping Method Descriptions](@id timestepping)
 
 ```@meta
-CurrentModule = OrdinaryDiffEq
+CurrentModule = OrdinaryDiffEqCore
 ```
 
 ## Common Setup
