@@ -145,9 +145,9 @@ Note that you should only do this if the sparsity is high, for example, 0.1%
 of the matrix is non-zeros, otherwise the overhead of sparse matrices can be higher
 than the gains from sparse differentiation!
 
-[ADTypes.jl](https://github.com/SciML/ADTypes.jl) provides a [common interface for automatic sparsity detection](https://sciml.github.io/ADTypes.jl/stable/#Sparsity-detector) 
+[ADTypes.jl](https://github.com/SciML/ADTypes.jl) provides a [common interface for automatic sparsity detection](https://sciml.github.io/ADTypes.jl/stable/#Sparsity-detector)
 via its function `jacobian_sparsity`.
-This function can be called using sparsity detectors from [SparseConnectivityTracer.jl](https://github.com/adrhill/SparseConnectivityTracer.jl) 
+This function can be called using sparsity detectors from [SparseConnectivityTracer.jl](https://github.com/adrhill/SparseConnectivityTracer.jl)
 or [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
 
 We can give an example `du` and `u` and call `jacobian_sparsity` on our function with the example arguments,
@@ -166,8 +166,8 @@ jac_sparsity = ADTypes.jacobian_sparsity(
 Using a different backend for sparsity detection just requires swapping out the detector,
 e.g. for Symbolics' [`SymbolicsSparsityDetector`](https://docs.sciml.ai/Symbolics/stable/manual/sparsity_detection/#Symbolics.SymbolicsSparsityDetector).
 
-Notice that Julia gives a nice print out of the sparsity pattern. 
-That's neat, and would be tedious to build by hand! 
+Notice that Julia gives a nice print out of the sparsity pattern.
+That's neat, and would be tedious to build by hand!
 Now we just pass it to the `ODEFunction` like as before:
 
 ```@example stiff1
