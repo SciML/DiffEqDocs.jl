@@ -340,7 +340,7 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 ```@example stiff1
 using ModelingToolkit
 prob_ode_brusselator_2d_mtk = ODEProblem(
-    modelingtoolkitize(prob_ode_brusselator_2d_sparse),
+    complete(modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
     [], (0.0, 11.5), jac = true, sparse = true);
 # @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide

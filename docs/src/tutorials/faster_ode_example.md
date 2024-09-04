@@ -310,7 +310,7 @@ the Julia code for this.
 
 ```@example faster_ode2
 using ModelingToolkit
-de = modelingtoolkitize(prob)
+de = complete(modelingtoolkitize(prob))
 ```
 
 We can tell it to compute the Jacobian if we want to see the code:
@@ -663,7 +663,7 @@ r0[:, :, 1] .= uss .+ 0.1 .* rand.()
 r0[:, :, 2] .= vss
 
 prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
-de = modelingtoolkitize(prob)
+de = complete(modelingtoolkitize(prob))
 
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!

@@ -1,7 +1,7 @@
 # [Timestepping Method Descriptions](@id timestepping)
 
 ```@meta
-CurrentModule = OrdinaryDiffEq
+CurrentModule = OrdinaryDiffEqCore
 ```
 
 ## Common Setup
@@ -54,7 +54,7 @@ one step to the next, it can effect the stability of explicit methods. Thus,
 it's only applied by default to low order implicit solvers.
 
 ```@docs
-IController
+OrdinaryDiffEqCore.IController
 ```
 
 ## Proportional-Integral Controller (PI Controller)
@@ -84,13 +84,13 @@ q
 history portion. `qoldinit` is the initialized value for the gain history.
 
 ```@docs
-PIController
+OrdinaryDiffEqCore.PIController
 ```
 
 ## Proportional-Integral-Derivative Controller (PID Controller)
 
 ```@docs
-PIDController
+OrdinaryDiffEqCore.PIDController
 ```
 
 ## Gustafsson Acceleration
@@ -148,7 +148,7 @@ end
 ```
 
 ```@docs
-PredictiveController
+OrdinaryDiffEqCore.PredictiveController
 ```
 
 ## Abstract Controller

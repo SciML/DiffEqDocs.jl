@@ -245,7 +245,7 @@ It's clear from the plot how the controls affected the outcome.
 
 ### Example 3: AutoAbstol
 
-MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolute-tolerance.html).
+MATLAB's Simulink has the option for [an automatic absolute tolerance](https://www.mathworks.com/help/simulink/gui/absolutetolerance.html).
 In this example we will implement a callback which will add this behavior to
 any JuliaDiffEq solver which implements the `integrator` and callback interface.
 
