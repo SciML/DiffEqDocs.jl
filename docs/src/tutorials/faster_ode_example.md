@@ -1,7 +1,7 @@
 # [Code Optimization for Differential Equations](@id speed)
 
 !!! note
-
+    
     See [this FAQ](@ref faq_performance)
     for information on common pitfalls and how to improve performance.
 
@@ -95,7 +95,7 @@ When the in-place form is used, DifferentialEquations.jl takes a different
 internal route that minimizes the internal allocations as well.
 
 !!! note
-
+    
     Notice that nothing is returned. When in in-place form, the ODE solver ignores
     the return. Instead, make sure that the original `du` array is mutated instead
     of constructing a new array
@@ -370,7 +370,7 @@ In this tutorial, we will optimize the right-hand side definition of a PDE
 semi-discretization.
 
 !!! note
-
+    
     We highly recommend looking at the [Solving Large Stiff Equations](@ref stiff)
     tutorial for details on customizing DifferentialEquations.jl for more
     efficient large-scale stiff ODE solving. This section will only focus on the
@@ -690,7 +690,7 @@ algorithms. `CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
 setting `linear_solver = :GMRES`.
 
 !!! note
-
+    
     The [Solving Large Stiff Equations](@ref stiff) tutorial goes through these
     details. This is simply to give a taste of how much optimization opportunity
     is left on the table!
