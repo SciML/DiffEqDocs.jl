@@ -2,7 +2,7 @@
 
 julia_version = "1.10.5"
 manifest_format = "2.0"
-project_hash = "2d522e57fae390bfaf9f92775b20b939d9a95881"
+project_hash = "f30a4c44b461937c3a8ce2a0b92956d3859dbe36"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "99a6f5d0ce1c7c6afdb759daa30226f71c54f6b0"
@@ -557,7 +557,7 @@ weakdeps = ["OrdinaryDiffEq", "OrdinaryDiffEqCore", "Sundials"]
 
 [[deps.DiffEqDocs]]
 deps = ["Documenter"]
-path = "/var/lib/buildkite-agent/builds/gpuci-3/julialang/diffeqdocs-dot-jl"
+path = "/var/lib/buildkite-agent/builds/gpuci-7/julialang/diffeqdocs-dot-jl"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
 version = "7.8.0"
 
