@@ -25,7 +25,7 @@ M = [
     0.000285583733151,
     0.0000437273164546,
     0.0000517759138449,
-    1 / 1.3e8,
+    1 / 1.3e8
 ]
 planets = ["Sun", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
 
@@ -51,8 +51,9 @@ const N = 6
 u = collect(u)
 D = Differential(t)
 potential = -G *
-            ∑(i -> ∑(j -> (M[i] * M[j]) / √(∑(k -> (u[k, i] - u[k, j])^2, 1:3)), 1:(i - 1)),
-              2:N)
+            ∑(
+    i -> ∑(j -> (M[i] * M[j]) / √(∑(k -> (u[k, i] - u[k, j])^2, 1:3)), 1:(i - 1)),
+    2:N)
 ```
 
 ## Hamiltonian System

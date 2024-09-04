@@ -16,9 +16,40 @@ the timesteps may (and will) change. By scrolling over the progress bar, one wil
 also see the current timestep. This can be used to track the solution's progress
 and find tough locations for the solvers.
 
-## Using Progress Bars Outside Juno
+## Using Progress Bars with VS Code
 
-To use the progress bars outside of Juno, use [TerminalLoggers.jl](https://github.com/JuliaLogging/TerminalLoggers.jl).
+If using VS Code, progress bars are enabled via the [ProgressLogging.jl](https://github.com/JuliaLogging/ProgressLogging.jl) package.
+For example:
+
+```julia
+using OrdinaryDiffEq, ProgressLogging
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+end
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true)
+```
+
+## Using Progress Bars in the Terminal
+
+```julia
+using OrdinaryDiffEq, TerminalLoggers
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+end
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true)
+```
+
+To use progress bars in the terminal, use [TerminalLoggers.jl](https://github.com/JuliaLogging/TerminalLoggers.jl).
 [Follow these directions to add TerminalLogging to your startup.jl](https://julialogging.github.io/TerminalLoggers.jl/stable/#Installation-and-setup-1),
 if you want it enabled by default.
 
@@ -27,16 +58,18 @@ before any other Julia call. This step is crucial. Otherwise, no logging will
 appear in the terminal.
 
 ```julia
+using OrdinaryDiffEq
 using Logging: global_logger
 using TerminalLoggers: TerminalLogger
 global_logger(TerminalLogger())
 
-using OrdinaryDiffEq
-
-solve(ODEProblem((u, p, t) -> (sleep(0.01); -u), 1.0, nothing),
-      Euler();
-      dt = 0.5,
-      tspan = (0.0, 1000.0),
-      progress = true,
-      progress_steps = 1)
+function lorenz!(du, u, p, t)
+    du[1] = 10.0(u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+end
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 1000000.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+sol = solve(prob, Tsit5(), progress = true, maxiters = 1e8)
 ```

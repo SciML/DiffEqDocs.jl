@@ -628,17 +628,18 @@ function (f::BeelerReuterGpu)(du, u, p, t)
 
     if Δt != 0 || t == 0
         @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
-                                                                      f.d_H, f.d_J, f.d_D,
-                                                                      f.d_F, f.d_C, Δt)
+            f.d_H, f.d_J, f.d_D,
+            f.d_F, f.d_C, Δt)
         f.t = t
     end
 
     laplacian(f.Δv, u)
 
     # calculate the reaction portion
-    @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_du_gpu(f.d_du, f.d_u, f.d_XI, f.d_M,
-                                                               f.d_H, f.d_J, f.d_D, f.d_F,
-                                                               f.d_C)
+    @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_du_gpu(
+        f.d_du, f.d_u, f.d_XI, f.d_M,
+        f.d_H, f.d_J, f.d_D, f.d_F,
+        f.d_C)
 
     copyto!(du, f.d_du)
 

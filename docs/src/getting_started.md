@@ -34,7 +34,7 @@ sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
 
 using Plots
 plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
@@ -236,7 +236,7 @@ axis labels, and change the legend (note we can disable the legend with
 
 ```@example ODE2
 plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 ```
 
 We can then add to the plot using the `plot!` command:
@@ -504,4 +504,4 @@ Many more are defined in the relevant sections of the docs. Please explore the r
 of the documentation, including tutorials for getting started with other types
 of equations. In addition, to get help, please either
 [file an issue at the main repository](https://github.com/SciML/DifferentialEquations.jl)
-or [come have an informal discussion at our Gitter chatroom](https://gitter.im/JuliaDiffEq/Lobby).
+or [come have an informal discussion at the Julia Zulip chatroom](https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged).

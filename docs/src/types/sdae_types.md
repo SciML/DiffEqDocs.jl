@@ -35,6 +35,6 @@ function g!(du, u, p, t)
     @. du = 0.1
 end
 
-prob = SDEProblem(SDEFunction(f!, g!; mass_matrix = mm_A), g!,
-                  ones(3), (0.0, 1.0))
+prob = SDEProblem(SDEFunction(f!, g!; mass_matrix = mm_A),
+    ones(3), (0.0, 1.0))
 ```

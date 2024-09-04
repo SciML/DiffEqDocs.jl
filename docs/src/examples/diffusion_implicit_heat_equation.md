@@ -123,8 +123,8 @@ T[i] + 2 Δz ∇T_{bottom} n̂ = T[g] \\
 ```@example diffusionimplicit
 # Initialize interior and boundary stencils:
 ∇² = Tridiagonal(ones(FT, n) .* ∇²_op[1],
-                 ones(FT, n + 1) .* ∇²_op[2],
-                 ones(FT, n) .* ∇²_op[3]);
+    ones(FT, n + 1) .* ∇²_op[2],
+    ones(FT, n) .* ∇²_op[3]);
 
 # Modify boundary stencil to account for BCs
 
@@ -179,18 +179,18 @@ params = (; n)
 tspan = (FT(0), N_t * FT(Δt))
 
 prob = SplitODEProblem(SciMLBase.DiffEqArrayOperator(D),
-                       rhs!,
-                       T,
-                       tspan,
-                       params)
+    rhs!,
+    T,
+    tspan,
+    params)
 alg = IMEXEuler()
 println("Solving...")
 sol = solve(prob,
-            alg,
-            dt = Δt,
-            saveat = range(FT(0), N_t * FT(Δt), length = 5),
-            progress = true,
-            progress_message = (dt, u, p, t) -> t);
+    alg,
+    dt = Δt,
+    saveat = range(FT(0), N_t * FT(Δt), length = 5),
+    progress = true,
+    progress_message = (dt, u, p, t) -> t);
 ```
 
 # Visualizing results
@@ -201,12 +201,12 @@ Now, let's visualize the results of the solution and error:
 T_end = sol.u[end]
 
 p1 = Plots.plot(zf, T_analytic.(zf), label = "analytic", markershape = :circle,
-                markersize = 6)
+    markersize = 6)
 p1 = Plots.plot!(p1, zf, T_end, label = "numerical", markershape = :diamond)
 p1 = Plots.plot!(p1, title = "T ∈ cell faces")
 
 p2 = Plots.plot(zf, abs.(T_end .- T_analytic.(zf)), label = "error", markershape = :circle,
-                markersize = 6)
+    markersize = 6)
 p2 = Plots.plot!(p2, title = "T ∈ cell faces")
 
 Plots.plot(p1, p2)

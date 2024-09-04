@@ -1,8 +1,5 @@
 # [Random Ordinary Differential Equations](@id rode_example)
 
-This tutorial will introduce you to the functionality for solving RODEs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
-
 !!! note
     
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).

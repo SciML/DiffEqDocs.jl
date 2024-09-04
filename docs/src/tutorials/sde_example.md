@@ -1,8 +1,5 @@
 # Stochastic Differential Equations
 
-This tutorial will introduce you to the functionality for solving SDEs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://github.com/SciML/SciMLTutorials.jl).
-
 !!! note
     
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
@@ -12,18 +9,17 @@ introductions can be found by [checking out SciMLTutorials.jl](https://github.co
 In this example, we will solve the equation
 
 ```math
-du = f(u,p,t)dt + g(u,p,t)dW
+du = f(u,p,t)dt + g(u,p,t)dW,
 ```
 
-where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic Calculus that the
+where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic calculus that the
 solution to this equation is
 
 ```math
-u(t,Wₜ)=u₀\exp((α-\frac{β^2}{2})t+βWₜ)
+u(t,Wₜ)=u₀\exp\left[\left(α-\frac{β^2}{2}\right)t+βWₜ\right].
 ```
 
-To solve this numerically, we define a problem type by giving it the equation
-and the initial condition:
+To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)`, and the initial condition:
 
 ```@example sde
 using DifferentialEquations
@@ -34,10 +30,10 @@ f(u, p, t) = α * u
 g(u, p, t) = β * u
 dt = 1 // 2^(4)
 tspan = (0.0, 1.0)
-prob = SDEProblem(f, g, u₀, (0.0, 1.0))
+prob = SDEProblem(f, g, u₀, tspan)
 ```
 
-The `solve` interface is then the same as with ODEs. Here we will use the classic
+The `solve` interface is then the same as ODEs. Here, we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```@example sde
@@ -49,43 +45,43 @@ plot(sol)
 ### Using Higher Order Methods
 
 One unique feature of DifferentialEquations.jl is that higher-order methods for
-stochastic differential equations are included. For reference, let's also give
-the `SDEProblem` the analytical solution. We can do this by making a test problem.
-This can be a good way to judge how accurate the algorithms are, or is used to
-test convergence of the algorithms for methods developers. Thus, we define the problem
-object with:
+stochastic differential equations are included. To illustrate it, let us compare the
+accuracy of the `EM()` method and a higher-order method `SRIW1()` with the analytical solution.
+This is a good way to judge the accuracy of a given algorithm, and is also useful
+to test convergence of new methods being developed. To setup our problem, we define
+`u_analytic(u₀, p, t, W)` and pass it to the `SDEFunction` as:
 
 ```@example sde
-f_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
-ff = SDEFunction(f, g, analytic = f_analytic)
-prob = SDEProblem(ff, g, u₀, (0.0, 1.0))
+u_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
+ff = SDEFunction(f, g, analytic = u_analytic)
+prob = SDEProblem(ff, u₀, (0.0, 1.0))
 ```
 
-and then we pass this information to the solver and plot:
+We can now compare the `EM()` solution with the analytic one:
 
 ```@example sde
-#We can plot using the classic Euler-Maruyama algorithm as follows:
 sol = solve(prob, EM(), dt = dt)
 plot(sol, plot_analytic = true)
 ```
 
-We can choose a higher-order solver for a more accurate result:
+Now, we choose a higher-order solver `SRIW1()` for better accuracy. By default,
+the higher order methods are adaptive. Let's first switch off adaptivity and
+compare the numerical and analytic solutions :
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt, adaptive = false)
 plot(sol, plot_analytic = true)
 ```
 
-By default, the higher order methods have adaptivity. Thus, one can use
+Now, let's allow the solver to automatically determine a starting `dt`. This estimate
+at the beginning is conservative (small) to ensure accuracy.
 
 ```@example sde
 sol = solve(prob, SRIW1())
 plot(sol, plot_analytic = true)
 ```
 
-Here we allowed the solver to automatically determine a starting `dt`. This estimate
-at the beginning is conservative (small) to ensure accuracy. We can instead start
-the method with a larger `dt` by passing in a value for the starting `dt`:
+We can instead start the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
 sol = solve(prob, SRIW1(), dt = dt)
@@ -140,41 +136,40 @@ timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coe
 
 ## Example 2: Systems of SDEs with Diagonal Noise
 
-More generally, an SDE
+In general, a system of SDEs
 
 ```math
-du = f(u,p,t)dt + g(u,p,t)dW
+du = f(u,p,t)dt + g(u,p,t)dW,
 ```
 
-generalizes to systems of equations is done in the same way as ODEs. Here, `g`
-is now a matrix of values. One common case, and the default for DifferentialEquations.jl,
-is diagonal noise where `g` is a diagonal matrix. This means that every function in
-the system gets a different random number. Instead of handling matrices in this case,
-we simply define both `f` and `g` as in-place functions. Thus, `f(du,u,p,t)` gives a
-vector of `du` which is the deterministic change, and `g(du2,u,p,t)` gives a vector
-`du2` for which `du2.*W` is the stochastic portion of the equation.
+where `g` is now a matrix of values, is numerically integrated in the
+same way as ODEs. A common scenario is when we have diagonal noise, which
+is the default for DifferentialEquations.jl. Physically this means that
+every variable in the system gets a different random kick. Consequently, `g` is a
+diagonal matrix and we can handle this in a simple manner by defining
+the deterministic part `f(du,u,p,t)` and the stochastic part
+`g(du2,u,p,t)` as in-place functions.
 
-For example, the Lorenz equation with additive noise has the same deterministic
-portion as the Lorenz equations, but adds an additive noise, which is simply
-`3*N(0,dt)` where `N` is the normal distribution `dt` is the time step, to each
-step of the equation. This is done via:
+Consider for example a stochastic variant of the Lorenz equations, where we introduce a
+simple additive noise to each of `x,y,z`, which is simply `3*N(0,dt)`. Here, `N` is the normal
+distribution and `dt` is the time step. This is done as follows:
 
 ```@example sde2
 using DifferentialEquations
 using Plots
-function lorenz(du, u, p, t)
-    du[1] = 10.0(u[2] - u[1])
+function lorenz!(du, u, p, t)
+    du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
     du[3] = u[1] * u[2] - (8 / 3) * u[3]
 end
 
-function σ_lorenz(du, u, p, t)
+function σ_lorenz!(du, u, p, t)
     du[1] = 3.0
     du[2] = 3.0
     du[3] = 3.0
 end
 
-prob_sde_lorenz = SDEProblem(lorenz, σ_lorenz, [1.0, 0.0, 0.0], (0.0, 10.0))
+prob_sde_lorenz = SDEProblem(lorenz!, σ_lorenz!, [1.0, 0.0, 0.0], (0.0, 10.0))
 sol = solve(prob_sde_lorenz)
 plot(sol, idxs = (1, 2, 3))
 ```
@@ -182,7 +177,7 @@ plot(sol, idxs = (1, 2, 3))
 Note that it's okay for the noise function to mix terms. For example
 
 ```@example sde2
-function σ_lorenz(du, u, p, t)
+function σ_lorenz!(du, u, p, t)
     du[1] = sin(u[3]) * 3.0
     du[2] = u[2] * u[1] * 3.0
     du[3] = 3.0
@@ -322,7 +317,7 @@ function f(du, u, p, t)
 end
 function g(du, u, p, t)
     du[1] = √u[2] * u[1]
-    du[2] = Θ * √u[2]
+    du[2] = σ * √u[2]
 end
 ```
 

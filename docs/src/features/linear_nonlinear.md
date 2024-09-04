@@ -86,10 +86,12 @@ allow for choosing the nonlinear solver that is used to handle the implicit syst
 While fully modifiable and customizable, most users should stick to the pre-defined
 nonlinear solver choices. These are:
 
-  - `NLNewton(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5, new_W_dt_cutoff=1//5)`: A quasi-Newton method. The default.
+  - `NLNewton(; κ = 1 // 100, max_iter = 10, fast_convergence_cutoff = 1 // 5, new_W_dt_cutoff = 1 // 5, always_new = false, check_div = true, relax = 0 // 1)`: A quasi-Newton method. The default.
   - `NLAnderson(; κ=1//100, max_iter=10, max_history::Int=5, aa_start::Int=1, droptol=nothing, fast_convergence_cutoff=1//5)`:
     Anderson acceleration. While more stable than functional iteration, this method
     is less stable than Newton's method, but does not require a Jacobian.
   - `NLFunctional(; κ=1//100, max_iter=10, fast_convergence_cutoff=1//5)`: This method
     is the least stable, but does not require a Jacobian. It should only be used for
     non-stiff ODEs.
+
+The `NLNewton` solver allows for relaxation via the `relax` keyword parameter. Numerical values of `relax` must lie in the half open unit interval `[0,1)` where `0` corresponds to no relaxation. Alternatively, `relax` may be set to a line search algorithm from [LineSearches.jl](https://julianlsolvers.github.io/LineSearches.jl/stable/) in order to include a line search relaxation step in the Newton iterations. For example, the well known Newton-Armijo iterative scheme can be employed by setting `relax=BackTracking()` where `BackTracking` is provided by `LineSearches`.

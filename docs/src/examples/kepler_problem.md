@@ -10,8 +10,7 @@ Also, we know that
 $${\displaystyle {\frac {\mathrm {d} {\boldsymbol {p}}}{\mathrm {d} t}}=-{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {q}}}}\quad ,\quad {\frac {\mathrm {d} {\boldsymbol {q}}}{\mathrm {d} t}}=+{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {p}}}}}$$
 
 ```@example kepler
-using OrdinaryDiffEq, LinearAlgebra, ForwardDiff, Plots;
-gr();
+using OrdinaryDiffEq, LinearAlgebra, ForwardDiff, Plots
 H(q, p) = norm(p)^2 / 2 - inv(norm(q))
 L(q, p) = q[1] * p[2] - p[1] * q[2]
 
@@ -30,13 +29,13 @@ sol = solve(prob, KahanLi6(), dt = 1 // 10);
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
 
 ```@example kepler
-plot_orbit(sol) = plot(sol, vars = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
+plot_orbit(sol) = plot(sol, idxs = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
 
 function plot_first_integrals(sol, H, L)
-    plot(initial_first_integrals[1] .- map(u -> H(u[2, :], u[1, :]), sol.u),
-         lab = "Energy variation", title = "First Integrals")
-    plot!(initial_first_integrals[2] .- map(u -> L(u[2, :], u[1, :]), sol.u),
-          lab = "Angular momentum variation")
+    plot(initial_first_integrals[1] .- map(u -> H(u.x[2], u.x[1]), sol.u),
+        lab = "Energy variation", title = "First Integrals")
+    plot!(initial_first_integrals[2] .- map(u -> L(u.x[2], u.x[1]), sol.u),
+        lab = "Angular momentum variation")
 end
 analysis_plot(sol, H, L) = plot(plot_orbit(sol), plot_first_integrals(sol, H, L))
 ```
@@ -98,9 +97,9 @@ end
 
 function plot_first_integrals2(sol, H, L)
     plot(initial_first_integrals[1] .- map(u -> H(u[1:2], u[3:4]), sol.u),
-         lab = "Energy variation", title = "First Integrals")
+        lab = "Energy variation", title = "First Integrals")
     plot!(initial_first_integrals[2] .- map(u -> L(u[1:2], u[3:4]), sol.u),
-          lab = "Angular momentum variation")
+        lab = "Angular momentum variation")
 end
 
 analysis_plot2(sol, H, L) = plot(plot_orbit2(sol), plot_first_integrals2(sol, H, L))

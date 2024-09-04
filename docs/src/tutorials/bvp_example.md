@@ -1,8 +1,5 @@
 # Boundary Value Problems
 
-This tutorial will introduce you to the functionality for solving BVPs. Other
-introductions can be found by [checking out SciMLTutorials.jl](https://docs.sciml.ai/SciMLTutorialsOutput/stable/).
-
 !!! note
     
     This tutorial assumes you have read the [Ordinary Differential Equations tutorial](@ref ode_example).
@@ -51,12 +48,14 @@ function bc1!(residual, u, p, t)
     residual[2] = u[end][1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
-sol1 = solve(bvp1, GeneralMIRK4(), dt = 0.05)
+sol1 = solve(bvp1, MIRK4(), dt = 0.05)
 plot(sol1)
 ```
 
-The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example. <!-- add examples of more general initial conditions -->
-We need to use `GeneralMIRK4` or `Shooting` methods to solve `BVProblem`. `GeneralMIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
+The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example.
+
+<!-- add examples of more general initial conditions -->
+We need to use `MIRK4` or `Shooting` methods to solve `BVProblem`. `MIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
 If you can have a good initial guess, `Shooting` method works very well.
 
 ```@example bvp
@@ -79,16 +78,26 @@ plot(sol3)
 
 #### `TwoPointBVProblem`
 
-Defining a similar problem as `TwoPointBVProblem` is shown in the following example. Currently, `MIRK4` is the only solver for `TwoPointBVProblem`s.
+`TwoPointBVProblem` is operationally the same as `BVProblem` but allows for the solver
+to specialize on the common form of being a two-point BVP, i.e. a BVP which only has
+boundary conditions at the start and the finish of the time interval.
+Defining a similar problem as `TwoPointBVProblem` is shown in the following example:
 
 ```@example bvp
-function bc2!(residual, u, p, t) # u[1] is the beginning of the time span, and u[end] is the ending
-    residual[1] = u[1][1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
-    residual[2] = u[end][1] - pi / 2 # the solution at the end of the time span should be pi/2
+function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
+    resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
 end
-bvp2 = TwoPointBVProblem(simplependulum!, bc2!, [pi / 2, pi / 2], tspan)
-sol2 = solve(bvp2, MIRK4(), dt = 0.05) # we need to use the MIRK4 solver for TwoPointBVProblem
+function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
+    resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
+end
+bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
+    bcresid_prototype = (zeros(1), zeros(1)))
+sol2 = solve(bvp2, MIRK4(), dt = 0.05)
 plot(sol2)
 ```
 
-Note that `u` is a tuple of `( u[1], u[end] )` just like `t` is `( t[1], t[end] )` and `p` holds the parameters of the given problem.
+Note here that `bc2a!` is a boundary condition for the first time point, and `bc2b!` is a boundary condition
+for the final time point. `bcresid_prototype` is a prototype array which is passed in order to know the size of
+`resid_a` and `resid_b`. In this case, we have one residual term for the start and one for the final time point,
+and thus we have `bcresid_prototype = (zeros(1), zeros(1))`. If we wanted to only have boundary conditions at the
+final time, we could instead have done `bcresid_prototype = (zeros(0), zeros(2))`.

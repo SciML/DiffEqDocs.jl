@@ -93,7 +93,7 @@ Note that the interpolating function allows for `t` to be a vector and uses this
 sol(t, deriv = Val{0}; idxs = nothing, continuity = :left)
 ```
 
-The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. Note that most of the derivatives have not yet been implemented (though it's not hard, it just has to be done manually for each algorithm. Open an issue if there's a specific one you need). `continuity` describes whether to satisfy left or right continuity when a discontinuity is saved. The default is `:left`, i.e. grab the value before the callback's change, but can be changed to `:right`. `idxs` allows you to choose the indices the interpolation should solve for. For example,
+The optional argument `deriv` lets you choose the number `n` derivative to solve the interpolation for, defaulting with `n=0`. (Note the implementation of this is per solver, most of the derivatives have implemented, but you might find some that are not. Open an issue if there's a specific one needed that you find is missing). `continuity` describes whether to satisfy left or right continuity when a discontinuity is saved. The default is `:left`, i.e. grab the value before the callback's change, but can be changed to `:right`. `idxs` allows you to choose the indices the interpolation should solve for. For example,
 
 ```julia
 sol(t, idxs = 1:2:5)
@@ -162,7 +162,7 @@ the solution calling solve at each step.
 ## Differential Equation Solver Statistics (destats)
 
 ```@docs
-DiffEqBase.DEStats
+SciMLBase.DEStats
 ```
 
 ## [Return Codes (RetCodes)](@id retcodes)
@@ -189,3 +189,12 @@ error state of the solution. The retcodes are as follows:
 
 Extra fields for solutions of specific problems are specified in the appropriate
 problem definition page.
+
+## Solution Function Stripping
+
+By default solution objects store functions, making them difficult to serialize. Using the function
+`strip_solution(sol)`, a copy of the solution that does not contain any functions is created.
+
+```@docs
+SciMLBase.strip_solution
+```

@@ -44,7 +44,7 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
   - `ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
     of available options, please see
-    [its ODE solver page](https://diffeq.sciml.ai/dev/solvers/ode_solve/#ode_solve_sundials).
+    [its ODE solver page](https://docs.sciml.ai/DiffEqDocs/dev/api/sundials/).
 
 ## Semilinear ODE
 
@@ -54,7 +54,7 @@ The Semilinear ODE is a `SplitODEProblem` with one linear operator and one nonli
 \frac{du}{dt} =  Au + f(t,u)
 ```
 
-See the documentation page for [DiffEqOperators](@ref)
+See the documentation page for [SciMLOperators](https://docs.sciml.ai/SciMLOperators/stable/)
 for details about how to define linear operators from a matrix or finite difference
 discretization of derivative operators.
 

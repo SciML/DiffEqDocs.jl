@@ -22,12 +22,12 @@ differential equation (BRUSS).
     
     Feel free to skip this section: it simply defines the example problem.
 
-The Brusselator PDE is defined as follows:
+The Brusselator PDE is defined on a unit square periodic domain as follows:
 
 ```math
 \begin{align}
-\frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}) + f(x, y, t)\\
-\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2})
+\frac{\partial U}{\partial t} &= 1 + U^2V - 4.4U + \alpha \nabla^2 U + f(x, y, t),\\
+\frac{\partial V}{\partial t} &= 3.4U - U^2V + \alpha \nabla^2 V,
 \end{align}
 ```
 
@@ -35,38 +35,41 @@ where
 
 ```math
 f(x, y, t) = \begin{cases}
-5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1 \\
+5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1\\
 0 & \quad \text{else}
-\end{cases}
+\end{cases}, \mathrm{and}
 ```
 
-and the initial conditions are
+$\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$ is the two dimensional Laplacian operator. The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
 
 ```math
 \begin{align}
-u(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
-v(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
-\end{align}
+U(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
+V(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
+\end{align},
 ```
 
-with the periodic boundary condition
+and the periodic boundary conditions
 
 ```math
 \begin{align}
-u(x+1,y,t) &= u(x,y,t) \\
-u(x,y+1,t) &= u(x,y,t)
+U(x+1,y,t) &= U(x,y,t) \\
+V(x,y+1,t) &= V(x,y,t).
 \end{align}
 ```
-
-on a timespan of ``t \in [0,11.5]``.
 
 To solve this PDE, we will discretize it into a system of ODEs with the finite
-difference method. We discretize `u` and `v` into arrays of the values at each
-time point: `u[i,j] = u(i*dx,j*dy)` for some choice of `dx`/`dy`, and same for
-`v`. Then our ODE is defined with `U[i,j,k] = [u v]`. The second derivative
-operator, the Laplacian, discretizes to become a tridiagonal matrix with
-`[1 -2 1]` and a `1` in the top right and bottom left corners. The nonlinear functions
-are then applied at each point in space (they are broadcast). Use `dx=dy=1/32`.
+difference method. We discretize the unit square domain with `N` grid points in each direction.
+`U[i,j]` and `V[i,j]` then represent the value of the discretized field at a given point in time, i.e.
+
+```
+U[i,j] = U(i*dx,j*dy)
+V[i,j] = V(i*dx,j*dy)
+```
+
+where `dx = dy = 1/N`. To implement our ODE system, we collect both `U` and `V` in a single array `u` of size `(N,N,2)` with `u[i,j,1] = U[i,j]` and `u[i,j,2] = V[i,j]`. This approach can be easily generalized to PDEs with larger number of field variables.
+
+Using a three-point stencil, the Laplacian operator discretizes into a tridiagonal matrix with elements `[1 -2 1]` and a `1` in the top, bottom, left, and right corners coming from the periodic boundary conditions. The nonlinear terms are implemented pointwise in a straightforward manner.
 
 The resulting `ODEProblem` definition is:
 
@@ -84,7 +87,7 @@ function brusselator_2d_loop(du, u, p, t)
         i, j = Tuple(I)
         x, y = xyd_brusselator[I[1]], xyd_brusselator[I[2]]
         ip1, im1, jp1, jm1 = limit(i + 1, N), limit(i - 1, N), limit(j + 1, N),
-                             limit(j - 1, N)
+        limit(j - 1, N)
         du[i, j, 1] = alpha * (u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] -
                        4u[i, j, 1]) +
                       B + u[i, j, 1]^2 * u[i, j, 2] - (A + 1) * u[i, j, 1] +
@@ -153,7 +156,7 @@ with our pattern, that we can turn into our `jac_prototype`.
 using Symbolics
 du0 = copy(u0)
 jac_sparsity = Symbolics.jacobian_sparsity((du, u) -> brusselator_2d_loop(du, u, p, 0.0),
-                                           du0, u0)
+    du0, u0)
 ```
 
 Notice that Julia gives a nice print out of the sparsity pattern. That's neat, and
@@ -177,7 +180,7 @@ using BenchmarkTools # for @btime
 @btime solve(prob_ode_brusselator_2d, TRBDF2(), save_everystep = false);
 @btime solve(prob_ode_brusselator_2d_sparse, TRBDF2(), save_everystep = false);
 @btime solve(prob_ode_brusselator_2d_sparse, KenCarp47(linsolve = KLUFactorization()),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -194,7 +197,7 @@ the `linsolve` command and choose the GMRES linear solver.
 
 ```@example stiff1
 @btime solve(prob_ode_brusselator_2d, KenCarp47(linsolve = KrylovJL_GMRES()),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -235,8 +238,8 @@ end
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -271,8 +274,8 @@ function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -283,10 +286,10 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
         A = convert(AbstractMatrix, W)
         Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
-                                                                                presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                                                                                                                                  1))),
-                                                                                postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                                                                                                                                   1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
+                1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
+                1)))))
     else
         Pl = Plprev
     end
@@ -294,8 +297,8 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
-                       concrete_jac = true), save_everystep = false);
+    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
+        concrete_jac = true), save_everystep = false);
 nothing # hide
 ```
 
@@ -323,10 +326,10 @@ using Sundials
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(), save_everystep = false);
 # Simplest speedup: use :LapackDense
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :LapackDense),
-             save_everystep = false);
+    save_everystep = false);
 # GMRES Version: Doesn't require any extra stuff!
 @btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :GMRES),
-             save_everystep = false);
+    save_everystep = false);
 nothing # hide
 ```
 
@@ -336,8 +339,9 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 
 ```@example stiff1
 using ModelingToolkit
-prob_ode_brusselator_2d_mtk = ODEProblem(modelingtoolkitize(prob_ode_brusselator_2d_sparse),
-                                         [], (0.0, 11.5), jac = true, sparse = true);
+prob_ode_brusselator_2d_mtk = ODEProblem(
+    complete(modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
+    [], (0.0, 11.5), jac = true, sparse = true);
 # @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide
 ```
@@ -393,18 +397,18 @@ We then simply pass these functions to the Sundials solver, with a choice of
 
 ```julia
 @btime solve(prob_ode_brusselator_2d_sparse,
-             CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
-                       prec_side = 1), save_everystep = false);
+    CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
+        prec_side = 1), save_everystep = false);
 ```
 
 And similarly for algebraic multigrid:
 
 ```julia
 prectmp2 = aspreconditioner(ruge_stuben(W,
-                                        presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                          1))),
-                                        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                           1)))))
+    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+        1))),
+    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+        1)))))
 const preccache2 = Ref(prectmp2)
 function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
     if jok
@@ -418,10 +422,10 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
 
         # Build preconditioner on W
         preccache2[] = aspreconditioner(ruge_stuben(W,
-                                                    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                                      1))),
-                                                    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                                                                                                       1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+                1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
+                1)))))
     end
 end
 
@@ -430,6 +434,6 @@ function precamg(z, r, p, t, y, fy, gamma, delta, lr)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-             CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
-                       prec_side = 1), save_everystep = false);
+    CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
+        prec_side = 1), save_everystep = false);
 ```

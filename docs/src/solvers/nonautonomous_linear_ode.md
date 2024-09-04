@@ -63,16 +63,16 @@ Options:
       + :simple - uses simple Krylov approximations with fixed subspace size `m`.
       + :adaptive - uses adaptive Krylov approximations with internal timestepping.
 
-  - `m` - integer, default: `30`. Controls the size of Krylov subspace if
+  - `m` - integer, default: `10`. Controls the size of Krylov subspace if
     `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
   - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
     orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
-using DifferentialEquations
+using DifferentialEquations, SciMLOperators
 _A = [2 -1; -3 -5] / 5
-A = DiffEqArrayOperator(_A)
+A = MatrixOperator(_A)
 prob = ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
 sol = solve(prob, LinearExponential())
 ```

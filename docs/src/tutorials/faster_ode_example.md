@@ -13,7 +13,7 @@ list:
 
   - [The Julia Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips/)
   - [MIT 18.337 Course Notes on Optimizing Serial Code](https://mitmath.github.io/18337/lecture2/optimizing)
-  - [What scientists must know about hardware to write fast code](https://biojulia.net/post/hardware/)
+  - [What scientists must know about hardware to write fast code](https://viralinstruction.com/posts/hardware/)
 
 User-side optimizations are important because, for sufficiently difficult problems,
 most time will be spent inside your `f` function, the function you are
@@ -310,7 +310,7 @@ the Julia code for this.
 
 ```@example faster_ode2
 using ModelingToolkit
-de = modelingtoolkitize(prob)
+de = complete(modelingtoolkitize(prob))
 ```
 
 We can tell it to compute the Jacobian if we want to see the code:
@@ -397,7 +397,7 @@ using DifferentialEquations, LinearAlgebra, BenchmarkTools
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
 Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
-                       [1.0 for i in 1:(N - 1)]))
+    [1.0 for i in 1:(N - 1)]))
 Ay = copy(Ax)
 Ax[2, 1] = 2.0
 Ax[end - 1, end] = 2.0
@@ -663,7 +663,7 @@ r0[:, :, 1] .= uss .+ 0.1 .* rand.()
 r0[:, :, 2] .= vss
 
 prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
-de = modelingtoolkitize(prob)
+de = complete(modelingtoolkitize(prob))
 
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!

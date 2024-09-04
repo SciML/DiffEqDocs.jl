@@ -34,8 +34,8 @@ is very important, consider the `OwrenZen5` method. For fast solving at higher
 tolerances, we recommend `BS3` (or `OwrenZen3` if the interpolation error is
 important). For high accuracy but with the range of `Float64` (`~1e-8-1e-12`),
 we recommend `Vern6`, `Vern7`, or `Vern8` as efficient choices. For very small
-non-stiff ODEs, `SimpleATsit5()` (available in the `SimpleDiffEq` package)
-is a simplified implementation of `Tsit5`
+non-stiff ODEs, `SimpleATsit5()`, `GPUVern7()`, or `GPUVern9()`
+(available in the `SimpleDiffEq` package) is a simplified implementation of `Tsit5`
 that can cut out extra overhead and is recommended in those scenarios.
 
 For high accuracy non-stiff solving (`BigFloat` and tolerances like `<1e-12`),
@@ -107,17 +107,17 @@ library methods are as follows:
 
   - `ode23` --> `BS3()`
   - `ode45`/`dopri5` --> `DP5()`, though in most cases `Tsit5()` is more efficient
-  - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas4()` is more efficient
+  - `ode23s` --> `Rosenbrock23()`, though in most cases `Rodas5P()` is more efficient
   - `ode113` --> `VCABM()`, though in many cases `Vern7()` is more efficient
   - `dop853` --> `DP8()`, though in most cases `Vern7()` is more efficient
-  - `ode15s`/`vode` --> `QNDF()` or `FBDF()`, though in many cases `Rodas4()`,
+  - `ode15s`/`vode` --> `QNDF()` or `FBDF()`, though in many cases `Rodas5P()`,
     `KenCarp4()`, `TRBDF2()`, or `RadauIIA5()` are more efficient
   - `ode23t` --> `Trapezoid()`
   - `ode23tb` --> `TRBDF2()`
   - `lsoda` --> `lsoda()`, though `AutoTsit5(Rosenbrock23())` or `AutoVern7(Rodas5())`
     may be more efficient. Note that `lsoda()` requires the LSODA.jl extension, which
     can be added via `]add LSODA; using LSODA`.
-  - `ode15i` --> `IDA()` or `DFBDF()`, though in many cases `Rodas4()` can handle
+  - `ode15i` --> `IDA()` or `DFBDF()`, though in many cases `Rodas5P()` can handle
     the DAE and is significantly more efficient.
 
 ## Full List of Methods
@@ -416,7 +416,7 @@ To override, utilize the keyword arguments. For example:
 
 ```julia
 alg = ExtrapolationMidpointDeuflhard(max_order = 7, min_order = 4, init_order = 4,
-                                     sequence = :bulirsch, threading = false)
+    sequence = :bulirsch, threading = false)
 solve(prob, alg)
 ```
 
@@ -524,6 +524,9 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
   - `ROS3P` - 3rd order A-stable and stiffly stable Rosenbrock method. Keeps high
     accuracy on discretizations of nonlinear parabolic PDEs.
   - `Rodas3` - 3rd order A-stable and stiffly stable Rosenbrock method.
+  - `Rodas3P` - 3rd order A-stable and stiffly stable Rosenbrock method with a
+    stiff-aware 3rd order interpolant and additional error test for interpolation.
+    Keeps accuracy on discretizations of linear parabolic PDEs.
   - `RosShamp4`- An A-stable 4th order Rosenbrock method.
   - `Veldd4` - A 4th order D-stable Rosenbrock method.
   - `Velds4` - A 4th order A-stable Rosenbrock method.
@@ -547,6 +550,23 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     4th order interpolant.
   - `Rodas5P` - A 5th order A-stable stiffly stable Rosenbrock method with a stiff-aware
     4th order interpolant. Has improved stability in the adaptive time stepping embedding.
+  - `ROS2` - A 2nd order L-stable Rosenbrock-Wanner method with 2 internal stages.
+  - `ROS3` - A 3rd order L-stable Rosenbrock-Wanner method with 3 internal stages
+    with an embedded strongly A-stable 2nd order method.
+  - `ROS2PR` - A 2nd order stiffly accurate Rosenbrock-Wanner method with 3 internal stages with Rinf=0.
+    For problems with medium stiffness the convergence behaviour is very poor
+    and it is recommended to use `ROS2S` instead.
+  - `ROS3PR` - A 3nd order stiffly accurate Rosenbrock-Wanner method
+    with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
+  - `Scholz4_7` - A 3nd order stiffly accurate Rosenbrock-Wanner method
+    with 3 internal stages and B_PR consistent of order 3, which is strongly A-stable with Rinf~=-0.73.
+    Convergence with order 4 for the stiff case, but has a poor accuracy.
+  - `ROS3PRL` - A 3nd order stiffly accurate Rosenbrock-Wanner method with 4 internal stages
+    with B_PR consistent of order 2 with Rinf=0. The order of convergence decreases if medium stiff problems
+    are considered, but it has good results for very stiff cases.
+  - `ROS3PRL2` - A 3nd order stiffly accurate Rosenbrock-Wanner method with 4 internal stages
+    with B_PR consistent of order 3. The order of convergence does NOT decreases if
+    medium stiff problems are considered as it does for ROS3PRL.
 
 #### Rosenbrock-W Methods
 
@@ -557,11 +577,17 @@ to be thread safe. It parallelizes the `nlsolve` calls inside the method.
     stiff equations without oscillations at low tolerances. Note that this method
     is prone to instability in the presence of oscillations, so use with caution.
     2nd order stiff-aware interpolation.
+  - `Rodas23W` - An Order 2/3 L-Stable Rosenbrock-W method for stiff ODEs and DAEs
+    in mass matrix form. 2nd order stiff-aware interpolation and additional error
+    test for interpolation.
   - `RosenbrockW6S4OS` - A 4th order L-stable Rosenbrock-W method (fixed step only).
   - `ROS34PW1a` - A 4th order L-stable Rosenbrock-W method.
   - `ROS34PW1b` - A 4th order L-stable Rosenbrock-W method.
   - `ROS34PW2` - A 4th order stiffy accurate Rosenbrock-W method for PDAEs.
   - `ROS34PW3` - A 4th order strongly A-stable (Rinf~0.63) Rosenbrock-W method.
+  - `ROS34PRw` - A 3nd order stiffly accurate Rosenbrock-Wanner W-method with 4 internal stages with B_PR consistent of order 2
+  - `ROS2S` - A 2nd order stiffly accurate Rosenbrock-Wanner W-method
+    with 3 internal stages with B_PR consistent of order 2 with Rinf=0.
 
 #### Stabilized Explicit Methods
 
@@ -619,7 +645,7 @@ To override, utilize the keyword arguments. For example:
 
 ```julia
 alg = ImplicitDeuflhardExtrapolation(max_order = 7, min_order = 4, init_order = 4,
-                                     sequence = :bulirsch)
+    sequence = :bulirsch)
 solve(prob, alg)
 ```
 
@@ -802,9 +828,9 @@ following options:
 
 ```julia
 AutoSwitch(nonstiffalg::nAlg, stiffalg::sAlg;
-           maxstiffstep = 10, maxnonstiffstep = 3,
-           nonstifftol::T = 9 // 10, stifftol::T = 9 // 10,
-           dtfac = 2.0, stiffalgfirst = false)
+    maxstiffstep = 10, maxnonstiffstep = 3,
+    nonstifftol::T = 9 // 10, stifftol::T = 9 // 10,
+    dtfac = 2.0, stiffalgfirst = false)
 ```
 
 The `nonstiffalg` must have an appropriate stiffness estimate built into the
@@ -943,10 +969,19 @@ limitations compared to OrdinaryDiffEq.jl and are not generally faster.
     form. Not compatible with events.
   - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator
     interface. Only allows `solve`.
+  - `SimpleEuler` - A fixed timestep bare-bones Euler implementation with integrators.
+  - `LoopEuler` - A fixed timestep bare-bones Euler. Not compatible with events or
+    the integrator interface.
+  - `GPUEuler` - A fully static Euler for specialized compilation to accelerators
+    like GPUs and TPUs.
   - `SimpleRK4` - A fixed timestep bare-bones RK4 implementation with integrators.
   - `LoopRK4` - A fixed timestep bare-bones RK4. Not compatible with events or
     the integrator interface.
   - `GPURK4` - A fully static RK4 for specialized compilation to accelerators
+    like GPUs and TPUs.
+  - `GPUVern7` - A fully static Vern7 for specialized compilation to accelerators
+    like GPUs and TPUs.
+  - `GPUVern9` - A fully static Vern9 for specialized compilation to accelerators
     like GPUs and TPUs.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
