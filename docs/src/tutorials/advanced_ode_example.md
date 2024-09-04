@@ -11,7 +11,7 @@ equations (PDEs). For example, we will use the stiff Brusselator partial
 differential equation (BRUSS).
 
 !!! note
-    
+
     This tutorial is for advanced users to dive into advanced features!
     DifferentialEquations.jl automates most of this usage, so we recommend
     users try `solve(prob)` with the automatic algorithm first!
@@ -19,7 +19,7 @@ differential equation (BRUSS).
 ## Definition of the Brusselator Equation
 
 !!! note
-    
+
     Feel free to skip this section: it simply defines the example problem.
 
 The Brusselator PDE is defined on a unit square periodic domain as follows:
@@ -208,7 +208,7 @@ information on linear solver choices, see the
 valid [LinearSolve.jl](https://linearsolve.sciml.ai/dev/) solver.
 
 !!! note
-    
+
     Switching to a Krylov linear solver will automatically change the ODE solver
     into Jacobian-free mode, dramatically reducing the memory required. This can
     be overridden by adding `concrete_jac=true` to the algorithm.
@@ -340,7 +340,7 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 ```@example stiff1
 using ModelingToolkit
 prob_ode_brusselator_2d_mtk = ODEProblem(
-    modelingtoolkitize(prob_ode_brusselator_2d_sparse),
+    complete(modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
     [], (0.0, 11.5), jac = true, sparse = true);
 # @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide
