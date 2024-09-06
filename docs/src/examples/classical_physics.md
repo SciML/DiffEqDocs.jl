@@ -148,7 +148,7 @@ So now we know that behaviour of the position versus time. However, it will be u
 
 ```@example physics
 p = plot(sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
-         xaxis = "Angular position", yaxis = "Angular velocity", leg = false)
+    xaxis = "Angular position", yaxis = "Angular velocity", leg = false)
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODEProblem(prob.f, u0, (0.0, tspan))
     sol = solve(_prob, Vern9()) # Use Vern9 solver for higher accuracy
