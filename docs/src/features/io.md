@@ -81,6 +81,12 @@ work. If none of these are put into scope, the solution type
 will still load and hold all of the values (so `sol.u` and `sol.t`
 will work), but none of the interface will be available.
 
+If you want a copy of the solution that contains no function information 
+you can use the function `SciMLBase.strip_solution(sol)`.
+This will return a copy of the solution that doesn't have any functions, 
+which you can serialize and deserialize without having any of the problems
+that typically come with serializing functions. 
+
 ## JLD
 
 Don't use JLD. It's dead. Julia types can be saved via JLD.jl.
