@@ -24,11 +24,12 @@ step!(integrator)
 which will take one successful step. Additionally:
 
 ```julia
-step!(integrator, dt, stop_at_tdt = false)
+step!(integrator, dt, false)
 ```
 
-passing a `dt` will make the integrator continue to step until `integrator.t+dt`, and
-setting `stop_at_tdt=true` will add a `tstop` to force it to step to `integrator.t+dt`
+passing a `dt` will make the integrator continue to step until at least `integrator.t+dt`, and
+passing `true` as the third argument will add a `tstop` to force it to step up to `integrator.t+dt`,
+exactly.
 
 To check whether the integration step was successful, you can
 call `check_error(integrator)` which returns one of the
