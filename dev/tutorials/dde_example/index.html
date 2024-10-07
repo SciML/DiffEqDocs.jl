@@ -40,46 +40,46 @@ Interpolation: specialized 4th order &quot;free&quot; interpolation
 t: 40-element Vector{Float64}:
   0.0
   0.05836370738671701
-  0.12916108569539597
-  0.21568702493539388
-  0.31476012203954973
-  0.42647876001237145
-  0.5486009950019299
-  0.6801498148290146
-  0.8195261166349427
-  0.9657507075079192
+  0.12916108716230104
+  0.21568702511913448
+  0.314760119628182
+  0.4264787587173874
+  0.5486009987808395
+  0.6801498272932349
+  0.8195261222856575
+  0.9657507155327404
   ⋮
-  5.637340314503988
+  5.637340375533149
   6.0
-  6.465321265034228
-  6.9807287937908855
-  7.578753298968584
-  8.241987232937237
-  8.98383276855844
-  9.794183131169206
+  6.465321316430051
+  6.980728829999052
+  7.578753430802856
+  8.24198735151423
+  8.983832887449289
+  9.794183221875112
  10.0
 u: 40-element Vector{Vector{Float64}}:
  [1.0, 1.0, 1.0]
  [0.7447276972023368, 0.9674847415959038, 0.9739922644849844]
- [0.5208656901491229, 0.9216176741982295, 0.9429345997713768]
- [0.3364796174978647, 0.860710765286255, 0.9053954304799672]
- [0.20402080446565843, 0.7893156306081849, 0.8627636946755286]
- [0.11605349292143445, 0.710940127223295, 0.8151154583589272]
- [0.0626366102079987, 0.6308046470869513, 0.7637408792490028]
- [0.032235100742968224, 0.5524928215361826, 0.7096033440842165]
- [0.015946634322456195, 0.47891242866857714, 0.6540674077278538]
- [0.007620742290428361, 0.4115815716883941, 0.598282219740215]
+ [0.5208656862906424, 0.9216176731989374, 0.9429345991317408]
+ [0.3364796171856176, 0.8607107651542081, 0.9053954304005898]
+ [0.2040208069499486, 0.7893156323361196, 0.8627636957091346]
+ [0.1160534936803686, 0.7109401281073281, 0.8151154589081274]
+ [0.06263660901296746, 0.6308046447141534, 0.7637408776739649]
+ [0.03223509871453403, 0.5524928145263729, 0.7096033390270903]
+ [0.015946633867446297, 0.47891242587662397, 0.6540674055203148]
+ [0.007620741981671972, 0.41158156825400705, 0.598282216755686]
  ⋮
- [1.9479598719209543e-12, 0.0025766300373552577, 0.019737459847233334]
- [3.329618915266748e-13, 0.0017291226374284339, 0.014435113877197188]
- [5.5064416255271054e-14, 0.0010364504244003902, 0.009606890211128623]
- [1.1838460929003351e-14, 0.0005879461631044241, 0.00607973255265001]
- [5.109127121132772e-15, 0.000304552063570238, 0.003549648850830777]
- [4.075064652637669e-15, 0.00014683986919108042, 0.0019394744851742]
- [6.623872359855267e-15, 6.493848650511525e-5, 0.0009786579729539708]
- [1.9122800413086536e-14, 2.6637039533048035e-5, 0.0004599558275824237]
- [6.699834916632785e-15, 2.124038225678225e-5, 0.00037925443873156473]</code></pre><p>Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:</p><pre><code class="language-julia hljs">using Plots
-plot(sol)</code></pre><img src="7a2f3b7c.svg" alt="Example block output"/><h4 id="Speeding-Up-Interpolations-with-Idxs"><a class="docs-heading-anchor" href="#Speeding-Up-Interpolations-with-Idxs">Speeding Up Interpolations with Idxs</a><a id="Speeding-Up-Interpolations-with-Idxs-1"></a><a class="docs-heading-anchor-permalink" href="#Speeding-Up-Interpolations-with-Idxs" title="Permalink"></a></h4><p>We can speed up the previous problem in two different ways. First of all, if we need to interpolate multiple values from a previous time, we can use the in-place form for the history function <code>h(out, p, t)</code> which writes the output to <code>out</code>. In this case, we must supply the history initial conditions as in-place as well. For the previous example, that&#39;s simply</p><pre><code class="language-julia hljs">h(out, p, t) = (out .= 1.0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">h (generic function with 2 methods)</code></pre><p>and then our DDE is:</p><pre><code class="language-julia hljs">const out = zeros(3) # Define a cache variable
+ [1.9479585196399e-12, 0.0025766298644058472, 0.019737458815299546]
+ [3.329617258475953e-13, 0.0017291226374219404, 0.014435113877204454]
+ [5.506439845491122e-14, 0.0010364503658065428, 0.009606889775939948]
+ [1.183845586506672e-14, 0.0005879461396862224, 0.006079732355926395]
+ [5.109129495489439e-15, 0.0003045520194135552, 0.003549648427028836]
+ [4.075066041243346e-15, 0.00014683985004098563, 0.001939474274352433]
+ [6.623874635098052e-15, 6.49384780137677e-5, 0.0009786578650955052]
+ [1.912280263738461e-14, 2.6637036874089532e-5, 0.000459955788516492]
+ [6.699838775403731e-15, 2.124038225581771e-5, 0.00037925443872892313]</code></pre><p>Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:</p><pre><code class="language-julia hljs">using Plots
+plot(sol)</code></pre><img src="cb682efd.svg" alt="Example block output"/><h4 id="Speeding-Up-Interpolations-with-Idxs"><a class="docs-heading-anchor" href="#Speeding-Up-Interpolations-with-Idxs">Speeding Up Interpolations with Idxs</a><a id="Speeding-Up-Interpolations-with-Idxs-1"></a><a class="docs-heading-anchor-permalink" href="#Speeding-Up-Interpolations-with-Idxs" title="Permalink"></a></h4><p>We can speed up the previous problem in two different ways. First of all, if we need to interpolate multiple values from a previous time, we can use the in-place form for the history function <code>h(out, p, t)</code> which writes the output to <code>out</code>. In this case, we must supply the history initial conditions as in-place as well. For the previous example, that&#39;s simply</p><pre><code class="language-julia hljs">h(out, p, t) = (out .= 1.0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">h (generic function with 2 methods)</code></pre><p>and then our DDE is:</p><pre><code class="language-julia hljs">const out = zeros(3) # Define a cache variable
 function bc_model(du, u, h, p, t)
     h(out, p, t - tau) # updates out to be the correct history function
     du[1] = (v0 / (1 + beta0 * (out[3]^2))) * (p0 - q0) * u[1] - d0 * u[1]
@@ -99,87 +99,87 @@ Interpolation: 3rd order Hermite
 t: 56-element Vector{Float64}:
   0.0
   0.028686567733943524
-  0.05496370797935472
-  0.09262168203274358
-  0.1328816015643946
-  0.1804089117440632
-  0.23156096928227454
-  0.28745950203007636
-  0.34649352838806813
-  0.40865997317696995
+  0.05496370739439499
+  0.09262168098439919
+  0.13288159974251465
+  0.1804089094084776
+  0.23156096482005833
+  0.2874595005680063
+  0.3464935321366882
+  0.4086599803961283
   ⋮
-  6.709304549678902
-  7.077771808058965
-  7.457378129664066
-  7.849229500378771
-  8.253885262007339
-  8.671507191596193
-  9.102489930712723
-  9.548109990519311
+  6.7093049308346755
+  7.07777221058625
+  7.457378543067793
+  7.849229962235385
+  8.25388572080611
+  8.67150768172502
+  9.102490449787183
+  9.548110530044545
  10.0
 u: 56-element Vector{Vector{Float64}}:
  [1.0, 1.0, 1.0]
  [0.8651377233256287, 0.9847919107281841, 0.9871577813957303]
- [0.7576257549925667, 0.9695375729958094, 0.9754952861529256]
- [0.6264188253434527, 0.9459514608421642, 0.9589125735972589]
- [0.511173996718998, 0.9190777328442522, 0.9413127662016809]
- [0.4021017755857873, 0.8859139628064613, 0.9206598661690842]
- [0.31056686797828226, 0.8492819001921053, 0.8985424920191215]
- [0.23418948608094928, 0.8089369051538083, 0.8744786633816477]
- [0.17382236795861314, 0.766681887677747, 0.8491794697919689]
- [0.1269922932046665, 0.7231641434076941, 0.8226801184713568]
+ [0.7576257572305956, 0.9695375733475622, 0.9754952864116233]
+ [0.6264188286596774, 0.9459514615222618, 0.9589125740571018]
+ [0.5111740014217758, 0.9190777340902481, 0.9413127669956879]
+ [0.40210178032806015, 0.8859139644625716, 0.920659867181337]
+ [0.31056687497554564, 0.8492819034092214, 0.8985424939442697]
+ [0.2341894878104844, 0.8089369062072906, 0.8744786640097065]
+ [0.1738223646703943, 0.7666818850181075, 0.8491794681894558]
+ [0.12699228857787634, 0.723164138429855, 0.8226801154036958]
  ⋮
- [7.633678240249587e-14, 0.0007930624927795012, 0.007743143315919018]
- [2.290654525439246e-14, 0.00052886086662893, 0.005575060518185558]
- [7.192689065388156e-15, 0.000348386861669049, 0.00396242735079288]
- [2.3938297589461707e-15, 0.00022643491366957353, 0.0027774610777958984]
- [8.537747837490129e-16, 0.00014511825271079198, 0.001919152324510346]
- [3.290737503207264e-16, 9.169024318664183e-5, 0.0013070717660449717]
- [1.3830954331558912e-16, 5.7090180277528864e-5, 0.0008771566981009424]
- [6.431419123095559e-17, 3.498102566610629e-5, 0.0005793516695673948]
- [3.127939839039937e-17, 2.128729410362161e-5, 0.00037958433259645345]</code></pre><p>Note that this method can solve problems with state-dependent delays.</p><h3 id="State-Dependent-Delay-Discontinuity-Tracking"><a class="docs-heading-anchor" href="#State-Dependent-Delay-Discontinuity-Tracking">State-Dependent Delay Discontinuity Tracking</a><a id="State-Dependent-Delay-Discontinuity-Tracking-1"></a><a class="docs-heading-anchor-permalink" href="#State-Dependent-Delay-Discontinuity-Tracking" title="Permalink"></a></h3><p>State-dependent delays are problems where the delay is allowed to be a function of the current state. They can be more efficiently solved with discontinuity tracking. To do this, in DifferentialEquations.jl, requires passing lag functions <code>g(u,p,t)</code> as keyword <code>dependent_lags</code> to the <code>DDEProblem</code> definition. Other than that, everything else is the same, and one solves that problem using the common interface.</p><p>We can solve the above problem with dependent delay tracking by declaring the dependent lags and solving with a <code>MethodOfSteps</code> algorithm:</p><pre><code class="language-julia hljs">prob = DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -&gt; tau,))
+ [7.633676185615979e-14, 0.0007930621605245319, 0.007743140697365638]
+ [2.2906540915518255e-14, 0.0005288606326468088, 0.0055750585085787546]
+ [7.192688047749808e-15, 0.0003483867033721152, 0.003962425871453464]
+ [2.3938300099552267e-15, 0.0002264347987418421, 0.0027774599103777805]
+ [8.537748583730977e-16, 0.00014511817954229568, 0.0019191515174950037]
+ [3.2907384347373503e-16, 9.169019380580966e-5, 0.0013070711750696115]
+ [1.3830960929511378e-16, 5.709014771932508e-5, 0.0008771562755794093]
+ [6.43142312383534e-17, 3.4981004932784286e-5, 0.0005793513779037975]
+ [3.1279295903750796e-17, 2.1287294067319118e-5, 0.00037958433237791136]</code></pre><p>Note that this method can solve problems with state-dependent delays.</p><h3 id="State-Dependent-Delay-Discontinuity-Tracking"><a class="docs-heading-anchor" href="#State-Dependent-Delay-Discontinuity-Tracking">State-Dependent Delay Discontinuity Tracking</a><a id="State-Dependent-Delay-Discontinuity-Tracking-1"></a><a class="docs-heading-anchor-permalink" href="#State-Dependent-Delay-Discontinuity-Tracking" title="Permalink"></a></h3><p>State-dependent delays are problems where the delay is allowed to be a function of the current state. They can be more efficiently solved with discontinuity tracking. To do this, in DifferentialEquations.jl, requires passing lag functions <code>g(u,p,t)</code> as keyword <code>dependent_lags</code> to the <code>DDEProblem</code> definition. Other than that, everything else is the same, and one solves that problem using the common interface.</p><p>We can solve the above problem with dependent delay tracking by declaring the dependent lags and solving with a <code>MethodOfSteps</code> algorithm:</p><pre><code class="language-julia hljs">prob = DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -&gt; tau,))
 alg = MethodOfSteps(Tsit5())
 sol = solve(prob, alg)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">retcode: Success
 Interpolation: specialized 4th order &quot;free&quot; interpolation
 t: 31-element Vector{Float64}:
   0.0
   0.05836370738671701
-  0.12916108569539597
-  0.21568702493539388
-  0.31476012203954973
-  0.42647876001237145
-  0.5486009950019299
-  0.6801498148290146
-  0.8195261166349427
-  0.9657507075079192
+  0.12916108716230104
+  0.21568702511913448
+  0.314760119628182
+  0.4264787587173874
+  0.5486009987808395
+  0.6801498272932349
+  0.8195261222856575
+  0.9657507155327404
   ⋮
-  4.70131900781237
-  5.319727380784704
-  5.975944439730393
-  6.672902478790312
-  7.412222703550066
-  8.203867606081308
-  9.055215255977002
-  9.965347765311543
+  4.701318960444954
+  5.319727376056641
+  5.975944408683879
+  6.672902485279905
+  7.412222694364806
+  8.2038677046622
+  9.055215419712582
+  9.965347976947953
  10.0
 u: 31-element Vector{Vector{Float64}}:
  [1.0, 1.0, 1.0]
  [0.7447276972023368, 0.9674847415959038, 0.9739922644849844]
- [0.5208656901491229, 0.9216176741982295, 0.9429345997713768]
- [0.3364796174978647, 0.860710765286255, 0.9053954304799672]
- [0.20402080446565843, 0.7893156306081849, 0.8627636946755286]
- [0.11605349292143445, 0.710940127223295, 0.8151154583589272]
- [0.0626366102079987, 0.6308046470869513, 0.7637408792490028]
- [0.032235100742968224, 0.5524928215361826, 0.7096033440842165]
- [0.015946634322456195, 0.47891242866857714, 0.6540674077278538]
- [0.007620742290428361, 0.4115815716883941, 0.598282219740215]
+ [0.5208656862906424, 0.9216176731989374, 0.9429345991317408]
+ [0.3364796171856176, 0.8607107651542081, 0.9053954304005898]
+ [0.2040208069499486, 0.7893156323361196, 0.8627636957091346]
+ [0.1160534936803686, 0.7109401281073281, 0.8151154589081274]
+ [0.06263660901296746, 0.6308046447141534, 0.7637408776739649]
+ [0.03223509871453403, 0.5524928145263729, 0.7096033390270903]
+ [0.015946633867446297, 0.47891242587662397, 0.6540674055203148]
+ [0.007620741981671972, 0.41158156825400705, 0.598282216755686]
  ⋮
- [1.637789748146157e-9, 0.00721151828428687, 0.043270644077427645]
- [8.555301578116396e-10, 0.0036540032665950705, 0.025862653910404817]
- [6.3879197655599e-10, 0.0017756654863386098, 0.014739430025735502]
- [6.957421403133184e-10, 0.0008250177664494771, 0.007996169982628913]
- [1.1062342089489495e-9, 0.0003658747495832693, 0.004126394925649491]
- [2.742161900458761e-9, 0.0001531915519910318, 0.0020084764604955643]
- [1.0932031990745032e-8, 6.007074691623037e-5, 0.0009160350421131339]
- [6.748471780531377e-8, 2.2069323013970137e-5, 0.00039185666579901965]
- [5.65528035943939e-8, 2.1246239705310007e-5, 0.000379321742343397]</code></pre><p>Here, we treated the single lag <code>t-tau</code> as a state-dependent delay. Of course, you can then replace that tuple of functions with whatever functions match your lags.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../rode_example/">« Random Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../dae_example/">Differential Algebraic Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Monday 23 September 2024 11:35">Monday 23 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ [1.6377894852907156e-9, 0.007211518659676409, 0.043270645754943715]
+ [8.555303649406559e-10, 0.0036540032856269434, 0.025862654013743092]
+ [6.387919733961433e-10, 0.0017756655469628245, 0.01473943042282548]
+ [6.957423749031111e-10, 0.0008250177605817439, 0.007996169936622296]
+ [1.1062344304712908e-9, 0.00036587475328225507, 0.004126394959863599]
+ [2.7421648834392112e-9, 0.0001531915354119481, 0.002008476279135364]
+ [1.0932049359081306e-8, 6.007073611751278e-5, 0.0009160349029904492]
+ [6.748484828512806e-8, 2.206931785093837e-5, 0.0003918565880625686]
+ [5.655297397782597e-8, 2.1246239672805988e-5, 0.0003793217423970312]</code></pre><p>Here, we treated the single lag <code>t-tau</code> as a state-dependent delay. Of course, you can then replace that tuple of functions with whatever functions match your lags.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../rode_example/">« Random Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../dae_example/">Differential Algebraic Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Monday 7 October 2024 16:40">Monday 7 October 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

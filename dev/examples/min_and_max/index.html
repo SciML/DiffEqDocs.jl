@@ -29,64 +29,64 @@ Interpolation: specialized 4th order &quot;free&quot; interpolation
 t: 193-element Vector{Float64}:
    0.0
    0.08332584852065579
-   0.24175300587841853
-   0.4389533535703127
-   0.6797301355043014
-   0.9647629844957191
-   1.3179426427778789
-   1.7031226589934565
-   2.0678504564408504
-   2.4717900471019023
+   0.24175300745938438
+   0.4389533584376291
+   0.6797301452523561
+   0.964762990756671
+   1.3179426345818903
+   1.7031226293414234
+   2.067850440442258
+   2.471790033442068
    ⋮
-  95.8457265154543
-  96.35778609875159
-  96.92912892765023
-  97.44679036707718
-  97.96248017978454
-  98.5118292417693
-  99.06082273312332
-  99.58284082787185
+  95.84572751485327
+  96.35778725202667
+  96.9291302913926
+  97.44679130983907
+  97.96248135692701
+  98.51183049955068
+  99.0608234876853
+  99.58284175370028
  100.0
 u: 193-element Vector{Vector{Float64}}:
  [0.01, 0.01, 0.01, 0.01]
  [0.009170687380405334, 0.006669000455384281, 0.012420525490765841, 0.008266408515192909]
- [0.007673275265972504, 0.00037461737897660443, 0.016442590227730397, 0.004636827483318277]
- [0.00612597441923929, -0.007305450189721187, 0.019967371084231893, -0.00033649798308968556]
- [0.004966110662711129, -0.016308516533738052, 0.021440659476204722, -0.0067050370984004706]
- [0.0047955683664552265, -0.026238104231339165, 0.018824324827053686, -0.013913365084526933]
- [0.006054680216573235, -0.03712455410888036, 0.010055700343225196, -0.02103812875155613]
- [0.007900784624609717, -0.04667607081473081, -0.0026735836995593456, -0.02518303657189279]
- [0.008276510353924278, -0.052784334378941075, -0.012731547682294859, -0.02525804011008267]
- [0.005523496102562298, -0.05525250412790727, -0.016843881819771457, -0.021898962485296488]
+ [0.007673275251908229, 0.00037461731659180626, 0.016442590263187704, 0.004636827445198725]
+ [0.006125974386969531, -0.00730545037634504, 0.019967371147127152, -0.00033649811007591606]
+ [0.004966110634454907, -0.016308516887941955, 0.021440659467349597, -0.006705037355788195]
+ [0.004795568376382594, -0.026238104439258024, 0.01882432472008982, -0.013913365232392866]
+ [0.0060546801759868134, -0.037124553877602676, 0.010055700596830796, -0.02103812861952017]
+ [0.007900784515124328, -0.046676070191193235, -0.0026735827338297265, -0.02518303641688081]
+ [0.008276510390197665, -0.052784334185385265, -0.012731547350727448, -0.025258040181386776]
+ [0.005523496259016676, -0.05525250413162683, -0.016843881833516653, -0.02189896263998639]
  ⋮
- [-0.014886778911438246, 0.042332620369772894, 0.013628258608953175, 0.018029076762559125]
- [-0.008190351596162148, 0.054422605450369234, 0.00944811277121419, 0.017740074304871633]
- [0.004124588963417958, 0.05674882926735976, -0.005154041839395091, 0.01759697731920931]
- [0.013079674415302153, 0.04807713954653318, -0.013770643022910718, 0.01828664595114757]
- [0.01531605221618201, 0.031631130205698375, -0.008957094529053794, 0.017118433263410206]
- [0.0111155405283548, 0.009929208333814244, 0.007297331934230866, 0.010353457826205769]
- [0.005713897643562418, -0.011787329261525656, 0.020508032523607993, -0.002310390783308045]
- [0.0042114355418556605, -0.029911103571309838, 0.01875050255817474, -0.015650642104010543]
- [0.005741239574253372, -0.041653859884274974, 0.0074132702648349305, -0.023348978443051824]</code></pre><p>In time, the solution looks like:</p><pre><code class="language-julia hljs">using Plots;
+ [-0.014886772678742981, 0.04233265138937294, 0.01362826417877648, 0.01802907800298128]
+ [-0.008190329756021365, 0.05442262290581612, 0.009448089553574289, 0.017740072819351936]
+ [0.004124618400934384, 0.05674881943069961, -0.0051540767334029, 0.01759697869976223]
+ [0.01307968530383876, 0.048077115531537845, -0.01377064757661266, 0.018286646614435426]
+ [0.015316049163607244, 0.031631086647704046, -0.008957068278558522, 0.017118425813261014]
+ [0.011115526939324764, 0.009929157201689038, 0.007297372148518435, 0.010353434698455214]
+ [0.005713892197924783, -0.011787357667090829, 0.020508041686825178, -0.002310410571356933]
+ [0.004211436807344068, -0.029911132614685865, 0.018750485544995192, -0.015650663390414776]
+ [0.005741239585228796, -0.04165385987261451, 0.007413270237967241, -0.023348978472272797]</code></pre><p>In time, the solution looks like:</p><pre><code class="language-julia hljs">using Plots;
 gr();
-plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)</code></pre><img src="4b515aa4.svg" alt="Example block output"/><p>while it has the well-known phase-space plot:</p><pre><code class="language-julia hljs">plot(sol, vars = (3, 4), leg = false)</code></pre><img src="258e5024.svg" alt="Example block output"/><h3 id="Local-Optimization"><a class="docs-heading-anchor" href="#Local-Optimization">Local Optimization</a><a id="Local-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Local-Optimization" title="Permalink"></a></h3><p>Let&#39;s find out what some of the local maxima and minima are. Optim.jl can be used to minimize functions, and the solution type has a continuous interpolation which can be used. Let&#39;s look for the local optima for the 4th variable around <code>t=20</code>. Thus, our optimization function is:</p><pre><code class="language-julia hljs">f(t, _) = sol(first(t), idxs = 4)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">f (generic function with 1 method)</code></pre><p><code>first(t)</code> is the same as <code>t[1]</code> which transforms the array of size 1 into a number. <code>idxs=4</code> is the same as <code>sol(first(t))[4]</code> but does the calculation without a temporary array and thus is faster. To find a local minimum, we can solve the optimization problem where the loss function is <code>f</code>:</p><pre><code class="language-julia hljs">using Optimization, OptimizationNLopt, ForwardDiff
+plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)</code></pre><img src="d12c851e.svg" alt="Example block output"/><p>while it has the well-known phase-space plot:</p><pre><code class="language-julia hljs">plot(sol, vars = (3, 4), leg = false)</code></pre><img src="4d57fe0c.svg" alt="Example block output"/><h3 id="Local-Optimization"><a class="docs-heading-anchor" href="#Local-Optimization">Local Optimization</a><a id="Local-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Local-Optimization" title="Permalink"></a></h3><p>Let&#39;s find out what some of the local maxima and minima are. Optim.jl can be used to minimize functions, and the solution type has a continuous interpolation which can be used. Let&#39;s look for the local optima for the 4th variable around <code>t=20</code>. Thus, our optimization function is:</p><pre><code class="language-julia hljs">f(t, _) = sol(first(t), idxs = 4)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">f (generic function with 1 method)</code></pre><p><code>first(t)</code> is the same as <code>t[1]</code> which transforms the array of size 1 into a number. <code>idxs=4</code> is the same as <code>sol(first(t))[4]</code> but does the calculation without a temporary array and thus is faster. To find a local minimum, we can solve the optimization problem where the loss function is <code>f</code>:</p><pre><code class="language-julia hljs">using Optimization, OptimizationNLopt, ForwardDiff
 optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
 min_guess = 18.0
 optprob = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
 opt = solve(optprob, NLopt.LD_LBFGS())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">retcode: Success
 u: 1-element Vector{Float64}:
- 18.632127451895908</code></pre><p>From this printout, we see that the minimum is at <code>t=18.63</code> and the value is <code>-2.79e-2</code>. We can get these in code-form via:</p><pre><code class="language-julia hljs">println(opt.u)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[18.632127451895908]</code></pre><p>To get the maximum, we just minimize the negative of the function:</p><pre><code class="language-julia hljs">fminus(t, _) = -sol(first(t), idxs = 4)
+ 18.63212745038073</code></pre><p>From this printout, we see that the minimum is at <code>t=18.63</code> and the value is <code>-2.79e-2</code>. We can get these in code-form via:</p><pre><code class="language-julia hljs">println(opt.u)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">[18.63212745038073]</code></pre><p>To get the maximum, we just minimize the negative of the function:</p><pre><code class="language-julia hljs">fminus(t, _) = -sol(first(t), idxs = 4)
 
 optf = OptimizationFunction(fminus, Optimization.AutoForwardDiff())
 min_guess = 22.0
 optprob2 = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
 opt2 = solve(optprob2, NLopt.LD_LBFGS())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">retcode: Success
 u: 1-element Vector{Float64}:
- 23.297606513035003</code></pre><p>Let&#39;s add the maxima and minima to the plots:</p><pre><code class="language-julia hljs">plot(sol, vars = (0, 4), plotdensity = 10000)
+ 23.29760651436087</code></pre><p>Let&#39;s add the maxima and minima to the plots:</p><pre><code class="language-julia hljs">plot(sol, vars = (0, 4), plotdensity = 10000)
 scatter!([opt.u], [opt.minimum], label = &quot;Local Min&quot;)
-scatter!([opt2.u], [-opt2.minimum], label = &quot;Local Max&quot;)</code></pre><img src="73ccc74d.svg" alt="Example block output"/><h3 id="Global-Optimization"><a class="docs-heading-anchor" href="#Global-Optimization">Global Optimization</a><a id="Global-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Global-Optimization" title="Permalink"></a></h3><p>If we instead want to find global maxima and minima, we need to look somewhere else. There are many choices for this. A pure Julia option are the <a href="https://docs.sciml.ai/Optimization/stable/optimization_packages/blackboxoptim/">BlackBoxOptim solvers within Optimization.jl</a>, but I will continue the story with the  OptimizationNLopt methods. To do this, we simply swap out to one of the <a href="https://docs.sciml.ai/Optimization/stable/optimization_packages/nlopt/">global optimizers in the list</a>. Let&#39;s try <code>GN_ORIG_DIRECT_L</code>:</p><pre><code class="language-julia hljs">gopt = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
+scatter!([opt2.u], [-opt2.minimum], label = &quot;Local Max&quot;)</code></pre><img src="f6fee826.svg" alt="Example block output"/><h3 id="Global-Optimization"><a class="docs-heading-anchor" href="#Global-Optimization">Global Optimization</a><a id="Global-Optimization-1"></a><a class="docs-heading-anchor-permalink" href="#Global-Optimization" title="Permalink"></a></h3><p>If we instead want to find global maxima and minima, we need to look somewhere else. There are many choices for this. A pure Julia option are the <a href="https://docs.sciml.ai/Optimization/stable/optimization_packages/blackboxoptim/">BlackBoxOptim solvers within Optimization.jl</a>, but I will continue the story with the  OptimizationNLopt methods. To do this, we simply swap out to one of the <a href="https://docs.sciml.ai/Optimization/stable/optimization_packages/nlopt/">global optimizers in the list</a>. Let&#39;s try <code>GN_ORIG_DIRECT_L</code>:</p><pre><code class="language-julia hljs">gopt = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
 gopt2 = solve(optprob2, NLopt.GN_ORIG_DIRECT_L())
 
-@show gopt.u, gopt2.u</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([76.29050923810225], [47.460303383855695])</code></pre><pre><code class="language-julia hljs">plot(sol, vars = (0, 4), plotdensity = 10000)
+@show gopt.u, gopt2.u</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">([76.29050925238306], [47.460303383501625])</code></pre><pre><code class="language-julia hljs">plot(sol, vars = (0, 4), plotdensity = 10000)
 scatter!([gopt.u], [gopt.minimum], label = &quot;Global Min&quot;)
-scatter!([gopt2.u], [-gopt2.minimum], label = &quot;Global Max&quot;)</code></pre><img src="e058d618.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../outer_solar_system/">« Simulating the Outer Solar System</a><a class="docs-footer-nextpage" href="../spiking_neural_systems/">Spiking Neural Systems »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Monday 23 September 2024 11:35">Monday 23 September 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+scatter!([gopt2.u], [-gopt2.minimum], label = &quot;Global Max&quot;)</code></pre><img src="cc4913b3.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../outer_solar_system/">« Simulating the Outer Solar System</a><a class="docs-footer-nextpage" href="../spiking_neural_systems/">Spiking Neural Systems »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Monday 7 October 2024 16:40">Monday 7 October 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
