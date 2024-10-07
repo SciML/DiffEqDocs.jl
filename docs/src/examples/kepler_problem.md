@@ -10,7 +10,7 @@ Also, we know that
 $${\displaystyle {\frac {\mathrm {d} {\boldsymbol {p}}}{\mathrm {d} t}}=-{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {q}}}}\quad ,\quad {\frac {\mathrm {d} {\boldsymbol {q}}}{\mathrm {d} t}}=+{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {p}}}}}$$
 
 ```@example kepler
-using OrdinaryDiffEq, LinearAlgebra, ForwardDiff, Plots
+using OrdinaryDiffEq, LinearAlgebra, ForwardDiff, NonlinearSolve, Plots
 H(q, p) = norm(p)^2 / 2 - inv(norm(q))
 L(q, p) = q[1] * p[2] - p[1] * q[2]
 
@@ -25,6 +25,9 @@ tspan = (0, 20.0)
 prob = DynamicalODEProblem(pdot, qdot, initial_velocity, initial_position, tspan)
 sol = solve(prob, KahanLi6(), dt = 1 // 10);
 ```
+
+!!! note
+    Note that NonlinearSolve.jl is required to be imported for ManifoldProjection
 
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
 
