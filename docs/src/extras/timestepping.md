@@ -190,9 +190,9 @@ end
 
 function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator,
         controller::CustomController, alg)
-    integrator.q11 = DiffEqBase.value(DiffEqBase.fastpow(integrator.EEst, controller.beta1))
+    integrator.q11 = DiffEqBase.value(FastPower.fastpower(integrator.EEst, controller.beta1))
     integrator.q = DiffEqBase.value(integrator.q11 /
-                                    DiffEqBase.fastpow(integrator.qold, controller.beta2))
+                                    FastPower.fastpower(integrator.qold, controller.beta2))
     integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax),
         min(inv(integrator.opts.qmin),
             integrator.q / integrator.opts.gamma)))
