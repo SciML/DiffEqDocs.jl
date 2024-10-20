@@ -18,7 +18,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = solve(bvp1, MIRK4(), dt = 0.05)
-plot(sol1)</code></pre><img src="59ef2c49.svg" alt="Example block output"/><p>The third argument of <code>BVProblem</code>  is the initial guess of the solution, which is constant in this example.</p><p>&lt;!– add examples of more general initial conditions –&gt; We need to use <code>MIRK4</code> or <code>Shooting</code> methods to solve <code>BVProblem</code>. <code>MIRK4</code> is a collocation method, whereas <code>Shooting</code> treats the problem as an IVP and varies the initial conditions until the boundary conditions are met. If you can have a good initial guess, <code>Shooting</code> method works very well.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq
+plot(sol1)</code></pre><img src="6fe15a7f.svg" alt="Example block output"/><p>The third argument of <code>BVProblem</code>  is the initial guess of the solution, which is constant in this example.</p><p>&lt;!– add examples of more general initial conditions –&gt; We need to use <code>MIRK4</code> or <code>Shooting</code> methods to solve <code>BVProblem</code>. <code>MIRK4</code> is a collocation method, whereas <code>Shooting</code> treats the problem as an IVP and varies the initial conditions until the boundary conditions are met. If you can have a good initial guess, <code>Shooting</code> method works very well.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
 function bc3!(residual, sol, p, t)
     residual[1] = sol(pi / 4)[1] + pi / 2 # use the interpolation here, since indexing will be wrong for adaptive methods
@@ -29,24 +29,24 @@ sol3 = solve(bvp3, Shooting(Vern7()))</code></pre><pre class="documenter-example
 Interpolation: specialized 7th order lazy interpolation
 t: 9-element Vector{Float64}:
  0.0
- 0.13986960009492544
- 0.3086769462905539
- 0.4990269714800579
- 0.7378795239949324
- 1.0534502503029022
- 1.2811003227629647
- 1.5410164104174386
+ 0.13986960009492588
+ 0.3086769462905549
+ 0.4990269714800596
+ 0.7378795239949348
+ 1.0534502503029057
+ 1.2811003227629691
+ 1.541016410417444
  1.5707963267948966
 u: 9-element Vector{Vector{Float64}}:
- [-0.475423302223443, -4.790776852843008]
- [-1.085124745026618, -3.8296320712739855]
- [-1.598829095453686, -2.2265415312623023]
- [-1.8470632472350823, -0.3946489907999079]
- [-1.6712472935963112, 1.8814574450311052]
- [-0.6093542263697345, 4.647142133185857]
- [0.5075363736332793, 4.759617792016059]
- [1.4965628327178282, 2.638610802208204]
- [1.5707963267948655, 2.346730301614964]</code></pre><p>The initial guess can also be supplied via a function of <code>t</code> or a previous solution type, this is especially handy for parameter analysis. We changed <code>u</code> to <code>sol</code> to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using the <code>Shooting</code> method. (i.e. you can have a boundary condition saying that the maximum over the interval is <code>1</code> using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.</p><pre><code class="language-julia hljs">plot(sol3)</code></pre><img src="9ff82ddc.svg" alt="Example block output"/><h4 id="TwoPointBVProblem"><a class="docs-heading-anchor" href="#TwoPointBVProblem"><code>TwoPointBVProblem</code></a><a id="TwoPointBVProblem-1"></a><a class="docs-heading-anchor-permalink" href="#TwoPointBVProblem" title="Permalink"></a></h4><p><code>TwoPointBVProblem</code> is operationally the same as <code>BVProblem</code> but allows for the solver to specialize on the common form of being a two-point BVP, i.e. a BVP which only has boundary conditions at the start and the finish of the time interval. Defining a similar problem as <code>TwoPointBVProblem</code> is shown in the following example:</p><pre><code class="language-julia hljs">function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
+ [-0.47542330222344453, -4.790776852843008]
+ [-1.0851247450266208, -3.829632071273981]
+ [-1.598829095453689, -2.2265415312622916]
+ [-1.8470632472350834, -0.39464899079989174]
+ [-1.671247293596307, 1.8814574450311299]
+ [-0.6093542263697187, 4.647142133185876]
+ [0.5075363736332995, 4.759617792016038]
+ [1.496562832717842, 2.638610802208153]
+ [1.5707963267948652, 2.346730301614965]</code></pre><p>The initial guess can also be supplied via a function of <code>t</code> or a previous solution type, this is especially handy for parameter analysis. We changed <code>u</code> to <code>sol</code> to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using the <code>Shooting</code> method. (i.e. you can have a boundary condition saying that the maximum over the interval is <code>1</code> using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.</p><pre><code class="language-julia hljs">plot(sol3)</code></pre><img src="bccd4492.svg" alt="Example block output"/><h4 id="TwoPointBVProblem"><a class="docs-heading-anchor" href="#TwoPointBVProblem"><code>TwoPointBVProblem</code></a><a id="TwoPointBVProblem-1"></a><a class="docs-heading-anchor-permalink" href="#TwoPointBVProblem" title="Permalink"></a></h4><p><code>TwoPointBVProblem</code> is operationally the same as <code>BVProblem</code> but allows for the solver to specialize on the common form of being a two-point BVP, i.e. a BVP which only has boundary conditions at the start and the finish of the time interval. Defining a similar problem as <code>TwoPointBVProblem</code> is shown in the following example:</p><pre><code class="language-julia hljs">function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
 end
 function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
@@ -55,4 +55,4 @@ end
 bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
     bcresid_prototype = (zeros(1), zeros(1)))
 sol2 = solve(bvp2, MIRK4(), dt = 0.05)
-plot(sol2)</code></pre><img src="e1d26bfe.svg" alt="Example block output"/><p>Note here that <code>bc2a!</code> is a boundary condition for the first time point, and <code>bc2b!</code> is a boundary condition for the final time point. <code>bcresid_prototype</code> is a prototype array which is passed in order to know the size of <code>resid_a</code> and <code>resid_b</code>. In this case, we have one residual term for the start and one for the final time point, and thus we have <code>bcresid_prototype = (zeros(1), zeros(1))</code>. If we wanted to only have boundary conditions at the final time, we could instead have done <code>bcresid_prototype = (zeros(0), zeros(2))</code>.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../jump_diffusion/">« Jump Diffusion Equations</a><a class="docs-footer-nextpage" href="../../examples/classical_physics/">Classical Physics Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Monday 7 October 2024 16:46">Monday 7 October 2024</span>. Using Julia version 1.10.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot(sol2)</code></pre><img src="641c8692.svg" alt="Example block output"/><p>Note here that <code>bc2a!</code> is a boundary condition for the first time point, and <code>bc2b!</code> is a boundary condition for the final time point. <code>bcresid_prototype</code> is a prototype array which is passed in order to know the size of <code>resid_a</code> and <code>resid_b</code>. In this case, we have one residual term for the start and one for the final time point, and thus we have <code>bcresid_prototype = (zeros(1), zeros(1))</code>. If we wanted to only have boundary conditions at the final time, we could instead have done <code>bcresid_prototype = (zeros(0), zeros(2))</code>.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../jump_diffusion/">« Jump Diffusion Equations</a><a class="docs-footer-nextpage" href="../../examples/classical_physics/">Classical Physics Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Sunday 20 October 2024 08:54">Sunday 20 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
