@@ -49,14 +49,14 @@ t: 40-element Vector{Float64}:
   0.8195261222856575
   0.9657507155327404
   ⋮
-  5.637340375533149
+  5.6373403764097185
   6.0
-  6.465321316430051
-  6.980728829999052
-  7.578753430802856
-  8.24198735151423
-  8.983832887449289
-  9.794183221875112
+  6.465321315305342
+  6.980728827628572
+  7.578753426986916
+  8.241987346095213
+  8.983832880237188
+  9.794183212704345
  10.0
 u: 40-element Vector{Vector{Float64}}:
  [1.0, 1.0, 1.0]
@@ -70,16 +70,16 @@ u: 40-element Vector{Vector{Float64}}:
  [0.015946633867446297, 0.47891242587662397, 0.6540674055203148]
  [0.007620741981671972, 0.41158156825400705, 0.598282216755686]
  ⋮
- [1.9479585196399e-12, 0.0025766298644058472, 0.019737458815299546]
- [3.329617258475953e-13, 0.0017291226374219404, 0.014435113877204454]
- [5.506439845491122e-14, 0.0010364503658065428, 0.009606889775939948]
- [1.183845586506672e-14, 0.0005879461396862224, 0.006079732355926395]
- [5.109129495489439e-15, 0.0003045520194135552, 0.003549648427028836]
- [4.075066041243346e-15, 0.00014683985004098563, 0.001939474274352433]
- [6.623874635098052e-15, 6.49384780137677e-5, 0.0009786578650955052]
- [1.912280263738461e-14, 2.6637036874089532e-5, 0.000459955788516492]
- [6.699838775403731e-15, 2.124038225581771e-5, 0.00037925443872892313]</code></pre><p>Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:</p><pre><code class="language-julia hljs">using Plots
-plot(sol)</code></pre><img src="8ad96af7.svg" alt="Example block output"/><h4 id="Speeding-Up-Interpolations-with-Idxs"><a class="docs-heading-anchor" href="#Speeding-Up-Interpolations-with-Idxs">Speeding Up Interpolations with Idxs</a><a id="Speeding-Up-Interpolations-with-Idxs-1"></a><a class="docs-heading-anchor-permalink" href="#Speeding-Up-Interpolations-with-Idxs" title="Permalink"></a></h4><p>We can speed up the previous problem in two different ways. First of all, if we need to interpolate multiple values from a previous time, we can use the in-place form for the history function <code>h(out, p, t)</code> which writes the output to <code>out</code>. In this case, we must supply the history initial conditions as in-place as well. For the previous example, that&#39;s simply</p><pre><code class="language-julia hljs">h(out, p, t) = (out .= 1.0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">h (generic function with 2 methods)</code></pre><p>and then our DDE is:</p><pre><code class="language-julia hljs">const out = zeros(3) # Define a cache variable
+ [1.9479586569871875e-12, 0.002576629861923476, 0.019737458800475192]
+ [3.3296175026442913e-13, 0.0017291226374230072, 0.014435113877203256]
+ [5.506440228284062e-14, 0.0010364503670893242, 0.009606889785462936]
+ [1.183845658657568e-14, 0.0005879461412195119, 0.00607973236880551]
+ [5.109129737946255e-15, 0.00030455202069189685, 0.0035496484392958704]
+ [4.0750661735392095e-15, 0.0001468398509161308, 0.0019394742839871095]
+ [6.62387474666883e-15, 6.49384785287269e-5, 0.0009786578716381644]
+ [1.9122802657589606e-14, 2.6637037142589578e-5, 0.0004599557924653781]
+ [6.699838471134649e-15, 2.124038225565019e-5, 0.00037925443872843627]</code></pre><p>Note that everything available to OrdinaryDiffEq.jl can be used here, including event handling and other callbacks. The solution object has the same interface as for ODEs. For example, we can use the same plot recipes to view the results:</p><pre><code class="language-julia hljs">using Plots
+plot(sol)</code></pre><img src="654f71bd.svg" alt="Example block output"/><h4 id="Speeding-Up-Interpolations-with-Idxs"><a class="docs-heading-anchor" href="#Speeding-Up-Interpolations-with-Idxs">Speeding Up Interpolations with Idxs</a><a id="Speeding-Up-Interpolations-with-Idxs-1"></a><a class="docs-heading-anchor-permalink" href="#Speeding-Up-Interpolations-with-Idxs" title="Permalink"></a></h4><p>We can speed up the previous problem in two different ways. First of all, if we need to interpolate multiple values from a previous time, we can use the in-place form for the history function <code>h(out, p, t)</code> which writes the output to <code>out</code>. In this case, we must supply the history initial conditions as in-place as well. For the previous example, that&#39;s simply</p><pre><code class="language-julia hljs">h(out, p, t) = (out .= 1.0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">h (generic function with 2 methods)</code></pre><p>and then our DDE is:</p><pre><code class="language-julia hljs">const out = zeros(3) # Define a cache variable
 function bc_model(du, u, h, p, t)
     h(out, p, t - tau) # updates out to be the correct history function
     du[1] = (v0 / (1 + beta0 * (out[3]^2))) * (p0 - q0) * u[1] - d0 * u[1]
@@ -182,4 +182,4 @@ u: 31-element Vector{Vector{Float64}}:
  [2.7421648834392112e-9, 0.0001531915354119481, 0.002008476279135364]
  [1.0932049359081306e-8, 6.007073611751278e-5, 0.0009160349029904492]
  [6.748484828512806e-8, 2.206931785093837e-5, 0.0003918565880625686]
- [5.655297397782597e-8, 2.1246239672805988e-5, 0.0003793217423970312]</code></pre><p>Here, we treated the single lag <code>t-tau</code> as a state-dependent delay. Of course, you can then replace that tuple of functions with whatever functions match your lags.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../rode_example/">« Random Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../dae_example/">Differential Algebraic Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Sunday 20 October 2024 08:54">Sunday 20 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ [5.655297397782597e-8, 2.1246239672805988e-5, 0.0003793217423970312]</code></pre><p>Here, we treated the single lag <code>t-tau</code> as a state-dependent delay. Of course, you can then replace that tuple of functions with whatever functions match your lags.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../rode_example/">« Random Ordinary Differential Equations</a><a class="docs-footer-nextpage" href="../dae_example/">Differential Algebraic Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.7.0 on <span class="colophon-date" title="Wednesday 23 October 2024 22:44">Wednesday 23 October 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
