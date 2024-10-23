@@ -76,18 +76,18 @@ the following conveniences are provided:
     variable is plotted as a function of time.  For example, the list above
     is equivalent to:
 
-```julia
-idxs = [1, (1, 3), (4, 5)]
-```
+    ```julia
+    idxs = [1, (1, 3), (4, 5)]
+    ```
 
-and
+    and
 
-```julia
-idxs = [1, 3, 4]
-```
+    ```julia
+    idxs = [1, 3, 4]
+    ```
 
-is the most concise way to plot the variables 1, 3, and 4 as a function
-of time.
+    is the most concise way to plot the variables 1, 3, and 4 as a function
+    of time.
 
   - It is possible to omit the list if only one plot is wanted: `(2,3)`
     and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
@@ -95,27 +95,27 @@ of time.
   - A tuple containing one or several lists will be expanded by
     associating corresponding elements of the lists with each other:
 
-```julia
-idxs = ([1, 2, 3], [4, 5, 6])
-```
+    ```julia
+    idxs = ([1, 2, 3], [4, 5, 6])
+    ```
 
-is equivalent to
+    is equivalent to
 
-```julia
-idxs = [(1, 4), (2, 5), (3, 6)]
-```
+    ```julia
+    idxs = [(1, 4), (2, 5), (3, 6)]
+    ```
 
-and
+    and
 
-```julia
-idxs = (1, [2, 3, 4])
-```
+    ```julia
+    idxs = (1, [2, 3, 4])
+    ```
 
-is equivalent to
+    is equivalent to
 
-```julia
-idxs = [(1, 2), (1, 3), (1, 4)]
-```
+    ```julia
+    idxs = [(1, 2), (1, 3), (1, 4)]
+    ```
 
   - Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
     For example, `idxs=(:x,:y)` will replace the symbols with the integer values for
