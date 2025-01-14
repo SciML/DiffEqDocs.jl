@@ -1,8 +1,13 @@
-# BVP Solvers
+# [BVP Solvers](@id bvp_solve)
 
-`solve(prob::BVProblem,alg,dt=0.0;kwargs)`
+```julia
+solve(prob::BVProblem,alg,dt;kwargs)
+solve(prob::TwoPointBVProblem,alg,dt;kwargs)
+solve(prob::SecondOrderBVProblem,alg,dt;kwargs)
+solve(prob::SecondOrderTwoPointBVProblem,alg,dt;kwargs)
+```
 
-Solves the BVP defined by `prob` using the algorithm `alg`. All algorithms except `Shooting` methods should specify a `dt` which is the step size for the discretized mesh.
+Solves the BVP defined by `prob` using the algorithm `alg`. All algorithms except `Shooting` and `MultipleShooting` methods should specify a `dt` which is the step size for the discretized mesh.
 
 ## Recommended Methods
 
@@ -34,23 +39,49 @@ off via the keyword argument `adaptive = false`.
 Similar to `MIRK` methods, fully implicit Runge-Kutta methods construct nonlinear problems from the collocation equations of a BVP and solve such nonlinear systems to obtain numerical solutions of BVP. When solving large boundary value problems, choose a nested NonlinearSolve.jl solver by setting `nested_nlsolve=true` in FIRK solvers can achieve better performance.
 
   - `LobattoIIIa2` - A 2nd stage LobattoIIIa collocation method.
-
   - `LobattoIIIa3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIa4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIa5` - A 5th stage LobattoIIIa collocation method.
+
   - `LobattoIIIb2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
   - `LobattoIIIb3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIb4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIb5` - A 5th stage LobattoIIIa collocation method.
+
   - `LobattoIIIc2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
   - `LobattoIIIc3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIc4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIc5` - A 5th stage LobattoIIIa collocation method.
+
   - `RadauIIa1` - A 1st stage Radau collocation method, doesn't support defect control adaptivity.
   - `RadauIIa2` - A 2nd stage Radau collocation method.
   - `RadauIIa3` - A 3rd stage Radau collocation method.
   - `RadauIIa5` - A 5th stage Radau collocation method.
   - `RadauIIa7` - A 7th stage Radau collocation method.
+
+#### Gauss Legendre collocation methods
+
+The `Ascher` collocation methods are similar with `MIRK` and `FIRK` methods but have extension for BVDAE prblem solving, the error control is based on instead of defect control adaptivity.
+
+  - `Ascher1` - A 1st stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher2` - A 2nd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher3` - A 3rd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher4` - A 4th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher5` - A 5th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher6` - A 6th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher7` - A 7th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+
+#### MIRKN(Monotonic Implicit Runge-Kutta-Nystöm) methods
+
+  - `MIRKN4` - A 4th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
+  - `MIRKN6` - A 6th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
+
+### SimpleBoundaryValueDiffEq.jl
+
+  - `SimpleMIRK4` - A simplified 4th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleMIRK5` - A simplified 5th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleMIRK6` - A simplified 6th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleShooting` - A simplified single Shooting method.
 
 ### ODEInterface.jl
 
