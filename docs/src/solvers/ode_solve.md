@@ -963,6 +963,7 @@ using IRKGaussLegendre
     
       + =false (default): for a ODEProblem type
       + =true: for a second-order differential equation
+
   - simd (boolean):
     
       + =true: SIMD-vectorized implementation only available for Float32 or Float64 computations

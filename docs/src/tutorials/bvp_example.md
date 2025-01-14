@@ -38,6 +38,8 @@ There are two problem types available:
 
 The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
+There are collocation and shooting methods for addressing boundary value problems in DifferentialEquations.jl. We need to use appropriate [available BVP solvers](@ref bvp_solve) to solve `BVProblem`. In this example, we use `MIRK4` to solve the simple pendulum example.
+
 ```@example bvp
 function bc1!(residual, u, p, t)
     residual[1] = u(pi / 4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
@@ -48,9 +50,7 @@ sol1 = solve(bvp1, MIRK4(), dt = 0.05)
 plot(sol1)
 ```
 
-The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t` or solution object from previous solving, in this example the initial guess is setted as a `Vector`.
-
-There are collocation and shooting methods for addressing boundary value problems in DifferentialEquations.jl. We need to use appropriate [available BVP solvers](@ref bvp_solve) to solve `BVProblem`. In this example, we use `MIRK4` to solve the simple pendulum example.
+The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t` or solution object from previous solving, in this example the initial guess is set as a `Vector`.
 
 ```@example bvp
 using OrdinaryDiffEq
@@ -64,7 +64,7 @@ sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
 The initial guess can also be supplied via a function of `t` or a previous solution type, this is especially handy for parameter analysis.
-We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation nd shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
+We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
 
 ```@example bvp
 plot(sol3)
@@ -112,7 +112,7 @@ u_1(0) = u_1'(0)= u_1(1)=u_1'(1)=0,u_3(0)=
 -1, u_3(1)=1
 ```
 
-The common way of solving the second order BVP is to define intermidiate variables and transform the second order system into first order one, however, DifferentialEquations.jl allows the direct solving of second order BVP system to achieve more efficiency and higher continuity of the numerical solution.
+The common way of solving the second order BVP is to define intermediate variables and transform the second order system into first order one, however, DifferentialEquations.jl allows the direct solving of second order BVP system to achieve more efficiency and higher continuity of the numerical solution.
 
 ```@example bvp
 function f!(ddu, du, u, p, t)
