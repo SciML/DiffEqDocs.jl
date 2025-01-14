@@ -1,10 +1,10 @@
 # [BVP Solvers](@id bvp_solve)
 
 ```julia
-solve(prob::BVProblem,alg,dt;kwargs)
-solve(prob::TwoPointBVProblem,alg,dt;kwargs)
-solve(prob::SecondOrderBVProblem,alg,dt;kwargs)
-solve(prob::SecondOrderTwoPointBVProblem,alg,dt;kwargs)
+solve(prob::BVProblem, alg, dt; kwargs)
+solve(prob::TwoPointBVProblem, alg, dt; kwargs)
+solve(prob::SecondOrderBVProblem, alg, dt; kwargs)
+solve(prob::SecondOrderTwoPointBVProblem, alg, dt; kwargs)
 ```
 
 Solves the BVP defined by `prob` using the algorithm `alg`. All algorithms except `Shooting` and `MultipleShooting` methods should specify a `dt` which is the step size for the discretized mesh.
@@ -39,20 +39,18 @@ off via the keyword argument `adaptive = false`.
 Similar to `MIRK` methods, fully implicit Runge-Kutta methods construct nonlinear problems from the collocation equations of a BVP and solve such nonlinear systems to obtain numerical solutions of BVP. When solving large boundary value problems, choose a nested NonlinearSolve.jl solver by setting `nested_nlsolve=true` in FIRK solvers can achieve better performance.
 
   - `LobattoIIIa2` - A 2nd stage LobattoIIIa collocation method.
+
   - `LobattoIIIa3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIa4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIa5` - A 5th stage LobattoIIIa collocation method.
-
   - `LobattoIIIb2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
   - `LobattoIIIb3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIb4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIb5` - A 5th stage LobattoIIIa collocation method.
-
   - `LobattoIIIc2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
   - `LobattoIIIc3` - A 3rd stage LobattoIIIa collocation method.
   - `LobattoIIIc4` - A 4th stage LobattoIIIa collocation method.
   - `LobattoIIIc5` - A 5th stage LobattoIIIa collocation method.
-
   - `RadauIIa1` - A 1st stage Radau collocation method, doesn't support defect control adaptivity.
   - `RadauIIa2` - A 2nd stage Radau collocation method.
   - `RadauIIa3` - A 3rd stage Radau collocation method.

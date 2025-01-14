@@ -40,8 +40,8 @@ The boundary conditions are specified by a function that calculates the residual
 
 ```@example bvp
 function bc1!(residual, u, p, t)
-    residual[1] = u(pi/4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
-    residual[2] = u(pi/2)[1] - pi / 2 # the solution at the end of the time span should be pi/2
+    residual[1] = u(pi / 4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
+    residual[2] = u(pi / 2)[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = solve(bvp1, MIRK4(), dt = 0.05)
