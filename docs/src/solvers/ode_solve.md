@@ -783,9 +783,9 @@ Examples:
 
 ```julia
 sol = solve(prob, Rosenbrock23()) # Standard, uses autodiff
-sol = solve(prob, Rosenbrock23(chunk_size = 10)) # Autodiff with chunksize of 10
-sol = solve(prob, Rosenbrock23(autodiff = false)) # Numerical differentiation with central differencing
-sol = solve(prob, Rosenbrock23(autodiff = false, diff_type = Val{:forward})) # Numerical differentiation with forward differencing
+sol = solve(prob, Rosenbrock23(autodiff = AutoForwardDiff(chunksize = 10)) # Autodiff with chunksize of 10
+sol = solve(prob, Rosenbrock23(autodiff = AutoFiniteDiff()) # Numerical differentiation with central differencing
+sol = solve(prob, Rosenbrock23(autodiff = AutoFiniteDiff(fdtype = Val{:forward})) # Numerical differentiation with forward differencing
 ```
 
 #### Tableau Method
