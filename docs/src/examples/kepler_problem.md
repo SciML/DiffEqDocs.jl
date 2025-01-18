@@ -126,7 +126,7 @@ function first_integrals_manifold(residual, u, p, t)
     residual[3:4] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
 end
 
-cb = ManifoldProjection(first_integrals_manifold)
+cb = ManifoldProjection(first_integrals_manifold, autodiff = AutoForwardDiff())
 sol5 = solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = cb)
 analysis_plot2(sol5, H, L)
 ```
@@ -138,7 +138,7 @@ function energy_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-energy_cb = ManifoldProjection(energy_manifold)
+energy_cb = ManifoldProjection(energy_manifold, autodiff = AutoForwardDiff())
 sol6 = solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
 analysis_plot2(sol6, H, L)
 ```
@@ -150,7 +150,7 @@ function angular_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-angular_cb = ManifoldProjection(angular_manifold)
+angular_cb = ManifoldProjection(angular_manifold, autodiff = AutoForwardDiff())
 sol7 = solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
 analysis_plot2(sol7, H, L)
 ```
