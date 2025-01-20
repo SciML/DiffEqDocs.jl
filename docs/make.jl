@@ -39,7 +39,7 @@ makedocs(
         "https://www.wolframalpha.com/input/?i=u%27%3D-sqrt%28u%29",
         "https://www.mathworks.com/help/simulink/gui/absolutetolerance.html",
         "https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html",
-        "https://journals.ametsoc.org/view/journals/atsc/20/2/1520-0469_1963_020_0130_dnf_2_0_co_2.xml",
+        "https://journals.ametsoc.org/view/journals/atsc/20/2/1520-0469_1963_020_0130_dnf_2_0_co_2.xml"
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs],

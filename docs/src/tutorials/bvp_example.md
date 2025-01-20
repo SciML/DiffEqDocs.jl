@@ -173,5 +173,7 @@ u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
 fun = BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
 prob = BVProblem(fun, u0, tspan)
-sol = solve(prob, Ascher4(zeta = [0.0, 0.0, 1.0], jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())), dt = 0.01)
+sol = solve(prob,
+    Ascher4(zeta = [0.0, 0.0, 1.0], jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())),
+    dt = 0.01)
 ```
