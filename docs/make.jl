@@ -35,7 +35,10 @@ makedocs(
         "https://www.sciencedirect.com/science/article/abs/pii/S0375960109009591",
         "https://www.sciencedirect.com/science/article/abs/pii/0375960176901018",
         "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001024",
-        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001383"
+        "https://www.worldscientific.com/doi/abs/10.1142/S0218127499001383",
+        "https://www.wolframalpha.com/input/?i=u%27%3D-sqrt%28u%29",
+        "https://www.mathworks.com/help/simulink/gui/absolutetolerance.html",
+        "https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html"
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs],
