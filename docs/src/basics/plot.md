@@ -75,52 +75,49 @@ the following conveniences are provided:
   - Everywhere in a tuple position where we only find an integer, this
     variable is plotted as a function of time.  For example, the list above
     is equivalent to:
-
+    
     ```julia
     idxs = [1, (1, 3), (4, 5)]
     ```
-
+    
     and
-
+    
     ```julia
     idxs = [1, 3, 4]
     ```
-
+    
     is the most concise way to plot the variables 1, 3, and 4 as a function
     of time.
 
   - It is possible to omit the list if only one plot is wanted: `(2,3)`
     and `4` are respectively equivalent to `[(2,3)]` and `[(0,4)]`.
-
   - A tuple containing one or several lists will be expanded by
     associating corresponding elements of the lists with each other:
-
+    
     ```julia
     idxs = ([1, 2, 3], [4, 5, 6])
     ```
-
+    
     is equivalent to
-
+    
     ```julia
     idxs = [(1, 4), (2, 5), (3, 6)]
     ```
-
+    
     and
-
+    
     ```julia
     idxs = (1, [2, 3, 4])
     ```
-
+    
     is equivalent to
-
+    
     ```julia
     idxs = [(1, 2), (1, 3), (1, 4)]
     ```
-
   - Instead of using integers, one can use the symbols from a `ParameterizedFunction`.
     For example, `idxs=(:x,:y)` will replace the symbols with the integer values for
     components `:x` and `:y`.
-
   - n-dimensional groupings are allowed. For example, `(1,2,3,4,5)` would be a
     5-dimensional plot between the associated variables.
 

@@ -27,6 +27,7 @@ sol = solve(prob, KahanLi6(), dt = 1 // 10);
 ```
 
 !!! note
+    
     Note that NonlinearSolve.jl is required to be imported for ManifoldProjection
 
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.

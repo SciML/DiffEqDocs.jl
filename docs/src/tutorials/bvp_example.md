@@ -31,32 +31,26 @@ function simplependulum!(du, u, p, t)
 end
 ```
 
-### Boundary Condition
-
 There are two problem types available:
 
-  - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval).
-  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`
-
-#### `BVProblem`
+  - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval, aka multi-points BVP).
+  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`(aka two-points BVP)
 
 The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
 
+There are collocation and shooting methods for addressing boundary value problems in DifferentialEquations.jl. We need to use appropriate [available BVP solvers](@ref bvp_solve) to solve `BVProblem`. In this example, we use `MIRK4` to solve the simple pendulum example.
+
 ```@example bvp
 function bc1!(residual, u, p, t)
-    residual[1] = u[end ÷ 2][1] + pi / 2 # the solution at the middle of the time span should be -pi/2
-    residual[2] = u[end][1] - pi / 2 # the solution at the end of the time span should be pi/2
+    residual[1] = u(pi / 4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
+    residual[2] = u(pi / 2)[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = solve(bvp1, MIRK4(), dt = 0.05)
 plot(sol1)
 ```
 
-The third argument of `BVProblem`  is the initial guess of the solution, which is constant in this example.
-
-<!-- add examples of more general initial conditions -->
-We need to use `MIRK4` or `Shooting` methods to solve `BVProblem`. `MIRK4` is a collocation method, whereas `Shooting` treats the problem as an IVP and varies the initial conditions until the boundary conditions are met.
-If you can have a good initial guess, `Shooting` method works very well.
+The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t` or solution object from previous solving, in this example the initial guess is set as a `Vector`.
 
 ```@example bvp
 using OrdinaryDiffEq
@@ -70,13 +64,11 @@ sol3 = solve(bvp3, Shooting(Vern7()))
 ```
 
 The initial guess can also be supplied via a function of `t` or a previous solution type, this is especially handy for parameter analysis.
-We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using the `Shooting` method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output). Note that user has to import the IVP solver before it can be used. Any common interface ODE solver is acceptable.
+We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
 
 ```@example bvp
 plot(sol3)
 ```
-
-#### `TwoPointBVProblem`
 
 `TwoPointBVProblem` is operationally the same as `BVProblem` but allows for the solver
 to specialize on the common form of being a two-point BVP, i.e. a BVP which only has
@@ -99,5 +91,89 @@ plot(sol2)
 Note here that `bc2a!` is a boundary condition for the first time point, and `bc2b!` is a boundary condition
 for the final time point. `bcresid_prototype` is a prototype array which is passed in order to know the size of
 `resid_a` and `resid_b`. In this case, we have one residual term for the start and one for the final time point,
-and thus we have `bcresid_prototype = (zeros(1), zeros(1))`. If we wanted to only have boundary conditions at the
-final time, we could instead have done `bcresid_prototype = (zeros(0), zeros(2))`.
+and thus we have `bcresid_prototype = (zeros(1), zeros(1))`.
+
+## Example 2: Directly Solving with Second Order BVP
+
+Suppose we want to solve the second order BVP system which can be formulated as
+
+```math
+\begin{cases}
+u_1''(x)= u_2(x),\\
+\epsilon u_2''(x)=-u_1(x)u_2'(x)- u_3(x)u_3'(x),\\
+\epsilon u_3''(x)=u_1'(x)u_3(x)- u_1(x) u_3 '(x)
+\end{cases}
+```
+
+with initial conditions:
+
+```math
+u_1(0) = u_1'(0)= u_1(1)=u_1'(1)=0,u_3(0)=
+-1, u_3(1)=1
+```
+
+The common way of solving the second order BVP is to define intermediate variables and transform the second order system into first order one, however, DifferentialEquations.jl allows the direct solving of second order BVP system to achieve more efficiency and higher continuity of the numerical solution.
+
+```@example bvp
+function f!(ddu, du, u, p, t)
+    ϵ = 0.1
+    ddu[1] = u[2]
+    ddu[2] = (-u[1] * du[2] - u[3] * du[3]) / ϵ
+    ddu[3] = (du[1] * u[3] - u[1] * du[3]) / ϵ
+end
+function bc!(res, du, u, p, t)
+    res[1] = u(0.0)[1]
+    res[2] = u(1.0)[1]
+    res[3] = u(0.0)[3] + 1
+    res[4] = u(1.0)[3] - 1
+    res[5] = du(0.0)[1]
+    res[6] = du(1.0)[1]
+end
+u0 = [1.0, 1.0, 1.0]
+tspan = (0.0, 1.0)
+prob = SecondOrderBVProblem(f!, bc!, u0, tspan)
+sol = solve(prob, MIRKN4(; jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())), dt = 0.01)
+```
+
+## Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations
+
+Consider a semi-explicit boundary value differential-algebraic equation formulated as
+
+```math
+\begin{cases}
+x_1'=(\epsilon+x_2-p_2(t))y+p_1'(t) \\
+x_2'=p_2'(t) \\
+x_3'=y \\
+0=(x_1-p_1(t))(y-e^t)
+\end{cases}
+```
+
+with boundary conditions
+
+```math
+x_1(0)=0,x_3(0)=1,x_2(1)=\sin(1)
+```
+
+We need to choose the Ascher methods for solving BVDAEs.
+
+```@example bvp
+function f!(du, u, p, t)
+    e = 2.7
+    du[1] = (1 + u[2] - sin(t)) * u[4] + cos(t)
+    du[2] = cos(t)
+    du[3] = u[4]
+    du[4] = (u[1] - sin(t)) * (u[4] - e^t)
+end
+function bc!(res, u, p, t)
+    res[1] = u[1]
+    res[2] = u[3] - 1
+    res[3] = u[2] - sin(1.0)
+end
+u0 = [0.0, 0.0, 0.0, 0.0]
+tspan = (0.0, 1.0)
+fun = BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
+prob = BVProblem(fun, u0, tspan)
+sol = solve(prob,
+    Ascher4(zeta = [0.0, 0.0, 1.0], jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())),
+    dt = 0.01)
+```

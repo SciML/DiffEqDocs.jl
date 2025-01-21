@@ -2,6 +2,7 @@
 
 ```@docs
 SciMLBase.BVProblem
+SciMLBase.SecondOrderBVProblem
 ```
 
 ## Solution Type
