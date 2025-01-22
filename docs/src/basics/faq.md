@@ -177,6 +177,26 @@ values, like solving for `u^2` or `exp(u)` instead of `u`, which mathematically
 can only be positive. Look into using a tool like [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)
 for automatically transforming your equations.
 
+### I'm trying to solve DAEs but my solver is unstable and/or slow, what's wrong with IDA and DFBDF?
+
+Fully implicit DAEs ``f(du,u,p,t) = 0`` are extremely difficult to numerical handle for many reasons.
+The linearly implicit form ``Mu'=f(u)`` where ``M`` is a singular mass matrix is much simpler
+numerically and thus results in much better performance. This is seen in many instances with the
+SciMLBenchmarks. Thus it is recommended that in almost all or most situations, one should use the
+mass matrix form of the DAE solver.
+
+However, it is generally recommended that if you are solving a DAE that you use 
+[ModelingToolkit.jl](https://mtk.sciml.ai/dev/) because it has many utilities for pre-processing
+DAEs to make them more numerically stable. For example, if your algebraic conditions are not
+uniquely matching to algebraic variables (i.e. you have at least one unique algebraic variable
+per algebraic condition), then the system is what is known as high index and thus the numerical
+DAE solvers will not be able to accurately solve the equation without rewriting the equations.
+ModelingToolkit is able to automatically detect this kind of condition and perform the equation
+transformation automatically. As such, if you are having difficulties with a DAE system, it is
+highly recommended to try `modelingtookitize` to transform the system to MTK's formulation and
+running `structural_simplify` to see how it would change the equations, simply convert the model
+to MTK.
+
 ## [Performance](@id faq_performance)
 
 #### GPUs, multithreading and distributed computation support
