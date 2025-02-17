@@ -10,3 +10,9 @@ SciMLBase.RODEFunction
 ```@docs
 SciMLBase.RODESolution
 ```
+
+## Alias Specifier
+
+```@docs
+SciMLBase.RODEAliasSpecifier
+```

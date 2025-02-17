@@ -10,6 +10,12 @@ SciMLBase.DDEFunction
 `DDEProblem` solutions return an `ODESolution`. For more information, see the
 [ODE problem definition page](@ref ode_prob) for the `ODESolution` docstring.
 
+## Alias Specifier 
+
+```@docs
+SciMLBase.DDEAliasSpecifier
+```
+
 ## Example Problems
 
 Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl).

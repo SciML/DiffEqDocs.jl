@@ -10,6 +10,12 @@ SciMLBase.SDEFunction
 `SDEProblem` solutions return an `RODESolution`. For more information, see the
 [RODE problem definition page](@ref rode_problem) for the `RODESolution` docstring.
 
+## Alias Specifier
+
+```@docs
+SciMLBase.SDEAliasSpecifier
+```
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/SDEProblemLibrary/src/SDEProblemLibrary.jl).
