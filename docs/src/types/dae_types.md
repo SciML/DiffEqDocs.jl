@@ -11,6 +11,12 @@ SciMLBase.DAEFunction
 SciMLBase.DAESolution
 ```
 
+## Alias Specifier
+
+```@docs
+SciMLBase.DAEAliasSpecifier
+```
+
 ## Example Problems
 
 Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/lib/DAEProblemLibrary).

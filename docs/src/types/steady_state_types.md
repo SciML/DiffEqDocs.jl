@@ -14,3 +14,9 @@ SciMLBase.SteadyStateProblem
 ```@docs
 SciMLBase.NonlinearSolution
 ```
+
+## Alias Specifier
+
+```@docs
+SciMLBase.SteadyStateAliasSpecifier
+```

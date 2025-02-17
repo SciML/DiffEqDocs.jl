@@ -11,6 +11,12 @@ SciMLBase.ODEFunction
 SciMLBase.ODESolution
 ```
 
+## ODE Alias Specifier
+
+```@docs
+SciMLBase.ODEAliasSpecifier
+```
+
 ## Example Problems
 
 Example problems can be found in [DiffEqProblemLibrary.jl](https://github.com/SciML/DiffEqProblemLibrary.jl/tree/master/lib/ODEProblemLibrary/src).
