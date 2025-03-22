@@ -30,7 +30,9 @@ function update_func(A, u, p, t)
     A[1, 2] = -sin(t)
     A[2, 2] = cos(t)
 end
-A = DiffEqArrayOperator(ones(2, 2), update_func = update_func)
+
+using SciMLOperators
+A = MatrixOperator(ones(2, 2), update_func = update_func)
 prob = ODEProblem(A, ones(2), (10, 50.0))
 ```
 
@@ -47,9 +49,10 @@ function update_func(A, u, p, t)
 end
 ```
 
-has a state-dependent linear operator. Note that many other `AbstractDiffEqOperator`s
-can be used, and `DiffEqArrayOperator` is just one version that represents `A` via
-a matrix (other choices are matrix-free).
+has a state-dependent linear operator. Note that many other `AbstractSciMLOperator`s
+can be used, and `MatrixOperator` is just one version that represents `A` via
+a matrix (other choices are matrix-free). See the [SciMLOperators.jl](https://docs.sciml.ai/SciMLOperators/stable/)
+documentation for more information.
 
 Note that if ``A`` is a constant, then it is sufficient to supply ``A`` directly without
 an `update_func`.
