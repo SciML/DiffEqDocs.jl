@@ -20,7 +20,7 @@ such as ``A`` being a constant or ``A`` being only time-dependent (``A(t)``).
 ### Construction
 
 Creating a non-autonomous linear ODE is the same as an `ODEProblem`, except `f`
-is represented by an `AbstractDiffEqOperator` (note: this means that any standard
+is represented by an `AbstractSciMLOperator` (note: this means that any standard
 ODE solver can also be applied to problems written in this form). As an example:
 
 ```julia
