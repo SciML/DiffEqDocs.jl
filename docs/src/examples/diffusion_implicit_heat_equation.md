@@ -17,7 +17,7 @@ import Plots
 using LinearAlgebra
 using DiffEqBase
 using OrdinaryDiffEq: SplitODEProblem, solve, IMEXEuler
-import SciMLBase
+import SciMLBase, SciMLOperators
 ```
 
 Next, we'll define some global problem parameters:
@@ -178,7 +178,7 @@ params = (; n)
 
 tspan = (FT(0), N_t * FT(Δt))
 
-prob = SplitODEProblem(SciMLBase.DiffEqArrayOperator(D),
+prob = SplitODEProblem(SciMLOperators.MatrixOperator(D),
     rhs!,
     T,
     tspan,
