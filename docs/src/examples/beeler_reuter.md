@@ -90,7 +90,7 @@ end
 
 ### Laplacian
 
-The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced. Note that we could have also used [DiffEqOperators.jl](https://docs.sciml.ai/DiffEqDocs/stable/features/diffeq_operator/#DiffEqOperators) to automate this step.
+The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced.
 
 ```julia
 # 5-point stencil
