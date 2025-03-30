@@ -72,7 +72,7 @@ Options:
 ```@example linear_ode
 using DifferentialEquations, SciMLOperators
 _A = [2 -1; -3 -5] / 5
-A = MatrixOperator(_A)
+A = SciMLOperators.MatrixOperator(_A)
 prob = ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
 sol = solve(prob, LinearExponential())
 ```
@@ -107,7 +107,7 @@ function update_func(A, u, p, t)
     A[1, 2] = -sin(t)
     A[2, 2] = cos(t)
 end
-A = DiffEqArrayOperator(ones(2, 2), update_func = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2), update_func = update_func)
 prob = ODEProblem(A, ones(2), (1.0, 6.0))
 sol = solve(prob, MagnusGL6(), dt = 1 / 10)
 ```
@@ -137,7 +137,7 @@ function update_func(A, u, p, t)
     A[1, 2] = -1
     A[2, 2] = 0
 end
-A = DiffEqArrayOperator(ones(2, 2), update_func = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2), update_func = update_func)
 prob = ODEProblem(A, ones(2), (0, 30.0))
 sol = solve(prob, LieRK4(), dt = 1 / 4)
 ```
@@ -156,7 +156,7 @@ function update_func(A, u, p, t)
     A[1, 2] = -2 * (1 - cos(u[2]) - u[2] * sin(u[2]))
     A[2, 2] = 0
 end
-A = DiffEqArrayOperator(ones(2, 2), update_func = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2), update_func = update_func)
 prob = ODEProblem(A, ones(2), (30, 150.0))
 sol = solve(prob, MagnusAdapt4())
 ```
