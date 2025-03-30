@@ -13,7 +13,7 @@ These algorithms require a Non-autonomous linear ODE of the form:
 u^\prime = A(u,p,t)u
 ```
 
-Where ``A`` is an [AbstractSciMLOperator](@ref SciMLOperators) that is
+Where ``A`` is an AbstractSciMLOperator (see SciMLOperators.jl for more information) that is
 multiplied against ``u``. Many algorithms specialize on the form of ``A``,
 such as ``A`` being a constant or ``A`` being only time-dependent (``A(t)``).
 
