@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Code Optimization for Differential Equations · DifferentialEquations.jl</title><meta name="title" content="Code Optimization for Differential Equations · DifferentialEquations.jl"/><meta property="og:title" content="Code Optimization for Differential Equations · DifferentialEquations.jl"/><meta property="twitter:title" content="Code Optimization for Differential Equations · DifferentialEquations.jl"/><meta name="description" content="Documentation for DifferentialEquations.jl."/><meta property="og:description" content="Documentation for DifferentialEquations.jl."/><meta property="twitter:description" content="Documentation for DifferentialEquations.jl."/><meta property="og:url" content="https://docs.sciml.ai/DiffEqDocs/stable/tutorials/faster_ode_example/"/><meta property="twitter:url" content="https://docs.sciml.ai/DiffEqDocs/stable/tutorials/faster_ode_example/"/><link rel="canonical" href="https://docs.sciml.ai/DiffEqDocs/stable/tutorials/faster_ode_example/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="DifferentialEquations.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">DifferentialEquations.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">DifferentialEquations.jl: Efficient Differential Equation Solving in Julia</a></li><li><a class="tocitem" href="../../getting_started/">Getting Started with Differential Equations in Julia</a></li><li><span class="tocitem">Tutorials</span><ul><li class="is-active"><a class="tocitem" href>Code Optimization for Differential Equations</a><ul class="internal"><li><a class="tocitem" href="#Code-Optimization-in-Julia"><span>Code Optimization in Julia</span></a></li><li><a class="tocitem" href="#Example-Accelerating-a-Non-Stiff-Equation:-The-Lorenz-Equation"><span>Example Accelerating a Non-Stiff Equation: The Lorenz Equation</span></a></li><li><a class="tocitem" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation"><span>Example Accelerating a Stiff Equation: the Robertson Equation</span></a></li><li><a class="tocitem" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization"><span>Example Accelerating Linear Algebra PDE Semi-Discretization</span></a></li></ul></li><li><a class="tocitem" href="../advanced_ode_example/">Solving Large Stiff Equations</a></li><li><a class="tocitem" href="../sde_example/">Stochastic Differential Equations</a></li><li><a class="tocitem" href="../rode_example/">Random Ordinary Differential Equations</a></li><li><a class="tocitem" href="../dde_example/">Delay Differential Equations</a></li><li><a class="tocitem" href="../dae_example/">Differential Algebraic Equations</a></li><li><a class="tocitem" href="../jump_diffusion/">Jump Diffusion Equations</a></li><li><a class="tocitem" href="../bvp_example/">Boundary Value Problems</a></li></ul></li><li><span class="tocitem">Examples</span><ul><li><input class="collapse-toggle" id="menuitem-4-1" type="checkbox"/><label class="tocitem" for="menuitem-4-1"><span class="docs-label">Beginner</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/classical_physics/">Classical Physics Models</a></li><li><a class="tocitem" href="../../examples/conditional_dosing/">Conditional Dosing in Pharmacometrics</a></li><li><a class="tocitem" href="../../examples/kepler_problem/">The Kepler Problem</a></li><li><a class="tocitem" href="../../examples/outer_solar_system/">Simulating the Outer Solar System</a></li><li><a class="tocitem" href="../../examples/min_and_max/">Finding Maxima and Minima of ODEs Solutions</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-4-2" type="checkbox"/><label class="tocitem" for="menuitem-4-2"><span class="docs-label">Advanced</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../examples/spiking_neural_systems/">Spiking Neural Systems</a></li><li><a class="tocitem" href="../../examples/beeler_reuter/">An Implicit/Explicit CUDA-Accelerated Solver for the 2D Beeler-Reuter Model</a></li><li><a class="tocitem" href="../../examples/diffusion_implicit_heat_equation/">Solving the heat equation with diffusion-implicit time-stepping</a></li></ul></li></ul></li><li><span class="tocitem">Basics</span><ul><li><a class="tocitem" href="../../basics/overview/">Overview of DifferentialEquations.jl</a></li><li><a class="tocitem" href="../../basics/common_solver_opts/">Common Solver Options (Solve Keyword Arguments)</a></li><li><a class="tocitem" href="../../basics/solution/">Solution Handling</a></li><li><a class="tocitem" href="../../basics/plot/">Plot Functions</a></li><li><a class="tocitem" href="../../basics/integrator/">Integrator Interface</a></li><li><a class="tocitem" href="../../basics/problem/">Problem Interface</a></li><li><a class="tocitem" href="../../basics/faq/">Frequently Asked Questions</a></li><li><a class="tocitem" href="../../basics/compatibility_chart/">Solver Compatibility Chart</a></li></ul></li><li><span class="tocitem">Problem Types</span><ul><li><a class="tocitem" href="../../types/discrete_types/">Discrete Problems</a></li><li><a class="tocitem" href="../../types/ode_types/">ODE Problems</a></li><li><a class="tocitem" href="../../types/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group Problems</a></li><li><a class="tocitem" href="../../types/dynamical_types/">Dynamical, Hamiltonian and 2nd Order ODE Problems</a></li><li><a class="tocitem" href="../../types/split_ode_types/">Split ODE Problems</a></li><li><a class="tocitem" href="../../types/steady_state_types/">Steady State Problems</a></li><li><a class="tocitem" href="../../types/bvp_types/">BVP Problems</a></li><li><a class="tocitem" href="../../types/sde_types/">SDE Problems</a></li><li><a class="tocitem" href="../../types/sdae_types/">SDAE Problems</a></li><li><a class="tocitem" href="../../types/rode_types/">RODE Problems</a></li><li><a class="tocitem" href="../../types/dde_types/">DDE Problems</a></li><li><a class="tocitem" href="../../types/sdde_types/">SDDE Problems</a></li><li><a class="tocitem" href="../../types/dae_types/">DAE Problems</a></li></ul></li><li><span class="tocitem">Solver Algorithms</span><ul><li><a class="tocitem" href="../../solvers/discrete_solve/">Discrete Solvers</a></li><li><a class="tocitem" href="../../solvers/ode_solve/">ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/nonautonomous_linear_ode/">Non-autonomous Linear ODE / Lie Group ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dynamical_solve/">Dynamical, Hamiltonian, and 2nd Order ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/split_ode_solve/">Split ODE Solvers</a></li><li><a class="tocitem" href="../../solvers/steady_state_solve/">Steady State Solvers</a></li><li><a class="tocitem" href="../../solvers/bvp_solve/">BVP Solvers</a></li><li><a class="tocitem" href="../../solvers/sde_solve/">SDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdae_solve/">SDAE Solvers</a></li><li><a class="tocitem" href="../../solvers/rode_solve/">RODE Solvers</a></li><li><a class="tocitem" href="../../solvers/dde_solve/">DDE Solvers</a></li><li><a class="tocitem" href="../../solvers/sdde_solve/">SDDE Solvers</a></li><li><a class="tocitem" href="../../solvers/dae_solve/">Mass Matrix and Fully Implicit DAE Solvers</a></li><li><a class="tocitem" href="../../solvers/benchmarks/">Solver Benchmarks</a></li></ul></li><li><span class="tocitem">Additional Features</span><ul><li><a class="tocitem" href="../../features/performance_overloads/">Jacobians, Gradients, etc.</a></li><li><a class="tocitem" href="../../features/diffeq_arrays/">DiffEq-Specific Array Types</a></li><li><a class="tocitem" href="../../features/diffeq_operator/">Matrix-Free Linear Operators and Specializations on Linearity</a></li><li><a class="tocitem" href="../../features/noise_process/">Noise Processes</a></li><li><a class="tocitem" href="../../features/linear_nonlinear/">Specifying (Non)Linear Solvers and Preconditioners</a></li><li><a class="tocitem" href="../../features/callback_functions/">Event Handling and Callback Functions</a></li><li><a class="tocitem" href="../../features/callback_library/">Callback Library</a></li><li><a class="tocitem" href="../../features/ensemble/">Parallel Ensemble Simulations</a></li><li><a class="tocitem" href="../../features/io/">I/O: Saving and Loading Solution Data</a></li><li><a class="tocitem" href="../../features/low_dep/">Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage</a></li><li><a class="tocitem" href="../../features/progress_bar/">Progress Bar Integration</a></li></ul></li><li><span class="tocitem">Detailed Solver APIs</span><ul><li><a class="tocitem" href="../../api/sundials/">Sundials.jl</a></li><li><a class="tocitem" href="../../api/daskr/">DASKR.jl</a></li></ul></li><li><span class="tocitem">Extra Details</span><ul><li><a class="tocitem" href="../../extras/timestepping/">Timestepping Method Descriptions</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Code Optimization for Differential Equations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Code Optimization for Differential Equations</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SciML/DiffEqDocs.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SciML/DiffEqDocs.jl/blob/master/docs/src/tutorials/faster_ode_example.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="speed"><a class="docs-heading-anchor" href="#speed">Code Optimization for Differential Equations</a><a id="speed-1"></a><a class="docs-heading-anchor-permalink" href="#speed" title="Permalink"></a></h1><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>See <a href="../../basics/faq/#faq_performance">this FAQ</a> for information on common pitfalls and how to improve performance.</p></div></div><h2 id="Code-Optimization-in-Julia"><a class="docs-heading-anchor" href="#Code-Optimization-in-Julia">Code Optimization in Julia</a><a id="Code-Optimization-in-Julia-1"></a><a class="docs-heading-anchor-permalink" href="#Code-Optimization-in-Julia" title="Permalink"></a></h2><p>Before starting this tutorial, we recommend the reader to check out one of the many tutorials for optimization Julia code. The following is an incomplete list:</p><ul><li><a href="https://docs.julialang.org/en/v1/manual/performance-tips/">The Julia Performance Tips</a></li><li><a href="https://mitmath.github.io/18337/lecture2/optimizing">MIT 18.337 Course Notes on Optimizing Serial Code</a></li><li><a href="https://viralinstruction.com/posts/hardware/">What scientists must know about hardware to write fast code</a></li></ul><p>User-side optimizations are important because, for sufficiently difficult problems, most time will be spent inside your <code>f</code> function, the function you are trying to solve. “Efficient” integrators are those that reduce the required number of <code>f</code> calls to hit the error tolerance. The main ideas for optimizing your DiffEq code, or any Julia function, are the following:</p><ul><li>Make it non-allocating</li><li>Use StaticArrays for small arrays</li><li>Use broadcast fusion</li><li>Make it type-stable</li><li>Reduce redundant calculations</li><li>Make use of BLAS calls</li><li>Optimize algorithm choice</li></ul><p>We&#39;ll discuss these strategies in the context of differential equations. Let&#39;s start with small systems.</p><h2 id="Example-Accelerating-a-Non-Stiff-Equation:-The-Lorenz-Equation"><a class="docs-heading-anchor" href="#Example-Accelerating-a-Non-Stiff-Equation:-The-Lorenz-Equation">Example Accelerating a Non-Stiff Equation: The Lorenz Equation</a><a id="Example-Accelerating-a-Non-Stiff-Equation:-The-Lorenz-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-a-Non-Stiff-Equation:-The-Lorenz-Equation" title="Permalink"></a></h2><p>Let&#39;s take the classic Lorenz system. Let&#39;s start by naively writing the system in its out-of-place form:</p><pre><code class="language-julia hljs">function lorenz(u, p, t)
+    dx = 10.0 * (u[2] - u[1])
+    dy = u[1] * (28.0 - u[3]) - u[2]
+    dz = u[1] * u[2] - (8 / 3) * u[3]
+    [dx, dy, dz]
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz (generic function with 1 method)</code></pre><p>Here, <code>lorenz</code> returns an object, <code>[dx,dy,dz]</code>, which is created within the body of <code>lorenz</code>.</p><p>This is a common code pattern from high-level languages like MATLAB, SciPy, or R&#39;s deSolve. However, the issue with this form is that it allocates a vector, <code>[dx,dy,dz]</code>, at each step. Let&#39;s benchmark the solution process with this choice of function:</p><pre><code class="language-julia hljs">using DifferentialEquations, BenchmarkTools
+u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz, u0, tspan)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  3.365 ms (192104 allocations: 7.44 MiB)</code></pre><p>The <code>BenchmarkTools.jl</code> package&#39;s <code>@benchmark</code> runs the code multiple times to get an accurate measurement. The minimum time is the time it takes when your OS and other background processes aren&#39;t getting in the way. Notice that in this case it takes about 5ms to solve and allocates around 11.11 MiB. However, if we were to use this inside of a real user code, we&#39;d see a lot of time spent doing garbage collection (GC) to clean up all the arrays we made. Even if we turn off saving, we have these allocations.</p><pre><code class="language-julia hljs">@btime solve(prob, Tsit5(), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  2.963 ms (169897 allocations: 6.49 MiB)</code></pre><p>The problem, of course, is that arrays are created every time our derivative function is called. This function is called multiple times per step and is thus the main source of memory usage. To fix this, we can use the in-place form to ***make our code non-allocating***:</p><pre><code class="language-julia hljs">function lorenz!(du, u, p, t)
+    du[1] = 10.0 * (u[2] - u[1])
+    du[2] = u[1] * (28.0 - u[3]) - u[2]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+    nothing
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz! (generic function with 1 method)</code></pre><p>Here, instead of creating an array each time, we utilized the cache array <code>du</code>. When the in-place form is used, DifferentialEquations.jl takes a different internal route that minimizes the internal allocations as well.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Notice that nothing is returned. When in in-place form, the ODE solver ignores the return. Instead, make sure that the original <code>du</code> array is mutated instead of constructing a new array</p></div></div><p>When we benchmark this function, we will see quite a difference.</p><pre><code class="language-julia hljs">u0 = [1.0; 0.0; 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz!, u0, tspan)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  748.216 μs (23214 allocations: 1013.30 KiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob, Tsit5(), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  357.118 μs (71 allocations: 3.89 KiB)</code></pre><p>There is a 16x time difference just from that change! Notice there are still some allocations and this is due to the construction of the integration cache. But this doesn&#39;t scale with the problem size:</p><pre><code class="language-julia hljs">tspan = (0.0, 500.0) # 5x longer than before
+prob = ODEProblem(lorenz!, u0, tspan)
+@btime solve(prob, Tsit5(), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  1.837 ms (71 allocations: 3.89 KiB)</code></pre><p>Since that&#39;s all setup allocations, the user-side optimization is complete.</p><h3 id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays"><a class="docs-heading-anchor" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays">Further Optimizations of Small Non-Stiff ODEs with StaticArrays</a><a id="Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays-1"></a><a class="docs-heading-anchor-permalink" href="#Further-Optimizations-of-Small-Non-Stiff-ODEs-with-StaticArrays" title="Permalink"></a></h3><p>Allocations are only expensive if they are “heap allocations”. For a more in-depth definition of heap allocations, <a href="http://net-informations.com/faq/net/stack-heap.htm">there are many sources online</a>. But a good working definition is that heap allocations are variable-sized slabs of memory which have to be pointed to, and this pointer indirection costs time. Additionally, the heap has to be managed, and the garbage controllers has to actively keep track of what&#39;s on the heap.</p><p>However, there&#39;s an alternative to heap allocations, known as stack allocations. The stack is statically-sized (known at compile time) and thus its accesses are quick. Additionally, the exact block of memory is known in advance by the compiler, and thus re-using the memory is cheap. This means that allocating on the stack has essentially no cost!</p><p>Arrays have to be heap allocated because their size (and thus the amount of memory they take up) is determined at runtime. But there are structures in Julia which are stack-allocated. <code>struct</code>s for example are stack-allocated “value-type”s. <code>Tuple</code>s are a stack-allocated collection. The most useful data structure for DiffEq though is the <code>StaticArray</code> from the package <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a>. These arrays have their length determined at compile-time. They are created using macros attached to normal array expressions, for example:</p><pre><code class="language-julia hljs">using StaticArrays
+A = SA[2.0, 3.0, 5.0]
+typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">SVector{3, Float64}<span class="sgr90"> (alias for StaticArraysCore.SArray{Tuple{3}, Float64, 1, 3})</span></code></pre><p>Notice that the <code>3</code> after <code>SVector</code> gives the size of the <code>SVector</code>. It cannot be changed. Additionally, <code>SVector</code>s are immutable, so we have to create a new <code>SVector</code> to change values. But remember, we don&#39;t have to worry about allocations because this data structure is stack-allocated. <code>SArray</code>s have numerous extra optimizations as well: they have fast matrix multiplication, fast QR factorizations, etc. which directly make use of the information about the size of the array. Thus, when possible, they should be used.</p><p>Unfortunately, static arrays can only be used for sufficiently small arrays. After a certain size, they are forced to heap allocate after some instructions and their compile time balloons. Thus, static arrays shouldn&#39;t be used if your system has more than ~20 variables. Additionally, only the native Julia algorithms can fully utilize static arrays.</p><p>Let&#39;s ***optimize <code>lorenz</code> using static arrays***. Note that in this case, we want to use the out-of-place allocating form, but this time we want to output a static array:</p><pre><code class="language-julia hljs">function lorenz_static(u, p, t)
+    dx = 10.0 * (u[2] - u[1])
+    dy = u[1] * (28.0 - u[3]) - u[2]
+    dz = u[1] * u[2] - (8 / 3) * u[3]
+    SA[dx, dy, dz]
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">lorenz_static (generic function with 1 method)</code></pre><p>To make the solver internally use static arrays, we simply give it a static array as the initial condition:</p><pre><code class="language-julia hljs">u0 = SA[1.0, 0.0, 0.0]
+tspan = (0.0, 100.0)
+prob = ODEProblem(lorenz_static, u0, tspan)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  262.099 μs (2615 allocations: 392.66 KiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob, Tsit5(), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  185.629 μs (25 allocations: 2.03 KiB)</code></pre><p>And that&#39;s pretty much all there is to it. With static arrays, you don&#39;t have to worry about allocating, so use operations like <code>*</code> and don&#39;t worry about fusing operations (discussed in the next section). Do “the vectorized code” of R/MATLAB/Python and your code in this case will be fast, or directly use the numbers/values.</p><h2 id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation"><a class="docs-heading-anchor" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation">Example Accelerating a Stiff Equation: the Robertson Equation</a><a id="Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-a-Stiff-Equation:-the-Robertson-Equation" title="Permalink"></a></h2><p>For these next examples, let&#39;s solve the Robertson equations (also known as ROBER):</p><p class="math-container">\[\begin{aligned}
+\frac{dy_1}{dt} &amp;= -0.04y₁ + 10^4 y_2 y_3 \\
+\frac{dy_2}{dt} &amp;= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
+\frac{dy_3}{dt} &amp;= 3*10^7 y_{2}^2 \\
+\end{aligned}\]</p><p>Given that these equations are stiff, non-stiff ODE solvers like <code>Tsit5</code> or <code>Vern9</code> will fail to solve these equations. The automatic algorithm will detect this and automatically switch to something more robust to handle these issues. For example:</p><pre><code class="language-julia hljs">using DifferentialEquations
+using Plots
+function rober!(du, u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    du[1] = -k₁ * y₁ + k₃ * y₂ * y₃
+    du[2] = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
+    du[3] = k₂ * y₂^2
+    nothing
+end
+prob = ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1e5), [0.04, 3e7, 1e4])
+sol = solve(prob)
+plot(sol, tspan = (1e-2, 1e5), xscale = :log10)</code></pre><img src="47f3076a.svg" alt="Example block output"/><pre><code class="language-julia hljs">using BenchmarkTools
+@btime solve(prob);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  110.979 μs (1671 allocations: 129.91 KiB)</code></pre><h3 id="Choosing-a-Good-Solver"><a class="docs-heading-anchor" href="#Choosing-a-Good-Solver">Choosing a Good Solver</a><a id="Choosing-a-Good-Solver-1"></a><a class="docs-heading-anchor-permalink" href="#Choosing-a-Good-Solver" title="Permalink"></a></h3><p>Choosing a good solver is required for getting top-notch speed. General recommendations can be found on the solver page (for example, the <a href="../../solvers/ode_solve/#ode_solve">ODE Solver Recommendations</a>). The current recommendations can be simplified to a Rosenbrock method (<code>Rosenbrock23</code> or <code>Rodas5</code>) for smaller (&lt;50 ODEs) problems, ESDIRK methods for slightly larger (<code>TRBDF2</code> or <code>KenCarp4</code> for &lt;2000 ODEs), and <code>QNDF</code> for even larger problems. <code>lsoda</code> from <a href="https://github.com/rveltz/LSODA.jl">LSODA.jl</a> is sometimes worth a try for the medium-sized category.</p><p>More details on the solver to choose can be found by benchmarking. See the <a href="https://docs.sciml.ai/SciMLBenchmarksOutput/stable/">SciMLBenchmarks</a> to compare many solvers on many problems.</p><p>From this, we try the recommendation of <code>Rosenbrock23()</code> for stiff ODEs at default tolerances:</p><pre><code class="language-julia hljs">@btime solve(prob, Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  67.120 μs (714 allocations: 35.20 KiB)</code></pre><h3 id="Declaring-Jacobian-Functions"><a class="docs-heading-anchor" href="#Declaring-Jacobian-Functions">Declaring Jacobian Functions</a><a id="Declaring-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Declaring-Jacobian-Functions" title="Permalink"></a></h3><p>In order to reduce the Jacobian construction cost, one can describe a Jacobian function by using the <code>jac</code> argument for the <code>ODEFunction</code>. First we have to derive the Jacobian <span>$\frac{df_i}{du_j}$</span> which is <code>J[i,j]</code>. From this, we get:</p><pre><code class="language-julia hljs">function rober_jac!(J, u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    J[1, 1] = k₁ * -1
+    J[2, 1] = k₁
+    J[3, 1] = 0
+    J[1, 2] = y₃ * k₃
+    J[2, 2] = y₂ * k₂ * -2 + y₃ * k₃ * -1
+    J[3, 2] = y₂ * 2 * k₂
+    J[1, 3] = k₃ * y₂
+    J[2, 3] = k₃ * y₂ * -1
+    J[3, 3] = 0
+    nothing
+end
+f! = ODEFunction(rober!, jac = rober_jac!)
+prob_jac = ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr38_2" style="color:#56b6c2">ODEProblem</span> with uType <span class="sgr38_2" style="color:#56b6c2">Vector{Float64}</span> and tType <span class="sgr38_2" style="color:#56b6c2">Float64</span>. In-place: <span class="sgr38_2" style="color:#56b6c2">true</span>
+Non-trivial mass matrix: <span class="sgr38_2" style="color:#56b6c2">false</span>
+timespan: (0.0, 100000.0)
+u0: 3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0</code></pre><pre><code class="language-julia hljs">@btime solve(prob_jac, Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  61.089 μs (694 allocations: 34.28 KiB)</code></pre><h3 id="Automatic-Derivation-of-Jacobian-Functions"><a class="docs-heading-anchor" href="#Automatic-Derivation-of-Jacobian-Functions">Automatic Derivation of Jacobian Functions</a><a id="Automatic-Derivation-of-Jacobian-Functions-1"></a><a class="docs-heading-anchor-permalink" href="#Automatic-Derivation-of-Jacobian-Functions" title="Permalink"></a></h3><p>But that was hard! If you want to take the symbolic Jacobian of numerical code, we can make use of <a href="https://github.com/SciML/ModelingToolkit.jl">ModelingToolkit.jl</a> to symbolic-ify the numerical code and do the symbolic calculation and return the Julia code for this.</p><pre><code class="language-julia hljs">using ModelingToolkit
+de = complete(modelingtoolkitize(prob))</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} \mathtt{x_1}\left( t \right)}{\mathrm{d}t} &amp;=  - \mathtt{x_1}\left( t \right) \mathtt{\alpha_1} + \mathtt{x_2}\left( t \right) \mathtt{x_3}\left( t \right) \mathtt{\alpha_3} \\
+\frac{\mathrm{d} \mathtt{x_2}\left( t \right)}{\mathrm{d}t} &amp;= \mathtt{x_1}\left( t \right) \mathtt{\alpha_1} - \left( \mathtt{x_2}\left( t \right) \right)^{2} \mathtt{\alpha_2} - \mathtt{x_2}\left( t \right) \mathtt{x_3}\left( t \right) \mathtt{\alpha_3} \\
+\frac{\mathrm{d} \mathtt{x_3}\left( t \right)}{\mathrm{d}t} &amp;= \left( \mathtt{x_2}\left( t \right) \right)^{2} \mathtt{\alpha_2}
+\end{align}
+ \]</p><p>We can tell it to compute the Jacobian if we want to see the code:</p><pre><code class="language-julia hljs">ModelingToolkit.generate_jacobian(de)[2] # Second is in-place</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">:(function (ˍ₋out, __mtk_arg_1, ___mtkparameters___, t)
+      <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/Symbolics/M5oEc/src/build_function.jl:368 =#</span> @inbounds begin
+              <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/Symbolics/M5oEc/src/build_function.jl:368 =#</span>
+              begin
+                  <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:402 =#</span>
+                  <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:403 =#</span>
+                  <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:404 =#</span>
+                  begin
+                      __mtk_arg_2 = ___mtkparameters___[1]
+                      __mtk_arg_3 = ___mtkparameters___[2]
+                      begin
+                          <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:457 =#</span> @inbounds begin
+                                  <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:453 =#</span>
+                                  ˍ₋out[1] = (*)(-1, __mtk_arg_2[2])
+                                  ˍ₋out[2] = __mtk_arg_2[2]
+                                  ˍ₋out[3] = 0
+                                  ˍ₋out[4] = (*)(__mtk_arg_1[3], __mtk_arg_2[1])
+                                  ˍ₋out[5] = (+)((*)((*)(-2, __mtk_arg_1[2]), __mtk_arg_2[3]), (*)((*)(-1, __mtk_arg_1[3]), __mtk_arg_2[1]))
+                                  ˍ₋out[6] = (*)((*)(2, __mtk_arg_1[2]), __mtk_arg_2[3])
+                                  ˍ₋out[7] = (*)(__mtk_arg_1[2], __mtk_arg_2[1])
+                                  ˍ₋out[8] = (*)((*)(-1, __mtk_arg_1[2]), __mtk_arg_2[1])
+                                  ˍ₋out[9] = 0
+                                  <span class="sgr90">#= /root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/packages/SymbolicUtils/KHJCP/src/code.jl:455 =#</span>
+                                  ˍ₋out
+                              end
+                      end
+                  end
+              end
+          end
+  end)</code></pre><p>Now let&#39;s use that to give the analytical solution Jacobian:</p><pre><code class="language-julia hljs">prob_jac2 = ODEProblem(de, [], (0.0, 1e5), jac = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr38_2" style="color:#56b6c2">ODEProblem</span> with uType <span class="sgr38_2" style="color:#56b6c2">Vector{Float64}</span> and tType <span class="sgr38_2" style="color:#56b6c2">Float64</span>. In-place: <span class="sgr38_2" style="color:#56b6c2">true</span>
+Initialization status: <span class="sgr38_2" style="color:#56b6c2">FULLY_DETERMINED</span>
+Non-trivial mass matrix: <span class="sgr38_2" style="color:#56b6c2">false</span>
+timespan: (0.0, 100000.0)
+u0: 3-element Vector{Float64}:
+ 1.0
+ 0.0
+ 0.0</code></pre><pre><code class="language-julia hljs">@btime solve(prob_jac2);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  96.049 μs (1587 allocations: 119.39 KiB)</code></pre><p>See the <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl documentation</a> for more details.</p><h3 id="Accelerating-Small-ODE-Solves-with-Static-Arrays"><a class="docs-heading-anchor" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays">Accelerating Small ODE Solves with Static Arrays</a><a id="Accelerating-Small-ODE-Solves-with-Static-Arrays-1"></a><a class="docs-heading-anchor-permalink" href="#Accelerating-Small-ODE-Solves-with-Static-Arrays" title="Permalink"></a></h3><p>If the ODE is sufficiently small (&lt;20 ODEs or so), using <a href="https://github.com/JuliaArrays/StaticArrays.jl">StaticArrays.jl</a> for the state variables can greatly enhance the performance. This is done by making <code>u0</code> a <code>StaticArray</code> and writing an out-of-place non-mutating dispatch for static arrays, for the ROBER problem, this looks like:</p><pre><code class="language-julia hljs">using StaticArrays
+function rober_static(u, p, t)
+    y₁, y₂, y₃ = u
+    k₁, k₂, k₃ = p
+    du1 = -k₁ * y₁ + k₃ * y₂ * y₃
+    du2 = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
+    du3 = k₂ * y₂^2
+    SA[du1, du2, du3]
+end
+prob = ODEProblem(rober_static, SA[1.0, 0.0, 0.0], (0.0, 1e5), SA[0.04, 3e7, 1e4])
+sol = solve(prob, Rosenbrock23())</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">retcode: Success
+Interpolation: specialized 2nd order &quot;free&quot; stiffness-aware interpolation
+t: 61-element Vector{Float64}:
+      0.0
+      3.196206628740808e-5
+      0.00014400709669791316
+      0.00025605212710841824
+      0.00048593872520561496
+      0.0007179482298405134
+      0.0010819240431281
+      0.0014801655696439716
+      0.0020679567767069723
+      0.0028435846274559506
+      ⋮
+  25371.934242574636
+  30784.11997687391
+  37217.42637183451
+  44850.61378119757
+  53893.69155452613
+  64593.73799781129
+  77241.71960460565
+  92180.81944906656
+ 100000.0
+u: 61-element Vector{StaticArraysCore.SVector{3, Float64}}:
+ [1.0, 0.0, 0.0]
+ [0.9999987215181657, 1.2780900152625978e-6, 3.9181897521319503e-10]
+ [0.9999942397327672, 5.718510591908378e-6, 4.175664083814195e-8]
+ [0.9999897579685716, 9.992106860321925e-6, 2.4992456809854223e-7]
+ [0.99998056266788, 1.7833624284594367e-5, 1.6037078354141815e-6]
+ [0.9999712826600025, 2.403488607694387e-5, 4.6824539206438825e-6]
+ [0.9999567250106862, 3.0390689558961382e-5, 1.2884299754832173e-5]
+ [0.999940798607161, 3.388427373871301e-5, 2.531711910029394e-5]
+ [0.9999172960308617, 3.583508668595173e-5, 4.686888245237194e-5]
+ [0.9998862913719596, 3.641240165367128e-5, 7.729622638673522e-5]
+ ⋮
+ [0.055635077310009065, 2.3546320422346706e-7, 0.944364687226786]
+ [0.0479253487640473, 2.012149504322489e-7, 0.9520744500210007]
+ [0.041233421490035026, 1.719278816689166e-7, 0.9587664065820823]
+ [0.03543699837030739, 1.4688361975260092e-7, 0.9645628547460712]
+ [0.030425371816163987, 1.2546809318472718e-7, 0.9695745027157405]
+ [0.026099132201150083, 1.0715608431717981e-7, 0.9739007606427643]
+ [0.02236969169455009, 9.149844876161108e-8, 0.9776302168069992]
+ [0.01915856331353317, 7.811096380138723e-8, 0.9808413585755008]
+ [0.01782789385075171, 7.258919982166322e-8, 0.9821720335600463]</code></pre><p>If we benchmark this, we see a really fast solution with really low allocation counts:</p><pre><code class="language-julia hljs">@btime sol = solve(prob, Rosenbrock23());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  18.270 μs (151 allocations: 18.89 KiB)</code></pre><p>This version is thus very amenable to multithreading and other forms of parallelism.</p><h2 id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization"><a class="docs-heading-anchor" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization">Example Accelerating Linear Algebra PDE Semi-Discretization</a><a id="Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Accelerating-Linear-Algebra-PDE-Semi-Discretization" title="Permalink"></a></h2><p>In this tutorial, we will optimize the right-hand side definition of a PDE semi-discretization.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>We highly recommend looking at the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for details on customizing DifferentialEquations.jl for more efficient large-scale stiff ODE solving. This section will only focus on the user-side code.</p></div></div><p>Let&#39;s optimize the solution of a Reaction-Diffusion PDE&#39;s discretization. In its discretized form, this is the ODE:</p><p class="math-container">\[\begin{align}
+du &amp;= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - \alpha u\\
+dv &amp;= D_2 (A_y v + v A_x) + a u^2 + \beta v
+\end{align}\]</p><p>where <span>$u$</span>, <span>$v$</span>, and <span>$A$</span> are matrices. Here, we will use the simplified version where <span>$A$</span> is the tridiagonal stencil <span>$[1,-2,1]$</span>, i.e. it&#39;s the 2D discretization of the Laplacian. The native code would be something along the lines of:</p><pre><code class="language-julia hljs">using DifferentialEquations, LinearAlgebra, BenchmarkTools
+# Generate the constants
+p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
+N = 100
+Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
+    [1.0 for i in 1:(N - 1)]))
+Ay = copy(Ax)
+Ax[2, 1] = 2.0
+Ax[end - 1, end] = 2.0
+Ay[1, 2] = 2.0
+Ay[end, end - 1] = 2.0
+
+function basic_version!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = r[:, :, 1]
+    v = r[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
+    dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
+end
+
+a, α, ubar, β, D1, D2 = p
+uss = (ubar + β) / α
+vss = (a / β) * uss^2
+r0 = zeros(100, 100, 2)
+r0[:, :, 1] .= uss .+ 0.1 .* rand.()
+r0[:, :, 2] .= vss
+
+prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr38_2" style="color:#56b6c2">ODEProblem</span> with uType <span class="sgr38_2" style="color:#56b6c2">Array{Float64, 3}</span> and tType <span class="sgr38_2" style="color:#56b6c2">Float64</span>. In-place: <span class="sgr38_2" style="color:#56b6c2">true</span>
+Non-trivial mass matrix: <span class="sgr38_2" style="color:#56b6c2">false</span>
+timespan: (0.0, 0.1)
+u0: 100×100×2 Array{Float64, 3}:
+[:, :, 1] =
+ 11.0069  11.0706  11.0502  11.0147  …  11.0011  11.0352  11.0627  11.0185
+ 11.0633  11.0363  11.0173  11.0598     11.073   11.0945  11.0111  11.0594
+ 11.01    11.05    11.0233  11.0334     11.0589  11.0943  11.0648  11.0447
+ 11.0459  11.0739  11.0158  11.0236     11.0233  11.0273  11.0138  11.0501
+ 11.0449  11.0724  11.0929  11.0081     11.0081  11.0919  11.0879  11.0979
+ 11.0507  11.0998  11.0538  11.0092  …  11.0703  11.0775  11.0022  11.057
+ 11.0903  11.0658  11.0364  11.028      11.0913  11.0357  11.08    11.0027
+ 11.0065  11.0518  11.0907  11.0373     11.0116  11.0533  11.0866  11.0566
+ 11.0412  11.0169  11.0285  11.0134     11.043   11.0964  11.0974  11.0366
+ 11.0021  11.0453  11.0918  11.0528     11.0268  11.0154  11.0414  11.0721
+  ⋮                                  ⋱                             
+ 11.003   11.0482  11.0478  11.0567     11.0262  11.018   11.0004  11.0436
+ 11.0271  11.0141  11.0701  11.0801     11.0626  11.0009  11.0889  11.075
+ 11.061   11.0863  11.04    11.0728     11.0983  11.0309  11.091   11.0331
+ 11.003   11.0481  11.0974  11.0146     11.0762  11.0927  11.0381  11.0324
+ 11.0622  11.0037  11.0153  11.0844  …  11.0084  11.0403  11.0935  11.0559
+ 11.0051  11.034   11.0628  11.0167     11.0171  11.0755  11.0092  11.0032
+ 11.0532  11.0385  11.0267  11.0681     11.0638  11.0829  11.095   11.0098
+ 11.0074  11.0695  11.0779  11.03       11.048   11.0923  11.0268  11.082
+ 11.0953  11.0173  11.0213  11.0954     11.0868  11.0615  11.0489  11.038
+
+[:, :, 2] =
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+  ⋮                             ⋮    ⋱         ⋮                      
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1  …  12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1
+ 12.1  12.1  12.1  12.1  12.1  12.1     12.1  12.1  12.1  12.1  12.1  12.1</code></pre><p>In this version, we have encoded our initial condition to be a 3-dimensional array, with <code>u[:,:,1]</code> being the <code>A</code> part and <code>u[:,:,2]</code> being the <code>B</code> part.</p><pre><code class="language-julia hljs">@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  55.172 ms (9265 allocations: 194.50 MiB)</code></pre><p>While this version isn&#39;t very efficient,</p><h4 id="We-recommend-writing-the-“high-level”-code-first,-and-iteratively-optimizing-it!"><a class="docs-heading-anchor" href="#We-recommend-writing-the-“high-level”-code-first,-and-iteratively-optimizing-it!">We recommend writing the “high-level” code first, and iteratively optimizing it!</a><a id="We-recommend-writing-the-“high-level”-code-first,-and-iteratively-optimizing-it!-1"></a><a class="docs-heading-anchor-permalink" href="#We-recommend-writing-the-“high-level”-code-first,-and-iteratively-optimizing-it!" title="Permalink"></a></h4><p>The first thing that we can do is get rid of the slicing allocations. The operation <code>r[:,:,1]</code> creates a temporary array instead of a “view”, i.e. a pointer to the already existing memory. To make it a view, add <code>@view</code>. Note that we have to be careful with views because they point to the same memory, and thus changing a view changes the original values:</p><pre><code class="language-julia hljs">A = rand(4)
+@show A
+B = @view A[1:3]
+B[2] = 2
+@show A</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">4-element Vector{Float64}:
+ 0.920030208897922
+ 2.0
+ 0.2121354674020749
+ 0.3296827620165734</code></pre><p>Notice that changing <code>B</code> changed <code>A</code>. This is something to be careful of, but at the same time we want to use this since we want to modify the output <code>dr</code>. Additionally, the last statement is a purely element-wise operation, and thus we can make use of broadcast fusion there. Let&#39;s rewrite <code>basic_version!</code> to ***avoid slicing allocations*** and to ***use broadcast fusion***:</p><pre><code class="language-julia hljs">function gm2!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    @. du = Du + a .* u .* u ./ v + ubar - α * u
+    @. dv = Dv + a .* u .* u - β * v
+end
+prob = ODEProblem(gm2!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  49.286 ms (6970 allocations: 124.55 MiB)</code></pre><p>Now, most of the allocations are taking place in <code>Du = D1*(Ay*u + u*Ax)</code> since those operations are vectorized and not mutating. We should instead replace the matrix multiplications with <code>mul!</code>. When doing so, we will need to have cache variables to write into. This looks like:</p><pre><code class="language-julia hljs">Ayu = zeros(N, N)
+uAx = zeros(N, N)
+Du = zeros(N, N)
+Ayv = zeros(N, N)
+vAx = zeros(N, N)
+Dv = zeros(N, N)
+function gm3!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    mul!(Ayu, Ay, u)
+    mul!(uAx, u, Ax)
+    mul!(Ayv, Ay, v)
+    mul!(vAx, v, Ax)
+    @. Du = D1 * (Ayu + uAx)
+    @. Dv = D2 * (Ayv + vAx)
+    @. du = Du + a * u * u ./ v + ubar - α * u
+    @. dv = Dv + a * u * u - β * v
+end
+prob = ODEProblem(gm3!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  42.839 ms (3910 allocations: 31.09 MiB)</code></pre><p>But our temporary variables are global variables. We need to either declare the caches as <code>const</code> or localize them. We can localize them by adding them to the parameters, <code>p</code>. It&#39;s easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.</p><pre><code class="language-julia hljs">p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0, Ayu, uAx, Du, Ayv, vAx, Dv) # a,α,ubar,β,D1,D2
+function gm4!(dr, r, p, t)
+    a, α, ubar, β, D1, D2, Ayu, uAx, Du, Ayv, vAx, Dv = p
+    u = @view r[:, :, 1]
+    v = @view r[:, :, 2]
+    du = @view dr[:, :, 1]
+    dv = @view dr[:, :, 2]
+    mul!(Ayu, Ay, u)
+    mul!(uAx, u, Ax)
+    mul!(Ayv, Ay, v)
+    mul!(vAx, v, Ax)
+    @. Du = D1 * (Ayu + uAx)
+    @. Dv = D2 * (Ayv + vAx)
+    @. du = Du + a * u * u ./ v + ubar - α * u
+    @. dv = Dv + a * u * u - β * v
+end
+prob = ODEProblem(gm4!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  42.347 ms (1297 allocations: 30.88 MiB)</code></pre><p>We could then use the BLAS <code>gemmv</code> to optimize the matrix multiplications some more, but instead let&#39;s devectorize the stencil.</p><pre><code class="language-julia hljs">p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0, N)
+function fast_gm!(du, u, p, t)
+    a, α, ubar, β, D1, D2, N = p
+
+    @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+        du[i, j, 1] = D1 *
+                      (u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
+                       4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+
+    @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+        du[i, j, 2] = D2 *
+                      (u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
+                       4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+
+    @inbounds for j in 2:(N - 1)
+        i = 1
+        du[1, j, 1] = D1 *
+                      (2u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = 1
+        du[1, j, 2] = D2 *
+                      (2u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = N
+        du[end, j, 1] = D1 *
+                        (2u[i - 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for j in 2:(N - 1)
+        i = N
+        du[end, j, 2] = D2 *
+                        (2u[i - 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+
+    @inbounds for i in 2:(N - 1)
+        j = 1
+        du[i, 1, 1] = D1 *
+                      (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = 1
+        du[i, 1, 2] = D2 *
+                      (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = N
+        du[i, end, 1] = D1 *
+                        (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+    end
+    @inbounds for i in 2:(N - 1)
+        j = N
+        du[i, end, 2] = D2 *
+                        (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+
+    @inbounds begin
+        i = 1
+        j = 1
+        du[1, 1, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[1, 1, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+
+        i = 1
+        j = N
+        du[1, N, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[1, N, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+
+        i = N
+        j = 1
+        du[N, 1, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[N, 1, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+
+        i = N
+        j = N
+        du[end, end, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+                          a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+        du[end, end, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+                          a * u[i, j, 1]^2 - β * u[i, j, 2]
+    end
+end
+prob = ODEProblem(fast_gm!, r0, (0.0, 0.1), p)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  7.122 ms (685 allocations: 30.84 MiB)</code></pre><p>Notice that in this case fusing the loops and avoiding the linear operators is a major improvement of about 10x! That&#39;s an order of magnitude faster than our original MATLAB/SciPy/R vectorized style code!</p><p>Since this is tedious to do by hand, we note that <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl&#39;s symbolic code generation</a> can do this automatically from the basic version:</p><pre><code class="language-julia hljs">using ModelingToolkit
+function basic_version!(dr, r, p, t)
+    a, α, ubar, β, D1, D2 = p
+    u = r[:, :, 1]
+    v = r[:, :, 2]
+    Du = D1 * (Ay * u + u * Ax)
+    Dv = D2 * (Ay * v + v * Ax)
+    dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
+    dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
+end
+
+a, α, ubar, β, D1, D2 = p
+uss = (ubar + β) / α
+vss = (a / β) * uss^2
+r0 = zeros(100, 100, 2)
+r0[:, :, 1] .= uss .+ 0.1 .* rand.()
+r0[:, :, 2] .= vss
+
+prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
+de = complete(modelingtoolkitize(prob))
+
+# Note jac=true,sparse=true makes it automatically build sparse Jacobian code
+# as well!
+
+fastprob = ODEProblem(de, [], (0.0, 0.1), jac = true, sparse = true)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr38_2" style="color:#56b6c2">ODEProblem</span> with uType <span class="sgr38_2" style="color:#56b6c2">Vector{Float64}</span> and tType <span class="sgr38_2" style="color:#56b6c2">Float64</span>. In-place: <span class="sgr38_2" style="color:#56b6c2">true</span>
+Initialization status: <span class="sgr38_2" style="color:#56b6c2">FULLY_DETERMINED</span>
+Non-trivial mass matrix: <span class="sgr38_2" style="color:#56b6c2">false</span>
+timespan: (0.0, 0.1)
+u0: 20000-element Vector{Float64}:
+ 11.017899709161647
+ 11.018334299041744
+ 11.007448064759513
+ 11.017653354244102
+ 11.007212900826193
+ 11.002296612772142
+ 11.097565548624507
+ 11.03025589962171
+ 11.09295095521475
+ 11.095513344935462
+  ⋮
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001
+ 12.100000000000001</code></pre><p>Lastly, we can do other things like multithread the main loops. <a href="https://github.com/JuliaSIMD/LoopVectorization.jl">LoopVectorization.jl</a> provides the <code>@turbo</code> macro for doing a lot of SIMD enhancements, and <code>@tturbo</code> is the multithreaded version.</p><h3 id="Optimizing-Algorithm-Choices"><a class="docs-heading-anchor" href="#Optimizing-Algorithm-Choices">Optimizing Algorithm Choices</a><a id="Optimizing-Algorithm-Choices-1"></a><a class="docs-heading-anchor-permalink" href="#Optimizing-Algorithm-Choices" title="Permalink"></a></h3><p>The last thing to do is then ***optimize our algorithm choice***. We have been using <code>Tsit5()</code> as our test algorithm, but in reality this problem is a stiff PDE discretization and thus one recommendation is to use <code>CVODE_BDF()</code>. However, instead of using the default dense Jacobian, we should make use of the sparse Jacobian afforded by the problem. The Jacobian is the matrix <span>$\frac{df_i}{dr_j}$</span>, where <span>$r$</span> is read by the linear index (i.e. down columns). But since the <span>$u$</span> variables depend on the <span>$v$</span>, the band size here is large, and thus this will not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian algorithms. <code>CVODE_BDF</code> allows us to use a sparse Newton-Krylov solver by setting <code>linear_solver = :GMRES</code>.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>The <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial goes through these details. This is simply to give a taste of how much optimization opportunity is left on the table!</p></div></div><p>Let&#39;s see how our fast right-hand side scales as we increase the integration time.</p><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!, r0, (0.0, 10.0), p)
+@btime solve(prob, Tsit5());</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  1.215 s (60142 allocations: 2.76 GiB)</code></pre><pre><code class="language-julia hljs">using Sundials
+@btime solve(prob, CVODE_BDF(linear_solver = :GMRES));</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  521.529 ms (14498 allocations: 97.56 MiB)</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!, r0, (0.0, 100.0), p)
+# Will go out of memory if we don&#39;t turn off `save_everystep`!
+@btime solve(prob, Tsit5(), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  3.962 s (90 allocations: 2.90 MiB)</code></pre><pre><code class="language-julia hljs">@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  2.094 s (49399 allocations: 2.68 MiB)</code></pre><pre><code class="language-julia hljs">prob = ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
+@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">  3.057 s (71671 allocations: 3.47 MiB)</code></pre><p>Notice that we&#39;ve eliminated almost all allocations, allowing the code to grow without hitting garbage collection and slowing down.</p><p>Why is <code>CVODE_BDF</code> doing well? What&#39;s happening is that, because the problem is stiff, the number of steps required by the explicit Runge-Kutta method grows rapidly, whereas <code>CVODE_BDF</code> is taking large steps. Additionally, the <code>GMRES</code> linear solver form is quite an efficient way to solve the implicit system in this case. This is problem-dependent, and in many cases using a Krylov method effectively requires a preconditioner, so you need to play around with testing other algorithms and linear solvers to find out what works best with your problem.</p><p>Now continue to the <a href="../advanced_ode_example/#stiff">Solving Large Stiff Equations</a> tutorial for more details on optimizing the algorithm choice for such codes.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../getting_started/">« Getting Started with Differential Equations in Julia</a><a class="docs-footer-nextpage" href="../advanced_ode_example/">Solving Large Stiff Equations »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.0 on <span class="colophon-date" title="Monday 31 March 2025 00:43">Monday 31 March 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
