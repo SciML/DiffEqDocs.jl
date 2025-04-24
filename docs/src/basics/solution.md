@@ -18,6 +18,19 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
 ## Array Interface
 
+!!! note
+
+    In 2023 the linear indexing `sol[i]`` was deprecated. It previously had the behavior that
+    `sol[i] = sol.u[i]`. However, this is incompatible with standard `AbstractArray` interfaces,
+    Since if `A = VectorOfArray([[1,2],[3,4]])` and `A` is supposed to act like `[1 3; 2 4]`,
+    then there is a difference `A[1] = [1,2]` for the VectorOfArray while `A[1] = 1` for the
+    matrix. This causes many issues if `AbstractVectorOfArray <: AbstractArray`. Thus we
+    plan in 2026 to complete the deprecation and thus have a breaking update where `sol[i]`
+    matches the linear indexing of an `AbstractArray`, and then making
+    `AbstractVectorOfArray <: AbstractArray`. Until then, `AbstractVectorOfArray` due to
+    this interface break but manaully implements an AbstractArray-like interface for
+    future compatability.
+
 The general operations are as follows. Use
 
 ```julia
