@@ -1,5 +1,9 @@
 # [Solution Handling](@id solution)
 
+The solution is an `RecursiveArrayTools.AbstractDiffEqArray`. 
+[See RecursiveArrayTools.jl for more information on the interface](https://docs.sciml.ai/RecursiveArrayTools/stable/).
+The following is a more DiffEq-centric explanation of the interface.
+
 ## Accessing the Values
 
 The solution type has a lot of built-in functionality to help analysis. For example,
@@ -14,11 +18,10 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
 ## Array Interface
 
-Instead of working on the `Vector{uType}` directly, we can use the provided
-array interface.
+The general operations are as follows. Use
 
 ```julia
-sol[j]
+sol.u[j]
 ```
 
 to access the value at timestep `j` (if the timeseries was saved), and
@@ -34,7 +37,8 @@ will address first by component and lastly by time, and thus
 sol[i, j]
 ```
 
-will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major, so the leading dimension should be contiguous in memory. If the independent variables had shape
+will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major, 
+so the leading dimension should be contiguous in memory. If the independent variables had shape
 (for example, was a matrix), then `i` is the linear index. We can also access
 solutions with shape:
 
@@ -87,7 +91,12 @@ at a time `t` using the command
 sol(t)
 ```
 
-Note that the interpolating function allows for `t` to be a vector and uses this to speed up the interpolation calculations. The full API for the interpolations is
+Note that the interpolating function allows for `t` to be a vector and uses this to speed up the interpolation calculations. If `t` is an `AbstractVector`, then
+the returned object is a `RecursiveArrayTools.DiffEqArray`, [see RecursiveArrayTools.jl for more information](https://docs.sciml.ai/RecursiveArrayTools/stable/).
+Note that the differential equation solution object itself is an `AbstractDiffEqArray`, and this means that the returned object will have the same indexing
+behavior as a solution type itself, thus see the indexing description above.
+
+The full API for the interpolations is:
 
 ```julia
 sol(t, deriv = Val{0}; idxs = nothing, continuity = :left)
@@ -116,14 +125,6 @@ sol(out, t, deriv = Val{0}; idxs = nothing, continuity = :left)
 which will write the output to `out`. This allows one to use pre-allocated vectors for the output to improve the speed even more.
 
 ## Comprehensions
-
-The solver interface also gives tools for using comprehensions over the solution.
-Using the `tuples(sol)` function, we can get a tuple for the output at each
-timestep. This allows one to do the following:
-
-```julia
-[t + 2u for (u, t) in tuples(sol)]
-```
 
 One can use the extra components of the solution object as well as using `zip`. For
 example, say the solution type holds `du`, the derivative at each timestep. One
