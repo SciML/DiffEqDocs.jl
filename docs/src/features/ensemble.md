@@ -30,7 +30,7 @@ EnsembleProblem(prob::DEProblem;
     `rerun` was true this will be `2`, `3`, etc. counting the number of times
     problem `i` has been repeated.
   - `reduction`: This function determines how to reduce the data in each batch.
-    Defaults to appending the `data` into `u`, initialised via `u_data`, from
+    Defaults to appending the `data` into `u`, initialised via `u_init`, from
     the batches. `I` is a range of indices giving the trajectories corresponding
     to the batches. The second part of the output determines whether the simulation
     has converged. If `true`, the simulation will exit early. By default, this is
