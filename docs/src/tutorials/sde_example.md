@@ -268,7 +268,7 @@ A[2, 4] = 1
 A = sparse(A)
 
 # Make `g!` write the sparse matrix values
-function g(du, u, p, t)
+function g!(du, u, p, t)
     du[1, 1] = 0.3u[1]
     du[1, 4] = 0.12u[2]
     du[2, 4] = 1.8u[2]
