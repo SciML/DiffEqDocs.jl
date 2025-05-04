@@ -275,7 +275,7 @@ function g(du, u, p, t)
 end
 
 # Make `g!` use the sparse matrix
-prob = SDEProblem(f, g, ones(2), (0.0, 1.0), noise_rate_prototype = A)
+prob = SDEProblem(f!, g!, ones(2), (0.0, 1.0), noise_rate_prototype = A)
 ```
 
 and now `g!(u,p,t)` writes into a sparse matrix, and `g!(u,p,t)*dW` is sparse matrix
