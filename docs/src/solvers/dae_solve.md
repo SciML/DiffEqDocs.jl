@@ -24,6 +24,9 @@ but still needs more optimizations.
 For all OrdinaryDiffEq.jl methods, an initialization scheme can be set with a
 common keyword argument `initializealg`. The choices are:
 
+  - `CheckInit`: Check that the provided initial conditions satisfy the equation;
+    if not, error. This avoids the need for nonlinear solution, as well as avoiding
+    changing the provided initial conditions.
   - `BrownFullBasicInit`: For Index-1 DAEs implicit DAEs and semi-explicit
     DAEs in mass matrix form. Keeps the differential variables constant. Requires
     `du0` when used on a `DAEProblem`.
