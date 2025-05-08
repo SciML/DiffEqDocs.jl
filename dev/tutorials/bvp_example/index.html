@@ -18,7 +18,7 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
 end
 bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = solve(bvp1, MIRK4(), dt = 0.05)
-plot(sol1)</code></pre><img src="fb8aee4b.svg" alt="Example block output"/><p>The third argument of <code>BVProblem</code> or <code>TwoPointBVProblem</code> is the initial guess of the solution, which can be specified as a <code>Vector</code>, a <code>Function</code> of <code>t</code> or solution object from previous solving, in this example the initial guess is set as a <code>Vector</code>.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq
+plot(sol1)</code></pre><img src="0b14ceab.svg" alt="Example block output"/><p>The third argument of <code>BVProblem</code> or <code>TwoPointBVProblem</code> is the initial guess of the solution, which can be specified as a <code>Vector</code>, a <code>Function</code> of <code>t</code> or solution object from previous solving, in this example the initial guess is set as a <code>Vector</code>.</p><pre><code class="language-julia hljs">using OrdinaryDiffEq
 u₀_2 = [-1.6, -1.7] # the initial guess
 function bc3!(residual, sol, p, t)
     residual[1] = sol(pi / 4)[1] + pi / 2 # use the interpolation here, since indexing will be wrong for adaptive methods
@@ -46,7 +46,7 @@ u: 9-element Vector{Vector{Float64}}:
  [-0.6093543238221867, 4.647142015454563]
  [0.5075363857196561, 4.759617779917022]
  [1.4965629102450297, 2.6386105147785]
- [1.5707963267948712, 2.3467303016286634]</code></pre><p>The initial guess can also be supplied via a function of <code>t</code> or a previous solution type, this is especially handy for parameter analysis. We changed <code>u</code> to <code>sol</code> to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is <code>1</code> using an optimization function on the continuous output).</p><pre><code class="language-julia hljs">plot(sol3)</code></pre><img src="42423ce6.svg" alt="Example block output"/><p><code>TwoPointBVProblem</code> is operationally the same as <code>BVProblem</code> but allows for the solver to specialize on the common form of being a two-point BVP, i.e. a BVP which only has boundary conditions at the start and the finish of the time interval. Defining a similar problem as <code>TwoPointBVProblem</code> is shown in the following example:</p><pre><code class="language-julia hljs">function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
+ [1.5707963267948712, 2.3467303016286634]</code></pre><p>The initial guess can also be supplied via a function of <code>t</code> or a previous solution type, this is especially handy for parameter analysis. We changed <code>u</code> to <code>sol</code> to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is <code>1</code> using an optimization function on the continuous output).</p><pre><code class="language-julia hljs">plot(sol3)</code></pre><img src="5da93459.svg" alt="Example block output"/><p><code>TwoPointBVProblem</code> is operationally the same as <code>BVProblem</code> but allows for the solver to specialize on the common form of being a two-point BVP, i.e. a BVP which only has boundary conditions at the start and the finish of the time interval. Defining a similar problem as <code>TwoPointBVProblem</code> is shown in the following example:</p><pre><code class="language-julia hljs">function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
 end
 function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
@@ -55,7 +55,7 @@ end
 bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
     bcresid_prototype = (zeros(1), zeros(1)))
 sol2 = solve(bvp2, MIRK4(), dt = 0.05)
-plot(sol2)</code></pre><img src="e3bfc24a.svg" alt="Example block output"/><p>Note here that <code>bc2a!</code> is a boundary condition for the first time point, and <code>bc2b!</code> is a boundary condition for the final time point. <code>bcresid_prototype</code> is a prototype array which is passed in order to know the size of <code>resid_a</code> and <code>resid_b</code>. In this case, we have one residual term for the start and one for the final time point, and thus we have <code>bcresid_prototype = (zeros(1), zeros(1))</code>.</p><h2 id="Example-2:-Directly-Solving-with-Second-Order-BVP"><a class="docs-heading-anchor" href="#Example-2:-Directly-Solving-with-Second-Order-BVP">Example 2: Directly Solving with Second Order BVP</a><a id="Example-2:-Directly-Solving-with-Second-Order-BVP-1"></a><a class="docs-heading-anchor-permalink" href="#Example-2:-Directly-Solving-with-Second-Order-BVP" title="Permalink"></a></h2><p>Suppose we want to solve the second order BVP system which can be formulated as</p><p class="math-container">\[\begin{cases}
+plot(sol2)</code></pre><img src="84d2c7c9.svg" alt="Example block output"/><p>Note here that <code>bc2a!</code> is a boundary condition for the first time point, and <code>bc2b!</code> is a boundary condition for the final time point. <code>bcresid_prototype</code> is a prototype array which is passed in order to know the size of <code>resid_a</code> and <code>resid_b</code>. In this case, we have one residual term for the start and one for the final time point, and thus we have <code>bcresid_prototype = (zeros(1), zeros(1))</code>.</p><h2 id="Example-2:-Directly-Solving-with-Second-Order-BVP"><a class="docs-heading-anchor" href="#Example-2:-Directly-Solving-with-Second-Order-BVP">Example 2: Directly Solving with Second Order BVP</a><a id="Example-2:-Directly-Solving-with-Second-Order-BVP-1"></a><a class="docs-heading-anchor-permalink" href="#Example-2:-Directly-Solving-with-Second-Order-BVP" title="Permalink"></a></h2><p>Suppose we want to solve the second order BVP system which can be formulated as</p><p class="math-container">\[\begin{cases}
 u_1&#39;&#39;(x)= u_2(x),\\
 \epsilon u_2&#39;&#39;(x)=-u_1(x)u_2&#39;(x)- u_3(x)u_3&#39;(x),\\
 \epsilon u_3&#39;&#39;(x)=u_1&#39;(x)u_3(x)- u_1(x) u_3 &#39;(x)
@@ -101,26 +101,26 @@ t: 101-element Vector{Float64}:
  0.99
  1.0
 u: 101-element Vector{RecursiveArrayTools.ArrayPartition{Float64, Tuple{Vector{Float64}, Vector{Float64}}}}:
- ([3.2319068822805606e-27, 0.3328933261321182, -1.0], [0.0, -4.010478735628838, 2.0236681968182793])
- ([1.598465668104959e-5, 0.2937935394385755, -0.9797638535888588], [0.003131765025054014, -3.810162701726377, 2.0235094064887527])
- ([6.136518913566573e-5, 0.25667636138895494, -0.9595307718465953], [0.00588247950245318, -3.6139597382905273, 2.0230624781233395])
- ([0.00013242953614834348, 0.22150058488421628, -0.9393034254389395], [0.008271763605907806, -3.4218845825964803, 2.022368987548369])
- ([0.00022565977556271408, 0.1882248711770671, -0.9190840860207149], [0.010318824754121063, -3.2339488785241297, 2.021467187526993])
- ([0.0003377279906518907, 0.15680777929420506, -0.8988746586803713], [0.012042456443909489, -3.050161475591524, 2.0203921643673537])
- ([0.0004654921262421141, 0.1272077925661202, -0.8786767128366697], [0.013461037362921731, -2.87052870854582, 2.0191759908950635])
- ([0.0006059918372442651, 0.09938334245479877, -0.858491511623563], [0.01459253075398957, -2.6950546583274764, 2.0178478758505896])
- ([0.0007564443319775305, 0.07329282986154419, -0.8383200397987686], [0.015454484005008092, -2.523741395216857, 2.016434309761243])
- ([0.0009142402124174599, 0.048894644089082256, -0.8181630302110748], [0.016064028440023696, -2.3565892049630297, 2.014959207328016])
+ ([1.32348905113524e-23, 0.332893489032949, -1.0], [0.0, -4.010479674083407, 2.0236679146909697])
+ ([1.5984664668543455e-5, 0.2937936928225238, -0.9797638564104205], [0.003131766606691316, -3.810163665799217, 2.0235091242732737])
+ ([6.136522044712101e-5, 0.25667650502438316, -0.9595307774915736], [0.005882482569360629, -3.6139607231638085, 2.023062195619459])
+ ([0.00013242960514575473, 0.22150071858498976, -0.939303433911345], [0.008271768059633793, -3.421885583981421, 2.022368704526589])
+ ([0.00022565989561494678, 0.1882249947974433, -0.919084097326964], [0.010318830494558702, -3.2339498926251906, 2.021466903737087])
+ ([0.00033772817412006735, 0.1568078927240765, -0.8988746728294515], [0.012042463369676466, -3.050162499071444, 2.020391879546658])
+ ([0.0004654923844685668, 0.12720789572660735, -0.8786767298402238], [0.013461045371694319, -2.870529738490244, 2.0191757047765426])
+ ([0.0006059921805446137, 0.09938343529420676, -0.8584915314958932], [0.014592539742794381, -2.6950556922072533, 2.0178475881707127])
+ ([0.000756444769635483, 0.07329291235171709, -0.8383200625567625], [0.015454493870475343, -2.5237424308458163, 2.0164340202676723])
+ ([0.0009142407526819701, 0.04889471622221103, -0.8181630558740564], [0.01606403907860623, -2.3565902404492114, 2.01495891578711])
  ⋮
- ([-0.0007564443319775325, -0.07329282986154505, 0.838320039798769], [0.015454484005008156, -2.523741395216861, 2.0164343097612383])
- ([-0.0006059918372442664, -0.09938334245479971, 0.8584915116235634], [0.014592530753989624, -2.6950546583274804, 2.0178478758505847])
- ([-0.0004654921262421164, -0.12720779256612083, 0.8786767128366698], [0.013461037362921788, -2.8705287085458218, 2.0191759908950586])
- ([-0.0003377279906518923, -0.15680777929420575, 0.8988746586803714], [0.012042456443909538, -3.0501614755915254, 2.0203921643673493])
- ([-0.00022565977556271514, -0.18822487117706785, 0.919084086020715], [0.010318824754121103, -3.233948878524131, 2.021467187526988])
- ([-0.00013242953614834408, -0.22150058488421706, 0.9393034254389395], [0.00827176360590784, -3.421884582596481, 2.022368987548364])
- ([-6.1365189135666e-5, -0.2566763613889557, 0.9595307718465954], [0.005882479502453202, -3.6139597382905277, 2.023062478123335])
- ([-1.5984656681049658e-5, -0.2937935394385764, 0.9797638535888589], [0.0031317650250540247, -3.810162701726377, 2.023509406488748])
- ([1.8949337993314205e-23, -0.3328933261321191, 1.0], [0.0, -4.010478735628838, 2.0236681968182744])</code></pre><h2 id="Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations"><a class="docs-heading-anchor" href="#Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations">Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations</a><a id="Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations-1"></a><a class="docs-heading-anchor-permalink" href="#Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations" title="Permalink"></a></h2><p>Consider a semi-explicit boundary value differential-algebraic equation formulated as</p><p class="math-container">\[\begin{cases}
+ ([-0.0007564445318050743, -0.0732928505571428, 0.8383200167121017], [0.015454488132544299, -2.523742087416382, 2.016434599748343])
+ ([-0.0006059919969477598, -0.09938337021368435, 0.8584914914331959], [0.014592534639491008, -2.6950553790414453, 2.0178481651538576])
+ ([-0.0004654922485998882, -0.1272078276807125, 0.8786766955366693], [0.013461040934305219, -2.870529459185726, 2.019176279694524])
+ ([-0.00033772807917794597, -0.15680782206960553, 0.8988746442665584], [0.012042459626101716, -3.0501622572697045, 2.0203924528321595])
+ ([-0.00022565983453721317, -0.1882249219277029, 0.9190840744905099], [0.010318827468947996, -3.2339496919818616, 2.0214674758065083])
+ ([-0.0001324295706490168, -0.22150064392978935, 0.9393034167911198], [0.008271765772021118, -3.4218854281365743, 2.022369275763086])
+ ([-6.13652050697425e-5, -0.2566764290497379, 0.9595307660809608], [0.005882481035300482, -3.613960615714087, 2.0230627663556993])
+ ([-1.5984660817240803e-5, -0.29379361603009285, 0.979763850705805], [0.0031317658368992555, -3.8101636102728778, 2.0235096947739475])
+ ([-1.6330817198392517e-18, -0.3328934119592388, 1.0], [0.0, -4.01047967391811, 2.0236684851351194])</code></pre><h2 id="Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations"><a class="docs-heading-anchor" href="#Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations">Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations</a><a id="Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations-1"></a><a class="docs-heading-anchor-permalink" href="#Example-3:-Semi-Explicit-Boundary-Value-Differential-Algebraic-Equations" title="Permalink"></a></h2><p>Consider a semi-explicit boundary value differential-algebraic equation formulated as</p><p class="math-container">\[\begin{cases}
 x_1&#39;=(\epsilon+x_2-p_2(t))y+p_1&#39;(t) \\
 x_2&#39;=p_2&#39;(t) \\
 x_3&#39;=y \\
@@ -167,23 +167,23 @@ t: 101-element Vector{Float64}:
  0.99
  1.0
 u: 101-element Vector{Vector{Float64}}:
- [0.0, -1.0259220371532954e-15, 1.0, 4.76198631278783e-12]
- [0.009999833334154756, 0.009999833334165648, 0.999999999999988, 2.8581548777400416e-11]
- [0.01999866669330928, 0.01999866669333207, 0.999999999999976, 5.237552326269422e-11]
- [0.029995500202459963, 0.029995500202494665, 0.9999999999999641, 7.61780824251421e-11]
- [0.03998933418658653, 0.039989334186633176, 0.9999999999999521, 9.999394331643753e-11]
- [0.049979169270618774, 0.04997916927067736, 0.9999999999999404, 1.2386859934636534e-10]
- [0.05996400647937319, 0.05996400647944364, 0.9999999999999285, 1.4755653164920218e-10]
- [0.06994284733744949, 0.06994284733753182, 0.9999999999999167, 1.712875041315455e-10]
- [0.07991469396907756, 0.07991469396917175, 0.9999999999999049, 1.9500474523241006e-10]
- [0.08987854919790407, 0.08987854919801011, 0.9999999999998929, 2.1867546894838398e-10]
+ [0.0, -1.0259220371532954e-15, 1.0, 4.761400661169388e-12]
+ [0.009999833334154756, 0.009999833334165648, 0.999999999999988, 2.8579875817317035e-11]
+ [0.019998666693309273, 0.01999866669333207, 0.999999999999976, 5.237717145751577e-11]
+ [0.029995500202459956, 0.029995500202494665, 0.9999999999999641, 7.621417876372792e-11]
+ [0.03998933418658651, 0.039989334186633176, 0.9999999999999521, 1.0004201999422757e-10]
+ [0.049979169270618795, 0.04997916927067736, 0.9999999999999403, 1.2381780348661177e-10]
+ [0.0599640064793732, 0.05996400647944364, 0.9999999999999285, 1.4747977015205275e-10]
+ [0.06994284733744963, 0.06994284733753182, 0.9999999999999168, 1.7105579208540234e-10]
+ [0.0799146939690777, 0.07991469396917175, 0.9999999999999049, 1.9465930781927925e-10]
+ [0.08987854919790425, 0.08987854919801011, 0.999999999999893, 2.1829174771320715e-10]
  ⋮
- [0.7956016200354185, 0.7956016200363661, 0.9999999999990539, 1.8981737077804735e-9]
- [0.8016199408828221, 0.8016199408837772, 0.9999999999990464, 1.913170528457201e-9]
- [0.8075581004041521, 0.8075581004051142, 0.9999999999990391, 1.9272680746484837e-9]
- [0.8134155047884044, 0.8134155047893737, 0.9999999999990321, 1.9418077927532746e-9]
- [0.8191915683000216, 0.8191915683009983, 0.9999999999990249, 1.9558540086673362e-9]
- [0.8248857133374666, 0.8248857133384501, 0.9999999999990179, 1.969480498246128e-9]
- [0.8304973704909802, 0.8304973704919705, 0.999999999999011, 1.983177363252644e-9]
- [0.8360259785995233, 0.8360259786005205, 0.9999999999990044, 1.99766291221036e-9]
- [0.8414709848068928, 0.8414709848078965, 0.9999999999989982, -2.004881906018049e-9]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../jump_diffusion/">« Jump Diffusion Equations</a><a class="docs-footer-nextpage" href="../../examples/classical_physics/">Classical Physics Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.0 on <span class="colophon-date" title="Monday 31 March 2025 00:47">Monday 31 March 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ [0.795601620035419, 0.7956016200363661, 0.9999999999990525, 1.896785813830087e-9]
+ [0.8016199408828236, 0.8016199408837772, 0.9999999999990457, 1.9095859783582542e-9]
+ [0.8075581004041531, 0.8075581004051142, 0.9999999999990385, 1.9248312733471065e-9]
+ [0.813415504788405, 0.8134155047893737, 0.9999999999990314, 1.940449678378869e-9]
+ [0.819191568300023, 0.8191915683009983, 0.9999999999990244, 1.95306115842928e-9]
+ [0.8248857133374676, 0.8248857133384501, 0.9999999999990176, 1.967592329852761e-9]
+ [0.830497370490981, 0.8304973704919705, 0.9999999999990108, 1.981503920823518e-9]
+ [0.8360259785995243, 0.8360259786005205, 0.9999999999990041, 1.9958490857311063e-9]
+ [0.8414709848068934, 0.8414709848078965, 0.9999999999989976, -2.003419511055732e-9]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../jump_diffusion/">« Jump Diffusion Equations</a><a class="docs-footer-nextpage" href="../../examples/classical_physics/">Classical Physics Models »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.2 on <span class="colophon-date" title="Thursday 8 May 2025 22:20">Thursday 8 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
