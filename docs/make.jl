@@ -42,6 +42,7 @@ makedocs(
         "https://journals.ametsoc.org/view/journals/atsc/20/2/1520-0469_1963_020_0130_dnf_2_0_co_2.xml",
         "https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/SDEProblemLibrary/src/SDEProblemLibrary.jl",
+        "https://github.com/SciML/ColPrac/blob/master/README.md",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs],
