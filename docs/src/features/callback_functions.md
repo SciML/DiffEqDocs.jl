@@ -522,7 +522,7 @@ However, at some point we will hit machine epsilon, the value where
 `t + eps(t) == t`, so we cannot measure infinitely many bounces and instead will
 be limited by the floating-point accuracy of our number representation. Using
 alternative number types like
-[ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl) can allow for this
+[ArbNumerics.jl](https://github.com/JeffreySarnoff/ArbNumerics.jl) can allow for this
 to be done at very high accuracy, but still not infinite. Thus, what we need to
 do is determine a tolerance after which we assume the accumulation has been
 reached and define the exit behavior. In this case, we will say when the

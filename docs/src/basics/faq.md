@@ -12,9 +12,9 @@ For guidelines on debugging ODE solve issues, see
 First of all, don't panic. You may have experienced one of the following warnings:
 
 > dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
-> 
+>
 > NaN dt detected. Likely a NaN value in the state, parameters, or derivative value caused this outcome.
-> 
+>
 > Instability detected. Aborting
 
 These are all pointing to a similar behavior: for some reason or another, the
@@ -185,7 +185,7 @@ numerically and thus results in much better performance. This is seen in many in
 SciMLBenchmarks. Thus it is recommended that in almost all or most situations, one should use the
 mass matrix form of the DAE solver.
 
-However, it is generally recommended that if you are solving a DAE that you use 
+However, it is generally recommended that if you are solving a DAE that you use
 [ModelingToolkit.jl](https://mtk.sciml.ai/dev/) because it has many utilities for pre-processing
 DAEs to make them more numerically stable. For example, if your algebraic conditions are not
 uniquely matching to algebraic variables (i.e. you have at least one unique algebraic variable
@@ -455,7 +455,7 @@ thing you can do is use
 
 You can't. For floating-point numbers, you shouldn't use below `abstol=1e-14`
 and `reltol=1e-14`. If you need lower than that, use arbitrary precision numbers
-like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
+like BigFloats or [ArbNumerics.jl](https://github.com/JeffreySarnoff/ArbNumerics.jl).
 
 ## Autodifferentiation and Dual Numbers
 
