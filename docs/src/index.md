@@ -42,7 +42,7 @@ DifferentialEquations.jl integrates with the Julia package sphere with:
   - Automatic plotting of time series and phase plots
   - Built-in interpolations
   - Wraps for common C/Fortran methods like Sundials and Hairer's radau
-  - Arbitrary precision with BigFloats and Arbfloats
+  - Arbitrary precision with BigFloats and [ArbNumerics.jl](https://github.com/JeffreySarnoff/ArbNumerics.jl)
   - Arbitrary array types, allowing the definition of differential equations on
     matrices and distributed arrays
   - Unit checked arithmetic with Unitful
@@ -67,7 +67,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
     for guidance on PRs, issues, and other matters relating to contributing to SciML.
   - See the [SciML Style Guide](https://github.com/SciML/SciMLStyle) for common coding practices and other style decisions.
   - There are a few community forums:
-    
+
       + The #diffeq-bridged and #sciml-bridged channels in the
         [Julia Slack](https://julialang.org/slack/)
       + The #diffeq-bridged and #sciml-bridged channels in the

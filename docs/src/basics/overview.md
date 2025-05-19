@@ -31,7 +31,7 @@ timespan and `BigFloat` for specifying the initial condition, then the solution
 will solve using `Rational{BigInt}` for the timesteps and `BigFloat` for the
 independent variables. A wide variety of number types are compatible with the
 solvers such as complex numbers, unitful numbers (via Unitful.jl),
-decimals (via DecFP), dual numbers, and many more which may not have been tested
+decimals (via [DecFP](https://github.com/JuliaMath/DecFP.jl)), dual numbers, and many more which may not have been tested
 yet (thanks to the power of multiple dispatch!). For information on type-compatibility,
 please see the solver pages for the specific problems.
 
