@@ -194,8 +194,7 @@ DAE solvers will not be able to accurately solve the equation without rewriting 
 ModelingToolkit is able to automatically detect this kind of condition and perform the equation
 transformation automatically. As such, if you are having difficulties with a DAE system, it is
 highly recommended to try `modelingtookitize` to transform the system to MTK's formulation and
-running `structural_simplify` to see how it would change the equations, simply convert the model
-to MTK.
+running `mtkcompile` to see how it would change the equations, simply convert the model to MTK.
 
 ## [Performance](@id faq_performance)
 
