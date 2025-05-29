@@ -16,6 +16,7 @@ The data is taken from the book “Geometric Numerical Integration” by E. Hair
 
 ```@example outersolarsystem
 using Plots, OrdinaryDiffEq, ModelingToolkit
+using ModelingToolkit: t_nounits as t, D_nounits as D
 gr()
 
 G = 2.95912208286e-4
@@ -47,9 +48,8 @@ Here, we want to solve for the motion of the five outer planets relative to the 
 ```@example outersolarsystem
 const ∑ = sum
 const N = 6
-@variables t u(t)[1:3, 1:N]
+@variables u(t)[1:3, 1:N]
 u = collect(u)
-D = Differential(t)
 potential = -G *
             ∑(
     i -> ∑(j -> (M[i] * M[j]) / √(∑(k -> (u[k, i] - u[k, j])^2, 1:3)), 1:(i - 1)),
@@ -71,8 +71,7 @@ Thus, $\dot{q}$ is defined by the masses. We only need to define $\dot{p}$, and 
 ```@example outersolarsystem
 eqs = vec(@. D(D(u))) .~ .-ModelingToolkit.gradient(potential, vec(u)) ./
                          repeat(M, inner = 3)
-@named sys = ODESystem(eqs, t)
-ss = structural_simplify(sys)
+@mtkcompile sys = System(eqs, t)
 prob = ODEProblem(ss, [vec(u .=> pos); vec(D.(u) .=> vel)], tspan)
 sol = solve(prob, Tsit5());
 ```
