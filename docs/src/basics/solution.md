@@ -28,8 +28,8 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
     plan in 2026 to complete the deprecation and thus have a breaking update where `sol[i]`
     matches the linear indexing of an `AbstractArray`, and then making
     `AbstractVectorOfArray <: AbstractArray`. Until then, `AbstractVectorOfArray` due to
-    this interface break but manaully implements an AbstractArray-like interface for
-    future compatability.
+    this interface break but manually implements an AbstractArray-like interface for
+    future compatibility.
 
 The general operations are as follows. Use
 
