@@ -20,7 +20,7 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
 !!! note
 
-    In 2023 the linear indexing `sol[i]`` was deprecated. It previously had the behavior that
+    In 2023 the linear indexing `sol[i]` was deprecated. It previously had the behavior that
     `sol[i] = sol.u[i]`. However, this is incompatible with standard `AbstractArray` interfaces,
     Since if `A = VectorOfArray([[1,2],[3,4]])` and `A` is supposed to act like `[1 3; 2 4]`,
     then there is a difference `A[1] = [1,2]` for the VectorOfArray while `A[1] = 1` for the
