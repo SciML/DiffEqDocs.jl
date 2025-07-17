@@ -32,7 +32,7 @@ function update_func(A, u, p, t)
 end
 
 using SciMLOperators
-A = MatrixOperator(ones(2, 2), update_func = update_func)
+A = MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = ODEProblem(A, ones(2), (10, 50.0))
 ```
 
