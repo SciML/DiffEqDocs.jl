@@ -184,9 +184,9 @@ Now let's see how the version with sparsity compares to the version without:
 
 ```@example stiff1
 using BenchmarkTools # for @btime
-@btime solve(prob_ode_brusselator_2d, TRBDF2(), save_everystep = false);
-@btime solve(prob_ode_brusselator_2d_sparse, TRBDF2(), save_everystep = false);
-@btime solve(prob_ode_brusselator_2d_sparse, KenCarp47(linsolve = KLUFactorization()),
+@btime solve(prob_ode_brusselator_2d, TRBDF2(); save_everystep = false);
+@btime solve(prob_ode_brusselator_2d_sparse, TRBDF2(); save_everystep = false);
+@btime solve(prob_ode_brusselator_2d_sparse, KenCarp47(; linsolve = KLUFactorization());
     save_everystep = false);
 nothing # hide
 ```
@@ -203,7 +203,7 @@ solver for changing to a Krylov method. To swap the linear solver out, we use
 the `linsolve` command and choose the GMRES linear solver.
 
 ```@example stiff1
-@btime solve(prob_ode_brusselator_2d, KenCarp47(linsolve = KrylovJL_GMRES()),
+@btime solve(prob_ode_brusselator_2d, KenCarp47(; linsolve = KrylovJL_GMRES());
     save_everystep = false);
 nothing # hide
 ```
@@ -245,8 +245,8 @@ end
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
-        concrete_jac = true), save_everystep = false);
+    KenCarp47(; linsolve = KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -281,8 +281,8 @@ function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
-        concrete_jac = true), save_everystep = false);
+    KenCarp47(; linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -304,8 +304,8 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
-        concrete_jac = true), save_everystep = false);
+    KenCarp47(; linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -330,12 +330,12 @@ Newton Krylov (with numerical differentiation). Thus, on this problem we could d
 
 ```@example stiff1
 using Sundials
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(), save_everystep = false);
+@btime solve(prob_ode_brusselator_2d, CVODE_BDF(); save_everystep = false);
 # Simplest speedup: use :LapackDense
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :LapackDense),
+@btime solve(prob_ode_brusselator_2d, CVODE_BDF(; linear_solver = :LapackDense);
     save_everystep = false);
 # GMRES Version: Doesn't require any extra stuff!
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :GMRES),
+@btime solve(prob_ode_brusselator_2d, CVODE_BDF(; linear_solver = :GMRES);
     save_everystep = false);
 nothing # hide
 ```
@@ -348,7 +348,7 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 using ModelingToolkit
 prob_ode_brusselator_2d_mtk = ODEProblem(
     complete(modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
-    [], (0.0, 11.5), jac = true, sparse = true);
+    [], (0.0, 11.5); jac = true, sparse = true);
 # @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide
 ```
@@ -404,8 +404,8 @@ We then simply pass these functions to the Sundials solver, with a choice of
 
 ```julia
 @btime solve(prob_ode_brusselator_2d_sparse,
-    CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
-        prec_side = 1), save_everystep = false);
+    CVODE_BDF(; linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
+        prec_side = 1); save_everystep = false);
 ```
 
 And similarly for algebraic multigrid:
@@ -441,6 +441,6 @@ function precamg(z, r, p, t, y, fy, gamma, delta, lr)
 end
 
 @btime solve(prob_ode_brusselator_2d_sparse,
-    CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
-        prec_side = 1), save_everystep = false);
+    CVODE_BDF(; linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
+        prec_side = 1); save_everystep = false);
 ```

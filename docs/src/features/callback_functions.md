@@ -77,14 +77,14 @@ Assume we have a patient whose internal drug concentration follows exponential d
 a negative coefficient:
 
 ```@example callback1
-using DifferentialEquations
+import DifferentialEquations as DE
 function f(du, u, p, t)
     du[1] = -u[1]
 end
 u0 = [10.0]
 const V = 1
-prob = ODEProblem(f, u0, (0.0, 10.0))
-sol = solve(prob, Tsit5())
+prob = DE.ODEProblem(f, u0, (0.0, 10.0))
+sol = DE.solve(prob, DE.Tsit5())
 using Plots;
 plot(sol);
 ```
@@ -95,13 +95,13 @@ we can use a `DiscreteCallback` which will only be true at `t==4`:
 ```@example callback1
 condition(u, t, integrator) = t == 4
 affect!(integrator) = integrator.u[1] += 10
-cb = DiscreteCallback(condition, affect!)
+cb = DE.DiscreteCallback(condition, affect!)
 ```
 
 If we then solve with this callback enabled, we see no change:
 
 ```@example callback1
-sol = solve(prob, Tsit5(), callback = cb)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 plot(sol)
 ```
 
@@ -111,7 +111,7 @@ force the ODE solver to step exactly at `t=4` so that the condition can be appli
 We can do that with the `tstops` argument:
 
 ```@example callback1
-sol = solve(prob, Tsit5(), callback = cb, tstops = [4.0])
+sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = [4.0])
 plot(sol)
 ```
 
@@ -124,8 +124,8 @@ are hit. For example, to dose at time `t=4` and `t=8`, we can do the following:
 dosetimes = [4.0, 8.0]
 condition(u, t, integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
-cb = DiscreteCallback(condition, affect!)
-sol = solve(prob, Tsit5(), callback = cb, tstops = dosetimes)
+cb = DE.DiscreteCallback(condition, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = dosetimes)
 plot(sol)
 ```
 
@@ -138,8 +138,8 @@ of just `10`. This model is implemented as simply:
 dosetimes = [4.0, 6.0, 8.0]
 condition(u, t, integrator) = t ∈ dosetimes && (u[1] < 1.0)
 affect!(integrator) = integrator.u[1] += 10integrator.t
-cb = DiscreteCallback(condition, affect!)
-sol = solve(prob, Tsit5(), callback = cb, tstops = dosetimes)
+cb = DE.DiscreteCallback(condition, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = dosetimes)
 plot(sol)
 ```
 
@@ -154,8 +154,8 @@ could do the following:
 ```@example callback1
 dosetimes = [4.0, 8.0]
 affect!(integrator) = integrator.u[1] += 10
-cb = PresetTimeCallback(dosetimes, affect!)
-sol = solve(prob, Tsit5(), callback = cb)
+cb = DE.PresetTimeCallback(dosetimes, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 plot(sol)
 ```
 
@@ -211,16 +211,16 @@ end
 With these functions we can build our callbacks:
 
 ```@example callback2
-using DifferentialEquations
+import DifferentialEquations as DE
 save_positions = (true, true)
 
-cb = DiscreteCallback(condition, affect!, save_positions = save_positions)
+cb = DE.DiscreteCallback(condition, affect!, save_positions = save_positions)
 
 save_positions = (false, true)
 
-cb2 = DiscreteCallback(condition2, affect2!, save_positions = save_positions)
+cb2 = DE.DiscreteCallback(condition2, affect2!, save_positions = save_positions)
 
-cbs = CallbackSet(cb, cb2)
+cbs = DE.CallbackSet(cb, cb2)
 ```
 
 Now we define our initial condition. We will start at `[10.0;10.0]` with `p=0.0`.
@@ -228,7 +228,7 @@ Now we define our initial condition. We will start at `[10.0;10.0]` with `p=0.0`
 ```@example callback2
 u0 = [10.0; 10.0]
 p = 0.0
-prob = ODEProblem(f, u0, (0.0, 10.0), p)
+prob = DE.ODEProblem(f, u0, (0.0, 10.0), p)
 ```
 
 Lastly we solve the problem. Note that we must pass `tstop` values of `5.0` and
@@ -236,7 +236,7 @@ Lastly we solve the problem. Note that we must pass `tstop` values of `5.0` and
 
 ```@example callback2
 const tstop = [5.0; 8.0]
-sol = solve(prob, Tsit5(), callback = cbs, tstops = tstop)
+sol = DE.solve(prob, DE.Tsit5(), callback = cbs, tstops = tstop)
 using Plots;
 plot(sol);
 ```
@@ -289,7 +289,7 @@ function AutoAbstol(save = true; init_curmax = 1e-6)
     affect! = AutoAbstolAffect(init_curmax)
     condition = (u, t, integrator) -> true
     save_positions = (save, false)
-    DiscreteCallback(condition, affect!, save_positions = save_positions)
+    DE.DiscreteCallback(condition, affect!, save_positions = save_positions)
 end
 ```
 
@@ -297,7 +297,7 @@ This creates the `DiscreteCallback` from the `affect!` and `condition` functions
 that we implemented. Now
 
 ```@example callback3
-using DifferentialEquations
+import DifferentialEquations as DE
 cb = AutoAbstol(true; init_curmax = 1e-6)
 ```
 
@@ -312,16 +312,16 @@ function g(u, p, t)
 end
 u0 = 10.0
 const V = 1
-prob = ODEProblem(g, u0, (0.0, 10.0))
-integrator = init(prob, BS3(), callback = cb)
+prob = DE.ODEProblem(g, u0, (0.0, 10.0))
+integrator = DE.init(prob, DE.BS3(), callback = cb)
 at1 = integrator.opts.abstol
-step!(integrator)
+DE.step!(integrator)
 at2 = integrator.opts.abstol
 at1 <= at2
 ```
 
 ```@example callback3
-step!(integrator)
+DE.step!(integrator)
 at3 = integrator.opts.abstol
 at2 <= at3
 ```
@@ -370,8 +370,8 @@ end
 The callback is thus specified by:
 
 ```@example callback4
-using DifferentialEquations
-cb = ContinuousCallback(condition, affect!)
+import DifferentialEquations as DE
+cb = DE.ContinuousCallback(condition, affect!)
 ```
 
 Then you can solve and plot:
@@ -380,8 +380,8 @@ Then you can solve and plot:
 u0 = [50.0, 0.0]
 tspan = (0.0, 15.0)
 p = 9.8
-prob = ODEProblem(f, u0, tspan, p)
-sol = solve(prob, Tsit5(), callback = cb)
+prob = DE.ODEProblem(f, u0, tspan, p)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 using Plots;
 plot(sol);
 ```
@@ -398,8 +398,8 @@ we can integrate for long time periods and get the desired behavior:
 ```@example callback4
 u0 = [50.0, 0.0]
 tspan = (0.0, 100.0)
-prob = ODEProblem(f, u0, tspan, p)
-sol = solve(prob, Tsit5(), callback = cb)
+prob = DE.ODEProblem(f, u0, tspan, p)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 plot(sol)
 ```
 
@@ -419,11 +419,11 @@ function floor_aff!(int)
     int.u[2] = 0
     @show int.u[1], int.t
 end
-floor_event = ContinuousCallback(condition, floor_aff!)
+floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
 p = [1.0]
-prob = ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
-sol = solve(prob, Tsit5(), callback = floor_event)
+prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
+sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
 plot(sol)
 ```
 
@@ -437,11 +437,11 @@ value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
 `rootfind` argument of the callback:
 
 ```@example callback4
-floor_event = ContinuousCallback(condition, floor_aff!, rootfind = SciMLBase.RightRootFind)
+floor_event = DE.ContinuousCallback(condition, floor_aff!, rootfind = DE.SciMLBase.RightRootFind)
 u0 = [1.0, 0.0]
 p = [1.0]
-prob = ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
-sol = solve(prob, Tsit5(), callback = floor_event)
+prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
+sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
 sol[end] # [-1.2647055847076505e-15, 0.0]
 ```
 
@@ -461,11 +461,11 @@ function floor_aff!(int)
     int.u[2] = 0
     @show int.u[1], int.t
 end
-floor_event = ContinuousCallback(condition, floor_aff!)
+floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
 p = [1.0]
-prob = ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
-sol = solve(prob, Tsit5(), callback = floor_event)
+prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
+sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
 sol[end] # [0.0,0.0]
 ```
 
@@ -550,11 +550,11 @@ function floor_aff!(int)
     int.p[2] += 1
     int.p[3] = int.t
 end
-floor_event = ContinuousCallback(condition, floor_aff!)
+floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
 p = [1.0, 0.0, 0.0]
-prob = ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
-sol = solve(prob, Tsit5(), callback = floor_event)
+prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
+sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
 plot(sol)
 ```
 
@@ -581,14 +581,14 @@ in a callback.
 In this example, we will solve the differential equation:
 
 ```@example callback4
-using DifferentialEquations
+import DifferentialEquations as DE
 u0 = [1.0, 0.0]
 function fun2(du, u, p, t)
     du[2] = -u[1]
     du[1] = u[2]
 end
 tspan = (0.0, 10.0)
-prob = ODEProblem(fun2, u0, tspan)
+prob = DE.ODEProblem(fun2, u0, tspan)
 ```
 
 which has cosine and -sine as the solutions respectively. We wish to solve until
@@ -599,9 +599,9 @@ is satisfied. For example, we could use:
 
 ```@example callback4
 condition(u, t, integrator) = u[2] > 0
-affect!(integrator) = terminate!(integrator)
-cb = DiscreteCallback(condition, affect!)
-sol = solve(prob, Tsit5(), callback = cb)
+affect!(integrator) = DE.terminate!(integrator)
+cb = DE.DiscreteCallback(condition, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 ```
 
 However, we often wish to halt exactly at the point of time that the
@@ -611,9 +611,9 @@ use the following:
 
 ```@example callback4
 condition(u, t, integrator) = u[2]
-affect!(integrator) = terminate!(integrator)
-cb = ContinuousCallback(condition, affect!)
-sol = solve(prob, Tsit5(), callback = cb)
+affect!(integrator) = DE.terminate!(integrator)
+cb = DE.ContinuousCallback(condition, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 using Plots;
 plot(sol);
 ```
@@ -628,7 +628,7 @@ sol.t[end] # 3.1415902502224307
 Using a more accurate integration increases the accuracy of this prediction:
 
 ```@example callback4
-sol = solve(prob, Vern8(), callback = cb, reltol = 1e-12, abstol = 1e-12)
+sol = DE.solve(prob, DE.Vern8(), callback = cb, reltol = 1e-12, abstol = 1e-12)
 #π = 3.141592653589703...
 sol.t[end] # 3.1415926535896035
 ```
@@ -639,9 +639,9 @@ the upcrossing and only stop on the downcrossing. We do this by ignoring the
 
 ```@example callback4
 condition(u, t, integrator) = u[2]
-affect!(integrator) = terminate!(integrator)
-cb = ContinuousCallback(condition, nothing, affect!)
-sol = solve(prob, Tsit5(), callback = cb)
+affect!(integrator) = DE.terminate!(integrator)
+cb = DE.ContinuousCallback(condition, nothing, affect!)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 plot(sol)
 ```
 
@@ -688,7 +688,7 @@ the values of these two cells at the time of the event:
 function affect!(integrator)
     u = integrator.u
     maxidx = findmax(u)[2]
-    resize!(integrator, length(u) + 1)
+    DE.resize!(integrator, length(u) + 1)
     Θ = rand()
     u[maxidx] = Θ
     u[end] = 1 - Θ
@@ -702,12 +702,12 @@ to be their current length + 1, growing the ODE system. Then the following code
 sets the new protein concentrations. Now we can solve:
 
 ```@example callback5
-using DifferentialEquations
-callback = ContinuousCallback(condition, affect!)
+import DifferentialEquations as DE
+callback = DE.ContinuousCallback(condition, affect!)
 u0 = [0.2]
 tspan = (0.0, 10.0)
-prob = ODEProblem(f, u0, tspan)
-sol = solve(prob, callback = callback)
+prob = DE.ODEProblem(f, u0, tspan)
+sol = DE.solve(prob, callback = callback)
 ```
 
 The plot recipes do not have a way of handling the changing size, but we can
@@ -737,7 +737,7 @@ Note that one macro which was not shown in this example is `deleteat!` on the ca
 For example, to delete the second cell, we could use:
 
 ```julia
-deleteat!(integrator, 2)
+DE.deleteat!(integrator, 2)
 ```
 
 This allows you to build sophisticated models of populations with births and deaths.
@@ -772,8 +772,8 @@ function affect!(integrator, idx)
         integrator.u[4] = -0.9integrator.u[4]
     end
 end
-using DifferentialEquations
-cb = VectorContinuousCallback(condition, affect!, 2)
+import DifferentialEquations as DE
+cb = DE.VectorContinuousCallback(condition, affect!, 2)
 ```
 
 It is evident that `out[2]` will be zero when `u[3]` (x-coordinate) is either `0.0` or `10.0`. And when that happens, we flip the velocity with some coefficient of restitution (`0.9`).
@@ -784,8 +784,8 @@ Completing the rest of the code
 u0 = [50.0, 0.0, 0.0, 2.0]
 tspan = (0.0, 15.0)
 p = 9.8
-prob = ODEProblem(f, u0, tspan, p)
-sol = solve(prob, Tsit5(), callback = cb, dt = 1e-3, adaptive = false)
+prob = DE.ODEProblem(f, u0, tspan, p)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb, dt = 1e-3, adaptive = false)
 using Plots;
 plot(sol, idxs = (1, 3));
 ```

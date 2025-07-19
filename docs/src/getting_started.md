@@ -25,17 +25,17 @@ The general workflow is to define a problem, solve the problem, and then analyze
 the solution. The full code for solving this problem is:
 
 ```@example ODE1
-using DifferentialEquations
+import DifferentialEquations as DE
 f(u, p, t) = 1.01 * u
 u0 = 1 / 2
 tspan = (0.0, 1.0)
-prob = ODEProblem(f, u0, tspan)
-sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
+prob = DE.ODEProblem(f, u0, tspan)
+sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8)
 
-using Plots
-plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+import Plots
+Plots.plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
-plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
+Plots.plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 where the pieces are described below.
@@ -46,11 +46,11 @@ To solve this numerically, we define a problem type by giving it the equation,
 the initial condition, and the timespan to solve over:
 
 ```@example ODE2
-using DifferentialEquations
+import DifferentialEquations as DE
 f(u, p, t) = 1.01 * u
 u0 = 1 / 2
 tspan = (0.0, 1.0)
-prob = ODEProblem(f, u0, tspan)
+prob = DE.ODEProblem(f, u0, tspan)
 ```
 
 Note that DifferentialEquations.jl will choose the types for the problem based on
@@ -78,7 +78,7 @@ function in order to speed up the solvers. These are detailed
 After defining a problem, you solve it using `solve`.
 
 ```@example ODE2
-sol = solve(prob)
+sol = DE.solve(prob)
 ```
 
 The solvers can be controlled using the available options are described on the
@@ -87,7 +87,7 @@ we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
 ```@example ODE2
-sol = solve(prob, reltol = 1e-6)
+sol = DE.solve(prob, reltol = 1e-6)
 ```
 
 There are many controls for handling outputs. For example, we can choose to have
@@ -95,7 +95,7 @@ the solver save every `0.1` time points by setting `saveat=0.1`. Chaining this
 with the tolerance choice looks like:
 
 ```@example ODE2
-sol = solve(prob, reltol = 1e-6, saveat = 0.1)
+sol = DE.solve(prob, reltol = 1e-6, saveat = 0.1)
 ```
 
 More generally, `saveat` can be any collection of time points to save at.
@@ -104,7 +104,7 @@ up the solution. In addition, if we only care about the endpoint, we can turn
 off intermediate saving in general:
 
 ```@example ODE2
-sol = solve(prob, reltol = 1e-6, save_everystep = false)
+sol = DE.solve(prob, reltol = 1e-6, save_everystep = false)
 ```
 
 which will only save the final time point.
@@ -122,7 +122,7 @@ For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
 ```@example ODE2
-sol = solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8)
 ```
 
 You can also explicitly choose the algorithm to use. DifferentialEquations.jl
@@ -132,15 +132,15 @@ been shown to be more efficient than the “standard” algorithms.
 For example, we can choose a 5th order Tsitouras method:
 
 ```@example ODE2
-sol = solve(prob, Tsit5())
+sol = DE.solve(prob, DE.Tsit5())
 ```
 
 Note that the solver controls can be combined with the algorithm choice. Thus
-we can for example solve the problem using `Tsit5()` with a lower tolerance
+we can for example solve the problem using `DE.Tsit5()` with a lower tolerance
 via:
 
 ```@example ODE2
-sol = solve(prob, Tsit5(), reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8)
 ```
 
 In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
@@ -149,7 +149,7 @@ In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
     is a good algorithm to use if you know nothing about the equation.
   - `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
     efficient for high accuracy.
-  - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
+  - `DE.Tsit5()` for standard non-stiff. This is the first algorithm to try in
     most cases.
   - `BS3()` for fast low accuracy non-stiff.
   - `Vern7()` for high accuracy non-stiff.
@@ -220,9 +220,9 @@ object, simply call plot:
 
 ```@example ODE2
 #]add Plots # You need to install Plots.jl before your first time using it!
-using Plots
+import Plots
 #plotly() # You can optionally choose a plotting backend
-plot(sol)
+Plots.plot(sol)
 ```
 
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.org/).
@@ -235,14 +235,14 @@ axis labels, and change the legend (note we can disable the legend with
 `legend=false`) to get a nice-looking plot:
 
 ```@example ODE2
-plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+Plots.plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
 ```
 
 We can then add to the plot using the `plot!` command:
 
 ```@example ODE2
-plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
+Plots.plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 ## Example 2: Solving Systems of Equations
@@ -277,11 +277,11 @@ end
 and then we can use this function in a problem:
 
 ```@example ODE3
-using DifferentialEquations
+import DifferentialEquations as DE
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 100.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-sol = solve(prob)
+prob = DE.ODEProblem(lorenz!, u0, tspan)
+sol = DE.solve(prob)
 ```
 
 Using the plot recipe tools
@@ -289,8 +289,8 @@ Using the plot recipe tools
 we can choose to do a 3D phase space plot between the different variables:
 
 ```@example ODE3
-using Plots
-plot(sol, idxs = (1, 2, 3))
+import Plots
+Plots.plot(sol, idxs = (1, 2, 3))
 ```
 
 Note that the default plot for multidimensional systems is an overlay of
@@ -298,7 +298,7 @@ each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
 ```@example ODE3
-plot(sol, idxs = (0, 2))
+Plots.plot(sol, idxs = (0, 2))
 ```
 
 Note that here “variable 0” corresponds to the independent variable (“time”).
@@ -324,7 +324,7 @@ and then we add the parameters to the `ODEProblem`:
 u0 = [1.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
 p = [10.0, 28.0, 8 / 3]
-prob = ODEProblem(parameterized_lorenz!, u0, tspan, p)
+prob = DE.ODEProblem(parameterized_lorenz!, u0, tspan, p)
 ```
 
 We can make our functions look nicer by doing a few tricks. For example:
@@ -362,8 +362,8 @@ Parameterized functions can also be used for building **nonhomogeneous ordinary 
 where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitational acceleration.
 
 ```@example ODE4
-using DifferentialEquations
-using Plots
+import DifferentialEquations as DE
+import Plots
 
 l = 1.0                             # length [m]
 m = 1.0                             # mass [kg]
@@ -381,10 +381,10 @@ tspan = (0.0, 10.0)                  # time interval
 
 M = t -> 0.1sin(t)                    # external torque [Nm]
 
-prob = ODEProblem(pendulum!, u₀, tspan, M)
-sol = solve(prob)
+prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
+sol = DE.solve(prob)
 
-plot(sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
+Plots.plot(sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
 ```
 
 Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
@@ -400,8 +400,8 @@ be a matrix, and define `f` such that it takes in a matrix and outputs a matrix.
 We can define a matrix of linear ODEs as follows:
 
 ```@example ODE4
-using DifferentialEquations
-using Plots
+import DifferentialEquations as DE
+import Plots
 A = [1.0 0 0 -5
      4 -2 4 -3
      -4 0 0 1
@@ -409,7 +409,7 @@ A = [1.0 0 0 -5
 u0 = rand(4, 2)
 tspan = (0.0, 1.0)
 f(u, p, t) = A * u
-prob = ODEProblem(f, u0, tspan)
+prob = DE.ODEProblem(f, u0, tspan)
 ```
 
 Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by
@@ -417,16 +417,16 @@ multiplication by `A`. To solve the ODE, we do the same steps
 as before.
 
 ```@example ODE4
-sol = solve(prob)
-plot(sol)
+sol = DE.solve(prob)
+Plots.plot(sol)
 ```
 
 We can instead use the in-place form by using Julia's in-place matrix multiplication
 function `mul!`:
 
 ```@example ODE4
-using LinearAlgebra
-f(du, u, p, t) = mul!(du, A, u)
+import LinearAlgebra
+f(du, u, p, t) = LinearAlgebra.mul!(du, A, u)
 ```
 
 Additionally, we can use non-traditional array types as well. For example,
@@ -436,17 +436,17 @@ normally have. This means that they can be used to solve the same problem as
 above, with the only change being the type for the initial condition and constants:
 
 ```@example ODE4
-using StaticArrays
-A = @SMatrix [1.0 0.0 0.0 -5.0
+import StaticArrays
+A = StaticArrays.@SMatrix [1.0 0.0 0.0 -5.0
               4.0 -2.0 4.0 -3.0
               -4.0 0.0 0.0 1.0
               5.0 -2.0 2.0 3.0]
-u0 = @SMatrix rand(4, 2)
+u0 = StaticArrays.@SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u
-prob = ODEProblem(f2, u0, tspan)
-sol = solve(prob)
-plot(sol)
+prob = DE.ODEProblem(f2, u0, tspan)
+sol = DE.solve(prob)
+Plots.plot(sol)
 ```
 
 Note that the analysis tools generalize over to systems of equations as well.

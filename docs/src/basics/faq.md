@@ -250,7 +250,7 @@ ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())
 If I want to set this directly to 4 threads, I would use:
 
 ```julia
-using LinearAlgebra
+import LinearAlgebra
 LinearAlgebra.BLAS.set_num_threads(4)
 ```
 
@@ -260,7 +260,7 @@ can use [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl), which will accel
 the linear algebra routines. This is done via:
 
 ```julia
-using MKL
+import MKL
 ```
 
 #### My ODE is solving really slow
@@ -472,7 +472,7 @@ To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
 ```@example faq1
-using DifferentialEquations
+import DifferentialEquations
 function func(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
@@ -491,14 +491,14 @@ for the timespan just to show what you'd do if there were parameters-dependent e
 Then we can take the Jacobian via ForwardDiff.jl:
 
 ```@example faq1
-using ForwardDiff
+import ForwardDiff
 ForwardDiff.jacobian(f, [1.5, 1.0])
 ```
 
 and compare it to FiniteDiff.jl:
 
 ```@example faq1
-using FiniteDiff
+import FiniteDiff
 FiniteDiff.finite_difference_jacobian(f, [1.5, 1.0])
 ```
 
@@ -508,7 +508,7 @@ This is because you're using a cache which is incompatible with autodifferentiat
 via ForwardDiff.jl. For example, if we use the ODE function:
 
 ```julia
-using LinearAlgebra, OrdinaryDiffEq
+import LinearAlgebra, OrdinaryDiffEq
 function foo(du, u, (A, tmp), t)
     mul!(tmp, A, u)
     @. du = u + tmp
@@ -539,7 +539,7 @@ We could use `get_tmp` and `dualcache` functions from
 to solve this issue, e.g.,
 
 ```julia
-using LinearAlgebra, OrdinaryDiffEq, PreallocationTools
+import LinearAlgebra, OrdinaryDiffEq, PreallocationTools
 function foo(du, u, (A, tmp), t)
     tmp = get_tmp(tmp, first(u) * t)
     mul!(tmp, A, u)

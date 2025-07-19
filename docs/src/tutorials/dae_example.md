@@ -45,8 +45,8 @@ In this form, we can write this as a mass matrix ODE where ``M`` is singular
 last row of `M` is just zero. We can implement this form as:
 
 ```@example dae
-using DifferentialEquations
-using Plots
+import DifferentialEquations as DE
+import Plots
 function rober(du, u, p, t)
     y₁, y₂, y₃ = u
     k₁, k₂, k₃ = p
@@ -58,11 +58,11 @@ end
 M = [1.0 0 0
      0 1.0 0
      0 0 0]
-f = ODEFunction(rober, mass_matrix = M)
-prob_mm = ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
-sol = solve(prob_mm, Rodas5(), reltol = 1e-8, abstol = 1e-8)
+f = DE.ODEFunction(rober, mass_matrix = M)
+prob_mm = DE.ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+sol = DE.solve(prob_mm, DE.Rodas5(), reltol = 1e-8, abstol = 1e-8)
 
-plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
+Plots.plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```
 
 !!! note
@@ -128,7 +128,7 @@ and make the `DAEProblem`:
 
 ```@example dae
 differential_vars = [true, true, false]
-prob = DAEProblem(f2, du₀, u₀, tspan, differential_vars = differential_vars)
+prob = DE.DAEProblem(f2, du₀, u₀, tspan, differential_vars = differential_vars)
 ```
 
 `differential_vars` is an option which states which of the variables are differential,
@@ -142,8 +142,8 @@ As with the other DifferentialEquations problems, the commands are then to solve
 and plot. Here we will use the IDA solver from Sundials:
 
 ```@example dae
-using Sundials
-sol = solve(prob, IDA())
+import Sundials
+sol = DE.solve(prob, Sundials.IDA())
 ```
 
 In order to clearly see all the features of this solution, it should be plotted
@@ -151,5 +151,5 @@ on a logarithmic scale. We'll also plot each on a different subplot, to allow
 scaling the y-axis appropriately.
 
 ```@example dae
-plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
+Plots.plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```

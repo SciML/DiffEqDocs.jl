@@ -250,7 +250,7 @@ For example, if one wants to iterate but only stop at specific values, one can
 choose:
 
 ```julia
-integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
+integrator = DE.init(prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
 for (u, t) in tuples(integrator)
     @test t ∈ [0.5, 1.0]
 end
@@ -261,7 +261,7 @@ and thus there are two values of `tstops` which are hit). Additionally, one can
 `solve!` only to `0.5` via:
 
 ```julia
-integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
+integrator = DE.init(prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
 integrator.opts.stop_at_next_tstop = true
 solve!(integrator)
 ```
@@ -283,20 +283,20 @@ For an example of manually chaining together the iterator interface and plotting
 one should try the following:
 
 ```julia
-using DifferentialEquations, DiffEqProblemLibrary, Plots
+import DifferentialEquations as DE, DiffEqProblemLibrary, Plots
 
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
+prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
-using Plots
-integrator = init(prob, Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
+import Plots
+integrator = DE.init(prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
 pyplot(show = true)
-plot(integrator)
+Plots.plot(integrator)
 for i in integrator
-    display(plot!(integrator, idxs = (0, 1), legend = false))
+    display(Plots.plot!(integrator, idxs = (0, 1), legend = false))
 end
 step!(integrator);
-plot!(integrator, idxs = (0, 1), legend = false);
+Plots.plot!(integrator, idxs = (0, 1), legend = false);
 savefig("iteratorplot.png")
 ```
 

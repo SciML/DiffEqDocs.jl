@@ -146,10 +146,11 @@ for a `EnsembleSimulation`.
 To use this functionality, import the analysis module via:
 
 ```julia
-using DifferentialEquations.EnsembleAnalysis
+import DifferentialEquations as DE
+# Access the analysis module via DE.EnsembleAnalysis
 ```
 
-(or more directly `SciMLBase.EnsembleAnalysis`).
+(or more directly `import SciMLBase; SciMLBase.EnsembleAnalysis`).
 
 ### Time steps vs time points
 
@@ -271,18 +272,18 @@ achieved with
 
 ```julia
 using Distributed
-using DifferentialEquations
+import DifferentialEquations as DE
 using Plots
 
 addprocs()
-@everywhere using DifferentialEquations
+@everywhere import DifferentialEquations as DE
 ```
 
 Now let's define the linear ODE, which is our base problem:
 
 ```julia
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
+prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 ```
 
 For our ensemble simulation, we would like to change the initial condition around.
@@ -293,15 +294,15 @@ and use that for calculating the trajectory:
 
 ```julia
 @everywhere function prob_func(prob, i, repeat)
-    remake(prob, u0 = rand() * prob.u0)
+    DE.remake(prob, u0 = rand() * prob.u0)
 end
 ```
 
 Now we build and solve the `EnsembleProblem` with this base problem and `prob_func`:
 
 ```julia
-ensemble_prob = EnsembleProblem(prob, prob_func = prob_func)
-sim = solve(ensemble_prob, Tsit5(), EnsembleDistributed(), trajectories = 10)
+ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
+sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleDistributed(), trajectories = 10)
 ```
 
 We can use the plot recipe to plot what the 10 ODEs look like:
@@ -327,13 +328,13 @@ Because the memory is shared across the different threads, it is not necessary t
 use the `@everywhere` macro. Instead, the same problem can be implemented simply as:
 
 ```@example ensemble1_2
-using DifferentialEquations
-prob = ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
+import DifferentialEquations as DE
+prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 function prob_func(prob, i, repeat)
-    remake(prob, u0 = rand() * prob.u0)
+    DE.remake(prob, u0 = rand() * prob.u0)
 end
-ensemble_prob = EnsembleProblem(prob, prob_func = prob_func)
-sim = solve(ensemble_prob, Tsit5(), EnsembleThreads(), trajectories = 10)
+ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
+sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleThreads(), trajectories = 10)
 using Plots;
 plot(sim);
 ```
@@ -354,7 +355,7 @@ we could simply index the `linspace` type:
 ```@example ensemble1_3
 initial_conditions = range(0, stop = 1, length = 100)
 function prob_func(prob, i, repeat)
-    remake(prob, u0 = initial_conditions[i])
+    DE.remake(prob, u0 = initial_conditions[i])
 end
 ```
 
@@ -385,9 +386,9 @@ end
 Now we build the SDE with these functions:
 
 ```@example ensemble2
-using DifferentialEquations
+import DifferentialEquations as DE
 p = [1.5, 1.0, 0.1, 0.1]
-prob = SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
+prob = DE.SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment
@@ -404,7 +405,7 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 prob_func = let p = p
     (prob, i, repeat) -> begin
         x = 0.3rand(2)
-        remake(prob, p = [p[1], p[2], x[1], x[2]])
+        DE.remake(prob, p = [p[1], p[2], x[1], x[2]])
     end
 end
 ```
@@ -412,8 +413,8 @@ end
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
 ```@example ensemble2
-ensemble_prob = EnsembleProblem(prob, prob_func = prob_func)
-sim = solve(ensemble_prob, SRIW1(), trajectories = 10)
+ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
+sim = DE.solve(ensemble_prob, DE.SRIW1(), trajectories = 10)
 using Plots;
 plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
 plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
@@ -424,7 +425,7 @@ We can then summarize this information with the mean/variance bounds using a
 units and directly plot the summary:
 
 ```@example ensemble2
-summ = EnsembleSummary(sim, 0:0.1:10)
+summ = DE.EnsembleSummary(sim, 0:0.1:10)
 plot(summ, fillalpha = 0.5)
 ```
 
@@ -448,12 +449,12 @@ end
 Our `prob_func` will simply randomize the initial condition:
 
 ```@example ensemble3
-using DifferentialEquations
+import DifferentialEquations as DE
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
-prob = ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
+prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
 function prob_func(prob, i, repeat)
-    remake(prob, u0 = rand() * prob.u0)
+    DE.remake(prob, u0 = rand() * prob.u0)
 end
 ```
 
@@ -473,9 +474,9 @@ end
 Then we can define and solve the problem:
 
 ```@example ensemble3
-prob2 = EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
+prob2 = DE.EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
     reduction = reduction, u_init = Vector{Float64}())
-sim = solve(prob2, Tsit5(), trajectories = 10000, batch_size = 20)
+sim = DE.solve(prob2, DE.Tsit5(), trajectories = 10000, batch_size = 20)
 ```
 
 Since `batch_size=20`, this means that every 20 simulations, it will take this batch,
@@ -493,9 +494,9 @@ save the running summation of the endpoints:
 function reduction(u, batch, I)
     u + sum(batch), false
 end
-prob2 = EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
+prob2 = DE.EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
     reduction = reduction, u_init = 0.0)
-sim2 = solve(prob2, Tsit5(), trajectories = 100, batch_size = 20)
+sim2 = DE.solve(prob2, DE.Tsit5(), trajectories = 100, batch_size = 20)
 ```
 
 this will sum up the endpoints after every 20 solutions, and save the running sum.
@@ -519,8 +520,8 @@ function σ(du, u, p, t)
         du[i] = 0.87 * u[i]
     end
 end
-using DifferentialEquations
-prob = SDEProblem(f, σ, ones(4, 2) / 2, (0.0, 1.0)) #prob_sde_2Dlinear
+import DifferentialEquations as DE
+prob = DE.SDEProblem(f, σ, ones(4, 2) / 2, (0.0, 1.0)) #prob_sde_2Dlinear
 ```
 
 To solve this 10 times, we use the `EnsembleProblem` constructor and solve
@@ -529,8 +530,8 @@ to make sure the steps all hit the same times. We thus set `adaptive=false` and
 explicitly give a `dt`.
 
 ```@example ensemble4
-prob2 = EnsembleProblem(prob)
-sim = solve(prob2, SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false)
+prob2 = DE.EnsembleProblem(prob)
+sim = DE.solve(prob2, DE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false)
 ```
 
 **Note that if you don't do the `timeseries_steps` calculations, this code is
@@ -539,47 +540,47 @@ compatible with adaptive timestepping. Using adaptivity is usually more efficien
 We can compute the mean and the variance at the 3rd timestep using:
 
 ```@example ensemble4
-using DifferentialEquations.EnsembleAnalysis
-m, v = timestep_meanvar(sim, 3)
+import DifferentialEquations as DE
+m, v = DE.EnsembleAnalysis.timestep_meanvar(sim, 3)
 ```
 
 or we can compute the mean and the variance at the `t=0.5` using:
 
 ```@example ensemble4
-m, v = timepoint_meanvar(sim, 0.5)
+m, v = DE.EnsembleAnalysis.timepoint_meanvar(sim, 0.5)
 ```
 
 We can get a series for the mean and the variance at each time step using:
 
 ```@example ensemble4
-m_series, v_series = timeseries_steps_meanvar(sim)
+m_series, v_series = DE.EnsembleAnalysis.timeseries_steps_meanvar(sim)
 ```
 
 or at chosen values of `t`:
 
 ```@example ensemble4
 ts = 0:0.1:1
-m_series = timeseries_point_mean(sim, ts)
+m_series = DE.EnsembleAnalysis.timeseries_point_mean(sim, ts)
 ```
 
 Note that these mean and variance series can be directly plotted. We can
 compute covariance matrices similarly:
 
 ```@example ensemble4
-timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt
-timeseries_point_meancov(sim, 0:(1 // 2^(3)):1, 0:(1 // 2^(3)):1) # Use time points, interpolate
+DE.EnsembleAnalysis.timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt
+DE.EnsembleAnalysis.timeseries_point_meancov(sim, 0:(1 // 2^(3)):1, 0:(1 // 2^(3)):1) # Use time points, interpolate
 ```
 
 For general analysis, we can build a `EnsembleSummary` type.
 
 ```@example ensemble4
-summ = EnsembleSummary(sim)
+summ = DE.EnsembleSummary(sim)
 ```
 
 will summarize at each time step, while
 
 ```@example ensemble4
-summ = EnsembleSummary(sim, 0.0:0.1:1.0)
+summ = DE.EnsembleSummary(sim, 0.0:0.1:1.0)
 ```
 
 will summarize at the `0.1` time points using the interpolations. To

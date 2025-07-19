@@ -72,7 +72,7 @@ doing garbage collection (GC) to clean up all the arrays we made. Even if we
 turn off saving, we have these allocations.
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+@btime solve(prob, Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -111,7 +111,7 @@ nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+@btime solve(prob, Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -122,7 +122,7 @@ But this doesn't scale with the problem size:
 ```@example faster_ode
 tspan = (0.0, 500.0) # 5x longer than before
 prob = ODEProblem(lorenz!, u0, tspan)
-@btime solve(prob, Tsit5(), save_everystep = false);
+@btime solve(prob, Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -198,7 +198,7 @@ nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+@btime solve(prob, Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -322,7 +322,7 @@ ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
 Now let's use that to give the analytical solution Jacobian:
 
 ```@example faster_ode2
-prob_jac2 = ODEProblem(de, [], (0.0, 1e5), jac = true)
+prob_jac2 = ODEProblem(de, [], (0.0, 1e5); jac = true)
 ```
 
 ```@example faster_ode2
@@ -668,7 +668,7 @@ de = complete(modelingtoolkitize(prob))
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!
 
-fastprob = ODEProblem(de, [], (0.0, 0.1), jac = true, sparse = true)
+fastprob = ODEProblem(de, [], (0.0, 0.1); jac = true, sparse = true)
 ```
 
 Lastly, we can do other things like multithread the main loops.
@@ -705,25 +705,25 @@ nothing # hide
 
 ```@example faster_ode3
 using Sundials
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES));
+@btime solve(prob, CVODE_BDF(; linear_solver = :GMRES));
 nothing # hide
 ```
 
 ```@example faster_ode3
 prob = ODEProblem(fast_gm!, r0, (0.0, 100.0), p)
 # Will go out of memory if we don't turn off `save_everystep`!
-@btime solve(prob, Tsit5(), save_everystep = false);
+@btime solve(prob, Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
+@btime solve(prob, CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
 prob = ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
+@btime solve(prob, CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 

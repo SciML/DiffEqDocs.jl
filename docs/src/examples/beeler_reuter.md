@@ -348,27 +348,27 @@ u0[90:102, 90:102] .= v1;   # a small square in the middle of the domain
 The initial condition is a small square in the middle of the domain.
 
 ```julia
-using Plots
-heatmap(u0)
+import Plots
+Plots.heatmap(u0)
 ```
 
 Next, the problem is defined:
 
 ```julia
-using DifferentialEquations, Sundials
+import DifferentialEquations as DE, Sundials
 
 deriv_cpu = BeelerReuterCpu(u0, 1.0);
-prob = ODEProblem(deriv_cpu, u0, (0.0, 50.0));
+prob = DE.ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 ```
 
 For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
 
 ```julia
-@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-heatmap(sol.u[end])
+Plots.heatmap(sol.u[end])
 ```
 
 ## CPU/GPU Beeler-Reuter Solver
@@ -402,7 +402,7 @@ The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global
 We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
 
 ```julia
-using CUDA
+import CUDA
 
 mutable struct BeelerReuterGpu <: Function
     t::Float64                  # the last timestep time to calculate Δt
@@ -651,15 +651,15 @@ end
 Ready to test!
 
 ```julia
-using DifferentialEquations, Sundials
+import DifferentialEquations as DE, Sundials
 
 deriv_gpu = BeelerReuterGpu(u0, 1.0);
-prob = ODEProblem(deriv_gpu, u0, (0.0, 50.0));
-@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+prob = DE.ODEProblem(deriv_gpu, u0, (0.0, 50.0));
+@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-heatmap(sol.u[end])
+Plots.heatmap(sol.u[end])
 ```
 
 ## Summary
