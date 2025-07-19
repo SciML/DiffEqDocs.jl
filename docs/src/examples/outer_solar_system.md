@@ -71,7 +71,7 @@ Thus, $\dot{q}$ is defined by the masses. We only need to define $\dot{p}$, and 
 ```@example outersolarsystem
 eqs = vec(@. D(D(u))) .~ .-ModelingToolkit.gradient(potential, vec(u)) ./
                          repeat(M, inner = 3)
-@mtkcompile sys = System(eqs, t)
+@mtkbuild sys = System(eqs, t)
 prob = ODEProblem(ss, [vec(u .=> pos); vec(D.(u) .=> vel)], tspan)
 sol = solve(prob, Tsit5());
 ```
