@@ -14,9 +14,10 @@ First, we'll use / import some packages:
 
 ```@example diffusionimplicit
 import Plots
-using LinearAlgebra
-using DiffEqBase
-using OrdinaryDiffEq: SplitODEProblem, solve, IMEXEuler
+import LinearAlgebra
+import DiffEqBase
+import OrdinaryDiffEq as ODE
+import OrdinaryDiffEq: SplitODEProblem, solve, IMEXEuler
 import SciMLBase, SciMLOperators
 ```
 
@@ -122,7 +123,7 @@ T[i] + 2 Δz ∇T_{bottom} n̂ = T[g] \\
 
 ```@example diffusionimplicit
 # Initialize interior and boundary stencils:
-∇² = Tridiagonal(ones(FT, n) .* ∇²_op[1],
+∇² = LinearAlgebra.Tridiagonal(ones(FT, n) .* ∇²_op[1],
     ones(FT, n + 1) .* ∇²_op[2],
     ones(FT, n) .* ∇²_op[3]);
 

@@ -12,28 +12,28 @@ type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs and get the DataFrame:
 
 ```@example IO
-using OrdinaryDiffEq, DataFrames
+import OrdinaryDiffEq as ODE, DataFrames
 f_2dlinear = (du, u, p, t) -> du .= 1.01u;
 tspan = (0.0, 1.0)
-prob = ODEProblem(f_2dlinear, rand(2, 2), tspan);
-sol = solve(prob, Euler(); dt = 1 // 2^(4));
-df = DataFrame(sol)
+prob = ODE.ODEProblem(f_2dlinear, rand(2, 2), tspan);
+sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4));
+df = DataFrames.DataFrame(sol)
 ```
 
 If we set `syms` in the DiffEqFunction, then those names will be used:
 
 ```@example IO
-f = ODEFunction(f_2dlinear, syms = [:a, :b, :c, :d])
-prob = ODEProblem(f, rand(2, 2), (0.0, 1.0));
-sol = solve(prob, Euler(); dt = 1 // 2^(4));
-df = DataFrame(sol)
+f = ODE.ODEFunction(f_2dlinear, syms = [:a, :b, :c, :d])
+prob = ODE.ODEProblem(f, rand(2, 2), (0.0, 1.0));
+sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4));
+df = DataFrames.DataFrame(sol)
 ```
 
 Many modeling frameworks will automatically set `syms` for this feature.
 Additionally, this data can be saved to a CSV:
 
 ```@example IO
-using CSV
+import CSV
 CSV.write("out.csv", df)
 ```
 
@@ -43,9 +43,9 @@ JLD2.jl and BSON.jl will work with the full solution type if you bring the requi
 back into scope before loading. For example, if we save the solution:
 
 ```@example IO
-sol = solve(prob, Euler(); dt = 1 // 2^(4))
-using JLD2
-@save "out.jld2" sol
+sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4))
+import JLD2
+JLD2.@save "out.jld2" sol
 ```
 
 then we can get the full solution type back, interpolations and all,
@@ -53,23 +53,23 @@ if we load the dependent functions first:
 
 ```@example IO
 # New session
-using JLD2
-using OrdinaryDiffEq
+import JLD2
+import OrdinaryDiffEq as ODE
 JLD2.@load "out.jld2" sol
 ```
 
 The example with BSON.jl is:
 
 ```@example IO
-sol = solve(prob, Euler(); dt = 1 // 2^(4))
-using BSON
-bson("test.bson", Dict(:sol => sol))
+sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4))
+import BSON
+BSON.bson("test.bson", Dict(:sol => sol))
 ```
 
 ```@example IO
 # New session
-using OrdinaryDiffEq
-using BSON
+import OrdinaryDiffEq as ODE
+import BSON
 # BSON.load("test.bson") # currently broken: https://github.com/JuliaIO/BSON.jl/issues/109
 ```
 
@@ -94,6 +94,6 @@ However, they cannot save types which have functions, which means that
 the solution type is currently not compatible with JLD.
 
 ```julia
-using JLD
+import JLD
 JLD.save("out.jld", "sol", sol)
 ```

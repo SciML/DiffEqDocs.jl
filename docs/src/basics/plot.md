@@ -8,8 +8,8 @@ and the plotter will generate appropriate plots.
 
 ```julia
 #]add Plots # You need to install Plots.jl before your first time using it!
-using Plots
-plot(sol) # Plots the solution
+import Plots
+Plots.plot(sol) # Plots the solution
 ```
 
 Many of the types defined in the DiffEq universe, such as
@@ -21,7 +21,7 @@ on the plot by doing:
 
 ```julia
 gr()
-plot(sol, title = "I Love DiffEqs!")
+Plots.plot(sol, title = "I Love DiffEqs!")
 ```
 
 Then to save the plot, use `savefig`, for example:
@@ -37,13 +37,13 @@ to use the dense function for generating the plot, and `plotdensity` is the numb
 of evenly-spaced points (in time) to plot. For example:
 
 ```julia
-plot(sol, denseplot = false)
+Plots.plot(sol, denseplot = false)
 ```
 
 means “only plot the points which the solver stepped to”, while:
 
 ```julia
-plot(sol, plotdensity = 1000)
+Plots.plot(sol, plotdensity = 1000)
 ```
 
 means to plot 1000 points using the dense function (since `denseplot=true` by
@@ -133,7 +133,7 @@ more details on the extra controls that exist.
 A plotting timespan can be chosen by the `tspan` argument in `plot`. For example:
 
 ```julia
-plot(sol, tspan = (0.0, 40.0))
+Plots.plot(sol, tspan = (0.0, 40.0))
 ```
 
 only plots between `t=0.0` and `t=40.0`. If `denseplot=true` these bounds will be respected
@@ -143,7 +143,7 @@ i.e. no points outside the interval will be plotted.
 ### Example
 
 ```@example plots
-using DifferentialEquations, Plots
+import DifferentialEquations as DE, Plots
 function lorenz(du, u, p, t)
     du[1] = p[1] * (u[2] - u[1])
     du[2] = u[1] * (p[2] - u[3]) - u[2]
@@ -153,28 +153,28 @@ end
 u0 = [1.0, 5.0, 10.0]
 tspan = (0.0, 100.0)
 p = (10.0, 28.0, 8 / 3)
-prob = ODEProblem(lorenz, u0, tspan, p)
-sol = solve(prob)
-xyzt = plot(sol, plotdensity = 10000, lw = 1.5)
-xy = plot(sol, plotdensity = 10000, idxs = (1, 2))
-xz = plot(sol, plotdensity = 10000, idxs = (1, 3))
-yz = plot(sol, plotdensity = 10000, idxs = (2, 3))
-xyz = plot(sol, plotdensity = 10000, idxs = (1, 2, 3))
-plot(plot(xyzt, xyz), plot(xy, xz, yz, layout = (1, 3), w = 1), layout = (2, 1))
+prob = DE.ODEProblem(lorenz, u0, tspan, p)
+sol = DE.solve(prob)
+xyzt = Plots.plot(sol, plotdensity = 10000, lw = 1.5)
+xy = Plots.plot(sol, plotdensity = 10000, idxs = (1, 2))
+xz = Plots.plot(sol, plotdensity = 10000, idxs = (1, 3))
+yz = Plots.plot(sol, plotdensity = 10000, idxs = (2, 3))
+xyz = Plots.plot(sol, plotdensity = 10000, idxs = (1, 2, 3))
+Plots.plot(Plots.plot(xyzt, xyz), Plots.plot(xy, xz, yz, layout = (1, 3), w = 1), layout = (2, 1))
 ```
 
 An example using the functions:
 
 ```@example plots
 f(x, y, z) = (sqrt(x^2 + y^2 + z^2), x)
-plot(sol, idxs = (f, 1, 2, 3))
+Plots.plot(sol, idxs = (f, 1, 2, 3))
 ```
 
 or the norm over time:
 
 ```@example plots
 f(t, x, y, z) = (t, sqrt(x^2 + y^2 + z^2))
-plot(sol, idxs = (f, 0, 1, 2, 3))
+Plots.plot(sol, idxs = (f, 0, 1, 2, 3))
 ```
 
 ## Animations
@@ -205,14 +205,14 @@ use this to plot solutions. For example, in PyPlot, Gadfly, GR, etc., you can
 do the following to plot the timeseries:
 
 ```julia
-plot(sol.t, sol')
+Plots.plot(sol.t, sol')
 ```
 
 since these plot along the columns, and `sol'` has the timeseries along the column.
 Phase plots can be done similarly, for example:
 
 ```julia
-plot(sol[i, :], sol[j, :], sol[k, :])
+Plots.plot(sol[i, :], sol[j, :], sol[k, :])
 ```
 
 is a 3D phase plot between variables `i`, `j`, and `k`.
@@ -223,7 +223,7 @@ the interpolation must be done manually. For example:
 ```julia
 n = 101 #number of timepoints
 ts = range(0, stop = 1, length = n)
-plot(sol(ts, idxs = i), sol(ts, idxs = j), sol(ts, idxs = k))
+Plots.plot(sol(ts, idxs = i), sol(ts, idxs = j), sol(ts, idxs = k))
 ```
 
 is the phase space using values `0.01` apart in time.

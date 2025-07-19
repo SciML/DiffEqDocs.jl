@@ -25,7 +25,7 @@ To use a sample problem, such as `prob_ode_linear`, you can do something like:
 
 ```julia
 #] add DiffEqProblemLibrary
-using DiffEqProblemLibrary.ODEProblemLibrary
+import DiffEqProblemLibrary.ODEProblemLibrary
 # load problems
 ODEProblemLibrary.importodeproblems()
 prob = ODEProblemLibrary.prob_ode_linear

@@ -874,9 +874,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use Sundials.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("Sundials")
-using Sundials
+import Sundials
 ```
 
 The Sundials suite is built around multistep methods. These methods are more efficient
@@ -906,9 +906,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use ODEInterfaceDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("ODEInterfaceDiffEq")
-using ODEInterfaceDiffEq
+import ODEInterfaceDiffEq
 ```
 
   - `dopri5` - Hairer's classic implementation of the Dormand-Prince 4/5 method.
@@ -937,9 +937,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use LSODA.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("LSODA")
-using LSODA
+import LSODA
 ```
 
 ### IRKGaussLegendre.jl
@@ -952,9 +952,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use IRKGaussLegendre.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("IRKGaussLegendre")
-using IRKGaussLegendre
+import IRKGaussLegendre
 ```
 
 `IRKGL16(;kwargs...)` has the following arguments:
@@ -1010,9 +1010,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use SimpleDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("SimpleDiffEq")
-using SimpleDiffEq
+import SimpleDiffEq
 ```
 
 ### ODE.jl
@@ -1021,9 +1021,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use ODE.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("ODE")
-using ODE
+import ODE
 ```
 
   - `ode23` - Bogacki-Shampine's order 2/3 Runge-Kutta  method
@@ -1043,9 +1043,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use MATLABDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/SciML/MATLABDiffEq.jl")
-using MATLABDiffEq
+import MATLABDiffEq
 ```
 
 This requires a licensed MATLAB installation. The available methods are:
@@ -1075,9 +1075,9 @@ with DifferentialEquations.jl. To use the following algorithms, you must install
 and use SciPyDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/SciML/SciPyDiffEq.jl")
-using SciPyDiffEq
+import SciPyDiffEq
 ```
 
 The available methods are:
@@ -1100,9 +1100,9 @@ with DifferentialEquations.jl. To use the following algorithms, you must install
 and use deSolveDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/SciML/deSolveDiffEq.jl")
-using deSolveDiffEq
+import deSolveDiffEq
 ```
 
 The available methods are:
@@ -1132,9 +1132,9 @@ To use the following algorithms, you must install and use
 GeometricIntegratorsDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/SciML/GeometricIntegratorsDiffEq.jl")
-using GeometricIntegratorsDiffEq
+import GeometricIntegratorsDiffEq
 ```
 
   - `GIEuler` - 1st order Euler method
@@ -1178,9 +1178,9 @@ DifferentialEquations.jl. To use the following algorithms, you must install and
 use BridgeDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/SciML/BridgeDiffEq.jl")
-using BridgeDiffEq
+import BridgeDiffEq
 ```
 
   - `BridgeR3` - 3rd order Ralston method
@@ -1196,9 +1196,9 @@ To use the following algorithms, you must install and
 use TaylorIntegration.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("TaylorIntegration")
-using TaylorIntegration
+import TaylorIntegration
 ```
 
   - `TaylorMethod(order)` - Taylor integration method with maximal `order` (required)
@@ -1215,9 +1215,9 @@ To use the following algorithms, you must install and
 use QuDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add(url = "https://github.com/QuantumBFS/QuDiffEq.jl")
-using QuDiffEq
+import QuDiffEq
 ```
 
   - `QuLDE(k)` - Algorithm based on truncated Taylor series. The method linearizes a system of non-linear differential equations and solves the resultant by means of a quantum circuit. `k` selects the order in the Taylor series approximation (for the quantum circuit).
@@ -1234,9 +1234,9 @@ To use the following algorithms, you must install and
 use NeuralPDE.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("NeuralPDE")
-using NeuralPDE
+import NeuralPDE
 ```
 
   - `nnode(chain,opt=ADAM(0.1))` - Defines a neural network solver which utilizes a Flux.jl
@@ -1250,9 +1250,9 @@ The list of tableaus can be found in [the developer docs](https://docs.sciml.ai/
 To use them, note you must install the library:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("DiffEqDevTools")
-using DiffEqDevTools
+import DiffEqDevTools
 ```
 
 For the most useful and common algorithms, a hand-optimized version is supplied
@@ -1277,9 +1277,9 @@ Note that this setup is not automatically included with DifferentialEquations.jl
 To use the following algorithms, you must install and use ProbNumDiffEq.jl:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("ProbNumDiffEq")
-using ProbNumDiffEq
+import ProbNumDiffEq
 ```
 
   - `EK1(order=3)` - A semi-implicit ODE solver based on extended Kalman filtering and smoothing with first order linearization. Recommended, but requires that the Jacobian of the vector field is specified.

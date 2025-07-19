@@ -24,7 +24,7 @@ To use a sample problem, such as `prob_bvp_linear_1`, you can do something like:
 
 ```julia
 #] add DiffEqProblemLibrary
-using DiffEqProblemLibrary.BVProblemLibrary, BoundaryValueDiffEq
+import DiffEqProblemLibrary.BVProblemLibrary, BoundaryValueDiffEq
 # load problems
 prob = BVProblemLibrary.prob_bvp_linear_1
 sol = solve(prob, MIRK4(), dt = 0.05)

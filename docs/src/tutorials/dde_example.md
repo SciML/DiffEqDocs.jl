@@ -36,7 +36,7 @@ no delays are written as in the ODE.
 Thus, the function for this model is given by:
 
 ```@example dde
-using DifferentialEquations
+import DifferentialEquations as DE
 function bc_model(du, u, h, p, t)
     p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau = p
     hist3 = h(p, t - tau)[3]
@@ -50,7 +50,7 @@ end
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDEProblem(f, u0, h, tspan, p = SciMLBase.NullParameters();
+prob = DE.DDEProblem(f, u0, h, tspan, p = SciMLBase.NullParameters();
     constant_lags = [], dependent_lags = [], kwargs...)
 ```
 
@@ -88,28 +88,28 @@ p = (p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau)
 tspan = (0.0, 10.0)
 u0 = [1.0, 1.0, 1.0]
 
-prob = DDEProblem(bc_model, u0, h, tspan, p; constant_lags = lags)
+prob = DE.DDEProblem(bc_model, u0, h, tspan, p; constant_lags = lags)
 ```
 
 An efficient way to solve this problem (given the constant lags) is with the
 MethodOfSteps solver. Through the magic that is Julia, it translates an OrdinaryDiffEq.jl
 ODE solver method into a method for delay differential equations, which is highly
-efficient due to sweet compiler magic. A good choice is the order 5 method `Tsit5()`:
+efficient due to sweet compiler magic. A good choice is the order 5 method `DE.Tsit5()`:
 
 ```@example dde
-alg = MethodOfSteps(Tsit5())
+alg = DE.MethodOfSteps(DE.Tsit5())
 ```
 
-For lower tolerance solving, one can use the `BS3()` algorithm to good
+For lower tolerance solving, one can use the `DE.BS3()` algorithm to good
 effect (this combination is similar to the MATLAB `dde23`, but more efficient
-tableau), and for high tolerances the `Vern6()` algorithm will give a 6th order
+tableau), and for high tolerances the `DE.Vern6()` algorithm will give a 6th order
 solution.
 
 To solve the problem with this algorithm, we do the same thing we'd do with other
 methods on the common interface:
 
 ```@example dde
-sol = solve(prob, alg)
+sol = DE.solve(prob, alg)
 ```
 
 Note that everything available to OrdinaryDiffEq.jl can be used here, including
@@ -117,8 +117,8 @@ event handling and other callbacks. The solution object has the same interface
 as for ODEs. For example, we can use the same plot recipes to view the results:
 
 ```@example dde
-using Plots
-plot(sol)
+import Plots
+Plots.plot(sol)
 ```
 
 #### Speeding Up Interpolations with Idxs
@@ -189,20 +189,20 @@ You might have noticed DifferentialEquations.jl allows you to solve problems
 with undeclared delays, since you can interpolate `h` at any value. This is
 a feature, but use it with caution. Undeclared delays can increase the error
 in the solution. It's recommended that you use a method with a residual control,
-such as `MethodOfSteps(RK4())` whenever there are undeclared delays. With this,
+such as `MethodOfSteps(DE.RK4())` whenever there are undeclared delays. With this,
 you can use interpolated derivatives, solve functional differential equations
 by using quadrature on the interpolant, etc. However, note that residual control
 solves with a low level of accuracy, so the tolerances should be made very small,
 and the solution should not be trusted for more than 2-3 decimal places.
 
-Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
+Note: `MethodOfSteps(DE.RK4())` with undeclared delays is similar to MATLAB's
 `ddesd`. Thus, for example, the following is similar to solving the example
 from above with residual control:
 
 ```@example dde
-prob = DDEProblem(bc_model, u0, h, tspan)
-alg = MethodOfSteps(RK4())
-sol = solve(prob, alg)
+prob = DE.DDEProblem(bc_model, u0, h, tspan)
+alg = DE.MethodOfSteps(DE.RK4())
+sol = DE.solve(prob, alg)
 ```
 
 Note that this method can solve problems with state-dependent delays.
@@ -220,9 +220,9 @@ We can solve the above problem with dependent delay tracking by declaring the
 dependent lags and solving with a `MethodOfSteps` algorithm:
 
 ```@example dde
-prob = DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -> tau,))
-alg = MethodOfSteps(Tsit5())
-sol = solve(prob, alg)
+prob = DE.DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -> tau,))
+alg = DE.MethodOfSteps(DE.Tsit5())
+sol = DE.solve(prob, alg)
 ```
 
 Here, we treated the single lag `t-tau` as a state-dependent delay. Of course, you

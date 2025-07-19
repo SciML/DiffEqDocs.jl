@@ -7,7 +7,7 @@ the package before using these solvers:
 ```julia
 using Pkg
 Pkg.add("Sundials")
-using Sundials
+import Sundials
 ```
 
 These methods can be used independently of the rest of DifferentialEquations.jl.

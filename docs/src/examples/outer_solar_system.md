@@ -15,9 +15,9 @@ The chosen units are masses relative to the sun, meaning the sun has mass $1$. W
 The data is taken from the book “Geometric Numerical Integration” by E. Hairer, C. Lubich and G. Wanner.
 
 ```@example outersolarsystem
-using Plots, OrdinaryDiffEq, ModelingToolkit
-using ModelingToolkit: t_nounits as t, D_nounits as D
-gr()
+import Plots, OrdinaryDiffEq as ODE, ModelingToolkit as MTK
+using MTK: t_nounits as t, D_nounits as D
+Plots.gr()
 
 G = 2.95912208286e-4
 M = [
@@ -69,17 +69,17 @@ $$\dot{p} = -\nabla{V}(q)\quad \dot{q}=M^{-1}p.$$
 Thus, $\dot{q}$ is defined by the masses. We only need to define $\dot{p}$, and this is done internally by taking the gradient of $V$. Therefore, we only need to pass the potential function and the rest is taken care of.
 
 ```@example outersolarsystem
-eqs = vec(@. D(D(u))) .~ .-ModelingToolkit.gradient(potential, vec(u)) ./
+eqs = vec(@. D(D(u))) .~ .-MTK.gradient(potential, vec(u)) ./
                          repeat(M, inner = 3)
-@mtkbuild sys = System(eqs, t)
-prob = ODEProblem(ss, [vec(u .=> pos); vec(D.(u) .=> vel)], tspan)
-sol = solve(prob, Tsit5());
+@mtkbuild sys = MTK.System(eqs, t)
+prob = ODE.ODEProblem(sys, [vec(u .=> pos); vec(D.(u) .=> vel)], tspan)
+sol = ODE.solve(prob, ODE.Tsit5());
 ```
 
 ```@example outersolarsystem
-plt = plot()
+plt = Plots.plot()
 for i in 1:N
-    plot!(plt, sol, idxs = (u[:, i]...,), lab = planets[i])
+    Plots.plot!(plt, sol, idxs = (u[:, i]...,), lab = planets[i])
 end
-plot!(plt; xlab = "x", ylab = "y", zlab = "z", title = "Outer solar system")
+Plots.plot!(plt; xlab = "x", ylab = "y", zlab = "z", title = "Outer solar system")
 ```

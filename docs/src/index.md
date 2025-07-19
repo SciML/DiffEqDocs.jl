@@ -107,14 +107,14 @@ are used, we ask that you cite the methods. [Please see our citation page for gu
 To install the package, use the following command inside the Julia REPL:
 
 ```julia
-using Pkg
+import Pkg
 Pkg.add("DifferentialEquations")
 ```
 
 To load the package, use the command:
 
 ```julia
-using DifferentialEquations
+import DifferentialEquations as DE
 ```
 
 This will add solvers and dependencies
@@ -236,7 +236,7 @@ The other strategy is to use [PackageCompiler.jl](https://julialang.github.io/Pa
 a system image that precompiles the whole package. To do this, one simply does:
 
 ```julia
-using PackageCompiler
+import PackageCompiler
 PackageCompiler.create_sysimage([:DifferentialEquations, :Plots]; replace_default = true)
 ```
 
@@ -374,7 +374,7 @@ individuals. Significant contributions have been made by the following individua
 ```
 
 ```@example
-using Pkg # hide
+import Pkg # hide
 Pkg.status() # hide
 ```
 
@@ -387,8 +387,8 @@ Pkg.status() # hide
 ```
 
 ```@example
-using InteractiveUtils # hide
-versioninfo() # hide
+import InteractiveUtils # hide
+InteractiveUtils.versioninfo() # hide
 ```
 
 ```@raw html
@@ -400,7 +400,7 @@ versioninfo() # hide
 ```
 
 ```@example
-using Pkg # hide
+import Pkg # hide
 Pkg.status(; mode = PKGMODE_MANIFEST) # hide
 ```
 
@@ -409,8 +409,8 @@ Pkg.status(; mode = PKGMODE_MANIFEST) # hide
 ```
 
 ```@eval
-using TOML
-using Markdown
+import TOML
+import Markdown
 version = TOML.parse(read("../../Project.toml", String))["version"]
 name = TOML.parse(read("../../Project.toml", String))["name"]
 link_manifest = "https://github.com/SciML/" * name * ".jl/tree/gh-pages/v" * version *

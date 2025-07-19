@@ -7,7 +7,7 @@ algorithm, you will need to install and use the package:
 ```julia
 using Pkg
 Pkg.add("DASKR")
-using DASKR
+import DASKR
 ```
 
 These methods can be used independently of the rest of DifferentialEquations.jl.

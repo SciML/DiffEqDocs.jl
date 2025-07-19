@@ -364,7 +364,7 @@ To use the following algorithms, you must install and use SimpleDiffEq.jl:
 ```julia
 using Pkg
 Pkg.add("SimpleDiffEq")
-using SimpleDiffEq
+import SimpleDiffEq
 ```
 
 ### BridgeDiffEq.jl
@@ -377,7 +377,7 @@ use BridgeDiffEq.jl:
 
 ```julia
 Pkg.clone("https://github.com/SciML/BridgeDiffEq.jl")
-using BridgeDiffEq
+import BridgeDiffEq
 ```
 
   - `BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.†

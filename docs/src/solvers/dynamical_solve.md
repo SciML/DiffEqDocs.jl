@@ -141,7 +141,7 @@ GeometricIntegratorsDiffEq.jl:
 
 ```julia
 Pkg.clone("https://github.com/SciML/GeometricIntegratorsDiffEq.jl")
-using GeometricIntegratorsDiffEq
+import GeometricIntegratorsDiffEq
 ```
 
   - `GISymplecticEulerA` - First order explicit symplectic Euler A
