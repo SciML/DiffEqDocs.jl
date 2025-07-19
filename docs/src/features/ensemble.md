@@ -271,11 +271,11 @@ achieved with
 [`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
-using Distributed
+import Distributed
 import DifferentialEquations as DE
-using Plots
+import Plots
 
-addprocs()
+Distributed.addprocs()
 @everywhere import DifferentialEquations as DE
 ```
 
@@ -308,7 +308,7 @@ sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleDistributed(), trajectories
 We can use the plot recipe to plot what the 10 ODEs look like:
 
 ```julia
-plot(sim, linealpha = 0.4)
+Plots.plot(sim, linealpha = 0.4)
 ```
 
 We note that if we wanted to find out what the initial condition was for a given
@@ -335,8 +335,8 @@ function prob_func(prob, i, repeat)
 end
 ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
 sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleThreads(), trajectories = 10)
-using Plots;
-plot(sim);
+import Plots;
+Plots.plot(sim);
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
@@ -415,9 +415,9 @@ Now we solve the problem 10 times and plot all of the trajectories in phase spac
 ```@example ensemble2
 ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
 sim = DE.solve(ensemble_prob, DE.SRIW1(), trajectories = 10)
-using Plots;
-plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
-plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
+import Plots;
+Plots.plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
+Plots.plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
 ```
 
 We can then summarize this information with the mean/variance bounds using a
@@ -426,7 +426,7 @@ units and directly plot the summary:
 
 ```@example ensemble2
 summ = DE.EnsembleSummary(sim, 0:0.1:10)
-plot(summ, fillalpha = 0.5)
+Plots.plot(summ, fillalpha = 0.5)
 ```
 
 Note that here we used the quantile bounds, which default to `[0.05,0.95]` in
@@ -463,10 +463,10 @@ batch, and declare convergence if the standard error of the mean is calculated
 as sufficiently small:
 
 ```@example ensemble3
-using Statistics
+import Statistics
 function reduction(u, batch, I)
     u = append!(u, batch)
-    finished = (var(u) / sqrt(last(I))) / mean(u) < 0.5
+    finished = (Statistics.var(u) / sqrt(last(I))) / Statistics.mean(u) < 0.5
     u, finished
 end
 ```
@@ -589,19 +589,19 @@ the differential equation, this can get messy, so let's only plot the
 3rd component:
 
 ```@example ensemble4
-using Plots;
-plot(summ; idxs = 3);
+import Plots;
+Plots.plot(summ; idxs = 3);
 ```
 
 We can change to errorbars instead of ribbons and plot two different
 indices:
 
 ```@example ensemble4
-plot(summ; idxs = (3, 5), error_style = :bars)
+Plots.plot(summ; idxs = (3, 5), error_style = :bars)
 ```
 
 Or we can simply plot the mean of every component over time:
 
 ```@example ensemble4
-plot(summ; error_style = :none)
+Plots.plot(summ; error_style = :none)
 ```

@@ -69,12 +69,12 @@ which outputs a tuple.
 
 ```@example problem
 import DifferentialEquations
-prob = DifferentialEquations.ODEProblem((u, p, t) -> u, (p, t0) -> p[1], (p) -> (0.0, p[2]), (2.0, 1.0))
+prob = DE.ODEProblem((u, p, t) -> u, (p, t0) -> p[1], (p) -> (0.0, p[2]), (2.0, 1.0))
 ```
 
 ```@example problem
 import Distributions
-prob = DifferentialEquations.ODEProblem((u, p, t) -> u, (p, t) -> Distributions.Normal(p, 1), (0.0, 1.0), 1.0)
+prob = DE.ODEProblem((u, p, t) -> u, (p, t) -> Distributions.Normal(p, 1), (0.0, 1.0), 1.0)
 ```
 
 ## Lower Level `__init` and `__solve`
@@ -101,8 +101,8 @@ example, to simulate it for longer timespan.  It can be done by the
 `remake` function:
 
 ```@example problem
-prob1 = DifferentialEquations.ODEProblem((u, p, t) -> u / 2, 1.0, (0.0, 1.0))
-prob2 = DifferentialEquations.remake(prob1; tspan = (0.0, 2.0))
+prob1 = DE.ODEProblem((u, p, t) -> u / 2, 1.0, (0.0, 1.0))
+prob2 = DE.remake(prob1; tspan = (0.0, 2.0))
 ```
 
 A general syntax of `remake` is

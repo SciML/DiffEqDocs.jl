@@ -24,9 +24,9 @@ Examples problems can be found in [DiffEqProblemLibrary.jl](https://github.com/S
 To use a sample problem, such as `prob_dae_resrob`, you can do something like:
 
 ```julia
-using DiffEqProblemLibrary.DAEProblemLibrary, Sundials
+import DiffEqProblemLibrary.DAEProblemLibrary, Sundials
 prob = DAEProblemLibrary.prob_dae_resrob
-sol = solve(prob, IDA())
+sol = solve(prob, Sundials.IDA())
 ```
 
 ```@meta

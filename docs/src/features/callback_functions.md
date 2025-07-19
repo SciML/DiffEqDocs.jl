@@ -85,8 +85,8 @@ u0 = [10.0]
 const V = 1
 prob = DE.ODEProblem(f, u0, (0.0, 10.0))
 sol = DE.solve(prob, DE.Tsit5())
-using Plots;
-plot(sol);
+import Plots;
+Plots.plot(sol);
 ```
 
 Now assume we wish to give the patient a dose of 10 at time `t==4`. For this,
@@ -102,7 +102,7 @@ If we then solve with this callback enabled, we see no change:
 
 ```@example callback1
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-plot(sol)
+Plots.plot(sol)
 ```
 
 The reason there is no change is because the `DiscreteCallback` only applies at
@@ -112,7 +112,7 @@ We can do that with the `tstops` argument:
 
 ```@example callback1
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = [4.0])
-plot(sol)
+Plots.plot(sol)
 ```
 
 and thus we achieve the desired result.
@@ -126,7 +126,7 @@ condition(u, t, integrator) = t ∈ dosetimes
 affect!(integrator) = integrator.u[1] += 10
 cb = DE.DiscreteCallback(condition, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = dosetimes)
-plot(sol)
+Plots.plot(sol)
 ```
 
 We can then use this mechanism to make the model arbitrarily complex. For
@@ -140,7 +140,7 @@ condition(u, t, integrator) = t ∈ dosetimes && (u[1] < 1.0)
 affect!(integrator) = integrator.u[1] += 10integrator.t
 cb = DE.DiscreteCallback(condition, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = dosetimes)
-plot(sol)
+Plots.plot(sol)
 ```
 
 #### PresetTimeCallback
@@ -156,7 +156,7 @@ dosetimes = [4.0, 8.0]
 affect!(integrator) = integrator.u[1] += 10
 cb = DE.PresetTimeCallback(dosetimes, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-plot(sol)
+Plots.plot(sol)
 ```
 
 Notice that this version will automatically set the `tstops` for you.
@@ -237,8 +237,8 @@ Lastly we solve the problem. Note that we must pass `tstop` values of `5.0` and
 ```@example callback2
 const tstop = [5.0; 8.0]
 sol = DE.solve(prob, DE.Tsit5(), callback = cbs, tstops = tstop)
-using Plots;
-plot(sol);
+import Plots;
+Plots.plot(sol);
 ```
 
 It's clear from the plot how the controls affected the outcome.
@@ -382,8 +382,8 @@ tspan = (0.0, 15.0)
 p = 9.8
 prob = DE.ODEProblem(f, u0, tspan, p)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-using Plots;
-plot(sol);
+import Plots;
+Plots.plot(sol);
 ```
 
 As you can see from the resulting image, DifferentialEquations.jl is smart enough
@@ -400,7 +400,7 @@ u0 = [50.0, 0.0]
 tspan = (0.0, 100.0)
 prob = DE.ODEProblem(f, u0, tspan, p)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-plot(sol)
+Plots.plot(sol)
 ```
 
 #### Handling Changing Dynamics and Exactness
@@ -424,7 +424,7 @@ u0 = [1.0, 0.0]
 p = [1.0]
 prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
 sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
-plot(sol)
+Plots.plot(sol)
 ```
 
 Notice that at the end, the ball is not at `0.0` like the condition would let
@@ -494,7 +494,7 @@ u0 = [1.0, 0.0]
 p = [0.0, 0.0]
 prob = ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
 sol = solve(prob, Tsit5(), callback = floor_event)
-plot(sol)
+Plots.plot(sol)
 ```
 
 From the readout, we can see the ball only bounced 8 times before it went below
@@ -555,7 +555,7 @@ u0 = [1.0, 0.0]
 p = [1.0, 0.0, 0.0]
 prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
 sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
-plot(sol)
+Plots.plot(sol)
 ```
 
 With this corrected version, we see that after 41 bounces, the accumulation
@@ -563,11 +563,11 @@ point is reached at `t = 1.355261854357056`. To really see the accumulation,
 let's zoom in:
 
 ```@example callback4
-p1 = plot(sol, idxs = 1, tspan = (1.25, 1.40))
-p2 = plot(sol, idxs = 1, tspan = (1.35, 1.36))
-p3 = plot(sol, idxs = 1, tspan = (1.354, 1.35526))
-p4 = plot(sol, idxs = 1, tspan = (1.35526, 1.35526185))
-plot(p1, p2, p3, p4)
+p1 = Plots.plot(sol, idxs = 1, tspan = (1.25, 1.40))
+p2 = Plots.plot(sol, idxs = 1, tspan = (1.35, 1.36))
+p3 = Plots.plot(sol, idxs = 1, tspan = (1.354, 1.35526))
+p4 = Plots.plot(sol, idxs = 1, tspan = (1.35526, 1.35526185))
+Plots.plot(p1, p2, p3, p4)
 ```
 
 I think Zeno would be proud of our solution.
@@ -614,8 +614,8 @@ condition(u, t, integrator) = u[2]
 affect!(integrator) = DE.terminate!(integrator)
 cb = DE.ContinuousCallback(condition, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-using Plots;
-plot(sol);
+import Plots;
+Plots.plot(sol);
 ```
 
 Note that this uses rootfinding to approximate the “exact” moment of the crossing.
@@ -642,7 +642,7 @@ condition(u, t, integrator) = u[2]
 affect!(integrator) = DE.terminate!(integrator)
 cb = DE.ContinuousCallback(condition, nothing, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
-plot(sol)
+Plots.plot(sol)
 ```
 
 Notice that passing only one `affect!` is the same as
@@ -716,8 +716,8 @@ many cells there are at each time. Since these are discrete values, we calculate
 and plot them directly:
 
 ```@example callback5
-using Plots
-plot(sol.t, map((x) -> length(x), sol[:]), lw = 3,
+import Plots
+Plots.plot(sol.t, map((x) -> length(x), sol[:]), lw = 3,
     ylabel = "Number of Cells", xlabel = "Time")
 ```
 
@@ -726,7 +726,7 @@ plot of the concentration of cell 1 over time. This is done with the command:
 
 ```@example callback5
 ts = range(0, stop = 10, length = 100)
-plot(ts, map((x) -> x[1], sol.(ts)), lw = 3,
+Plots.plot(ts, map((x) -> x[1], sol.(ts)), lw = 3,
     ylabel = "Amount of X in Cell 1", xlabel = "Time")
 ```
 
@@ -786,6 +786,6 @@ tspan = (0.0, 15.0)
 p = 9.8
 prob = DE.ODEProblem(f, u0, tspan, p)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, dt = 1e-3, adaptive = false)
-using Plots;
-plot(sol, idxs = (1, 3));
+import Plots;
+Plots.plot(sol, idxs = (1, 3));
 ```

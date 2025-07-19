@@ -478,9 +478,9 @@ function func(du, u, p, t)
     du[2] = -3 * u[2] + u[1] * u[2]
 end
 function f(p)
-    prob = ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
+    prob = DE.ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
     # Lower tolerances to show the methods converge to the same value
-    solve(prob, Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
+    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
 end
 ```
 
@@ -508,14 +508,14 @@ This is because you're using a cache which is incompatible with autodifferentiat
 via ForwardDiff.jl. For example, if we use the ODE function:
 
 ```julia
-import LinearAlgebra, OrdinaryDiffEq
+import LinearAlgebra, OrdinaryDiffEq as ODE, DifferentialEquations
 function foo(du, u, (A, tmp), t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
-solve(prob, Rosenbrock23())
+prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
+DE.solve(prob, ODE.Rosenbrock23())
 ```
 
 Here we use a cached temporary array to avoid the allocations of matrix
@@ -527,8 +527,9 @@ option in the solver. Every solver which uses autodifferentiation has this optio
 Thus, we'd solve this with:
 
 ```julia
-prob = ODEProblem(f, ones(5, 5), (0.0, 1.0))
-sol = solve(prob, Rosenbrock23(autodiff = false))
+import DifferentialEquations, OrdinaryDiffEq as ODE
+prob = DE.ODEProblem(f, ones(5, 5), (0.0, 1.0))
+sol = DE.solve(prob, ODE.Rosenbrock23(autodiff = false))
 ```
 
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
@@ -539,16 +540,16 @@ We could use `get_tmp` and `dualcache` functions from
 to solve this issue, e.g.,
 
 ```julia
-import LinearAlgebra, OrdinaryDiffEq, PreallocationTools
+import LinearAlgebra, OrdinaryDiffEq as ODE, PreallocationTools, DifferentialEquations
 function foo(du, u, (A, tmp), t)
-    tmp = get_tmp(tmp, first(u) * t)
+    tmp = PreallocationTools.get_tmp(tmp, first(u) * t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0),
+prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0),
     (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
-solve(prob, TRBDF2())
+DE.solve(prob, ODE.TRBDF2())
 ```
 
 ## Sparse Jacobians
@@ -570,7 +571,8 @@ ERROR: ArgumentError: pattern of the matrix changed
 though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g.,
 
 ```julia
-solve(prob, Rodas4(linsolve = KLUFactorization(; reuse_symbolic = false)))
+import DifferentialEquations, OrdinaryDiffEq as ODE, LinearSolve
+DE.solve(prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(; reuse_symbolic = false)))
 ```
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](https://docs.sciml.ai/LinearSolve/stable/)

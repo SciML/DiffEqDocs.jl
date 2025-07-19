@@ -120,10 +120,10 @@ mean/var statistics and has an associated plot recipe. For example, we can get
 the statistics at every `0.01` timesteps and plot the average + error using:
 
 ```@example sde
-import DifferentialEquations as DE.EnsembleAnalysis
-summ = EnsembleSummary(sol, 0:0.01:1)
+import DifferentialEquations as DE
+summ = DE.EnsembleSummary(sol, 0:0.01:1)
 Plots.plot(summ, labels = "Middle 95%")
-summ = EnsembleSummary(sol, 0:0.01:1; quantiles = [0.25, 0.75])
+summ = DE.EnsembleSummary(sol, 0:0.01:1; quantiles = [0.25, 0.75])
 Plots.plot!(summ, labels = "Middle 50%", legend = true)
 ```
 
@@ -288,7 +288,7 @@ In that portion of the docs, it is shown how to define your own noise process
 `my_noise`, which can be passed to the SDEProblem
 
 ```julia
-SDEProblem(f!, g!, u0, tspan, noise = my_noise)
+DE.SDEProblem(f!, g!, u0, tspan, noise = my_noise)
 ```
 
 Note that general colored noise problems are only compatible with the `EM` and `EulerHeun` methods.
@@ -335,7 +335,7 @@ heston_noise = DE.CorrelatedWienerProcess!(Γ, tspan[1], zeros(2), zeros(2))
 This is then used to build the SDE:
 
 ```@example sde4
-SDEProblem(f!, g!, ones(2), tspan, noise = heston_noise)
+DE.SDEProblem(f!, g!, ones(2), tspan, noise = heston_noise)
 ```
 
 Of course, to fully define this problem, we need to define our constants. Constructors

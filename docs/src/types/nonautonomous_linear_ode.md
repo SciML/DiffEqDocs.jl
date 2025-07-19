@@ -31,8 +31,8 @@ function update_func(A, u, p, t)
     A[2, 2] = cos(t)
 end
 
-using SciMLOperators
-A = MatrixOperator(ones(2, 2), update_func! = update_func)
+import SciMLOperators
+A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = ODEProblem(A, ones(2), (10, 50.0))
 ```
 

@@ -49,15 +49,15 @@ For example, to turn off precompilation for non-default problem types
 you can execute the following code in your active project.
 
 ```
-using Preferences, UUIDs
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
+import Preferences, UUIDs
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
 ```
 
 This will create a `LocalPreferences.toml` file next to the currently active
@@ -126,8 +126,8 @@ sim = DE.solve(ensemble_prob, DE.Euler(), trajectories = 100, callback = cb, dt 
 If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
 
 ```@example low_dep_1
-using InteractiveUtils # hide
-@which DE.ProbIntsUncertainty(0.2, 1)
+import InteractiveUtils # hide
+InteractiveUtils.@which DE.ProbIntsUncertainty(0.2, 1)
 ```
 
 This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have

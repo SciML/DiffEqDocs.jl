@@ -70,11 +70,11 @@ Options:
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
-import DifferentialEquations, SciMLOperators
+import DifferentialEquations as DE, SciMLOperators
 _A = [2 -1; -3 -5] / 5
 A = SciMLOperators.MatrixOperator(_A)
-prob = DifferentialEquations.ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
-sol = DifferentialEquations.solve(prob, DifferentialEquations.LinearExponential())
+prob = DE.ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
+sol = DE.solve(prob, DE.LinearExponential())
 ```
 
 !!! note
@@ -108,8 +108,8 @@ function update_func(A, u, p, t)
     A[2, 2] = cos(t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
-prob = DifferentialEquations.ODEProblem(A, ones(2), (1.0, 6.0))
-sol = DifferentialEquations.solve(prob, DifferentialEquations.MagnusGL6(), dt = 1 / 10)
+prob = DE.ODEProblem(A, ones(2), (1.0, 6.0))
+sol = DE.solve(prob, DE.MagnusGL6(), dt = 1 / 10)
 ```
 
 The initial values for ``A`` are irrelevant in this and similar cases, as the `update_func` immediately overwrites them.
@@ -138,8 +138,8 @@ function update_func(A, u, p, t)
     A[2, 2] = 0
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
-prob = DifferentialEquations.ODEProblem(A, ones(2), (0, 30.0))
-sol = DifferentialEquations.solve(prob, DifferentialEquations.LieRK4(), dt = 1 / 4)
+prob = DE.ODEProblem(A, ones(2), (0, 30.0))
+sol = DE.solve(prob, DE.LieRK4(), dt = 1 / 4)
 ```
 
 The above example solves a non-stiff Non-Autonomous Linear ODE
@@ -157,8 +157,8 @@ function update_func(A, u, p, t)
     A[2, 2] = 0
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
-prob = DifferentialEquations.ODEProblem(A, ones(2), (30, 150.0))
-sol = DifferentialEquations.solve(prob, DifferentialEquations.MagnusAdapt4())
+prob = DE.ODEProblem(A, ones(2), (30, 150.0))
+sol = DE.solve(prob, DE.MagnusAdapt4())
 ```
 
 # Time and State-Dependent Operators
