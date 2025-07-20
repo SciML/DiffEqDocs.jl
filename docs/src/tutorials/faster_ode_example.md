@@ -663,7 +663,7 @@ r0[:, :, 1] .= uss .+ 0.1 .* rand.()
 r0[:, :, 2] .= vss
 
 prob = DE.ODEProblem(basic_version!, r0, (0.0, 0.1), p)
-de = complete(modelingtoolkitize(prob))
+de = MTK.complete(MTK.modelingtoolkitize(prob))
 
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!
