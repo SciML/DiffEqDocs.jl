@@ -475,7 +475,7 @@ nothing # hide
 
 Now, most of the allocations are taking place in `Du = D1*(Ay*u + u*Ax)` since
 those operations are vectorized and not mutating. We should instead replace the
-matrix multiplications with `mul!`. When doing so, we will need to have cache
+matrix multiplications with `LA.mul!`. When doing so, we will need to have cache
 variables to write into. This looks like:
 
 ```@example faster_ode3
@@ -491,10 +491,10 @@ function gm3!(dr, r, p, t)
     v = @view r[:, :, 2]
     du = @view dr[:, :, 1]
     dv = @view dr[:, :, 2]
-    mul!(Ayu, Ay, u)
-    mul!(uAx, u, Ax)
-    mul!(Ayv, Ay, v)
-    mul!(vAx, v, Ax)
+    LA.mul!(Ayu, Ay, u)
+    LA.mul!(uAx, u, Ax)
+    LA.mul!(Ayv, Ay, v)
+    LA.mul!(vAx, v, Ax)
     @. Du = D1 * (Ayu + uAx)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
@@ -515,10 +515,10 @@ function gm4!(dr, r, p, t)
     v = @view r[:, :, 2]
     du = @view dr[:, :, 1]
     dv = @view dr[:, :, 2]
-    mul!(Ayu, Ay, u)
-    mul!(uAx, u, Ax)
-    mul!(Ayv, Ay, v)
-    mul!(vAx, v, Ax)
+    LA.mul!(Ayu, Ay, u)
+    LA.mul!(uAx, u, Ax)
+    LA.mul!(Ayv, Ay, v)
+    LA.mul!(vAx, v, Ax)
     @. Du = D1 * (Ayu + uAx)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
