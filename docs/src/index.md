@@ -401,7 +401,7 @@ InteractiveUtils.versioninfo() # hide
 
 ```@example
 import Pkg # hide
-Pkg.status(; mode = PKGMODE_MANIFEST) # hide
+Pkg.status(; mode = Pkg.PKGMODE_MANIFEST) # hide
 ```
 
 ```@raw html
