@@ -165,7 +165,7 @@ function g!(du, u, p, t)  # It actually represents a diagonal matrix [3.0 0 0; 0
     du[3] = 3.0
 end
 
-prob_sde_lorenz = SDEProblem(f!, g!, [1.0, 0.0, 0.0], (0.0, 10.0))
+prob_sde_lorenz = DE.SDEProblem(f!, g!, [1.0, 0.0, 0.0], (0.0, 10.0))
 sol = DE.solve(prob_sde_lorenz)
 Plots.plot(sol, idxs = (1, 2, 3))
 ```
