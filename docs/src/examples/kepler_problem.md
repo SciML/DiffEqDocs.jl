@@ -93,7 +93,7 @@ Both Runge-Kutta-Nyström and Runge-Kutta integrator do not conserve energy nor 
 In this example, we know that energy and angular momentum should be conserved. We can achieve this through manifold projection. As the name implies, it is a procedure to project the ODE solution to a manifold. Let's start with a base case, where manifold projection isn't being used.
 
 ```@example kepler
-import DiffEqCallbacks
+import DiffEqCallbacks as CB
 
 function plot_orbit2(sol)
     Plots.plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")
@@ -127,7 +127,7 @@ function first_integrals_manifold(residual, u, p, t)
     residual[3:4] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
 end
 
-cb = DiffEqCallbacks.ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
+cb = CB.ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
 sol5 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = cb)
 analysis_plot2(sol5, H, L)
 ```
@@ -139,7 +139,7 @@ function energy_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-energy_cb = DiffEqCallbacks.ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
+energy_cb = CB.ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
 sol6 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
 analysis_plot2(sol6, H, L)
 ```
@@ -151,7 +151,7 @@ function angular_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-angular_cb = DiffEqCallbacks.ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
+angular_cb = CB.ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
 sol7 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
 analysis_plot2(sol7, H, L)
 ```

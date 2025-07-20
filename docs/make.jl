@@ -1,4 +1,4 @@
-using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqCore
+using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF, OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
 import ODEProblemLibrary,
        SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
@@ -21,7 +21,12 @@ makedocs(
         DAEProblemLibrary,
         BVProblemLibrary,
         OrdinaryDiffEq,
+        OrdinaryDiffEqBDF,
         OrdinaryDiffEqCore,
+        StochasticDiffEq,
+        DelayDiffEq,
+        SteadyStateDiffEq,
+        DiffEqCallbacks,
         Sundials, DASKR
     ],
     linkcheck = true,

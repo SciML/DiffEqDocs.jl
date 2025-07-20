@@ -16,8 +16,7 @@ First, we'll use / import some packages:
 import Plots
 import LinearAlgebra
 import DiffEqBase
-import OrdinaryDiffEq as ODE
-import OrdinaryDiffEq: SplitODEProblem, solve, IMEXEuler
+import OrdinaryDiffEqBDF as BDF
 import SciMLBase, SciMLOperators
 ```
 
@@ -179,14 +178,14 @@ params = (; n)
 
 tspan = (FT(0), N_t * FT(Δt))
 
-prob = SplitODEProblem(SciMLOperators.MatrixOperator(D),
+prob = SciMLBase.SplitODEProblem(SciMLOperators.MatrixOperator(D),
     rhs!,
     T,
     tspan,
     params)
-alg = IMEXEuler()
+alg = BDF.IMEXEuler()
 println("Solving...")
-sol = solve(prob,
+sol = SciMLBase.solve(prob,
     alg,
     dt = Δt,
     saveat = range(FT(0), N_t * FT(Δt), length = 5),
