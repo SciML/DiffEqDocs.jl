@@ -541,7 +541,7 @@ end
 function floor_aff!(int)
     int.u[2] *= -0.5
     if int.dt > 1e-12
-        set_proposed_dt!(int, (int.t - int.tprev) / 100)
+        DE.set_proposed_dt!(int, (int.t - int.tprev) / 100)
     else
         int.u[1] = 0
         int.u[2] = 0
