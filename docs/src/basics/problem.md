@@ -68,7 +68,7 @@ which outputs a tuple.
 ### Examples
 
 ```@example problem
-import DifferentialEquations
+import DifferentialEquations as DE
 prob = DE.ODEProblem((u, p, t) -> u, (p, t0) -> p[1], (p) -> (0.0, p[2]), (2.0, 1.0))
 ```
 

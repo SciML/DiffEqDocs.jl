@@ -472,7 +472,7 @@ To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
 ```@example faq1
-import DifferentialEquations
+import DifferentialEquations as DE
 function func(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
@@ -527,7 +527,7 @@ option in the solver. Every solver which uses autodifferentiation has this optio
 Thus, we'd solve this with:
 
 ```julia
-import DifferentialEquations, OrdinaryDiffEq as ODE
+import DifferentialEquations as DE, OrdinaryDiffEq as ODE
 prob = DE.ODEProblem(f, ones(5, 5), (0.0, 1.0))
 sol = DE.solve(prob, ODE.Rosenbrock23(autodiff = false))
 ```
@@ -571,7 +571,7 @@ ERROR: ArgumentError: pattern of the matrix changed
 though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g.,
 
 ```julia
-import DifferentialEquations, OrdinaryDiffEq as ODE, LinearSolve
+import DifferentialEquations as DE, OrdinaryDiffEq as ODE, LinearSolve
 DE.solve(prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(; reuse_symbolic = false)))
 ```
 

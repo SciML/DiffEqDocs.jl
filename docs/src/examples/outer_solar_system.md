@@ -15,7 +15,8 @@ The chosen units are masses relative to the sun, meaning the sun has mass $1$. W
 The data is taken from the book “Geometric Numerical Integration” by E. Hairer, C. Lubich and G. Wanner.
 
 ```@example outersolarsystem
-import Plots, OrdinaryDiffEq as ODE, ModelingToolkit as MTK
+import Plots, OrdinaryDiffEq as ODE
+import ModelingToolkit as MTK
 using MTK: t_nounits as t, D_nounits as D
 Plots.gr()
 
