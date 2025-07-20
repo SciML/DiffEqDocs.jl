@@ -183,7 +183,7 @@ Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
 ```@example ODE2
-[t + u for (u, t) in tuples(sol)]
+[t + u for (u, t) in DE.tuples(sol)]
 ```
 
 or more generally
