@@ -489,7 +489,7 @@ function floor_aff!(int)
     int.p[1] += 1
     int.p[2] = int.t
 end
-floor_event = ContinuousCallback(condition, floor_aff!)
+floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
 p = [0.0, 0.0]
 prob = ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
