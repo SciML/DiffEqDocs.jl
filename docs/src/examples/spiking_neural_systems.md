@@ -74,7 +74,7 @@ Our condition is `thr(u,t,integrator)` and the condition kicks in when `u > inte
 ```@example spikingneural
 u0 = -75
 tspan = (0.0, 40.0)
-p = ComponentArray(gL = 5.0, EL = -75.0, C = 50.0, Vth = -55.0, I = 0)
+p = ComponentArrays.ComponentArray(gL = 5.0, EL = -75.0, C = 50.0, Vth = -55.0, I = 0)
 
 prob = DE.ODEProblem(lif, u0, tspan, p, callback = cb)
 ```
