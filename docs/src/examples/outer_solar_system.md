@@ -17,7 +17,7 @@ The data is taken from the book “Geometric Numerical Integration” by E. Hair
 ```@example outersolarsystem
 import Plots, OrdinaryDiffEq as ODE
 import ModelingToolkit as MTK
-using MTK: t_nounits as t, D_nounits as D
+using ModelingToolkit: t_nounits as t, D_nounits as D, @mtkbuild, @variables
 Plots.gr()
 
 G = 2.95912208286e-4
