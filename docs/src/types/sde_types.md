@@ -25,10 +25,11 @@ To use a sample problem, such as `prob_sde_linear`, you can do something like:
 ```julia
 #] add DiffEqProblemLibrary
 import DiffEqProblemLibrary.SDEProblemLibrary
+import DifferentialEquations as DE
 # load problems
 SDEProblemLibrary.importsdeproblems()
 prob = SDEProblemLibrary.prob_sde_linear
-sol = solve(prob)
+sol = DE.solve(prob)
 ```
 
 ```@meta

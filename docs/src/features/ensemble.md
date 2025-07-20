@@ -118,7 +118,7 @@ are handled. Currently, the ensemble algorithm types are:
 For example, `EnsembleThreads()` is invoked by:
 
 ```julia
-solve(ensembleprob, alg, EnsembleThreads(); trajectories = 1000)
+DE.solve(ensembleprob, alg, DE.EnsembleThreads(); trajectories = 1000)
 ```
 
 ### Solution Type

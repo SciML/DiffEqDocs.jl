@@ -492,8 +492,8 @@ end
 floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
 p = [0.0, 0.0]
-prob = ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
-sol = solve(prob, Tsit5(), callback = floor_event)
+prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 2.0), p)
+sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
 Plots.plot(sol)
 ```
 

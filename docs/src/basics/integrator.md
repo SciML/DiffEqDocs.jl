@@ -295,7 +295,7 @@ Plots.plot(integrator)
 for i in integrator
     display(Plots.plot!(integrator, idxs = (0, 1), legend = false))
 end
-step!(integrator);
+DE.step!(integrator);
 Plots.plot!(integrator, idxs = (0, 1), legend = false);
 savefig("iteratorplot.png")
 ```

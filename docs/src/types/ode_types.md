@@ -26,10 +26,11 @@ To use a sample problem, such as `prob_ode_linear`, you can do something like:
 ```julia
 #] add DiffEqProblemLibrary
 import DiffEqProblemLibrary.ODEProblemLibrary
+import DifferentialEquations as DE
 # load problems
 ODEProblemLibrary.importodeproblems()
 prob = ODEProblemLibrary.prob_ode_linear
-sol = solve(prob)
+sol = DE.solve(prob)
 ```
 
 ```@meta

@@ -331,7 +331,7 @@ Plots.plot(sol, vars = [5, 6])
 Because of the time courses at play here, this facilitation is frequency-dependent. If we increase the period between these events, facilitation does not occur.
 
 ```@example spikingneural
-epsp_ts = PresetTimeCallback(100:1000:5100, epsp!)
+epsp_ts = DE.PresetTimeCallback(100:1000:5100, epsp!)
 
 p = [35.0, 40.0, 0.3, -77.0, 55.0, -65.0, 1, 0, 30, 500, 50, 0.5, 0.005, 0]
 u0 = [-60, n_inf(-60), m_inf(-60), h_inf(-60), 0.0, 1.0, 0.0]
