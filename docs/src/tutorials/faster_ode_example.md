@@ -316,7 +316,7 @@ de = MTK.complete(MTK.modelingtoolkitize(prob))
 We can tell it to compute the Jacobian if we want to see the code:
 
 ```@example faster_ode2
-ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
+MTK.generate_jacobian(de)[2] # Second is in-place
 ```
 
 Now let's use that to give the analytical solution Jacobian:
@@ -392,11 +392,11 @@ discretization of the Laplacian. The native code would be something along the
 lines of:
 
 ```@example faster_ode3
-import DifferentialEquations as DE, LinearAlgebra, BenchmarkTools as BT
+import DifferentialEquations as DE, LinearAlgebra as LA, BenchmarkTools as BT
 # Generate the constants
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
-Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
+Ax = Array(LA.Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
     [1.0 for i in 1:(N - 1)]))
 Ay = copy(Ax)
 Ax[2, 1] = 2.0
