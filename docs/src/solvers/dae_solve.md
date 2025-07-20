@@ -149,7 +149,7 @@ To use the following algorithms, you must install and use Sundials.jl:
 ```julia
 using Pkg
 Pkg.add("Sundials")
-using Sundials
+import Sundials
 ```
 
   - `IDA`: A fixed-leading coefficient fully implicit BDF method. Efficient for large systems.
@@ -165,7 +165,7 @@ algorithm, you will need to install and use the package:
 ```julia
 using Pkg
 Pkg.add("DASKR")
-using DASKR
+import DASKR
 ```
 
   - `daskr` - This is a wrapper for the well-known DASKR algorithm.

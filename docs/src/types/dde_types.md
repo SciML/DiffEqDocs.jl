@@ -24,10 +24,10 @@ To use a sample problem, such as `prob_dde_constant_1delay_ip`, you can do somet
 
 ```julia
 #] add DiffEqProblemLibrary
-using DiffEqProblemLibrary.ODEProblemLibrary, DelayDiffEq
+import DiffEqProblemLibrary.DDEProblemLibrary, DelayDiffEq
 # load problems
 prob = DDEProblemLibrary.prob_dde_constant_1delay_ip
-sol = solve(prob, MethodOfSteps(Tsit5()))
+sol = solve(prob, DelayDiffEq.MethodOfSteps(DelayDiffEq.Tsit5()))
 ```
 
 ### DDEs with 1 constant delay

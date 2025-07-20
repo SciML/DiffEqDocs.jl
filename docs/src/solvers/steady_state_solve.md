@@ -41,8 +41,9 @@ large time steps as the steady state approaches.
 Example usage:
 
 ```julia
-sol = solve(prob, SSRootfind())
-sol = solve(prob, DynamicSS(Tsit5()))
-using Sundials
-sol = solve(prob, DynamicSS(CVODE_BDF()), dt = 1.0)
+import DifferentialEquations as DE
+import Sundials
+sol = DE.solve(prob, DE.SSRootfind())
+sol = DE.solve(prob, DE.DynamicSS(DE.Tsit5()))
+sol = DE.solve(prob, DE.DynamicSS(Sundials.CVODE_BDF()), dt = 1.0)
 ```

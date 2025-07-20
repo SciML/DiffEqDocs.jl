@@ -8,7 +8,7 @@ of solutions. Let's take a look at the double pendulum:
 
 ```@example minmax
 #Constants and setup
-using OrdinaryDiffEq
+import OrdinaryDiffEq as ODE
 initial = [0.01, 0.01, 0.01, 0.01]
 tspan = (0.0, 100.0)
 
@@ -26,25 +26,25 @@ function double_pendulum_hamiltonian(udot, u, p, t)
 end
 
 #Pass to solvers
-poincare = ODEProblem(double_pendulum_hamiltonian, initial, tspan)
+poincare = ODE.ODEProblem(double_pendulum_hamiltonian, initial, tspan)
 ```
 
 ```@example minmax
-sol = solve(poincare, Tsit5())
+sol = ODE.solve(poincare, ODE.Tsit5())
 ```
 
 In time, the solution looks like:
 
 ```@example minmax
-using Plots;
-gr();
-plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)
+import Plots;
+Plots.gr();
+Plots.plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)
 ```
 
 while it has the well-known phase-space plot:
 
 ```@example minmax
-plot(sol, vars = (3, 4), leg = false)
+Plots.plot(sol, vars = (3, 4), leg = false)
 ```
 
 ### Local Optimization
@@ -59,11 +59,11 @@ f(t, _) = sol(first(t), idxs = 4)
 function is `f`:
 
 ```@example minmax
-using Optimization, OptimizationNLopt, ForwardDiff
-optf = OptimizationFunction(f, Optimization.AutoForwardDiff())
+import Optimization as OPT, OptimizationNLopt as OptNL, ForwardDiff
+optf = OPT.OptimizationFunction(f, OPT.AutoForwardDiff())
 min_guess = 18.0
-optprob = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
-opt = solve(optprob, NLopt.LD_LBFGS())
+optprob = OPT.OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
+opt = OPT.solve(optprob, OptNL.NLopt.LD_LBFGS())
 ```
 
 From this printout, we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We
@@ -78,18 +78,18 @@ To get the maximum, we just minimize the negative of the function:
 ```@example minmax
 fminus(t, _) = -sol(first(t), idxs = 4)
 
-optf = OptimizationFunction(fminus, Optimization.AutoForwardDiff())
+optf = OPT.OptimizationFunction(fminus, OPT.AutoForwardDiff())
 min_guess = 22.0
-optprob2 = OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
-opt2 = solve(optprob2, NLopt.LD_LBFGS())
+optprob2 = OPT.OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
+opt2 = OPT.solve(optprob2, OptNL.NLopt.LD_LBFGS())
 ```
 
 Let's add the maxima and minima to the plots:
 
 ```@example minmax
-plot(sol, vars = (0, 4), plotdensity = 10000)
-scatter!([opt.u], [opt.minimum], label = "Local Min")
-scatter!([opt2.u], [-opt2.minimum], label = "Local Max")
+Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
+Plots.scatter!([opt.u], [opt.minimum], label = "Local Min")
+Plots.scatter!([opt2.u], [-opt2.minimum], label = "Local Max")
 ```
 
 ### Global Optimization
@@ -103,14 +103,14 @@ swap out to one of the
 Let's try `GN_ORIG_DIRECT_L`:
 
 ```@example minmax
-gopt = solve(optprob, NLopt.GN_ORIG_DIRECT_L())
-gopt2 = solve(optprob2, NLopt.GN_ORIG_DIRECT_L())
+gopt = OPT.solve(optprob, OptNL.NLopt.GN_ORIG_DIRECT_L())
+gopt2 = OPT.solve(optprob2, OptNL.NLopt.GN_ORIG_DIRECT_L())
 
 @show gopt.u, gopt2.u
 ```
 
 ```@example minmax
-plot(sol, vars = (0, 4), plotdensity = 10000)
-scatter!([gopt.u], [gopt.minimum], label = "Global Min")
-scatter!([gopt2.u], [-gopt2.minimum], label = "Global Max")
+Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
+Plots.scatter!([gopt.u], [gopt.minimum], label = "Global Min")
+Plots.scatter!([gopt2.u], [-gopt2.minimum], label = "Global Max")
 ```
