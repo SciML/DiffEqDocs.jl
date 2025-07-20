@@ -131,7 +131,7 @@ Additionally, we can easily calculate the correlation between the values at `t=0
 and `t=0.7` via
 
 ```@example sde
-DE.timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coefficient
+DE.EnsembleAnalysis.timepoint_meancor(sol, 0.2, 0.7) # Gives both means and then the correlation coefficient
 ```
 
 ## Example 2: Systems of SDEs with Diagonal Noise
