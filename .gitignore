@@ -3,6 +3,8 @@
 *.jl.mem
 docs/build
 docs/site
+docs/src/api/ordinarydiffeq
+docs/ordinarydiffeq_pages.jl
 /Manifest.toml
 
 # vscode stuff

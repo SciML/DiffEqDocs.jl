@@ -1,3 +1,31 @@
+# Load OrdinaryDiffEq pages - must be available
+ordinary_diffeq_pages_file = joinpath(@__DIR__, "ordinarydiffeq_pages.jl")
+if !isfile(ordinary_diffeq_pages_file)
+    error("OrdinaryDiffEq pages file not found at: $ordinary_diffeq_pages_file. Run the build process first.")
+end
+
+include(ordinary_diffeq_pages_file)
+
+# Transform OrdinaryDiffEq pages to have the api/ordinarydiffeq prefix
+function transform_ordinarydiffeq_pages(pages_array)
+    transformed = []
+    for page in pages_array
+        if isa(page, String)
+            push!(transformed, "api/ordinarydiffeq/" * page)
+        elseif isa(page, Pair)
+            key, value = page
+            if isa(value, String)
+                push!(transformed, key => "api/ordinarydiffeq/" * value)
+            elseif isa(value, Vector)
+                push!(transformed, key => transform_ordinarydiffeq_pages(value))
+            end
+        end
+    end
+    return transformed
+end
+
+ordinary_diffeq_pages = transform_ordinarydiffeq_pages(pages)
+
 pages = Any["index.md",
     "getting_started.md",
     "Tutorials" => Any["tutorials/faster_ode_example.md",
@@ -63,6 +91,7 @@ pages = Any["index.md",
         "features/io.md",
         "features/low_dep.md",
         "features/progress_bar.md"],
-    "Detailed Solver APIs" => Any["api/sundials.md",
+    "External Solver APIs" => Any["api/sundials.md",
         "api/daskr.md"],
+    "OrdinaryDiffEq.jl API" => ordinary_diffeq_pages,
     "Extra Details" => Any["extras/timestepping.md"]]

@@ -6,6 +6,23 @@ using Sundials, DASKR
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
 cp("./docs/Project.toml", "./docs/src/assets/Project.toml", force = true)
 
+# Copy OrdinaryDiffEq.jl documentation
+ordinartdiffeq_docs_root = joinpath(dirname(pathof(OrdinaryDiffEq)), "..", "docs")
+ordinartdiffeq_docs_path = joinpath(ordinartdiffeq_docs_root, "src")
+if isdir(ordinartdiffeq_docs_path)
+    # Create the OrdinaryDiffEq API directory in the docs
+    ordinary_diffeq_dest = joinpath(@__DIR__, "src", "api", "ordinarydiffeq")
+    mkpath(dirname(ordinary_diffeq_dest))
+    
+    # Copy all the docs from OrdinaryDiffEq.jl
+    cp(ordinartdiffeq_docs_path, ordinary_diffeq_dest, force=true)
+    
+    # Copy the pages.jl file from OrdinaryDiffEq.jl
+    ordinary_diffeq_pages_dest = joinpath(@__DIR__, "ordinarydiffeq_pages.jl")
+    ordinary_diffeq_pages_file = joinpath(ordinartdiffeq_docs_root, "pages.jl")
+    cp(ordinary_diffeq_pages_file, ordinary_diffeq_pages_dest, force=true)
+end
+
 ENV["PLOTS_TEST"] = "true"
 ENV["GKSwstype"] = "100"
 
