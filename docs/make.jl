@@ -21,6 +21,11 @@ if isdir(ordinartdiffeq_docs_path)
     ordinary_diffeq_pages_dest = joinpath(@__DIR__, "ordinarydiffeq_pages.jl")
     ordinary_diffeq_pages_file = joinpath(ordinartdiffeq_docs_root, "pages.jl")
     cp(ordinary_diffeq_pages_file, ordinary_diffeq_pages_dest, force=true)
+    
+    # Copy the common_first_steps.jl file from OrdinaryDiffEq.jl
+    common_first_steps_dest = joinpath(@__DIR__, "common_first_steps.jl")
+    common_first_steps_file = joinpath(ordinartdiffeq_docs_root, "common_first_steps.jl")
+    cp(common_first_steps_file, common_first_steps_dest, force=true)
 end
 
 ENV["PLOTS_TEST"] = "true"
