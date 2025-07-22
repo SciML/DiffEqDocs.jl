@@ -103,7 +103,8 @@ makedocs(
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
     sitename = "DifferentialEquations.jl",
     authors = "Chris Rackauckas",
-    pages = pages)
+    pages = pages,
+    size_threshold = 500 * 2^10)
 
 #Redirect old links
 # cd(joinpath(@__DIR__, "build")) do
