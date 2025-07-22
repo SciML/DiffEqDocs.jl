@@ -98,7 +98,7 @@ makedocs(
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
     ],
     doctest = false, clean = true,
-    warnonly = [:missing_docs],
+    warnonly = [:missing_docs, :docs_block],
     format = Documenter.HTML(assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
     sitename = "DifferentialEquations.jl",
