@@ -100,11 +100,11 @@ makedocs(
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
     format = Documenter.HTML(assets = ["assets/favicon.ico"],
-        canonical = "https://docs.sciml.ai/DiffEqDocs/stable/"),
+        canonical = "https://docs.sciml.ai/DiffEqDocs/stable/",
+              size_threshold = 500 * 2^10),
     sitename = "DifferentialEquations.jl",
     authors = "Chris Rackauckas",
-    pages = pages,
-    size_threshold = 500 * 2^10)
+    pages = pages)
 
 #Redirect old links
 # cd(joinpath(@__DIR__, "build")) do
