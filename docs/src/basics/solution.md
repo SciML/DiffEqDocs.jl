@@ -192,7 +192,9 @@ SciMLBase.successful_retcode(sol)
 
 !!! warning
     Previous iterations of the interface suggested using `sol.retcode == :Success`, 
-    however, that is now not advised. Use `SciMLBase.successful_retcode(sol)` instead.
+    however, that is now not advised because there are more than one return code that can be interpreted
+    as successful. For example, `Terminated` is a successful run to a manual termination, and would be missed
+    if only checking for Success. Therefore we highly recommend you use `SciMLBase.successful_retcode(sol)` instead.
 
 The return codes include:
 
