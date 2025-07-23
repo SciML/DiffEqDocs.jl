@@ -3,6 +3,11 @@ import ODEProblemLibrary,
        SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
 
+# Use development versions for API documentation
+import Pkg
+Pkg.develop("OrdinaryDiffEq")
+Pkg.develop("StochasticDiffEq")
+
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
 cp("./docs/Project.toml", "./docs/src/assets/Project.toml", force = true)
 
