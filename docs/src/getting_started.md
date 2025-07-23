@@ -379,7 +379,7 @@ end
 u₀ = [θ₀, ω₀]                       # initial state vector
 tspan = (0.0, 10.0)                  # time interval
 
-M = t -> 0.1sin(t)                    # external torque [Nm]
+M = t -> 0.1 * sin(t)                    # external torque [Nm]
 
 prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
 sol = DE.solve(prob)
