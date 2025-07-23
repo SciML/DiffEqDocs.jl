@@ -32,7 +32,7 @@ the solution quickly diverges to infinity! This means, double-check your paramet
 are indexed correctly!
 
 **Note: if you see these warnings during a parameter estimation process, this is
-likely the underlying problem. Simply check `SciMLBase.successful_retcode(sol.retcode)` and throw
+likely the underlying problem. Simply check `SciMLBase.successful_retcode(sol)` and throw
 an `Inf` cost. Most optimizers will then reject steps in those parameter regimes!**
 
 There are a few other things to check as well. Often, the stability of

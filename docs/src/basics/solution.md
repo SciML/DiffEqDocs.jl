@@ -181,23 +181,41 @@ SciMLBase.DEStats
 
 ## [Return Codes (RetCodes)](@id retcodes)
 
-The solution types have a `retcode` field which returns a symbol signifying the
-error state of the solution. The retcodes are as follows:
+The solution types have a `retcode` field which returns an enum value signifying the
+error state of the solution. Return codes are now implemented as an enum using EnumX.jl
+rather than symbols.
 
-  - `:Default`: The solver did not set retcodes.
-  - `:Success`: The integration completed without erroring or the steady state solver
+To check if a solution was successful, use:
+```julia
+SciMLBase.successful_retcode(sol)
+```
+
+!!! warning
+    Previous iterations of the interface suggested using `sol.retcode == :Success`, 
+    however, that is now not advised because there are more than one return code that can be interpreted
+    as successful. For example, `Terminated` is a successful run to a manual termination, and would be missed
+    if only checking for Success. Therefore we highly recommend you use `SciMLBase.successful_retcode(sol)` instead.
+
+The return codes include are accessed via the ReturnCode module, i.e. `SciMLBase.ReturnCode.Success`. The
+following are major return codes to know:
+
+  - `Default`: The solver did not set retcodes.
+  - `Success`: The integration completed without erroring or the steady state solver
     from `SteadyStateDiffEq` found the steady state.
-  - `:Terminated`: The integration is terminated with `terminate!(integrator)`.
+  - `Terminated`: The integration is terminated with `terminate!(integrator)`.
     Note that this may occur by using `TerminateSteadyState` from the callback
     library `DiffEqCallbacks`.
-  - `:MaxIters`: The integration exited early because it reached its maximum number
+  - `MaxIters`: The integration exited early because it reached its maximum number
     of iterations.
-  - `:DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
+  - `DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
     allowed minimum timestep, and exited early.
-  - `:Unstable`: The solver detected that the solution was unstable and exited early.
-  - `:InitialFailure`: The DAE solver could not find consistent initial conditions.
-  - `:ConvergenceFailure`: The internal implicit solvers failed to converge.
-  - `:Failure`: General uncategorized failures or errors.
+  - `Unstable`: The solver detected that the solution was unstable and exited early.
+  - `InitialFailure`: The DAE solver could not find consistent initial conditions.
+  - `ConvergenceFailure`: The internal implicit solvers failed to converge.
+  - `Failure`: General uncategorized failures or errors.
+
+For a complete list of return codes and their properties, see the 
+[SciMLBase ReturnCode documentation](https://docs.sciml.ai/SciMLBase/stable/interfaces/Solutions/#retcodes).
 
 ## Problem-Specific Features
 
