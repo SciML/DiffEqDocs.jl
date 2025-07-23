@@ -81,13 +81,26 @@ After defining a problem, you solve it using `solve`.
 sol = DE.solve(prob)
 ```
 
+This gives us an object `sol` which contains the solution. Looking at the solution object:
+
+```@example ODE2
+typeof(sol)
+```
+
+The solution object contains the time points and corresponding solution values:
+
+```@example ODE2
+@info "Solution contains $(length(sol.t)) time points from t=$(sol.t[1]) to t=$(sol.t[end])"
+```
+
 The solvers can be controlled using the available options are described on the
 [Common Solver Options manual page](@ref solver_options). For example,
 we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
 ```@example ODE2
-sol = DE.solve(prob, reltol = 1e-6)
+sol = DE.solve(prob, reltol = 1e-6);
+nothing # hide
 ```
 
 There are many controls for handling outputs. For example, we can choose to have
@@ -95,7 +108,8 @@ the solver save every `0.1` time points by setting `saveat=0.1`. Chaining this
 with the tolerance choice looks like:
 
 ```@example ODE2
-sol = DE.solve(prob, reltol = 1e-6, saveat = 0.1)
+sol = DE.solve(prob, reltol = 1e-6, saveat = 0.1);
+nothing # hide
 ```
 
 More generally, `saveat` can be any collection of time points to save at.
@@ -104,7 +118,8 @@ up the solution. In addition, if we only care about the endpoint, we can turn
 off intermediate saving in general:
 
 ```@example ODE2
-sol = DE.solve(prob, reltol = 1e-6, save_everystep = false)
+sol = DE.solve(prob, reltol = 1e-6, save_everystep = false);
+nothing # hide
 ```
 
 which will only save the final time point.
@@ -122,7 +137,8 @@ For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
 ```@example ODE2
-sol = DE.solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8);
+nothing # hide
 ```
 
 You can also explicitly choose the algorithm to use. DifferentialEquations.jl
@@ -132,7 +148,8 @@ been shown to be more efficient than the “standard” algorithms.
 For example, we can choose a 5th order Tsitouras method:
 
 ```@example ODE2
-sol = DE.solve(prob, DE.Tsit5())
+sol = DE.solve(prob, DE.Tsit5());
+nothing # hide
 ```
 
 Note that the solver controls can be combined with the algorithm choice. Thus
@@ -140,7 +157,8 @@ we can for example solve the problem using `DE.Tsit5()` with a lower tolerance
 via:
 
 ```@example ODE2
-sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8);
+nothing # hide
 ```
 
 In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
@@ -282,6 +300,8 @@ u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 100.0)
 prob = DE.ODEProblem(lorenz!, u0, tspan)
 sol = DE.solve(prob)
+@info "Solution has $(length(sol.t)) timesteps" # hide
+nothing # hide
 ```
 
 Using the plot recipe tools

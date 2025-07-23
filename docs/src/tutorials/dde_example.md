@@ -109,7 +109,9 @@ To solve the problem with this algorithm, we do the same thing we'd do with othe
 methods on the common interface:
 
 ```@example dde
-sol = DDE.solve(prob, alg)
+sol = DDE.solve(prob, alg);
+@info "Solution computed with $(length(sol.t)) timesteps" # hide
+nothing # hide
 ```
 
 Note that everything available to OrdinaryDiffEq.jl can be used here, including
@@ -202,7 +204,8 @@ from above with residual control:
 ```@example dde
 prob = DDE.DDEProblem(bc_model, u0, h, tspan)
 alg = DDE.MethodOfSteps(DE.RK4())
-sol = DDE.solve(prob, alg)
+sol = DDE.solve(prob, alg);
+nothing # hide
 ```
 
 Note that this method can solve problems with state-dependent delays.
@@ -222,7 +225,8 @@ dependent lags and solving with a `MethodOfSteps` algorithm:
 ```@example dde
 prob = DDE.DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -> tau,))
 alg = DDE.MethodOfSteps(DE.Tsit5())
-sol = DDE.solve(prob, alg)
+sol = DDE.solve(prob, alg);
+nothing # hide
 ```
 
 Here, we treated the single lag `t-tau` as a state-dependent delay. Of course, you

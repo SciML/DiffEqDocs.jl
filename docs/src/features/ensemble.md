@@ -414,7 +414,11 @@ Now we solve the problem 10 times and plot all of the trajectories in phase spac
 
 ```@example ensemble2
 ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
-sim = DE.solve(ensemble_prob, DE.SRIW1(), trajectories = 10)
+sim = DE.solve(ensemble_prob, DE.SRIW1(), trajectories = 10);
+nothing # hide
+```
+
+```@example ensemble2
 import Plots;
 Plots.plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
 Plots.plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
@@ -531,7 +535,9 @@ explicitly give a `dt`.
 
 ```@example ensemble4
 prob2 = DE.EnsembleProblem(prob)
-sim = DE.solve(prob2, DE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false)
+sim = DE.solve(prob2, DE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false);
+@info "Ensemble solution computed with $(length(sim)) trajectories" # hide
+nothing # hide
 ```
 
 **Note that if you don't do the `timeseries_steps` calculations, this code is

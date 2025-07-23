@@ -37,7 +37,11 @@ The `solve` interface is then the same as ODEs. Here, we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.EM(), dt = dt)
+sol = SDE.solve(prob, SDE.EM(), dt = dt);
+nothing # hide
+```
+
+```@example sde
 import Plots
 Plots.plot(sol)
 ```
@@ -60,7 +64,11 @@ prob = SDE.SDEProblem(ff, u₀, (0.0, 1.0))
 We can now compare the `SDE.EM()` solution with the analytic one:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.EM(), dt = dt)
+sol = SDE.solve(prob, SDE.EM(), dt = dt);
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol, plot_analytic = true)
 ```
 
@@ -69,7 +77,11 @@ the higher order methods are adaptive. Let's first switch off adaptivity and
 compare the numerical and analytic solutions :
 
 ```@example sde
-sol = SDE.solve(prob, SDE.SRIW1(), dt = dt, adaptive = false)
+sol = SDE.solve(prob, SDE.SRIW1(), dt = dt, adaptive = false);
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol, plot_analytic = true)
 ```
 
@@ -77,14 +89,22 @@ Now, let's allow the solver to automatically determine a starting `dt`. This est
 at the beginning is conservative (small) to ensure accuracy.
 
 ```@example sde
-sol = SDE.solve(prob, SDE.SRIW1())
+sol = SDE.solve(prob, SDE.SRIW1());
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol, plot_analytic = true)
 ```
 
 We can instead start the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.SRIW1(), dt = dt)
+sol = SDE.solve(prob, SDE.SRIW1(), dt = dt);
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol, plot_analytic = true)
 ```
 
@@ -105,7 +125,9 @@ are added via `addprocs()`, but we can change this to use multithreading via
 `SDE.EnsembleThreads()`. Together, this looks like:
 
 ```@example sde
-sol = SDE.solve(ensembleprob, SDE.EnsembleThreads(), trajectories = 1000)
+sol = SDE.solve(ensembleprob, SDE.EnsembleThreads(), trajectories = 1000);
+@info "Ensemble solution computed with $(length(sol)) trajectories" # hide
+nothing # hide
 ```
 
 !!! warn
@@ -166,7 +188,11 @@ function g!(du, u, p, t)  # It actually represents a diagonal matrix [3.0 0 0; 0
 end
 
 prob_sde_lorenz = SDE.SDEProblem(f!, g!, [1.0, 0.0, 0.0], (0.0, 10.0))
-sol = SDE.solve(prob_sde_lorenz)
+sol = SDE.solve(prob_sde_lorenz);
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol, idxs = (1, 2, 3))
 ```
 
@@ -202,7 +228,11 @@ u0 = rand(4, 2)
 
 W = SDE.WienerProcess(0.0, 0.0, 0.0)
 prob = SDE.SDEProblem(f!, g!, u0, (0.0, 1.0), noise = W)
-sol = SDE.solve(prob, SDE.SRIW1())
+sol = SDE.solve(prob, SDE.SRIW1());
+nothing # hide
+```
+
+```@example sde
 Plots.plot(sol)
 ```
 
