@@ -78,8 +78,7 @@ function in order to speed up the solvers. These are detailed
 After defining a problem, you solve it using `solve`.
 
 ```@example ODE2
-sol = DE.solve(prob);
-nothing # hide
+sol = DE.solve(prob)
 ```
 
 This gives us an object `sol` which contains the solution. Looking at the solution object:
