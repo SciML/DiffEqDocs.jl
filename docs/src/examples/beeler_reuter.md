@@ -92,6 +92,11 @@ end
 
 The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced.
 
+!!! note
+    For more complex PDE discretizations, consider using [MethodOfLines.jl](https://docs.sciml.ai/MethodOfLines/stable/) 
+    which can automatically generate finite difference discretizations, or [SciMLOperators.jl](https://docs.sciml.ai/SciMLOperators/stable/) 
+    for defining matrix-free linear operators.
+
 ```julia
 # 5-point stencil
 function laplacian(Δu, u)
