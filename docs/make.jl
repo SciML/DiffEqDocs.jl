@@ -28,6 +28,23 @@ if isdir(ordinartdiffeq_docs_path)
     cp(common_first_steps_file, common_first_steps_dest, force=true)
 end
 
+# Copy StochasticDiffEq.jl documentation
+stochasticdiffeq_docs_root = joinpath(dirname(pathof(StochasticDiffEq)), "..", "docs")
+stochasticdiffeq_docs_path = joinpath(stochasticdiffeq_docs_root, "src")
+if isdir(stochasticdiffeq_docs_path)
+    # Create the StochasticDiffEq API directory in the docs
+    stochastic_diffeq_dest = joinpath(@__DIR__, "src", "api", "stochasticdiffeq")
+    mkpath(dirname(stochastic_diffeq_dest))
+    
+    # Copy all the docs from StochasticDiffEq.jl
+    cp(stochasticdiffeq_docs_path, stochastic_diffeq_dest, force=true)
+    
+    # Copy the pages.jl file from StochasticDiffEq.jl
+    stochastic_diffeq_pages_dest = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
+    stochastic_diffeq_pages_file = joinpath(stochasticdiffeq_docs_root, "pages.jl")
+    cp(stochastic_diffeq_pages_file, stochastic_diffeq_pages_dest, force=true)
+end
+
 ENV["PLOTS_TEST"] = "true"
 ENV["GKSwstype"] = "100"
 
