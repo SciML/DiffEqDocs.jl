@@ -144,6 +144,13 @@ As low-level alternative to the callbacks, one can use `set_t!`, `set_u!` and
 have efficient ways to modify `u` and `t`.  In such case, `set_*!` are as
 inefficient as `reinit!`.
 
+For modifying parameters `p`, you can directly assign to the field:
+```julia
+integrator.p = new_p
+```
+Unlike `u` or `t`, changing `p` doesn't affect the solver's internal state or
+accuracy, so it can be modified directly without a setter function.
+
 ```@docs
 SciMLBase.set_t!
 SciMLBase.set_u!
