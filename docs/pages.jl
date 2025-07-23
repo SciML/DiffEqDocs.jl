@@ -26,6 +26,33 @@ end
 
 ordinary_diffeq_pages = transform_ordinarydiffeq_pages(pages)
 
+# Load StochasticDiffEq pages - if available
+stochastic_diffeq_pages_file = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
+stochastic_diffeq_pages = []
+if isfile(stochastic_diffeq_pages_file)
+    include(stochastic_diffeq_pages_file)
+    
+    # Transform StochasticDiffEq pages to have the api/stochasticdiffeq prefix
+    function transform_stochasticdiffeq_pages(pages_array)
+        transformed = []
+        for page in pages_array
+            if isa(page, String)
+                push!(transformed, "api/stochasticdiffeq/" * page)
+            elseif isa(page, Pair)
+                key, value = page
+                if isa(value, String)
+                    push!(transformed, key => "api/stochasticdiffeq/" * value)
+                elseif isa(value, Vector)
+                    push!(transformed, key => transform_stochasticdiffeq_pages(value))
+                end
+            end
+        end
+        return transformed
+    end
+    
+    stochastic_diffeq_pages = transform_stochasticdiffeq_pages(pages)
+end
+
 pages = Any["index.md",
     "getting_started.md",
     "Tutorials" => Any["tutorials/faster_ode_example.md",
@@ -94,4 +121,5 @@ pages = Any["index.md",
     "External Solver APIs" => Any["api/sundials.md",
         "api/daskr.md"],
     "OrdinaryDiffEq.jl API" => ordinary_diffeq_pages,
+    "StochasticDiffEq.jl API" => stochastic_diffeq_pages,
     "Extra Details" => Any["extras/timestepping.md"]]

@@ -3,6 +3,11 @@ import ODEProblemLibrary,
        SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
 
+# Use development versions for API documentation
+import Pkg
+Pkg.develop("OrdinaryDiffEq")
+Pkg.develop("StochasticDiffEq")
+
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
 cp("./docs/Project.toml", "./docs/src/assets/Project.toml", force = true)
 
@@ -26,6 +31,23 @@ if isdir(ordinartdiffeq_docs_path)
     common_first_steps_dest = joinpath(@__DIR__, "common_first_steps.jl")
     common_first_steps_file = joinpath(ordinartdiffeq_docs_root, "common_first_steps.jl")
     cp(common_first_steps_file, common_first_steps_dest, force=true)
+end
+
+# Copy StochasticDiffEq.jl documentation
+stochasticdiffeq_docs_root = joinpath(dirname(pathof(StochasticDiffEq)), "..", "docs")
+stochasticdiffeq_docs_path = joinpath(stochasticdiffeq_docs_root, "src")
+if isdir(stochasticdiffeq_docs_path)
+    # Create the StochasticDiffEq API directory in the docs
+    stochastic_diffeq_dest = joinpath(@__DIR__, "src", "api", "stochasticdiffeq")
+    mkpath(dirname(stochastic_diffeq_dest))
+    
+    # Copy all the docs from StochasticDiffEq.jl
+    cp(stochasticdiffeq_docs_path, stochastic_diffeq_dest, force=true)
+    
+    # Copy the pages.jl file from StochasticDiffEq.jl
+    stochastic_diffeq_pages_dest = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
+    stochastic_diffeq_pages_file = joinpath(stochasticdiffeq_docs_root, "pages.jl")
+    cp(stochastic_diffeq_pages_file, stochastic_diffeq_pages_dest, force=true)
 end
 
 ENV["PLOTS_TEST"] = "true"
@@ -96,6 +118,7 @@ makedocs(
         "https://github.com/SciML/ColPrac/blob/master/README.md",
         "https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
+        "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
