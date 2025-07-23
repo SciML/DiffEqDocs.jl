@@ -196,7 +196,8 @@ SciMLBase.successful_retcode(sol)
     as successful. For example, `Terminated` is a successful run to a manual termination, and would be missed
     if only checking for Success. Therefore we highly recommend you use `SciMLBase.successful_retcode(sol)` instead.
 
-The return codes include:
+The return codes include are accessed via the ReturnCode module, i.e. `SciMLBase.ReturnCode.Success`. The
+following are major return codes to know:
 
   - `Default`: The solver did not set retcodes.
   - `Success`: The integration completed without erroring or the steady state solver
