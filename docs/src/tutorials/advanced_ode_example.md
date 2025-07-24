@@ -258,7 +258,7 @@ by default). Then `newW = true` whenever a new `W` matrix is computed, and
 `newW === nothing || newW` and when true, it's only at these points when
 we update the preconditioner, otherwise we just pass on the previous version.
 We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix (matching
-`jac_prototype`, thus `SpraseMatrixCSC`) which we can use in the preconditioner's
+`jac_prototype`, thus `SparseMatrixCSC`) which we can use in the preconditioner's
 definition. Then we use `IncompleteLU.ilu` on that sparse matrix to generate
 the preconditioner. We return `Pl,nothing` to say that our preconditioner is a
 left preconditioner, and that there is no right preconditioning.

@@ -137,7 +137,7 @@ of just `10`. This model is implemented as simply:
 ```@example callback1
 dosetimes = [4.0, 6.0, 8.0]
 condition(u, t, integrator) = t ∈ dosetimes && (u[1] < 1.0)
-affect!(integrator) = integrator.u[1] += 10integrator.t
+affect!(integrator) = integrator.u[1] += 10 * integrator.t
 cb = DE.DiscreteCallback(condition, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, tstops = dosetimes)
 Plots.plot(sol)

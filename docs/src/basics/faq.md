@@ -179,7 +179,7 @@ for automatically transforming your equations.
 
 ### I'm trying to solve DAEs but my solver is unstable and/or slow, what's wrong with IDA and DFBDF?
 
-Fully implicit DAEs ``f(du,u,p,t) = 0`` are extremely difficult to numerical handle for many reasons.
+Fully implicit DAEs ``f(du,u,p,t) = 0`` are extremely difficult to numerically handle for many reasons.
 The linearly implicit form ``Mu'=f(u)`` where ``M`` is a singular mass matrix is much simpler
 numerically and thus results in much better performance. This is seen in many instances with the
 SciMLBenchmarks. Thus it is recommended that in almost all or most situations, one should use the
