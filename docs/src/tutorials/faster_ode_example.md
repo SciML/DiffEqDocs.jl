@@ -350,7 +350,8 @@ function rober_static(u, p, t)
     du3 = k₂ * y₂^2
     StaticArrays.SA[du1, du2, du3]
 end
-prob = DE.ODEProblem(rober_static, StaticArrays.SA[1.0, 0.0, 0.0], (0.0, 1e5), StaticArrays.SA[0.04, 3e7, 1e4])
+prob = DE.ODEProblem(rober_static, StaticArrays.SA[1.0, 0.0, 0.0],
+    (0.0, 1e5), StaticArrays.SA[0.04, 3e7, 1e4])
 sol = DE.solve(prob, DE.Rosenbrock23())
 ```
 
@@ -717,13 +718,15 @@ nothing # hide
 ```
 
 ```@example faster_ode3
-BT.@btime DE.solve(prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
+BT.@btime DE.solve(
+    prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
 prob = DE.ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
-BT.@btime DE.solve(prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
+BT.@btime DE.solve(
+    prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 

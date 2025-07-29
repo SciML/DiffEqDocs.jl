@@ -160,7 +160,8 @@ xy = Plots.plot(sol, plotdensity = 10000, idxs = (1, 2))
 xz = Plots.plot(sol, plotdensity = 10000, idxs = (1, 3))
 yz = Plots.plot(sol, plotdensity = 10000, idxs = (2, 3))
 xyz = Plots.plot(sol, plotdensity = 10000, idxs = (1, 2, 3))
-Plots.plot(Plots.plot(xyzt, xyz), Plots.plot(xy, xz, yz, layout = (1, 3), w = 1), layout = (2, 1))
+Plots.plot(
+    Plots.plot(xyzt, xyz), Plots.plot(xy, xz, yz, layout = (1, 3), w = 1), layout = (2, 1))
 ```
 
 An example using the functions:

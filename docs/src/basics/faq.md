@@ -12,9 +12,9 @@ For guidelines on debugging ODE solve issues, see
 First of all, don't panic. You may have experienced one of the following warnings:
 
 > dt <= dtmin. Aborting. There is either an error in your model specification or the true solution is unstable.
->
+> 
 > NaN dt detected. Likely a NaN value in the state, parameters, or derivative value caused this outcome.
->
+> 
 > Instability detected. Aborting
 
 These are all pointing to a similar behavior: for some reason or another, the
@@ -572,7 +572,8 @@ though, an `Error: SingularException` is also possible if the linear solver fail
 
 ```julia
 import DifferentialEquations as DE, OrdinaryDiffEq as ODE, LinearSolve
-DE.solve(prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(; reuse_symbolic = false)))
+DE.solve(
+    prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(; reuse_symbolic = false)))
 ```
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](https://docs.sciml.ai/LinearSolve/stable/)

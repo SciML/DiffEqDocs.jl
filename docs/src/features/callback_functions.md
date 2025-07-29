@@ -437,7 +437,8 @@ value of `u[1] = -1.2647055847076505e-15`. You can see this by changing the
 `rootfind` argument of the callback:
 
 ```@example callback4
-floor_event = DE.ContinuousCallback(condition, floor_aff!, rootfind = DE.SciMLBase.RightRootFind)
+floor_event = DE.ContinuousCallback(
+    condition, floor_aff!, rootfind = DE.SciMLBase.RightRootFind)
 u0 = [1.0, 0.0]
 p = [1.0]
 prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)

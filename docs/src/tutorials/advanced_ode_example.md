@@ -186,7 +186,8 @@ Now let's see how the version with sparsity compares to the version without:
 import BenchmarkTools as BT # for @btime
 BT.@btime DE.solve(prob_ode_brusselator_2d, DE.TRBDF2(); save_everystep = false);
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, DE.TRBDF2(); save_everystep = false);
-BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, DE.KenCarp47(; linsolve = DE.KLUFactorization());
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d_sparse, DE.KenCarp47(; linsolve = DE.KLUFactorization());
     save_everystep = false);
 nothing # hide
 ```
@@ -273,7 +274,8 @@ which is more automatic. The setup is very similar to before:
 import AlgebraicMultigrid
 function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
-        Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(AbstractMatrix, W)))
+        Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(
+            AbstractMatrix, W)))
     else
         Pl = Plprev
     end
@@ -332,7 +334,8 @@ Newton Krylov (with numerical differentiation). Thus, on this problem we could d
 import Sundials
 BT.@btime DE.solve(prob_ode_brusselator_2d, Sundials.CVODE_BDF(); save_everystep = false);
 # Simplest speedup: use :LapackDense
-BT.@btime DE.solve(prob_ode_brusselator_2d, Sundials.CVODE_BDF(; linear_solver = :LapackDense);
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d, Sundials.CVODE_BDF(; linear_solver = :LapackDense);
     save_everystep = false);
 # GMRES Version: Doesn't require any extra stuff!
 BT.@btime DE.solve(prob_ode_brusselator_2d, Sundials.CVODE_BDF(; linear_solver = :GMRES);
@@ -428,7 +431,8 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
         @. @view(W[idxs]) = @view(W[idxs]) + 1
 
         # Build preconditioner on W
-        preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(W,
+        preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(
+            W,
             presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
                 1))),
             postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,

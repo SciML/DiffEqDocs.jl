@@ -88,7 +88,8 @@ sol = ODE.solve(prob, ODE.DPRKN6())
 Plots.plot(sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
     xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"])
 Plots.plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
-Plots.plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
+Plots.plot!(
+    t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
 ```
 
 Note that the order of the variables (and initial conditions) is `dx`, `x`.
@@ -374,7 +375,8 @@ function HH_acceleration!(dv, v, u, p, t)
 end
 initial_positions = [0.0, 0.1]
 initial_velocities = [0.5, 0.0]
-prob = ODE.SecondOrderODEProblem(HH_acceleration!, initial_velocities, initial_positions, tspan)
+prob = ODE.SecondOrderODEProblem(
+    HH_acceleration!, initial_velocities, initial_positions, tspan)
 sol2 = ODE.solve(prob, ODE.KahanLi8(), dt = 1 / 10);
 ```
 
@@ -382,7 +384,8 @@ Notice that we get the same results:
 
 ```@example physics
 # Plot the orbit
-Plots.plot(sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
+Plots.plot(
+    sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
     yaxis = "y", leg = false)
 ```
 

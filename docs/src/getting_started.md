@@ -404,7 +404,8 @@ M = t -> 0.1sin(t)                    # external torque [Nm]
 prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
 sol = DE.solve(prob)
 
-Plots.plot(sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
+Plots.plot(
+    sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
 ```
 
 Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
@@ -458,9 +459,9 @@ above, with the only change being the type for the initial condition and constan
 ```@example ODE4
 import StaticArrays
 A = StaticArrays.@SMatrix [1.0 0.0 0.0 -5.0
-              4.0 -2.0 4.0 -3.0
-              -4.0 0.0 0.0 1.0
-              5.0 -2.0 2.0 3.0]
+                           4.0 -2.0 4.0 -3.0
+                           -4.0 0.0 0.0 1.0
+                           5.0 -2.0 2.0 3.0]
 u0 = StaticArrays.@SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u

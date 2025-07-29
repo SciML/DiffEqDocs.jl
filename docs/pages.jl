@@ -31,7 +31,7 @@ stochastic_diffeq_pages_file = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
 stochastic_diffeq_pages = []
 if isfile(stochastic_diffeq_pages_file)
     include(stochastic_diffeq_pages_file)
-    
+
     # Transform StochasticDiffEq pages to have the api/stochasticdiffeq prefix
     function transform_stochasticdiffeq_pages(pages_array)
         transformed = []
@@ -49,7 +49,7 @@ if isfile(stochastic_diffeq_pages_file)
         end
         return transformed
     end
-    
+
     stochastic_diffeq_pages = transform_stochasticdiffeq_pages(pages)
 end
 

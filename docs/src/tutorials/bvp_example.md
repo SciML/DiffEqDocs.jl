@@ -132,7 +132,9 @@ end
 u0 = [1.0, 1.0, 1.0]
 tspan = (0.0, 1.0)
 prob = BVP.SecondOrderBVProblem(f!, bc!, u0, tspan)
-sol = BVP.solve(prob, BVP.MIRKN4(; jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff())); dt = 0.01)
+sol = BVP.solve(
+    prob, BVP.MIRKN4(; jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()));
+    dt = 0.01)
 ```
 
 ## Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations
@@ -174,6 +176,7 @@ tspan = (0.0, 1.0)
 fun = BVP.BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
 prob = BVP.BVProblem(fun, u0, tspan)
 sol = BVP.solve(prob,
-    BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()));
+    BVP.Ascher4(;
+        zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()));
     dt = 0.01)
 ```
