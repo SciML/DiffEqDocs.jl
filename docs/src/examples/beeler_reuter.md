@@ -93,8 +93,9 @@ end
 The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced.
 
 !!! note
-    For more complex PDE discretizations, consider using [MethodOfLines.jl](https://docs.sciml.ai/MethodOfLines/stable/) 
-    which can automatically generate finite difference discretizations, or [SciMLOperators.jl](https://docs.sciml.ai/SciMLOperators/stable/) 
+    
+    For more complex PDE discretizations, consider using [MethodOfLines.jl](https://docs.sciml.ai/MethodOfLines/stable/)
+    which can automatically generate finite difference discretizations, or [SciMLOperators.jl](https://docs.sciml.ai/SciMLOperators/stable/)
     for defining matrix-free linear operators.
 
 ```julia
@@ -632,7 +633,7 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     ny, nx = size(u)
 
     if Δt != 0 || t == 0
-        @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
+        @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
             f.d_H, f.d_J, f.d_D,
             f.d_F, f.d_C, Δt)
         f.t = t
@@ -641,7 +642,7 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     laplacian(f.Δv, u)
 
     # calculate the reaction portion
-    @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_du_gpu(
+    @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_du_gpu(
         f.d_du, f.d_u, f.d_XI, f.d_M,
         f.d_H, f.d_J, f.d_D, f.d_F,
         f.d_C)

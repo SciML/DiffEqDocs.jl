@@ -67,7 +67,7 @@ Additionally, DifferentialEquations.jl comes with built-in analysis features, in
     for guidance on PRs, issues, and other matters relating to contributing to SciML.
   - See the [SciML Style Guide](https://github.com/SciML/SciMLStyle) for common coding practices and other style decisions.
   - There are a few community forums:
-
+    
       + The #diffeq-bridged and #sciml-bridged channels in the
         [Julia Slack](https://julialang.org/slack/)
       + The #diffeq-bridged and #sciml-bridged channels in the

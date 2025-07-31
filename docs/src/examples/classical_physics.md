@@ -382,7 +382,8 @@ Notice that we get the same results:
 
 ```@example physics
 # Plot the orbit
-Plots.plot(sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
+Plots.plot(
+    sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
     yaxis = "y", leg = false)
 ```
 

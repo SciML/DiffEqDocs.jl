@@ -960,22 +960,22 @@ import IRKGaussLegendre
 `IRKGL16(;kwargs...)` has the following arguments:
 
   - second_order_ode (boolean):
-
+    
       + =false (default): for a ODEProblem type
       + =true: for a second-order differential equation
 
   - simd (boolean):
-
+    
       + =true: SIMD-vectorized implementation only available for Float32 or Float64 computations
       + =false (default):  generic implementation that can use with arbitrary Julia-defined number systems
   - mstep: output saved at every 'mstep' steps. Default 1.
   - initial_extrapolation: initialization method for stages.
-
+    
       + =false: simplest initialization
       + =true (default): extrapolation from the stage values of previous step
   - maxtrials: maximum number of attempts to accept adaptive step size
   - threading
-
+    
       + =false (default): sequential execution of the numerical integration
       + =true: computations using threads (shared memory multi-threading) for stage-wise parallelization
 

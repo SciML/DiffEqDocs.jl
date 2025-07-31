@@ -537,6 +537,7 @@ function fast_gm!(du, u, p, t)
     a, α, ubar, β, D1, D2, N = p
 
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+
         du[i, j, 1] = D1 *
                       (u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
                        4u[i, j, 1]) +
@@ -544,6 +545,7 @@ function fast_gm!(du, u, p, t)
     end
 
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+
         du[i, j, 2] = D2 *
                       (u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
                        4u[i, j, 2]) +
