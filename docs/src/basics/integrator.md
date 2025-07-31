@@ -250,7 +250,8 @@ For example, if one wants to iterate but only stop at specific values, one can
 choose:
 
 ```julia
-integrator = DE.init(prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
+integrator = DE.init(
+    prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
 for (u, t) in tuples(integrator)
     @test t ∈ [0.5, 1.0]
 end

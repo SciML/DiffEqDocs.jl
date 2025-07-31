@@ -33,7 +33,9 @@ sol = ODE.solve(prob, ODE.KahanLi6(), dt = 1 // 10);
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
 
 ```@example kepler
-plot_orbit(sol) = Plots.plot(sol, idxs = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
+function plot_orbit(sol)
+    Plots.plot(sol, idxs = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
+end
 
 function plot_first_integrals(sol, H, L)
     Plots.plot(initial_first_integrals[1] .- map(u -> H(u.x[2], u.x[1]), sol.u),

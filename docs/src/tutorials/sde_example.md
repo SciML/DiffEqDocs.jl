@@ -164,7 +164,7 @@ In general, a system of SDEs
 du = f(u,p,t)dt + g(u,p,t)dW,
 ```
 
-where `u` is now a vector of variables, `f` is a vector, and `g` is a matrix, is numerically integrated in the same way as ODEs. A common scenario, which is the default for DifferentialEquations.jl, is that every variable in the system gets a different random kick. This is the case when `g` is a diagonal matrix. Correspondingly, we say that we have a diagonal noise. 
+where `u` is now a vector of variables, `f` is a vector, and `g` is a matrix, is numerically integrated in the same way as ODEs. A common scenario, which is the default for DifferentialEquations.jl, is that every variable in the system gets a different random kick. This is the case when `g` is a diagonal matrix. Correspondingly, we say that we have a diagonal noise.
 
 We handle this in a simple manner by defining the deterministic part `f!(du,u,p,t)` and the stochastic part
 `g!(du2,u,p,t)` as in-place functions, but note that our convention is that the function `g!` only defines and modifies the diagonal entries of `g` matrix.

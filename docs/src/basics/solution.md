@@ -1,6 +1,6 @@
 # [Solution Handling](@id solution)
 
-The solution is an `RecursiveArrayTools.AbstractDiffEqArray`. 
+The solution is an `RecursiveArrayTools.AbstractDiffEqArray`.
 [See RecursiveArrayTools.jl for more information on the interface](https://docs.sciml.ai/RecursiveArrayTools/stable/).
 The following is a more DiffEq-centric explanation of the interface.
 
@@ -19,7 +19,7 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 ## Array Interface
 
 !!! note
-
+    
     In 2023 the linear indexing `sol[i]` was deprecated. It previously had the behavior that
     `sol[i] = sol.u[i]`. However, this is incompatible with standard `AbstractArray` interfaces,
     Since if `A = VectorOfArray([[1,2],[3,4]])` and `A` is supposed to act like `[1 3; 2 4]`,
@@ -50,7 +50,7 @@ will address first by component and lastly by time, and thus
 sol[i, j]
 ```
 
-will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major, 
+will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major,
 so the leading dimension should be contiguous in memory. If the independent variables had shape
 (for example, was a matrix), then `i` is the linear index. We can also access
 solutions with shape:
@@ -186,12 +186,14 @@ error state of the solution. Return codes are now implemented as an enum using E
 rather than symbols.
 
 To check if a solution was successful, use:
+
 ```julia
 SciMLBase.successful_retcode(sol)
 ```
 
 !!! warning
-    Previous iterations of the interface suggested using `sol.retcode == :Success`, 
+    
+    Previous iterations of the interface suggested using `sol.retcode == :Success`,
     however, that is now not advised because there are more than one return code that can be interpreted
     as successful. For example, `Terminated` is a successful run to a manual termination, and would be missed
     if only checking for Success. Therefore we highly recommend you use `SciMLBase.successful_retcode(sol)` instead.
@@ -214,7 +216,7 @@ following are major return codes to know:
   - `ConvergenceFailure`: The internal implicit solvers failed to converge.
   - `Failure`: General uncategorized failures or errors.
 
-For a complete list of return codes and their properties, see the 
+For a complete list of return codes and their properties, see the
 [SciMLBase ReturnCode documentation](https://docs.sciml.ai/SciMLBase/stable/interfaces/Solutions/#retcodes).
 
 ## Problem-Specific Features
