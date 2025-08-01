@@ -98,6 +98,10 @@ makedocs(
         DiffEqCallbacks,
         Sundials, DASKR
     ],
+    remotes = Dict(
+        OrdinaryDiffEq => Documenter.Remotes.GitHub("SciML", "OrdinaryDiffEq.jl"),
+        StochasticDiffEq => Documenter.Remotes.GitHub("SciML", "StochasticDiffEq.jl")
+    ),
     linkcheck = true,
     linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
         "https://biojulia.net/post/hardware/",
