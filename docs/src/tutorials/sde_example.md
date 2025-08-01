@@ -192,7 +192,7 @@ sol = SDE.solve(prob_sde_lorenz);
 nothing # hide
 ```
 
-```@example sde
+```@example sde2
 Plots.plot(sol, idxs = (1, 2, 3))
 ```
 
@@ -232,7 +232,7 @@ sol = SDE.solve(prob, SDE.SRIW1());
 nothing # hide
 ```
 
-```@example sde
+```@example sde3
 Plots.plot(sol)
 ```
 
