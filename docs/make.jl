@@ -98,6 +98,7 @@ makedocs(
         DiffEqCallbacks,
         Sundials, DASKR
     ],
+    remotes = nothing,
     linkcheck = true,
     linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
         "https://biojulia.net/post/hardware/",
