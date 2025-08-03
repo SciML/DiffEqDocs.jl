@@ -32,7 +32,7 @@ the solution quickly diverges to infinity! This means, double-check your paramet
 are indexed correctly!
 
 **Note: if you see these warnings during a parameter estimation process, this is
-likely the underlying problem. Simply check `SciMLBase.successful_retcode(sol.retcode)` and throw
+likely the underlying problem. Simply check `SciMLBase.successful_retcode(sol)` and throw
 an `Inf` cost. Most optimizers will then reject steps in those parameter regimes!**
 
 There are a few other things to check as well. Often, the stability of
@@ -179,13 +179,13 @@ for automatically transforming your equations.
 
 ### I'm trying to solve DAEs but my solver is unstable and/or slow, what's wrong with IDA and DFBDF?
 
-Fully implicit DAEs ``f(du,u,p,t) = 0`` are extremely difficult to numerical handle for many reasons.
+Fully implicit DAEs ``f(du,u,p,t) = 0`` are extremely difficult to numerically handle for many reasons.
 The linearly implicit form ``Mu'=f(u)`` where ``M`` is a singular mass matrix is much simpler
 numerically and thus results in much better performance. This is seen in many instances with the
 SciMLBenchmarks. Thus it is recommended that in almost all or most situations, one should use the
 mass matrix form of the DAE solver.
 
-However, it is generally recommended that if you are solving a DAE that you use 
+However, it is generally recommended that if you are solving a DAE that you use
 [ModelingToolkit.jl](https://mtk.sciml.ai/dev/) because it has many utilities for pre-processing
 DAEs to make them more numerically stable. For example, if your algebraic conditions are not
 uniquely matching to algebraic variables (i.e. you have at least one unique algebraic variable
@@ -194,8 +194,7 @@ DAE solvers will not be able to accurately solve the equation without rewriting 
 ModelingToolkit is able to automatically detect this kind of condition and perform the equation
 transformation automatically. As such, if you are having difficulties with a DAE system, it is
 highly recommended to try `modelingtookitize` to transform the system to MTK's formulation and
-running `structural_simplify` to see how it would change the equations, simply convert the model
-to MTK.
+running `mtkcompile` to see how it would change the equations, simply convert the model to MTK.
 
 ## [Performance](@id faq_performance)
 
@@ -251,7 +250,7 @@ ccall((:openblas_get_num_threads64_, Base.libblas_name), Cint, ())
 If I want to set this directly to 4 threads, I would use:
 
 ```julia
-using LinearAlgebra
+import LinearAlgebra
 LinearAlgebra.BLAS.set_num_threads(4)
 ```
 
@@ -261,7 +260,7 @@ can use [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl), which will accel
 the linear algebra routines. This is done via:
 
 ```julia
-using MKL
+import MKL
 ```
 
 #### My ODE is solving really slow
@@ -455,7 +454,7 @@ thing you can do is use
 
 You can't. For floating-point numbers, you shouldn't use below `abstol=1e-14`
 and `reltol=1e-14`. If you need lower than that, use arbitrary precision numbers
-like BigFloats or [ArbFloats.jl](https://github.com/JuliaArbTypes/ArbFloats.jl).
+like BigFloats or [ArbNumerics.jl](https://github.com/JeffreySarnoff/ArbNumerics.jl).
 
 ## Autodifferentiation and Dual Numbers
 
@@ -473,15 +472,15 @@ To show this in action, let's say we want to find the Jacobian of solution
 of the Lotka-Volterra equation at `t=10` with respect to the parameters.
 
 ```@example faq1
-using DifferentialEquations
+import DifferentialEquations as DE
 function func(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
 end
 function f(p)
-    prob = ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
+    prob = DE.ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
     # Lower tolerances to show the methods converge to the same value
-    solve(prob, Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
+    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
 end
 ```
 
@@ -492,14 +491,14 @@ for the timespan just to show what you'd do if there were parameters-dependent e
 Then we can take the Jacobian via ForwardDiff.jl:
 
 ```@example faq1
-using ForwardDiff
+import ForwardDiff
 ForwardDiff.jacobian(f, [1.5, 1.0])
 ```
 
 and compare it to FiniteDiff.jl:
 
 ```@example faq1
-using FiniteDiff
+import FiniteDiff
 FiniteDiff.finite_difference_jacobian(f, [1.5, 1.0])
 ```
 
@@ -509,14 +508,14 @@ This is because you're using a cache which is incompatible with autodifferentiat
 via ForwardDiff.jl. For example, if we use the ODE function:
 
 ```julia
-using LinearAlgebra, OrdinaryDiffEq
+import LinearAlgebra, OrdinaryDiffEq as ODE, DifferentialEquations
 function foo(du, u, (A, tmp), t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
-solve(prob, Rosenbrock23())
+prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
+DE.solve(prob, ODE.Rosenbrock23())
 ```
 
 Here we use a cached temporary array to avoid the allocations of matrix
@@ -528,8 +527,9 @@ option in the solver. Every solver which uses autodifferentiation has this optio
 Thus, we'd solve this with:
 
 ```julia
-prob = ODEProblem(f, ones(5, 5), (0.0, 1.0))
-sol = solve(prob, Rosenbrock23(autodiff = false))
+import DifferentialEquations as DE, OrdinaryDiffEq as ODE
+prob = DE.ODEProblem(f, ones(5, 5), (0.0, 1.0))
+sol = DE.solve(prob, ODE.Rosenbrock23(autodiff = false))
 ```
 
 and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
@@ -540,16 +540,16 @@ We could use `get_tmp` and `dualcache` functions from
 to solve this issue, e.g.,
 
 ```julia
-using LinearAlgebra, OrdinaryDiffEq, PreallocationTools
+import LinearAlgebra, OrdinaryDiffEq as ODE, PreallocationTools, DifferentialEquations
 function foo(du, u, (A, tmp), t)
-    tmp = get_tmp(tmp, first(u) * t)
+    tmp = PreallocationTools.get_tmp(tmp, first(u) * t)
     mul!(tmp, A, u)
     @. du = u + tmp
     nothing
 end
-prob = ODEProblem(foo, ones(5, 5), (0.0, 1.0),
+prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0),
     (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
-solve(prob, TRBDF2())
+DE.solve(prob, ODE.TRBDF2())
 ```
 
 ## Sparse Jacobians
@@ -571,7 +571,9 @@ ERROR: ArgumentError: pattern of the matrix changed
 though, an `Error: SingularException` is also possible if the linear solver fails to detect that the sparsity structure changed. To address this issue, you'll need to disable caching the symbolic factorization, e.g.,
 
 ```julia
-solve(prob, Rodas4(linsolve = KLUFactorization(; reuse_symbolic = false)))
+import DifferentialEquations as DE, OrdinaryDiffEq as ODE, LinearSolve
+DE.solve(prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(;
+    reuse_symbolic = false)))
 ```
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](https://docs.sciml.ai/LinearSolve/stable/)

@@ -92,6 +92,12 @@ end
 
 The finite-difference Laplacian is calculated in-place by a 5-point stencil. The Neumann boundary condition is enforced.
 
+!!! note
+    
+    For more complex PDE discretizations, consider using [MethodOfLines.jl](https://docs.sciml.ai/MethodOfLines/stable/)
+    which can automatically generate finite difference discretizations, or [SciMLOperators.jl](https://docs.sciml.ai/SciMLOperators/stable/)
+    for defining matrix-free linear operators.
+
 ```julia
 # 5-point stencil
 function laplacian(Δu, u)
@@ -348,27 +354,27 @@ u0[90:102, 90:102] .= v1;   # a small square in the middle of the domain
 The initial condition is a small square in the middle of the domain.
 
 ```julia
-using Plots
-heatmap(u0)
+import Plots
+Plots.heatmap(u0)
 ```
 
 Next, the problem is defined:
 
 ```julia
-using DifferentialEquations, Sundials
+import DifferentialEquations as DE, Sundials
 
 deriv_cpu = BeelerReuterCpu(u0, 1.0);
-prob = ODEProblem(deriv_cpu, u0, (0.0, 50.0));
+prob = DE.ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 ```
 
 For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
 
 ```julia
-@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-heatmap(sol.u[end])
+Plots.heatmap(sol.u[end])
 ```
 
 ## CPU/GPU Beeler-Reuter Solver
@@ -402,7 +408,7 @@ The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global
 We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
 
 ```julia
-using CUDA
+import CUDA
 
 mutable struct BeelerReuterGpu <: Function
     t::Float64                  # the last timestep time to calculate Δt
@@ -627,7 +633,7 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     ny, nx = size(u)
 
     if Δt != 0 || t == 0
-        @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
+        @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
             f.d_H, f.d_J, f.d_D,
             f.d_F, f.d_C, Δt)
         f.t = t
@@ -636,7 +642,7 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     laplacian(f.Δv, u)
 
     # calculate the reaction portion
-    @cuda blocks=(ny ÷ L, nx ÷ L) threads=(L, L) update_du_gpu(
+    @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_du_gpu(
         f.d_du, f.d_u, f.d_XI, f.d_M,
         f.d_H, f.d_J, f.d_D, f.d_F,
         f.d_C)
@@ -651,15 +657,15 @@ end
 Ready to test!
 
 ```julia
-using DifferentialEquations, Sundials
+import DifferentialEquations as DE, Sundials
 
 deriv_gpu = BeelerReuterGpu(u0, 1.0);
-prob = ODEProblem(deriv_gpu, u0, (0.0, 50.0));
-@time sol = solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+prob = DE.ODEProblem(deriv_gpu, u0, (0.0, 50.0));
+@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-heatmap(sol.u[end])
+Plots.heatmap(sol.u[end])
 ```
 
 ## Summary
@@ -667,6 +673,6 @@ heatmap(sol.u[end])
 We achieve around a 6x speedup with running the explicit portion of our IMEX solver on a GPU. The major bottleneck of this technique is the communication between CPU and GPU. In its current form, not all the internals of the method utilize GPU acceleration. In particular, the implicit equations solved by GMRES are performed on the CPU. This partial CPU nature also increases the amount of data transfer that is required between the GPU and CPU (performed every f call). Compiling the full ODE solver to the GPU would solve both of these issues and potentially give a much larger speedup. [JuliaDiffEq developers are currently working on solutions to alleviate these issues](http://www.stochasticlifestyle.com/solving-systems-stochastic-pdes-using-gpus-julia/), but these will only be compatible with native Julia solvers (and not Sundials).
 
 ```julia, echo = false, skip="notebook"
-using SciMLTutorials
+import SciMLTutorials
 SciMLTutorials.tutorial_footer(WEAVE_ARGS[:folder], WEAVE_ARGS[:file])
 ```

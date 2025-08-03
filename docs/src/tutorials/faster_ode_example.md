@@ -55,15 +55,15 @@ R's deSolve. However, the issue with this form is that it allocates a vector,
 choice of function:
 
 ```@example faster_ode
-using DifferentialEquations, BenchmarkTools
+import DifferentialEquations as DE, BenchmarkTools as BT
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 100.0)
-prob = ODEProblem(lorenz, u0, tspan)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(lorenz, u0, tspan)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
-The `BenchmarkTools.jl` package's `@benchmark` runs the code multiple times to
+The `BenchmarkTools.jl` package's `BT.@benchmark` runs the code multiple times to
 get an accurate measurement. The minimum time is the time it takes when your
 OS and other background processes aren't getting in the way. Notice that in
 this case it takes about 5ms to solve and allocates around 11.11 MiB. However,
@@ -72,7 +72,7 @@ doing garbage collection (GC) to clean up all the arrays we made. Even if we
 turn off saving, we have these allocations.
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+BT.@btime DE.solve(prob, DE.Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -105,13 +105,13 @@ When we benchmark this function, we will see quite a difference.
 ```@example faster_ode
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 100.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(lorenz!, u0, tspan)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+BT.@btime DE.solve(prob, DE.Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -121,8 +121,8 @@ But this doesn't scale with the problem size:
 
 ```@example faster_ode
 tspan = (0.0, 500.0) # 5x longer than before
-prob = ODEProblem(lorenz!, u0, tspan)
-@btime solve(prob, Tsit5(), save_everystep = false);
+prob = DE.ODEProblem(lorenz!, u0, tspan)
+BT.@btime DE.solve(prob, DE.Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -154,14 +154,14 @@ have their length determined at compile-time. They are created using macros
 attached to normal array expressions, for example:
 
 ```@example faster_ode
-using StaticArrays
-A = SA[2.0, 3.0, 5.0]
-typeof(A) # SVector{3, Float64} (alias for SArray{Tuple{3}, Float64, 1, 3})
+import StaticArrays
+A = StaticArrays.SA[2.0, 3.0, 5.0]
+typeof(A) # StaticArrays.SVector{3, Float64} (alias for StaticArrays.SArray{Tuple{3}, Float64, 1, 3})
 ```
 
-Notice that the `3` after `SVector` gives the size of the `SVector`. It cannot
-be changed. Additionally, `SVector`s are immutable, so we have to create a new
-`SVector` to change values. But remember, we don't have to worry about
+Notice that the `3` after `StaticArrays.SVector` gives the size of the `StaticArrays.SVector`. It cannot
+be changed. Additionally, `StaticArrays.SVector`s are immutable, so we have to create a new
+`StaticArrays.SVector` to change values. But remember, we don't have to worry about
 allocations because this data structure is stack-allocated. `SArray`s have
 numerous extra optimizations as well: they have fast matrix multiplication,
 fast QR factorizations, etc. which directly make use of the information about
@@ -182,7 +182,7 @@ function lorenz_static(u, p, t)
     dx = 10.0 * (u[2] - u[1])
     dy = u[1] * (28.0 - u[3]) - u[2]
     dz = u[1] * u[2] - (8 / 3) * u[3]
-    SA[dx, dy, dz]
+    StaticArrays.SA[dx, dy, dz]
 end
 ```
 
@@ -190,15 +190,15 @@ To make the solver internally use static arrays, we simply give it a static
 array as the initial condition:
 
 ```@example faster_ode
-u0 = SA[1.0, 0.0, 0.0]
+u0 = StaticArrays.SA[1.0, 0.0, 0.0]
 tspan = (0.0, 100.0)
-prob = ODEProblem(lorenz_static, u0, tspan)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(lorenz_static, u0, tspan)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode
-@btime solve(prob, Tsit5(), save_everystep = false);
+BT.@btime DE.solve(prob, DE.Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
@@ -221,14 +221,14 @@ ROBER):
 \end{aligned}
 ```
 
-Given that these equations are stiff, non-stiff ODE solvers like `Tsit5` or
-`Vern9` will fail to solve these equations. The automatic algorithm will detect
+Given that these equations are stiff, non-stiff ODE solvers like `DE.Tsit5` or
+`DE.Vern9` will fail to solve these equations. The automatic algorithm will detect
 this and automatically switch to something more robust to handle these issues.
 For example:
 
 ```@example faster_ode2
-using DifferentialEquations
-using Plots
+import DifferentialEquations as DE
+import Plots
 function rober!(du, u, p, t)
     y₁, y₂, y₃ = u
     k₁, k₂, k₃ = p
@@ -237,14 +237,14 @@ function rober!(du, u, p, t)
     du[3] = k₂ * y₂^2
     nothing
 end
-prob = ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1e5), [0.04, 3e7, 1e4])
-sol = solve(prob)
-plot(sol, tspan = (1e-2, 1e5), xscale = :log10)
+prob = DE.ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1e5), [0.04, 3e7, 1e4])
+sol = DE.solve(prob)
+Plots.plot(sol, tspan = (1e-2, 1e5), xscale = :log10)
 ```
 
 ```@example faster_ode2
-using BenchmarkTools
-@btime solve(prob);
+import BenchmarkTools as BT
+BT.@btime DE.solve(prob);
 nothing # hide
 ```
 
@@ -254,8 +254,8 @@ Choosing a good solver is required for getting top-notch speed. General
 recommendations can be found on the solver page (for example, the
 [ODE Solver Recommendations](@ref ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
-(`Rosenbrock23` or `Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
-for slightly larger (`TRBDF2` or `KenCarp4` for <2000 ODEs), and `QNDF` for even
+(`DE.Rosenbrock23` or `DE.Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
+for slightly larger (`DE.TRBDF2` or `DE.KenCarp4` for <2000 ODEs), and `DE.QNDF` for even
 larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
 sometimes worth a try for the medium-sized category.
 
@@ -263,18 +263,18 @@ More details on the solver to choose can be found by benchmarking. See the
 [SciMLBenchmarks](https://docs.sciml.ai/SciMLBenchmarksOutput/stable/) to
 compare many solvers on many problems.
 
-From this, we try the recommendation of `Rosenbrock23()` for stiff ODEs at
+From this, we try the recommendation of `DE.Rosenbrock23()` for stiff ODEs at
 default tolerances:
 
 ```@example faster_ode2
-@btime solve(prob, Rosenbrock23());
+BT.@btime DE.solve(prob, DE.Rosenbrock23());
 nothing # hide
 ```
 
 ### Declaring Jacobian Functions
 
 In order to reduce the Jacobian construction cost, one can describe a Jacobian
-function by using the `jac` argument for the `ODEFunction`. First we have to
+function by using the `jac` argument for the `DE.ODEFunction`. First we have to
 derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this, we get:
 
 ```@example faster_ode2
@@ -292,12 +292,12 @@ function rober_jac!(J, u, p, t)
     J[3, 3] = 0
     nothing
 end
-f! = ODEFunction(rober!, jac = rober_jac!)
-prob_jac = ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+f! = DE.ODEFunction(rober!, jac = rober_jac!)
+prob_jac = DE.ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
 ```
 
 ```@example faster_ode2
-@btime solve(prob_jac, Rosenbrock23());
+BT.@btime DE.solve(prob_jac, DE.Rosenbrock23());
 nothing # hide
 ```
 
@@ -309,24 +309,24 @@ to symbolic-ify the numerical code and do the symbolic calculation and return
 the Julia code for this.
 
 ```@example faster_ode2
-using ModelingToolkit
-de = complete(modelingtoolkitize(prob))
+import ModelingToolkit as MTK
+de = MTK.complete(MTK.modelingtoolkitize(prob))
 ```
 
 We can tell it to compute the Jacobian if we want to see the code:
 
 ```@example faster_ode2
-ModelingToolkit.generate_jacobian(de)[2] # Second is in-place
+MTK.generate_jacobian(de)[2] # Second is in-place
 ```
 
 Now let's use that to give the analytical solution Jacobian:
 
 ```@example faster_ode2
-prob_jac2 = ODEProblem(de, [], (0.0, 1e5), jac = true)
+prob_jac2 = DE.ODEProblem(de, [], (0.0, 1e5); jac = true)
 ```
 
 ```@example faster_ode2
-@btime solve(prob_jac2);
+BT.@btime DE.solve(prob_jac2);
 nothing # hide
 ```
 
@@ -341,24 +341,24 @@ making `u0` a `StaticArray` and writing an out-of-place non-mutating dispatch
 for static arrays, for the ROBER problem, this looks like:
 
 ```@example faster_ode2
-using StaticArrays
+import StaticArrays
 function rober_static(u, p, t)
     y₁, y₂, y₃ = u
     k₁, k₂, k₃ = p
     du1 = -k₁ * y₁ + k₃ * y₂ * y₃
     du2 = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
     du3 = k₂ * y₂^2
-    SA[du1, du2, du3]
+    StaticArrays.SA[du1, du2, du3]
 end
-prob = ODEProblem(rober_static, SA[1.0, 0.0, 0.0], (0.0, 1e5), SA[0.04, 3e7, 1e4])
-sol = solve(prob, Rosenbrock23())
+prob = DE.ODEProblem(rober_static, StaticArrays.SA[1.0, 0.0, 0.0], (0.0, 1e5), StaticArrays.SA[0.04, 3e7, 1e4])
+sol = DE.solve(prob, DE.Rosenbrock23())
 ```
 
 If we benchmark this, we see a really fast solution with really low allocation
 counts:
 
 ```@example faster_ode2
-@btime sol = solve(prob, Rosenbrock23());
+BT.@btime sol = DE.solve(prob, DE.Rosenbrock23());
 nothing # hide
 ```
 
@@ -392,11 +392,11 @@ discretization of the Laplacian. The native code would be something along the
 lines of:
 
 ```@example faster_ode3
-using DifferentialEquations, LinearAlgebra, BenchmarkTools
+import DifferentialEquations as DE, LinearAlgebra as LA, BenchmarkTools as BT
 # Generate the constants
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
-Ax = Array(Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
+Ax = Array(LA.Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
     [1.0 for i in 1:(N - 1)]))
 Ay = copy(Ax)
 Ax[2, 1] = 2.0
@@ -421,14 +421,14 @@ r0 = zeros(100, 100, 2)
 r0[:, :, 1] .= uss .+ 0.1 .* rand.()
 r0[:, :, 2] .= vss
 
-prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
+prob = DE.ODEProblem(basic_version!, r0, (0.0, 0.1), p)
 ```
 
 In this version, we have encoded our initial condition to be a 3-dimensional
 array, with `u[:,:,1]` being the `A` part and `u[:,:,2]` being the `B` part.
 
 ```@example faster_ode3
-@btime solve(prob, Tsit5());
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
@@ -468,14 +468,14 @@ function gm2!(dr, r, p, t)
     @. du = Du + a .* u .* u ./ v + ubar - α * u
     @. dv = Dv + a .* u .* u - β * v
 end
-prob = ODEProblem(gm2!, r0, (0.0, 0.1), p)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(gm2!, r0, (0.0, 0.1), p)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
 Now, most of the allocations are taking place in `Du = D1*(Ay*u + u*Ax)` since
 those operations are vectorized and not mutating. We should instead replace the
-matrix multiplications with `mul!`. When doing so, we will need to have cache
+matrix multiplications with `LA.mul!`. When doing so, we will need to have cache
 variables to write into. This looks like:
 
 ```@example faster_ode3
@@ -491,17 +491,17 @@ function gm3!(dr, r, p, t)
     v = @view r[:, :, 2]
     du = @view dr[:, :, 1]
     dv = @view dr[:, :, 2]
-    mul!(Ayu, Ay, u)
-    mul!(uAx, u, Ax)
-    mul!(Ayv, Ay, v)
-    mul!(vAx, v, Ax)
+    LA.mul!(Ayu, Ay, u)
+    LA.mul!(uAx, u, Ax)
+    LA.mul!(Ayv, Ay, v)
+    LA.mul!(vAx, v, Ax)
     @. Du = D1 * (Ayu + uAx)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
     @. dv = Dv + a * u * u - β * v
 end
-prob = ODEProblem(gm3!, r0, (0.0, 0.1), p)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(gm3!, r0, (0.0, 0.1), p)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
@@ -515,17 +515,17 @@ function gm4!(dr, r, p, t)
     v = @view r[:, :, 2]
     du = @view dr[:, :, 1]
     dv = @view dr[:, :, 2]
-    mul!(Ayu, Ay, u)
-    mul!(uAx, u, Ax)
-    mul!(Ayv, Ay, v)
-    mul!(vAx, v, Ax)
+    LA.mul!(Ayu, Ay, u)
+    LA.mul!(uAx, u, Ax)
+    LA.mul!(Ayv, Ay, v)
+    LA.mul!(vAx, v, Ax)
     @. Du = D1 * (Ayu + uAx)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
     @. dv = Dv + a * u * u - β * v
 end
-prob = ODEProblem(gm4!, r0, (0.0, 0.1), p)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(gm4!, r0, (0.0, 0.1), p)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
@@ -537,6 +537,7 @@ function fast_gm!(du, u, p, t)
     a, α, ubar, β, D1, D2, N = p
 
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+
         du[i, j, 1] = D1 *
                       (u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
                        4u[i, j, 1]) +
@@ -544,6 +545,7 @@ function fast_gm!(du, u, p, t)
     end
 
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
+
         du[i, j, 2] = D2 *
                       (u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
                        4u[i, j, 2]) +
@@ -630,8 +632,8 @@ function fast_gm!(du, u, p, t)
                           a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
 end
-prob = ODEProblem(fast_gm!, r0, (0.0, 0.1), p)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(fast_gm!, r0, (0.0, 0.1), p)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
@@ -644,7 +646,7 @@ Since this is tedious to do by hand, we note that
 do this automatically from the basic version:
 
 ```@example faster_ode3
-using ModelingToolkit
+import ModelingToolkit as MTK
 function basic_version!(dr, r, p, t)
     a, α, ubar, β, D1, D2 = p
     u = r[:, :, 1]
@@ -662,13 +664,13 @@ r0 = zeros(100, 100, 2)
 r0[:, :, 1] .= uss .+ 0.1 .* rand.()
 r0[:, :, 2] .= vss
 
-prob = ODEProblem(basic_version!, r0, (0.0, 0.1), p)
-de = complete(modelingtoolkitize(prob))
+prob = DE.ODEProblem(basic_version!, r0, (0.0, 0.1), p)
+de = MTK.complete(MTK.modelingtoolkitize(prob))
 
 # Note jac=true,sparse=true makes it automatically build sparse Jacobian code
 # as well!
 
-fastprob = ODEProblem(de, [], (0.0, 0.1), jac = true, sparse = true)
+fastprob = DE.ODEProblem(de, [], (0.0, 0.1); jac = true, sparse = true)
 ```
 
 Lastly, we can do other things like multithread the main loops.
@@ -679,14 +681,14 @@ multithreaded version.
 ### Optimizing Algorithm Choices
 
 The last thing to do is then ***optimize our algorithm choice***. We have been
-using `Tsit5()` as our test algorithm, but in reality this problem is a stiff
-PDE discretization and thus one recommendation is to use `CVODE_BDF()`. However,
+using `DE.Tsit5()` as our test algorithm, but in reality this problem is a stiff
+PDE discretization and thus one recommendation is to use `Sundials.CVODE_BDF()`. However,
 instead of using the default dense Jacobian, we should make use of the sparse
 Jacobian afforded by the problem. The Jacobian is the matrix $\frac{df_i}{dr_j}$,
 where $r$ is read by the linear index (i.e. down columns). But since the $u$
 variables depend on the $v$, the band size here is large, and thus this will
 not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian
-algorithms. `CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
+algorithms. `Sundials.CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
 setting `linear_solver = :GMRES`.
 
 !!! note
@@ -698,41 +700,41 @@ setting `linear_solver = :GMRES`.
 Let's see how our fast right-hand side scales as we increase the integration time.
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!, r0, (0.0, 10.0), p)
-@btime solve(prob, Tsit5());
+prob = DE.ODEProblem(fast_gm!, r0, (0.0, 10.0), p)
+BT.@btime DE.solve(prob, DE.Tsit5());
 nothing # hide
 ```
 
 ```@example faster_ode3
-using Sundials
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES));
+import Sundials
+BT.@btime DE.solve(prob, Sundials.CVODE_BDF(; linear_solver = :GMRES));
 nothing # hide
 ```
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!, r0, (0.0, 100.0), p)
+prob = DE.ODEProblem(fast_gm!, r0, (0.0, 100.0), p)
 # Will go out of memory if we don't turn off `save_everystep`!
-@btime solve(prob, Tsit5(), save_everystep = false);
+BT.@btime DE.solve(prob, DE.Tsit5(); save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
+BT.@btime DE.solve(prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 
 ```@example faster_ode3
-prob = ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
-@btime solve(prob, CVODE_BDF(linear_solver = :GMRES), save_everystep = false);
+prob = DE.ODEProblem(fast_gm!, r0, (0.0, 500.0), p)
+BT.@btime DE.solve(prob, Sundials.CVODE_BDF(; linear_solver = :GMRES); save_everystep = false);
 nothing # hide
 ```
 
 Notice that we've eliminated almost all allocations, allowing the code to grow
 without hitting garbage collection and slowing down.
 
-Why is `CVODE_BDF` doing well? What's happening is that, because the problem is
+Why is `Sundials.CVODE_BDF` doing well? What's happening is that, because the problem is
 stiff, the number of steps required by the explicit Runge-Kutta method grows
-rapidly, whereas `CVODE_BDF` is taking large steps. Additionally, the `GMRES`
+rapidly, whereas `Sundials.CVODE_BDF` is taking large steps. Additionally, the `GMRES`
 linear solver form is quite an efficient way to solve the implicit system in
 this case. This is problem-dependent, and in many cases using a Krylov method
 effectively requires a preconditioner, so you need to play around with testing

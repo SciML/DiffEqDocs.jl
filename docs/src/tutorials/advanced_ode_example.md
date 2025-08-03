@@ -74,7 +74,7 @@ Using a three-point stencil, the Laplacian operator discretizes into a tridiagon
 The resulting `ODEProblem` definition is:
 
 ```@example stiff1
-using DifferentialEquations, LinearAlgebra, SparseArrays
+import DifferentialEquations as DE, LinearAlgebra, SparseArrays
 
 const N = 32
 const xyd_brusselator = range(0, stop = 1, length = N)
@@ -86,7 +86,8 @@ function brusselator_2d_loop(du, u, p, t)
     @inbounds for I in CartesianIndices((N, N))
         i, j = Tuple(I)
         x, y = xyd_brusselator[I[1]], xyd_brusselator[I[2]]
-        ip1, im1, jp1, jm1 = limit(i + 1, N), limit(i - 1, N), limit(j + 1, N),
+        ip1, im1, jp1,
+        jm1 = limit(i + 1, N), limit(i - 1, N), limit(j + 1, N),
         limit(j - 1, N)
         du[i, j, 1] = alpha * (u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] -
                        4u[i, j, 1]) +
@@ -111,7 +112,7 @@ function init_brusselator_2d(xyd)
     u
 end
 u0 = init_brusselator_2d(xyd_brusselator)
-prob_ode_brusselator_2d = ODEProblem(brusselator_2d_loop, u0, (0.0, 11.5), p)
+prob_ode_brusselator_2d = DE.ODEProblem(brusselator_2d_loop, u0, (0.0, 11.5), p)
 ```
 
 ## Choosing Jacobian Types
@@ -156,8 +157,8 @@ and it will kick out a sparse matrix with our pattern, that we can turn into our
 Let's try SparseConnectivityTracer's [`TracerSparsityDetector`](https://adrianhill.de/SparseConnectivityTracer.jl/stable/user/api/#SparseConnectivityTracer.TracerSparsityDetector):
 
 ```@example stiff1
-using SparseConnectivityTracer, ADTypes
-detector = TracerSparsityDetector()
+import SparseConnectivityTracer, ADTypes
+detector = SparseConnectivityTracer.TracerSparsityDetector()
 du0 = copy(u0)
 jac_sparsity = ADTypes.jacobian_sparsity(
     (du, u) -> brusselator_2d_loop(du, u, p, 0.0), du0, u0, detector)
@@ -171,29 +172,30 @@ That's neat, and would be tedious to build by hand!
 Now we just pass it to the `ODEFunction` like as before:
 
 ```@example stiff1
-f = ODEFunction(brusselator_2d_loop; jac_prototype = float.(jac_sparsity))
+f = DE.ODEFunction(brusselator_2d_loop; jac_prototype = float.(jac_sparsity))
 ```
 
 Build the `ODEProblem`:
 
 ```@example stiff1
-prob_ode_brusselator_2d_sparse = ODEProblem(f, u0, (0.0, 11.5), p)
+prob_ode_brusselator_2d_sparse = DE.ODEProblem(f, u0, (0.0, 11.5), p)
 ```
 
 Now let's see how the version with sparsity compares to the version without:
 
 ```@example stiff1
-using BenchmarkTools # for @btime
-@btime solve(prob_ode_brusselator_2d, TRBDF2(), save_everystep = false);
-@btime solve(prob_ode_brusselator_2d_sparse, TRBDF2(), save_everystep = false);
-@btime solve(prob_ode_brusselator_2d_sparse, KenCarp47(linsolve = KLUFactorization()),
+import BenchmarkTools as BT # for @btime
+BT.@btime DE.solve(prob_ode_brusselator_2d, DE.TRBDF2(); save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, DE.TRBDF2(); save_everystep = false);
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d_sparse, DE.KenCarp47(; linsolve = DE.KLUFactorization());
     save_everystep = false);
 nothing # hide
 ```
 
 Note that depending on the properties of the sparsity pattern, one may want
-to try alternative linear solvers such as `TRBDF2(linsolve = KLUFactorization())`
-or `TRBDF2(linsolve = UMFPACKFactorization())`.
+to try alternative linear solvers such as `DE.TRBDF2(linsolve = DE.KLUFactorization())`
+or `DE.TRBDF2(linsolve = DE.UMFPACKFactorization())`.
 
 ## Using Jacobian-Free Newton-Krylov
 
@@ -203,7 +205,7 @@ solver for changing to a Krylov method. To swap the linear solver out, we use
 the `linsolve` command and choose the GMRES linear solver.
 
 ```@example stiff1
-@btime solve(prob_ode_brusselator_2d, KenCarp47(linsolve = KrylovJL_GMRES()),
+BT.@btime DE.solve(prob_ode_brusselator_2d, DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES());
     save_everystep = false);
 nothing # hide
 ```
@@ -231,10 +233,10 @@ An example of this with using [IncompleteLU.jl](https://github.com/haampie/Incom
 is as follows:
 
 ```@example stiff1
-using IncompleteLU
+import IncompleteLU
 function incompletelu(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
-        Pl = ilu(convert(AbstractMatrix, W), τ = 50.0)
+        Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
     else
         Pl = Plprev
     end
@@ -244,9 +246,9 @@ end
 # Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
-@btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = incompletelu,
-        concrete_jac = true), save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -258,7 +260,7 @@ by default). Then `newW = true` whenever a new `W` matrix is computed, and
 `newW === nothing || newW` and when true, it's only at these points when
 we update the preconditioner, otherwise we just pass on the previous version.
 We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix (matching
-`jac_prototype`, thus `SpraseMatrixCSC`) which we can use in the preconditioner's
+`jac_prototype`, thus `SparseMatrixCSC`) which we can use in the preconditioner's
 definition. Then we use `IncompleteLU.ilu` on that sparse matrix to generate
 the preconditioner. We return `Pl,nothing` to say that our preconditioner is a
 left preconditioner, and that there is no right preconditioning.
@@ -270,19 +272,19 @@ requires a well-tuned `τ` parameter. Another option is to use
 which is more automatic. The setup is very similar to before:
 
 ```@example stiff1
-using AlgebraicMultigrid
+import AlgebraicMultigrid
 function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
-        Pl = aspreconditioner(ruge_stuben(convert(AbstractMatrix, W)))
+        Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(AbstractMatrix, W)))
     else
         Pl = Plprev
     end
     Pl, nothing
 end
 
-@btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid,
-        concrete_jac = true), save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = algebraicmultigrid,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -303,9 +305,9 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     Pl, nothing
 end
 
-@btime solve(prob_ode_brusselator_2d_sparse,
-    KenCarp47(linsolve = KrylovJL_GMRES(), precs = algebraicmultigrid2,
-        concrete_jac = true), save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = algebraicmultigrid2,
+        concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
 
@@ -329,13 +331,14 @@ defining the JacVecOperator, and instead will always make use of a Jacobian-Free
 Newton Krylov (with numerical differentiation). Thus, on this problem we could do:
 
 ```@example stiff1
-using Sundials
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(), save_everystep = false);
+import Sundials
+BT.@btime DE.solve(prob_ode_brusselator_2d, Sundials.CVODE_BDF(); save_everystep = false);
 # Simplest speedup: use :LapackDense
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :LapackDense),
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d, Sundials.CVODE_BDF(; linear_solver = :LapackDense);
     save_everystep = false);
 # GMRES Version: Doesn't require any extra stuff!
-@btime solve(prob_ode_brusselator_2d, CVODE_BDF(linear_solver = :GMRES),
+BT.@btime DE.solve(prob_ode_brusselator_2d, Sundials.CVODE_BDF(; linear_solver = :GMRES);
     save_everystep = false);
 nothing # hide
 ```
@@ -345,11 +348,11 @@ function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
 `modelingtoolkitize` to automatically generate this:
 
 ```@example stiff1
-using ModelingToolkit
-prob_ode_brusselator_2d_mtk = ODEProblem(
-    complete(modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
-    [], (0.0, 11.5), jac = true, sparse = true);
-# @btime solve(prob_ode_brusselator_2d_mtk,CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
+import ModelingToolkit as MTK
+prob_ode_brusselator_2d_mtk = DE.ODEProblem(
+    MTK.complete(MTK.modelingtoolkitize(prob_ode_brusselator_2d_sparse)),
+    [], (0.0, 11.5); jac = true, sparse = true);
+# BT.@btime DE.solve(prob_ode_brusselator_2d_mtk,Sundials.CVODE_BDF(linear_solver=:KLU),save_everystep=false); # compiles very slowly
 nothing # hide
 ```
 
@@ -365,13 +368,13 @@ we need to first compute the `W = I - gamma*J` matrix before computing the
 preconditioner on it. For the ILU example above, this is done for Sundials like:
 
 ```julia
-using LinearAlgebra
+import LinearAlgebra
 u0 = prob_ode_brusselator_2d_mtk.u0
 p = prob_ode_brusselator_2d_mtk.p
 const jaccache = prob_ode_brusselator_2d_mtk.f.jac(u0, p, 0.0)
-const W = I - 1.0 * jaccache
+const W = LinearAlgebra.I - 1.0 * jaccache
 
-prectmp = ilu(W, τ = 50.0)
+prectmp = IncompleteLU.ilu(W, τ = 50.0)
 const preccache = Ref(prectmp)
 
 function psetupilu(p, t, u, du, jok, jcurPtr, gamma)
@@ -381,11 +384,11 @@ function psetupilu(p, t, u, du, jok, jcurPtr, gamma)
 
         # W = I - gamma*J
         @. W = -gamma * jaccache
-        idxs = diagind(W)
+        idxs = LinearAlgebra.diagind(W)
         @. @view(W[idxs]) = @view(W[idxs]) + 1
 
         # Build preconditioner on W
-        preccache[] = ilu(W, τ = 5.0)
+        preccache[] = IncompleteLU.ilu(W, τ = 5.0)
     end
 end
 ```
@@ -403,15 +406,15 @@ We then simply pass these functions to the Sundials solver, with a choice of
 `prec_side=1` to indicate that it is a left-preconditioner:
 
 ```julia
-@btime solve(prob_ode_brusselator_2d_sparse,
-    CVODE_BDF(linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
-        prec_side = 1), save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
+    Sundials.CVODE_BDF(; linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
+        prec_side = 1); save_everystep = false);
 ```
 
 And similarly for algebraic multigrid:
 
 ```julia
-prectmp2 = aspreconditioner(ruge_stuben(W,
+prectmp2 = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(W,
     presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
         1))),
     postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
@@ -424,11 +427,12 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
 
         # W = I - gamma*J
         @. W = -gamma * jaccache
-        idxs = diagind(W)
+        idxs = LinearAlgebra.diagind(W)
         @. @view(W[idxs]) = @view(W[idxs]) + 1
 
         # Build preconditioner on W
-        preccache2[] = aspreconditioner(ruge_stuben(W,
+        preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(
+            W,
             presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
                 1))),
             postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
@@ -440,7 +444,7 @@ function precamg(z, r, p, t, y, fy, gamma, delta, lr)
     ldiv!(z, preccache2[], r)
 end
 
-@btime solve(prob_ode_brusselator_2d_sparse,
-    CVODE_BDF(linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
-        prec_side = 1), save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
+    Sundials.CVODE_BDF(; linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
+        prec_side = 1); save_everystep = false);
 ```

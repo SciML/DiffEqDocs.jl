@@ -22,7 +22,7 @@ If using VS Code, progress bars are enabled via the [ProgressLogging.jl](https:/
 For example:
 
 ```julia
-using OrdinaryDiffEq, ProgressLogging
+import OrdinaryDiffEq as ODE, ProgressLogging
 function lorenz!(du, u, p, t)
     du[1] = 10.0(u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
@@ -30,14 +30,14 @@ function lorenz!(du, u, p, t)
 end
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 1000000.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-sol = solve(prob, Tsit5(), progress = true)
+prob = ODE.ODEProblem(lorenz!, u0, tspan)
+sol = ODE.solve(prob, ODE.Tsit5(), progress = true)
 ```
 
 ## Using Progress Bars in the Terminal
 
 ```julia
-using OrdinaryDiffEq, TerminalLoggers
+import OrdinaryDiffEq as ODE, TerminalLoggers
 function lorenz!(du, u, p, t)
     du[1] = 10.0(u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
@@ -45,8 +45,8 @@ function lorenz!(du, u, p, t)
 end
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 1000000.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-sol = solve(prob, Tsit5(), progress = true)
+prob = ODE.ODEProblem(lorenz!, u0, tspan)
+sol = ODE.solve(prob, ODE.Tsit5(), progress = true)
 ```
 
 To use progress bars in the terminal, use [TerminalLoggers.jl](https://github.com/JuliaLogging/TerminalLoggers.jl).
@@ -58,9 +58,9 @@ before any other Julia call. This step is crucial. Otherwise, no logging will
 appear in the terminal.
 
 ```julia
-using OrdinaryDiffEq
-using Logging: global_logger
-using TerminalLoggers: TerminalLogger
+import OrdinaryDiffEq as ODE
+import Logging: global_logger
+import TerminalLoggers: TerminalLogger
 global_logger(TerminalLogger())
 
 function lorenz!(du, u, p, t)
@@ -70,6 +70,6 @@ function lorenz!(du, u, p, t)
 end
 u0 = [1.0; 0.0; 0.0]
 tspan = (0.0, 1000000.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-sol = solve(prob, Tsit5(), progress = true, maxiters = 1e8)
+prob = ODE.ODEProblem(lorenz!, u0, tspan)
+sol = ODE.solve(prob, ODE.Tsit5(), progress = true, maxiters = 1e8)
 ```

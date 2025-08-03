@@ -218,5 +218,6 @@ end
 and used via
 
 ```julia
-sol = solve(prob, EM(), dt = dt, adaptive = true, controller = CustomController())
+# Assuming: import DifferentialEquations as DE
+sol = DE.solve(prob, DE.EM(), dt = dt, adaptive = true, controller = CustomController())
 ```

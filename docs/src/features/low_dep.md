@@ -49,15 +49,15 @@ For example, to turn off precompilation for non-default problem types
 you can execute the following code in your active project.
 
 ```
-using Preferences, UUIDs
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
-set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
+import Preferences, UUIDs
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
+Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
 ```
 
 This will create a `LocalPreferences.toml` file next to the currently active
@@ -78,7 +78,7 @@ reexport SciMLBase.jl (which holds the problem and solution types) and so
 OrdinaryDiffEq.jl is all that's needed. Thus replacing
 
 ```julia
-using DifferentialEquations
+import DifferentialEquations as DE
 ```
 
 with
@@ -86,7 +86,7 @@ with
 ```julia
 #Add the OrdinaryDiffEq Package first!
 #using Pkg; Pkg.add("OrdinaryDiffEq")
-using OrdinaryDiffEq
+import OrdinaryDiffEq as ODE
 ```
 
 will work if these are the only features you are using.
@@ -107,7 +107,7 @@ which package a specific command is from, then use `@which`. For example, from
 the callback docs we have:
 
 ```@example low_dep_1
-using DifferentialEquations
+import DifferentialEquations as DE
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -117,24 +117,24 @@ end
 u0 = [-1.0; 1.0]
 tspan = (0.0, 20.0)
 p = (0.2, 0.2, 3.0)
-prob = ODEProblem(fitz, u0, tspan, p)
-cb = ProbIntsUncertainty(0.2, 1)
-ensemble_prob = EnsembleProblem(prob)
-sim = solve(ensemble_prob, Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+prob = DE.ODEProblem(fitz, u0, tspan, p)
+cb = DE.ProbIntsUncertainty(0.2, 1)
+ensemble_prob = DE.EnsembleProblem(prob)
+sim = DE.solve(ensemble_prob, DE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
 If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
 
 ```@example low_dep_1
-using InteractiveUtils # hide
-@which ProbIntsUncertainty(0.2, 1)
+import InteractiveUtils # hide
+InteractiveUtils.@which DE.ProbIntsUncertainty(0.2, 1)
 ```
 
 This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have
 done
 
 ```@example low_dep_2
-using OrdinaryDiffEq, DiffEqCallbacks
+import OrdinaryDiffEq as ODE, DiffEqCallbacks as CB
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -144,10 +144,10 @@ end
 u0 = [-1.0; 1.0]
 tspan = (0.0, 20.0)
 p = (0.2, 0.2, 3.0)
-prob = ODEProblem(fitz, u0, tspan, p)
-cb = ProbIntsUncertainty(0.2, 1)
-ensemble_prob = EnsembleProblem(prob)
-sim = solve(ensemble_prob, Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+prob = ODE.ODEProblem(fitz, u0, tspan, p)
+cb = CB.ProbIntsUncertainty(0.2, 1)
+ensemble_prob = ODE.EnsembleProblem(prob)
+sim = ODE.solve(ensemble_prob, ODE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
 instead of the full `using DifferentialEquations`. Note that due to the way

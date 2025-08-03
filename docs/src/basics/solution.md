@@ -1,6 +1,6 @@
 # [Solution Handling](@id solution)
 
-The solution is an `RecursiveArrayTools.AbstractDiffEqArray`. 
+The solution is an `RecursiveArrayTools.AbstractDiffEqArray`.
 [See RecursiveArrayTools.jl for more information on the interface](https://docs.sciml.ai/RecursiveArrayTools/stable/).
 The following is a more DiffEq-centric explanation of the interface.
 
@@ -19,8 +19,8 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 ## Array Interface
 
 !!! note
-
-    In 2023 the linear indexing `sol[i]`` was deprecated. It previously had the behavior that
+    
+    In 2023 the linear indexing `sol[i]` was deprecated. It previously had the behavior that
     `sol[i] = sol.u[i]`. However, this is incompatible with standard `AbstractArray` interfaces,
     Since if `A = VectorOfArray([[1,2],[3,4]])` and `A` is supposed to act like `[1 3; 2 4]`,
     then there is a difference `A[1] = [1,2]` for the VectorOfArray while `A[1] = 1` for the
@@ -28,8 +28,8 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
     plan in 2026 to complete the deprecation and thus have a breaking update where `sol[i]`
     matches the linear indexing of an `AbstractArray`, and then making
     `AbstractVectorOfArray <: AbstractArray`. Until then, `AbstractVectorOfArray` due to
-    this interface break but manaully implements an AbstractArray-like interface for
-    future compatability.
+    this interface break but manually implements an AbstractArray-like interface for
+    future compatibility.
 
 The general operations are as follows. Use
 
@@ -50,7 +50,7 @@ will address first by component and lastly by time, and thus
 sol[i, j]
 ```
 
-will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major, 
+will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major,
 so the leading dimension should be contiguous in memory. If the independent variables had shape
 (for example, was a matrix), then `i` is the linear index. We can also access
 solutions with shape:
@@ -181,23 +181,43 @@ SciMLBase.DEStats
 
 ## [Return Codes (RetCodes)](@id retcodes)
 
-The solution types have a `retcode` field which returns a symbol signifying the
-error state of the solution. The retcodes are as follows:
+The solution types have a `retcode` field which returns an enum value signifying the
+error state of the solution. Return codes are now implemented as an enum using EnumX.jl
+rather than symbols.
 
-  - `:Default`: The solver did not set retcodes.
-  - `:Success`: The integration completed without erroring or the steady state solver
+To check if a solution was successful, use:
+
+```julia
+SciMLBase.successful_retcode(sol)
+```
+
+!!! warning
+    
+    Previous iterations of the interface suggested using `sol.retcode == :Success`,
+    however, that is now not advised because there are more than one return code that can be interpreted
+    as successful. For example, `Terminated` is a successful run to a manual termination, and would be missed
+    if only checking for Success. Therefore we highly recommend you use `SciMLBase.successful_retcode(sol)` instead.
+
+The return codes include are accessed via the ReturnCode module, i.e. `SciMLBase.ReturnCode.Success`. The
+following are major return codes to know:
+
+  - `Default`: The solver did not set retcodes.
+  - `Success`: The integration completed without erroring or the steady state solver
     from `SteadyStateDiffEq` found the steady state.
-  - `:Terminated`: The integration is terminated with `terminate!(integrator)`.
+  - `Terminated`: The integration is terminated with `terminate!(integrator)`.
     Note that this may occur by using `TerminateSteadyState` from the callback
     library `DiffEqCallbacks`.
-  - `:MaxIters`: The integration exited early because it reached its maximum number
+  - `MaxIters`: The integration exited early because it reached its maximum number
     of iterations.
-  - `:DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
+  - `DtLessThanMin`: The timestep method chose a stepsize which is smaller than the
     allowed minimum timestep, and exited early.
-  - `:Unstable`: The solver detected that the solution was unstable and exited early.
-  - `:InitialFailure`: The DAE solver could not find consistent initial conditions.
-  - `:ConvergenceFailure`: The internal implicit solvers failed to converge.
-  - `:Failure`: General uncategorized failures or errors.
+  - `Unstable`: The solver detected that the solution was unstable and exited early.
+  - `InitialFailure`: The DAE solver could not find consistent initial conditions.
+  - `ConvergenceFailure`: The internal implicit solvers failed to converge.
+  - `Failure`: General uncategorized failures or errors.
+
+For a complete list of return codes and their properties, see the
+[SciMLBase ReturnCode documentation](https://docs.sciml.ai/SciMLBase/stable/interfaces/Solutions/#retcodes).
 
 ## Problem-Specific Features
 

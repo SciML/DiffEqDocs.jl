@@ -18,8 +18,8 @@ g(u) &= \vec{0}
 The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
 
 ```@example bvp
-using BoundaryValueDiffEq
-using Plots
+import BoundaryValueDiffEq as BVP
+import Plots
 const g = 9.81
 L = 1.0
 tspan = (0.0, pi / 2)
@@ -45,29 +45,29 @@ function bc1!(residual, u, p, t)
     residual[1] = u(pi / 4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u(pi / 2)[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
-bvp1 = BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
-sol1 = solve(bvp1, MIRK4(), dt = 0.05)
-plot(sol1)
+bvp1 = BVP.BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
+sol1 = BVP.solve(bvp1, BVP.MIRK4(); dt = 0.05)
+Plots.plot(sol1)
 ```
 
 The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t` or solution object from previous solving, in this example the initial guess is set as a `Vector`.
 
 ```@example bvp
-using OrdinaryDiffEq
+import OrdinaryDiffEq as ODE
 u₀_2 = [-1.6, -1.7] # the initial guess
 function bc3!(residual, sol, p, t)
     residual[1] = sol(pi / 4)[1] + pi / 2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi / 2)[1] - pi / 2
 end
-bvp3 = BVProblem(simplependulum!, bc3!, u₀_2, tspan)
-sol3 = solve(bvp3, Shooting(Vern7()))
+bvp3 = BVP.BVProblem(simplependulum!, bc3!, u₀_2, tspan)
+sol3 = BVP.solve(bvp3, BVP.Shooting(ODE.Vern7()))
 ```
 
 The initial guess can also be supplied via a function of `t` or a previous solution type, this is especially handy for parameter analysis.
 We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
 
 ```@example bvp
-plot(sol3)
+Plots.plot(sol3)
 ```
 
 `TwoPointBVProblem` is operationally the same as `BVProblem` but allows for the solver
@@ -82,10 +82,10 @@ end
 function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
     resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
 end
-bvp2 = TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
+bvp2 = BVP.TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
     bcresid_prototype = (zeros(1), zeros(1)))
-sol2 = solve(bvp2, MIRK4(), dt = 0.05)
-plot(sol2)
+sol2 = BVP.solve(bvp2, BVP.MIRK4(); dt = 0.05)
+Plots.plot(sol2)
 ```
 
 Note here that `bc2a!` is a boundary condition for the first time point, and `bc2b!` is a boundary condition
@@ -131,8 +131,9 @@ function bc!(res, du, u, p, t)
 end
 u0 = [1.0, 1.0, 1.0]
 tspan = (0.0, 1.0)
-prob = SecondOrderBVProblem(f!, bc!, u0, tspan)
-sol = solve(prob, MIRKN4(; jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())), dt = 0.01)
+prob = BVP.SecondOrderBVProblem(f!, bc!, u0, tspan)
+sol = BVP.solve(prob, BVP.MIRKN4(;
+    jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff())); dt = 0.01)
 ```
 
 ## Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations
@@ -171,9 +172,9 @@ function bc!(res, u, p, t)
 end
 u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
-fun = BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
-prob = BVProblem(fun, u0, tspan)
-sol = solve(prob,
-    Ascher4(zeta = [0.0, 0.0, 1.0], jac_alg = BVPJacobianAlgorithm(AutoForwardDiff())),
+fun = BVP.BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
+prob = BVP.BVProblem(fun, u0, tspan)
+sol = BVP.solve(prob,
+    BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()));
     dt = 0.01)
 ```

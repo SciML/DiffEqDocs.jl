@@ -24,11 +24,12 @@ To use a sample problem, such as `prob_sde_linear`, you can do something like:
 
 ```julia
 #] add DiffEqProblemLibrary
-using DiffEqProblemLibrary.SDEProblemLibrary
+import DiffEqProblemLibrary.SDEProblemLibrary
+import StochasticDiffEq as SDE
 # load problems
 SDEProblemLibrary.importsdeproblems()
 prob = SDEProblemLibrary.prob_sde_linear
-sol = solve(prob)
+sol = SDE.solve(prob)
 ```
 
 ```@meta

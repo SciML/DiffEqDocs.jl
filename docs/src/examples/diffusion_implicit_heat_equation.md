@@ -14,9 +14,9 @@ First, we'll use / import some packages:
 
 ```@example diffusionimplicit
 import Plots
-using LinearAlgebra
-using DiffEqBase
-using OrdinaryDiffEq: SplitODEProblem, solve, IMEXEuler
+import LinearAlgebra
+import DiffEqBase
+import OrdinaryDiffEqBDF as BDF
 import SciMLBase, SciMLOperators
 ```
 
@@ -122,7 +122,7 @@ T[i] + 2 Δz ∇T_{bottom} n̂ = T[g] \\
 
 ```@example diffusionimplicit
 # Initialize interior and boundary stencils:
-∇² = Tridiagonal(ones(FT, n) .* ∇²_op[1],
+∇² = LinearAlgebra.Tridiagonal(ones(FT, n) .* ∇²_op[1],
     ones(FT, n + 1) .* ∇²_op[2],
     ones(FT, n) .* ∇²_op[3]);
 
@@ -178,14 +178,14 @@ params = (; n)
 
 tspan = (FT(0), N_t * FT(Δt))
 
-prob = SplitODEProblem(SciMLOperators.MatrixOperator(D),
+prob = SciMLBase.SplitODEProblem(SciMLOperators.MatrixOperator(D),
     rhs!,
     T,
     tspan,
     params)
-alg = IMEXEuler()
+alg = BDF.IMEXEuler()
 println("Solving...")
-sol = solve(prob,
+sol = SciMLBase.solve(prob,
     alg,
     dt = Δt,
     saveat = range(FT(0), N_t * FT(Δt), length = 5),
