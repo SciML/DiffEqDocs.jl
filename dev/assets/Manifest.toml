@@ -2,7 +2,7 @@
 
 julia_version = "1.11.6"
 manifest_format = "2.0"
-project_hash = "af8754e28e4db41210402c29413be2524d2a023f"
+project_hash = "d0a35220c4742679c47d44b8fa7ff6d482d2e5b5"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "7927b9af540ee964cc5d1b73293f1eb0b761a3a1"
@@ -563,9 +563,9 @@ version = "1.9.1"
 
 [[deps.DiffEqBase]]
 deps = ["ArrayInterface", "ConcreteStructs", "DataStructures", "DocStringExtensions", "EnumX", "EnzymeCore", "FastBroadcast", "FastClosures", "FastPower", "FunctionWrappers", "FunctionWrappersWrappers", "LinearAlgebra", "Logging", "Markdown", "MuladdMacro", "Parameters", "PrecompileTools", "Printf", "RecursiveArrayTools", "Reexport", "SciMLBase", "SciMLOperators", "SciMLStructures", "Setfield", "Static", "StaticArraysCore", "Statistics", "SymbolicIndexingInterface", "TruncatedStacktraces"]
-git-tree-sha1 = "6f8f25122389ba34e491bdfe143ae16fda37cad3"
+git-tree-sha1 = "9782d43bd23a405f7ab06e2cbb4cec267b37d12f"
 uuid = "2b5f629d-d688-5b77-993f-72d75c75574e"
-version = "6.180.0"
+version = "6.181.0"
 
     [deps.DiffEqBase.extensions]
     DiffEqBaseCUDAExt = "CUDA"
@@ -609,7 +609,7 @@ version = "4.8.0"
 
 [[deps.DiffEqDocs]]
 deps = ["Documenter"]
-path = "/var/lib/buildkite-agent/builds/gpuci-10/julialang/diffeqdocs-dot-jl"
+path = "/var/lib/buildkite-agent/builds/gpuci-3/julialang/diffeqdocs-dot-jl"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
 version = "7.15.0"
 
@@ -645,9 +645,9 @@ version = "7.16.1"
 
 [[deps.DifferentiationInterface]]
 deps = ["ADTypes", "LinearAlgebra"]
-git-tree-sha1 = "f620da805b82bec64ab4d5f881c7592c82dbc08a"
+git-tree-sha1 = "54d7b8c74408048aea9c055ac8573b2b5c5ec11f"
 uuid = "a0c0ee7d-e4b9-4e03-894e-1c5f64a51d63"
-version = "0.7.3"
+version = "0.7.4"
 
     [deps.DifferentiationInterface.extensions]
     DifferentiationInterfaceChainRulesCoreExt = "ChainRulesCore"
@@ -1769,10 +1769,10 @@ weakdeps = ["ForwardDiff"]
     NonlinearSolveSpectralMethodsForwardDiffExt = "ForwardDiff"
 
 [[deps.ODEProblemLibrary]]
-deps = ["DiffEqBase", "Latexify", "LinearAlgebra", "Markdown", "ModelingToolkit", "Random", "RuntimeGeneratedFunctions"]
-git-tree-sha1 = "edfb669de8a7b29c18bc08ab919a8be39ec7ebeb"
+deps = ["DiffEqBase", "LinearAlgebra", "Markdown", "Random"]
+git-tree-sha1 = "ca459fa95b1e51a89a0e4e50b21fdd8c97d8dc45"
 uuid = "fdc4e326-1af4-4b90-96e7-779fcce2daa5"
-version = "0.1.11"
+version = "1.0.0"
 
 [[deps.OffsetArrays]]
 git-tree-sha1 = "117432e406b5c023f665fa73dc26e79ec3630151"
