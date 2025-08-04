@@ -1,4 +1,5 @@
-using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF, OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
+using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF,
+      OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
 import ODEProblemLibrary,
        SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
@@ -18,19 +19,19 @@ if isdir(ordinartdiffeq_docs_path)
     # Create the OrdinaryDiffEq API directory in the docs
     ordinary_diffeq_dest = joinpath(@__DIR__, "src", "api", "ordinarydiffeq")
     mkpath(dirname(ordinary_diffeq_dest))
-    
+
     # Copy all the docs from OrdinaryDiffEq.jl
-    cp(ordinartdiffeq_docs_path, ordinary_diffeq_dest, force=true)
-    
+    cp(ordinartdiffeq_docs_path, ordinary_diffeq_dest, force = true)
+
     # Copy the pages.jl file from OrdinaryDiffEq.jl
     ordinary_diffeq_pages_dest = joinpath(@__DIR__, "ordinarydiffeq_pages.jl")
     ordinary_diffeq_pages_file = joinpath(ordinartdiffeq_docs_root, "pages.jl")
-    cp(ordinary_diffeq_pages_file, ordinary_diffeq_pages_dest, force=true)
-    
+    cp(ordinary_diffeq_pages_file, ordinary_diffeq_pages_dest, force = true)
+
     # Copy the common_first_steps.jl file from OrdinaryDiffEq.jl
     common_first_steps_dest = joinpath(@__DIR__, "common_first_steps.jl")
     common_first_steps_file = joinpath(ordinartdiffeq_docs_root, "common_first_steps.jl")
-    cp(common_first_steps_file, common_first_steps_dest, force=true)
+    cp(common_first_steps_file, common_first_steps_dest, force = true)
 end
 
 # Copy StochasticDiffEq.jl documentation
@@ -40,14 +41,14 @@ if isdir(stochasticdiffeq_docs_path)
     # Create the StochasticDiffEq API directory in the docs
     stochastic_diffeq_dest = joinpath(@__DIR__, "src", "api", "stochasticdiffeq")
     mkpath(dirname(stochastic_diffeq_dest))
-    
+
     # Copy all the docs from StochasticDiffEq.jl
-    cp(stochasticdiffeq_docs_path, stochastic_diffeq_dest, force=true)
-    
+    cp(stochasticdiffeq_docs_path, stochastic_diffeq_dest, force = true)
+
     # Copy the pages.jl file from StochasticDiffEq.jl
     stochastic_diffeq_pages_dest = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
     stochastic_diffeq_pages_file = joinpath(stochasticdiffeq_docs_root, "pages.jl")
-    cp(stochastic_diffeq_pages_file, stochastic_diffeq_pages_dest, force=true)
+    cp(stochastic_diffeq_pages_file, stochastic_diffeq_pages_dest, force = true)
 end
 
 ENV["PLOTS_TEST"] = "true"
@@ -97,6 +98,7 @@ makedocs(
         DiffEqCallbacks,
         Sundials, DASKR
     ],
+    remotes = nothing,
     linkcheck = true,
     linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
         "https://biojulia.net/post/hardware/",
@@ -118,13 +120,13 @@ makedocs(
         "https://github.com/SciML/ColPrac/blob/master/README.md",
         "https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
-        "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
+        "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl"
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
     format = Documenter.HTML(assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/",
-              size_threshold = 500 * 2^10),
+        size_threshold = 500 * 2^10),
     sitename = "DifferentialEquations.jl",
     authors = "Chris Rackauckas",
     pages = pages)
