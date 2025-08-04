@@ -28,8 +28,8 @@ jobs:
             println("--- :julia: Instantiating project")
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.install("DifferentialEquations")
-            Pkg.install("Plots")
+            Pkg.add("DifferentialEquations")
+            Pkg.add("Plots")
             println("--- :julia: Adding OrdinaryDiffEq from master")
             Pkg.develop("OrdinaryDiffEq")
             println("--- :julia: Building documentation")
