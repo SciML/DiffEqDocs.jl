@@ -22,7 +22,7 @@ jobs:
           set -x
           mv docs/src docs/src.offf
           mkdir docs/src
-          mv docs/src.offf/new.md docs/src
+          mv docs/src.offf/examples/new.md docs/src
           echo 'pages = Any["new.md"]' > docs/pages.jl
           julia --project=docs -e '
             println("--- :julia: Instantiating project")
