@@ -24,7 +24,7 @@ jobs:
           mkdir docs/src
           mv docs/src.offf/examples/new.md docs/src
           echo 'pages = Any["new.md"]' > docs/pages.jl
-          JULIA_PKG_PRECOMPILE_AUTO=0 julia --project=docs -e --compile=min'
+          JULIA_PKG_PRECOMPILE_AUTO=0 julia --project=docs --compile=min -e '
             println("--- :julia: Instantiating project")
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
