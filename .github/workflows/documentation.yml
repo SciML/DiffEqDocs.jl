@@ -1,0 +1,36 @@
+name: Documentation
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        julia-version: [1]
+        julia-arch: [x86]
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4.1.6
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: ${{ matrix.julia-version }}
+      - name: generate docs
+        run: |
+          set -x
+          mv docs/src docs/src.offf
+          mkdir docs/src
+          mv docs/src.offf/new.md docs/src
+          echo 'pages = Any["new.md"]' > docs/pages.jl
+          julia --project=docs -e '
+            println("--- :julia: Instantiating project")
+            using Pkg
+            Pkg.develop(PackageSpec(path=pwd()))
+            Pkg.instantiate()
+            println("--- :julia: Adding OrdinaryDiffEq from master")
+            Pkg.develop("OrdinaryDiffEq")
+            println("--- :julia: Building documentation")
+            include("docs/make.jl")
+          '

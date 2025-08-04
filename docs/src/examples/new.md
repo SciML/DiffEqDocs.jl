@@ -10,6 +10,10 @@ The purpose of this example is to reproduce figures from the original paper by s
 
 ## Physical Background
 
+```@example new
+print(a)
+```
+
 Cloud formation is a complex thermodynamic process. To analyze it, we use simplified approaches, such as the  **parcel model**, in which a small "parcel" of air ascends adiabatically through the atmosphere.
 
 In this simplified model:
@@ -27,7 +31,7 @@ Key simplifying assumptions:
 
 ---
 
-## ⚙️ Model Setup
+##  Model Setup
 
 Initial conditions for the simulation (based on the paper):
 
