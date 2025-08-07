@@ -33,9 +33,9 @@ Key simplifying assumptions:
 
 Initial conditions for the simulation include physical constants: 
 
-```@example rogers
+```@setup rogers
+import DifferentialEquations as DE
 using Plots
-using DifferentialEquations
 @enum vars p=1 T=2 S=3 r=4 
 
 struct PhysicalConstants
@@ -194,8 +194,8 @@ Let's solve this system of equations using **ODEProblem** solver in defined time
 
 ```@example rogers
 tspan = (0.0, 20.0)
-prob = ODEProblem(rhs!, u0, tspan,param)
-sol = solve(prob)
+prob = DE.ODEProblem(rhs!, u0, tspan,param)
+sol = DE.solve(prob)
 
 ```
 
@@ -208,10 +208,10 @@ Using the solution from above  it is possible to recreate figures from the origi
 
 ### Figure 1 — Droplet Growth and Supersaturation
 ```@example rogers
-plot(sol.t, sol[Int(r),:] .* 1e6, 
+Plots.plot(sol.t, sol[Int(r),:] .* 1e6, 
     ylabel="Radius [um]", xlabel="Time [s]", label = "r(t)"
 )
-plot!(twinx(),sol.t, (sol[Int(S),:] .- 1).*100,
+Plots.plot!(twinx(),sol.t, (sol[Int(S),:] .- 1).*100,
     ylabel="Supersaturation [%]",
     color=:red,
     xticks=:none,
@@ -228,9 +228,9 @@ savefig( "rogers_fig1.svg")
 ```@example rogers
 nu_0 = 200*10^(6) / param[2]  # 200 /cm^3 -> 2e6 /m^3
 ksi  =  4.0 * π * C.ro_l * nu_0 *(sol[Int(r),:].^3)
-plot(sol.t, sol[Int(T),:],
+Plots.plot(sol.t, sol[Int(T),:],
     ylabel="Temperatura [K]", xlabel="Czas [s]", label = "T(t)")
-plot!(twinx(),sol.t, ksi,
+Plots.plot!(twinx(),sol.t, ksi,
     ylabel="Współczynnik mieszania [gm/kg]",
     color=:red,
     xticks=:none,
@@ -248,5 +248,4 @@ savefig( "rogers_fig2.svg")
 > R.R. Rogers (1975), *An Elementary Parcel Model with Explicit Condensation and Supersaturation*,  
 > Atmosphere, Vol. 13, No. 4, pp. 192–204.  
 > DOI: [10.1080/00046973.1975.9648397](https://doi.org/10.1080/00046973.1975.9648397)
-
 
