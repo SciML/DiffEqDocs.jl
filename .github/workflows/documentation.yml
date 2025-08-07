@@ -35,3 +35,6 @@ jobs:
             println("--- :julia: Building documentation")
             include("docs/make.jl")
           '
+          - name: Setup tmate session
+      - if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
