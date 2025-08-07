@@ -34,6 +34,8 @@ Key simplifying assumptions:
 Initial conditions for the simulation include physical constants: 
 
 ```@example rogers
+using Plots
+using DifferentialEquations
 @enum vars p=1 T=2 S=3 r=4 
 
 struct PhysicalConstants
