@@ -1,6 +1,6 @@
 # Progress Bar Integration
 
-DifferentialEquations.jl integrates with the Juno progress bar in order to make
+DifferentialEquations.jl integrates with the VS Code progress bar in order to make
 long calculations more manageable. By default, this feature is off for ODE and
 SDE solvers, but can be turned on via the keyword argument `progress=true`.
 The progress bar updates every `progress_steps` timesteps, which has a default
