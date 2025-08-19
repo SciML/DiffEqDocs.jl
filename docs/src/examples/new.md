@@ -36,6 +36,7 @@ Initial conditions for the simulation include physical constants:
 ```@setup rogers
 import DifferentialEquations as DE
 using Plots
+using LaTeXStrings
 @enum vars p=1 T=2 S=3 r=4 
 
 struct PhysicalConstants
@@ -59,7 +60,7 @@ const C = PhysicalConstants(
     10.0         # U
 )
 ```
-and followin parameters:
+and following parameters:
 
 - Initial droplet radius: $$r_0 $$
 - Droplet concentration: $$n_0 $$
@@ -209,15 +210,21 @@ Using the solution from above  it is possible to recreate figures from the origi
 ### Figure 1 — Droplet Growth and Supersaturation
 ```@example rogers
 Plots.plot(sol.t, sol[Int(r),:] .* 1e6, 
-    ylabel="Radius [um]", xlabel="Time [s]", label = "r(t)"
+    ylabel="Radius "*LaTeXStrings.L" [\mu m]", 
+    xlabel="Time "*LaTeXStrings.L"[s]", 
+    label = "r(t)"
+)
+Plots.plot!(twiny(),sol[Int(p),:]./100, sol[Int(r),:] .* 1e6, 
+    xflip = true, 
+    label = false,
+    xlabel = "Pressure "*LaTeXStrings.L"[mbar]" 
 )
 Plots.plot!(twinx(),sol.t, (sol[Int(S),:] .- 1).*100,
-    ylabel="Supersaturation [%]",
+    ylabel="Supersaturation "*LaTeXStrings.L"[\%]",
     color=:red,
     xticks=:none,
     label="S(t)"
 )
-savefig( "rogers_fig1.svg")
 ```
 
 
@@ -229,16 +236,56 @@ savefig( "rogers_fig1.svg")
 nu_0 = 200*10^(6) / param[2]  # 200 /cm^3 -> 2e6 /m^3
 ksi  =  4.0 * π * C.ro_l * nu_0 *(sol[Int(r),:].^3)
 Plots.plot(sol.t, sol[Int(T),:],
-    ylabel="Temperatura [K]", xlabel="Czas [s]", label = "T(t)")
+    ylabel="Temperature "*LaTeXStrings.L"[K]", 
+    xlabel="Time "*LaTeXStrings.L"[s]", 
+    label = "T(t)",
+    legend=:left
+)
+
+Plots.plot!(twiny(),sol[Int(p),:]./100, sol[Int(T),:], 
+    xflip = true, 
+    label = false,
+    xlabel = "Pressure "*LaTeXStrings.L"[mbar]" 
+)
 Plots.plot!(twinx(),sol.t, ksi,
-    ylabel="Współczynnik mieszania [gm/kg]",
+    ylabel="Liquid water mixing ratio "*LaTeXStrings.L" [\frac{gm}{kg}]",
     color=:red,
     xticks=:none,
-    label="x(t)"
+    label="x(t)",
+    legend=:right
 )
-savefig( "rogers_fig2.svg")
 
 ```
+### Figure 3 and 4 - supersaturation and radius initial conditions
+
+```@example rogers
+tspan2 = (0.0, 30.0)
+plt = Plots.plot(title="Supersaturation for different initial conditions", 
+    xlabel="t", 
+    ylabel="S-1 "*LaTeXStrings.L"[\%]"
+)
+plt2 = Plots.plot(title="Radius for different initial conditions", 
+    xlabel="t", 
+    ylabel="Radius "*LaTeXStrings.L" [\mu m]"
+)
+
+
+for s in [1.02,1.01,1.0,0.99, 0.98]
+    u0[Int(S)] = s
+    prob2 = ODEProblem(rhs!, u0, tspan2,param)
+    sol2 = solve(prob2)
+    Plots.plot!(plt, sol2.t, (sol2[Int(S),:] .- 1)*100, 
+    label="S(t=0) = $(round((s-1)*100,digits=2)) %"
+    )
+    Plots.plot!(plt2, sol2.t, sol2[Int(r),:] .* 1e6, 
+    label="S(t=0) = $(round((s-1)*100, digits = 2)) %"
+    )
+
+end
+
+
+```
+
 
 
 ---
