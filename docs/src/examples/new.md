@@ -54,7 +54,7 @@ const C = PhysicalConstants(
     287.053,     # R
     9.81,        # g
     0.622,       # eps
-    1000.0,      # ro_l = 1 kg/L = 1000 kg/m^3
+    1000.0,      # ro_l = 1 kg/L = 1000 kg/m^3h
     1005.0,      # cp
     2.5e6,       # L = 2.5e3 J/g = 2.5e6 J/kg
     10.0         # U
@@ -62,13 +62,13 @@ const C = PhysicalConstants(
 ```
 and following parameters:
 
-- Initial droplet radius: $$r_0 $$
-- Droplet concentration: $$n_0 $$
-- Updraft speed: $$U $$
-- Temperature: $$T_0 $$
-- Pressure: $$p_0 $$
-- Initial supersaturation: $$S_0 $$ (saturated)
-- Gravitational acceleration $$g $$
+- Initial droplet radius: ``r_0 ``
+- Droplet concentration: ``n_0 ``
+- Updraft speed: ``U ``
+- Temperature: ``T_0 ``
+- Pressure: ``p_0 ``
+- Initial supersaturation: ``S_0 `` (saturated)
+- Gravitational acceleration ``g ``
 
 ```@example rogers
 
@@ -87,52 +87,53 @@ These parameters are typical of rapidly developing cumulonimbus clouds in the lo
 
 The simulation integrates the following variables over time, which are described by following equations:
 - Pressure 'p(t)' 
-<div align="center">
 
-$$
+```math
 \frac{dp}{dt}  = -\rho_0 g U 
-$$
+```
 
-</div>
-where $$\rho = \frac{p}{R\cdot T}$$
+
+where ``\rho = \frac{p}{R\cdot T}``
+
+
+
 
 - Droplet radius 'r(t)'
-<div align="center">
 
-$$
+
+```math
   \frac{dr}{dt} = \frac{\sigma(S, T, p)}{r}
-$$
+```
 
-</div>
-where $$\sigma = \frac{S-1}{F_D + F_K}$$
+
+where ``\sigma = \frac{S-1}{F_D + F_K}``
 
 
 - Liquid water mixing ratio 'x(t)'
-<div align="center">
 
-$$
+
+```math
   \frac{dx}{dt} = 4.0 \cdot  \pi \cdot  \rho_l \cdot nu_0 \cdot r^2 \cdot \frac{dr}{dt}
-$$
+```
 
-</div>
-where $$nu_0 = 200\cdot10^(6) / \rho_0$$
+where ``nu_0 = 200\cdot10^(6) / \rho_0``
 - Temperature 'T(t)'
-<div align="center">
 
-$$
+
+```math
 \frac{dT}{t}  = T \cdot \frac{R}{cp} \cdot \frac{\frac{dp}{dt} }{p} + \frac{L}{cp} \cdot  \frac{dx}{dt}
-$$
+```
 
-</div>
+
 - Supersaturation 'S(t)'
-<div align="center">
 
-$$
+
+```math
 \frac{dS}{t}  = Q1 \cdot U - \rho \cdot Q2 \cdot \frac{dx}{dt}
-$$
+```
 
-</div>
-where $$Q1 = L \cdot g \cdot \frac{\epsilon}{R \cdot cp \cdot T^2 - \frac{g}{R \cdot T}}$$
+
+where ``Q1 = L \cdot g \cdot \frac{\epsilon}{R \cdot cp \cdot T^2 - \frac{g}{R \cdot T}}``
 
 Addidionally we should define all of funkctions and coefficients used in equations above.
 
@@ -199,14 +200,6 @@ prob = DE.ODEProblem(rhs!, u0, tspan,param)
 sol = DE.solve(prob)
 
 ```
-
-
----
-
-## Results
-
-Using the solution from above  it is possible to recreate figures from the original paper.
-
 ### Figure 1 — Droplet Growth and Supersaturation
 ```@example rogers
 Plots.plot(sol.t, sol[Int(r),:] .* 1e6, 
@@ -256,6 +249,7 @@ Plots.plot!(twinx(),sol.t, ksi,
 )
 
 ```
+
 ### Figure 3 and 4 - supersaturation and radius initial conditions
 
 ```@example rogers
@@ -272,8 +266,8 @@ plt2 = Plots.plot(title="Radius for different initial conditions",
 
 for s in [1.02,1.01,1.0,0.99, 0.98]
     u0[Int(S)] = s
-    prob2 = ODEProblem(rhs!, u0, tspan2,param)
-    sol2 = solve(prob2)
+    prob2 = DE.ODEProblem(rhs!, u0, tspan2,param)
+    sol2 = DE.solve(prob2)
     Plots.plot!(plt, sol2.t, (sol2[Int(S),:] .- 1)*100, 
     label="S(t=0) = $(round((s-1)*100,digits=2)) %"
     )
@@ -288,6 +282,7 @@ end
 
 
 
+
 ---
 
 ## Reference
@@ -295,4 +290,3 @@ end
 > R.R. Rogers (1975), *An Elementary Parcel Model with Explicit Condensation and Supersaturation*,  
 > Atmosphere, Vol. 13, No. 4, pp. 192–204.  
 > DOI: [10.1080/00046973.1975.9648397](https://doi.org/10.1080/00046973.1975.9648397)
-
