@@ -3,6 +3,7 @@
 ```@docs
 SciMLBase.BVProblem
 SciMLBase.SecondOrderBVProblem
+SciMLBase.BVPFunction
 ```
 
 ## Solution Type
