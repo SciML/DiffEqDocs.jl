@@ -27,7 +27,7 @@ DiffEqBase.DefaultInit
 DiffEqBase.CheckInit
 DiffEqBase.NoInit
 DiffEqBase.OverrideInit
-DiffEqBase.BrownBasicInit
+DiffEqBase.BrownFullBasicInit
 DiffEqBase.ShampineCollocationInit
 ```
 
@@ -60,7 +60,7 @@ DiffEqBase.ShampineCollocationInit
 | `CheckInit()` | When you've computed consistent conditions yourself | No (verification only) |
 | `NoInit()` | ⚠️ **AVOID** - Only for verified consistent conditions | No |
 | `OverrideInit()` | With ModelingToolkit problems | Yes (uses custom problem) |
-| `BrownBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
+| `BrownFullBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
 | `ShampineCollocationInit()` | For general DAEs without structure information | All variables |
 
 ## Examples
@@ -88,8 +88,8 @@ tspan = (0.0, 10.0)
 prob = DAEProblem(pendulum!, du0, u0, tspan, p,
                   differential_vars = [true, true, false])
 
-# BrownBasicInit will fix the inconsistent du0
-sol = solve(prob, DFBDF(), initializealg = BrownBasicInit())
+# BrownFullBasicInit will fix the inconsistent du0
+sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())
 ```
 
 ### Example 2: Checking Consistency (Recommended over NoInit)
@@ -148,8 +148,8 @@ using OrdinaryDiffEq
 using Sundials
 
 # Use Brown's algorithm to fix inconsistent conditions
-sol = solve(prob, DFBDF(), initializealg = BrownBasicInit())  # OrdinaryDiffEq
-sol = solve(prob, IDA(), initializealg = BrownBasicInit())    # Sundials
+sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())  # OrdinaryDiffEq
+sol = solve(prob, IDA(), initializealg = BrownFullBasicInit())    # Sundials
 
 # Use Shampine's collocation method for general DAEs
 sol = solve(prob, DFBDF(), initializealg = ShampineCollocationInit())  # OrdinaryDiffEq
@@ -170,7 +170,7 @@ sol = solve(prob, IDA(), initializealg = CheckInit())    # Sundials
 
 1. **"Initial conditions are not consistent" error**
    - Ensure your `du0` satisfies the DAE constraints at `t0`
-   - Try using `BrownBasicInit()` or `ShampineCollocationInit()` instead of `CheckInit()`
+   - Try using `BrownFullBasicInit()` or `ShampineCollocationInit()` instead of `CheckInit()`
    - Check that `differential_vars` correctly identifies differential vs algebraic variables
 
 2. **Initialization fails to converge**
