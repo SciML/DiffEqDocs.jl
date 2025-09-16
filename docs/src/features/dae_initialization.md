@@ -186,11 +186,31 @@ sol = solve(prob, IDA(), initializealg = CheckInit())
    - Relax tolerances if using extended versions
    - Try a different initialization algorithm
    - Provide a better initial guess for algebraic variables
+   - **Check if your DAE is index-1**: The system may be higher-index (see below)
 
 3. **Solver fails immediately after initialization**
    - The initialization might have found a consistent but numerically unstable point
    - Try tightening initialization tolerances
    - Check problem scaling and consider non-dimensionalization
+
+4. **DAE is not index-1 (higher-index DAE)**
+   - Many initialization algorithms only work reliably for index-1 DAEs
+   - **To check if your DAE is index-1**: The Jacobian of the algebraic equations with respect to the algebraic variables must be non-singular
+   - **Solution**: Use ModelingToolkit.jl to analyze and potentially reduce the index:
+   ```julia
+   using ModelingToolkit
+
+   # Define your system with ModelingToolkit
+   @named sys = ODESystem(eqs, t, vars, params)
+
+   # Analyze and reduce the index
+   sys_reduced = structural_simplify(dae_index_lowering(sys))
+
+   # The reduced system will be index-1 and easier to initialize
+   prob = DAEProblem(sys_reduced, [], (0.0, 10.0), params)
+   ```
+   - ModelingToolkit can automatically detect the index and apply appropriate transformations
+   - After index reduction, standard initialization algorithms will work more reliably
 
 ## Performance Tips
 
