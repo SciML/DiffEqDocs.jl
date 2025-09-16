@@ -127,7 +127,7 @@ eqs = [
 ]
 
 @named pendulum = ODESystem(eqs, t, [x, y, T], [g, L])
-sys = structural_simplify(dae_index_lowering(pendulum))
+sys = structural_simplify(pendulum)
 
 # ModelingToolkit provides initialization_data
 prob = DAEProblem(sys, [x => 1.0, y => 0.0], (0.0, 10.0), [g => 9.81, L => 1.0])
@@ -203,8 +203,8 @@ sol = solve(prob, IDA(), initializealg = CheckInit())
    # Define your system with ModelingToolkit
    @named sys = ODESystem(eqs, t, vars, params)
 
-   # Analyze and reduce the index
-   sys_reduced = structural_simplify(dae_index_lowering(sys))
+   # Analyze and reduce the index (structural_simplify handles this in v10+)
+   sys_reduced = structural_simplify(sys)
 
    # The reduced system will be index-1 and easier to initialize
    prob = DAEProblem(sys_reduced, [], (0.0, 10.0), params)
