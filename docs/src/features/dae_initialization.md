@@ -164,22 +164,6 @@ sol = solve(prob, IDA(), initializealg = CheckInit())    # Sundials
 # sol = solve(prob, IDA(), initializealg = NoInit())    # ⚠️ USE AT YOUR OWN RISK
 ```
 
-### Extended Versions with Additional Parameters (OrdinaryDiffEq only)
-
-OrdinaryDiffEq provides extended versions with additional parameters for advanced use:
-
-```julia
-using OrdinaryDiffEq
-
-# Shampine with custom initial dt and nonlinear solver
-sol = solve(prob, DFBDF(),
-            initializealg = OrdinaryDiffEqCore.ShampineCollocationInitExt(initdt = 0.001))
-
-# Brown with custom absolute tolerance
-sol = solve(prob, DFBDF(),
-            initializealg = OrdinaryDiffEqCore.BrownFullBasicInit(abstol = 1e-10))
-```
-
 ## Troubleshooting
 
 ### Common Issues and Solutions
