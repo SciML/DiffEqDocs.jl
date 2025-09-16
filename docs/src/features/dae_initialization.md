@@ -138,11 +138,35 @@ sol = solve(prob, DFBDF())  # Automatic initialization!
 
 ## Algorithm-Specific Options
 
-Some solvers provide extended versions of these algorithms with additional options:
+Both OrdinaryDiffEq and Sundials support the same initialization algorithms through the `initializealg` parameter:
 
-### OrdinaryDiffEq Extensions
+### OrdinaryDiffEq and Sundials
 
-OrdinaryDiffEq provides extended versions with additional parameters:
+```julia
+using OrdinaryDiffEq
+# or
+using Sundials
+
+# Use Brown's algorithm to fix inconsistent conditions
+sol = solve(prob, DFBDF(), initializealg = BrownBasicInit())  # OrdinaryDiffEq
+sol = solve(prob, IDA(), initializealg = BrownBasicInit())    # Sundials
+
+# Use Shampine's collocation method for general DAEs
+sol = solve(prob, DFBDF(), initializealg = ShampineCollocationInit())  # OrdinaryDiffEq
+sol = solve(prob, IDA(), initializealg = ShampineCollocationInit())    # Sundials
+
+# RECOMMENDED: Verify conditions are consistent
+sol = solve(prob, DFBDF(), initializealg = CheckInit())  # OrdinaryDiffEq
+sol = solve(prob, IDA(), initializealg = CheckInit())    # Sundials
+
+# NOT RECOMMENDED: Skip all initialization checks (dangerous!)
+# sol = solve(prob, DFBDF(), initializealg = NoInit())  # ⚠️ USE AT YOUR OWN RISK
+# sol = solve(prob, IDA(), initializealg = NoInit())    # ⚠️ USE AT YOUR OWN RISK
+```
+
+### Extended Versions with Additional Parameters (OrdinaryDiffEq only)
+
+OrdinaryDiffEq provides extended versions with additional parameters for advanced use:
 
 ```julia
 using OrdinaryDiffEq
@@ -154,23 +178,6 @@ sol = solve(prob, DFBDF(),
 # Brown with custom absolute tolerance
 sol = solve(prob, DFBDF(),
             initializealg = OrdinaryDiffEqCore.BrownFullBasicInit(abstol = 1e-10))
-```
-
-### Sundials (IDA)
-
-The IDA solver from Sundials.jl uses initialization through the `initializealg` parameter:
-
-```julia
-using Sundials
-
-# Use Brown's algorithm to fix inconsistent conditions
-sol = solve(prob, IDA(), initializealg = BrownBasicInit())
-
-# RECOMMENDED: Verify conditions are consistent
-sol = solve(prob, IDA(), initializealg = CheckInit())
-
-# NOT RECOMMENDED: Skip all initialization checks (dangerous!)
-# sol = solve(prob, IDA(), initializealg = NoInit())  # ⚠️ USE AT YOUR OWN RISK
 ```
 
 ## Troubleshooting
