@@ -31,13 +31,34 @@ DiffEqBase.BrownBasicInit
 DiffEqBase.ShampineCollocationInit
 ```
 
+## ⚠️ WARNING: NoInit Usage
+
+!!! danger "Use NoInit at your own risk"
+    **`NoInit()` should almost never be used.** No algorithm has any guarantee of correctness if `NoInit()` is used with inconsistent initial conditions. Users should almost always use `CheckInit()` instead for safety.
+
+    **Important:**
+    - Any issues opened that are using `NoInit()` will be immediately closed
+    - Allowing incorrect initializations is not a supported part of the system
+    - Using `NoInit()` with inconsistent conditions can lead to:
+      - Solver instability and crashes
+      - Incorrect results that may appear plausible
+      - Undefined behavior in the numerical algorithms
+      - Silent corruption of the solution
+
+    **When to use `CheckInit()` instead:**
+    - When you believe your initial conditions are consistent
+    - When you want to skip automatic modification of initial conditions
+    - When you need to verify your manual initialization
+
+    The only valid use case for `NoInit()` is when you are 100% certain your conditions are consistent AND you need to skip the computational cost of verification for performance reasons in production code that has been thoroughly tested.
+
 ## Algorithm Selection Guide
 
 | Algorithm | When to Use | Modifies Variables |
 |-----------|-------------|-------------------|
 | `DefaultInit()` | Default choice - automatically selects appropriate method | Depends on selection |
 | `CheckInit()` | When you've computed consistent conditions yourself | No (verification only) |
-| `NoInit()` | When conditions are known to be perfectly consistent | No |
+| `NoInit()` | ⚠️ **AVOID** - Only for verified consistent conditions | No |
 | `OverrideInit()` | With ModelingToolkit problems | Yes (uses custom problem) |
 | `BrownBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
 | `ShampineCollocationInit()` | For general DAEs without structure information | All variables |
@@ -71,7 +92,7 @@ prob = DAEProblem(pendulum!, du0, u0, tspan, p,
 sol = solve(prob, DFBDF(), initializealg = BrownBasicInit())
 ```
 
-### Example 2: Checking Consistency
+### Example 2: Checking Consistency (Recommended over NoInit)
 
 ```julia
 # If you've computed consistent conditions yourself
@@ -81,8 +102,11 @@ du0_consistent = [0.0, -1.0, compute_tension(u0_consistent, p)]
 prob2 = DAEProblem(pendulum!, du0_consistent, u0_consistent, tspan, p,
                    differential_vars = [true, true, false])
 
-# Just verify they're consistent
+# RECOMMENDED: Verify they're consistent with CheckInit
 sol = solve(prob2, DFBDF(), initializealg = CheckInit())
+
+# NOT RECOMMENDED: NoInit skips all checks - use at your own risk!
+# sol = solve(prob2, DFBDF(), initializealg = NoInit())  # ⚠️ DANGEROUS
 ```
 
 ### Example 3: ModelingToolkit Integration
@@ -139,11 +163,14 @@ The IDA solver from Sundials.jl uses initialization through the `initializealg` 
 ```julia
 using Sundials
 
-# Use Brown's algorithm
+# Use Brown's algorithm to fix inconsistent conditions
 sol = solve(prob, IDA(), initializealg = BrownBasicInit())
 
-# Skip initialization if you know conditions are consistent
-sol = solve(prob, IDA(), initializealg = NoInit())
+# RECOMMENDED: Verify conditions are consistent
+sol = solve(prob, IDA(), initializealg = CheckInit())
+
+# NOT RECOMMENDED: Skip all initialization checks (dangerous!)
+# sol = solve(prob, IDA(), initializealg = NoInit())  # ⚠️ USE AT YOUR OWN RISK
 ```
 
 ## Troubleshooting
