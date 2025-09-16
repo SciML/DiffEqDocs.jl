@@ -20,97 +20,27 @@ for fully implicit DAEs, or the equivalent constraint for semi-explicit DAEs. Fi
 
 ## Available Initialization Algorithms
 
-The `initializealg` keyword argument to `solve` controls how initialization is performed:
+The `initializealg` keyword argument to `solve` controls how initialization is performed. All algorithms are documented with their docstrings:
 
-### `DefaultInit()`
-
-The default initialization algorithm that automatically chooses the most appropriate method based on the problem structure:
-
-- If the problem has `initialization_data` (typically from ModelingToolkit), uses `OverrideInit`
-- For DAE problems without `differential_vars`, uses `ShampineCollocationInit`
-- For DAE problems with `differential_vars`, uses `BrownBasicInit`
-- For ODE problems with mass matrices, uses `BrownBasicInit`
-
-```julia
-sol = solve(prob, IDA())  # Uses DefaultInit() automatically
+```@docs
+DiffEqBase.DefaultInit
+DiffEqBase.CheckInit
+DiffEqBase.NoInit
+DiffEqBase.OverrideInit
+DiffEqBase.BrownBasicInit
+DiffEqBase.ShampineCollocationInit
 ```
 
-### `CheckInit()`
+## Algorithm Selection Guide
 
-Only verifies that the provided initial conditions are consistent within tolerance. This is useful when you've already computed consistent initial conditions yourself:
-
-```julia
-sol = solve(prob, IDA(), initializealg = CheckInit())
-```
-
-If the conditions are not consistent, this will error with a message explaining the inconsistency.
-
-### `NoInit()`
-
-Skips initialization entirely. Use this when you are certain your initial conditions are consistent:
-
-```julia
-sol = solve(prob, IDA(), initializealg = NoInit())
-```
-
-⚠️ **Warning**: Using `NoInit()` with inconsistent initial conditions will likely cause solver failures.
-
-### `BrownBasicInit()`
-
-Implements the algorithm from:
-> P.N. Brown, A.C. Hindmarsh, and L.R. Petzold, "Consistent Initial Condition Calculation for Differential-Algebraic Systems", SIAM J. Sci. Comput., 19(5), pp. 1495-1512, 1998.
-
-This method modifies algebraic variables and their derivatives to be consistent while keeping differential variables fixed. It's most effective for index-1 DAEs when `differential_vars` is provided:
-
-```julia
-prob = DAEProblem(f, du0, u0, tspan, differential_vars = [true, false, true])
-sol = solve(prob, IDA(), initializealg = BrownBasicInit())
-```
-
-### `ShampineCollocationInit()`
-
-Implements the algorithm from:
-> L.F. Shampine, "Consistent Initial Condition for Differential-Algebraic Systems", SIAM J. Sci. Comput., 22(6), pp. 2007-2026, 2001.
-
-This method uses collocation on the first two steps to find consistent initial conditions, modifying both differential and algebraic variables:
-
-```julia
-sol = solve(prob, IDA(), initializealg = ShampineCollocationInit())
-```
-
-## Algorithm-Specific Options
-
-Some solvers provide extended versions of these algorithms with additional options:
-
-### OrdinaryDiffEq Extensions
-
-OrdinaryDiffEq provides extended versions with additional parameters:
-
-```julia
-using OrdinaryDiffEq
-
-# Shampine with custom initial dt and nonlinear solver
-sol = solve(prob, DFBDF(),
-            initializealg = ShampineCollocationInit(initdt = 0.001))
-
-# Brown with custom absolute tolerance
-sol = solve(prob, DFBDF(),
-            initializealg = BrownBasicInit(abstol = 1e-10))
-```
-
-### Sundials (IDA)
-
-The IDA solver from Sundials.jl uses initialization through the `initializealg` parameter:
-
-```julia
-using Sundials
-
-# Use Brown's algorithm
-sol = solve(prob, IDA(), initializealg = BrownBasicInit())
-
-# Skip initialization if you know conditions are consistent
-sol = solve(prob, IDA(), initializealg = NoInit())
-```
+| Algorithm | When to Use | Modifies Variables |
+|-----------|-------------|-------------------|
+| `DefaultInit()` | Default choice - automatically selects appropriate method | Depends on selection |
+| `CheckInit()` | When you've computed consistent conditions yourself | No (verification only) |
+| `NoInit()` | When conditions are known to be perfectly consistent | No |
+| `OverrideInit()` | With ModelingToolkit problems | Yes (uses custom problem) |
+| `BrownBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
+| `ShampineCollocationInit()` | For general DAEs without structure information | All variables |
 
 ## Examples
 
@@ -182,6 +112,40 @@ prob = DAEProblem(sys, [x => 1.0, y => 0.0], (0.0, 10.0), [g => 9.81, L => 1.0])
 sol = solve(prob, DFBDF())  # Automatic initialization!
 ```
 
+## Algorithm-Specific Options
+
+Some solvers provide extended versions of these algorithms with additional options:
+
+### OrdinaryDiffEq Extensions
+
+OrdinaryDiffEq provides extended versions with additional parameters:
+
+```julia
+using OrdinaryDiffEq
+
+# Shampine with custom initial dt and nonlinear solver
+sol = solve(prob, DFBDF(),
+            initializealg = OrdinaryDiffEqCore.ShampineCollocationInitExt(initdt = 0.001))
+
+# Brown with custom absolute tolerance
+sol = solve(prob, DFBDF(),
+            initializealg = OrdinaryDiffEqCore.BrownFullBasicInit(abstol = 1e-10))
+```
+
+### Sundials (IDA)
+
+The IDA solver from Sundials.jl uses initialization through the `initializealg` parameter:
+
+```julia
+using Sundials
+
+# Use Brown's algorithm
+sol = solve(prob, IDA(), initializealg = BrownBasicInit())
+
+# Skip initialization if you know conditions are consistent
+sol = solve(prob, IDA(), initializealg = NoInit())
+```
+
 ## Troubleshooting
 
 ### Common Issues and Solutions
@@ -192,7 +156,7 @@ sol = solve(prob, DFBDF())  # Automatic initialization!
    - Check that `differential_vars` correctly identifies differential vs algebraic variables
 
 2. **Initialization fails to converge**
-   - Relax tolerances: `initializealg = BrownBasicInit(abstol = 1e-8)`
+   - Relax tolerances if using extended versions
    - Try a different initialization algorithm
    - Provide a better initial guess for algebraic variables
 
