@@ -556,9 +556,9 @@ version = "1.9.1"
 
 [[deps.DiffEqBase]]
 deps = ["ArrayInterface", "ConcreteStructs", "DocStringExtensions", "EnzymeCore", "FastBroadcast", "FastClosures", "FastPower", "FunctionWrappers", "FunctionWrappersWrappers", "LinearAlgebra", "Logging", "Markdown", "MuladdMacro", "PrecompileTools", "Printf", "RecursiveArrayTools", "Reexport", "SciMLBase", "SciMLOperators", "SciMLStructures", "Setfield", "Static", "StaticArraysCore", "Statistics", "SymbolicIndexingInterface", "TruncatedStacktraces"]
-git-tree-sha1 = "d7c02d5974c48c14495c030ae96fa259c1bad70e"
+git-tree-sha1 = "087632db966c90079a5534e4147afea9136ca39a"
 uuid = "2b5f629d-d688-5b77-993f-72d75c75574e"
-version = "6.190.0"
+version = "6.190.2"
 
     [deps.DiffEqBase.extensions]
     DiffEqBaseCUDAExt = "CUDA"
@@ -601,7 +601,7 @@ version = "4.9.0"
 
 [[deps.DiffEqDocs]]
 deps = ["Documenter"]
-path = "/var/lib/buildkite-agent/builds/gpuci-4/julialang/diffeqdocs-dot-jl"
+path = "/var/lib/buildkite-agent/builds/gpuci-1/julialang/diffeqdocs-dot-jl"
 uuid = "d91efeb5-c178-44a6-a2ee-51685df7c78e"
 version = "7.17.0"
 
@@ -1683,9 +1683,9 @@ version = "0.5.9"
 
 [[deps.MutableArithmetics]]
 deps = ["LinearAlgebra", "SparseArrays", "Test"]
-git-tree-sha1 = "491bdcdc943fcbc4c005900d7463c9f216aabf4c"
+git-tree-sha1 = "a03ae6a640a92191615fb53baae6a74b74bce56d"
 uuid = "d8a4904e-b15c-11e9-3269-09a3773c0cb0"
-version = "1.6.4"
+version = "1.6.5"
 
 [[deps.NLSolversBase]]
 deps = ["ADTypes", "DifferentiationInterface", "Distributed", "FiniteDiff", "ForwardDiff"]
@@ -1761,9 +1761,9 @@ version = "4.10.0"
 
 [[deps.NonlinearSolveBase]]
 deps = ["ADTypes", "Adapt", "ArrayInterface", "CommonSolve", "Compat", "ConcreteStructs", "DifferentiationInterface", "EnzymeCore", "FastClosures", "LinearAlgebra", "Markdown", "MaybeInplace", "Preferences", "Printf", "RecursiveArrayTools", "SciMLBase", "SciMLJacobianOperators", "SciMLOperators", "SciMLStructures", "Setfield", "StaticArraysCore", "SymbolicIndexingInterface", "TimerOutputs"]
-git-tree-sha1 = "99a400f7ad42e56431c76f3eadee0755f2123fda"
+git-tree-sha1 = "bc0c764f8d4cbd75dc8e4968e62194495c2c6637"
 uuid = "be0214bd-f91f-a760-ac4e-3421ce2b2da0"
-version = "1.15.0"
+version = "1.16.0"
 
     [deps.NonlinearSolveBase.extensions]
     NonlinearSolveBaseBandedMatricesExt = "BandedMatrices"
@@ -2477,9 +2477,9 @@ version = "0.1.0"
 
 [[deps.SciMLBase]]
 deps = ["ADTypes", "Accessors", "Adapt", "ArrayInterface", "CommonSolve", "ConstructionBase", "Distributed", "DocStringExtensions", "EnumX", "FunctionWrappersWrappers", "IteratorInterfaceExtensions", "LinearAlgebra", "Logging", "Markdown", "Moshi", "PreallocationTools", "PrecompileTools", "Preferences", "Printf", "RecipesBase", "RecursiveArrayTools", "Reexport", "RuntimeGeneratedFunctions", "SciMLOperators", "SciMLStructures", "StaticArraysCore", "Statistics", "SymbolicIndexingInterface"]
-git-tree-sha1 = "dfec1fce27c829814348266486b4cb8fdcb263fb"
+git-tree-sha1 = "16fa030fb4bd4df373a677eca0460c3eee791ab2"
 uuid = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
-version = "2.119.0"
+version = "2.120.0"
 
     [deps.SciMLBase.extensions]
     SciMLBaseChainRulesCoreExt = "ChainRulesCore"
@@ -2634,17 +2634,19 @@ version = "1.11.0"
 
 [[deps.SparseConnectivityTracer]]
 deps = ["ADTypes", "DocStringExtensions", "FillArrays", "LinearAlgebra", "Random", "SparseArrays"]
-git-tree-sha1 = "e49c106eb7c78f55cdfa39e8bddeda24e1e09fce"
+git-tree-sha1 = "3c3a42a29f696f16273741ffe589b4003f539088"
 uuid = "9f842d2f-2579-4b1d-911e-f412cf18a3f5"
-version = "1.0.2"
+version = "1.1.0"
 
     [deps.SparseConnectivityTracer.extensions]
+    SparseConnectivityTracerChainRulesCoreExt = "ChainRulesCore"
     SparseConnectivityTracerLogExpFunctionsExt = "LogExpFunctions"
     SparseConnectivityTracerNNlibExt = "NNlib"
     SparseConnectivityTracerNaNMathExt = "NaNMath"
     SparseConnectivityTracerSpecialFunctionsExt = "SpecialFunctions"
 
     [deps.SparseConnectivityTracer.weakdeps]
+    ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
     LogExpFunctions = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
     NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
     NaNMath = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
@@ -2799,9 +2801,9 @@ version = "5.2.3+0"
 
 [[deps.SymbolicIndexingInterface]]
 deps = ["Accessors", "ArrayInterface", "RuntimeGeneratedFunctions", "StaticArraysCore"]
-git-tree-sha1 = "93104ca226670c0cb92ba8bc6998852ad55a2d4c"
+git-tree-sha1 = "b19cf024a2b11d72bef7c74ac3d1cbe86ec9e4ed"
 uuid = "2efcf032-c050-4f8e-a9bb-153293bab1f5"
-version = "0.3.43"
+version = "0.3.44"
 weakdeps = ["PrettyTables"]
 
     [deps.SymbolicIndexingInterface.extensions]
