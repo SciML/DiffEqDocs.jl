@@ -133,18 +133,39 @@ prob = DE.DAEProblem(f2, du₀, u₀, tspan, differential_vars = differential_va
 
 `differential_vars` is an option which states which of the variables are differential,
 i.e. not purely algebraic (which means that their derivative shows up in the residual
-equations). This is required for the algorithm to be able to find consistent initial
-conditions. Notice that the first two variables are determined by their changes, but
-the last is simply determined by the conservation equation. Thus, we use
-`differential_vars = [true,true,false]`.
+equations). This is required for the initialization algorithm to properly compute
+consistent initial conditions. Notice that the first two variables are determined by
+their changes, but the last is simply determined by the conservation equation. Thus,
+we use `differential_vars = [true,true,false]`.
 
-As with the other DifferentialEquations problems, the commands are then to solve
-and plot. Here we will use the IDA solver from Sundials:
+### DAE Initialization
+
+DAEs require that the initial conditions satisfy the constraint equations. In this
+example, our initial conditions are already consistent (they satisfy `f(du₀, u₀, p, t₀) = 0`).
+However, in many cases, you may not have consistent initial conditions, and the solver
+needs to compute them.
+
+The IDA solver from Sundials can handle initialization through the `initializealg`
+parameter. The most commonly used initialization algorithm is `BrownFullBasicInit()`,
+which modifies the algebraic variables and derivatives to satisfy the constraints:
 
 ```@example dae
 import Sundials
-sol = DE.solve(prob, Sundials.IDA())
+import DiffEqBase
+# Explicitly use Brown's initialization algorithm
+sol = DE.solve(prob, Sundials.IDA(), initializealg = DiffEqBase.BrownFullBasicInit())
 ```
+
+If you're confident your initial conditions are already consistent, you can verify
+this using `CheckInit()`:
+
+```@example dae
+# This will verify initial conditions and error if they're inconsistent
+sol_check = DE.solve(prob, Sundials.IDA(), initializealg = DiffEqBase.CheckInit())
+```
+
+For more details on DAE initialization options, see the
+[DAE Initialization documentation](@ref).
 
 In order to clearly see all the features of this solution, it should be plotted
 on a logarithmic scale. We'll also plot each on a different subplot, to allow
@@ -153,3 +174,32 @@ scaling the y-axis appropriately.
 ```@example dae
 Plots.plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```
+
+### Handling Inconsistent Initial Conditions
+
+Let's see what happens when we provide inconsistent initial conditions and how
+the initialization algorithms handle them:
+
+```@example dae
+# Inconsistent initial conditions - y₃ should be 0 to satisfy y₁ + y₂ + y₃ = 1
+u₀_inconsistent = [1.0, 0.0, 0.5]  # Sum is 1.5, not 1!
+du₀_inconsistent = [-0.04, 0.04, 0.0]
+
+prob_inconsistent = DE.DAEProblem(f2, du₀_inconsistent, u₀_inconsistent, tspan,
+                                  differential_vars = differential_vars)
+
+# This would error with CheckInit() because conditions are inconsistent:
+# sol_error = DE.solve(prob_inconsistent, Sundials.IDA(),
+#                      initializealg = DiffEqBase.CheckInit())
+
+# But BrownFullBasicInit() will fix the inconsistency automatically:
+sol_fixed = DE.solve(prob_inconsistent, Sundials.IDA(),
+                    initializealg = DiffEqBase.BrownFullBasicInit())
+
+println("Original (inconsistent) y₃ = ", u₀_inconsistent[3])
+println("Corrected y₃ after initialization = ", sol_fixed.u[1][3])
+println("Sum after correction = ", sum(sol_fixed.u[1]))
+```
+
+As you can see, `BrownFullBasicInit()` automatically adjusted the algebraic variable
+`y₃` to satisfy the constraint equation `y₁ + y₂ + y₃ = 1`.
