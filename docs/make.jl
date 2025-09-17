@@ -120,7 +120,8 @@ makedocs(
         "https://github.com/SciML/ColPrac/blob/master/README.md",
         "https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
-        "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl"
+        "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
+        "https://docs.sciml.ai/DiffEqDocs/stable/features/dae_initialization/"
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
