@@ -40,10 +40,10 @@ DiffEqBase.ShampineCollocationInit
     - Any issues opened that are using `NoInit()` will be immediately closed
     - Allowing incorrect initializations is not a supported part of the system
     - Using `NoInit()` with inconsistent conditions can lead to:
-      - Solver instability and crashes
-      - Incorrect results that may appear plausible
-      - Undefined behavior in the numerical algorithms
-      - Silent corruption of the solution
+      + Solver instability and crashes
+      + Incorrect results that may appear plausible
+      + Undefined behavior in the numerical algorithms
+      + Silent corruption of the solution
 
     **When to use `CheckInit()` instead:**
     - When you believe your initial conditions are consistent
@@ -54,14 +54,14 @@ DiffEqBase.ShampineCollocationInit
 
 ## Algorithm Selection Guide
 
-| Algorithm | When to Use | Modifies Variables |
-|-----------|-------------|-------------------|
-| `DefaultInit()` | Default choice - automatically selects appropriate method | Depends on selection |
-| `CheckInit()` | When you've computed consistent conditions yourself | No (verification only) |
-| `NoInit()` | ⚠️ **AVOID** - Only for verified consistent conditions | No |
-| `OverrideInit()` | With ModelingToolkit problems | Yes (uses custom problem) |
-| `BrownFullBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
-| `ShampineCollocationInit()` | For general DAEs without structure information | All variables |
+| Algorithm                   | When to Use                                               | Modifies Variables        |
+|:--------------------------- |:--------------------------------------------------------- |:------------------------- |
+| `DefaultInit()`             | Default choice - automatically selects appropriate method | Depends on selection      |
+| `CheckInit()`               | When you've computed consistent conditions yourself       | No (verification only)    |
+| `NoInit()`                  | ⚠️ **AVOID** - Only for verified consistent conditions    | No                        |
+| `OverrideInit()`            | With ModelingToolkit problems                             | Yes (uses custom problem) |
+| `BrownFullBasicInit()`      | For index-1 DAEs with `differential_vars`                 | Algebraic variables only  |
+| `ShampineCollocationInit()` | For general DAEs without structure information            | All variables             |
 
 ## Examples
 
@@ -86,7 +86,7 @@ p = [9.81, 1.0]  # g, L
 tspan = (0.0, 10.0)
 
 prob = DAEProblem(pendulum!, du0, u0, tspan, p,
-                  differential_vars = [true, true, false])
+    differential_vars = [true, true, false])
 
 # BrownFullBasicInit will fix the inconsistent du0
 sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())
@@ -100,7 +100,7 @@ u0_consistent = [1.0, 0.0, 0.0]
 du0_consistent = [0.0, -1.0, compute_tension(u0_consistent, p)]
 
 prob2 = DAEProblem(pendulum!, du0_consistent, u0_consistent, tspan, p,
-                   differential_vars = [true, true, false])
+    differential_vars = [true, true, false])
 
 # RECOMMENDED: Verify they're consistent with CheckInit
 sol = solve(prob2, DFBDF(), initializealg = CheckInit())
@@ -169,48 +169,48 @@ sol = solve(prob, IDA(), initializealg = CheckInit())    # Sundials
 ### Common Issues and Solutions
 
 1. **"Initial conditions are not consistent" error**
-   - Ensure your `du0` satisfies the DAE constraints at `t0`
-   - Try using `BrownFullBasicInit()` or `ShampineCollocationInit()` instead of `CheckInit()`
-   - Check that `differential_vars` correctly identifies differential vs algebraic variables
+   + Ensure your `du0` satisfies the DAE constraints at `t0`
+   + Try using `BrownFullBasicInit()` or `ShampineCollocationInit()` instead of `CheckInit()`
+   + Check that `differential_vars` correctly identifies differential vs algebraic variables
 
 2. **Initialization fails to converge**
-   - Relax tolerances if using extended versions
-   - Try a different initialization algorithm
-   - Provide a better initial guess for algebraic variables
-   - **Check if your DAE is index-1**: The system may be higher-index (see below)
+   + Relax tolerances if using extended versions
+   + Try a different initialization algorithm
+   + Provide a better initial guess for algebraic variables
+   + **Check if your DAE is index-1**: The system may be higher-index (see below)
 
 3. **Solver fails immediately after initialization**
-   - The initialization might have found a consistent but numerically unstable point
-   - Try tightening initialization tolerances
-   - Check problem scaling and consider non-dimensionalization
+   + The initialization might have found a consistent but numerically unstable point
+   + Try tightening initialization tolerances
+   + Check problem scaling and consider non-dimensionalization
 
 4. **DAE is not index-1 (higher-index DAE)**
-   - Many initialization algorithms only work reliably for index-1 DAEs
-   - **To check if your DAE is index-1**: The Jacobian of the algebraic equations with respect to the algebraic variables must be non-singular
-   - **Solution**: Use ModelingToolkit.jl to analyze and potentially reduce the index:
-   ```julia
-   using ModelingToolkit
+   + Many initialization algorithms only work reliably for index-1 DAEs
+   + **To check if your DAE is index-1**: The Jacobian of the algebraic equations with respect to the algebraic variables must be non-singular
+   + **Solution**: Use ModelingToolkit.jl to analyze and potentially reduce the index:
+     ```julia
+     using ModelingToolkit
 
-   # Define your system with ModelingToolkit
-   @named sys = ODESystem(eqs, t, vars, params)
+     # Define your system with ModelingToolkit
+     @named sys = ODESystem(eqs, t, vars, params)
 
-   # Analyze and reduce the index (structural_simplify handles this in v10+)
-   sys_reduced = structural_simplify(sys)
+     # Analyze and reduce the index (structural_simplify handles this in v10+)
+     sys_reduced = structural_simplify(sys)
 
-   # The reduced system will be index-1 and easier to initialize
-   prob = DAEProblem(sys_reduced, [], (0.0, 10.0), params)
-   ```
-   - ModelingToolkit can automatically detect the index and apply appropriate transformations
-   - After index reduction, standard initialization algorithms will work more reliably
+     # The reduced system will be index-1 and easier to initialize
+     prob = DAEProblem(sys_reduced, [], (0.0, 10.0), params)
+     ```
+   + ModelingToolkit can automatically detect the index and apply appropriate transformations
+   + After index reduction, standard initialization algorithms will work more reliably
 
 ## Performance Tips
 
-1. **Use `differential_vars` when possible**: This helps initialization algorithms understand problem structure
-2. **Provide good initial guesses**: Even when using automatic initialization, starting closer to the solution helps
-3. **Consider problem-specific initialization**: For complex systems, custom initialization procedures may be more efficient
-4. **Use `CheckInit()` when appropriate**: If you know conditions are consistent, skip unnecessary computation
+ 1. **Use `differential_vars` when possible**: This helps initialization algorithms understand problem structure
+ 2. **Provide good initial guesses**: Even when using automatic initialization, starting closer to the solution helps
+ 3. **Consider problem-specific initialization**: For complex systems, custom initialization procedures may be more efficient
+ 4. **Use `CheckInit()` when appropriate**: If you know conditions are consistent, skip unnecessary computation
 
 ## References
 
-- Brown, P. N., Hindmarsh, A. C., & Petzold, L. R. (1998). Consistent initial condition calculation for differential-algebraic systems. SIAM Journal on Scientific Computing, 19(5), 1495-1512.
-- Shampine, L. F. (2002). Consistent initial condition for differential-algebraic systems. SIAM Journal on Scientific Computing, 22(6), 2007-2026.
+  - Brown, P. N., Hindmarsh, A. C., & Petzold, L. R. (1998). Consistent initial condition calculation for differential-algebraic systems. SIAM Journal on Scientific Computing, 19(5), 1495-1512.
+  - Shampine, L. F. (2002). Consistent initial condition for differential-algebraic systems. SIAM Journal on Scientific Computing, 22(6), 2007-2026.

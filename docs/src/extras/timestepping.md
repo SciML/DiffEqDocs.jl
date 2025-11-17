@@ -67,8 +67,8 @@ for explicit solvers, and it's applied by default to the Rosenbrock methods
 as well. The form for the updates is:
 
 ```julia
-EEst, beta1, q11, qold, beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,
-integrator.qold, integrator.opts.beta2
+(; EEst, q11, qold) = integrator
+(; beta1, beta2) = integrator.opts
 @fastmath q11 = EEst^beta1
 @fastmath q = q11 / (qold^beta2)
 integrator.q11 = q11
@@ -169,15 +169,15 @@ and overload
 
 ```julia
 function stepsize_controller!(integrator, controller::CustomController, alg)
-    ...
+    # ...
     nothing
 end
 function step_accept_controller!(integrator, controller::CustomController, alg)
-    ...
+    # ...
     nothing
 end
 function step_reject_controller!(integrator, controller::CustomController, alg)
-    ...
+    # ...
     nothing
 end
 ```

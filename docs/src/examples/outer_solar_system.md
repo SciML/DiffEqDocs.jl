@@ -92,4 +92,3 @@ for i in 1:N
 end
 Plots.plot!(plt; xlab = "x", ylab = "y", zlab = "z", title = "Outer solar system")
 ```
-

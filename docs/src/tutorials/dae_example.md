@@ -186,7 +186,7 @@ u₀_inconsistent = [1.0, 0.0, 0.5]  # Sum is 1.5, not 1!
 du₀_inconsistent = [-0.04, 0.04, 0.0]
 
 prob_inconsistent = DE.DAEProblem(f2, du₀_inconsistent, u₀_inconsistent, tspan,
-                                  differential_vars = differential_vars)
+    differential_vars = differential_vars)
 
 # This would error with CheckInit() because conditions are inconsistent:
 # sol_error = DE.solve(prob_inconsistent, Sundials.IDA(),
@@ -194,7 +194,7 @@ prob_inconsistent = DE.DAEProblem(f2, du₀_inconsistent, u₀_inconsistent, tsp
 
 # But BrownFullBasicInit() will fix the inconsistency automatically:
 sol_fixed = DE.solve(prob_inconsistent, Sundials.IDA(),
-                    initializealg = DiffEqBase.BrownFullBasicInit())
+    initializealg = DiffEqBase.BrownFullBasicInit())
 
 println("Original (inconsistent) y₃ = ", u₀_inconsistent[3])
 println("Corrected y₃ after initialization = ", sol_fixed.u[1][3])
