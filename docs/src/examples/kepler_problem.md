@@ -1,13 +1,22 @@
 # The Kepler Problem
 
-The Hamiltonian $\mathcal {H}$ and the angular momentum $L$ for the Kepler problem are
+The (non-dimensional) Hamiltonian $\mathcal {H}$ and the angular momentum $L$ for the Kepler problem are
 
-$$\mathcal {H} = \frac{1}{2}(\dot{q}^2_1+\dot{q}^2_2)-\frac{1}{\sqrt{q^2_1+q^2_2}},\quad
-L = q_1\dot{q_2} - \dot{q_1}q_2$$
+```math
+\begin{align*}
+\mathcal{H}(q_1, p_1, q_2, p_2) &= \frac{1}{2}(p^2_1+p^2_2)-\frac{1}{\sqrt{q^2_1+q^2_2}}, \\
+L &= q_1 p_2 - p_1 q_2
+\end{align*}
+```
 
 Also, we know that
 
-$${\displaystyle {\frac {\mathrm {d} {\boldsymbol {p}}}{\mathrm {d} t}}=-{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {q}}}}\quad ,\quad {\frac {\mathrm {d} {\boldsymbol {q}}}{\mathrm {d} t}}=+{\frac {\partial {\mathcal {H}}}{\partial {\boldsymbol {p}}}}}$$
+```math
+\begin{align*}
+\frac{\mathrm{d} \boldsymbol{p}}{\mathrm{d} t} &= - \frac {\partial \mathcal{H}}{\partial \boldsymbol{q}} , \\
+\frac{\mathrm{d} \boldsymbol{q}}{\mathrm{d} t} &= + \frac {\partial \mathcal{H}}{\partial \boldsymbol{p}}
+\end{align*}
+```
 
 ```@example kepler
 import OrdinaryDiffEq as ODE, LinearAlgebra, ForwardDiff, NonlinearSolve as NLS, Plots
