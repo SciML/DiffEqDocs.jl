@@ -165,7 +165,7 @@ sol_check = DE.solve(prob, Sundials.IDA(), initializealg = DiffEqBase.CheckInit(
 ```
 
 For more details on DAE initialization options, see the
-[DAE Initialization documentation](@ref).
+[DAE Initialization documentation](@ref dae_initialization).
 
 In order to clearly see all the features of this solution, it should be plotted
 on a logarithmic scale. We'll also plot each on a different subplot, to allow
