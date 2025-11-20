@@ -1,7 +1,7 @@
 # [Getting Started with Differential Equations in Julia](@id ode_example)
 
 This tutorial will introduce you to the functionality for solving ODEs.
-Additionally, a [video tutorial](https://youtu.be/KPEqYtEd-zY) walks through
+Additionally, a [video tutorial](https://www.youtube.com/watch?v=KPEqYtEd-zY) walks through
 this material.
 
 ## Example 1 : Solving Scalar Equations

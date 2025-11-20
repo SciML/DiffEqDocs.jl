@@ -200,7 +200,7 @@ Currently, use from R supported a subset of DifferentialEquations.jl which is do
 
 ### Video Tutorial
 
-[![Video Tutorial](https://user-images.githubusercontent.com/1814174/36342812-bdfd0606-13b8-11e8-9eff-ff219de909e5.PNG)](https://youtu.be/KPEqYtEd-zY)
+[![Video Tutorial](https://user-images.githubusercontent.com/1814174/36342812-bdfd0606-13b8-11e8-9eff-ff219de909e5.PNG)](https://www.youtube.com/watch?v=KPEqYtEd-zY)
 
 ### Tutorials
 
