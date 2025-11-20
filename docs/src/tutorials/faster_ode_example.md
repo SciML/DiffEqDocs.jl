@@ -132,7 +132,7 @@ Since that's all setup allocations, the user-side optimization is complete.
 
 Allocations are only expensive if they are “heap allocations”. For a more
 in-depth definition of heap allocations,
-[there are many sources online](http://net-informations.com/faq/net/stack-heap.htm).
+[there are many sources online](https://net-informations.com/faq/net/stack-heap.htm).
 But a good working definition is that heap allocations are variable-sized slabs
 of memory which have to be pointed to, and this pointer indirection costs time.
 Additionally, the heap has to be managed, and the garbage controllers has to
