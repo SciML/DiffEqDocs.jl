@@ -1,4 +1,4 @@
-# DAE Initialization
+# [DAE Initialization](@id dae_initialization)
 
 DAE (Differential-Algebraic Equation) problems often require special initialization procedures to ensure that the initial conditions are consistent with the algebraic constraints. The DifferentialEquations.jl ecosystem provides several initialization algorithms to handle this automatically or to verify that your provided initial conditions are already consistent.
 

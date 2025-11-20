@@ -152,7 +152,7 @@ p = Plots.plot(sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODE.ODEProblem(prob.f, u0, (0.0, tspan))
     sol = ODE.solve(_prob, ODE.Vern9()) # Use Vern9 solver for higher accuracy
-    Plots.plot!(p, sol, idxs = (1, 2), xlims = nothing, ylims = nothing)
+    Plots.plot!(p, sol, idxs = (1, 2))
 end
 for i in (-4pi):(pi / 2):(4π)
     for j in (-4pi):(pi / 2):(4π)
