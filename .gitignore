@@ -13,4 +13,5 @@ docs/common_first_steps.jl
 .vscode
 .vscode/*
 
+docs/src/assets/Project.toml
 Manifest.toml
