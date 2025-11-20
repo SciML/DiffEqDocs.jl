@@ -28,10 +28,12 @@ if isdir(ordinartdiffeq_docs_path)
     ordinary_diffeq_pages_file = joinpath(ordinartdiffeq_docs_root, "pages.jl")
     cp(ordinary_diffeq_pages_file, ordinary_diffeq_pages_dest, force = true)
 
-    # Copy the common_first_steps.jl file from OrdinaryDiffEq.jl
-    common_first_steps_dest = joinpath(@__DIR__, "common_first_steps.jl")
-    common_first_steps_file = joinpath(ordinartdiffeq_docs_root, "common_first_steps.jl")
-    cp(common_first_steps_file, common_first_steps_dest, force = true)
+    # Copy the common_first_steps.jl and common_imex_first_steps.jl files from OrdinaryDiffEq.jl
+    for fname in ["common_first_steps.jl", "common_imex_first_steps.jl"]
+        common_first_steps_dest = joinpath(@__DIR__, fname)
+        common_first_steps_file = joinpath(ordinartdiffeq_docs_root, fname)
+        cp(common_first_steps_file, common_first_steps_dest, force = true)
+    end
 end
 
 # Copy StochasticDiffEq.jl documentation

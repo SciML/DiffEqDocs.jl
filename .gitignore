@@ -8,6 +8,7 @@ docs/src/api/stochasticdiffeq
 docs/ordinarydiffeq_pages.jl
 docs/stochasticdiffeq_pages.jl
 docs/common_first_steps.jl
+docs/common_imex_first_steps.jl
 
 # vscode stuff
 .vscode
