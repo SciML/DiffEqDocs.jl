@@ -33,7 +33,7 @@ DiffEqBase.ShampineCollocationInit
 
 ## ⚠️ WARNING: NoInit Usage
 
-!!! warn "Use NoInit at your own risk"
+!!! warning "Use NoInit at your own risk"
     **`NoInit()` should almost never be used.** No algorithm has any guarantee of correctness if `NoInit()` is used with inconsistent initial conditions. Users should almost always use `CheckInit()` instead for safety.
 
     **Important:**

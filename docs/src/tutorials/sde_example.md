@@ -130,7 +130,7 @@ sol = SDE.solve(ensembleprob, SDE.EnsembleThreads(), trajectories = 1000);
 nothing # hide
 ```
 
-!!! warn
+!!! warning
     
     If you use a custom noise process, you might need to specify it in a custom prob_func
     in the EnsembleProblem constructor, as each trajectory needs its own noise process.
