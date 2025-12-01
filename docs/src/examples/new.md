@@ -1,31 +1,27 @@
-# Parcel Model with Explicit Condensation and Supersaturation
+# Atmospheric cloud microphysics in an adiabatic air-parcel model
 
-This example demonstrates a numerical implementation of a classic cloud physics model:  
+This example constitutes a numerical implementation of a simple cloud physics model following :  
 **"An Elementary Parcel Model with Explicit Condensation and Supersaturation"**  
-by R.R. Rogers (1975), using the Julia language and the [`DifferentialEquations.jl`](https://diffeq.sciml.ai/stable/) library.
+by R.R. Rogers (1975).
+The purpose of this examples is twofold: to provide an atmospheric-physics example for the package, and to demonstrate a robust way of using `DifferentialEquations.jl` with the [`Unitful.jl`](https://juliaphysics.github.io/Unitful.jl/stable/) dimensional analysis package.
+This enables to programatically represent physical units in the code and to check dimensionality corectnes in all arithmetic opertions within physical formulae, while incurring zero overhead within numerical solution.
 
-The purpose of this example is to reproduce figures from the original paper by simulating the temporal evolution of supersaturation, droplet radius, temperature, and liquid water content in an ascending air parcel.
+The example code below reproduces all figures from the original paper by simulating the temporal evolution of supersaturation, droplet radius, temperature, and liquid water content in an ascending air parcel.
 
 ---
 
 ## Physical Background
 
-
-
-Cloud formation is a complex thermodynamic process. To analyze it, we use simplified approaches, such as the  **parcel model**, in which a small "parcel" of air ascends adiabatically through the atmosphere.
+Clouds are suspensions of water droplets (and/or ice particles) in the air.
+Formation of a cloud is a thermodynamic process.
+To analyze it, we employ a simplified model based on the so-called air parcel framework, in which an adiabatically isolated "parcel" of air ascends  along a hydrostatic atmospheric pressure profile.
+Adiabatic cooling of air due to its expansion causes increase of relative humidity, which upon reaching supersaturation, triggers diffusional growth of droplets and concurrent latent heat release associated with the vapor-liquid phase transition.
 
 In this simplified model:
 
-- An **air parcel** rises at a constant velocity `U`.
-- As pressure decreases, **supersaturation** is created.
-- Water vapor condenses on pre-existing droplets (resulting in their growth), releasing latent heat.
-- This process changes the **droplet radius**, **temperature**, and **liquid water content** over time.
-
-Key simplifying assumptions:
-- No new droplet activation (fixed number of droplets).
-- No coalescence or sedimentation.
-- No mixing with the environment (idealized adiabatic ascent).
-
+- an **air parcel** rises at a constant velocity;
+- water vapor condenses on a fixed number of pre-existing monodisperse droplets (i.e., no aerosol interactions are modeled);
+- coalescence, sedimentation, radiative cooling and mixing are neglected.
 
 ---
 
@@ -172,12 +168,12 @@ As a first step in our calculation we will create a NamedTuple from the dictiona
 ```@example rogers
 formulas = (; formulas...)
 ```
-We defined our constants using units from the article. To be sure our algorith works well with units using Unitful.jl package. First, let's set first argument in our formulas as constants with units. 
+We defined our constants using units from the article. To be sure our algorithm works well with units using Unitful.jl package. First, let's set first argument in our formulas as constants with units. 
 ```@example rogers
 mapvalues(f, nt::NamedTuple) = NamedTuple{keys(nt)}(map(f, values(nt)))
 formulas_u = mapvalues(f -> ((args...) -> f(constants_u, args...)), formulas)   
 ```
-Now we can test whether calulated density of air for some test values is within expected range.
+Now we can test whether calculated density of air for some test values is within expected range.
 ```@example rogers
 @Test.test 1 * Unitful.u"kg/(m^3)" < formulas_u.ρ(1000 * Unitful.u"hPa", 300 * Unitful.u"K") < 1.5 * Unitful.u"kg/(m^3)"
 ```
@@ -224,7 +220,7 @@ end
 
 
 ```
-To begin our simulation we have to define our begining conditions and parameters of the simulation. 
+To begin our simulation we have to define our initial conditions and parameters of the simulation. 
 ```@example rogers
 u0 = Vector{Quantity{Float64}}(undef, 4)
 u0[Int(p)] = uconvert(Unitful.u"Pa", 800 * Unitful.u"mbar")       
