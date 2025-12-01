@@ -56,7 +56,7 @@ constants_u = (
 
 
 
-#testing wether units are correct
+#testing whether units are correct
 begin 
     mapvalues(f, nt::NamedTuple) = NamedTuple{keys(nt)}(map(f, values(nt)))
     functions_u = mapvalues(f -> ((args...) -> f(constants_u, args...)), functions)    
