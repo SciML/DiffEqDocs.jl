@@ -4,7 +4,7 @@ This example constitutes a numerical implementation of a simple cloud physics mo
 **"An Elementary Parcel Model with Explicit Condensation and Supersaturation"**  
 by R.R. Rogers (1975).
 The purpose of this examples is twofold: to provide an atmospheric-physics example for the package, and to demonstrate a robust way of using `DifferentialEquations.jl` with the [`Unitful.jl`](https://juliaphysics.github.io/Unitful.jl/stable/) dimensional analysis package.
-This enables to programatically represent physical units in the code and to check dimensionality corectnes in all arithmetic opertions within physical formulae, while incurring zero overhead within numerical solution.
+This enables to programmatically represent physical units in the code and to check dimensionality corectnes in all arithmetic operations within physical formulae, while incurring zero overhead within numerical solution.
 
 The example code below reproduces all figures from the original paper by simulating the temporal evolution of supersaturation, droplet radius, temperature, and liquid water content in an ascending air parcel.
 
@@ -177,7 +177,7 @@ Now we can test whether calculated density of air for some test values is within
 ```@example rogers
 @Test.test 1 * Unitful.u"kg/(m^3)" < formulas_u.ρ(1000 * Unitful.u"hPa", 300 * Unitful.u"K") < 1.5 * Unitful.u"kg/(m^3)"
 ```
-As there is no error returned the test was succesful. 
+As there is no error returned the test was successful. 
 Another test we can perform uses Figure 7 from the article depicting values of proportionality factor G in declared range.
 ```@example rogers
 p_values = range(400* Unitful.u"mbar", 1000 * Unitful.u"mbar", length=50)
