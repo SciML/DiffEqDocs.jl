@@ -42,6 +42,11 @@ StochasticDiffEq = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
 Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
+[sources]
+DiffEqDocs = {path = "/var/lib/buildkite-agent/builds/gpuci-3/julialang/diffeqdocs-dot-jl"}
+OrdinaryDiffEq = {path = "/root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/dev/OrdinaryDiffEq"}
+StochasticDiffEq = {path = "/root/.cache/julia-buildkite-plugin/depots/0185fce3-4489-413a-a934-123dd653ef61/dev/StochasticDiffEq"}
+
 [compat]
 ADTypes = "1.7"
 AlgebraicMultigrid = "0.5, 0.6, 1"
@@ -68,7 +73,7 @@ JLD2 = "0.4, 0.5.1, 0.6"
 ModelingToolkit = "9, 10"
 NonlinearSolve = "3.15, 4"
 ODEProblemLibrary = "0.1, 1"
-Optimization = "3, 4"
+Optimization = "3, 4, 5"
 OptimizationNLopt = "0.2, 0.3"
 OrdinaryDiffEq = "6.76"
 OrdinaryDiffEqBDF = "1"
