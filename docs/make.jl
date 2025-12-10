@@ -105,6 +105,7 @@ makedocs(
     linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
         "https://biojulia.net/post/hardware/",
         "https://archimede.dm.uniba.it/~testset/report/pollu.pdf",
+        r"https://archimede.uniba.it/~bvpsolvers/testsetbvpsolvers/\?page_id=\d+",
         "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoHires/demohires.pdf",
         "https://www.radford.edu/%7Ethompson/RP/nonnegative.pdf",
         "http://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoOrego/demoorego.pdf",
@@ -123,7 +124,7 @@ makedocs(
         "https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
-        "https://docs.sciml.ai/DiffEqDocs/stable/features/dae_initialization/"
+        "https://docs.sciml.ai/DiffEqDocs/stable/features/dae_initialization/",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
