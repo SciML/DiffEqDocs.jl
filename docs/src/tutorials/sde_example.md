@@ -28,7 +28,7 @@ import StochasticDiffEq as SDE
 u₀ = 1 / 2
 f(u, p, t) = α * u
 g(u, p, t) = β * u
-dt = 1 // 2^(4)
+dt = 1 // 2^4
 tspan = (0.0, 1.0)
 prob = SDE.SDEProblem(f, g, u₀, tspan)
 ```

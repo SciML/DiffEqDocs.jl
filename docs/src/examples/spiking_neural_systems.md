@@ -185,7 +185,7 @@ function HH!(du, u, p, t)
     gK, gNa, gL, EK, ENa, EL, C, I = p
     v, n, m, h = u
 
-    du[1] = (-(gK * (n^4.0) * (v - EK)) - (gNa * (m^3.0) * h * (v - ENa)) -
+    du[1] = (-(gK * n^4 * (v - EK)) - (gNa * m^3 * h * (v - ENa)) -
              (gL * (v - EL)) + I) / C
     du[2] = (alpha_n(v) * (1.0 - n)) - (beta_n(v) * n)
     du[3] = (alpha_m(v) * (1.0 - m)) - (beta_m(v) * m)
