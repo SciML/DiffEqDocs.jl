@@ -120,12 +120,12 @@ But we have numerical ODE solvers! Why not solve the *real* pendulum?
 
 Notice that now we have a second order ODE.
 In order to use the same method as above, we need to transform it into a system
-of first order ODEs by employing the notation ``dθ = \dot{θ}``.
+of first order ODEs by employing the notation ``ω(t) = \dot{θ}``.
 
 ```math
 \begin{align*}
-\dot{θ} &= dθ \\
-\dot{dθ} &= - \frac{g}{L} \sin(θ)
+\dot{θ} &= ω \\
+\dot{ω} &= - \frac{g}{L} \sin(θ)
 \end{align*}
 ```
 
@@ -143,8 +143,8 @@ tspan = (0.0, 6.3)
 
 #Define the problem
 function simplependulum(du, u, p, t)
-    θ, dθ = u
-    du[1] = dθ
+    θ, ω = u
+    du[1] = ω
     du[2] = -(g / L) * sin(θ)
 end
 
