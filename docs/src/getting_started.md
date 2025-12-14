@@ -433,7 +433,7 @@ f(u, p, t) = A * u
 prob = DE.ODEProblem(f, u0, tspan)
 ```
 
-Here our ODE is on a 4x2 matrix, and the ODE is the linear system defined by
+Here our ODE is on a 4×2 matrix, and the ODE is the linear system defined by
 multiplication by `A`. To solve the ODE, we do the same steps
 as before.
 
