@@ -19,8 +19,9 @@ Also, we know that
 ```
 
 ```@example kepler
-import OrdinaryDiffEq as ODE, LinearAlgebra, ForwardDiff, NonlinearSolve as NLS, Plots
-H(q, p) = LinearAlgebra.norm(p)^2 / 2 - inv(LinearAlgebra.norm(q))
+import OrdinaryDiffEq as ODE, ForwardDiff, Plots
+import LinearAlgebra: norm
+H(q, p) = norm(p)^2 / 2 - inv(norm(q))
 L(q, p) = q[1] * p[2] - p[1] * q[2]
 
 pdot(dp, p, q, params, t) = ForwardDiff.gradient!(dp, q -> -H(q, p), q)
@@ -34,10 +35,6 @@ tspan = (0, 20.0)
 prob = ODE.DynamicalODEProblem(pdot, qdot, initial_velocity, initial_position, tspan)
 sol = ODE.solve(prob, ODE.KahanLi6(), dt = 1 // 10);
 ```
-
-!!! note
-    
-    Note that NonlinearSolve.jl is required to be imported for ManifoldProjection
 
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
 
@@ -103,8 +100,12 @@ Both Runge-Kutta-Nyström and Runge-Kutta integrator do not conserve energy nor 
 
 In this example, we know that energy and angular momentum should be conserved. We can achieve this through manifold projection. As the name implies, it is a procedure to project the ODE solution to a manifold. Let's start with a base case, where manifold projection isn't being used.
 
+!!! note
+    
+    Note that NonlinearSolve.jl is required to be imported for ManifoldProjection
+
 ```@example kepler
-import DiffEqCallbacks as CB
+import DiffEqCallbacks as CB, NonlinearSolve as NLS
 
 function plot_orbit2(sol)
     Plots.plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")

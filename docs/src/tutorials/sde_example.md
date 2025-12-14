@@ -28,7 +28,7 @@ import StochasticDiffEq as SDE
 u₀ = 1 / 2
 f(u, p, t) = α * u
 g(u, p, t) = β * u
-dt = 1 // 2^(4)
+dt = 1 // 2^4
 tspan = (0.0, 1.0)
 prob = SDE.SDEProblem(f, g, u₀, tspan)
 ```
@@ -132,7 +132,7 @@ nothing # hide
 
 !!! warning
     
-    If you use a custom noise process, you might need to specify it in a custom prob_func
+    If you use a custom noise process, you might need to specify it in a custom `prob_func`
     in the EnsembleProblem constructor, as each trajectory needs its own noise process.
 
 Many more controls are defined at the [Ensemble simulations page](@ref ensemble),
@@ -311,7 +311,7 @@ prob = SDE.SDEProblem(f!, g!, ones(2), (0.0, 1.0), noise_rate_prototype = A)
 and now `g!(u,p,t)` writes into a sparse matrix, and `g!(u,p,t)*dW` is sparse matrix
 multiplication.
 
-## Example 4: Colored Noise
+## Example 5: Colored Noise
 
 Colored noise can be defined [using the Noise Process interface](@ref noise_process).
 In that portion of the docs, it is shown how to define your own noise process
@@ -329,9 +329,11 @@ This is discussed [in the SDE solvers page](@ref sde_solve).
 Let's define the Heston equation from financial mathematics:
 
 ```math
-dS = μSdt + \sqrt{v}SdW_1 \\
-dv = κ(Θ-v)dt + σ\sqrt{v}dW_2 \\
-dW_1 dW_2 = ρ dt
+\begin{align*}
+dS &= μS \, dt + \sqrt{v}S \, dW_1 \\
+dv &= κ(Θ-v) \, dt + σ\sqrt{v} \, dW_2 \\
+dW_1 \, dW_2 &= ρ \, dt
+\end{align*}
 ```
 
 In this problem, we have a diagonal noise problem given by:

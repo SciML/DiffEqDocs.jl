@@ -14,10 +14,7 @@ tspan = (0.0, 100.0)
 
 #Define the problem
 function double_pendulum_hamiltonian(udot, u, p, t)
-    α = u[1]
-    lα = u[2]
-    β = u[3]
-    lβ = u[4]
+    α, lα, β, lβ = u
     udot .= [2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
         -2sin(α) - sin(α + β),
         2(-(1 + cos(β))lα + (3 + 2cos(β))lβ) / (3 - cos(2β)),
