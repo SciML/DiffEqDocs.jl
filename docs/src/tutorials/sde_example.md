@@ -311,7 +311,7 @@ prob = SDE.SDEProblem(f!, g!, ones(2), (0.0, 1.0), noise_rate_prototype = A)
 and now `g!(u,p,t)` writes into a sparse matrix, and `g!(u,p,t)*dW` is sparse matrix
 multiplication.
 
-## Example 4: Colored Noise
+## Example 5: Colored Noise
 
 Colored noise can be defined [using the Noise Process interface](@ref noise_process).
 In that portion of the docs, it is shown how to define your own noise process
