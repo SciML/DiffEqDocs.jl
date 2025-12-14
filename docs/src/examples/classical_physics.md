@@ -211,7 +211,7 @@ function polar2cart(sol; dt = 0.02, l1 = L₁, l2 = L₂, vars = (2, 4))
     x1 = l1 * sin.(p1)
     y1 = l1 * -cos.(p1)
     (u, (x1 + l2 * sin.(p2),
-        y1 - l2 * cos.(p2)))
+         y1 - l2 * cos.(p2)))
 end
 
 #Define the Problem

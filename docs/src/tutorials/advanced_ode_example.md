@@ -295,10 +295,8 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
         A = convert(AbstractMatrix, W)
         Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
     else
         Pl = Plprev
     end
@@ -415,10 +413,8 @@ And similarly for algebraic multigrid:
 
 ```julia
 prectmp2 = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(W,
-    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-        1))),
-    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-        1)))))
+    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
 const preccache2 = Ref(prectmp2)
 function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
     if jok
@@ -433,10 +429,8 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
         # Build preconditioner on W
         preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(
             W,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
     end
 end
 
