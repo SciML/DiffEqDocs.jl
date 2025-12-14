@@ -7,10 +7,10 @@ If you're getting some cold feet to jump in to DiffEq land, here are some handcr
 #### Radioactive Decay of Carbon-14
 
 ```math
-f(t,u) = \frac{du}{dt}
+\frac{du}{dt} = f(t,u) = - λ u
 ```
 
-The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation.
+The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation. ``λ`` is known as the decay rate, and can be related to the half-life as ``λ = \ln(2)/t_{1/2}``.
 
 ```@example physics
 import OrdinaryDiffEq as ODE, Plots
