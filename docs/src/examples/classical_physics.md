@@ -143,8 +143,7 @@ tspan = (0.0, 6.3)
 
 #Define the problem
 function simplependulum(du, u, p, t)
-    θ = u[1]
-    dθ = u[2]
+    θ, dθ = u
     du[1] = dθ
     du[2] = -(g / L) * sin(θ)
 end
@@ -256,10 +255,7 @@ tspan2 = (0.0, 500.0)
 
 #Define the problem
 function double_pendulum_hamiltonian(udot, u, p, t)
-    α = u[1]
-    lα = u[2]
-    β = u[3]
-    lβ = u[4]
+    α, lα, β, lβ = u
     udot .= [2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
         -2sin(α) - sin(α + β),
         2(-(1 + cos(β))lα + (3 + 2cos(β))lβ) / (3 - cos(2β)),
@@ -340,10 +336,7 @@ E(x, y, dx, dy) = V(x, y) + 1 // 2 * (dx^2 + dy^2);
 
 #Define the function
 function Hénon_Heiles(du, u, p, t)
-    x = u[1]
-    y = u[2]
-    dx = u[3]
-    dy = u[4]
+    x, y, dx, dy = u
     du[1] = dx
     du[2] = dy
     du[3] = -x - 2x * y
