@@ -243,6 +243,7 @@ end
 
 Now, it is time to define the derivative function as an associated function of **BeelerReuterCpu**. We plan to use the `CVODE_BDF` solver as our implicit portion. Similar to other iterative methods, it calls the deriv function with the same ``t`` multiple times. For example, these are consecutive ``t``s from a representative run:
 
+```
 0.86830
 0.86830
 0.85485
@@ -256,6 +257,7 @@ Now, it is time to define the derivative function as an associated function of *
 0.87233
 0.88598
 ...
+```
 
 Here, every time step is called three times. We distinguish between two types of calls to the deriv function. When ``t`` changes, the gating variables are updated by calling `update_gates_cpu`:
 
@@ -383,7 +385,7 @@ deriv_cpu = BeelerReuterCpu(u0, 1.0);
 prob = DE.ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 ```
 
-For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
+For stiff reaction-diffusion equations, `CVODE_BDF` from Sundial library is an excellent solver.
 
 ```julia
 @time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
@@ -421,7 +423,7 @@ Some libraries, such as [ArrayFire](https://github.com/arrayfire/arrayfire), hid
 
 The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global memory accesses. The implicit solver is currently CPU only, but it only requires access to the transmembrane potential. The rest of state variables reside on the GPU memory.
 
-We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
+We modify `BeelerReuterCpu` into `BeelerReuterGpu` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that ``Δv`` is a temporary storage for the Laplacian and stays on the CPU side.
 
 ```julia
 import CUDA
@@ -572,7 +574,7 @@ A CUDA program does not directly deal with GPCs and SMs. The logical view of a C
 
 Each thread can find its logical coordinate by using few pre-defined indexing variables (*threadIdx*, *blockIdx*, *blockDim* and *gridDim*) in C/C++ and the corresponding functions (e.g., `threadIdx()`) in Julia. Their variables and functions are defined automatically for each thread and may return a different value depending on the calling thread. The return value of these functions is a 1-, 2-, or 3-dimensional structure whose elements can be accessed as `.x`, `.y`, and `.z` (for a 1-dimensional case, `.x` reports the actual index and `.y` and `.z` simply return 1). For example, if we deploy a kernel in 128 blocks and with 256 threads per block, each thread will see
 
-```
+```c
     gridDim.x = 128;
     blockDim=256;
 ```
@@ -581,13 +583,13 @@ while `blockIdx.x` ranges from 0 to 127 in C/C++ and 1 to 128 in Julia. Similarl
 
 A C/C++ thread can calculate its index as
 
-```
+```c
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
 ```
 
 In Julia, we have to take into account base 1. Therefore, we use the following formula
 
-```
+```julia
     idx = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
 ```
 

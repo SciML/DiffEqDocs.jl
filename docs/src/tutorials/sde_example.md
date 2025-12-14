@@ -132,7 +132,7 @@ nothing # hide
 
 !!! warning
     
-    If you use a custom noise process, you might need to specify it in a custom prob_func
+    If you use a custom noise process, you might need to specify it in a custom `prob_func`
     in the EnsembleProblem constructor, as each trajectory needs its own noise process.
 
 Many more controls are defined at the [Ensemble simulations page](@ref ensemble),
