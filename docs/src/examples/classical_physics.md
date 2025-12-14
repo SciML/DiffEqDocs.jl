@@ -6,7 +6,9 @@ If you're getting some cold feet to jump in to DiffEq land, here are some handcr
 
 #### Radioactive Decay of Carbon-14
 
-$$f(t,u) = \frac{du}{dt}$$
+```math
+f(t,u) = \frac{du}{dt}
+```
 
 The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation.
 
@@ -41,21 +43,27 @@ Plots.plot!(sol.t, t -> 2^(-t / t½), lw = 3, ls = :dash, label = "Analytical So
 
 Another classical example is the harmonic oscillator, given by:
 
-$$\ddot{x} + \omega^2 x = 0$$
+```math
+\ddot{x} + \omega^2 x = 0
+```
 
 with the known analytical solution
 
-$$\begin{align*}
+```math
+\begin{align*}
 x(t) &= A\cos(\omega t - \phi) \\
 v(t) &= -A\omega\sin(\omega t - \phi),
-\end{align*}$$
+\end{align*}
+```
 
 where
 
-$$A = \sqrt{c_1 + c_2} \qquad\text{and}\qquad \tan \phi = \frac{c_2}{c_1}$$
+```math
+A = \sqrt{c_1 + c_2} \qquad\text{and}\qquad \tan \phi = \frac{c_2}{c_1}
+```
 
-with $c_1, c_2$ constants determined by the initial conditions such that
-$c_1$ is the initial position and $\omega c_2$ is the initial velocity.
+with ``c_1``, ``c_2`` constants determined by the initial conditions such that
+``c_1`` is the initial position and ``\omega c_2`` is the initial velocity.
 
 Instead of transforming this to a system of ODEs to solve with `ODEProblem`,
 we can use `SecondOrderODEProblem` as follows.
@@ -98,22 +106,28 @@ Thus, if we want the first series to be `x`, we have to flip the order with `var
 
 #### Simple Pendulum
 
-We will start by solving the pendulum problem. In the physics class, we often solve this problem by small angle approximation, i.e. $ sin(\theta) \approx \theta$, because otherwise, we get an elliptic integral which doesn't have an analytic solution. The linearized form is
+We will start by solving the pendulum problem. In the physics class, we often solve this problem by small angle approximation, i.e. ``\sin(θ) \approx θ``, because otherwise, we get an elliptic integral which doesn't have an analytic solution. The linearized form is
 
-$$\ddot{\theta} + \frac{g}{L}{\theta} = 0$$
+```math
+\ddot{θ} + \frac{g}{L} θ = 0
+```
 
 But we have numerical ODE solvers! Why not solve the *real* pendulum?
 
-$$\ddot{\theta} + \frac{g}{L}{\sin(\theta)} = 0$$
+```math
+\ddot{θ} + \frac{g}{L} \sin(θ) = 0
+```
 
 Notice that now we have a second order ODE.
 In order to use the same method as above, we need to transform it into a system
-of first order ODEs by employing the notation $d\theta = \dot{\theta}$.
+of first order ODEs by employing the notation ``dθ = \dot{θ}``.
 
-$$\begin{align*}
-&\dot{\theta} = d{\theta} \\
-&\dot{d\theta} = - \frac{g}{L}{\sin(\theta)}
-\end{align*}$$
+```math
+\begin{align*}
+\dot{θ} &= dθ \\
+\dot{dθ} &= - \frac{g}{L} \sin(θ)
+\end{align*}
+```
 
 ```@example physics
 # Simple Pendulum Problem
@@ -167,16 +181,17 @@ Plots.plot(p, xlims = (-9, 9))
 A more complicated example is given by the double pendulum. The equations governing
 its motion are given by the following (taken from this [Stack Overflow question](https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum))
 
-$$\frac{d}{dt}
-\begin{pmatrix}
-\alpha \\ l_\alpha \\ \beta \\ l_\beta
-\end{pmatrix}=
+```math
+\frac{d}{dt}
+\begin{pmatrix} \alpha \\ l_\alpha \\ \beta \\ l_\beta \end{pmatrix}
+=
 \begin{pmatrix}
 2\frac{l_\alpha - (1+\cos\beta)l_\beta}{3-\cos 2\beta} \\
 -2\sin\alpha - \sin(\alpha + \beta) \\
 2\frac{-(1+\cos\beta)l_\alpha + (3+2\cos\beta)l_\beta}{3-\cos2\beta}\\
 -\sin(\alpha+\beta) - 2\sin(\beta)\frac{(l_\alpha-l_\beta)l_\beta}{3-\cos2\beta} + 2\sin(2\beta)\frac{l_\alpha^2-2(1+\cos\beta)l_\alpha l_\beta + (3+2\cos\beta)l_\beta^2}{(3-\cos2\beta)^2}
-\end{pmatrix}$$
+\end{pmatrix}
+```
 
 ```@example physics
 #Double Pendulum Problem
@@ -231,7 +246,7 @@ Instead of looking at the full phase space, we can look at Poincaré sections,
 which are sections through a higher-dimensional phase space diagram.
 This helps to understand the dynamics of interactions and is wonderfully pretty.
 
-The Poincaré section in this is given by the collection of $(β,l_β)$ when $α=0$ and $\frac{dα}{dt}>0$.
+The Poincaré section in this is given by the collection of ``(β,l_β)`` when ``α=0`` and ``\frac{dα}{dt}>0``.
 
 ```@example physics
 #Constants and setup
@@ -284,22 +299,30 @@ Plots.plot(p, xlabel = "\\beta", ylabel = "l_\\beta", ylims = (0, 0.03))
 
 The Hénon-Heiles potential occurs when non-linear motion of a star around a galactic center, with the motion restricted to a plane.
 
-$$\begin{align}
+```math
+\begin{align*}
 \frac{d^2x}{dt^2}&=-\frac{\partial V}{\partial x}\\
 \frac{d^2y}{dt^2}&=-\frac{\partial V}{\partial y}
-\end{align}$$
+\end{align*}
+```
 
 where
 
-$$V(x,y)={\frac {1}{2}}(x^{2}+y^{2})+\lambda \left(x^{2}y-{\frac {y^{3}}{3}}\right).$$
+```math
+V(x,y) = \frac {1}{2} (x^2+y^2) + λ \left(x^2 y - \frac{y^3}{3}\right).
+```
 
-We pick $\lambda=1$ in this case, so
+We pick ``λ=1`` in this case, so
 
-$$V(x,y) = \frac{1}{2}(x^2+y^2+2x^2y-\frac{2}{3}y^3).$$
+```math
+V(x,y) = \frac{1}{2} \left(x^2 + y^2 + 2 x^2 y - \frac{2}{3} y^3\right).
+```
 
 Then the total energy of the system can be expressed by
 
-$$E = T+V = V(x,y)+\frac{1}{2}(\dot{x}^2+\dot{y}^2).$$
+```math
+E = T+V = V(x,y) + \frac{1}{2} \left(\dot{x}^2+\dot{y}^2\right).
+```
 
 The total energy should conserve as this system evolves.
 

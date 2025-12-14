@@ -36,7 +36,7 @@ There are two problem types available:
   - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval, aka multi-points BVP).
   - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`(aka two-points BVP)
 
-The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
+The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is ``\vec{0}`` when the boundary condition is satisfied.
 
 There are collocation and shooting methods for addressing boundary value problems in DifferentialEquations.jl. We need to use appropriate [available BVP solvers](@ref bvp_solve) to solve `BVProblem`. In this example, we use `MIRK4` to solve the simple pendulum example.
 

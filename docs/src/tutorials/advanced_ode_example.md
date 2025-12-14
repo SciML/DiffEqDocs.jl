@@ -40,7 +40,7 @@ f(x, y, t) = \begin{cases}
 \end{cases}, \mathrm{and}
 ```
 
-$\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$ is the two dimensional Laplacian operator. The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
+and ``\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}`` is the two dimensional Laplacian operator. The above equations are to be solved for a time interval ``t \in [0, 11.5]`` subject to the initial conditions
 
 ```math
 \begin{align}

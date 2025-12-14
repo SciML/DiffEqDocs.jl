@@ -684,9 +684,9 @@ The last thing to do is then ***optimize our algorithm choice***. We have been
 using `DE.Tsit5()` as our test algorithm, but in reality this problem is a stiff
 PDE discretization and thus one recommendation is to use `Sundials.CVODE_BDF()`. However,
 instead of using the default dense Jacobian, we should make use of the sparse
-Jacobian afforded by the problem. The Jacobian is the matrix $\frac{df_i}{dr_j}$,
-where $r$ is read by the linear index (i.e. down columns). But since the $u$
-variables depend on the $v$, the band size here is large, and thus this will
+Jacobian afforded by the problem. The Jacobian is the matrix ``\frac{df_i}{dr_j}``,
+where ``r`` is read by the linear index (i.e. down columns). But since the ``u``
+variables depend on the ``v``, the band size here is large, and thus this will
 not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian
 algorithms. `Sundials.CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
 setting `linear_solver = :GMRES`.
