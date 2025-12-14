@@ -125,6 +125,7 @@ makedocs(
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/BVProblemLibrary/src/BVProblemLibrary.jl",
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
         "https://docs.sciml.ai/DiffEqDocs/stable/features/dae_initialization/",
+        "https://doi.org/10.1080/00046973.1975.9648397",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
