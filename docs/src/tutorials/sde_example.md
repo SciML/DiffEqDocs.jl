@@ -329,9 +329,11 @@ This is discussed [in the SDE solvers page](@ref sde_solve).
 Let's define the Heston equation from financial mathematics:
 
 ```math
-dS = μSdt + \sqrt{v}SdW_1 \\
-dv = κ(Θ-v)dt + σ\sqrt{v}dW_2 \\
-dW_1 dW_2 = ρ dt
+\begin{align*}
+dS &= μS \, dt + \sqrt{v}S \, dW_1 \\
+dv &= κ(Θ-v) \, dt + σ\sqrt{v} \, dW_2 \\
+dW_1 \, dW_2 &= ρ \, dt
+\end{align*}
 ```
 
 In this problem, we have a diagonal noise problem given by:
