@@ -145,10 +145,10 @@ Consider a semi-explicit boundary value differential-algebraic equation formulat
 
 ```math
 \begin{cases}
-x_1'=(ε+x_2-p_2(t))y+p_1'(t) \\
-x_2'=p_2'(t) \\
-x_3'=y \\
-0=(x_1-p_1(t))(y-e^t)
+x_1' = \left(ε + x_2 - \sin(t)\right) y + \cos(t) \\
+x_2' = \cos(t) \\
+x_3' = y \\
+0 = \left(x_1 - \sin(t)\right) \left(y - e^t\right)
 \end{cases}
 ```
 
