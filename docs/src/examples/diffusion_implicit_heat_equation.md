@@ -3,10 +3,10 @@
 In this tutorial, we'll be solving the heat equation:
 
 ```math
-∂_t T = α ∇²(T) + β \sin(γ z)
+∂_t T = α ∇²T + β \sin(γ z)
 ```
 
-with boundary conditions: ``∇T(z=a) = ∇T_{bottom}, T(z=b) = T_{top}``. We'll solve these equations numerically using Finite Difference Method on cell faces. The same exercise could easily be done on cell centers.
+with boundary conditions: ``∇T(z=a) = ∇T_\text{bottom}`` and ``T(z=b) = T_\text{top}``. We'll solve these equations numerically using Finite Difference Method on cell faces. The same exercise could easily be done on cell centers.
 
 ## Code loading and parameters
 
@@ -44,23 +44,29 @@ zf = range(a, b, length = n + 1);   # coordinates on cell faces
 Here, we'll derive the analytic solution:
 
 ```math
-\frac{∂²T}{∂²z} = -\frac{S(z)}{α} = -\frac{β \sin(γ z)}{α} \\
-\frac{∂T}{∂z} = \frac{β \cos(γ z)}{γ α}+c_1 \\
-T(z) = \frac{β \sin(γ z)}{γ^2 α}+c_1 z+c_2, \qquad \text{(generic solution)}
+\begin{align*}
+\frac{∂²T}{∂²z} &= -\frac{S(z)}{α} = -\frac{β \sin(γ z)}{α} \\
+\frac{∂T}{∂z} &= \frac{β \cos(γ z)}{γ α}+c_1 \\
+T(z) &= \frac{β \sin(γ z)}{γ^2 α}+c_1 z+c_2, \qquad \text{(generic solution)}
+\end{align*}
 ```
 
 Apply bottom boundary condition:
 
 ```math
-\frac{∂T}{∂z}(a) = \frac{β \cos(γ a)}{γ α}+c_1 = ∇T_{bottom} \\
-c_1 = ∇T_{bottom}-\frac{β \cos(γ a)}{γ α}
+\begin{align*}
+\frac{∂T}{∂z}(a) &= \frac{β \cos(γ a)}{γ α} + c_1 = ∇T_{bottom} \\
+c_1 &= ∇T_\text{bottom} - \frac{β \cos(γ a)}{γ α}
+\end{align*}
 ```
 
 Apply top boundary condition:
 
 ```math
-T(b) = \frac{β \sin(γ b)}{γ^2 α}+c_1 b+c_2 = T_{top} \\
-c_2 = T_{top}-\left(\frac{β \sin(γ b)}{γ^2 α}+c_1 b\right)
+\begin{align*}
+T(b) &= \frac{β \sin(γ b)}{γ^2 α} + c_1 b+c_2 = T_\text{top} \\
+c_2 &= T_\text{top} - \left(\frac{β \sin(γ b)}{γ^2 α}+c_1 b\right)
+\end{align*}
 ```
 
 And now let's define this in a Julia function:
@@ -78,10 +84,12 @@ end
 Here, we'll derive the matrix form of the temporal discretization we wish to use (diffusion-implicit and explicit Euler):
 
 ```math
-∂_t T = α ∇²T + S \\
-(T^{n+1}-T^n) = Δt (α  ∇²T^{n+1} + S) \\
-(T^{n+1} - Δt α ∇²T^{n+1}) = T^n + Δt S \\
-(I - Δt α ∇²) T^{n+1} = T^n + Δt S
+\begin{align*}
+∂_t T &= α ∇²T + S \\
+(T^{n+1}-T^n) &= Δt (α  ∇²T^{n+1} + S) \\
+(T^{n+1} - Δt α ∇²T^{n+1}) &= T^n + Δt S \\
+(I - Δt α ∇²) T^{n+1} &= T^n + Δt S
+\end{align*}
 ```
 
 Note that, since the ``∇²`` reaches to boundary points, we'll need to modify the stencils to account for boundary conditions.
@@ -91,8 +99,10 @@ Note that, since the ``∇²`` reaches to boundary points, we'll need to modify 
 For the interior domain, a central and second-order finite difference stencil is simply:
 
 ```math
-∇²f = \frac{f_{i-1} -2f_i + f_{i+1}}{Δz²}, \qquad \text{or} \\
-∇² = \left[\frac{1}{Δz²}, \frac{-2}{Δz²}, \frac{1}{Δz²}\right] \\
+\begin{align*}
+∇²f &= \frac{f_{i-1} -2f_i + f_{i+1}}{Δz²}, \qquad \text{or} \\
+∇² &= \left[\frac{1}{Δz²}, \frac{-2}{Δz²}, \frac{1}{Δz²}\right] \\
+\end{align*}
 ```
 
 At the boundaries, we need to modify the stencil to account for Dirichlet and Neumann BCs. Using the following index denotation:
@@ -104,18 +114,22 @@ At the boundaries, we need to modify the stencil to account for Dirichlet and Ne
 the Dirichlet boundary stencil & source:
 
 ```math
-∂_t T = α \frac{T[i-1]+T[b]-2 T[i]}{Δz²} + S \\
-∂_t T = α \frac{T[i-1]-2 T[i]}{Δz²} + S + α \frac{T[b]}{Δz²}
+\begin{align*}
+∂_t T &= α \frac{T[i-1]+T[b]-2 T[i]}{Δz²} + S \\
+∂_t T &= α \frac{T[i-1]-2 T[i]}{Δz²} + S + α \frac{T[b]}{Δz²}
+\end{align*}
 ```
 
 and Neumann boundary stencil & source:
 
 ```math
-∇T_{bottom} n̂ = \frac{T[g] - T[i]}{2Δz}, \qquad    n̂ = [-1,1] ∈ [z_{min},z_{max}] \\
-T[i] + 2 Δz ∇T_{bottom} n̂ = T[g] \\
-∂_t T = α \frac{\frac{(T[i] + 2 Δz ∇T_{bottom} n̂) - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S \\
-∂_t T = α \frac{\frac{T[i] - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S + α 2 Δz \frac{∇T_{bottom}}{Δz²} \\
-∂_t T = α \frac{2 T[i] - 2 T[b]}{Δz²} + S + 2α \frac{∇T_{bottom} n̂}{Δz}
+\begin{align*}
+∇T_\text{bottom} n̂ = \frac{T[g] - T[i]}{2Δz}, \qquad    n̂ = [-1,1] ∈ [z_\text{min},z_\text{max}] \\
+T[i] + 2 Δz ∇T_\text{bottom} n̂ = T[g] \\
+∂_t T &= α \frac{\frac{(T[i] + 2 Δz ∇T_\text{bottom} n̂) - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S \\
+∂_t T &= α \frac{\frac{T[i] - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S + α 2 Δz \frac{∇T_\text{bottom}}{Δz²} \\
+∂_t T &= α \frac{2 T[i] - 2 T[b]}{Δz²} + S + 2α \frac{∇T_\text{bottom} n̂}{Δz}
+\end{align*}
 ```
 
 ## Define the discrete diffusion operator

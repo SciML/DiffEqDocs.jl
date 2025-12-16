@@ -66,7 +66,7 @@ potential = -G *
 `NBodyProblem` constructs a second order ODE problem under the hood. We know that a Hamiltonian system has the form of
 
 ```math
-\dot{p} = -H_{q}(p,q), \quad \dot{q} = H_{p}(p,q)
+\dot{p} = -\frac{\partial H}{\partial q}, \quad \dot{q} = \frac{\partial H}{\partial p}
 ```
 
 For an N-body system, we can simplify this as:
