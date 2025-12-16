@@ -216,8 +216,8 @@ ROBER):
 ```math
 \begin{aligned}
 \frac{dy_1}{dt} &= -0.04y₁ + 10^4 y_2 y_3 \\
-\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3*10^7 y_{2}^2 \\
-\frac{dy_3}{dt} &= 3*10^7 y_{2}^2 \\
+\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3×10^7 y_{2}^2 \\
+\frac{dy_3}{dt} &= 3×10^7 y_{2}^2 \\
 \end{aligned}
 ```
 
@@ -380,10 +380,10 @@ Let's optimize the solution of a Reaction-Diffusion PDE's discretization.
 In its discretized form, this is the ODE:
 
 ```math
-\begin{align}
+\begin{align*}
 du &= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - \alpha u\\
 dv &= D_2 (A_y v + v A_x) + a u^2 + \beta v
-\end{align}
+\end{align*}
 ```
 
 where ``u``, ``v``, and ``A`` are matrices. Here, we will use the simplified
@@ -684,9 +684,9 @@ The last thing to do is then ***optimize our algorithm choice***. We have been
 using `DE.Tsit5()` as our test algorithm, but in reality this problem is a stiff
 PDE discretization and thus one recommendation is to use `Sundials.CVODE_BDF()`. However,
 instead of using the default dense Jacobian, we should make use of the sparse
-Jacobian afforded by the problem. The Jacobian is the matrix $\frac{df_i}{dr_j}$,
-where $r$ is read by the linear index (i.e. down columns). But since the $u$
-variables depend on the $v$, the band size here is large, and thus this will
+Jacobian afforded by the problem. The Jacobian is the matrix ``\frac{df_i}{dr_j}``,
+where ``r`` is read by the linear index (i.e. down columns). But since the ``u``
+variables depend on the ``v``, the band size here is large, and thus this will
 not do well with a Banded Jacobian solver. Instead, we utilize sparse Jacobian
 algorithms. `Sundials.CVODE_BDF` allows us to use a sparse Newton-Krylov solver by
 setting `linear_solver = :GMRES`.

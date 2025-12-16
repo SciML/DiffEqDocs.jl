@@ -15,7 +15,7 @@ g(u) &= \vec{0}
 
 ## Example 1: Simple Pendulum
 
-The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
+The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}\sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
 
 ```@example bvp
 import BoundaryValueDiffEq as BVP
@@ -36,7 +36,7 @@ There are two problem types available:
   - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval, aka multi-points BVP).
   - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`(aka two-points BVP)
 
-The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is $\vec{0}$ when the boundary condition is satisfied.
+The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is ``\vec{0}`` when the boundary condition is satisfied.
 
 There are collocation and shooting methods for addressing boundary value problems in DifferentialEquations.jl. We need to use appropriate [available BVP solvers](@ref bvp_solve) to solve `BVProblem`. In this example, we use `MIRK4` to solve the simple pendulum example.
 
@@ -100,26 +100,29 @@ Suppose we want to solve the second order BVP system which can be formulated as
 ```math
 \begin{cases}
 u_1''(x)= u_2(x),\\
-\epsilon u_2''(x)=-u_1(x)u_2'(x)- u_3(x)u_3'(x),\\
-\epsilon u_3''(x)=u_1'(x)u_3(x)- u_1(x) u_3 '(x)
+ε u_2''(x)=-u_1(x)u_2'(x)- u_3(x)u_3'(x),\\
+ε u_3''(x)=u_1'(x)u_3(x)- u_1(x) u_3 '(x)
 \end{cases}
 ```
 
 with initial conditions:
 
 ```math
-u_1(0) = u_1'(0)= u_1(1)=u_1'(1)=0,u_3(0)=
--1, u_3(1)=1
+\begin{align*}
+u_1(0) &= u_1'(0)= u_1(1)=u_1'(1)=0, \\
+u_3(0) &= -1, \\
+u_3(1) &= 1
+\end{align*}
 ```
 
 The common way of solving the second order BVP is to define intermediate variables and transform the second order system into first order one, however, DifferentialEquations.jl allows the direct solving of second order BVP system to achieve more efficiency and higher continuity of the numerical solution.
 
 ```@example bvp
 function f!(ddu, du, u, p, t)
-    ϵ = 0.1
+    ε = 0.1
     ddu[1] = u[2]
-    ddu[2] = (-u[1] * du[2] - u[3] * du[3]) / ϵ
-    ddu[3] = (du[1] * u[3] - u[1] * du[3]) / ϵ
+    ddu[2] = (-u[1] * du[2] - u[3] * du[3]) / ε
+    ddu[3] = (du[1] * u[3] - u[1] * du[3]) / ε
 end
 function bc!(res, du, u, p, t)
     res[1] = u(0.0)[1]
@@ -142,28 +145,31 @@ Consider a semi-explicit boundary value differential-algebraic equation formulat
 
 ```math
 \begin{cases}
-x_1'=(\epsilon+x_2-p_2(t))y+p_1'(t) \\
-x_2'=p_2'(t) \\
-x_3'=y \\
-0=(x_1-p_1(t))(y-e^t)
+x_1' = \left(ε + x_2 - \sin(t)\right) y + \cos(t) \\
+x_2' = \cos(t) \\
+x_3' = y \\
+0 = \left(x_1 - \sin(t)\right) \left(y - e^t\right)
 \end{cases}
 ```
 
 with boundary conditions
 
 ```math
-x_1(0)=0,x_3(0)=1,x_2(1)=\sin(1)
+\begin{align*}
+x_1(0)&=0, \\
+x_3(0)&=1, \\
+x_2(1)&=\sin(1)
+\end{align*}
 ```
 
 We need to choose the Ascher methods for solving BVDAEs.
 
 ```@example bvp
 function f!(du, u, p, t)
-    e = 2.7
     du[1] = (1 + u[2] - sin(t)) * u[4] + cos(t)
     du[2] = cos(t)
     du[3] = u[4]
-    du[4] = (u[1] - sin(t)) * (u[4] - e^t)
+    du[4] = (u[1] - sin(t)) * (u[4] - exp(t))
 end
 function bc!(res, u, p, t)
     res[1] = u[1]
@@ -174,7 +180,6 @@ u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
 fun = BVP.BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
 prob = BVP.BVProblem(fun, u0, tspan)
-sol = BVP.solve(prob,
-    BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()));
-    dt = 0.01)
+solver = BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
+sol = BVP.solve(prob, solver; dt = 0.01)
 ```

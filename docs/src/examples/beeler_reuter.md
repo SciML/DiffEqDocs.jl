@@ -8,19 +8,23 @@ Note that this tutorial does not use the [higher order IMEX methods built into D
 
 There are hundreds of ionic models that describe cardiac electrical activity in various degrees of detail. Most are based on the classic [Hodgkin-Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model) and define the time-evolution of different state variables in the form of nonlinear first-order ODEs. The state vector for these models includes the transmembrane potential, gating variables, and ionic concentrations. The coupling between cells is through the transmembrane potential only and is described as a reaction-diffusion equation, which is a parabolic PDE,
 
-$$\partial V / \partial t = \nabla (D  \nabla V) - \frac {I_\text{ion}} {C_m},$$
+```math
+\frac{\partial V}{\partial t} = \nabla (D  \nabla V) - \frac {I_\text{ion}} {C_m},
+```
 
-where $V$ is the transmembrane potential, $D$ is a diffusion tensor, $I_\text{ion}$ is the sum of the transmembrane currents and is calculated from the ODEs, and $C_m$ is the membrane capacitance, usually assumed to be constant. Here, we model a uniform and isotropic medium. Therefore, the model can be simplified to,
+where ``V`` is the transmembrane potential, ``D`` is a diffusion tensor, ``I_\text{ion}`` is the sum of the transmembrane currents and is calculated from the ODEs, and ``C_m`` is the membrane capacitance, usually assumed to be constant. Here, we model a uniform and isotropic medium. Therefore, the model can be simplified to,
 
-$$\partial V / \partial t = D \Delta{V} - \frac {I_\text{ion}} {C_m},$$
+```math
+\frac{\partial V}{\partial t} = D \nabla^2 V - \frac {I_\text{ion}} {C_m},
+```
 
-where $D$ is now a scalar. By nature, these models have to deal with different time scales and are therefore classified as *stiff*. Commonly, they are solved using the explicit Euler method, typically with a closed form for the integration of the gating variables (the Rush-Larsen method, see below). We can also solve these problems using implicit or semi-implicit PDE solvers (e.g., the [Crank-Nicholson method](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method) combined with an iterative solver). Higher order explicit methods such as Runge-Kutta and linear multistep methods cannot overcome the stiffness and are not particularly helpful.
+where ``D`` is now a scalar. By nature, these models have to deal with different time scales and are therefore classified as *stiff*. Commonly, they are solved using the explicit Euler method, typically with a closed form for the integration of the gating variables (the Rush-Larsen method, see below). We can also solve these problems using implicit or semi-implicit PDE solvers (e.g., the [Crank-Nicholson method](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method) combined with an iterative solver). Higher order explicit methods such as Runge-Kutta and linear multistep methods cannot overcome the stiffness and are not particularly helpful.
 
 In this tutorial, we first develop a CPU-only IMEX solver and then show how to move the explicit part to a GPU.
 
 ### The Beeler-Reuter Model
 
-We have chosen the [Beeler-Reuter ventricular ionic model](https://pmc.ncbi.nlm.nih.gov/articles/PMC1283659/) as our example. It is a classic model first described in 1977 and is used as a base for many other ionic models. It has eight state variables, which makes it complicated enough to be interesting without obscuring the main points of the exercise. The eight state variables are: the transmembrane potential ($V$), sodium-channel activation and inactivation gates ($m$ and $h$, similar to the Hodgkin-Huxley model), with an additional slow inactivation gate ($j$), calcium-channel activation and deactivations gates ($d$ and $f$), a time-dependent inward-rectifying potassium current gate ($x_1$), and intracellular calcium concentration ($c$). There are four currents: a sodium current ($i_{Na}$), a calcium current ($i_{Ca}$), and two potassium currents, one time-dependent ($i_{x_1}$) and one background time-independent ($i_{K_1}$).
+We have chosen the [Beeler-Reuter ventricular ionic model](https://pmc.ncbi.nlm.nih.gov/articles/PMC1283659/) as our example. It is a classic model first described in 1977 and is used as a base for many other ionic models. It has eight state variables, which makes it complicated enough to be interesting without obscuring the main points of the exercise. The eight state variables are: the transmembrane potential (``V``), sodium-channel activation and inactivation gates (``m`` and ``h``, similar to the Hodgkin-Huxley model), with an additional slow inactivation gate (``j``), calcium-channel activation and deactivations gates (``d`` and ``f``), a time-dependent inward-rectifying potassium current gate (``x_1``), and intracellular calcium concentration (``c``). There are four currents: a sodium current (``i_\text{Na}``), a calcium current (``i_\text{Ca}``), and two potassium currents, one time-dependent (``i_{x_1}``) and one background time-independent (``i_{K_1}``).
 
 ## CPU-Only Beeler-Reuter Solver
 
@@ -137,27 +141,39 @@ We use an explicit solver for all the state variables except for the transmembra
 
 The [Rush-Larsen](https://ieeexplore.ieee.org/document/4122859/) method replaces the explicit Euler integration for the gating variables with direct integration. The starting point is the general ODE for the gating variables in Hodgkin-Huxley style ODEs,
 
-$$\frac{dg}{dt} = \alpha(V) (1 - g) - \beta(V) g$$
+```math
+\frac{dg}{dt} = (1 - g) \alpha(V) - g \beta(V)
+```
 
-where $g$ is a generic gating variable, ranging from 0 to 1, and $\alpha$ and $\beta$ are reaction rates. This equation can be written as,
+where ``g`` is a generic gating variable, ranging from 0 to 1, and ``α`` and ``β`` are reaction rates. This equation can be written as,
 
-$$\frac{dg}{dt} = (g_{\infty} - g) / \tau_g,$$
+```math
+\frac{dg}{dt} = \frac{g_{\infty} - g}{\tau_g},
+```
 
-where $g_\infty$ and $\tau_g$ are
+where ``g_∞`` and ``τ_g`` are
 
-$$g_{\infty} = \frac{\alpha}{(\alpha + \beta)},$$
+```math
+g_{\infty} = \frac{\alpha}{\alpha + \beta},
+```
 
 and,
 
-$$\tau_g = \frac{1}{(\alpha + \beta)}.$$
+```math
+\tau_g = \frac{1}{\alpha + \beta}.
+```
 
-Assuming that $g_\infty$ and $\tau_g$ are constant for the duration of a single time step ($\Delta{t}$), which is a reasonable assumption for most cardiac models, we can integrate directly to have,
+Assuming that ``g_∞`` and ``τ_g`` are constant for the duration of a single time step (``Δt``), which is a reasonable assumption for most cardiac models, we can integrate directly to have,
 
-$$g(t + \Delta{t}) = g_{\infty} - \left(g_{\infty} - g(\Delta{t})\right)\,e^{-\Delta{t}/\tau_g}.$$
+```math
+g(t + Δt) = g_∞ - \left(g_∞ - g(Δt)\right)\,e^{-Δt/τ_g}.
+```
 
-This is the Rush-Larsen technique. Note that as $\Delta{t} \rightarrow 0$, this equation morphs into the explicit Euler formula,
+This is the Rush-Larsen technique. Note that as ``Δt → 0``, this equation morphs into the explicit Euler formula,
 
-$$g(t + \Delta{t}) = g(t) + \Delta{t}\frac{dg}{dt}.$$
+```math
+g(t + Δt) = g(t) + Δt \frac{dg}{dt}.
+```
 
 `rush_larsen` is a helper function that use the Rush-Larsen method to integrate the gating variables.
 
@@ -169,7 +185,7 @@ $$g(t + \Delta{t}) = g(t) + \Delta{t}\frac{dg}{dt}.$$
 end
 ```
 
-The gating variables are updated as below. The details of how to calculate $\alpha$ and $\beta$ are based on the Beeler-Reuter model and not of direct interest to this tutorial.
+The gating variables are updated as below. The details of how to calculate ``α`` and ``β`` are based on the Beeler-Reuter model and not of direct interest to this tutorial.
 
 ```julia
 function update_M_cpu(g, v, Δt)
@@ -225,8 +241,9 @@ end
 
 ### Implicit Solver
 
-Now, it is time to define the derivative function as an associated function of **BeelerReuterCpu**. We plan to use the CVODE_BDF solver as our implicit portion. Similar to other iterative methods, it calls the deriv function with the same $t$ multiple times. For example, these are consecutive $t$s from a representative run:
+Now, it is time to define the derivative function as an associated function of **BeelerReuterCpu**. We plan to use the `CVODE_BDF` solver as our implicit portion. Similar to other iterative methods, it calls the deriv function with the same ``t`` multiple times. For example, these are consecutive ``t``s from a representative run:
 
+```
 0.86830
 0.86830
 0.85485
@@ -240,8 +257,9 @@ Now, it is time to define the derivative function as an associated function of *
 0.87233
 0.88598
 ...
+```
 
-Here, every time step is called three times. We distinguish between two types of calls to the deriv function. When $t$ changes, the gating variables are updated by calling `update_gates_cpu`:
+Here, every time step is called three times. We distinguish between two types of calls to the deriv function. When ``t`` changes, the gating variables are updated by calling `update_gates_cpu`:
 
 ```julia
 function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
@@ -265,7 +283,7 @@ function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
 end
 ```
 
-On the other hand, du is updated at each time step, since it is independent of $\Delta{t}$.
+On the other hand, du is updated at each time step, since it is independent of ``Δt``.
 
 ```julia
 # iK1 is the inward-rectifying potassium current
@@ -367,7 +385,7 @@ deriv_cpu = BeelerReuterCpu(u0, 1.0);
 prob = DE.ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 ```
 
-For stiff reaction-diffusion equations, CVODE_BDF from Sundial library is an excellent solver.
+For stiff reaction-diffusion equations, `CVODE_BDF` from Sundial library is an excellent solver.
 
 ```julia
 @time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
@@ -405,7 +423,7 @@ Some libraries, such as [ArrayFire](https://github.com/arrayfire/arrayfire), hid
 
 The key to fast CUDA programs is to minimize CPU/GPU memory transfers and global memory accesses. The implicit solver is currently CPU only, but it only requires access to the transmembrane potential. The rest of state variables reside on the GPU memory.
 
-We modify ``BeelerReuterCpu`` into ``BeelerReuterGpu`` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that $\Delta{v}$ is a temporary storage for the Laplacian and stays on the CPU side.
+We modify `BeelerReuterCpu` into `BeelerReuterGpu` by defining the state variables as *CuArray*s instead of standard Julia *Array*s. The name of each variable defined on the GPU is prefixed by *d_* for clarity. Note that ``Δv`` is a temporary storage for the Laplacian and stays on the CPU side.
 
 ```julia
 import CUDA
@@ -556,7 +574,7 @@ A CUDA program does not directly deal with GPCs and SMs. The logical view of a C
 
 Each thread can find its logical coordinate by using few pre-defined indexing variables (*threadIdx*, *blockIdx*, *blockDim* and *gridDim*) in C/C++ and the corresponding functions (e.g., `threadIdx()`) in Julia. Their variables and functions are defined automatically for each thread and may return a different value depending on the calling thread. The return value of these functions is a 1-, 2-, or 3-dimensional structure whose elements can be accessed as `.x`, `.y`, and `.z` (for a 1-dimensional case, `.x` reports the actual index and `.y` and `.z` simply return 1). For example, if we deploy a kernel in 128 blocks and with 256 threads per block, each thread will see
 
-```
+```c
     gridDim.x = 128;
     blockDim=256;
 ```
@@ -565,13 +583,13 @@ while `blockIdx.x` ranges from 0 to 127 in C/C++ and 1 to 128 in Julia. Similarl
 
 A C/C++ thread can calculate its index as
 
-```
+```c
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
 ```
 
 In Julia, we have to take into account base 1. Therefore, we use the following formula
 
-```
+```julia
     idx = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
 ```
 

@@ -25,10 +25,10 @@ differential equation (BRUSS).
 The Brusselator PDE is defined on a unit square periodic domain as follows:
 
 ```math
-\begin{align}
+\begin{align*}
 \frac{\partial U}{\partial t} &= 1 + U^2V - 4.4U + \alpha \nabla^2 U + f(x, y, t),\\
 \frac{\partial V}{\partial t} &= 3.4U - U^2V + \alpha \nabla^2 V,
-\end{align}
+\end{align*}
 ```
 
 where
@@ -36,26 +36,26 @@ where
 ```math
 f(x, y, t) = \begin{cases}
 5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1\\
-0 & \quad \text{else}
-\end{cases}, \mathrm{and}
+0 & \quad \text{else},
+\end{cases}
 ```
 
-$\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}$ is the two dimensional Laplacian operator. The above equations are to be solved for a time interval $t \in [0, 11.5]$ subject to the initial conditions
+and ``\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}`` is the two dimensional Laplacian operator. The above equations are to be solved for a time interval ``t \in [0, 11.5]`` subject to the initial conditions
 
 ```math
-\begin{align}
+\begin{align*}
 U(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
-V(x, y, 0) &= 27\cdot (x(1-x))^{3/2}
-\end{align},
+V(x, y, 0) &= 27\cdot (x(1-x))^{3/2},
+\end{align*}
 ```
 
 and the periodic boundary conditions
 
 ```math
-\begin{align}
+\begin{align*}
 U(x+1,y,t) &= U(x,y,t) \\
 V(x,y+1,t) &= V(x,y,t).
-\end{align}
+\end{align*}
 ```
 
 To solve this PDE, we will discretize it into a system of ODEs with the finite
@@ -295,10 +295,8 @@ function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
     if newW === nothing || newW
         A = convert(AbstractMatrix, W)
         Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A,
-                1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
     else
         Pl = Plprev
     end
@@ -415,10 +413,8 @@ And similarly for algebraic multigrid:
 
 ```julia
 prectmp2 = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(W,
-    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-        1))),
-    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-        1)))))
+    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
 const preccache2 = Ref(prectmp2)
 function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
     if jok
@@ -433,10 +429,8 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
         # Build preconditioner on W
         preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(
             W,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W,
-                1)))))
+            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
     end
 end
 
