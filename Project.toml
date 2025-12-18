@@ -4,8 +4,18 @@ authors = ["Chris Rackauckas <accounts@chrisrackauckas.com>"]
 version = "7.20.0"
 
 [deps]
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
+DifferentialEquations = "7.17.0"
 Documenter = "1"
+LaTeXStrings = "1.4.0"
+Plots = "1.41.3"
+Test = "1.11.0"
+Unitful = "1.27.0"
 julia = "1.10"
