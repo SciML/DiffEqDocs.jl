@@ -44,11 +44,11 @@ to dispatch to the right methods. The common interface for calling the solvers i
 sol = solve(prob, alg; kwargs)
 ```
 
-Into the command, one passes the differential equation problem that they defined
-`prob`, optionally choose an algorithm `alg` (a default is given if not
-chosen), and change the properties of the solver using keyword arguments. The common
-arguments which are accepted by most methods is defined in [the common solver options manual page](@ref solver_options).
-The solver returns a solution object `sol` which hold all the details for the solution.
+Into the command, one passes the differential equation problem that they defined,
+`prob`, optionally chooses an algorithm `alg` (a default is given if not
+chosen), and changes the properties of the solver using keyword arguments. The common
+arguments which are accepted by most methods are defined in [the common solver options manual page](@ref solver_options).
+The solver returns a solution object `sol` which holds all the details for the solution.
 
 ## Analyzing the Solution
 

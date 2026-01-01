@@ -34,7 +34,7 @@ end
 There are two problem types available:
 
   - A problem type for general boundary conditions `BVProblem` (including conditions that may be anywhere/ everywhere on the integration interval, aka multi-points BVP).
-  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem`(aka two-points BVP)
+  - A problem type for boundaries that are specified at the beginning and the end of the integration interval `TwoPointBVProblem` (aka two-points BVP)
 
 The boundary conditions are specified by a function that calculates the residual in-place from the problem solution, such that the residual is ``\vec{0}`` when the boundary condition is satisfied.
 
@@ -50,7 +50,7 @@ sol1 = BVP.solve(bvp1, BVP.MIRK4(); dt = 0.05)
 Plots.plot(sol1)
 ```
 
-The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t` or solution object from previous solving, in this example the initial guess is set as a `Vector`.
+The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t`, or a solution object from previous solving. In this example, the initial guess is set as a `Vector`.
 
 ```@example bvp
 import OrdinaryDiffEq as ODE
@@ -63,8 +63,8 @@ bvp3 = BVP.BVProblem(simplependulum!, bc3!, u₀_2, tspan)
 sol3 = BVP.solve(bvp3, BVP.Shooting(ODE.Vern7()))
 ```
 
-The initial guess can also be supplied via a function of `t` or a previous solution type, this is especially handy for parameter analysis.
-We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting method. (i.e. you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
+The initial guess can also be supplied via a function of `t` or a previous solution type, which is especially handy for parameter analysis.
+We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting methods (i.e., you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
 
 ```@example bvp
 Plots.plot(sol3)
