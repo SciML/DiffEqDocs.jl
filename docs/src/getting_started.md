@@ -321,7 +321,7 @@ the variable choices interface once more:
 Plots.plot(sol, idxs = (0, 2))
 ```
 
-Note that here “variable 0” corresponds to the independent variable (“time”).
+Note that "variable 0" corresponds to the independent variable ("time").
 
 ## Defining Parameterized Functions
 

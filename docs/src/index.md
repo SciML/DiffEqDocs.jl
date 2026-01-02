@@ -195,7 +195,7 @@ You will need a working installation of Julia in your path. To install Julia, do
 from [the JuliaLang site](https://julialang.org/downloads/) and add it to your path. The download and
 installation of DifferentialEquations.jl will happen on the first invocation of `diffeqr::diffeq_setup()`.
 
-Currently, use from R supported a subset of DifferentialEquations.jl which is documented
+Currently, use from R supports a subset of DifferentialEquations.jl which is documented
 [through CRAN](https://cran.r-project.org/web/packages/diffeqr/index.html).
 
 ### Video Tutorial
