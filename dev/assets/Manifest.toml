@@ -2477,9 +2477,9 @@ weakdeps = ["ChainRulesCore"]
 
 [[deps.SDEProblemLibrary]]
 deps = ["DiffEqBase", "Markdown", "RuntimeGeneratedFunctions", "SciMLBase"]
-git-tree-sha1 = "4cc1aaab99276140cd4615312de353e9702c7184"
+git-tree-sha1 = "6e69a42c237c381293cda9917deee408a9aa8fbd"
 uuid = "c72e72a9-a271-4b2b-8966-303ed956772e"
-version = "1.1.0"
+version = "1.1.1"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
