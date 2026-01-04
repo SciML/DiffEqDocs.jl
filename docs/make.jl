@@ -1,7 +1,7 @@
 using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF,
-      OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
+    OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
 import ODEProblemLibrary,
-       SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
+    SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR
 
 # Use development versions for API documentation
@@ -98,11 +98,12 @@ makedocs(
         DelayDiffEq,
         SteadyStateDiffEq,
         DiffEqCallbacks,
-        Sundials, DASKR
+        Sundials, DASKR,
     ],
     remotes = nothing,
     linkcheck = true,
-    linkcheck_ignore = ["https://www.izhikevich.org/publications/spikes.htm",
+    linkcheck_ignore = [
+        "https://www.izhikevich.org/publications/spikes.htm",
         "https://biojulia.net/post/hardware/",
         "https://archimede.dm.uniba.it/~testset/report/pollu.pdf",
         r"https://archimede.uniba.it/~bvpsolvers/testsetbvpsolvers/\?page_id=\d+",
@@ -128,12 +129,15 @@ makedocs(
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
-    format = Documenter.HTML(assets = ["assets/favicon.ico"],
+    format = Documenter.HTML(
+        assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/",
-        size_threshold = 500 * 2^10),
+        size_threshold = 500 * 2^10
+    ),
     sitename = "DifferentialEquations.jl",
     authors = "Chris Rackauckas",
-    pages = pages)
+    pages = pages
+)
 
 #Redirect old links
 # cd(joinpath(@__DIR__, "build")) do
