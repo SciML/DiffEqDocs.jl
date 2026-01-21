@@ -14,20 +14,25 @@ Pkg.add("SimpleDiffEq")
 import SimpleDiffEq
 ```
 
-## ODE Solver APIs
+## ODE Solvers
 
-```@docs
-SimpleDiffEq.SimpleTsit5
-SimpleDiffEq.SimpleATsit5
-SimpleDiffEq.GPUSimpleATsit5
-SimpleDiffEq.SimpleEuler
-SimpleDiffEq.SimpleRK4
-SimpleDiffEq.GPUVern7
-SimpleDiffEq.GPUVern9
-```
+The following ODE solvers are available:
 
-## SDE Solver APIs
+  - `SimpleTsit5` - A fixed timestep integrator form of Tsit5. Not compatible with events.
+  - `SimpleATsit5` - An adaptive Tsit5 with an interpolation in its simplest form. Not compatible with events.
+  - `GPUSimpleATsit5` - A version of `SimpleATsit5` without the integrator interface. Only allows `solve`.
+  - `SimpleEuler` - A fixed timestep bare-bones Euler implementation with integrators.
+  - `SimpleRK4` - A fixed timestep bare-bones RK4 implementation with integrators.
+  - `GPUSimpleVern7` - A fully static Vern7 for specialized compilation to accelerators like GPUs and TPUs.
+  - `GPUSimpleVern9` - A fully static Vern9 for specialized compilation to accelerators like GPUs and TPUs.
+  - `GPUSimpleTsit5` - A fully static Tsit5 for specialized compilation to accelerators.
+  - `GPUSimpleRK4` - A fully static RK4 for specialized compilation to accelerators.
+  - `GPUSimpleEuler` - A fully static Euler for specialized compilation to accelerators.
+  - `LoopEuler` - A fixed timestep bare-bones Euler. Not compatible with events or the integrator interface.
+  - `LoopRK4` - A fixed timestep bare-bones RK4. Not compatible with events or the integrator interface.
 
-```@docs
-SimpleDiffEq.SimpleEM
-```
+## SDE Solvers
+
+The following SDE solvers are available:
+
+  - `SimpleEM` - A fixed timestep solve method for Euler-Maruyama. Only works with non-colored Gaussian noise.
