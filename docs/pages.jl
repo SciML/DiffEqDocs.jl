@@ -135,9 +135,21 @@ pages = Any[
         "features/low_dep.md",
         "features/progress_bar.md",
     ],
-    "External Solver APIs" => Any[
-        "api/sundials.md",
-        "api/daskr.md",
+    "Solver Package APIs" => Any[
+        "Native Julia Solvers" => Any[
+            "api/delaydiffeq.md",
+            "api/steadystatediffeq.md",
+            "api/boundaryvaluediffeq.md",
+            "api/diffeqcallbacks.md",
+            "api/simplediffeq.md",
+            "api/dassl.md",
+        ],
+        "External Wrappers" => Any[
+            "api/sundials.md",
+            "api/daskr.md",
+            "api/lsoda.md",
+            "api/odeinterfacediffeq.md",
+        ],
     ],
     "OrdinaryDiffEq.jl API" => ordinary_diffeq_pages,
     "StochasticDiffEq.jl API" => stochastic_diffeq_pages,

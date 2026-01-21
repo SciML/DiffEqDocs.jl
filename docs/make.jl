@@ -1,8 +1,9 @@
 using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF,
-    OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks
+    OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks,
+    BoundaryValueDiffEq
 import ODEProblemLibrary,
     SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
-using Sundials, DASKR
+using Sundials, DASKR, LSODA, DASSL, SimpleDiffEq, ODEInterfaceDiffEq
 
 # Use development versions for API documentation
 import Pkg
@@ -98,7 +99,13 @@ makedocs(
         DelayDiffEq,
         SteadyStateDiffEq,
         DiffEqCallbacks,
-        Sundials, DASKR,
+        BoundaryValueDiffEq,
+        Sundials,
+        DASKR,
+        LSODA,
+        DASSL,
+        SimpleDiffEq,
+        ODEInterfaceDiffEq,
     ],
     remotes = nothing,
     linkcheck = true,
