@@ -18,7 +18,7 @@ These methods can be used independently of the rest of DifferentialEquations.jl.
 
 The following DAE solver is available:
 
-  - `dassl` - A native Julia implementation of the DASSL algorithm. This is an
+  - ``dassl`` - A native Julia implementation of the DASSL algorithm. This is an
     adaptive-order, adaptive-stepsize backward differentiation formula (BDF)
     method for solving stiff systems of differential-algebraic equations.
 
