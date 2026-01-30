@@ -134,6 +134,7 @@ pages = Any[
         "features/io.md",
         "features/low_dep.md",
         "features/progress_bar.md",
+        "features/verbosity.md"
     ],
     "Solver Package APIs" => Any[
         "Native Julia Solvers" => Any[
