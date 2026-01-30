@@ -94,7 +94,7 @@ verbose = DEVerbosity(
     alg_switch = SciMLLogging.InfoLevel(),
     linear_verbosity = SciMLLogging.Detailed()
 )
-integrator = init(prob, Rosenbrock23(), verbose = verbose, dt = 1e-3)
+integrator = init(prob, Rosenbrock23(), verbose = verbose)
 
 # Step through the solution
 step!(integrator)
