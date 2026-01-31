@@ -47,7 +47,7 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [sources]
-DiffEqDocs = {path = "/var/lib/buildkite-agent/builds/gpuci-17/julialang/diffeqdocs-dot-jl"}
+DiffEqDocs = {path = "/var/lib/buildkite-agent/builds/gpuci-8/julialang/diffeqdocs-dot-jl"}
 
 [compat]
 ADTypes = "1.7"
