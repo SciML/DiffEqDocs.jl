@@ -134,6 +134,7 @@ makedocs(
         "https://github.com/SciML/DiffEqProblemLibrary.jl/blob/master/lib/DDEProblemLibrary/src/DDEProblemLibrary.jl",
         "https://docs.sciml.ai/DiffEqDocs/stable/features/dae_initialization/",
         "https://www.sciencedirect.com/science/article/pii/S0096300304009683",
+        "https://github.com/JuliaDiff/FiniteDiff.jl",
     ],
     doctest = false, clean = true,
     warnonly = [:missing_docs, :docs_block],
