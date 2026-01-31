@@ -214,7 +214,7 @@ Notice that this acceleration does not require the definition of a sparsity
 pattern, and can thus be an easier way to scale for large problems. For more
 information on linear solver choices, see the
 [linear solver documentation](@ref linear_nonlinear). `linsolve` choices are any
-valid [LinearSolve.jl](https://linearsolve.sciml.ai/dev/) solver.
+valid [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/) solver.
 
 !!! note
     
@@ -342,7 +342,7 @@ nothing # hide
 ```
 
 Notice that using sparse matrices with Sundials requires an analytical Jacobian
-function. We will use [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)'s
+function. We will use [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/)'s
 `modelingtoolkitize` to automatically generate this:
 
 ```@example stiff1

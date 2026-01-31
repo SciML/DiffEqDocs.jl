@@ -226,7 +226,7 @@ Depth = 2
 
 In some situations, one may wish to decrease the compile time associated with DifferentialEquations.jl
 usage. If that's the case, there are two strategies to employ. One strategy is to use the
-[low dependency usage](https://diffeq.sciml.ai/stable/features/low_dep/). DifferentialEquations.jl
+[low dependency usage](https://docs.sciml.ai/DiffEqDocs/stable/features/low_dep/). DifferentialEquations.jl
 is a metapackage composed of many smaller packages, and thus one could directly use a single component,
 such as `OrdinaryDiffEq.jl` for the pure Julia ODE solvers, and decrease the compile times by ignoring
 the rest (note: the interface is exactly the same, except using a solver apart from those in OrdinaryDiffEq.jl

@@ -40,7 +40,7 @@ an ODE solve improves as you decrease the tolerance, so you may want to try a
 smaller `abstol` and `reltol`. One behavior to watch out for is that if your
 model is a differential-algebraic equation and your DAE is of high index (say
 index>1), this can impact the numerical solution. In this case, you may want to
-use the [ModelingToolkit.jl index reduction tools](https://mtk.sciml.ai/dev/mtkitize_tutorials/modelingtoolkitize_index_reduction/)
+use the [ModelingToolkit.jl index reduction tools](https://docs.sciml.ai/ModelingToolkit/stable/examples/modelingtoolkitize_index_reduction/)
 to improve the numerical stability of a solve. In addition, if it's a highly
 stiff ODE/DAE that is large, and you're using a matrix-free solver (such as GMRES),
 make sure the tolerance of the GMRES is well-tuned and an appropriate preconditioner
@@ -174,7 +174,7 @@ the ODE solver is still doing its job. If this is a major issue for your applica
 you may want to write your model to be robust to this behavior, such as changing
 `sqrt(u[i])` to `sqrt(max(0,u[i]))`. You should also consider transforming your
 values, like solving for `u^2` or `exp(u)` instead of `u`, which mathematically
-can only be positive. Look into using a tool like [ModelingToolkit.jl](https://mtk.sciml.ai/dev/)
+can only be positive. Look into using a tool like [ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/)
 for automatically transforming your equations.
 
 ### I'm trying to solve DAEs but my solver is unstable and/or slow, what's wrong with IDA and DFBDF?
@@ -186,7 +186,7 @@ SciMLBenchmarks. Thus it is recommended that in almost all or most situations, o
 mass matrix form of the DAE solver.
 
 However, it is generally recommended that if you are solving a DAE that you use
-[ModelingToolkit.jl](https://mtk.sciml.ai/dev/) because it has many utilities for pre-processing
+[ModelingToolkit.jl](https://docs.sciml.ai/ModelingToolkit/stable/) because it has many utilities for pre-processing
 DAEs to make them more numerically stable. For example, if your algebraic conditions are not
 uniquely matching to algebraic variables (i.e. you have at least one unique algebraic variable
 per algebraic condition), then the system is what is known as high index and thus the numerical
@@ -273,7 +273,7 @@ causing a divergence of the solution is the most common reason for reported
 slow codes.
 
 If you have no bugs, great! The standard tricks for optimizing Julia code then
-apply. Take a look at the [Optimizing DiffEq Code tutorial](https://tutorials.sciml.ai/html/introduction/03-optimizing_diffeq_code.html)
+apply. Take a look at the [Optimizing DiffEq Code tutorial](https://docs.sciml.ai/DiffEqDocs/stable/tutorials/faster_ode_example/)
 for some tips and pointers.
 
 What you want to do first is make sure your function does not allocate.
