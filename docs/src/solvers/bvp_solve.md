@@ -4,7 +4,6 @@
 solve(prob::BVProblem, alg, dt; kwargs)
 solve(prob::TwoPointBVProblem, alg, dt; kwargs)
 solve(prob::SecondOrderBVProblem, alg, dt; kwargs)
-solve(prob::SecondOrderTwoPointBVProblem, alg, dt; kwargs)
 ```
 
 Solves the BVP defined by `prob` using the algorithm `alg`. All algorithms except `Shooting` and `MultipleShooting` methods should specify a `dt` which is the step size for the discretized mesh.
