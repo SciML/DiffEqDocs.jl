@@ -20,16 +20,11 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
 !!! note
     
-    In 2023 the linear indexing `sol[i]` was deprecated. It previously had the behavior that
-    `sol[i] = sol.u[i]`. However, this is incompatible with standard `AbstractArray` interfaces,
-    Since if `A = VectorOfArray([[1,2],[3,4]])` and `A` is supposed to act like `[1 3; 2 4]`,
-    then there is a difference `A[1] = [1,2]` for the VectorOfArray while `A[1] = 1` for the
-    matrix. This causes many issues if `AbstractVectorOfArray <: AbstractArray`. Thus we
-    plan in 2026 to complete the deprecation and thus have a breaking update where `sol[i]`
-    matches the linear indexing of an `AbstractArray`, and then making
-    `AbstractVectorOfArray <: AbstractArray`. Until then, `AbstractVectorOfArray` due to
-    this interface break but manually implements an AbstractArray-like interface for
-    future compatibility.
+    As of RecursiveArrayTools v4 / SciMLBase v3 / OrdinaryDiffEq v7 / DifferentialEquations v8, 
+    `AbstractVectorOfArray <: AbstractArray`. This means
+    `sol[i]` now uses standard column-major linear indexing (returning a scalar element),
+    not the old behavior of `sol[i] = sol.u[i]` (which returned the `i`th state vector).
+    To access the `i`th state vector, use `sol.u[i]` or `sol[:, i]`.
 
 The general operations are as follows. Use
 
@@ -50,7 +45,7 @@ will address first by component and lastly by time, and thus
 sol[i, j]
 ```
 
-will be the `i`th component at timestep `j`. Hence, `sol[j][i] == sol[i, j]`. This is done because Julia is column-major,
+will be the `i`th component at timestep `j`. Hence, `sol.u[j][i] == sol[i, j]`. This is done because Julia is column-major,
 so the leading dimension should be contiguous in memory. If the independent variables had shape
 (for example, was a matrix), then `i` is the linear index. We can also access
 solutions with shape:

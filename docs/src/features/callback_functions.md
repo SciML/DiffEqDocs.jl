@@ -442,7 +442,7 @@ u0 = [1.0, 0.0]
 p = [1.0]
 prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
 sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
-sol[end] # [-1.2647055847076505e-15, 0.0]
+sol.u[end] # [-1.2647055847076505e-15, 0.0]
 ```
 
 What this means is that there is no 64-bit floating-point number `t` such that
@@ -466,7 +466,7 @@ u0 = [1.0, 0.0]
 p = [1.0]
 prob = DE.ODEProblem{true}(dynamics!, u0, (0.0, 1.75), p)
 sol = DE.solve(prob, DE.Tsit5(), callback = floor_event)
-sol[end] # [0.0,0.0]
+sol.u[end] # [0.0,0.0]
 ```
 
 and now the sticky behavior is perfect to the floating-point.
