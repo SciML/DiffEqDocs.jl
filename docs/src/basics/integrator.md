@@ -195,7 +195,7 @@ full_cache
 ### [Stepping Controls](@id stepping_controls)
 
 ```@docs
-u_modified!
+derivative_discontinuity!
 get_proposed_dt
 set_proposed_dt!
 terminate!
