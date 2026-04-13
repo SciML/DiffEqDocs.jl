@@ -275,7 +275,7 @@ end
 function (p::AutoAbstolAffect)(integrator)
     p.curmax = max(p.curmax, integrator.u)
     integrator.opts.abstol = p.curmax * integrator.opts.reltol
-    DE.u_modified!(integrator, false)
+    DE.derivative_discontinuity!(integrator, false)
 end
 ```
 

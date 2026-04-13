@@ -13,9 +13,9 @@ to specific answers, and compute summary statistics on the results.
 To perform a simulation on an ensemble of trajectories, define a `EnsembleProblem`. The constructor is:
 
 ```julia
-EnsembleProblem(prob::DEProblem;
-    output_func = (sol, i) -> (sol, false),
-    prob_func = (prob, i, repeat) -> (prob),
+EnsembleProblem(prob::AbstractDEProblem;
+    output_func = (sol, ctx) -> (sol, false),
+    prob_func = (prob, ctx) -> (prob),
     reduction = (u, data, I) -> (append!(u, data), false),
     u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
 ```
@@ -25,10 +25,12 @@ EnsembleProblem(prob::DEProblem;
     `(out,rerun)` where `out` is the output and `rerun` is a boolean which
     designates whether to rerun.
   - `prob_func`: The function by which the problem is to be modified. `prob`
-    is the problem, `i` is the unique id `1:trajectories` for the problem, and
-    `repeat` is the iteration of the repeat. At first, it is `1`, but if
-    `rerun` was true this will be `2`, `3`, etc. counting the number of times
-    problem `i` has been repeated.
+    is the problem and `ctx` is an `EnsembleContext` carrying per-trajectory
+    metadata. Use `ctx.sim_id` for the unique id in `1:trajectories`, and
+    `ctx.repeat` for the rerun counter (starts at `1`; if `rerun` was true on
+    the previous call it increments to `2`, `3`, etc.). Other available
+    fields include `ctx.rng` (per-trajectory RNG or `nothing`), `ctx.sim_seed`,
+    and `ctx.master_rng`.
   - `reduction`: This function determines how to reduce the data in each batch.
     Defaults to appending the `data` into `u`, initialised via `u_init`, from
     the batches. `I` is a range of indices giving the trajectories corresponding
@@ -49,7 +51,7 @@ EnsembleProblem(prob::DEProblem;
 One can specify a function `prob_func` which changes the problem. For example:
 
 ```julia
-function prob_func(prob, i, repeat)
+function prob_func(prob, ctx)
     @. prob.u0 = randn() * prob.u0
     prob
 end
@@ -61,20 +63,21 @@ problem types are immutable, it uses `.=`. Otherwise, one can just create
 a new problem type:
 
 ```julia
-function prob_func(prob, i, repeat)
-    @. prob.u0 = u0_arr[i]
+function prob_func(prob, ctx)
+    @. prob.u0 = u0_arr[ctx.sim_id]
     prob
 end
 ```
 
 If your function is a `ParameterizedFunction`,
 you can do similar modifications to `prob.f` to perform a parameter search. The `output_func`
-is a reduction function. Its arguments are the generated solution and the unique
-index for the run. For example, if we wish to only save the 2nd coordinate
-at the end of each solution, we can do:
+is a reduction function. Its arguments are the generated solution and the
+`EnsembleContext` for the run (use `ctx.sim_id` for the unique index).
+For example, if we wish to only save the 2nd coordinate at the end of each
+solution, we can do:
 
 ```julia
-output_func(sol, i) = (sol[end, 2], false)
+output_func(sol, ctx) = (sol[end, 2], false)
 ```
 
 Thus, the ensemble simulation would return as its data an array which is the
@@ -293,7 +296,7 @@ Here, we will take the base problem, multiply the initial condition by a `rand()
 and use that for calculating the trajectory:
 
 ```julia
-@everywhere function prob_func(prob, i, repeat)
+@everywhere function prob_func(prob, ctx)
     DE.remake(prob, u0 = rand() * prob.u0)
 end
 ```
@@ -330,7 +333,7 @@ use the `@everywhere` macro. Instead, the same problem can be implemented simply
 ```@example ensemble1_2
 import DifferentialEquations as DE
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
-function prob_func(prob, i, repeat)
+function prob_func(prob, ctx)
     DE.remake(prob, u0 = rand() * prob.u0)
 end
 ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
@@ -345,17 +348,17 @@ the environmental variable `JULIA_NUM_THREADS` (see Julia's [documentation](http
 ### Pre-Determined Initial Conditions
 
 Often, you may already know what initial conditions you want to use. This
-can be specified by the `i` argument of the `prob_func`. This `i` is the unique
-index of each trajectory. So, if we have `trajectories=100`, then we have `i` as
-some index in `1:100`, and it's different for each trajectory.
+can be specified via `ctx.sim_id` inside the `prob_func`. This is the unique
+index of each trajectory. So, if we have `trajectories=100`, then `ctx.sim_id`
+takes some value in `1:100`, different for each trajectory.
 
 So, if we wanted to use a grid of evenly spaced initial conditions from `0` to `1`,
 we could simply index the `linspace` type:
 
 ```@example ensemble1_3
 initial_conditions = range(0, stop = 1, length = 100)
-function prob_func(prob, i, repeat)
-    DE.remake(prob, u0 = initial_conditions[i])
+function prob_func(prob, ctx)
+    DE.remake(prob, u0 = initial_conditions[ctx.sim_id])
 end
 ```
 
@@ -403,7 +406,7 @@ Once again, we do this with a `prob_func`, and here we modify the parameters in
 # capture that local `p` which isn't redefined anywhere in that local scope.
 # This allows it to be type stable.
 prob_func = let p = p
-    (prob, i, repeat) -> begin
+    (prob, ctx) -> begin
         x = 0.3rand(2)
         DE.remake(prob, p = [p[1], p[2], x[1], x[2]])
     end
@@ -445,8 +448,8 @@ the standard error of the mean for the final time point below our tolerance
 to discard the rest of the data.
 
 ```@example ensemble3
-function output_func(sol, i)
-    last(sol), false
+function output_func(sol, ctx)
+    sol.u[end], false
 end
 ```
 
@@ -457,7 +460,7 @@ import DifferentialEquations as DE
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
-function prob_func(prob, i, repeat)
+function prob_func(prob, ctx)
     DE.remake(prob, u0 = rand() * prob.u0)
 end
 ```
