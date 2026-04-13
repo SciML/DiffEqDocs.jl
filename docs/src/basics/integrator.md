@@ -196,7 +196,6 @@ full_cache
 
 ```@docs
 derivative_discontinuity!
-u_modified!
 get_proposed_dt
 set_proposed_dt!
 terminate!
