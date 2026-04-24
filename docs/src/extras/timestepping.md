@@ -4,6 +4,20 @@
 CurrentModule = OrdinaryDiffEqCore
 ```
 
+!!! note "OrdinaryDiffEq v7 controller refactor"
+    Starting with OrdinaryDiffEq v7, each controller (`IController`,
+    `PIController`, `PIDController`, `PredictiveController`) is a real object
+    that owns its own state. The `beta1`, `beta2`, `gamma`, `qmin`, `qmax`,
+    `qsteady_min`, `qsteady_max`, and `qoldinit` tuning parameters now live
+    on the controller struct, not on `integrator.opts`. The error estimate
+    previously stored as `integrator.EEst` is obtained with
+    `OrdinaryDiffEqCore.get_EEst(integrator)`. Fields `qold`, `q11`,
+    `erracc`, `dtacc`, and `q` moved from `ODEIntegrator` to the controller
+    cache (`integrator.controller_cache`). The pseudocode below uses the
+    pre-v7 field names to keep the algorithmic descriptions readable; in the
+    v7 codebase, each reference corresponds to the equivalent controller
+    struct / controller cache field.
+
 ## Common Setup
 
 All methods start by calculating a scaled error estimate on each scalar component of ``u``:

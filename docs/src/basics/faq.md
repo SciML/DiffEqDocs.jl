@@ -522,18 +522,20 @@ Here we use a cached temporary array to avoid the allocations of matrix
 multiplication. When autodifferentiation occurs, the element type of `u` is
 `Dual` numbers, so `A*u` produces `Dual` numbers, so the error arises when it
 tries to write into `tmp`. There are two ways to avoid this. The first way,
-the easy way, is to just turn off autodifferentiation with the `autodiff=false`
-option in the solver. Every solver which uses autodifferentiation has this option.
-Thus, we'd solve this with:
+the easy way, is to swap the AD backend for a numerical one via the
+`autodiff` keyword on the solver, using the `ADTypes` interface
+(`AutoFiniteDiff()`). Every solver which uses autodifferentiation accepts
+this. Thus, we'd solve this with:
 
 ```julia
-import DifferentialEquations as DE, OrdinaryDiffEq as ODE
+import DifferentialEquations as DE, OrdinaryDiffEq as ODE, ADTypes
 prob = DE.ODEProblem(f, ones(5, 5), (0.0, 1.0))
-sol = DE.solve(prob, ODE.Rosenbrock23(autodiff = false))
+sol = DE.solve(prob, ODE.Rosenbrock23(autodiff = ADTypes.AutoFiniteDiff()))
 ```
 
-and it will use a numerical differentiation fallback (DiffEqDiffTools.jl) to
-calculate Jacobians.
+and it will use a numerical differentiation fallback (FiniteDiff.jl) to
+calculate Jacobians. (Prior to OrdinaryDiffEq v7 the shortcut
+`autodiff = false` did the same thing; v7 requires an `ADTypes` object.)
 
 We could use `get_tmp` and `dualcache` functions from
 [PreallocationTools.jl](https://github.com/SciML/PreallocationTools.jl)

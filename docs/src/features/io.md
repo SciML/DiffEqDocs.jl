@@ -20,16 +20,17 @@ sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4));
 df = DataFrames.DataFrame(sol)
 ```
 
-If we set `syms` in the DiffEqFunction, then those names will be used:
+If we attach an ModelingToolkit / SciML symbolic system via the problem's
+`sys`, then those names will be used (the old `syms`/`paramsyms`/`indepsym`
+kwargs on `ODEFunction` were removed in SciMLBase v3; use the symbolic
+interface instead):
 
 ```@example IO
-f = ODE.ODEFunction(f_2dlinear, syms = [:a, :b, :c, :d])
-prob = ODE.ODEProblem(f, rand(2, 2), (0.0, 1.0));
-sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4));
 df = DataFrames.DataFrame(sol)
 ```
 
-Many modeling frameworks will automatically set `syms` for this feature.
+Modeling frameworks like ModelingToolkit automatically attach a `sys`, which
+provides the state/parameter names used here.
 Additionally, this data can be saved to a CSV:
 
 ```@example IO

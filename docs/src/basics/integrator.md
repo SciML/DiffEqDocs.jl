@@ -50,32 +50,29 @@ for i in integrator
 end
 ```
 
-In addition, some helper iterators are provided to help monitor the solution. For
-example, the `tuples` iterator lets you view the values:
+In addition, you can monitor the solution by reading the current `u` / `t`
+off the integrator on each step:
 
 ```julia
-for (u, t) in tuples(integrator)
+for i in integrator
+    u, t = integrator.u, integrator.t
     @show u, t
 end
 ```
 
-and the `intervals` iterator lets you view the full interval:
+or view both the previous and current endpoints of each accepted step:
 
 ```julia
-for (uprev, tprev, u, t) in intervals(integrator)
+for i in integrator
+    uprev, tprev = integrator.uprev, integrator.tprev
+    u, t = integrator.u, integrator.t
     @show tprev, t
 end
 ```
 
-Additionally, you can make the iterator return specific time points via the
-`TimeChoiceIterator`:
-
-```julia
-ts = range(0, stop = 1, length = 11)
-for (u, t) in TimeChoiceIterator(integrator, ts)
-    @show u, t
-end
-```
+(The old `tuples` / `intervals` / `TimeChoiceIterator` helper iterators were
+removed in SciMLBase v3 — iterate the integrator directly and read the field
+you want on each step.)
 
 Lastly, one can dynamically control the “endpoint”. The initialization simply makes
 `prob.tspan[2]` the last value of `tstop`, and many of the iterators are made to stop
@@ -252,8 +249,8 @@ choose:
 ```julia
 integrator = DE.init(
     prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
-for (u, t) in tuples(integrator)
-    @test t ∈ [0.5, 1.0]
+for i in integrator
+    @test integrator.t ∈ [0.5, 1.0]
 end
 ```
 

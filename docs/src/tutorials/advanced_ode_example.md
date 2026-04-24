@@ -225,21 +225,22 @@ valid [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/) solver.
 ## Adding a Preconditioner
 
 Any [LinearSolve.jl-compatible preconditioner](https://docs.sciml.ai/LinearSolve/stable/basics/Preconditioners/)
-can be used as a preconditioner in the linear solver interface. To define
-preconditioners, one must define a `precs` function in compatible stiff ODE
-solvers which returns the left and right preconditioners, matrices which
-approximate the inverse of `W = I - gamma*J` used in the solution of the ODE.
-An example of this with using [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
-is as follows:
+can be used as a preconditioner in the linear solver interface. Starting with
+OrdinaryDiffEq v7 / DiffEqBase v7, the `precs` keyword is on the
+LinearSolve.jl linear solver object (e.g. `KrylovJL_GMRES(precs = ...)`)
+rather than on the ODE algorithm, and the `precs` callback signature is
+`Pl, Pr = precs(A, p)` — where `A` is the current `W = I - γJ` operator and
+`p` is the ODE parameter object. Preconditioners can be either left, right,
+or both; return `nothing` (or `IdentityOperator`) for sides you don't want to
+precondition.
+
+An example using [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
+is:
 
 ```@example stiff1
 import IncompleteLU
-function incompletelu(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
-    if newW === nothing || newW
-        Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
-    else
-        Pl = Plprev
-    end
+function incompletelu(W, p)
+    Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
     Pl, nothing
 end
 
@@ -247,7 +248,7 @@ end
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = incompletelu,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = incompletelu),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
@@ -255,15 +256,12 @@ nothing # hide
 Notice a few things about this preconditioner. This preconditioner uses the
 sparse Jacobian, and thus we set `concrete_jac=true` to tell the algorithm to
 generate the Jacobian (otherwise, a Jacobian-free algorithm is used with GMRES
-by default). Then `newW = true` whenever a new `W` matrix is computed, and
-`newW=nothing` during the startup phase of the solver. Thus, we do a check
-`newW === nothing || newW` and when true, it's only at these points when
-we update the preconditioner, otherwise we just pass on the previous version.
-We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix (matching
-`jac_prototype`, thus `SparseMatrixCSC`) which we can use in the preconditioner's
-definition. Then we use `IncompleteLU.ilu` on that sparse matrix to generate
-the preconditioner. We return `Pl,nothing` to say that our preconditioner is a
-left preconditioner, and that there is no right preconditioning.
+by default). We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix
+(matching `jac_prototype`, thus `SparseMatrixCSC`) which we can use in the
+preconditioner's definition. Then we use `IncompleteLU.ilu` on that sparse
+matrix to generate the preconditioner. We return `Pl,nothing` to say that our
+preconditioner is a left preconditioner, and that there is no right
+preconditioning.
 
 This method thus uses both the Krylov solver and the sparse Jacobian. Not only
 that, it is faster than both implementations! IncompleteLU is fussy in that it
@@ -273,17 +271,13 @@ which is more automatic. The setup is very similar to before:
 
 ```@example stiff1
 import AlgebraicMultigrid
-function algebraicmultigrid(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
-    if newW === nothing || newW
-        Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(AbstractMatrix, W)))
-    else
-        Pl = Plprev
-    end
+function algebraicmultigrid(W, p)
+    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(AbstractMatrix, W)))
     Pl, nothing
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = algebraicmultigrid,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = algebraicmultigrid),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
@@ -291,20 +285,16 @@ nothing # hide
 or with a Jacobi smoother:
 
 ```@example stiff1
-function algebraicmultigrid2(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
-    if newW === nothing || newW
-        A = convert(AbstractMatrix, W)
-        Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
-    else
-        Pl = Plprev
-    end
+function algebraicmultigrid2(W, p)
+    A = convert(AbstractMatrix, W)
+    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
+        presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
+        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
     Pl, nothing
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(), precs = algebraicmultigrid2,
+    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = algebraicmultigrid2),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
