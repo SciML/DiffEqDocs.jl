@@ -207,8 +207,6 @@ These methods when lazy assume that the parameter vector `p` will be unchanged
 between the moment of the interval solving and the interpolation. If `p` is
 changed in a ContinuousCallback, or in a DiscreteCallback and the continuous
 solution is used after the full solution, then set `lazy=Val{false}()`.
-Starting with OrdinaryDiffEq v7 this kwarg must be a `Val{Bool}` rather than
-a raw `Bool`.
 
 Example:
 
@@ -806,9 +804,6 @@ alg = ExplicitRK(tableau = OrdinaryDiffEqExplicitTableaus.DormandPrince())
 solve(prob, alg)
 ```
 
-(The `construct*` prefix on the tableau constructors was dropped in
-OrdinaryDiffEq v7; the new names live in `OrdinaryDiffEqExplicitTableaus` /
-`OrdinaryDiffEqImplicitTableaus` and are no longer exported.)
 
 #### CompositeAlgorithm
 
@@ -1252,11 +1247,9 @@ import NeuralPDE
 
 ### List of Supplied Tableaus
 
-A large variety of tableaus have been supplied by default. Starting with
-OrdinaryDiffEq v7 / DiffEqDevTools v3 these live in
+A large variety of tableaus have been supplied by default. These live in
 `OrdinaryDiffEqExplicitTableaus` / `OrdinaryDiffEqImplicitTableaus` under
-their bare names (no `construct` prefix), and are no longer exported — call
-them qualified. The list of tableaus can be found in
+their bare names. The list of tableaus can be found in
 [the developer docs](https://docs.sciml.ai/DiffEqDevDocs/stable/internals/tableaus/).
 To use them:
 

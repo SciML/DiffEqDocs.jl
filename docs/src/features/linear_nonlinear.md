@@ -37,9 +37,7 @@ on the choices.
 ## Preconditioners: `precs` Specification
 
 Any [LinearSolve.jl-compatible preconditioner](https://docs.sciml.ai/LinearSolve/stable/basics/Preconditioners/)
-can be used as a left or right preconditioner. Starting with OrdinaryDiffEq
-v7 / DiffEqBase v7, the per-solver `precs` kwarg and the old `DEFAULT_PRECS`
-default were removed — preconditioners are now configured on the `linsolve`
+can be used as a left or right preconditioner. Preconditioners are configured on the `linsolve`
 object itself, through LinearSolve's `Pl` / `Pr` interface. For example:
 
 ```julia

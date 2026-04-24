@@ -225,8 +225,7 @@ valid [LinearSolve.jl](https://docs.sciml.ai/LinearSolve/stable/) solver.
 ## Adding a Preconditioner
 
 Any [LinearSolve.jl-compatible preconditioner](https://docs.sciml.ai/LinearSolve/stable/basics/Preconditioners/)
-can be used as a preconditioner in the linear solver interface. Starting with
-OrdinaryDiffEq v7 / DiffEqBase v7, the `precs` keyword is on the
+can be used as a preconditioner in the linear solver interface. The `precs` keyword is on the
 LinearSolve.jl linear solver object (e.g. `KrylovJL_GMRES(precs = ...)`)
 rather than on the ODE algorithm, and the `precs` callback signature is
 `Pl, Pr = precs(A, p)` — where `A` is the current `W = I - γJ` operator and

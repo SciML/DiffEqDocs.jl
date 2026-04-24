@@ -151,7 +151,7 @@ The solution interface also includes some special fields. The problem object
 `prob` and the algorithm used to solve the problem `alg` are included in the
 solution. Additionally, the field `dense` is a boolean which states whether
 the interpolation functionality is available. Further, the field `stats`
-(formerly `destats`, renamed in SciMLBase v3) contains the internal statistics
+contains the internal statistics
 for the solution process, such as the number of linear solves and convergence
 failures. Lastly, there is a mutable state `tslocation` which controls the
 plot recipe behavior. By default, `tslocation=0`.

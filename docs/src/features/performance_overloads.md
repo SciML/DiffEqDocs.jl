@@ -17,9 +17,8 @@ of pre-computed functions to speed up the calculations. This is offered via the
 
 All applicable stiff differential equation solvers in the Julia ecosystem
 (OrdinaryDiffEq.jl, StochasticDiffEq.jl, DelayDiffEq.jl, etc.) take an
-`autodiff` keyword for handling automatic Jacobian construction. Starting with
-OrdinaryDiffEq v7 / SciMLBase v3 this takes an `ADTypes` object rather than a
-`Bool`, which means every AD backend in the Julia ecosystem is supported
+`autodiff` keyword for handling automatic Jacobian construction. This takes an `ADTypes` object, 
+which means every AD backend in the Julia ecosystem is supported
 through the same interface:
 
   - `autodiff`: Specifies the AD backend to use for Jacobian / gradient
@@ -34,10 +33,6 @@ through the same interface:
     `nothing`, which means it will be chosen true/false depending on circumstances
     of the solver, such as whether a Krylov subspace method is used for `linsolve`.
 
-The old solver kwargs `chunk_size`, `diff_type`, and `standardtag` were
-removed in OrdinaryDiffEq v7 — the first two are now configured on the
-`ADTypes` object (`AutoForwardDiff(chunksize=…)` /
-`AutoFiniteDiff(fdtype=…)`) and the latter is always on.
 
 ## Passing Jacobian Function Definitions
 

@@ -21,9 +21,7 @@ df = DataFrames.DataFrame(sol)
 ```
 
 If we attach an ModelingToolkit / SciML symbolic system via the problem's
-`sys`, then those names will be used (the old `syms`/`paramsyms`/`indepsym`
-kwargs on `ODEFunction` were removed in SciMLBase v3; use the symbolic
-interface instead):
+`sys`, then those names will be used:
 
 ```@example IO
 df = DataFrames.DataFrame(sol)
