@@ -206,13 +206,13 @@ interpolation, but these steps are only taken when the interpolation is used.
 These methods when lazy assume that the parameter vector `p` will be unchanged
 between the moment of the interval solving and the interpolation. If `p` is
 changed in a ContinuousCallback, or in a DiscreteCallback and the continuous
-solution is used after the full solution, then set `lazy=false`.
+solution is used after the full solution, then set `lazy=Val{false}()`.
 
 Example:
 
 ```julia
 solve(prob, Vern7()) # lazy by default
-solve(prob, Vern7(lazy = false))
+solve(prob, Vern7(lazy = Val{false}()))
 ```
 
 #### Parallel Explicit Runge-Kutta Methods
@@ -799,9 +799,11 @@ Additionally, there is the tableau method:
 Example usage:
 
 ```julia
-alg = ExplicitRK(tableau = constructDormandPrince())
+using OrdinaryDiffEqExplicitTableaus
+alg = ExplicitRK(tableau = OrdinaryDiffEqExplicitTableaus.DormandPrince())
 solve(prob, alg)
 ```
+
 
 #### CompositeAlgorithm
 
@@ -1245,24 +1247,26 @@ import NeuralPDE
 
 ### List of Supplied Tableaus
 
-A large variety of tableaus have been supplied by default, via DiffEqDevTools.jl.
-The list of tableaus can be found in [the developer docs](https://docs.sciml.ai/DiffEqDevDocs/stable/internals/tableaus/).
-To use them, note you must install the library:
+A large variety of tableaus have been supplied by default. These live in
+`OrdinaryDiffEqExplicitTableaus` / `OrdinaryDiffEqImplicitTableaus` under
+their bare names. The list of tableaus can be found in
+[the developer docs](https://docs.sciml.ai/DiffEqDevDocs/stable/internals/tableaus/).
+To use them:
 
 ```julia
 import Pkg
-Pkg.add("DiffEqDevTools")
-import DiffEqDevTools
+Pkg.add(["OrdinaryDiffEqExplicitTableaus", "OrdinaryDiffEqImplicitTableaus"])
+using OrdinaryDiffEqExplicitTableaus, OrdinaryDiffEqImplicitTableaus
 ```
 
 For the most useful and common algorithms, a hand-optimized version is supplied
 in OrdinaryDiffEq.jl, which is recommended for general uses (i.e. use `DP5`
-instead of `ExplicitRK` with `tableau=constructDormandPrince()`). However, these
-serve as a good method for comparing between tableaus and understanding the
-pros/cons of the methods. Implemented are every published tableau (that I know
-exists). Note that user-defined tableaus also are accepted. To see how to define
-a tableau, checkout the [premade tableau source code](https://github.com/SciML/DiffEqDevTools.jl/blob/master/src/ode_tableaus.jl).
-Tableau docstrings should have appropriate citations (if not, file an issue).
+instead of `ExplicitRK` with `tableau=OrdinaryDiffEqExplicitTableaus.DormandPrince()`).
+However, these serve as a good method for comparing between tableaus and
+understanding the pros/cons of the methods. Implemented are every published
+tableau (that I know exists). Note that user-defined tableaus also are
+accepted. Tableau docstrings should have appropriate citations (if not, file
+an issue).
 
 Plot recipes are provided which will plot the stability region for a given tableau.
 

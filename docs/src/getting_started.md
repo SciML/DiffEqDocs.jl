@@ -184,11 +184,11 @@ type has an associated page detailing all the solvers associated with the proble
 
 #### Handling the Solution Type
 
-The result of `solve` is a solution object. We can access the 5th value of the
+The result of `solve` is a solution object. We can access the 5th timestep of the
 solution with:
 
 ```@example ODE2
-sol[5]
+sol.u[5]
 ```
 
 or get the time of the 8th timestep by:
@@ -201,7 +201,7 @@ Convenience features are also included. We can build an array using a
 comprehension over the solution tuples via:
 
 ```@example ODE2
-[t + u for (u, t) in DE.tuples(sol)]
+[t + u for (u, t) in zip(sol.u, sol.t)]
 ```
 
 or more generally
@@ -473,12 +473,12 @@ Plots.plot(sol)
 Note that the analysis tools generalize over to systems of equations as well.
 
 ```@example ODE4
-sol[4]
+sol.u[4]
 ```
 
-still returns the solution at the fourth timestep. It also indexes into the array
-as well. The last value is the timestep, and the beginning values are for the component.
-This means
+still returns the solution at the fourth timestep. The solution also indexes
+into the underlying array. The last index is the timestep, and the preceding
+indices are for the component. This means
 
 ```@example ODE4
 sol[5, 3]

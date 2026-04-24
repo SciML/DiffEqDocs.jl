@@ -85,8 +85,8 @@ Let's add the maxima and minima to the plots:
 
 ```@example minmax
 Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
-Plots.scatter!([opt.u], [opt.minimum], label = "Local Min")
-Plots.scatter!([opt2.u], [-opt2.minimum], label = "Local Max")
+Plots.scatter!([opt.u], [opt.objective], label = "Local Min")
+Plots.scatter!([opt2.u], [-opt2.objective], label = "Local Max")
 ```
 
 ### Global Optimization
@@ -108,6 +108,6 @@ gopt2 = OPT.solve(optprob2, OptNL.NLopt.GN_ORIG_DIRECT_L())
 
 ```@example minmax
 Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
-Plots.scatter!([gopt.u], [gopt.minimum], label = "Global Min")
-Plots.scatter!([gopt2.u], [-gopt2.minimum], label = "Global Max")
+Plots.scatter!([gopt.u], [gopt.objective], label = "Global Min")
+Plots.scatter!([gopt2.u], [-gopt2.objective], label = "Global Max")
 ```

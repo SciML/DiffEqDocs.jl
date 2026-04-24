@@ -126,7 +126,7 @@ are added via `addprocs()`, but we can change this to use multithreading via
 
 ```@example sde
 sol = SDE.solve(ensembleprob, SDE.EnsembleThreads(), trajectories = 1000);
-@info "Ensemble solution computed with $(length(sol)) trajectories" # hide
+@info "Ensemble solution computed with $(length(sol.u)) trajectories" # hide
 nothing # hide
 ```
 

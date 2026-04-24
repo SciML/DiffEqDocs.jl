@@ -150,10 +150,11 @@ number of saved timepoints.
 The solution interface also includes some special fields. The problem object
 `prob` and the algorithm used to solve the problem `alg` are included in the
 solution. Additionally, the field `dense` is a boolean which states whether
-the interpolation functionality is available. Further, the field `destats`
-contains the internal statistics for the solution process, such as the number
-of linear solves and convergence failures. Lastly, there is a mutable state
-`tslocation` which controls the plot recipe behavior. By default, `tslocation=0`.
+the interpolation functionality is available. Further, the field `stats`
+contains the internal statistics
+for the solution process, such as the number of linear solves and convergence
+failures. Lastly, there is a mutable state `tslocation` which controls the
+plot recipe behavior. By default, `tslocation=0`.
 Its values have different meanings between partial and ordinary differential equations:
 
   - `tslocation=0`  for non-spatial problems (ODEs) means that the plot recipe
@@ -168,7 +169,7 @@ will default to plotting the surface at the final timepoint. The iterator interf
 simply iterates the value of `tslocation`, and the `animate` function iterates
 the solution calling solve at each step.
 
-## Differential Equation Solver Statistics (destats)
+## Differential Equation Solver Statistics (sol.stats)
 
 ```@docs
 SciMLBase.DEStats

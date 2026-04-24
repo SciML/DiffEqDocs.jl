@@ -16,25 +16,23 @@ of pre-computed functions to speed up the calculations. This is offered via the
     using the in-solver code.
 
 All applicable stiff differential equation solvers in the Julia ecosystem
-(OrdinaryDiffEq.jl, StochasticDiffEq.jl, DelayDiffEq.jl, etc.) take the following
-arguments for handling the automatic Jacobian construction with the following defaults:
+(OrdinaryDiffEq.jl, StochasticDiffEq.jl, DelayDiffEq.jl, etc.) take an
+`autodiff` keyword for handling automatic Jacobian construction. This takes an `ADTypes` object, 
+which means every AD backend in the Julia ecosystem is supported
+through the same interface:
 
-  - `chunk_size`: The chunk size used with ForwardDiff.jl. Defaults to `Val{0}()`
-    and thus uses the internal ForwardDiff.jl algorithm for the choice.
-  - `autodiff`: Specifies whether to use automatic differentiation via
-    [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl) or finite
-    differencing via [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl).
-    Defaults to `Val{true}()` for automatic differentiation.
-  - `standardtag`: Specifies whether to use package-specific tags instead of the
-    ForwardDiff default function-specific tags. For more information, see
-    [this blog post](https://www.stochasticlifestyle.com/improved-forwarddiff-jl-stacktraces-with-package-tags/).
-    Defaults to `Val{true}()`.
+  - `autodiff`: Specifies the AD backend to use for Jacobian / gradient
+    construction via the [ADTypes.jl](https://github.com/SciML/ADTypes.jl)
+    interface. Common choices include `AutoForwardDiff()` (default),
+    `AutoFiniteDiff()` (numerical fallback), `AutoEnzyme()`, `AutoZygote()`,
+    and `AutoMooncake()`. `AutoForwardDiff` and `AutoFiniteDiff` accept their
+    own tuning kwargs (e.g. `AutoForwardDiff(chunksize=12)`, or
+    `AutoFiniteDiff(fdtype=Val(:central))`), which replace the old
+    per-solver `chunk_size` / `diff_type` kwargs.
   - `concrete_jac`: Specifies whether a Jacobian should be constructed. Defaults to
     `nothing`, which means it will be chosen true/false depending on circumstances
     of the solver, such as whether a Krylov subspace method is used for `linsolve`.
-  - `diff_type`: The type of differentiation used in FiniteDiff.jl if `autodiff=false`.
-    Defaults to `Val{:forward}`, with alternatives of `Val{:central}` and
-    `Val{:complex}`.
+
 
 ## Passing Jacobian Function Definitions
 
