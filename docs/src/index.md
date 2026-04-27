@@ -1,3 +1,15 @@
+!!! warning "OrdinaryDiffEq v7 / SciMLBase v3 released — breaking changes"
+    The OrdinaryDiffEq v7 ecosystem release (OrdinaryDiffEq v7, SciMLBase v3,
+    RecursiveArrayTools v4, DiffEqBase v7) introduces breaking changes:
+    typed `verbose`/`autodiff`/`alias` (no more `Bool`); `AutoSpecialize`
+    `ODEFunction` default; step-size controllers as objects; RAT v4
+    element-first array semantics (`sol[i]` → `sol.u[i]`); removed re-exports
+    (`sol.destats` → `sol.stats`, `DEAlgorithm` → `AbstractDEAlgorithm`);
+    `ADTypes` replaces `chunk_size`/`diff_type`/`standardtag`/`autodiff::Bool`;
+    ensemble `prob_func(prob, i, repeat)` → `prob_func(prob, ctx)`.
+    See the [OrdinaryDiffEq v7 migration guide](migration/ordinarydiffeq_v7.md)
+    for the full table.
+
 # DifferentialEquations.jl: Efficient Differential Equation Solving in Julia
 
 This is a suite for numerically solving differential equations written in Julia
