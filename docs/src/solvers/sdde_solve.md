@@ -1,5 +1,15 @@
 # SDDE Solvers
 
+!!! note "StochasticDelayDiffEq.jl is deprecated"
+    The separate `StochasticDelayDiffEq.jl` package is deprecated as of the
+    OrdinaryDiffEq v7 / SciMLBase v3 ecosystem release. SDDE problems are now
+    solved directly via `DelayDiffEq.jl`, which has supported them for some time.
+    Replace `using StochasticDelayDiffEq` with `using DelayDiffEq` (and add
+    `using StochasticDiffEq` if you rely on SDE algorithm names such as `EM()`,
+    `RKMil()`, or `SRIW1()`). The `MethodOfSteps(alg)` wrapper and the
+    `SDDEProblem` constructor are unchanged. See the
+    [OrdinaryDiffEq v7 migration guide](@ref ordinarydiffeq_v7_migration) for details.
+
 `solve(prob::AbstractSDDEProblem, alg; kwargs)`
 
 Solves the SDDE defined by `prob` using the algorithm `alg`. If no algorithm is
@@ -8,7 +18,7 @@ given, a default algorithm will be chosen.
 ## Recommended Methods
 
 The recommended method for SDDE problems are the `SDE` algorithms. On SDEs you
-simply reuse the same algorithm as the `SDE` solver, and StochasticDelayDiffEq.jl
+simply reuse the same algorithm as the `SDE` solver, and `DelayDiffEq.jl`
 will convert it to an SDDE solver. The recommendations for SDDE solvers match
 those of SDEs, except that only up to strong order 1 is recommended. Also note
 that order 1 is currently only attainable if there is no delay term in the
@@ -23,6 +33,8 @@ technique as SDEs, but no proof of convergence is known for SDDEs.
 ## Example
 
 ```julia
+using DelayDiffEq, StochasticDiffEq
+
 function hayes_modelf(du, u, h, p, t)
     τ, a, b, c, α, β, γ = p
     du .= a .* u .+ b .* h(p, t - τ) .+ c
