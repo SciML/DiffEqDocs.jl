@@ -1,4 +1,19 @@
-# [OrdinaryDiffEq v7 Migration Guide](@id ordinarydiffeq_v7_migration)
+# [DifferentialEquations.jl v8 / OrdinaryDiffEq v7 Migration Guide](@id ordinarydiffeq_v7_migration)
+
+**DifferentialEquations.jl v8** is the coordinated meta-release of this
+breaking-change wave. The actual breaking changes live in the underlying
+solver and base packages — most prominently **OrdinaryDiffEq v7**,
+**SciMLBase v3**, **DiffEqBase v7**, **RecursiveArrayTools v4**,
+**DelayDiffEq v6**, **StochasticDiffEq v7**, and the cascade of major bumps
+across every `OrdinaryDiffEqXXX` / `StochasticDiffEqXXX` sublib (see
+SciML/OrdinaryDiffEq.jl#3562 for the cascade and SciML/OrdinaryDiffEq.jl#3565
+for the OrdinaryDiffEqCore / DiffEqDevTools revert that kept those two at v4
+and v3 respectively).
+
+If you upgrade `DifferentialEquations` to v8 you will pick up the full set;
+if you depend on a specific sublib (e.g. `OrdinaryDiffEqTsit5`) you only get
+that lib's bump — the migration items below are split by package so you only
+need to read the parts relevant to what you use.
 
 This page mirrors <https://github.com/SciML/OrdinaryDiffEq.jl/blob/master/NEWS.md> as of
 2026-04-24; that file is the authoritative source of truth — check there for any updates

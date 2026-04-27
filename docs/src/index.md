@@ -1,14 +1,25 @@
-!!! warning "OrdinaryDiffEq v7 / SciMLBase v3 released — breaking changes"
-    The OrdinaryDiffEq v7 ecosystem release (OrdinaryDiffEq v7, SciMLBase v3,
-    RecursiveArrayTools v4, DiffEqBase v7) introduces breaking changes:
-    typed `verbose`/`autodiff`/`alias` (no more `Bool`); `AutoSpecialize`
-    `ODEFunction` default; step-size controllers as objects; RAT v4
-    element-first array semantics (`sol[i]` → `sol.u[i]`); removed re-exports
-    (`sol.destats` → `sol.stats`, `DEAlgorithm` → `AbstractDEAlgorithm`);
-    `ADTypes` replaces `chunk_size`/`diff_type`/`standardtag`/`autodiff::Bool`;
-    ensemble `prob_func(prob, i, repeat)` → `prob_func(prob, ctx)`.
-    See the [OrdinaryDiffEq v7 migration guide](migration/ordinarydiffeq_v7.md)
-    for the full table.
+!!! warning "DifferentialEquations.jl v8 released — breaking changes"
+    DifferentialEquations.jl v8 ships the coordinated breaking-change wave
+    of the underlying ecosystem: **OrdinaryDiffEq v7**, **SciMLBase v3**,
+    **DiffEqBase v7**, **RecursiveArrayTools v4**, **DelayDiffEq v6**,
+    **StochasticDiffEq v7**, and major bumps across every `OrdinaryDiffEqXXX`
+    / `StochasticDiffEqXXX` sublib. Highlights:
+
+      - typed `verbose` / `autodiff` / `alias` / `lazy` (no more `Bool`)
+      - `AutoSpecialize` is the new `ODEFunction` default
+      - step-size controllers are objects (`PIController`, `PIDController`, …)
+        instead of loose `gamma` / `beta1` / `beta2` / `qmin` / `qmax` kwargs
+      - RAT v4 element-first array semantics (`sol[i]` → `sol.u[i]`)
+      - removed re-exports (`sol.destats` → `sol.stats`,
+        `DEAlgorithm` → `AbstractDEAlgorithm`, `has_destats` → `has_stats`,
+        `u_modified!` → `derivative_discontinuity!`)
+      - `ADTypes` replaces `chunk_size` / `diff_type` / `standardtag` /
+        `autodiff::Bool`
+      - ensemble `prob_func(prob, i, repeat)` → `prob_func(prob, ctx)` with
+        `ctx.sim_id`
+
+    See the [DifferentialEquations.jl v8 / OrdinaryDiffEq v7 migration guide](migration/ordinarydiffeq_v7.md)
+    for the full table and recommended upgrade path.
 
 # DifferentialEquations.jl: Efficient Differential Equation Solving in Julia
 
