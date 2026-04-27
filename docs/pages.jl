@@ -155,7 +155,7 @@ pages = Any[
     "OrdinaryDiffEq.jl API" => ordinary_diffeq_pages,
     "StochasticDiffEq.jl API" => stochastic_diffeq_pages,
     "Extra Details" => Any["extras/timestepping.md"],
-    "Migration" => Any[
+    "Change Log" => Any[
         "migration/ordinarydiffeq_v7.md",
     ],
 ]
