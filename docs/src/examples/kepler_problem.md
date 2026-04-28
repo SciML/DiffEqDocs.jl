@@ -19,7 +19,11 @@ Also, we know that
 ```
 
 ```@example kepler
-import OrdinaryDiffEq as ODE, ForwardDiff, Plots
+import OrdinaryDiffEq as ODE
+import OrdinaryDiffEqSymplecticRK as ODESymp # KahanLi6
+import OrdinaryDiffEqRKN as ODERKN           # DPRKN6, ERKN4
+import OrdinaryDiffEqLowOrderRK as ODELow    # RK4
+import ForwardDiff, Plots
 import LinearAlgebra: norm
 H(q, p) = norm(p)^2 / 2 - inv(norm(q))
 L(q, p) = q[1] * p[2] - p[1] * q[2]
@@ -33,7 +37,7 @@ initial_cond = (initial_position, initial_velocity)
 initial_first_integrals = (H(initial_cond...), L(initial_cond...))
 tspan = (0, 20.0)
 prob = ODE.DynamicalODEProblem(pdot, qdot, initial_velocity, initial_position, tspan)
-sol = ODE.solve(prob, ODE.KahanLi6(), dt = 1 // 10);
+sol = ODE.solve(prob, ODESymp.KahanLi6(), dt = 1 // 10);
 ```
 
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
@@ -59,7 +63,7 @@ analysis_plot(sol, H, L)
 Let's try to use a Runge-Kutta-Nyström solver to solve this problem and check the first integrals' variation.
 
 ```@example kepler
-sol2 = ODE.solve(prob, ODE.DPRKN6())  # dt is not necessary, because unlike symplectic
+sol2 = ODE.solve(prob, ODERKN.DPRKN6())  # dt is not necessary, because unlike symplectic
 # integrators DPRKN6 is adaptive
 @show sol2.u |> length
 analysis_plot(sol2, H, L)
@@ -68,7 +72,7 @@ analysis_plot(sol2, H, L)
 Let's then try to solve the same problem by the `ERKN4` solver, which is specialized for sinusoid-like periodic function
 
 ```@example kepler
-sol3 = ODE.solve(prob, ODE.ERKN4()) # dt is not necessary, because unlike symplectic
+sol3 = ODE.solve(prob, ODERKN.ERKN4()) # dt is not necessary, because unlike symplectic
 # integrators ERKN4 is adaptive
 @show sol3.u |> length
 analysis_plot(sol3, H, L)
@@ -127,7 +131,7 @@ function hamiltonian(du, u, params, t)
 end
 
 prob2 = ODE.ODEProblem(hamiltonian, [initial_position; initial_velocity], tspan)
-sol_ = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false)
+sol_ = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false)
 analysis_plot2(sol_, H, L)
 ```
 
@@ -140,7 +144,7 @@ function first_integrals_manifold(residual, u, p, t)
 end
 
 cb = CB.ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
-sol5 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = cb)
+sol5 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = cb)
 analysis_plot2(sol5, H, L)
 ```
 
@@ -152,7 +156,7 @@ function energy_manifold(residual, u, p, t)
     residual[3:4] .= 0
 end
 energy_cb = CB.ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
-sol6 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
+sol6 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
 analysis_plot2(sol6, H, L)
 ```
 
@@ -164,7 +168,7 @@ function angular_manifold(residual, u, p, t)
     residual[3:4] .= 0
 end
 angular_cb = CB.ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
-sol7 = ODE.solve(prob2, ODE.RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
+sol7 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
 analysis_plot2(sol7, H, L)
 ```
 

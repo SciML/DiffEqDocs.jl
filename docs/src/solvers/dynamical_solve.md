@@ -38,6 +38,17 @@ which require this assumption will lose accuracy if this assumption is violated.
 Methods listed below make note of this requirement with "Requires quadratic
 kinetic energy".
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqRKN` | DPRKN6/8/12, ERKN4/5/7, IRKN3/4 | Second-order ODEs (Newtonian mechanics) without first-order conversion. |
+| `OrdinaryDiffEqSymplecticRK` | KahanLi6/8, McAte, VelocityVerlet, Yoshida6 | Hamiltonian / conservative dynamics; long-time energy preservation. |
+| `GeometricIntegratorsDiffEq` | Gauss, Lobatto, Radau, Symplectic methods | Wrappers for GeometricIntegrators.jl. |
+
+
 ## Recommendations
 
 When energy conservation is required, use a symplectic method. Otherwise, the
@@ -78,59 +89,70 @@ Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
+!!! note "v8: import from the dynamical OrdinaryDiffEq sublibs"
+
+    None of the specialized solvers below are in OrdinaryDiffEq's default
+    re-export set under v7. Bring them in directly:
+
+    ```julia
+    using OrdinaryDiffEqRKN          # Nystrom*, IRKN*, ERKN*, DPRKN*
+    using OrdinaryDiffEqSymplecticRK # SymplecticEuler, VelocityVerlet, ...
+                                     # McAte*, KahanLi6, KahanLi8, SofSpa10
+    ```
+
 ### Runge-Kutta-Nyström Integrators
 
-  - `Nystrom4`: 4th order explicit Runge-Kutta-Nyström method. Allows acceleration
+  - `OrdinaryDiffEqRKN.Nystrom4`: 4th order explicit Runge-Kutta-Nyström method. Allows acceleration
     to depend on velocity. Fixed timestep only.
-  - `IRKN3`: 4th order explicit two-step Runge-Kutta-Nyström method. Fixed
+  - `OrdinaryDiffEqRKN.IRKN3`: 4th order explicit two-step Runge-Kutta-Nyström method. Fixed
     timestep only.
-  - `IRKN4`: 4th order explicit two-step Runge-Kutta-Nyström method. Can be more
+  - `OrdinaryDiffEqRKN.IRKN4`: 4th order explicit two-step Runge-Kutta-Nyström method. Can be more
     efficient for smooth problems. Fixed timestep only.
-  - `ERKN4`: 4th order Runge-Kutta-Nyström method which integrates the periodic
+  - `OrdinaryDiffEqRKN.ERKN4`: 4th order Runge-Kutta-Nyström method which integrates the periodic
     properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
     problems.
-  - `ERKN5`: 5th order Runge-Kutta-Nyström method which integrates the periodic
+  - `OrdinaryDiffEqRKN.ERKN5`: 5th order Runge-Kutta-Nyström method which integrates the periodic
     properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
     problems.
-  - `ERKN7`: 7th order Runge-Kutta-Nyström method which integrates the periodic
+  - `OrdinaryDiffEqRKN.ERKN7`: 7th order Runge-Kutta-Nyström method which integrates the periodic
     properties of the harmonic oscillator exactly. Gets extra efficiency on periodic
     problems.
-  - `Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.Nystrom4VelocityIndependent`: 4th order explicit Runge-Kutta-Nyström method.
     Fixed timestep only.
-  - `Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.Nystrom5VelocityIndependent`: 5th order explicit Runge-Kutta-Nyström method.
     Fixed timestep only.
-  - `DPRKN4`: 4th order explicit adaptive Runge-Kutta-Nyström method.
-  - `DPRKN5`: 5th order explicit adaptive Runge-Kutta-Nyström method.
-  - `DPRKN6`: 6th order explicit adaptive Runge-Kutta-Nyström method. Free 6th
+  - `OrdinaryDiffEqRKN.DPRKN4`: 4th order explicit adaptive Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.DPRKN5`: 5th order explicit adaptive Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.DPRKN6`: 6th order explicit adaptive Runge-Kutta-Nyström method. Free 6th
     order interpolant.
-  - `DPRKN6FM`: 6th order explicit adaptive Runge-Kutta-Nyström method.
-  - `DPRKN8`: 8th order explicit adaptive Runge-Kutta-Nyström method.
-  - `DPRKN12`: 12th order explicit adaptive Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.DPRKN6FM`: 6th order explicit adaptive Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.DPRKN8`: 8th order explicit adaptive Runge-Kutta-Nyström method.
+  - `OrdinaryDiffEqRKN.DPRKN12`: 12th order explicit adaptive Runge-Kutta-Nyström method.
 
 ### Symplectic Integrators
 
 Note that all symplectic integrators are fixed timestep only.
 
-  - `SymplecticEuler`: First order explicit symplectic integrator
-  - `VelocityVerlet`: 2nd order explicit symplectic integrator. Requires `f_2(t,u) = v`, i.e.
+  - `OrdinaryDiffEqSymplecticRK.SymplecticEuler`: First order explicit symplectic integrator
+  - `OrdinaryDiffEqSymplecticRK.VelocityVerlet`: 2nd order explicit symplectic integrator. Requires `f_2(t,u) = v`, i.e.
     a second order ODE.
-  - `VerletLeapfrog`: 2nd order explicit symplectic integrator.
-  - `PseudoVerletLeapfrog`: 2nd order explicit symplectic integrator.
-  - `McAte2`: Optimized efficiency 2nd order explicit symplectic integrator.
-  - `Ruth3`: 3rd order explicit symplectic integrator.
-  - `McAte3`: Optimized efficiency 3rd order explicit symplectic integrator.
-  - `CandyRoz4`: 4th order explicit symplectic integrator.
-  - `McAte4`: 4th order explicit symplectic integrator. Requires quadratic
+  - `OrdinaryDiffEqSymplecticRK.VerletLeapfrog`: 2nd order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.PseudoVerletLeapfrog`: 2nd order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.McAte2`: Optimized efficiency 2nd order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.Ruth3`: 3rd order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.McAte3`: Optimized efficiency 3rd order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.CandyRoz4`: 4th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.McAte4`: 4th order explicit symplectic integrator. Requires quadratic
     kinetic energy.
-  - `CalvoSanz4`: Optimized efficiency 4th order explicit symplectic integrator.
-  - `McAte42`: 4th order explicit symplectic integrator. (Broken)
-  - `McAte5`: Optimized efficiency 5th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.CalvoSanz4`: Optimized efficiency 4th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.McAte42`: 4th order explicit symplectic integrator. (Broken)
+  - `OrdinaryDiffEqSymplecticRK.McAte5`: Optimized efficiency 5th order explicit symplectic integrator.
     Requires quadratic kinetic energy.
-  - `Yoshida6`: 6th order explicit symplectic integrator.
-  - `KahanLi6`: Optimized efficiency 6th order explicit symplectic integrator.
-  - `McAte8`: 8th order explicit symplectic integrator.
-  - `KahanLi8`: Optimized efficiency 8th order explicit symplectic integrator.
-  - `SofSpa10`: 10th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.Yoshida6`: 6th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.KahanLi6`: Optimized efficiency 6th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.McAte8`: 8th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.KahanLi8`: Optimized efficiency 8th order explicit symplectic integrator.
+  - `OrdinaryDiffEqSymplecticRK.SofSpa10`: 10th order explicit symplectic integrator.
 
 ### GeometricIntegrators.jl
 
@@ -144,7 +166,7 @@ Pkg.clone("https://github.com/SciML/GeometricIntegratorsDiffEq.jl")
 import GeometricIntegratorsDiffEq
 ```
 
-  - `GISymplecticEulerA` - First order explicit symplectic Euler A
-  - `GISymplecticEulerB` - First order explicit symplectic Euler B
-  - `GILobattoIIIAIIIB(n)` - Nth order Gauss-Labatto-IIIA-IIIB
-  - `GILobattoIIIBIIIA(n)` - Nth order Gauss-Labatto-IIIB-IIIA
+  - `GeometricIntegratorsDiffEq.GISymplecticEulerA` - First order explicit symplectic Euler A
+  - `GeometricIntegratorsDiffEq.GISymplecticEulerB` - First order explicit symplectic Euler B
+  - `GeometricIntegratorsDiffEq.GILobattoIIIAIIIB(n)` - Nth order Gauss-Labatto-IIIA-IIIB
+  - `GeometricIntegratorsDiffEq.GILobattoIIIBIIIA(n)` - Nth order Gauss-Labatto-IIIB-IIIA

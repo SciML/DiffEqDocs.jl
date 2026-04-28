@@ -5,6 +5,22 @@
 Solves the DDE defined by `prob` using the algorithm `alg`. If no algorithm is
 given, a default algorithm will be chosen.
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `DelayDiffEq` | `MethodOfSteps`, `DDEProblem`, `SDDEProblem` | DDE / SDDE driver - pick the inner ODE alg by ODE-style criteria. |
+| `OrdinaryDiffEqTsit5` | `Tsit5`, `AutoTsit5` | Default non-stiff inner alg at medium tolerances (1e-3 - 1e-8). |
+| `OrdinaryDiffEqVerner` | Vern6/7/8/9, AutoVern (lazy variants) | High-precision non-stiff inner alg (down to 1e-12+). |
+| `OrdinaryDiffEqLowOrderRK` | BS3, DP5, RK4, Heun, Euler, OwrenZen | Non-stiff DDE inner alg at loose tolerances. |
+| `OrdinaryDiffEqHighOrderRK` | DP8, TanYam7, TsitPap8, PFRK87 | High-order non-stiff inner alg alternatives to Verner. |
+| `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium DDEs (mass-matrix). |
+| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DDEs with cheap Jacobians; general fallback. |
+| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | Stiff large/sparse DDEs. |
+
+
 ## Recommended Methods
 
 The recommended method for DDE problems are the `MethodOfSteps` algorithms.
@@ -15,6 +31,26 @@ MethodOfSteps(alg; constrained = false, fpsolve = NLFunctional(; max_iter = 10))
 ```
 
 where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
+
+!!! note "v8: DelayDiffEq must be loaded explicitly"
+
+    Under DifferentialEquations.jl v8 the `using DifferentialEquations`
+    umbrella only re-exports `OrdinaryDiffEq`.  `MethodOfSteps`,
+    `DDEProblem`, and the DDE-specific solver paths come from
+    `DelayDiffEq.jl`; load them with
+
+    ```julia
+    using DelayDiffEq        # MethodOfSteps, DDEProblem
+    # plus the OrdinaryDiffEq sublib(s) for the inner ODE algorithm, e.g.
+    using OrdinaryDiffEqTsit5: Tsit5
+    alg = MethodOfSteps(Tsit5())
+    ```
+
+    `DelayDiffEq` already `@reexport`s `OrdinaryDiffEq`'s default solver set
+    (`Tsit5`, `Vern6`–`Vern9`, `Rosenbrock23`, `Rodas5P`, `FBDF`, ...), so
+    `MethodOfSteps(Tsit5())` works after just `using DelayDiffEq`. Non-default
+    inner algorithms (`BS3`, `RK4`, `DP8`, `Rodas4`, `Rodas5`, ...) require
+    pulling in the corresponding `OrdinaryDiffEqXxx` sublib explicitly.
 
 ### Nonstiff DDEs
 

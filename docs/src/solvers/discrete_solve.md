@@ -1,5 +1,15 @@
 # Discrete Solvers
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqFunctionMap` | `FunctionMap` | Plain discrete iteration `u_{n+1} = f(u_n, p, t_n)` with full callback / saving support. |
+| `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation discrete iteration for tight inner loops. |
+
+
 ## DiscreteProblems
 
 `solve(prob::DiscreteProblem,alg;kwargs)`
@@ -21,7 +31,16 @@ all the extras like callbacks and saving support (but does have an integrator in
 
 ### OrdinaryDiffEq.jl
 
-  - `FunctionMap`: A basic function map which implements the full common interface.
+  - `OrdinaryDiffEqFunctionMap.FunctionMap`: A basic function map which implements the full common interface.
+
+!!! note "v8: import from `OrdinaryDiffEqFunctionMap`"
+
+    `FunctionMap` lives in `OrdinaryDiffEqFunctionMap` and is not part of
+    OrdinaryDiffEq's default re-export set. Import it via:
+
+    ```julia
+    using OrdinaryDiffEqFunctionMap   # FunctionMap
+    ```
 
 OrdinaryDiffEq.jl also contains the `FunctionMap` algorithm which lets you
 It has a piecewise constant interpolation and allows for all the
@@ -54,5 +73,5 @@ piecewise constant.
 
 ### SimpleDiffEq.jl
 
-  - `SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
+  - `SimpleDiffEq.SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
     and has an integrator interface version, but does not support callbacks or saving controls.

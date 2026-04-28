@@ -70,7 +70,9 @@ we can use `SecondOrderODEProblem` as follows.
 
 ```@example physics
 # Simple Harmonic Oscillator Problem
-import OrdinaryDiffEq as ODE, Plots
+import OrdinaryDiffEq as ODE
+import OrdinaryDiffEqRKN as ODERKN # DPRKN6
+import Plots
 
 #Parameters
 ω = 1
@@ -90,7 +92,7 @@ end
 
 #Pass to solvers
 prob = ODE.SecondOrderODEProblem(harmonicoscillator, dx₀, x₀, tspan, ω)
-sol = ODE.solve(prob, ODE.DPRKN6())
+sol = ODE.solve(prob, ODERKN.DPRKN6())
 
 #Plot
 Plots.plot(sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
@@ -382,6 +384,7 @@ Plots.plot(sol.t, energy .- energy[1], title = "Change in Energy over Time",
 To prevent energy drift, we can instead use a symplectic integrator. We can directly define and solve the `SecondOrderODEProblem`:
 
 ```@example physics
+import OrdinaryDiffEqSymplecticRK as ODESymp # KahanLi8
 function HH_acceleration!(dv, v, u, p, t)
     x, y = u
     dx, dy = dv
@@ -391,7 +394,7 @@ end
 initial_positions = [0.0, 0.1]
 initial_velocities = [0.5, 0.0]
 prob = ODE.SecondOrderODEProblem(HH_acceleration!, initial_velocities, initial_positions, tspan)
-sol2 = ODE.solve(prob, ODE.KahanLi8(), dt = 1 / 10);
+sol2 = ODE.solve(prob, ODESymp.KahanLi8(), dt = 1 / 10);
 ```
 
 Notice that we get the same results:
@@ -424,7 +427,7 @@ Plots.plot(sol2.t, energy .- energy[1], title = "Change in Energy over Time",
 And let's try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn't symplectic.
 
 ```@example physics
-sol3 = ODE.solve(prob, ODE.DPRKN6());
+sol3 = ODE.solve(prob, ODERKN.DPRKN6());
 energy = map(x -> E(x[3], x[4], x[1], x[2]), sol3.u)
 @show ΔE = energy[1] - energy[end]
 Plots.gr()

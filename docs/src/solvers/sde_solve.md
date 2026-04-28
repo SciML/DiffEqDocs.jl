@@ -1,5 +1,22 @@
 # [SDE Solvers](@id sde_solve)
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `StochasticDiffEqLowOrder` | EM, EulerHeun, LambaEM, RKMilCommute, SOSRA2 | Non-stiff SDE workhorse; diagonal/scalar noise. |
+| `StochasticDiffEqHighOrder` | SOSRI, SOSRA, RKMilGeneral, SRA1/2/3, SRIW1/2 | High-order strong/weak SDE methods (SRA/SRI families). |
+| `StochasticDiffEqMilstein` | RKMil, RKMilCommute | Itô-Milstein methods for diagonal-noise SDEs. |
+| `StochasticDiffEqImplicit` | ImplicitEM, ImplicitEulerHeun, ImplicitRKMil, STrapezoid, SImplicitMidpoint, SKenCarp | Stiff SDEs (drift-implicit and additive-noise SKenCarp). |
+| `StochasticDiffEqROCK` | SROCK, SROCK2, SROCKC2, SKSROCK | Stiff SDEs from PDE semi-discretization. |
+| `StochasticDiffEqWeak` | DRI1, RDI*, RS1/2, PL1WM, SIE, NON, COM | Weak-order convergence schemes for moment estimation. |
+| `StochasticDiffEqCore` | `IICommutative`, `IILevyArea` types | Internals; rarely imported directly. |
+| `BridgeDiffEq` | `BridgeR3`, `BridgeBS3`, `BridgeEM` | Wrappers for Bridge.jl ODE/SDE solvers. |
+| `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |
+
+
 ## Recommended Methods
 
 For most Ito diagonal and scalar noise problems where a good amount of accuracy is
@@ -80,10 +97,10 @@ approximation of the iterated integrals. For those methods, the algorithms have
 an `ii_approx` keyword argument that allows one to specify the method for the
 approximation. The choices are:
 
-  - `IICommutative`: a simplification of the integral which assumes the noise commutativity
+  - `StochasticDiffEqCore.IICommutative`: a simplification of the integral which assumes the noise commutativity
     property. If used on a non-commutative noise problem this will limit the strong convergence
     to 0.5.
-  - `IILevyArea`: computes the iterated integrals based on an approximation of the Levy area
+  - `StochasticDiffEqCore.IILevyArea`: computes the iterated integrals based on an approximation of the Levy area
     using the [LevyArea.jl](https://github.com/stochastics-uni-luebeck/LevyArea.jl) package:
     Kastner, F. and Rößler, A., [arXiv: 2201.08424](https://arxiv.org/abs/2201.08424)
     Kastner, F. and Rößler, A., LevyArea.jl, [10.5281/ZENODO.5883748](https://zenodo.org/record/5883749#.Yg-d698xmu4).
@@ -115,65 +132,78 @@ Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 Orders are given in terms of strong order.
 
+!!! note "v8: StochasticDiffEq must be loaded explicitly"
+
+    Under DifferentialEquations.jl v8 the `using DifferentialEquations`
+    umbrella only re-exports `OrdinaryDiffEq`. The SDE solvers below come from
+    `StochasticDiffEq.jl`; load them with
+
+    ```julia
+    using StochasticDiffEq    # SDEProblem, EM, SOSRI, SRIW1, ImplicitEM, ...
+    ```
+
+    or, equivalently, `using DifferentialEquations, StochasticDiffEq` if you
+    also want the umbrella.
+
 #### Nonstiff Methods
 
-  - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an
+  - `StochasticDiffEqLowOrder.EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an
     optional argument `split=true` for controlling step splitting. When splitting
     is enabled, the stability with large diffusion eigenvalues is improved. Can handle
     all forms of noise, including non-diagonal, scalar, and colored noise. Fixed
     time step only.†
-  - `LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
+  - `StochasticDiffEqLowOrder.LambaEM`- A modified Euler-Maruyama method with adaptive time stepping with
     an error estimator based on Lamba and Rackauckas. Has an optional argument
     `split=true` for controlling step splitting. When splitting is enabled, the
     stability with   large diffusion eigenvalues is improved. Strong Order 0.5 in
     the Ito sense. Can handle all forms of noise, including non-diagonal, scalar,
     and colored noise.†
-  - `EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
+  - `StochasticDiffEqLowOrder.EulerHeun` - The Euler-Heun method. Strong Order 0.5 in the Stratonovich sense.
     Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
     Fixed time step only.†
-  - `LambaEulerHeun` - A modified Euler-Heun method with adaptive time stepping
+  - `StochasticDiffEqLowOrder.LambaEulerHeun` - A modified Euler-Heun method with adaptive time stepping
     with an error estimator based on Lamba due to Rackauckas. Strong order 0.5 in
     the Stratonovich sense. Can handle all forms of noise, including non-diagonal,
     scalar, and colored noise.†
-  - `RKMil` - An explicit Runge-Kutta discretization of the strong order 1.0
+  - `StochasticDiffEqLowOrder.RKMil` - An explicit Runge-Kutta discretization of the strong order 1.0
     Milstein method. Defaults to solving the Ito problem, but
     `RKMil(interpretation=:Stratonovich)` makes it solve the Stratonovich problem.
     Only handles scalar and diagonal noise.†
-  - `RKMilCommute` - An explicit Runge-Kutta discretization of the strong order 1.0
+  - `StochasticDiffEqLowOrder.RKMilCommute` - An explicit Runge-Kutta discretization of the strong order 1.0
     Milstein method for commutative noise problems. Defaults to solving the Ito
     problem, but `RKMilCommute(interpretation=:Stratonovich)` makes it solve the
     Stratonovich problem. Uses a 1.5/2.0 error estimate for adaptive time stepping.†
-  - `RKMilGeneral(;interpretation=:Ito, ii_approx=IILevyArea()` - An explicit
+  - `StochasticDiffEqMilstein.RKMilGeneral(;interpretation=:Ito, ii_approx=IILevyArea()` - An explicit
     Runge-Kutta discretization of the strong order 1.0 Milstein method for general
     non-commutative noise problems. Allows for a choice of interpretation between
     `:Ito` and `:Stratonovich`. Allows for a choice of iterated integral approximation.
-  - `WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `WangLi3SMil_B` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `WangLi3SMil_C` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `WangLi3SMil_D` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `WangLi3SMil_E` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `WangLi3SMil_F` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
-  - `SRA` - Adaptive strong order 1.5 methods for additive Ito and Stratonovich SDEs.
+  - `StochasticDiffEqMilstein.WangLi3SMil_A` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqMilstein.WangLi3SMil_B` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqMilstein.WangLi3SMil_C` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqMilstein.WangLi3SMil_D` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqMilstein.WangLi3SMil_E` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqMilstein.WangLi3SMil_F` - fixed step-size explicit 3-stage Milstein methods for Ito problem with strong and weak order 1.0
+  - `StochasticDiffEqHighOrder.SRA` - Adaptive strong order 1.5 methods for additive Ito and Stratonovich SDEs.
     Default tableau is for SRA1. Can handle diagonal, non-diagonal and scalar
     additive noise.
-  - `SRI` - Adaptive strong order 1.5 methods for diagonal/scalar Ito SDEs.
+  - `StochasticDiffEqHighOrder.SRI` - Adaptive strong order 1.5 methods for diagonal/scalar Ito SDEs.
     Default tableau is for SRIW1.
-  - `SRIW1` - Adaptive strong order 1.5 and weak order 2.0 for diagonal/scalar Ito SDEs.†
-  - `SRIW2` - Adaptive strong order 1.5 and weak order 3.0 for diagonal/scalar Ito SDEs.†
-  - `SOSRI` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
+  - `StochasticDiffEqHighOrder.SRIW1` - Adaptive strong order 1.5 and weak order 2.0 for diagonal/scalar Ito SDEs.†
+  - `StochasticDiffEqHighOrder.SRIW2` - Adaptive strong order 1.5 and weak order 3.0 for diagonal/scalar Ito SDEs.†
+  - `StochasticDiffEqHighOrder.SOSRI` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
     diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
-  - `SOSRI2` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
+  - `StochasticDiffEqHighOrder.SOSRI2` - Stability-optimized adaptive strong order 1.5 and weak order 2.0 for
     diagonal/scalar Ito SDEs. Stable at high tolerances and robust to stiffness.†
-  - `SRA1` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
+  - `StochasticDiffEqHighOrder.SRA1` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
     order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
-  - `SRA2` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
+  - `StochasticDiffEqHighOrder.SRA2` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
     order 2. Can handle diagonal, non-diagonal, and scalar additive noise.†
-  - `SRA3` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
+  - `StochasticDiffEqHighOrder.SRA3` - Adaptive strong order 1.5 for additive Ito and Stratonovich SDEs with weak
     order 3. Can handle non-diagonal and scalar additive noise.†
-  - `SOSRA` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
+  - `StochasticDiffEqHighOrder.SOSRA` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
     Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
     additive noise. Stable at high tolerances and robust to stiffness.†
-  - `SOSRA2` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
+  - `StochasticDiffEqHighOrder.SOSRA2` - A stability-optimized adaptive SRA. Strong order 1.5 for additive Ito and
     Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal, and scalar
     additive noise. Stable at high tolerances and robust to stiffness.†
 
@@ -193,45 +223,45 @@ For `SRA` and `SRI`, the following option is allowed:
 
 #### S-ROCK Methods
 
-  - `SROCK1` - is a fixed step size stabilized explicit method for stiff problems. Defaults to
+  - `StochasticDiffEqROCK.SROCK1` - is a fixed step size stabilized explicit method for stiff problems. Defaults to
     solving the Ito problem but `SROCK1(interpretation=:Stratonovich)` can make it solve
     the Stratonovich problem. Strong order of convergence is 0.5 and weak order 1, but is
     optimized to get order 1 in case of scalar/diagonal noise.
-  - `SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization, and can thus
+  - `StochasticDiffEqROCK.SROCKEM` - is fixed step Euler-Mayurama with first order ROCK stabilization, and can thus
     handle stiff problems. Only for Ito problems. Defaults to strong and weak order 1.0,
     but can solve with weak order 0.5 as `SROCKEM(strong_order_1=false)`. This method can handle
     1-dimensional, diagonal and non-diagonal noise.
-  - `SROCK2` - is a weak second order and strong first order fixed step stabilized method for
+  - `StochasticDiffEqROCK.SROCK2` - is a weak second order and strong first order fixed step stabilized method for
     stiff Ito problems. This method can handle 1-dimensional, diagonal and non-diagonal noise.
-  - `SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
+  - `StochasticDiffEqROCK.SKSROCK` - is fixed step stabilized explicit method for stiff Ito problems. Strong order 0.5
     and weak order 1. This method has a better stability domain then `SROCK1`. Also, it allows
     special post-processing techniques in case of ergodic dynamical systems, in the context of
     ergodic Brownian dynamics, to achieve order 2 accuracy. `SKSROCK(;post_processing=true)`
     will make use of post-processing. By default, it doesn't use post-processing. Post-processing is
     optional and under development. The rest of the method is completely functional and can handle
     1-dimensional, diagonal and non-diagonal noise.
-  - `TangXiaoSROCK2` - is a fixed step size stabilized explicit method for stiff problems. Only for
+  - `StochasticDiffEqROCK.TangXiaoSROCK2` - is a fixed step size stabilized explicit method for stiff problems. Only for
     Ito problems. Weak order of 2 and strong order of 1. Has 5 versions with different stability
     domains which can be used as `TangXiaoSROCK2(version_num=i)` where `i` is 1-5. Under Development.
 
 #### Stiff Methods
 
-  - `ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which
+  - `StochasticDiffEqImplicit.ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which
     defaults to `theta=1` or the Trapezoid method on the drift term. This method
     defaults to `symplectic=false`, but when true and `theta=1/2` this is the
     implicit Midpoint method on the drift term and is symplectic in distribution.
     Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
     Uses a 1.0/1.5 heuristic for adaptive time stepping.
-  - `STrapezoid` - An alias for `ImplicitEM` with `theta=1/2`
-  - `SImplicitMidpoint` - An alias for `ImplicitEM` with `theta=1/2` and `symplectic=true`
-  - `ImplicitEulerHeun` - An order 0.5 Stratonovich drift-implicit method. This is a
+  - `StochasticDiffEqImplicit.STrapezoid` - An alias for `ImplicitEM` with `theta=1/2`
+  - `StochasticDiffEqImplicit.SImplicitMidpoint` - An alias for `ImplicitEM` with `theta=1/2` and `symplectic=true`
+  - `StochasticDiffEqImplicit.ImplicitEulerHeun` - An order 0.5 Stratonovich drift-implicit method. This is a
     theta method which defaults to `theta=1/2` or the Trapezoid method on the
     drift term. This method defaults to `symplectic=false`, but when true and
     `theta=1` this is the implicit Midpoint method on the drift term and is
     symplectic in distribution. Can handle all forms of noise, including
     non-diagonal, scalar, and colored noise. Uses a 1.0/1.5 heuristic for
     adaptive time stepping.
-  - `ImplicitRKMil` - An order 1.0 drift-implicit method. This is a theta method which
+  - `StochasticDiffEqImplicit.ImplicitRKMil` - An order 1.0 drift-implicit method. This is a theta method which
     defaults to `theta=1` or the Trapezoid method on the drift term. Defaults
     to solving the Ito problem, but `ImplicitRKMil(interpretation=:Stratonovich)`
     makes it solve the Stratonovich problem. This method defaults to
@@ -239,21 +269,21 @@ For `SRA` and `SRI`, the following option is allowed:
     implicit Midpoint method on the drift term and is symplectic in distribution.
     Handles diagonal and scalar noise. Uses a 1.5/2.0 heuristic for adaptive
     time stepping.
-  - `ISSEM` - An order 0.5 split-step Ito implicit method. It is fully implicit,
+  - `StochasticDiffEqImplicit.ISSEM` - An order 0.5 split-step Ito implicit method. It is fully implicit,
     meaning it can handle stiffness in the noise term. This is a theta method which
     defaults to `theta=1` or the Trapezoid method on the drift term. This method
     defaults to `symplectic=false`, but when true and `theta=1/2` this is the
     implicit Midpoint method on the drift term and is symplectic in distribution.
     Can handle all forms of noise, including non-diagonal, scalar, and colored noise.
     Uses a 1.0/1.5 heuristic for adaptive time stepping.
-  - `ISSEulerHeun` - An order 0.5 split-step Stratonovich implicit method. It is
+  - `StochasticDiffEqImplicit.ISSEulerHeun` - An order 0.5 split-step Stratonovich implicit method. It is
     fully implicit, meaning it can handle stiffness in the noise term. This is a
     theta method which defaults to `theta=1` or the Trapezoid method on the drift
     term. This method defaults to `symplectic=false`, but when true and `theta=1/2`
     this is the implicit Midpoint method on the drift term and is symplectic in
     distribution. Can handle all forms of noise, including non-diagonal,Q scalar,
     and colored noise. Uses a 1.0/1.5 heuristic for adaptive time stepping.
-  - `SKenCarp` - Adaptive L-stable drift-implicit strong order 1.5 for additive
+  - `StochasticDiffEqImplicit.SKenCarp` - Adaptive L-stable drift-implicit strong order 1.5 for additive
     Ito and Stratonovich SDEs with weak order 2. Can handle diagonal, non-diagonal
     and scalar additive noise.\*†
 
@@ -261,7 +291,7 @@ For `SRA` and `SRI`, the following option is allowed:
 
 The following methods require analytic derivatives of the diffusion term.
 
-  - `PCEuler` - The predictor corrector Euler method. Strong Order 0.5 in the Ito
+  - `StochasticDiffEqLowOrder.PCEuler` - The predictor corrector Euler method. Strong Order 0.5 in the Ito
     sense. Requires the ggprime function, which is defined as
     
     ```math
@@ -283,50 +313,50 @@ The following methods require analytic derivatives of the diffusion term.
 
 Note that none of the following methods are adaptive.
 
-  - `SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
+  - `StochasticDiffEqLowOrder.SimplifiedEM` - A simplified Euler-Maruyama method with weak order 1.0 and fixed step
     size. Can handle all forms of noise, including non-diagonal, scalar, and colored noise.†
-  - `DRI1` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
+  - `StochasticDiffEqWeak.DRI1` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
     (deterministic order 3). Can handle diagonal, non-diagonal, non-commuting, and
     scalar additive noise.†
-  - `DRI1NM` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
+  - `StochasticDiffEqWeak.DRI1NM` - Adaptive step weak order 2.0 for Ito SDEs with minimized error constants
     (deterministic order 3). Can handle non-mixing diagonal (i.e., du[k] = f(u[k]))
     and scalar additive noise.†
-  - `RI1` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RI1` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RI3` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RI3` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RI5` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RI5` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RI6` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.RI6` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RDI1WM` - Fixed step weak order 1.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.RDI1WM` - Fixed step weak order 1.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RDI2WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.RDI2WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RDI3WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RDI3WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RDI4WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RDI4WM` - Adaptive step weak order 2.0 for Ito SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RS1` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.RS1` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 2).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `RS2` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 3).
+  - `StochasticDiffEqWeak.RS2` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 3).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `PL1WM` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.PL1WM` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `PL1WMA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.PL1WMA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle additive noise.†
-  - `NON` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 4).
+  - `StochasticDiffEqWeak.NON` - Fixed step weak order 2.0 for Stratonovich SDEs (deterministic order 4).
     Can handle diagonal, non-diagonal, non-commuting, and scalar additive noise.†
-  - `SIEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.SIEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal and scalar additive noise.†  Stochastic generalization of
     the improved Euler method.
-  - `SIEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.SIEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal and scalar additive noise.†  Stochastic generalization of
     the improved Euler method.
-  - `SMEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.SMEA` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal and scalar additive noise.†  Stochastic generalization of
     the modified Euler method.
-  - `SMEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
+  - `StochasticDiffEqWeak.SMEB` - Fixed step weak order 2.0 for Ito SDEs (deterministic order 2).
     Can handle diagonal and scalar additive noise.†  Stochastic generalization of
     the modified Euler method.
 
@@ -355,7 +385,7 @@ This setup provides access to simplified versions of a few SDE solvers. They
 mostly exist for experimentation, but offer shorter compile times. They have
 limitations compared to StochasticDiffEq.jl.
 
-  - `SimpleEM` - A fixed timestep solve method for Euler-Maruyama. Only works
+  - `SimpleDiffEq.SimpleEM` - A fixed timestep solve method for Euler-Maruyama. Only works
     with non-colored Gaussian noise.
 
 Note that this setup is not automatically included with DifferentialEquations.jl.
@@ -380,9 +410,9 @@ Pkg.clone("https://github.com/SciML/BridgeDiffEq.jl")
 import BridgeDiffEq
 ```
 
-  - `BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.†
-  - `BridgeHeun` - Strong order 0.5 Euler-Heun method for Stratonovich equations.†
-  - `BridgeSRK` - Strong order 1.0 derivative-free stochastic Runge-Kutta method
+  - `BridgeDiffEq.BridgeEuler` - Strong order 0.5 Euler-Maruyama method for Ito equations.†
+  - `BridgeDiffEq.BridgeHeun` - Strong order 0.5 Euler-Heun method for Stratonovich equations.†
+  - `BridgeDiffEq.BridgeSRK` - Strong order 1.0 derivative-free stochastic Runge-Kutta method
     for scalar (`<:Number`) Ito equations.†
 
 ##### Notes

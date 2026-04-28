@@ -174,18 +174,39 @@ nothing # hide
 
 In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
 
-  - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
+  - `OrdinaryDiffEqTsit5.AutoTsit5(OrdinaryDiffEqRosenbrock.Rosenbrock23())` handles both stiff and non-stiff equations. This
     is a good algorithm to use if you know nothing about the equation.
-  - `AutoVern7(Rodas5())` handles both stiff and non-stiff equations in a way that's
+  - `OrdinaryDiffEqVerner.AutoVern7(OrdinaryDiffEqRosenbrock.Rodas5P())` handles both stiff and non-stiff equations in a way that's
     efficient for high accuracy.
-  - `DE.Tsit5()` for standard non-stiff. This is the first algorithm to try in
+  - `OrdinaryDiffEqTsit5.Tsit5()` for standard non-stiff. This is the first algorithm to try in
     most cases.
-  - `BS3()` for fast low accuracy non-stiff.
-  - `Vern7()` for high accuracy non-stiff.
-  - `Rodas4()` or `Rodas5()` for small stiff equations with Julia-defined types, events, etc.
-  - `KenCarp4()` or `TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
-  - `RadauIIA5()` for really high accuracy stiff equations
-  - `QNDF()` for large stiff equations
+  - `OrdinaryDiffEqLowOrderRK.BS3()` for fast low accuracy non-stiff.
+  - `OrdinaryDiffEqVerner.Vern7()` for high accuracy non-stiff.
+  - `OrdinaryDiffEqRosenbrock.Rodas4()` or `OrdinaryDiffEqRosenbrock.Rodas5P()` for small stiff equations with Julia-defined types, events, etc.
+  - `OrdinaryDiffEqSDIRK.KenCarp4()` or `OrdinaryDiffEqSDIRK.TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
+  - `OrdinaryDiffEqFIRK.RadauIIA5()` for really high accuracy stiff equations
+  - `OrdinaryDiffEqBDF.QNDF()` for large stiff equations
+
+!!! note "v8: which package supplies each solver"
+
+    Under DifferentialEquations.jl v8, the umbrella `using DifferentialEquations`
+    only re-exports `OrdinaryDiffEq`'s **default solver set**: `Tsit5`,
+    `Vern6`–`Vern9`, `AutoTsit5`, `AutoVern6`–`AutoVern9`, `Rosenbrock23`,
+    `Rodas5P`, `FBDF`, and `DefaultODEAlgorithm`. The other recommendations
+    above must be imported from their host sublibrary (these are sublibs of
+    OrdinaryDiffEq, so a `using OrdinaryDiffEq` plus the right
+    `using OrdinaryDiffEqXxx` will give you everything):
+
+    | Solver(s)                                  | Sublibrary                  |
+    |--------------------------------------------|-----------------------------|
+    | `BS3`, `RK4`, `Heun`, `Euler`, ...         | `OrdinaryDiffEqLowOrderRK`  |
+    | `Rodas4`, `Rodas5`, `ROS3P`, all Rosenbrock except `Rosenbrock23` / `Rodas5P` | `OrdinaryDiffEqRosenbrock` |
+    | `KenCarp3`, `KenCarp4`, `TRBDF2`, `Kvaerno*`, `ImplicitEuler`, ... | `OrdinaryDiffEqSDIRK` |
+    | `RadauIIA3`, `RadauIIA5`, `RadauIIA9`      | `OrdinaryDiffEqFIRK`        |
+    | `QNDF`, `QBDF`, `ABDF2`, `MEBDF2`, `DFBDF`, `DABDF2`, `DImplicitEuler`, `IMEXEuler`, `SBDF*` | `OrdinaryDiffEqBDF` |
+    | `DPRKN*`, `Nystrom*`, `ERKN*`              | `OrdinaryDiffEqRKN`         |
+    | `KahanLi*`, `McAte*`, `VelocityVerlet`, `SymplecticEuler`, ... | `OrdinaryDiffEqSymplecticRK` |
+    | `LinearExponential`, `Magnus*`, `LieRK4`, `RKMK*` | `OrdinaryDiffEqLinear`      |
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [please see the solver documentation](@ref ode_solve). Every problem

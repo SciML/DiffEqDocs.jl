@@ -185,17 +185,19 @@ Now let's see how the version with sparsity compares to the version without:
 
 ```@example stiff1
 import BenchmarkTools as BT # for @btime
-BT.@btime DE.solve(prob_ode_brusselator_2d, DE.TRBDF2(); save_everystep = false);
-BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, DE.TRBDF2(); save_everystep = false);
+import OrdinaryDiffEqSDIRK as ODESDIRK # TRBDF2, KenCarp47
+import LinearSolve as LS               # KLUFactorization, UMFPACKFactorization, KrylovJL_GMRES
+BT.@btime DE.solve(prob_ode_brusselator_2d, ODESDIRK.TRBDF2(); save_everystep = false);
+BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, ODESDIRK.TRBDF2(); save_everystep = false);
 BT.@btime DE.solve(
-    prob_ode_brusselator_2d_sparse, DE.KenCarp47(; linsolve = DE.KLUFactorization());
+    prob_ode_brusselator_2d_sparse, ODESDIRK.KenCarp47(; linsolve = LS.KLUFactorization());
     save_everystep = false);
 nothing # hide
 ```
 
 Note that depending on the properties of the sparsity pattern, one may want
-to try alternative linear solvers such as `DE.TRBDF2(linsolve = DE.KLUFactorization())`
-or `DE.TRBDF2(linsolve = DE.UMFPACKFactorization())`.
+to try alternative linear solvers such as `ODESDIRK.TRBDF2(linsolve = LS.KLUFactorization())`
+or `ODESDIRK.TRBDF2(linsolve = LS.UMFPACKFactorization())`.
 
 ## Using Jacobian-Free Newton-Krylov
 
@@ -205,7 +207,7 @@ solver for changing to a Krylov method. To swap the linear solver out, we use
 the `linsolve` command and choose the GMRES linear solver.
 
 ```@example stiff1
-BT.@btime DE.solve(prob_ode_brusselator_2d, DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES());
+BT.@btime DE.solve(prob_ode_brusselator_2d, ODESDIRK.KenCarp47(; linsolve = LS.KrylovJL_GMRES());
     save_everystep = false);
 nothing # hide
 ```
@@ -247,7 +249,7 @@ end
 Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = incompletelu),
+    ODESDIRK.KenCarp47(; linsolve = LS.KrylovJL_GMRES(precs = incompletelu),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
@@ -276,7 +278,7 @@ function algebraicmultigrid(W, p)
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = algebraicmultigrid),
+    ODESDIRK.KenCarp47(; linsolve = LS.KrylovJL_GMRES(precs = algebraicmultigrid),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
@@ -293,7 +295,7 @@ function algebraicmultigrid2(W, p)
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    DE.KenCarp47(; linsolve = DE.KrylovJL_GMRES(precs = algebraicmultigrid2),
+    ODESDIRK.KenCarp47(; linsolve = LS.KrylovJL_GMRES(precs = algebraicmultigrid2),
         concrete_jac = true); save_everystep = false);
 nothing # hide
 ```
@@ -397,6 +399,10 @@ BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
     Sundials.CVODE_BDF(; linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
         prec_side = 1); save_everystep = false);
 ```
+
+(`Sundials.CVODE_BDF` is from the **Sundials.jl** package — under DifferentialEquations.jl
+v8 the umbrella no longer re-exports Sundials, so explicitly add `using Sundials` /
+`import Sundials` whenever you want CVODE/IDA/ARKODE.)
 
 And similarly for algebraic multigrid:
 

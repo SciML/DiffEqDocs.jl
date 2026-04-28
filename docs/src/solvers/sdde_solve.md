@@ -15,6 +15,16 @@
 Solves the SDDE defined by `prob` using the algorithm `alg`. If no algorithm is
 given, a default algorithm will be chosen.
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `DelayDiffEq` | `MethodOfSteps`, `SDDEProblem` | SDDE driver - reuses an SDE algorithm as the inner solver. |
+| `StochasticDiffEq` | Umbrella for SDE solvers; pulls in `StochasticDiffEq*` sublibs | Provides the inner SDE algorithm names (EM, RKMil, SRIW1, ...). |
+
+
 ## Recommended Methods
 
 The recommended method for SDDE problems are the `SDE` algorithms. On SDEs you

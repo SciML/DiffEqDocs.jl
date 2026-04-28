@@ -390,8 +390,9 @@ Now we build the SDE with these functions:
 
 ```@example ensemble2
 import DifferentialEquations as DE
+import StochasticDiffEq as SDE # SDEProblem, SRIW1
 p = [1.5, 1.0, 0.1, 0.1]
-prob = DE.SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
+prob = SDE.SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment
@@ -416,8 +417,8 @@ end
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
 ```@example ensemble2
-ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
-sim = DE.solve(ensemble_prob, DE.SRIW1(), trajectories = 10);
+ensemble_prob = SDE.EnsembleProblem(prob, prob_func = prob_func)
+sim = SDE.solve(ensemble_prob, SDE.SRIW1(), trajectories = 10);
 nothing # hide
 ```
 

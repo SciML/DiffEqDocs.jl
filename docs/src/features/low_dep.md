@@ -112,39 +112,15 @@ so there is no issue here!
 
 For the add-on packages, you will normally need SciMLBase, the solver package
 you choose, and the add-on package. So for example, for predefined callbacks you
-would likely want SciMLBase+OrdinaryDiffEq+DiffEqCallbacks. If you aren't sure
-which package a specific command is from, then use `@which`. For example, from
-the callback docs we have:
+would likely want SciMLBase+OrdinaryDiffEq+DiffEqCallbacks. For example, the
+callback `ProbIntsUncertainty` lives in `DiffEqCallbacks` and the explicit Euler
+solver lives in `OrdinaryDiffEqLowOrderRK`, so this fully-explicit form replaces
+the old `using DifferentialEquations` shape:
 
 ```@example low_dep_1
-import DifferentialEquations as DE
-function fitz(du, u, p, t)
-    V, R = u
-    a, b, c = p
-    du[1] = c * (V - V^3 / 3 + R)
-    du[2] = -(1 / c) * (V - a - b * R)
-end
-u0 = [-1.0; 1.0]
-tspan = (0.0, 20.0)
-p = (0.2, 0.2, 3.0)
-prob = DE.ODEProblem(fitz, u0, tspan, p)
-cb = DE.ProbIntsUncertainty(0.2, 1)
-ensemble_prob = DE.EnsembleProblem(prob)
-sim = DE.solve(ensemble_prob, DE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
-```
-
-If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
-
-```@example low_dep_1
-import InteractiveUtils # hide
-InteractiveUtils.@which DE.ProbIntsUncertainty(0.2, 1)
-```
-
-This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have
-done
-
-```@example low_dep_2
-import OrdinaryDiffEq as ODE, DiffEqCallbacks as CB
+import OrdinaryDiffEq as ODE
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler
+import DiffEqCallbacks as CB              # ProbIntsUncertainty
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -157,11 +133,18 @@ p = (0.2, 0.2, 3.0)
 prob = ODE.ODEProblem(fitz, u0, tspan, p)
 cb = CB.ProbIntsUncertainty(0.2, 1)
 ensemble_prob = ODE.EnsembleProblem(prob)
-sim = ODE.solve(ensemble_prob, ODE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+sim = ODE.solve(ensemble_prob, ODELow.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
-instead of the full `using DifferentialEquations`. Note that due to the way
-Julia dependencies work, any internal function in the package will work. The only
-dependencies you need to explicitly `using` are the functions you are specifically
-calling. Thus, this method can be used to determine all of the DiffEq packages
-you are using.
+If you encounter an unfamiliar name and want to discover which package owns it,
+use `@which`:
+
+```@example low_dep_1
+import InteractiveUtils # hide
+InteractiveUtils.@which CB.ProbIntsUncertainty(0.2, 1)
+```
+
+Note that due to the way Julia dependencies work, any internal function in the
+package will work. The only dependencies you need to explicitly `using` are the
+functions you are specifically calling. Thus, this method can be used to
+determine all of the DiffEq packages you are using.

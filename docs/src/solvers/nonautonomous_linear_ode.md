@@ -28,6 +28,15 @@ u^\prime = Au
 
 where ``A`` is a constant operator.
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqLinear` | Magnus, Lie-group, matrix-exponential methods | Linear time-dependent ODEs; matrix-exponential propagation. |
+
+
 ## Recommendations
 
 It is recommended to always specialize on the properties of the operator as much as possible.
@@ -48,11 +57,21 @@ steps are computed lazily (i.e. not during the solve).
 
 Note that all of these methods are fixed timestep unless otherwise specified.
 
+!!! note "v8: import from `OrdinaryDiffEqLinear`"
+
+    `LinearExponential`, all `Magnus*`, all `RKMK*`, `LieEuler` / `LieRK4`,
+    `CayleyEuler`, `CG*`, etc. live in `OrdinaryDiffEqLinear` (a sublib of
+    OrdinaryDiffEq). Bring them in with:
+
+    ```julia
+    using OrdinaryDiffEqLinear
+    ```
+
 ### Exponential Methods for Linear and Affine Problems
 
 These methods require that ``A`` is constant.
 
-  - `LinearExponential` - Exact solution formula for linear, time-independent problems.
+  - `OrdinaryDiffEqLinear.LinearExponential` - Exact solution formula for linear, time-independent problems.
 
 Options:
 
@@ -70,11 +89,13 @@ Options:
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
-import DifferentialEquations as DE, SciMLOperators
+import DifferentialEquations as DE
+import OrdinaryDiffEqLinear as ODELinear   # LinearExponential, Magnus*, LieRK4, ...
+import SciMLOperators
 _A = [2 -1; -3 -5] / 5
 A = SciMLOperators.MatrixOperator(_A)
 prob = DE.ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
-sol = DE.solve(prob, DE.LinearExponential())
+sol = DE.solve(prob, ODELinear.LinearExponential())
 ```
 
 !!! note
@@ -89,14 +110,14 @@ sol = DE.solve(prob, DE.LinearExponential())
 
 These methods require ``A`` is only dependent on the independent variable, i.e. ``A(t)``.
 
-  - `MagnusMidpoint` - Second order Magnus Midpoint method.
-  - `MagnusLeapfrog`- Second order Magnus Leapfrog method.
-  - `MagnusGauss4` - Fourth order Magnus method approximated using a two stage Gauss quadrature.
-  - `MagnusGL4`- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
-  - `MagnusNC6`- Sixth order Magnus method approximated using Newton-Cotes quadrature.
-  - `MagnusGL6`- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
-  - `MagnusNC8`- Eighth order Magnus method approximated using Newton-Cotes quadrature.
-  - `MagnusGL8`- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `OrdinaryDiffEqLinear.MagnusMidpoint` - Second order Magnus Midpoint method.
+  - `OrdinaryDiffEqLinear.MagnusLeapfrog`- Second order Magnus Leapfrog method.
+  - `OrdinaryDiffEqLinear.MagnusGauss4` - Fourth order Magnus method approximated using a two stage Gauss quadrature.
+  - `OrdinaryDiffEqLinear.MagnusGL4`- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `OrdinaryDiffEqLinear.MagnusNC6`- Sixth order Magnus method approximated using Newton-Cotes quadrature.
+  - `OrdinaryDiffEqLinear.MagnusGL6`- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `OrdinaryDiffEqLinear.MagnusNC8`- Eighth order Magnus method approximated using Newton-Cotes quadrature.
+  - `OrdinaryDiffEqLinear.MagnusGL8`- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
 
 Example:
 
@@ -109,7 +130,7 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (1.0, 6.0))
-sol = DE.solve(prob, DE.MagnusGL6(), dt = 1 / 10)
+sol = DE.solve(prob, ODELinear.MagnusGL6(), dt = 1 / 10)
 ```
 
 The initial values for ``A`` are irrelevant in this and similar cases, as the `update_func` immediately overwrites them.
@@ -119,14 +140,14 @@ Starting with `ones(2,2)` is just a convenient way to get a mutable 2x2 matrix.
 
 These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u)``.
 
-  - `CayleyEuler` - First order method using Cayley transformations.
-  - `LieEuler` - First order Lie Euler method.
-  - `RKMK2` - Second order Runge–Kutta–Munthe-Kaas method.
-  - `RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
-  - `LieRK4` - Fourth order Lie Runge-Kutta method.
-  - `CG2` - Second order Crouch–Grossman method.
-  - `CG4a` - Fourth order Crouch-Grossman method.
-  - `MagnusAdapt4` - Fourth Order Adaptive Magnus method.
+  - `OrdinaryDiffEqLinear.CayleyEuler` - First order method using Cayley transformations.
+  - `OrdinaryDiffEqLinear.LieEuler` - First order Lie Euler method.
+  - `OrdinaryDiffEqLinear.RKMK2` - Second order Runge–Kutta–Munthe-Kaas method.
+  - `OrdinaryDiffEqLinear.RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
+  - `OrdinaryDiffEqLinear.LieRK4` - Fourth order Lie Runge-Kutta method.
+  - `OrdinaryDiffEqLinear.CG2` - Second order Crouch–Grossman method.
+  - `OrdinaryDiffEqLinear.CG4a` - Fourth order Crouch-Grossman method.
+  - `OrdinaryDiffEqLinear.MagnusAdapt4` - Fourth Order Adaptive Magnus method.
 
 Example:
 
@@ -139,7 +160,7 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (0, 30.0))
-sol = DE.solve(prob, DE.LieRK4(), dt = 1 / 4)
+sol = DE.solve(prob, ODELinear.LieRK4(), dt = 1 / 4)
 ```
 
 The above example solves a non-stiff Non-Autonomous Linear ODE
@@ -158,13 +179,13 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (30, 150.0))
-sol = DE.solve(prob, DE.MagnusAdapt4())
+sol = DE.solve(prob, ODELinear.MagnusAdapt4())
 ```
 
 # Time and State-Dependent Operators
 
 These methods can be used when ``A`` is dependent on both time and state variables, i.e. ``A(u,t)``
 
-  - `CG3` - Third order Crouch-Grossman method.
+  - `OrdinaryDiffEqLinear.CG3` - Third order Crouch-Grossman method.
 
 [^1]: A description of IOP can be found in this [paper](https://doi.org/10.1016/j.jcp.2018.06.026).
