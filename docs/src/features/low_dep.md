@@ -6,6 +6,16 @@ options for controlling the dependency sizing and the compilation caching
 behavior to further refine this trade-off. The following methods are
 available for such controls.
 
+!!! note "DifferentialEquations.jl v8: scope reduction"
+    From v8 onwards, `using DifferentialEquations` only loads the ODE
+    solvers (i.e. `OrdinaryDiffEq`); the SDE / DDE / BVP / Jump / SteadyState /
+    Sundials / LinearSolve / NonlinearSolve / Optimization solver families
+    are no longer re-exported by the umbrella. The "use only the package
+    you need" pattern described on this page is therefore now the default
+    (and required) workflow for non-ODE solvers — see the
+    [scope-reduction migration table](@ref ordinarydiffeq_v7_migration) for
+    the full topic → package mapping.
+
 ## Controlling Function Specialization and Precompilation
 
 By default, DifferentialEquations.jl solvers make use of function wrapping

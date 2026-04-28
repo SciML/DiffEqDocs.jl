@@ -4,6 +4,17 @@ This tutorial will introduce you to the functionality for solving ODEs.
 Additionally, a [video tutorial](https://www.youtube.com/watch?v=KPEqYtEd-zY) walks through
 this material.
 
+!!! note "Note for users of older tutorials (DifferentialEquations.jl v8+)"
+    From v8 onwards, `using DifferentialEquations` only loads the ODE solvers
+    (i.e. `OrdinaryDiffEq`). If you are following an older tutorial that
+    relies on `using DifferentialEquations` for SDEs, DDEs, BVPs, jumps,
+    steady states, or Sundials, you'll need to explicitly add the
+    topic-specific package (`using StochasticDiffEq`, `using DelayDiffEq`,
+    `using BoundaryValueDiffEq`, `using JumpProcesses`, `using SteadyStateDiffEq`,
+    `using Sundials`, …). See the
+    [DifferentialEquations.jl v8 scope-reduction migration table](@ref ordinarydiffeq_v7_migration)
+    for the full mapping.
+
 ## Example 1 : Solving Scalar Equations
 
 In this example, we will solve the equation
