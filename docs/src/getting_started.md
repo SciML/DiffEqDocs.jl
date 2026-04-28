@@ -163,18 +163,18 @@ nothing # hide
 
 In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
 
-  - `AutoTsit5(Rosenbrock23())` handles both stiff and non-stiff equations. This
+  - `OrdinaryDiffEqTsit5.AutoTsit5(OrdinaryDiffEqRosenbrock.Rosenbrock23())` handles both stiff and non-stiff equations. This
     is a good algorithm to use if you know nothing about the equation.
-  - `AutoVern7(Rodas5P())` handles both stiff and non-stiff equations in a way that's
+  - `OrdinaryDiffEqVerner.AutoVern7(OrdinaryDiffEqRosenbrock.Rodas5P())` handles both stiff and non-stiff equations in a way that's
     efficient for high accuracy.
-  - `Tsit5()` for standard non-stiff. This is the first algorithm to try in
+  - `OrdinaryDiffEqTsit5.Tsit5()` for standard non-stiff. This is the first algorithm to try in
     most cases.
-  - `BS3()` for fast low accuracy non-stiff.
-  - `Vern7()` for high accuracy non-stiff.
-  - `Rodas4()` or `Rodas5P()` for small stiff equations with Julia-defined types, events, etc.
-  - `KenCarp4()` or `TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
-  - `RadauIIA5()` for really high accuracy stiff equations
-  - `QNDF()` for large stiff equations
+  - `OrdinaryDiffEqLowOrderRK.BS3()` for fast low accuracy non-stiff.
+  - `OrdinaryDiffEqVerner.Vern7()` for high accuracy non-stiff.
+  - `OrdinaryDiffEqRosenbrock.Rodas4()` or `OrdinaryDiffEqRosenbrock.Rodas5P()` for small stiff equations with Julia-defined types, events, etc.
+  - `OrdinaryDiffEqSDIRK.KenCarp4()` or `OrdinaryDiffEqSDIRK.TRBDF2()` for medium-sized (100-2000 ODEs) stiff equations
+  - `OrdinaryDiffEqFIRK.RadauIIA5()` for really high accuracy stiff equations
+  - `OrdinaryDiffEqBDF.QNDF()` for large stiff equations
 
 !!! note "v8: which package supplies each solver"
 
