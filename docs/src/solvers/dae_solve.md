@@ -4,18 +4,18 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `OrdinaryDiffEqBDF` | BDF / NDF multistep (FBDF, QNDF, ABDF2, SBDF) and implicit-DAE forms (DFBDF, DImplicitEuler). |
-| `OrdinaryDiffEqRosenbrock` | Rosenbrock and Rosenbrock-W methods for stiff problems (Rosenbrock23, Rodas4/5P, ROS variants). |
-| `OrdinaryDiffEqSDIRK` | SDIRK / ESDIRK methods for stiff problems (KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno). |
-| `OrdinaryDiffEqFIRK` | Fully-implicit Runge-Kutta (RadauIIA3/5/9) for stiff problems with high precision. |
-| `OrdinaryDiffEqNonlinearSolve` | DAE initialization algorithms (`BrownFullBasicInit`, `ShampineCollocationInit`). |
-| `SciMLBase` | Common types and DAE-init algorithms (`CheckInit`, `NoInit`). |
-| `Sundials` | Wrappers for the SUNDIALS C library: `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE`. |
-| `ODEInterfaceDiffEq` | Wrappers for ODEInterface.jl Fortran solvers (`dopri5`, `dop853`, `radau`, `seulex`, `rodas`). |
-| `DASSL` | Wrapper for the DASSL Fortran DAE solver (`dassl`). |
-| `DASKR` | Wrapper for the DASKR Fortran DAE solver (`daskr`). |
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | Stiff large/sparse mass-matrix or implicit-form DAEs. |
+| `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium index-1 mass-matrix DAEs. |
+| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DAEs with cheap Jacobians; general fallback. |
+| `OrdinaryDiffEqFIRK` | RadauIIA3/5/9 | Stiff DAEs needing high precision (1e-10+). |
+| `OrdinaryDiffEqNonlinearSolve` | `BrownFullBasicInit`, `ShampineCollocationInit` | DAE consistent-initialization algorithms. |
+| `SciMLBase` | `CheckInit`, `NoInit` | Common types and DAE-init policies. |
+| `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | `IDA` for general implicit DAEs; industrial-grade C solvers. |
+| `ODEInterfaceDiffEq` | `dopri5`, `dop853`, `radau`, `seulex`, `rodas` | Hairer / Wanner Fortran solvers (radau / rodas for DAEs). |
+| `DASSL` | `dassl` | Classical Petzold DASSL Fortran DAE solver. |
+| `DASKR` | `daskr` | Krylov variant of DASSL for large-scale DAEs. |
 
 
 ## Recommended Methods

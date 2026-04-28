@@ -4,10 +4,10 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `OrdinaryDiffEqFunctionMap` | `FunctionMap` driver for `DiscreteProblem` time-stepping. |
-| `SimpleDiffEq` | Minimal-allocation simple solvers for tight inner loops (`SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap`). |
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqFunctionMap` | `FunctionMap` | Plain discrete iteration `u_{n+1} = f(u_n, p, t_n)` with full callback / saving support. |
+| `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation discrete iteration for tight inner loops. |
 
 
 ## DiscreteProblems

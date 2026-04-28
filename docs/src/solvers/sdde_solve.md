@@ -19,10 +19,10 @@ given, a default algorithm will be chosen.
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `DelayDiffEq` | DDE / SDDE driver: `MethodOfSteps`, `DDEProblem`, `SDDEProblem`. Wraps an inner ODE algorithm. |
-| `StochasticDiffEq` | Umbrella package for SDE solvers; pulls in the relevant `StochasticDiffEq*` sublibs. |
+| Package | Methods | Good for |
+|---|---|---|
+| `DelayDiffEq` | `MethodOfSteps`, `SDDEProblem` | SDDE driver - reuses an SDE algorithm as the inner solver. |
+| `StochasticDiffEq` | Umbrella for SDE solvers; pulls in `StochasticDiffEq*` sublibs | Provides the inner SDE algorithm names (EM, RKMil, SRIW1, ...). |
 
 
 ## Recommended Methods

@@ -8,14 +8,14 @@ linearity and number of components. Each solver has functional form
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `OrdinaryDiffEqLowOrderRK` | Low-order explicit Runge-Kutta methods (BS3, DP5, RK4, Heun, Euler, OwrenZen, etc.). |
-| `OrdinaryDiffEqSDIRK` | SDIRK / ESDIRK methods for stiff problems (KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno). |
-| `OrdinaryDiffEqBDF` | BDF / NDF multistep (FBDF, QNDF, ABDF2, SBDF) and implicit-DAE forms (DFBDF, DImplicitEuler). |
-| `OrdinaryDiffEqIMEXMultistep` | IMEX multistep methods for split ODEs (CNAB2, CNLF2). |
-| `OrdinaryDiffEqExponentialRK` | Exponential RK and exponential propagation methods (LawsonEuler, ETDRK4, EPIRK, Exprb). |
-| `Sundials` | Wrappers for the SUNDIALS C library: `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE`. |
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqLowOrderRK` | BS3, DP5, RK4, Heun, Euler, OwrenZen | Explicit half of an IMEX split at loose tolerances. |
+| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | IMEX-ARK methods (KenCarp family) for stiff/non-stiff splits. |
+| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | SBDF multistep for stiff/non-stiff splits; large/sparse systems. |
+| `OrdinaryDiffEqIMEXMultistep` | CNAB2, CNLF2 | Mixed stiff/non-stiff RHS (advection-diffusion-reaction). |
+| `OrdinaryDiffEqExponentialRK` | LawsonEuler, ETDRK4, EPIRK, Exprb | Semilinear problems where the linear operator dominates. |
+| `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | `ARKODE` IMEX-ARK; industrial-grade C IMEX solver. |
 
 
 ## Implicit-Explicit (IMEX) ODE

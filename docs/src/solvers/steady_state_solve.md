@@ -14,9 +14,9 @@ Solves for the steady states in the problem defined by `prob` using the algorith
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `SteadyStateDiffEq` | Steady-state finders (`DynamicSS`, `SSRootfind`). |
+| Package | Methods | Good for |
+|---|---|---|
+| `SteadyStateDiffEq` | `DynamicSS`, `SSRootfind` | Time-integrate-to-equilibrium (`DynamicSS`) or algebraic root (`SSRootfind`). |
 
 
 ## Recommended Methods

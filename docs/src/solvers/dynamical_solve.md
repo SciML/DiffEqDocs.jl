@@ -42,11 +42,11 @@ kinetic energy".
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `OrdinaryDiffEqRKN` | Runge-Kutta-Nystrom methods (DPRKN6/8/12, ERKN4/5/7, IRKN3/4) for second-order ODEs. |
-| `OrdinaryDiffEqSymplecticRK` | Symplectic integrators (KahanLi6/8, McAte, VelocityVerlet, Yoshida6) for Hamiltonian systems. |
-| `GeometricIntegratorsDiffEq` | Wrappers for GeometricIntegrators.jl (Gauss, Lobatto, Radau, Symplectic methods). |
+| Package | Methods | Good for |
+|---|---|---|
+| `OrdinaryDiffEqRKN` | DPRKN6/8/12, ERKN4/5/7, IRKN3/4 | Second-order ODEs (Newtonian mechanics) without first-order conversion. |
+| `OrdinaryDiffEqSymplecticRK` | KahanLi6/8, McAte, VelocityVerlet, Yoshida6 | Hamiltonian / conservative dynamics; long-time energy preservation. |
+| `GeometricIntegratorsDiffEq` | Gauss, Lobatto, Radau, Symplectic methods | Wrappers for GeometricIntegrators.jl. |
 
 
 ## Recommendations

@@ -4,9 +4,9 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Description |
-|---|---|
-| `StochasticDiffEqImplicit` | Implicit SDE methods (ImplicitEM, ImplicitEulerHeun, ImplicitRKMil, STrapezoid, SImplicitMidpoint). |
+| Package | Methods | Good for |
+|---|---|---|
+| `StochasticDiffEqImplicit` | ImplicitEM, ImplicitEulerHeun, ImplicitRKMil, STrapezoid, SImplicitMidpoint, SKenCarp, ISSEM, ISSEulerHeun | Stiff SDAEs in mass-matrix form (drift-implicit and split-step methods). |
 
 
 ## Recommended Methods
