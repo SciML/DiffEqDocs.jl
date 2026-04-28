@@ -108,7 +108,7 @@ the callback docs we have:
 
 ```@example low_dep_1
 import DifferentialEquations as DE
-import OrdinaryDiffEqLowOrderRK as ODELow # Euler comes from this OrdinaryDiffEq sublib
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -142,7 +142,7 @@ done
 
 ```@example low_dep_2
 import OrdinaryDiffEq as ODE
-import OrdinaryDiffEqLowOrderRK as ODELow # Euler is in the LowOrderRK sublib
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler
 import DiffEqCallbacks as CB
 function fitz(du, u, p, t)
     V, R = u

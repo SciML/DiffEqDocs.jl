@@ -20,11 +20,6 @@ Also, we know that
 
 ```@example kepler
 import OrdinaryDiffEq as ODE
-# Solver imports — KahanLi6 lives in the SymplecticRK sublib, DPRKN6/ERKN4 in
-# the RKN sublib, RK4 in the LowOrderRK sublib. Under OrdinaryDiffEq v7 the main
-# package only re-exports the default solver set (Tsit5, Vern6–Vern9,
-# Rosenbrock23, Rodas5P, FBDF, AutoTsit5, AutoVern6–AutoVern9), so any other
-# solver must be imported from its sublibrary.
 import OrdinaryDiffEqSymplecticRK as ODESymp # KahanLi6
 import OrdinaryDiffEqRKN as ODERKN           # DPRKN6, ERKN4
 import OrdinaryDiffEqLowOrderRK as ODELow    # RK4

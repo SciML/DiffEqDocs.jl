@@ -71,9 +71,7 @@ we can use `SecondOrderODEProblem` as follows.
 ```@example physics
 # Simple Harmonic Oscillator Problem
 import OrdinaryDiffEq as ODE
-# DPRKN6 is a Runge-Kutta-Nyström method living in OrdinaryDiffEqRKN; it is not
-# in the default OrdinaryDiffEq export set, so we import it explicitly.
-import OrdinaryDiffEqRKN as ODERKN
+import OrdinaryDiffEqRKN as ODERKN # DPRKN6
 import Plots
 
 #Parameters
@@ -386,8 +384,7 @@ Plots.plot(sol.t, energy .- energy[1], title = "Change in Energy over Time",
 To prevent energy drift, we can instead use a symplectic integrator. We can directly define and solve the `SecondOrderODEProblem`:
 
 ```@example physics
-# KahanLi8 is a symplectic integrator from OrdinaryDiffEqSymplecticRK
-import OrdinaryDiffEqSymplecticRK as ODESymp
+import OrdinaryDiffEqSymplecticRK as ODESymp # KahanLi8
 function HH_acceleration!(dv, v, u, p, t)
     x, y = u
     dx, dy = dv

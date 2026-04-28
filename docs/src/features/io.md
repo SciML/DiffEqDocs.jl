@@ -13,9 +13,7 @@ let's solve a 4x2 system of ODEs and get the DataFrame:
 
 ```@example IO
 import OrdinaryDiffEq as ODE
-# Euler() is in OrdinaryDiffEqLowOrderRK; under OrdinaryDiffEq v7 the parent
-# package only re-exports the default solver set.
-import OrdinaryDiffEqLowOrderRK as ODELow
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler
 import DataFrames
 f_2dlinear = (du, u, p, t) -> du .= 1.01u;
 tspan = (0.0, 1.0)

@@ -29,7 +29,7 @@ linsolve. For example, the following tells `TRBDF2` (from
 (via `KLUFactorization` from `LinearSolve`):
 
 ```julia
-using OrdinaryDiffEqSDIRK: TRBDF2     # not in OrdinaryDiffEq's default re-exports
+using OrdinaryDiffEqSDIRK: TRBDF2
 using LinearSolve: KLUFactorization
 TRBDF2(linsolve = KLUFactorization())
 ```

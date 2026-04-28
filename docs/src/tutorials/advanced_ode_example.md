@@ -185,7 +185,7 @@ Now let's see how the version with sparsity compares to the version without:
 
 ```@example stiff1
 import BenchmarkTools as BT # for @btime
-import OrdinaryDiffEqSDIRK as ODESDIRK # TRBDF2, KenCarp47 — not in the default OrdinaryDiffEq export set
+import OrdinaryDiffEqSDIRK as ODESDIRK # TRBDF2, KenCarp47
 import LinearSolve as LS               # KLUFactorization, UMFPACKFactorization, KrylovJL_GMRES
 BT.@btime DE.solve(prob_ode_brusselator_2d, ODESDIRK.TRBDF2(); save_everystep = false);
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse, ODESDIRK.TRBDF2(); save_everystep = false);

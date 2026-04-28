@@ -390,9 +390,7 @@ Now we build the SDE with these functions:
 
 ```@example ensemble2
 import DifferentialEquations as DE
-import StochasticDiffEq as SDE   # SDEProblem & SRIW1 are in StochasticDiffEq;
-                                 # under DifferentialEquations.jl v8 the umbrella
-                                 # only re-exports OrdinaryDiffEq.
+import StochasticDiffEq as SDE # SDEProblem, SRIW1
 p = [1.5, 1.0, 0.1, 0.1]
 prob = SDE.SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
 ```

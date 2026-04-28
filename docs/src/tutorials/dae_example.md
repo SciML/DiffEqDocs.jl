@@ -46,7 +46,7 @@ last row of `M` is just zero. We can implement this form as:
 
 ```@example dae
 import DifferentialEquations as DE
-import OrdinaryDiffEqRosenbrock as ODERosenbrock # Rodas5 lives in this OrdinaryDiffEq sublib
+import OrdinaryDiffEqRosenbrock as ODERosenbrock # Rodas5
 import Plots
 function rober(du, u, p, t)
     y₁, y₂, y₃ = u

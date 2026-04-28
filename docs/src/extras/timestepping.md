@@ -232,8 +232,6 @@ end
 and used via
 
 ```julia
-# DifferentialEquations.jl v8 only re-exports OrdinaryDiffEq, so SDE solvers
-# such as `EM` need an explicit import from StochasticDiffEq:
-import StochasticDiffEq as SDE
+import StochasticDiffEq as SDE # EM
 sol = SDE.solve(prob, SDE.EM(), dt = dt, adaptive = true, controller = CustomController())
 ```

@@ -33,7 +33,7 @@ When using auto-switching algorithms, see when and why switches occur:
 
 ```julia
 using ODEProblemLibrary: prob_ode_vanderpol_stiff
-using OrdinaryDiffEqRosenbrock: Rodas5  # not in OrdinaryDiffEq's default re-exports
+using OrdinaryDiffEqRosenbrock: Rodas5
 
 verbose = DEVerbosity(alg_switch = SciMLLogging.InfoLevel())
 sol = solve(prob_ode_vanderpol_stiff, AutoTsit5(Rodas5()), verbose = verbose)
@@ -111,7 +111,7 @@ The simplest approach is to pass a SciMLLogging preset, which is automatically c
 
 ```julia
 using OrdinaryDiffEqNonlinearSolve: NonlinearSolveAlg
-using OrdinaryDiffEqSDIRK: ImplicitEuler  # ImplicitEuler is in the SDIRK sublib
+using OrdinaryDiffEqSDIRK: ImplicitEuler
 
 # Enable detailed nonlinear solver diagnostics
 verbose = DEVerbosity(nonlinear_verbosity = SciMLLogging.Detailed())

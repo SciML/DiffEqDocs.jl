@@ -298,10 +298,7 @@ that we implemented. Now
 
 ```@example callback3
 import DifferentialEquations as DE
-# BS3 lives in OrdinaryDiffEqLowOrderRK; under DifferentialEquations.jl v8 the
-# umbrella only re-exports OrdinaryDiffEq's default solver set, so non-default
-# solvers must be imported from their host sublibrary.
-import OrdinaryDiffEqLowOrderRK as ODELow
+import OrdinaryDiffEqLowOrderRK as ODELow # BS3
 cb = AutoAbstol(true; init_curmax = 1e-6)
 ```
 
