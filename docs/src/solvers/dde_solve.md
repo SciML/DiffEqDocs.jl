@@ -5,6 +5,22 @@
 Solves the DDE defined by `prob` using the algorithm `alg`. If no algorithm is
 given, a default algorithm will be chosen.
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Description |
+|---|---|
+| `DelayDiffEq` | DDE / SDDE driver: `MethodOfSteps`, `DDEProblem`, `SDDEProblem`. Wraps an inner ODE algorithm. |
+| `OrdinaryDiffEqTsit5` | Tsit5 (5/4) and AutoTsit5 - the fastest non-stiff default for medium-tolerance problems. |
+| `OrdinaryDiffEqVerner` | Vern6/7/8/9 and AutoVern - high-order explicit non-stiff methods with lazy variants. |
+| `OrdinaryDiffEqLowOrderRK` | Low-order explicit Runge-Kutta methods (BS3, DP5, RK4, Heun, Euler, OwrenZen, etc.). |
+| `OrdinaryDiffEqHighOrderRK` | High-order explicit RK beyond Verner (DP8, TanYam7, TsitPap8, PFRK87). |
+| `OrdinaryDiffEqRosenbrock` | Rosenbrock and Rosenbrock-W methods for stiff problems (Rosenbrock23, Rodas4/5P, ROS variants). |
+| `OrdinaryDiffEqSDIRK` | SDIRK / ESDIRK methods for stiff problems (KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno). |
+| `OrdinaryDiffEqBDF` | BDF / NDF multistep (FBDF, QNDF, ABDF2, SBDF) and implicit-DAE forms (DFBDF, DImplicitEuler). |
+
+
 ## Recommended Methods
 
 The recommended method for DDE problems are the `MethodOfSteps` algorithms.

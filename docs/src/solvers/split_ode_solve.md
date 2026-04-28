@@ -4,6 +4,20 @@ The solvers which are available for a `SplitODEProblem` depend on the input
 linearity and number of components. Each solver has functional form
 (or many) that it allows.
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Description |
+|---|---|
+| `OrdinaryDiffEqLowOrderRK` | Low-order explicit Runge-Kutta methods (BS3, DP5, RK4, Heun, Euler, OwrenZen, etc.). |
+| `OrdinaryDiffEqSDIRK` | SDIRK / ESDIRK methods for stiff problems (KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno). |
+| `OrdinaryDiffEqBDF` | BDF / NDF multistep (FBDF, QNDF, ABDF2, SBDF) and implicit-DAE forms (DFBDF, DImplicitEuler). |
+| `OrdinaryDiffEqIMEXMultistep` | IMEX multistep methods for split ODEs (CNAB2, CNLF2). |
+| `OrdinaryDiffEqExponentialRK` | Exponential RK and exponential propagation methods (LawsonEuler, ETDRK4, EPIRK, Exprb). |
+| `Sundials` | Wrappers for the SUNDIALS C library: `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE`. |
+
+
 ## Implicit-Explicit (IMEX) ODE
 
 The Implicit-Explicit (IMEX) ODE is a `SplitODEProblem` with two functions:
@@ -37,24 +51,24 @@ the problem, though for large enough PDEs the `ARKODE` method with
     using OrdinaryDiffEqSDIRK         # KenCarp3, KenCarp4, KenCarp47, KenCarp5, KenCarp58
     ```
 
-  - `SplitEuler` *(from `OrdinaryDiffEqLowOrderRK`)*: 1st order fully explicit method. Used for testing accuracy
+  - `OrdinaryDiffEqLowOrderRK.SplitEuler`: 1st order fully explicit method. Used for testing accuracy
     of splits.
-  - `IMEXEuler` *(from `OrdinaryDiffEqBDF`)* : 1st order explicit Euler mixed with implicit Euler. Fixed time
+  - `OrdinaryDiffEqBDF.IMEXEuler` : 1st order explicit Euler mixed with implicit Euler. Fixed time
     step only.
-  - `CNAB2` *(from `OrdinaryDiffEqIMEXMultistep`)*: Crank-Nicolson Adams Bashforth Order 2. Fixed time step only.
-  - `CNLF2` *(from `OrdinaryDiffEqIMEXMultistep`)*: Crank-Nicolson Leapfrog of Order 2. Fixed time step only.
-  - `SBDF2` *(from `OrdinaryDiffEqBDF`)* : 2nd order IMEX BDF method. Fixed time step only.
-  - `SBDF3` *(from `OrdinaryDiffEqBDF`)* : 3rd order IMEX BDF method. Fixed time step only. In development.
-  - `SBDF4` *(from `OrdinaryDiffEqBDF`)* : 4th order IMEX BDF method. Fixed time step only. In development.
-  - `KenCarp3` *(from `OrdinaryDiffEqSDIRK`)*: An A-L stable stiffly-accurate 3rd order ESDIRK method.
-  - `KenCarp4` *(from `OrdinaryDiffEqSDIRK`)*: An A-L stable stiffly-accurate 4th order ESDIRK method.
-  - `KenCarp47` *(from `OrdinaryDiffEqSDIRK`)* - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
-  - `KenCarp5` *(from `OrdinaryDiffEqSDIRK`)*: An A-L stable stiffly-accurate 5th order ESDIRK method.
-  - `KenCarp58` *(from `OrdinaryDiffEqSDIRK`)* - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
+  - `OrdinaryDiffEqIMEXMultistep.CNAB2`: Crank-Nicolson Adams Bashforth Order 2. Fixed time step only.
+  - `OrdinaryDiffEqIMEXMultistep.CNLF2`: Crank-Nicolson Leapfrog of Order 2. Fixed time step only.
+  - `OrdinaryDiffEqBDF.SBDF2` : 2nd order IMEX BDF method. Fixed time step only.
+  - `OrdinaryDiffEqBDF.SBDF3` : 3rd order IMEX BDF method. Fixed time step only. In development.
+  - `OrdinaryDiffEqBDF.SBDF4` : 4th order IMEX BDF method. Fixed time step only. In development.
+  - `OrdinaryDiffEqSDIRK.KenCarp3`: An A-L stable stiffly-accurate 3rd order ESDIRK method.
+  - `OrdinaryDiffEqSDIRK.KenCarp4`: An A-L stable stiffly-accurate 4th order ESDIRK method.
+  - `OrdinaryDiffEqSDIRK.KenCarp47` - An A-L stable stiffly-accurate 4th order seven-stage ESDIRK method with splitting
+  - `OrdinaryDiffEqSDIRK.KenCarp5`: An A-L stable stiffly-accurate 5th order ESDIRK method.
+  - `OrdinaryDiffEqSDIRK.KenCarp58` - An A-L stable stiffly-accurate 5th order eight-stage ESDIRK method with splitting
 
 ### Sundials.jl
 
-  - `ARKODE` *(from `Sundials`)*: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
+  - `Sundials.ARKODE`: An additive Runge-Kutta method. Order between 3rd and 5th. For a list
     of available options, please see
     [its ODE solver page](https://docs.sciml.ai/DiffEqDocs/dev/api/sundials/).
 
@@ -80,13 +94,13 @@ The appropriate algorithms for this form are:
     `OrdinaryDiffEqExponentialRK` (a sublib of OrdinaryDiffEq). Bring them in
     with `using OrdinaryDiffEqExponentialRK`.
 
-  - `LawsonEuler` *(from `OrdinaryDiffEqExponentialRK`)* - First order exponential Euler scheme. Fixed timestepping only.
-  - `NorsettEuler` *(from `OrdinaryDiffEqExponentialRK`)* - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
-  - `ETD2` *(from `OrdinaryDiffEqExponentialRK`)* - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
-  - `ETDRK2` *(from `OrdinaryDiffEqExponentialRK`)* - 2nd order exponential-RK scheme. Fixed timestepping only.
-  - `ETDRK3` *(from `OrdinaryDiffEqExponentialRK`)* - 3rd order exponential-RK scheme. Fixed timestepping only.
-  - `ETDRK4` *(from `OrdinaryDiffEqExponentialRK`)* - 4th order exponential-RK scheme. Fixed timestepping only.
-  - `HochOst4` *(from `OrdinaryDiffEqExponentialRK`)* - 4th order exponential-RK scheme with stiff order 4. Fixed
+  - `OrdinaryDiffEqExponentialRK.LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
+  - `OrdinaryDiffEqExponentialRK.NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.
+  - `OrdinaryDiffEqExponentialRK.ETD2` - Second order Exponential Time Differencing method (in development). Fixed timestepping only. Doesn't support Krylov approximation.
+  - `OrdinaryDiffEqExponentialRK.ETDRK2` - 2nd order exponential-RK scheme. Fixed timestepping only.
+  - `OrdinaryDiffEqExponentialRK.ETDRK3` - 3rd order exponential-RK scheme. Fixed timestepping only.
+  - `OrdinaryDiffEqExponentialRK.ETDRK4` - 4th order exponential-RK scheme. Fixed timestepping only.
+  - `OrdinaryDiffEqExponentialRK.HochOst4` - 4th order exponential-RK scheme with stiff order 4. Fixed
     timestepping only.
 
 Note that the generic algorithms `GenericIIF1` and `GenericIIF2` allow for a choice of `nlsolve`.

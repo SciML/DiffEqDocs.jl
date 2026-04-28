@@ -10,6 +10,15 @@ Solves for the steady states in the problem defined by `prob` using the algorith
     For a more complete documentation on nonlinear solvers for steady state problems,
     see [NonlinearSolve.jl](https://docs.sciml.ai/NonlinearSolve/stable/)
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Description |
+|---|---|
+| `SteadyStateDiffEq` | Steady-state finders (`DynamicSS`, `SSRootfind`). |
+
+
 ## Recommended Methods
 
 `DynamicSS` is a good choice if you think you may have multiple steady states
@@ -24,10 +33,10 @@ large time steps as the steady state approaches.
 
 ### SteadyStateDiffEq.jl
 
-  - `SSRootfind` *(from `SteadyStateDiffEq`)* : Uses a rootfinding algorithm to find a steady state. Defaults
+  - `SteadyStateDiffEq.SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
     to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
     keyword argument. (This method is deprecated: use NonlinearSolve.jl instead).
-  - `DynamicSS` *(from `SteadyStateDiffEq`)* : Uses an ODE solver to find the steady state. Automatically
+  - `SteadyStateDiffEq.DynamicSS` : Uses an ODE solver to find the steady state. Automatically
     terminates when close to the steady state.
     `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
     ODE algorithm is given as the first argument.  The absolute and

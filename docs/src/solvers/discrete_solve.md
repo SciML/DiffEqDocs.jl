@@ -1,5 +1,15 @@
 # Discrete Solvers
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Description |
+|---|---|
+| `OrdinaryDiffEqFunctionMap` | `FunctionMap` driver for `DiscreteProblem` time-stepping. |
+| `SimpleDiffEq` | Minimal-allocation simple solvers for tight inner loops (`SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap`). |
+
+
 ## DiscreteProblems
 
 `solve(prob::DiscreteProblem,alg;kwargs)`
@@ -21,7 +31,7 @@ all the extras like callbacks and saving support (but does have an integrator in
 
 ### OrdinaryDiffEq.jl
 
-  - `FunctionMap` *(from `OrdinaryDiffEqFunctionMap`)*: A basic function map which implements the full common interface.
+  - `OrdinaryDiffEqFunctionMap.FunctionMap`: A basic function map which implements the full common interface.
 
 !!! note "v8: import from `OrdinaryDiffEqFunctionMap`"
 
@@ -63,5 +73,5 @@ piecewise constant.
 
 ### SimpleDiffEq.jl
 
-  - `SimpleFunctionMap` *(from `SimpleDiffEq`)*: A bare-bones implementation of a function map. Is optimally-efficient
+  - `SimpleDiffEq.SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
     and has an integrator interface version, but does not support callbacks or saving controls.

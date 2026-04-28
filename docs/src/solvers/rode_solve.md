@@ -1,5 +1,14 @@
 # RODE Solvers
 
+## Packages
+
+The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
+
+| Package | Description |
+|---|---|
+| `StochasticDiffEqRODE` | Random ODE methods (`RandomEM`, `RandomTamedEM`, `RandomHeun`). |
+
+
 ## Recommended Methods
 
 Currently, the only implemented method is the `RandomEM` method in StochasticDiffEq.jl.
@@ -11,7 +20,7 @@ It is strong order alpha for an alpha-Holder continuous noise process.
 
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 
-  - `RandomEM` *(from `StochasticDiffEqRODE`)*- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity.
+  - `StochasticDiffEqRODE.RandomEM`- The Euler-Maruyama method for RODEs. Strong order matching Holder continuity.
 
 Example usage:
 
