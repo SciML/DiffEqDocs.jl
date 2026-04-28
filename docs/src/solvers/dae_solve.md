@@ -14,7 +14,7 @@ The solvers on this page are distributed across the packages below. Add the pack
 | `SciMLBase` | `CheckInit`, `NoInit` | Common types and DAE-init policies. |
 | `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | `IDA` for general implicit DAEs; industrial-grade C solvers. |
 | `ODEInterfaceDiffEq` | `dopri5`, `dop853`, `radau`, `seulex`, `rodas` | Hairer / Wanner Fortran solvers (radau / rodas for DAEs). |
-| `DASSL` | `dassl` | Classical Petzold DASSL Fortran DAE solver. |
+| `DASSL` | `dassl` | Classical Petzold DASSL Fortran DAE solver direct translation to Julia. |
 | `DASKR` | `daskr` | Krylov variant of DASSL for large-scale DAEs. |
 
 

@@ -34,7 +34,6 @@ The solvers on this page are distributed across the packages below. Add the pack
 | `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | Industrial-grade C BDF / Adams / ARK; `IDA` for general implicit DAEs. |
 | `LSODA` | `lsoda` | Classic Fortran auto-switching solver (Hindmarsh). |
 | `ODEInterfaceDiffEq` | `dopri5`, `dop853`, `radau`, `seulex`, `rodas` | Hairer / Wanner Fortran solvers. |
-| `ODE` | `ode23`, `ode45`, `ode78` | Legacy ODE.jl solvers; kept for compatibility with older code. |
 | `ProbNumDiffEq` | `EK0`, `EK1` | Probabilistic numerics - get uncertainty estimates on the trajectory. |
 | `TaylorIntegration` | `TaylorMethod` | Taylor method - super-high order for very smooth ODEs. |
 | `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |

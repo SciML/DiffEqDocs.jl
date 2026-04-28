@@ -14,7 +14,7 @@ The solvers on this page are distributed across the packages below. Add the pack
 
 | Package | Methods | Good for |
 |---|---|---|
-| `BoundaryValueDiffEqShooting` | `Shooting`, `MultipleShooting` | Shooting / multiple-shooting; problems where ODE solver choice matters. |
+| `BoundaryValueDiffEqShooting` | `Shooting`, `MultipleShooting` | Fastest when not too stiff. |
 | `BoundaryValueDiffEqMIRK` | MIRK2/3/4/5/6 (sparse Jacobians) | Default BVP workhorse; robust on standard two-point BVPs. |
 | `BoundaryValueDiffEqFIRK` | RadauIIa1/2/3/5/7, LobattoIIIa/b/c | Stiff or high-precision BVPs (fully-implicit RK). |
 | `BoundaryValueDiffEqAscher` | Ascher1/2/3/4/5/6/7 | Index-1 DAEs and mixed-order / stiff BVPs. |
