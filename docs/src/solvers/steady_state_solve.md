@@ -24,10 +24,10 @@ large time steps as the steady state approaches.
 
 ### SteadyStateDiffEq.jl
 
-  - `SSRootfind` : Uses a rootfinding algorithm to find a steady state. Defaults
+  - `SSRootfind` *(from `SteadyStateDiffEq`)* : Uses a rootfinding algorithm to find a steady state. Defaults
     to using NLsolve.jl. A different algorithm can be specified via the `nlsolve`
     keyword argument. (This method is deprecated: use NonlinearSolve.jl instead).
-  - `DynamicSS` : Uses an ODE solver to find the steady state. Automatically
+  - `DynamicSS` *(from `SteadyStateDiffEq`)* : Uses an ODE solver to find the steady state. Automatically
     terminates when close to the steady state.
     `DynamicSS(alg;abstol=1e-8,reltol=1e-6,tspan=Inf)` requires that an
     ODE algorithm is given as the first argument.  The absolute and

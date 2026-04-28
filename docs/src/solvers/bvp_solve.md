@@ -45,71 +45,71 @@ in many cases, single shooting method `Shooting` may be faster than collocation 
 
 #### Shooting Methods
 
-  - `Shooting(odealg())` - A wrapper over initial value problem solvers, it reduces BVP to an initial value problem and solves the IVP.
-  - `MultipleShooting(N, odealg())` - A wrapper over initial value problem solvers, it reduces BVP to `N` initial value problems and solves these IVPs. Multiple Shooting usually maintains more numerical stability than Single Shooting.
+  - `Shooting(odealg())` *(from `BoundaryValueDiffEqShooting`)* - A wrapper over initial value problem solvers, it reduces BVP to an initial value problem and solves the IVP.
+  - `MultipleShooting(N, odealg())` *(from `BoundaryValueDiffEqShooting`)* - A wrapper over initial value problem solvers, it reduces BVP to `N` initial value problems and solves these IVPs. Multiple Shooting usually maintains more numerical stability than Single Shooting.
 
 #### MIRK(Monotonic Implicit Runge-Kutta) Methods
 
 All `MIRK` methods have defect control adaptivity by default which adapts the mesh (`dt`) automatically. This can be turned
 off via the keyword argument `adaptive = false`.
 
-  - `MIRK2` - A 2nd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
-  - `MIRK3` - A 3rd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
-  - `MIRK4` - A 4th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
-  - `MIRK5` - A 5th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
-  - `MIRK6` - A 6th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK2` *(from `BoundaryValueDiffEqMIRK`)* - A 2nd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK3` *(from `BoundaryValueDiffEqMIRK`)* - A 3rd order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK4` *(from `BoundaryValueDiffEqMIRK`)* - A 4th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK5` *(from `BoundaryValueDiffEqMIRK`)* - A 5th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
+  - `MIRK6` *(from `BoundaryValueDiffEqMIRK`)* - A 6th order collocation method using an implicit Runge-Kutta tableau with a sparse Jacobian.
 
 #### FIRK(Fully Implicit Runge-Kutta) methods
 
 Similar to `MIRK` methods, fully implicit Runge-Kutta methods construct nonlinear problems from the collocation equations of a BVP and solve such nonlinear systems to obtain numerical solutions of BVP. When solving large boundary value problems, choose a nested NonlinearSolve.jl solver by setting `nested_nlsolve=true` in FIRK solvers can achieve better performance.
 
-  - `LobattoIIIa2` - A 2nd stage LobattoIIIa collocation method.
+  - `LobattoIIIa2` *(from `BoundaryValueDiffEqFIRK`)* - A 2nd stage LobattoIIIa collocation method.
 
-  - `LobattoIIIa3` - A 3rd stage LobattoIIIa collocation method.
-  - `LobattoIIIa4` - A 4th stage LobattoIIIa collocation method.
-  - `LobattoIIIa5` - A 5th stage LobattoIIIa collocation method.
-  - `LobattoIIIb2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
-  - `LobattoIIIb3` - A 3rd stage LobattoIIIa collocation method.
-  - `LobattoIIIb4` - A 4th stage LobattoIIIa collocation method.
-  - `LobattoIIIb5` - A 5th stage LobattoIIIa collocation method.
-  - `LobattoIIIc2` - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
-  - `LobattoIIIc3` - A 3rd stage LobattoIIIa collocation method.
-  - `LobattoIIIc4` - A 4th stage LobattoIIIa collocation method.
-  - `LobattoIIIc5` - A 5th stage LobattoIIIa collocation method.
-  - `RadauIIa1` - A 1st stage Radau collocation method, doesn't support defect control adaptivity.
-  - `RadauIIa2` - A 2nd stage Radau collocation method.
-  - `RadauIIa3` - A 3rd stage Radau collocation method.
-  - `RadauIIa5` - A 5th stage Radau collocation method.
-  - `RadauIIa7` - A 7th stage Radau collocation method.
+  - `LobattoIIIa3` *(from `BoundaryValueDiffEqFIRK`)* - A 3rd stage LobattoIIIa collocation method.
+  - `LobattoIIIa4` *(from `BoundaryValueDiffEqFIRK`)* - A 4th stage LobattoIIIa collocation method.
+  - `LobattoIIIa5` *(from `BoundaryValueDiffEqFIRK`)* - A 5th stage LobattoIIIa collocation method.
+  - `LobattoIIIb2` *(from `BoundaryValueDiffEqFIRK`)* - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
+  - `LobattoIIIb3` *(from `BoundaryValueDiffEqFIRK`)* - A 3rd stage LobattoIIIa collocation method.
+  - `LobattoIIIb4` *(from `BoundaryValueDiffEqFIRK`)* - A 4th stage LobattoIIIa collocation method.
+  - `LobattoIIIb5` *(from `BoundaryValueDiffEqFIRK`)* - A 5th stage LobattoIIIa collocation method.
+  - `LobattoIIIc2` *(from `BoundaryValueDiffEqFIRK`)* - A 2nd stage LobattoIIIa collocation method, doesn't support defect control adaptivity.
+  - `LobattoIIIc3` *(from `BoundaryValueDiffEqFIRK`)* - A 3rd stage LobattoIIIa collocation method.
+  - `LobattoIIIc4` *(from `BoundaryValueDiffEqFIRK`)* - A 4th stage LobattoIIIa collocation method.
+  - `LobattoIIIc5` *(from `BoundaryValueDiffEqFIRK`)* - A 5th stage LobattoIIIa collocation method.
+  - `RadauIIa1` *(from `BoundaryValueDiffEqFIRK`)* - A 1st stage Radau collocation method, doesn't support defect control adaptivity.
+  - `RadauIIa2` *(from `BoundaryValueDiffEqFIRK`)* - A 2nd stage Radau collocation method.
+  - `RadauIIa3` *(from `BoundaryValueDiffEqFIRK`)* - A 3rd stage Radau collocation method.
+  - `RadauIIa5` *(from `BoundaryValueDiffEqFIRK`)* - A 5th stage Radau collocation method.
+  - `RadauIIa7` *(from `BoundaryValueDiffEqFIRK`)* - A 7th stage Radau collocation method.
 
 #### Gauss Legendre collocation methods
 
 The `Ascher` collocation methods are similar with `MIRK` and `FIRK` methods but have extension for BVDAE prblem solving, the error control is based on instead of defect control adaptivity.
 
-  - `Ascher1` - A 1st stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher2` - A 2nd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher3` - A 3rd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher4` - A 4th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher5` - A 5th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher6` - A 6th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
-  - `Ascher7` - A 7th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher1` *(from `BoundaryValueDiffEqAscher`)* - A 1st stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher2` *(from `BoundaryValueDiffEqAscher`)* - A 2nd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher3` *(from `BoundaryValueDiffEqAscher`)* - A 3rd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher4` *(from `BoundaryValueDiffEqAscher`)* - A 4th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher5` *(from `BoundaryValueDiffEqAscher`)* - A 5th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher6` *(from `BoundaryValueDiffEqAscher`)* - A 6th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
+  - `Ascher7` *(from `BoundaryValueDiffEqAscher`)* - A 7th stage Gauss Legendre collocation method with Ascher's error control adaptivity.
 
 #### MIRKN(Monotonic Implicit Runge-Kutta-Nystöm) methods
 
-  - `MIRKN4` - A 4th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
-  - `MIRKN6` - A 6th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
+  - `MIRKN4` *(from `BoundaryValueDiffEqMIRKN`)* - A 4th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
+  - `MIRKN6` *(from `BoundaryValueDiffEqMIRKN`)* - A 6th order collocation method using an implicit Runge-Kutta-Nyström tableau without defect control adaptivity.
 
 ### SimpleBoundaryValueDiffEq.jl
 
-  - `SimpleMIRK4` - A simplified 4th order collocation method using an implicit Runge-Kutta tableau.
-  - `SimpleMIRK5` - A simplified 5th order collocation method using an implicit Runge-Kutta tableau.
-  - `SimpleMIRK6` - A simplified 6th order collocation method using an implicit Runge-Kutta tableau.
-  - `SimpleShooting` - A simplified single Shooting method.
+  - `SimpleMIRK4` *(from `SimpleBoundaryValueDiffEq`)* - A simplified 4th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleMIRK5` *(from `SimpleBoundaryValueDiffEq`)* - A simplified 5th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleMIRK6` *(from `SimpleBoundaryValueDiffEq`)* - A simplified 6th order collocation method using an implicit Runge-Kutta tableau.
+  - `SimpleShooting` *(from `SimpleBoundaryValueDiffEq`)* - A simplified single Shooting method.
 
 ### ODEInterface.jl
 
 ODEInterface.jl can be used seamlessly with BoundaryValueDiffEq.jl, after we define our model using `BVProblem` or `TwoPointBVProblem`, we can directly call the solvers from ODEInterface.jl.
 
-  - `BVPM2` - FORTRAN code for solving two-point boundary value problems. `BVPM2` is only compatible with `TwoPointBVProblem`.
-  - `BVPSOL` - FORTRAN77 code which solves highly nonlinear two point boundary value problems using a local linear solver (condensing algorithm) or a global sparse linear solver for the solution of the arising linear subproblems, by Peter Deuflhard, Georg Bader, Lutz Weimann. `BVPSOL` should be used with `TwoPointBVProblem` and initial guess.
-  - `COLNEW` - A Fortran77 code solves a multi-points boundary value problems for a mixed order system of ODEs by Uri Ascher and Georg Bader. It incorporates a new basis representation replacing b-splines, and improvements for the linear and nonlinear algebraic equation solvers. `COLNEW` support `TwoPointBVProblem` by default. To solve multi-points BVP using `COLNEW`, special form of multi-points boundary conditions should be provided by `COLNEW(bc_func, dbc_func, zeta)` where `bc_func(i, z, res)` is the multi-points boundary conditions, `dbc_func(i, z, dbc)` is the i-th row of jacobian of boundary conditions.
+  - `BVPM2` *(from `ODEInterface`)* - FORTRAN code for solving two-point boundary value problems. `BVPM2` is only compatible with `TwoPointBVProblem`.
+  - `BVPSOL` *(from `ODEInterface`)* - FORTRAN77 code which solves highly nonlinear two point boundary value problems using a local linear solver (condensing algorithm) or a global sparse linear solver for the solution of the arising linear subproblems, by Peter Deuflhard, Georg Bader, Lutz Weimann. `BVPSOL` should be used with `TwoPointBVProblem` and initial guess.
+  - `COLNEW` *(from `ODEInterface`)* - A Fortran77 code solves a multi-points boundary value problems for a mixed order system of ODEs by Uri Ascher and Georg Bader. It incorporates a new basis representation replacing b-splines, and improvements for the linear and nonlinear algebraic equation solvers. `COLNEW` support `TwoPointBVProblem` by default. To solve multi-points BVP using `COLNEW`, special form of multi-points boundary conditions should be provided by `COLNEW(bc_func, dbc_func, zeta)` where `bc_func(i, z, res)` is the multi-points boundary conditions, `dbc_func(i, z, dbc)` is the i-th row of jacobian of boundary conditions.

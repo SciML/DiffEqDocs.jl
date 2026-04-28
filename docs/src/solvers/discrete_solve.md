@@ -21,7 +21,7 @@ all the extras like callbacks and saving support (but does have an integrator in
 
 ### OrdinaryDiffEq.jl
 
-  - `FunctionMap`: A basic function map which implements the full common interface.
+  - `FunctionMap` *(from `OrdinaryDiffEqFunctionMap`)*: A basic function map which implements the full common interface.
 
 !!! note "v8: import from `OrdinaryDiffEqFunctionMap`"
 
@@ -63,5 +63,5 @@ piecewise constant.
 
 ### SimpleDiffEq.jl
 
-  - `SimpleFunctionMap`: A bare-bones implementation of a function map. Is optimally-efficient
+  - `SimpleFunctionMap` *(from `SimpleDiffEq`)*: A bare-bones implementation of a function map. Is optimally-efficient
     and has an integrator interface version, but does not support callbacks or saving controls.

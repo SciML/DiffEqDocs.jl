@@ -62,7 +62,7 @@ Note that all of these methods are fixed timestep unless otherwise specified.
 
 These methods require that ``A`` is constant.
 
-  - `LinearExponential` - Exact solution formula for linear, time-independent problems.
+  - `LinearExponential` *(from `OrdinaryDiffEqLinear`)* - Exact solution formula for linear, time-independent problems.
 
 Options:
 
@@ -101,14 +101,14 @@ sol = DE.solve(prob, ODELinear.LinearExponential())
 
 These methods require ``A`` is only dependent on the independent variable, i.e. ``A(t)``.
 
-  - `MagnusMidpoint` - Second order Magnus Midpoint method.
-  - `MagnusLeapfrog`- Second order Magnus Leapfrog method.
-  - `MagnusGauss4` - Fourth order Magnus method approximated using a two stage Gauss quadrature.
-  - `MagnusGL4`- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
-  - `MagnusNC6`- Sixth order Magnus method approximated using Newton-Cotes quadrature.
-  - `MagnusGL6`- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
-  - `MagnusNC8`- Eighth order Magnus method approximated using Newton-Cotes quadrature.
-  - `MagnusGL8`- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `MagnusMidpoint` *(from `OrdinaryDiffEqLinear`)* - Second order Magnus Midpoint method.
+  - `MagnusLeapfrog` *(from `OrdinaryDiffEqLinear`)*- Second order Magnus Leapfrog method.
+  - `MagnusGauss4` *(from `OrdinaryDiffEqLinear`)* - Fourth order Magnus method approximated using a two stage Gauss quadrature.
+  - `MagnusGL4` *(from `OrdinaryDiffEqLinear`)*- Fourth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `MagnusNC6` *(from `OrdinaryDiffEqLinear`)*- Sixth order Magnus method approximated using Newton-Cotes quadrature.
+  - `MagnusGL6` *(from `OrdinaryDiffEqLinear`)*- Sixth order Magnus method approximated using Gauss-Legendre quadrature.
+  - `MagnusNC8` *(from `OrdinaryDiffEqLinear`)*- Eighth order Magnus method approximated using Newton-Cotes quadrature.
+  - `MagnusGL8` *(from `OrdinaryDiffEqLinear`)*- Eighth order Magnus method approximated using Gauss-Legendre quadrature.
 
 Example:
 
@@ -131,14 +131,14 @@ Starting with `ones(2,2)` is just a convenient way to get a mutable 2x2 matrix.
 
 These methods can be used when ``A`` is dependent on the state variables, i.e. ``A(u)``.
 
-  - `CayleyEuler` - First order method using Cayley transformations.
-  - `LieEuler` - First order Lie Euler method.
-  - `RKMK2` - Second order Runge–Kutta–Munthe-Kaas method.
-  - `RKMK4` - Fourth order Runge–Kutta–Munthe-Kaas method.
-  - `LieRK4` - Fourth order Lie Runge-Kutta method.
-  - `CG2` - Second order Crouch–Grossman method.
-  - `CG4a` - Fourth order Crouch-Grossman method.
-  - `MagnusAdapt4` - Fourth Order Adaptive Magnus method.
+  - `CayleyEuler` *(from `OrdinaryDiffEqLinear`)* - First order method using Cayley transformations.
+  - `LieEuler` *(from `OrdinaryDiffEqLinear`)* - First order Lie Euler method.
+  - `RKMK2` *(from `OrdinaryDiffEqLinear`)* - Second order Runge–Kutta–Munthe-Kaas method.
+  - `RKMK4` *(from `OrdinaryDiffEqLinear`)* - Fourth order Runge–Kutta–Munthe-Kaas method.
+  - `LieRK4` *(from `OrdinaryDiffEqLinear`)* - Fourth order Lie Runge-Kutta method.
+  - `CG2` *(from `OrdinaryDiffEqLinear`)* - Second order Crouch–Grossman method.
+  - `CG4a` *(from `OrdinaryDiffEqLinear`)* - Fourth order Crouch-Grossman method.
+  - `MagnusAdapt4` *(from `OrdinaryDiffEqLinear`)* - Fourth Order Adaptive Magnus method.
 
 Example:
 
@@ -177,6 +177,6 @@ sol = DE.solve(prob, ODELinear.MagnusAdapt4())
 
 These methods can be used when ``A`` is dependent on both time and state variables, i.e. ``A(u,t)``
 
-  - `CG3` - Third order Crouch-Grossman method.
+  - `CG3` *(from `OrdinaryDiffEqLinear`)* - Third order Crouch-Grossman method.
 
 [^1]: A description of IOP can be found in this [paper](https://doi.org/10.1016/j.jcp.2018.06.026).
