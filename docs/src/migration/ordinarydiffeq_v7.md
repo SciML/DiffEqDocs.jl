@@ -21,6 +21,114 @@ not yet reflected here.
 
 ---
 
+# [DifferentialEquations.jl v8: scope reduction](@id diffeq_v8_scope_reduction)
+
+The single most user-visible v8 change is what `using DifferentialEquations`
+actually loads. Through v7, the umbrella package re-exported the entire SciML
+solver suite — `OrdinaryDiffEq`, `StochasticDiffEq`, `DelayDiffEq`,
+`BoundaryValueDiffEq`, `Sundials`, `JumpProcesses`, `SteadyStateDiffEq`,
+`LinearSolve`, `NonlinearSolve`, `Optimization`, and more — so a single
+`using DifferentialEquations` gave you every solver family in one shot. That
+broad surface drove up `using` time and obscured which package each solver
+actually came from.
+
+**In v8, `using DifferentialEquations` only loads `OrdinaryDiffEq`.** All
+other solver families have been removed from the umbrella. If your code
+relied on `DifferentialEquations` for SDEs, DDEs, BVPs, jumps, steady states,
+DAE wrappers, or any non-ODE solver, you now need to add the topic-specific
+package to your project explicitly.
+
+## What to import instead
+
+| Topic | Old (v7 and earlier) | New (v8) |
+|---|---|---|
+| ODEs | `using DifferentialEquations` | `using OrdinaryDiffEq` (or a sublib like `using OrdinaryDiffEqTsit5: Tsit5`) |
+| Stochastic ODEs (SDEs) | `using DifferentialEquations` | `using StochasticDiffEq` |
+| Delay ODEs (DDEs) | `using DifferentialEquations` | `using DelayDiffEq` |
+| Boundary value problems | `using DifferentialEquations` | `using BoundaryValueDiffEq` (or one of the BVP sublibs) |
+| Jump problems | `using DifferentialEquations` | `using JumpProcesses` |
+| Steady state | `using DifferentialEquations` | `using SteadyStateDiffEq` |
+| DAEs (mass matrix) | (already in `OrdinaryDiffEq`) | `using OrdinaryDiffEq` |
+| DAEs (implicit / IDA) | `using DifferentialEquations` | `using Sundials` (or use a topic sublib) |
+| Sundials wrappers (CVODE, IDA, ARKODE) | `using DifferentialEquations` | `using Sundials` |
+| Linear solves | `using DifferentialEquations` | `using LinearSolve` |
+| Nonlinear solves | `using DifferentialEquations` | `using NonlinearSolve` |
+| Optimization | `using DifferentialEquations` | `using Optimization` |
+
+## Example
+
+```julia
+# v7 — the umbrella covered everything
+using DifferentialEquations
+prob_ode = ODEProblem(f, u0, tspan)
+prob_sde = SDEProblem(f, g, u0, tspan)
+prob_dde = DDEProblem(f, u0, h, tspan)
+sol_ode = solve(prob_ode, Tsit5())
+sol_sde = solve(prob_sde, SOSRI())
+sol_dde = solve(prob_dde, MethodOfSteps(Tsit5()))
+
+# v8 — add the topic packages you actually use
+using OrdinaryDiffEq      # ODEs (still re-exported by DifferentialEquations)
+using StochasticDiffEq    # SDEs — now an explicit dep
+using DelayDiffEq         # DDEs — now an explicit dep
+
+prob_ode = ODEProblem(f, u0, tspan)
+prob_sde = SDEProblem(f, g, u0, tspan)
+prob_dde = DDEProblem(f, u0, h, tspan)
+sol_ode = solve(prob_ode, Tsit5())
+sol_sde = solve(prob_sde, SOSRI())
+sol_dde = solve(prob_dde, MethodOfSteps(Tsit5()))
+```
+
+The problem-type constructors (`ODEProblem`, `SDEProblem`, `DDEProblem`,
+`BVProblem`, `JumpProblem`, `SteadyStateProblem`, …) are defined in
+`SciMLBase` and re-exported by every topic package, so you do **not** need
+`using SciMLBase` — `using StochasticDiffEq` already gives you `SDEProblem`,
+`using DelayDiffEq` already gives you `DDEProblem`, and so on.
+
+## Why
+
+  - **`using` time.** The pre-v8 umbrella precompile chain pulled in the
+    full SciML solver suite for every user, even ones who only solved ODEs.
+    Most users want exactly one or two topic packages; the umbrella was
+    paying the loading cost of all of them.
+  - **Honest dependency graph.** `using DifferentialEquations` no longer
+    silently brings in `Optimization`, `LinearSolve`, `NonlinearSolve`,
+    `Sundials`, etc. The `Project.toml` of a v8 project now reads as the
+    list of solver families actually being used, which makes version-pinning
+    and upgrade decisions much easier.
+  - **Independent release cadence.** Every topic package can now bump its
+    major version without waiting for the others. `StochasticDiffEq`,
+    `DelayDiffEq`, `BoundaryValueDiffEq`, `JumpProcesses`, etc. are no longer
+    blocked on a coordinated meta-release — `DifferentialEquations` is just
+    the ODE umbrella now.
+
+## How this relates to the OrdinaryDiffEq v7 changes
+
+The scope-reduction discussed here is **independent** of the
+OrdinaryDiffEq v7 breaking changes documented in the rest of this page.
+OrdinaryDiffEq v7 ships *with* DifferentialEquations v8, but the two changes
+are decoupled:
+
+  - You can use OrdinaryDiffEq v7 directly (`using OrdinaryDiffEq`) without
+    the umbrella package at all. This is the recommended setup for
+    libraries that want minimal load time and an explicit dependency on
+    just the ODE solver family. See the
+    [Reduced Compile Time, Optimizing Runtime, and Low Dependency Usage](@ref low_dep)
+    page for the per-sublib import pattern (e.g.
+    `using OrdinaryDiffEqTsit5: Tsit5` to load only `Tsit5` and its support
+    code), which trims `using` time even further.
+  - You can still use the `DifferentialEquations` umbrella under v8; it now
+    just means "OrdinaryDiffEq + a few convenience exports" rather than
+    "every solver in SciML."
+
+For the full v7 + v8 breaking-change list — including the typed kwargs,
+controller refactor, RAT v4 indexing, ADTypes migration, etc. — see the
+[OrdinaryDiffEq NEWS.md PR](https://github.com/SciML/OrdinaryDiffEq.jl/pull/3579)
+and the per-package sections below.
+
+---
+
 # OrdinaryDiffEq.jl v7 Breaking Changes
 
 This release bumps to **SciMLBase v3**, **RecursiveArrayTools v4**, and includes breaking changes across **DiffEqBase**, **OrdinaryDiffEqCore**, and all solver sublibraries.

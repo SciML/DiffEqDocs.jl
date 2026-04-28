@@ -5,6 +5,12 @@
     **StochasticDiffEq v7**, and major bumps across every `OrdinaryDiffEqXXX`
     / `StochasticDiffEqXXX` sublib. Highlights:
 
+      - **`using DifferentialEquations` now only loads `OrdinaryDiffEq`.**
+        SDE / DDE / BVP / Jump / SteadyState / Sundials / LinearSolve /
+        NonlinearSolve / Optimization are no longer re-exported — add the
+        topic-specific package explicitly (`using StochasticDiffEq`,
+        `using DelayDiffEq`, etc.). See the
+        [scope-reduction migration table](@ref diffeq_v8_scope_reduction).
       - typed `verbose` / `autodiff` / `alias` / `lazy` (no more `Bool`)
       - `AutoSpecialize` is the new `ODEFunction` default
       - step-size controllers are objects (`PIController`, `PIDController`, …)
