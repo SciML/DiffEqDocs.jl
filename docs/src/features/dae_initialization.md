@@ -68,7 +68,9 @@ DiffEqBase.ShampineCollocationInit
 ### Example 1: Simple Pendulum DAE
 
 ```julia
-using DifferentialEquations
+using OrdinaryDiffEqBDF       # DFBDF
+using SciMLBase               # DAEProblem, solve
+using DiffEqBase              # BrownFullBasicInit, CheckInit, NoInit
 
 function pendulum!(res, du, u, p, t)
     x, y, T = u
@@ -114,7 +116,9 @@ sol = solve(prob2, DFBDF(), initializealg = CheckInit())
 When using ModelingToolkit, initialization information is often included automatically:
 
 ```julia
-using ModelingToolkit, DifferentialEquations
+using ModelingToolkit
+using OrdinaryDiffEqBDF       # DFBDF
+using SciMLBase               # DAEProblem, solve
 
 @variables t x(t) y(t) T(t)
 @parameters g L
@@ -143,9 +147,9 @@ Both OrdinaryDiffEq and Sundials support the same initialization algorithms thro
 ### OrdinaryDiffEq and Sundials
 
 ```julia
-using OrdinaryDiffEq
+using OrdinaryDiffEqBDF   # DFBDF
 # or
-using Sundials
+using Sundials            # IDA
 
 # Use Brown's algorithm to fix inconsistent conditions
 sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())  # OrdinaryDiffEq

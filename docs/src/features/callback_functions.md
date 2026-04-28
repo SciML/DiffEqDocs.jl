@@ -298,6 +298,10 @@ that we implemented. Now
 
 ```@example callback3
 import DifferentialEquations as DE
+# BS3 lives in OrdinaryDiffEqLowOrderRK; under DifferentialEquations.jl v8 the
+# umbrella only re-exports OrdinaryDiffEq's default solver set, so non-default
+# solvers must be imported from their host sublibrary.
+import OrdinaryDiffEqLowOrderRK as ODELow
 cb = AutoAbstol(true; init_curmax = 1e-6)
 ```
 
@@ -313,7 +317,7 @@ end
 u0 = 10.0
 const V = 1
 prob = DE.ODEProblem(g, u0, (0.0, 10.0))
-integrator = DE.init(prob, DE.BS3(), callback = cb)
+integrator = DE.init(prob, ODELow.BS3(), callback = cb)
 at1 = integrator.opts.abstol
 DE.step!(integrator)
 at2 = integrator.opts.abstol

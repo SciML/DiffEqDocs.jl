@@ -78,6 +78,17 @@ Unless otherwise specified, the OrdinaryDiffEq algorithms all come with a
 interpolation. For the non-free higher order interpolating functions, the extra
 steps are computed lazily (i.e. not during the solve).
 
+!!! note "v8: import from the dynamical OrdinaryDiffEq sublibs"
+
+    None of the specialized solvers below are in OrdinaryDiffEq's default
+    re-export set under v7. Bring them in directly:
+
+    ```julia
+    using OrdinaryDiffEqRKN          # Nystrom*, IRKN*, ERKN*, DPRKN*
+    using OrdinaryDiffEqSymplecticRK # SymplecticEuler, VelocityVerlet, ...
+                                     # McAte*, KahanLi6, KahanLi8, SofSpa10
+    ```
+
 ### Runge-Kutta-Nyström Integrators
 
   - `Nystrom4`: 4th order explicit Runge-Kutta-Nyström method. Allows acceleration

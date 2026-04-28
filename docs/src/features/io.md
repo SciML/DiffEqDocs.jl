@@ -12,11 +12,15 @@ type as the data source to convert to other tabular data formats. For example,
 let's solve a 4x2 system of ODEs and get the DataFrame:
 
 ```@example IO
-import OrdinaryDiffEq as ODE, DataFrames
+import OrdinaryDiffEq as ODE
+# Euler() is in OrdinaryDiffEqLowOrderRK; under OrdinaryDiffEq v7 the parent
+# package only re-exports the default solver set.
+import OrdinaryDiffEqLowOrderRK as ODELow
+import DataFrames
 f_2dlinear = (du, u, p, t) -> du .= 1.01u;
 tspan = (0.0, 1.0)
 prob = ODE.ODEProblem(f_2dlinear, rand(2, 2), tspan);
-sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4));
+sol = ODE.solve(prob, ODELow.Euler(); dt = 1 // 2^(4));
 df = DataFrames.DataFrame(sol)
 ```
 
@@ -42,7 +46,7 @@ JLD2.jl and BSON.jl will work with the full solution type if you bring the requi
 back into scope before loading. For example, if we save the solution:
 
 ```@example IO
-sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4))
+sol = ODE.solve(prob, ODELow.Euler(); dt = 1 // 2^(4))
 import JLD2
 JLD2.@save "out.jld2" sol
 ```
@@ -60,7 +64,7 @@ JLD2.@load "out.jld2" sol
 The example with BSON.jl is:
 
 ```@example IO
-sol = ODE.solve(prob, ODE.Euler(); dt = 1 // 2^(4))
+sol = ODE.solve(prob, ODELow.Euler(); dt = 1 // 2^(4))
 import BSON
 BSON.bson("test.bson", Dict(:sol => sol))
 ```

@@ -25,6 +25,18 @@ the problem, though for large enough PDEs the `ARKODE` method with
 
 ### OrdinaryDiffEq.jl
 
+!!! note "v8: import from the IMEX OrdinaryDiffEq sublibs"
+
+    None of the IMEX solvers below are in OrdinaryDiffEq's default re-export
+    set under v7.
+
+    ```julia
+    using OrdinaryDiffEqLowOrderRK    # SplitEuler
+    using OrdinaryDiffEqBDF           # IMEXEuler, IMEXEulerARK, SBDF2, SBDF3, SBDF4, MEBDF2
+    using OrdinaryDiffEqIMEXMultistep # CNAB2, CNLF2
+    using OrdinaryDiffEqSDIRK         # KenCarp3, KenCarp4, KenCarp47, KenCarp5, KenCarp58
+    ```
+
   - `SplitEuler`: 1st order fully explicit method. Used for testing accuracy
     of splits.
   - `IMEXEuler` : 1st order explicit Euler mixed with implicit Euler. Fixed time
@@ -61,6 +73,12 @@ discretization of derivative operators.
 The appropriate algorithms for this form are:
 
 ### OrdinaryDiffEq.jl
+
+!!! note "v8: import from `OrdinaryDiffEqExponentialRK`"
+
+    The exponential RK / EPIRK families below all live in
+    `OrdinaryDiffEqExponentialRK` (a sublib of OrdinaryDiffEq). Bring them in
+    with `using OrdinaryDiffEqExponentialRK`.
 
   - `LawsonEuler` - First order exponential Euler scheme. Fixed timestepping only.
   - `NorsettEuler` - First order exponential-RK scheme. Fixed timestepping only. Alias: `ETD1`.

@@ -46,6 +46,7 @@ last row of `M` is just zero. We can implement this form as:
 
 ```@example dae
 import DifferentialEquations as DE
+import OrdinaryDiffEqRosenbrock as ODERosenbrock # Rodas5 lives in this OrdinaryDiffEq sublib
 import Plots
 function rober(du, u, p, t)
     y₁, y₂, y₃ = u
@@ -60,7 +61,7 @@ M = [1.0 0 0
      0 0 0]
 f = DE.ODEFunction(rober, mass_matrix = M)
 prob_mm = DE.ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
-sol = DE.solve(prob_mm, DE.Rodas5(), reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob_mm, ODERosenbrock.Rodas5(), reltol = 1e-8, abstol = 1e-8)
 
 Plots.plot(sol, xscale = :log10, tspan = (1e-6, 1e5), layout = (3, 1))
 ```

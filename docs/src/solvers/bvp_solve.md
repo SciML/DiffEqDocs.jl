@@ -17,6 +17,32 @@ in many cases, single shooting method `Shooting` may be faster than collocation 
 
 ### BoundaryValueDiffEq.jl
 
+!!! note "v8: BoundaryValueDiffEq must be loaded explicitly"
+
+    Under DifferentialEquations.jl v8 the `using DifferentialEquations`
+    umbrella only re-exports `OrdinaryDiffEq`. The BVP solvers below come from
+    `BoundaryValueDiffEq.jl` (and its sublibraries). Either load the umbrella
+
+    ```julia
+    using BoundaryValueDiffEq         # MIRK*, Shooting, MultipleShooting,
+                                      # RadauIIa*, LobattoIIIa/b/c*, Ascher*,
+                                      # MIRKN*, BVPJacobianAlgorithm
+    ```
+
+    or, for tighter compile times, just the relevant sublibrary:
+
+    | Method family                                              | Sublibrary                          |
+    |------------------------------------------------------------|-------------------------------------|
+    | `Shooting`, `MultipleShooting`                             | `BoundaryValueDiffEqShooting`       |
+    | `MIRK2`–`MIRK6`                                            | `BoundaryValueDiffEqMIRK`           |
+    | `MIRKN4`, `MIRKN6`                                         | `BoundaryValueDiffEqMIRKN`          |
+    | `LobattoIIIa*`, `LobattoIIIb*`, `LobattoIIIc*`, `RadauIIa*` | `BoundaryValueDiffEqFIRK`           |
+    | `Ascher1`–`Ascher7` (BVDAE)                                | `BoundaryValueDiffEqAscher`         |
+    | `BVPM2`, `BVPSOL`, `COLNEW` (Fortran wrappers)             | `BoundaryValueDiffEq` + `ODEInterface` |
+
+    Shooting / `MultipleShooting` also need an OrdinaryDiffEq inner solver, e.g.
+    `Shooting(Tsit5())` requires `using OrdinaryDiffEqTsit5: Tsit5`.
+
 #### Shooting Methods
 
   - `Shooting(odealg())` - A wrapper over initial value problem solvers, it reduces BVP to an initial value problem and solves the IVP.

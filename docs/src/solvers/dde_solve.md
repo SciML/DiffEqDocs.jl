@@ -16,6 +16,26 @@ MethodOfSteps(alg; constrained = false, fpsolve = NLFunctional(; max_iter = 10))
 
 where `alg` is an OrdinaryDiffEq.jl algorithm. Most algorithms should work.
 
+!!! note "v8: DelayDiffEq must be loaded explicitly"
+
+    Under DifferentialEquations.jl v8 the `using DifferentialEquations`
+    umbrella only re-exports `OrdinaryDiffEq`.  `MethodOfSteps`,
+    `DDEProblem`, and the DDE-specific solver paths come from
+    `DelayDiffEq.jl`; load them with
+
+    ```julia
+    using DelayDiffEq        # MethodOfSteps, DDEProblem
+    # plus the OrdinaryDiffEq sublib(s) for the inner ODE algorithm, e.g.
+    using OrdinaryDiffEqTsit5: Tsit5
+    alg = MethodOfSteps(Tsit5())
+    ```
+
+    `DelayDiffEq` already `@reexport`s `OrdinaryDiffEq`'s default solver set
+    (`Tsit5`, `Vern6`–`Vern9`, `Rosenbrock23`, `Rodas5P`, `FBDF`, ...), so
+    `MethodOfSteps(Tsit5())` works after just `using DelayDiffEq`. Non-default
+    inner algorithms (`BS3`, `RK4`, `DP8`, `Rodas4`, `Rodas5`, ...) require
+    pulling in the corresponding `OrdinaryDiffEqXxx` sublib explicitly.
+
 ### Nonstiff DDEs
 
 The standard algorithm choice is `MethodOfSteps(Tsit5())`. This is a highly efficient

@@ -115,6 +115,19 @@ Example: `RKMilGeneral(;ii_approx=IILevyArea())`.
 Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 Orders are given in terms of strong order.
 
+!!! note "v8: StochasticDiffEq must be loaded explicitly"
+
+    Under DifferentialEquations.jl v8 the `using DifferentialEquations`
+    umbrella only re-exports `OrdinaryDiffEq`. The SDE solvers below come from
+    `StochasticDiffEq.jl`; load them with
+
+    ```julia
+    using StochasticDiffEq    # SDEProblem, EM, SOSRI, SRIW1, ImplicitEM, ...
+    ```
+
+    or, equivalently, `using DifferentialEquations, StochasticDiffEq` if you
+    also want the umbrella.
+
 #### Nonstiff Methods
 
   - `EM`- The Euler-Maruyama method. Strong Order 0.5 in the Ito sense. Has an

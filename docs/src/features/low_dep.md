@@ -108,6 +108,7 @@ the callback docs we have:
 
 ```@example low_dep_1
 import DifferentialEquations as DE
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler comes from this OrdinaryDiffEq sublib
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -120,7 +121,7 @@ p = (0.2, 0.2, 3.0)
 prob = DE.ODEProblem(fitz, u0, tspan, p)
 cb = DE.ProbIntsUncertainty(0.2, 1)
 ensemble_prob = DE.EnsembleProblem(prob)
-sim = DE.solve(ensemble_prob, DE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+sim = DE.solve(ensemble_prob, ODELow.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
 If we wanted to know where `ProbIntsUncertainty(0.2,1)` came from, we can do:
@@ -130,11 +131,19 @@ import InteractiveUtils # hide
 InteractiveUtils.@which DE.ProbIntsUncertainty(0.2, 1)
 ```
 
+(Under DifferentialEquations.jl v8 the umbrella only re-exports `OrdinaryDiffEq`, so
+many of the names above — `ProbIntsUncertainty`, `Euler`, etc. — are not actually
+re-exported from `DifferentialEquations` and must be obtained from their host
+package.  `@which` is the easiest way to find which package a given symbol comes
+from.)
+
 This says it's in the DiffEqCallbacks.jl package. Thus in this case, we could have
 done
 
 ```@example low_dep_2
-import OrdinaryDiffEq as ODE, DiffEqCallbacks as CB
+import OrdinaryDiffEq as ODE
+import OrdinaryDiffEqLowOrderRK as ODELow # Euler is in the LowOrderRK sublib
+import DiffEqCallbacks as CB
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -147,7 +156,7 @@ p = (0.2, 0.2, 3.0)
 prob = ODE.ODEProblem(fitz, u0, tspan, p)
 cb = CB.ProbIntsUncertainty(0.2, 1)
 ensemble_prob = ODE.EnsembleProblem(prob)
-sim = ODE.solve(ensemble_prob, ODE.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+sim = ODE.solve(ensemble_prob, ODELow.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
 instead of the full `using DifferentialEquations`. Note that due to the way

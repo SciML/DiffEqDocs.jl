@@ -23,6 +23,15 @@ all the extras like callbacks and saving support (but does have an integrator in
 
   - `FunctionMap`: A basic function map which implements the full common interface.
 
+!!! note "v8: import from `OrdinaryDiffEqFunctionMap`"
+
+    `FunctionMap` lives in `OrdinaryDiffEqFunctionMap` and is not part of
+    OrdinaryDiffEq's default re-export set. Import it via:
+
+    ```julia
+    using OrdinaryDiffEqFunctionMap   # FunctionMap
+    ```
+
 OrdinaryDiffEq.jl also contains the `FunctionMap` algorithm which lets you
 It has a piecewise constant interpolation and allows for all the
 callback/event handling capabilities (of course, with `rootfind=false`. If a

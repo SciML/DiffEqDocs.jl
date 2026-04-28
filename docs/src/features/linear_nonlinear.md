@@ -24,9 +24,13 @@ For linear solvers, DifferentialEquations.jl uses
 [LinearSolve.jl](https://github.com/SciML/LinearSolve.jl). Any
 [LinearSolve.jl algorithm](https://docs.sciml.ai/LinearSolve/stable/solvers/solvers/)
 can be used as the linear solver simply by passing the algorithm choice to
-linsolve. For example, the following tells `TRBDF2` to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
+linsolve. For example, the following tells `TRBDF2` (from
+`OrdinaryDiffEqSDIRK`) to use [KLU.jl](https://github.com/JuliaSparse/KLU.jl)
+(via `KLUFactorization` from `LinearSolve`):
 
 ```julia
+using OrdinaryDiffEqSDIRK: TRBDF2     # not in OrdinaryDiffEq's default re-exports
+using LinearSolve: KLUFactorization
 TRBDF2(linsolve = KLUFactorization())
 ```
 
@@ -41,7 +45,8 @@ can be used as a left or right preconditioner. Preconditioners are configured on
 object itself, through LinearSolve's `Pl` / `Pr` interface. For example:
 
 ```julia
-using LinearSolve
+using LinearSolve              # KrylovJL_GMRES
+using OrdinaryDiffEqSDIRK: TRBDF2
 alg = TRBDF2(linsolve = KrylovJL_GMRES(precs = mypreconditioner))
 ```
 

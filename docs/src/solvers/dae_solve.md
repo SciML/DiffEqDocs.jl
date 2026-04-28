@@ -38,6 +38,12 @@ common keyword argument `initializealg`. The choices are:
 
 These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
 
+!!! note "v8: import from `OrdinaryDiffEqBDF`"
+
+    `DImplicitEuler`, `DABDF2`, and `DFBDF` live in
+    `OrdinaryDiffEqBDF` and are not in `OrdinaryDiffEq`'s default re-export
+    set under v7. Load them with `using OrdinaryDiffEqBDF`.
+
   - `DImplicitEuler` - 1st order A-L and stiffly stable adaptive implicit Euler
   - `DABDF2` - 2nd order A-L stable adaptive BDF method.
   - `DFBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
@@ -47,6 +53,19 @@ These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
 
 These methods require the DAE to be an `ODEProblem` in mass matrix form. For
 extra options for the solvers, see the ODE solver page.
+
+!!! note "v8: sublib mapping"
+
+    Under OrdinaryDiffEq v7 only `Rosenbrock23`, `Rodas5P`, and `FBDF` from the
+    list below are re-exported by the umbrella `OrdinaryDiffEq` package. The
+    rest must be imported from their host sublib:
+
+    | Section                    | Sublibrary                  |
+    |----------------------------|-----------------------------|
+    | Rosenbrock / Rosenbrock-W  | `OrdinaryDiffEqRosenbrock`  |
+    | FIRK (`RadauIIA5`)         | `OrdinaryDiffEqFIRK`        |
+    | SDIRK (`ImplicitEuler`, `ImplicitMidpoint`, `Trapezoid`) | `OrdinaryDiffEqSDIRK` |
+    | Multistep (`QNDF`, `FBDF`, ...) | `OrdinaryDiffEqBDF`     |
 
 !!! note
     

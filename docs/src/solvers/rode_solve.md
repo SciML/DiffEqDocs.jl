@@ -16,5 +16,12 @@ Each of the StochasticDiffEq.jl solvers come with a linear interpolation.
 Example usage:
 
 ```julia
+using StochasticDiffEq    # RODEProblem, RandomEM
 sol = solve(prob, RandomEM(), dt = 1 / 100)
 ```
+
+!!! note "v8: load StochasticDiffEq directly"
+
+    Under DifferentialEquations.jl v8 the umbrella only re-exports
+    `OrdinaryDiffEq`, so `RandomEM` and the `RODEProblem` constructor must be
+    obtained from `StochasticDiffEq` directly.

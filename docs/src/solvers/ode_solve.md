@@ -136,6 +136,43 @@ allow for sophisticated event handling, etc. On stiff ODEs, these algorithms
 again consistently among the top. OrdinaryDiffEq.jl is recommended for most ODE
 problems.
 
+!!! note "OrdinaryDiffEq v7 sublibrary structure"
+
+    Starting with OrdinaryDiffEq v7 (released as part of DifferentialEquations.jl
+    v8), `using OrdinaryDiffEq` only re-exports a small **default solver set**
+    (`DefaultODEAlgorithm`, `Tsit5`, `AutoTsit5`, `Vern6`–`Vern9`,
+    `AutoVern6`–`AutoVern9`, `Rosenbrock23`, `Rodas5P`, `FBDF`).  Every other
+    solver lives in a topic-specific sublibrary and must be brought in
+    explicitly, e.g. `using OrdinaryDiffEqLowOrderRK: BS3, RK4`.  The sublibrary
+    that hosts each family is noted below at the start of each section; you can
+    also `using OrdinaryDiffEq` to get the umbrella default set plus the
+    sublibraries you need.
+
+    | Family (section heading)                              | Host sublibrary                                  |
+    |-------------------------------------------------------|--------------------------------------------------|
+    | Explicit Runge-Kutta (low order)                      | `OrdinaryDiffEqLowOrderRK`                       |
+    | Tsit5 / AutoTsit5                                     | `OrdinaryDiffEqTsit5` (re-exported by main pkg)  |
+    | Verner / AutoVern                                     | `OrdinaryDiffEqVerner` (re-exported by main pkg) |
+    | High-order RK (Feagin, TanYam7, DP8, ...)             | `OrdinaryDiffEqHighOrderRK`                      |
+    | Parallel Explicit RK (KuttaPRK2p5)                    | `OrdinaryDiffEqPRK`                              |
+    | SSPRK family                                          | `OrdinaryDiffEqSSPRK`                            |
+    | Low-Storage RK                                        | `OrdinaryDiffEqLowStorageRK`                     |
+    | Explicit Extrapolation                                | `OrdinaryDiffEqExtrapolation`                    |
+    | Adams-Bashforth / Adaptive Adams                      | `OrdinaryDiffEqAdamsBashforthMoulton`            |
+    | SDIRK (TRBDF2, KenCarp*, Kvaerno*, ImplicitEuler, ...) | `OrdinaryDiffEqSDIRK`                            |
+    | FIRK (RadauIIA*)                                      | `OrdinaryDiffEqFIRK`                             |
+    | Parallel DIRK                                         | `OrdinaryDiffEqPDIRK`                            |
+    | Rosenbrock / Rosenbrock-W (Rodas4, Rodas5, ROS3*, ...) | `OrdinaryDiffEqRosenbrock` (Rosenbrock23 / Rodas5P re-exported) |
+    | Stabilized Explicit (ROCK*, RKC, ESERK*, ...)         | `OrdinaryDiffEqStabilizedRK` / `OrdinaryDiffEqStabilizedIRK` |
+    | Implicit Extrapolation                                | `OrdinaryDiffEqExtrapolation`                    |
+    | Exponential RK / EPIRK / Adaptive Exp Rosenbrock      | `OrdinaryDiffEqExponentialRK`                    |
+    | BDF / FBDF / QNDF / QBDF / DFBDF / DABDF2 / DImplicitEuler / SBDF | `OrdinaryDiffEqBDF` (FBDF re-exported by main pkg) |
+    | Implicit SSPRK                                        | `OrdinaryDiffEqSSPRK`                            |
+    | Function-map / DiscreteProblem default                | `OrdinaryDiffEqFunctionMap`                      |
+    | Symplectic RK (KahanLi*, McAte*, VelocityVerlet, ...) | `OrdinaryDiffEqSymplecticRK`                     |
+    | Runge-Kutta-Nyström (DPRKN*, Nystrom*, ERKN*, IRKN*)  | `OrdinaryDiffEqRKN`                              |
+    | Default algorithm chooser (`DefaultODEAlgorithm`)     | `OrdinaryDiffEqDefault` (re-exported by main pkg) |
+
 #### Explicit Runge-Kutta Methods
 
   - `Euler`- The canonical forward Euler method. Fixed timestep only.

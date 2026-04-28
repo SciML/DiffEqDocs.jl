@@ -5,6 +5,12 @@
 The recommendations for SDAEs are the same recommended implicit SDE methods for
 stiff equations when the SDAE is specified in mass matrix form.
 
+!!! note "v8: load StochasticDiffEq directly"
+
+    All of the methods below come from `StochasticDiffEq.jl`. Under
+    DifferentialEquations.jl v8 the umbrella only re-exports `OrdinaryDiffEq`,
+    so use `using StochasticDiffEq` to access them.
+
 #### Mass Matrix Form
 
   - `ImplicitEM` - An order 0.5 Ito drift-implicit method. This is a theta method which

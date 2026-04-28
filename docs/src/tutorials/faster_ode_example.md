@@ -254,10 +254,16 @@ Choosing a good solver is required for getting top-notch speed. General
 recommendations can be found on the solver page (for example, the
 [ODE Solver Recommendations](@ref ode_solve)).
 The current recommendations can be simplified to a Rosenbrock method
-(`DE.Rosenbrock23` or `DE.Rodas5`) for smaller (<50 ODEs) problems, ESDIRK methods
-for slightly larger (`DE.TRBDF2` or `DE.KenCarp4` for <2000 ODEs), and `DE.QNDF` for even
-larger problems. `lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is
-sometimes worth a try for the medium-sized category.
+(`Rosenbrock23` or `Rodas5P`, both from `OrdinaryDiffEqRosenbrock`; `Rosenbrock23`
+and `Rodas5P` are in the default `OrdinaryDiffEq` re-export set, the rest of the
+Rosenbrock family — including `Rodas5` — needs an explicit
+`using OrdinaryDiffEqRosenbrock`) for smaller (<50 ODEs) problems, ESDIRK methods
+for slightly larger (`TRBDF2` or `KenCarp4` from `OrdinaryDiffEqSDIRK` for
+<2000 ODEs), and `QNDF` (from `OrdinaryDiffEqBDF`) for even larger problems.
+`lsoda` from [LSODA.jl](https://github.com/rveltz/LSODA.jl) is sometimes worth a
+try for the medium-sized category. Under DifferentialEquations.jl v8 the umbrella
+`using DifferentialEquations` only re-exports `OrdinaryDiffEq`'s default solver
+set; non-default solvers must be imported from their host sublibrary.
 
 More details on the solver to choose can be found by benchmarking. See the
 [SciMLBenchmarks](https://docs.sciml.ai/SciMLBenchmarksOutput/stable/) to

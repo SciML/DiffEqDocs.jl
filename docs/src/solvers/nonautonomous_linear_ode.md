@@ -48,6 +48,16 @@ steps are computed lazily (i.e. not during the solve).
 
 Note that all of these methods are fixed timestep unless otherwise specified.
 
+!!! note "v8: import from `OrdinaryDiffEqLinear`"
+
+    `LinearExponential`, all `Magnus*`, all `RKMK*`, `LieEuler` / `LieRK4`,
+    `CayleyEuler`, `CG*`, etc. live in `OrdinaryDiffEqLinear` (a sublib of
+    OrdinaryDiffEq). Bring them in with:
+
+    ```julia
+    using OrdinaryDiffEqLinear
+    ```
+
 ### Exponential Methods for Linear and Affine Problems
 
 These methods require that ``A`` is constant.
@@ -70,11 +80,13 @@ Options:
     then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
-import DifferentialEquations as DE, SciMLOperators
+import DifferentialEquations as DE
+import OrdinaryDiffEqLinear as ODELinear   # LinearExponential, Magnus*, LieRK4, ...
+import SciMLOperators
 _A = [2 -1; -3 -5] / 5
 A = SciMLOperators.MatrixOperator(_A)
 prob = DE.ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
-sol = DE.solve(prob, DE.LinearExponential())
+sol = DE.solve(prob, ODELinear.LinearExponential())
 ```
 
 !!! note
@@ -109,7 +121,7 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (1.0, 6.0))
-sol = DE.solve(prob, DE.MagnusGL6(), dt = 1 / 10)
+sol = DE.solve(prob, ODELinear.MagnusGL6(), dt = 1 / 10)
 ```
 
 The initial values for ``A`` are irrelevant in this and similar cases, as the `update_func` immediately overwrites them.
@@ -139,7 +151,7 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (0, 30.0))
-sol = DE.solve(prob, DE.LieRK4(), dt = 1 / 4)
+sol = DE.solve(prob, ODELinear.LieRK4(), dt = 1 / 4)
 ```
 
 The above example solves a non-stiff Non-Autonomous Linear ODE
@@ -158,7 +170,7 @@ function update_func(A, u, p, t)
 end
 A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = DE.ODEProblem(A, ones(2), (30, 150.0))
-sol = DE.solve(prob, DE.MagnusAdapt4())
+sol = DE.solve(prob, ODELinear.MagnusAdapt4())
 ```
 
 # Time and State-Dependent Operators
