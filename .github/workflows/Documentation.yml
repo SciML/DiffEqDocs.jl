@@ -24,16 +24,20 @@ jobs:
       - uses: julia-actions/setup-julia@v3
         with:
           version: "1"
-      - run: |
-          julia --project=docs -e '
-            println("--- Instantiating project")
-            using Pkg
-            Pkg.develop(PackageSpec(path=pwd()))
-            Pkg.instantiate()
-            println("--- Adding OrdinaryDiffEq from master")
-            Pkg.develop("OrdinaryDiffEq")
-            println("+++ Building documentation")
-            include("docs/make.jl")'
+      - name: Set up environment
+        shell: julia --color=yes --project=docs {0}
+        run: |
+          println("--- Instantiating project")
+          using Pkg
+          Pkg.develop(PackageSpec(path=pwd()))
+          Pkg.instantiate()
+          println("--- Adding OrdinaryDiffEq from master")
+          Pkg.develop("OrdinaryDiffEq")
+        env:
+          DATADEPS_ALWAYS_ACCEPT: true
+          JULIA_PKG_PRECOMPILE_AUTO: 0
+      - name: Building documentation
+        run: julia --color=yes --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
