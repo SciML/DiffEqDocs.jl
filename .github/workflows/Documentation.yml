@@ -25,7 +25,7 @@ jobs:
         with:
           version: "1"
       - run: |
-          julia --project=docs -e '
+          julia --color=yes --project=docs -e '
             println("--- Instantiating project")
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
