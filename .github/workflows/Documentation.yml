@@ -35,6 +35,7 @@ jobs:
           Pkg.develop("OrdinaryDiffEq")
         env:
           DATADEPS_ALWAYS_ACCEPT: true
+          JULIA_PKG_PRECOMPILE_AUTO: 0
       - name: Building documentation
         run: julia --color=yes --project=docs docs/make.jl
         env:
