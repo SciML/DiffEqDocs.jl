@@ -61,24 +61,22 @@ prob_dde_constant_2delays_long_scalar
 
 Some details:
 
-```
-# DDEs with time dependent delays
-prob_dde_DDETST_A1, prob_dde_DDETST_A2,
-# DDEs with vanishing time dependent delays
-prob_dde_DDETST_B1, prob_dde_DDETST_B2,
-# DDEs with state dependent delays
-prob_dde_DDETST_C1, prob_dde_DDETST_C2, prob_dde_DDETST_C3, prob_dde_DDETST_C4,
-# DDEs with vanishing state dependent delays
-prob_dde_DDETST_D1, prob_dde_DDETST_D2,
-# neutral DDEs with time dependent delays
-prob_dde_DDETST_E1, prob_dde_DDETST_E2,
-# neutral DDEs with vanishing time dependent delays
-prob_dde_DDETST_F1, prob_dde_DDETST_F2, prob_dde_DDETST_F3, prob_dde_DDETST_F4, prob_dde_DDETST_F5,
-# neutral DDEs with state dependent delays
-prob_dde_DDETST_G1, prob_dde_DDETST_G2,
-# neutral DDEs with vanishing state dependent delays
-prob_dde_DDETST_H1, prob_dde_DDETST_H2, prob_dde_DDETST_H3, prob_dde_DDETST_H4
-```
+- DDEs with time dependent delays
+  `prob_dde_DDETST_A1`, `prob_dde_DDETST_A2`
+- DDEs with vanishing time dependent delays
+  `prob_dde_DDETST_B1`, `prob_dde_DDETST_B2`
+- DDEs with state dependent delays
+  `prob_dde_DDETST_C1`, `prob_dde_DDETST_C2`, `prob_dde_DDETST_C3`, `prob_dde_DDETST_C4`
+- DDEs with vanishing state dependent delays
+  `prob_dde_DDETST_D1`, `prob_dde_DDETST_D2`
+- neutral DDEs with time dependent delays
+  `prob_dde_DDETST_E1`, `prob_dde_DDETST_E2`
+- neutral DDEs with vanishing time dependent delays
+  `prob_dde_DDETST_F1`, `prob_dde_DDETST_F2`, `prob_dde_DDETST_F3`, `prob_dde_DDETST_F4`, `prob_dde_DDETST_F5`
+- neutral DDEs with state dependent delays
+  `prob_dde_DDETST_G1`, `prob_dde_DDETST_G2`
+- neutral DDEs with vanishing state dependent delays
+  `prob_dde_DDETST_H1`, `prob_dde_DDETST_H2`, `prob_dde_DDETST_H3`, `prob_dde_DDETST_H4`
 
 ```@docs
 prob_dde_DDETST_A1
