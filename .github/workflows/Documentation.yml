@@ -24,12 +24,16 @@ jobs:
       - uses: julia-actions/setup-julia@v3
         with:
           version: "1"
+      - name: Set up Julia registries
+        shell: julia --color=yes --project=docs {0}
+        run: using Pkg; Pkg.Registry.rm("General"); Pkg.Registry.add()
+        env:
+          JULIA_PKG_SERVER: ''
       - name: Set up environment
         shell: julia --color=yes --project=docs {0}
         run: |
           println("--- Instantiating project")
           using Pkg
-          Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()
           println("--- Adding OrdinaryDiffEq from master")
           Pkg.develop("OrdinaryDiffEq")
