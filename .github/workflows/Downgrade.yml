@@ -1,0 +1,26 @@
+name: "Downgrade"
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  downgrade:
+    name: "Downgrade"
+    uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
+    with:
+      julia-version: "lts"
+      skip: "Pkg,TOML"
+    secrets: "inherit"
