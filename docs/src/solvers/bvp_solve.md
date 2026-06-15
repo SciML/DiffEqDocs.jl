@@ -99,7 +99,7 @@ Similar to `MIRK` methods, fully implicit Runge-Kutta methods construct nonlinea
 
 #### Gauss Legendre collocation methods
 
-The `Ascher` collocation methods are similar with `MIRK` and `FIRK` methods but have extension for BVDAE prblem solving, the error control is based on instead of defect control adaptivity.
+The `Ascher` collocation methods are similar with `MIRK` and `FIRK` methods but have extension for BVDAE problem solving, the error control is based on instead of defect control adaptivity.
 
   - `BoundaryValueDiffEqAscher.Ascher1` - A 1st stage Gauss Legendre collocation method with Ascher's error control adaptivity.
   - `BoundaryValueDiffEqAscher.Ascher2` - A 2nd stage Gauss Legendre collocation method with Ascher's error control adaptivity.
