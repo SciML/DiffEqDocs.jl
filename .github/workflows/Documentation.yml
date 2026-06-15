@@ -32,6 +32,12 @@ jobs:
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()
           println("--- Adding OrdinaryDiffEq from master")
+          # Drop any stale dev checkout a previous run left in ~/.julia/dev so the
+          # current master is cloned fresh; a stale checkout can pin an old version
+          # that conflicts with the docs [compat] (e.g. OrdinaryDiffEq 6.x vs "7").
+          let p = joinpath(Pkg.devdir(), "OrdinaryDiffEq")
+              isdir(p) && rm(p; recursive = true, force = true)
+          end
           Pkg.develop("OrdinaryDiffEq")
         env:
           DATADEPS_ALWAYS_ACCEPT: true
