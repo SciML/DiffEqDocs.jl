@@ -265,7 +265,7 @@ function double_pendulum_hamiltonian(udot, u, p, t)
         2sin(2β) * ((lα^2 - 2(1 + cos(β))lα * lβ + (3 + 2cos(β))lβ^2) / (3 - cos(2β))^2)]
 end
 
-# Construct a ContiunousCallback
+# Construct a ContinuousCallback
 condition(u, t, integrator) = u[1]
 affect!(integrator) = nothing
 cb = ODE.ContinuousCallback(condition, affect!, nothing,

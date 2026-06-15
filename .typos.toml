@@ -1,5 +1,6 @@
 [default.extend-words]
 quations = "quations"
+Lamba = "Lamba"
 IIF = "IIF"
 padd = "padd"
 thr = "thr"

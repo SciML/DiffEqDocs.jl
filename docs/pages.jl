@@ -25,6 +25,9 @@ function transform_ordinarydiffeq_pages(pages_array)
 end
 
 ordinary_diffeq_pages = transform_ordinarydiffeq_pages(pages)
+# The Developer Documentation section maps to OrdinaryDiffEq's contributor-internal
+# devtools pages, which are excluded from the DiffEqDocs build (see docs/make.jl).
+filter!(p -> !(p isa Pair && first(p) == "Developer Documentation"), ordinary_diffeq_pages)
 
 # Load StochasticDiffEq pages - if available
 stochastic_diffeq_pages_file = joinpath(@__DIR__, "stochasticdiffeq_pages.jl")
@@ -159,3 +162,9 @@ pages = Any[
         "migration/ordinarydiffeq_v7.md",
     ],
 ]
+
+# StochasticDiffEq ships no docs in the OrdinaryDiffEq v7 monorepo, so drop the API
+# section entirely rather than leaving an empty navigation entry.
+if isempty(stochastic_diffeq_pages)
+    filter!(p -> !(p isa Pair && first(p) == "StochasticDiffEq.jl API"), pages)
+end

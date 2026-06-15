@@ -232,7 +232,7 @@ LinearSolve.jl linear solver object (e.g. `KrylovJL_GMRES(precs = ...)`)
 rather than on the ODE algorithm, and the `precs` callback signature is
 `Pl, Pr = precs(A, p)` — where `A` is the current `W = I - γJ` operator and
 `p` is the ODE parameter object. Preconditioners can be either left, right,
-or both; return `nothing` (or `IdentityOperator`) for sides you don't want to
+or both; return `I` (or `IdentityOperator`) for sides you don't want to
 precondition.
 
 An example using [IncompleteLU.jl](https://github.com/haampie/IncompleteLU.jl)
@@ -242,7 +242,7 @@ is:
 import IncompleteLU
 function incompletelu(W, p)
     Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
-    Pl, nothing
+    Pl, LinearAlgebra.I
 end
 
 # Required due to a bug in Krylov.jl: https://github.com/JuliaSmoothOptimizers/Krylov.jl/pull/477
@@ -260,7 +260,7 @@ generate the Jacobian (otherwise, a Jacobian-free algorithm is used with GMRES
 by default). We use `convert(AbstractMatrix,W)` to get the concrete `W` matrix
 (matching `jac_prototype`, thus `SparseMatrixCSC`) which we can use in the
 preconditioner's definition. Then we use `IncompleteLU.ilu` on that sparse
-matrix to generate the preconditioner. We return `Pl,nothing` to say that our
+matrix to generate the preconditioner. We return `Pl, I` to say that our
 preconditioner is a left preconditioner, and that there is no right
 preconditioning.
 
@@ -274,7 +274,7 @@ which is more automatic. The setup is very similar to before:
 import AlgebraicMultigrid
 function algebraicmultigrid(W, p)
     Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(convert(AbstractMatrix, W)))
-    Pl, nothing
+    Pl, LinearAlgebra.I
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
@@ -291,7 +291,7 @@ function algebraicmultigrid2(W, p)
     Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
         presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
         postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
-    Pl, nothing
+    Pl, LinearAlgebra.I
 end
 
 BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,

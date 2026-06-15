@@ -480,7 +480,7 @@ end
 function f(p)
     prob = DE.ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
     # Lower tolerances to show the methods converge to the same value
-    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12)[end]
+    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12).u[end]
 end
 ```
 

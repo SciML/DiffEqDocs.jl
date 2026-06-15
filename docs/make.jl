@@ -1,6 +1,26 @@
 using Documenter, DiffEqBase, SciMLBase, OrdinaryDiffEq, OrdinaryDiffEqBDF,
     OrdinaryDiffEqCore, StochasticDiffEq, DelayDiffEq, SteadyStateDiffEq, DiffEqCallbacks,
     BoundaryValueDiffEq
+# Load the OrdinaryDiffEq/StochasticDiffEq solver subpackages directly instead of relying
+# on the meta-packages to reexport them: OrdinaryDiffEq v7 already dropped its reexports,
+# so listing each subpackage explicitly is what keeps the API docs complete and robust.
+using OrdinaryDiffEqAdamsBashforthMoulton, OrdinaryDiffEqDefault, OrdinaryDiffEqExplicitRK,
+    OrdinaryDiffEqExponentialRK, OrdinaryDiffEqExtrapolation, OrdinaryDiffEqFeagin,
+    OrdinaryDiffEqFIRK, OrdinaryDiffEqHighOrderRK, OrdinaryDiffEqIMEXMultistep,
+    OrdinaryDiffEqLinear, OrdinaryDiffEqLowOrderRK, OrdinaryDiffEqLowStorageRK,
+    OrdinaryDiffEqNordsieck, OrdinaryDiffEqPDIRK, OrdinaryDiffEqPRK, OrdinaryDiffEqQPRK,
+    OrdinaryDiffEqRKN, OrdinaryDiffEqRosenbrock, OrdinaryDiffEqSDIRK, OrdinaryDiffEqSSPRK,
+    OrdinaryDiffEqStabilizedIRK, OrdinaryDiffEqStabilizedRK, OrdinaryDiffEqSymplecticRK,
+    OrdinaryDiffEqTsit5, OrdinaryDiffEqVerner, OrdinaryDiffEqAMF, ImplicitDiscreteSolve,
+    DiffEqDevTools
+using StochasticDiffEqCore, StochasticDiffEqHighOrder, StochasticDiffEqIIF,
+    StochasticDiffEqImplicit, StochasticDiffEqLeaping, StochasticDiffEqLowOrder,
+    StochasticDiffEqMilstein, StochasticDiffEqROCK, StochasticDiffEqRODE,
+    StochasticDiffEqWeak
+# Bring the OrdinaryDiffEqCore controller API symbols into Main so the unqualified
+# @ref links in the copied controllers.md resolve (mirrors OrdinaryDiffEq.jl's docs).
+using OrdinaryDiffEqCore: default_controller, resolve_basic, get_EEst, set_EEst!,
+    CompositeController
 import ODEProblemLibrary,
     SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR, LSODA, DASSL, SimpleDiffEq, ODEInterfaceDiffEq
@@ -23,6 +43,11 @@ if isdir(ordinartdiffeq_docs_path)
 
     # Copy all the docs from OrdinaryDiffEq.jl
     cp(ordinartdiffeq_docs_path, ordinary_diffeq_dest, force = true)
+
+    # OrdinaryDiffEq's developer docs are contributor-internal and their @eval blocks
+    # read paths relative to OrdinaryDiffEq's own build layout, so they cannot build
+    # inside DiffEqDocs; drop them from the user-facing site.
+    rm(joinpath(ordinary_diffeq_dest, "devtools"), recursive = true, force = true)
 
     # Copy the pages.jl file from OrdinaryDiffEq.jl
     ordinary_diffeq_pages_dest = joinpath(@__DIR__, "ordinarydiffeq_pages.jl")
@@ -69,33 +94,47 @@ makedocs(
         DAEProblemLibrary,
         BVProblemLibrary,
         OrdinaryDiffEq,
-        OrdinaryDiffEq.OrdinaryDiffEqAdamsBashforthMoulton,
-        OrdinaryDiffEq.OrdinaryDiffEqBDF,
-        OrdinaryDiffEq.OrdinaryDiffEqDefault,
-        OrdinaryDiffEq.OrdinaryDiffEqExplicitRK,
-        OrdinaryDiffEq.OrdinaryDiffEqExponentialRK,
-        OrdinaryDiffEq.OrdinaryDiffEqExtrapolation,
-        OrdinaryDiffEq.OrdinaryDiffEqFeagin,
-        OrdinaryDiffEq.OrdinaryDiffEqFIRK,
-        OrdinaryDiffEq.OrdinaryDiffEqHighOrderRK,
-        OrdinaryDiffEq.OrdinaryDiffEqIMEXMultistep,
-        OrdinaryDiffEq.OrdinaryDiffEqLinear,
-        OrdinaryDiffEq.OrdinaryDiffEqLowOrderRK,
-        OrdinaryDiffEq.OrdinaryDiffEqLowStorageRK,
-        OrdinaryDiffEq.OrdinaryDiffEqNordsieck,
-        OrdinaryDiffEq.OrdinaryDiffEqPDIRK,
-        OrdinaryDiffEq.OrdinaryDiffEqPRK,
-        OrdinaryDiffEq.OrdinaryDiffEqQPRK,
-        OrdinaryDiffEq.OrdinaryDiffEqRKN,
-        OrdinaryDiffEq.OrdinaryDiffEqRosenbrock,
-        OrdinaryDiffEq.OrdinaryDiffEqSDIRK,
-        OrdinaryDiffEq.OrdinaryDiffEqSSPRK,
-        OrdinaryDiffEq.OrdinaryDiffEqStabilizedIRK,
-        OrdinaryDiffEq.OrdinaryDiffEqStabilizedRK,
-        OrdinaryDiffEq.OrdinaryDiffEqSymplecticRK,
-        OrdinaryDiffEq.OrdinaryDiffEqTsit5,
-        OrdinaryDiffEq.OrdinaryDiffEqVerner,
+        OrdinaryDiffEqCore,
+        OrdinaryDiffEqAdamsBashforthMoulton,
+        OrdinaryDiffEqBDF,
+        OrdinaryDiffEqDefault,
+        OrdinaryDiffEqExplicitRK,
+        OrdinaryDiffEqExponentialRK,
+        OrdinaryDiffEqExtrapolation,
+        OrdinaryDiffEqFeagin,
+        OrdinaryDiffEqFIRK,
+        OrdinaryDiffEqHighOrderRK,
+        OrdinaryDiffEqIMEXMultistep,
+        OrdinaryDiffEqLinear,
+        OrdinaryDiffEqLowOrderRK,
+        OrdinaryDiffEqLowStorageRK,
+        OrdinaryDiffEqNordsieck,
+        OrdinaryDiffEqPDIRK,
+        OrdinaryDiffEqPRK,
+        OrdinaryDiffEqQPRK,
+        OrdinaryDiffEqRKN,
+        OrdinaryDiffEqRosenbrock,
+        OrdinaryDiffEqSDIRK,
+        OrdinaryDiffEqSSPRK,
+        OrdinaryDiffEqStabilizedIRK,
+        OrdinaryDiffEqStabilizedRK,
+        OrdinaryDiffEqSymplecticRK,
+        OrdinaryDiffEqTsit5,
+        OrdinaryDiffEqVerner,
+        OrdinaryDiffEqAMF,
+        ImplicitDiscreteSolve,
+        DiffEqDevTools,
         StochasticDiffEq,
+        StochasticDiffEqCore,
+        StochasticDiffEqHighOrder,
+        StochasticDiffEqIIF,
+        StochasticDiffEqImplicit,
+        StochasticDiffEqLeaping,
+        StochasticDiffEqLowOrder,
+        StochasticDiffEqMilstein,
+        StochasticDiffEqROCK,
+        StochasticDiffEqRODE,
+        StochasticDiffEqWeak,
         DelayDiffEq,
         SteadyStateDiffEq,
         DiffEqCallbacks,

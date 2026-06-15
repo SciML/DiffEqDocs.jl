@@ -538,8 +538,9 @@ to make sure the steps all hit the same times. We thus set `adaptive=false` and
 explicitly give a `dt`.
 
 ```@example ensemble4
+import StochasticDiffEq as SDE # SRIW1 is no longer reexported by DifferentialEquations v8
 prob2 = DE.EnsembleProblem(prob)
-sim = DE.solve(prob2, DE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false);
+sim = SDE.solve(prob2, SDE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false);
 @info "Ensemble solution computed with $(length(sim)) trajectories" # hide
 nothing # hide
 ```
