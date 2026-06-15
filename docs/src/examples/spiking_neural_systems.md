@@ -20,6 +20,7 @@ The LIF model has five parameters, `gL, EL, C, Vth, I` and we define it in the `
 
 ```@example spikingneural
 import DifferentialEquations as DE
+import DiffEqCallbacks as CB # PresetTimeCallback is no longer reexported by DifferentialEquations v8
 import ComponentArrays
 import Plots
 Plots.gr()
@@ -65,7 +66,7 @@ function reset!(integrator)
 end
 
 threshold = DE.ContinuousCallback(thr, reset!, nothing)
-current_step = DE.PresetTimeCallback([2, 15], integrator -> integrator.p.I += 150.0)
+current_step = CB.PresetTimeCallback([2, 15], integrator -> integrator.p.I += 150.0)
 cb = DE.CallbackSet(current_step, threshold)
 ```
 
@@ -100,6 +101,7 @@ We see that the model is resting at `-75` while there is no input. At `t=2` the 
 ```@example spikingneural
 #Izhikevichch Model
 import DifferentialEquations as DE
+import DiffEqCallbacks as CB
 import Plots
 
 function izh!(du, u, p, t)
@@ -123,7 +125,7 @@ function reset!(integrator)
 end
 
 threshold = DE.DiscreteCallback(thr, reset!)
-current_step = DE.PresetTimeCallback(50, integrator -> integrator.p[5] += 10)
+current_step = CB.PresetTimeCallback(50, integrator -> integrator.p[5] += 10)
 cb = DE.CallbackSet(current_step, threshold)
 ```
 
@@ -168,6 +170,7 @@ The Hodgkin-Huxley (HH) model is our first biophysically realistic model. This m
 
 ```@example spikingneural
 import DifferentialEquations as DE
+import DiffEqCallbacks as CB
 import Plots
 
 # Potassium ion-channel rate functions
@@ -198,7 +201,7 @@ We have three different types of ionic conductances. Potassium, sodium and the l
 The sodium current is not very different, but it has two gating variables, `m, h` instead of one. The leak conductance gL has no gating variables because it is not voltage gated. Let's move on to the parameters. If you want all the details on the HH model, you can find a great description [here](https://neuronaldynamics.epfl.ch/online/Ch2.S2.html).
 
 ```@example spikingneural
-current_step = DE.PresetTimeCallback(100, integrator -> integrator.p[8] += 1)
+current_step = CB.PresetTimeCallback(100, integrator -> integrator.p[8] += 1)
 
 # n, m & h steady-states
 n_inf(v) = alpha_n(v) / (alpha_n(v) + beta_n(v))
@@ -308,7 +311,7 @@ function epsp!(integrator)
     integrator.u[6] -= integrator.u[5] * integrator.u[6]
 end
 
-epsp_ts = DE.PresetTimeCallback(100:100:500, epsp!)
+epsp_ts = CB.PresetTimeCallback(100:100:500, epsp!)
 
 p = [35.0, 40.0, 0.3, -77.0, 55.0, -65.0, 1, 0, 30, 1000, 50, 0.5, 0.005, 0]
 u0 = [-60, n_inf(-60), m_inf(-60), h_inf(-60), 0.0, 1.0, 0.0]
@@ -331,7 +334,7 @@ Plots.plot(sol, vars = [5, 6])
 Because of the time courses at play here, this facilitation is frequency-dependent. If we increase the period between these events, facilitation does not occur.
 
 ```@example spikingneural
-epsp_ts = DE.PresetTimeCallback(100:1000:5100, epsp!)
+epsp_ts = CB.PresetTimeCallback(100:1000:5100, epsp!)
 
 p = [35.0, 40.0, 0.3, -77.0, 55.0, -65.0, 1, 0, 30, 500, 50, 0.5, 0.005, 0]
 u0 = [-60, n_inf(-60), m_inf(-60), h_inf(-60), 0.0, 1.0, 0.0]
@@ -348,7 +351,7 @@ Plots.plot(sol, vars = [5, 6])
 We can also change these time constants such that the dynamics show short-term depression instead of facilitation.
 
 ```@example spikingneural
-epsp_ts = DE.PresetTimeCallback(100:100:500, epsp!)
+epsp_ts = CB.PresetTimeCallback(100:100:500, epsp!)
 
 p = [35.0, 40.0, 0.3, -77.0, 55.0, -65.0, 1, 0, 30, 100, 1000, 0.5, 0.005, 0]
 u0 = [-60, n_inf(-60), m_inf(-60), h_inf(-60), 0.0, 1.0, 0.0]

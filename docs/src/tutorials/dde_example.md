@@ -37,6 +37,7 @@ Thus, the function for this model is given by:
 
 ```@example dde
 import DelayDiffEq as DDE, DifferentialEquations as DE
+import OrdinaryDiffEqLowOrderRK as ODELow # RK4 is no longer reexported by DifferentialEquations v8
 function bc_model(du, u, h, p, t)
     p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau = p
     hist3 = h(p, t - tau)[3]
@@ -191,19 +192,19 @@ You might have noticed DifferentialEquations.jl allows you to solve problems
 with undeclared delays, since you can interpolate `h` at any value. This is
 a feature, but use it with caution. Undeclared delays can increase the error
 in the solution. It's recommended that you use a method with a residual control,
-such as `MethodOfSteps(DDE.RK4())` whenever there are undeclared delays. With this,
+such as `MethodOfSteps(RK4())` whenever there are undeclared delays. With this,
 you can use interpolated derivatives, solve functional differential equations
 by using quadrature on the interpolant, etc. However, note that residual control
 solves with a low level of accuracy, so the tolerances should be made very small,
 and the solution should not be trusted for more than 2-3 decimal places.
 
-Note: `MethodOfSteps(DDE.RK4())` with undeclared delays is similar to MATLAB's
+Note: `MethodOfSteps(RK4())` with undeclared delays is similar to MATLAB's
 `ddesd`. Thus, for example, the following is similar to solving the example
 from above with residual control:
 
 ```@example dde
 prob = DDE.DDEProblem(bc_model, u0, h, tspan)
-alg = DDE.MethodOfSteps(DE.RK4())
+alg = DDE.MethodOfSteps(ODELow.RK4())
 sol = DDE.solve(prob, alg);
 nothing # hide
 ```

@@ -78,6 +78,7 @@ a negative coefficient:
 
 ```@example callback1
 import DifferentialEquations as DE
+import DiffEqCallbacks as CB # PresetTimeCallback is no longer reexported by DifferentialEquations v8
 function f(du, u, p, t)
     du[1] = -u[1]
 end
@@ -154,7 +155,7 @@ could do the following:
 ```@example callback1
 dosetimes = [4.0, 8.0]
 affect!(integrator) = integrator.u[1] += 10
-cb = DE.PresetTimeCallback(dosetimes, affect!)
+cb = CB.PresetTimeCallback(dosetimes, affect!)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb)
 Plots.plot(sol)
 ```
@@ -689,7 +690,7 @@ the values of these two cells at the time of the event:
 function affect!(integrator)
     u = integrator.u
     maxidx = findmax(u)[2]
-    DE.resize!(integrator, length(u) + 1)
+    resize!(integrator, length(u) + 1)
     Θ = rand()
     u[maxidx] = Θ
     u[end] = 1 - Θ
