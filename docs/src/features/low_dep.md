@@ -121,6 +121,7 @@ the old `using DifferentialEquations` shape:
 import OrdinaryDiffEq as ODE
 import OrdinaryDiffEqLowOrderRK as ODELow # Euler
 import DiffEqCallbacks as CB              # ProbIntsUncertainty
+import SciMLBase                          # EnsembleProblem
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -132,7 +133,7 @@ tspan = (0.0, 20.0)
 p = (0.2, 0.2, 3.0)
 prob = ODE.ODEProblem(fitz, u0, tspan, p)
 cb = CB.ProbIntsUncertainty(0.2, 1)
-ensemble_prob = ODE.EnsembleProblem(prob)
+ensemble_prob = SciMLBase.EnsembleProblem(prob)
 sim = ODE.solve(ensemble_prob, ODELow.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
