@@ -274,10 +274,7 @@ which is more automatic. The setup is very similar to before:
 import AlgebraicMultigrid
 function algebraicmultigrid(W, p)
     A = convert(AbstractMatrix, W)
-    # Use a direct (LU) coarse solver: AlgebraicMultigrid's default `Pinv` coarse solver
-    # forms a dense pseudo-inverse via SVD, which errors on the non-SPD `W = I - γJ`.
-    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A;
-        coarse_solver = AlgebraicMultigrid.LinearSolveWrapper(LS.UMFPACKFactorization())))
+    Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A))
     Pl, LinearAlgebra.I
 end
 
@@ -294,8 +291,7 @@ function algebraicmultigrid2(W, p)
     A = convert(AbstractMatrix, W)
     Pl = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(A,
         presmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
-        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1))),
-        coarse_solver = AlgebraicMultigrid.LinearSolveWrapper(LS.UMFPACKFactorization())))
+        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(A, 1)))))
     Pl, LinearAlgebra.I
 end
 
