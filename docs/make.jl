@@ -25,10 +25,11 @@ import ODEProblemLibrary,
     SDEProblemLibrary, DDEProblemLibrary, DAEProblemLibrary, BVProblemLibrary
 using Sundials, DASKR, LSODA, DASSL, SimpleDiffEq, ODEInterfaceDiffEq
 
-# Use development versions for API documentation
-import Pkg
-Pkg.develop("OrdinaryDiffEq")
-Pkg.develop("StochasticDiffEq")
+# OrdinaryDiffEq, StochasticDiffEq and the solver subpackages are resolved from the
+# registry at their released versions — their docs/ ship in the released packages,
+# so the API docs below are copied from the installed (stable) packages with no
+# Pkg.develop of master (which would pin the docs to unreleased code and risk
+# monorepo version skew against the registered subpackages).
 
 cp("./docs/Manifest.toml", "./docs/src/assets/Manifest.toml", force = true)
 cp("./docs/Project.toml", "./docs/src/assets/Project.toml", force = true)
