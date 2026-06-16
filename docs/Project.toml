@@ -90,7 +90,7 @@ DiffEqDocs = {path = ".."}
 
 [compat]
 ADTypes = "1.7"
-AlgebraicMultigrid = "0.5, 0.6, 1, 2"
+AlgebraicMultigrid = "2"
 BSON = "0.3"
 BVProblemLibrary = "0.1.2"
 BenchmarkTools = "1"
