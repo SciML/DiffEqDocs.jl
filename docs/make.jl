@@ -176,6 +176,8 @@ makedocs(
         "https://www.sciencedirect.com/science/article/pii/S0096300304009683",
         "https://github.com/JuliaDiff/FiniteDiff.jl",
         "https://github.com/SciML/LinearSolve.jl",
+        "https://github.com/JuliaSparse/KLU.jl",
+        "https://github.com/JuliaDiff/ForwardDiff.jl",
         "https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html",
     ],
     doctest = false, clean = true,
