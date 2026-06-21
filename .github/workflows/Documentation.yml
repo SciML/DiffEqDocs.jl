@@ -18,6 +18,10 @@ jobs:
     name: "Documentation"
     runs-on: [self-hosted, gpu-v100]
     timeout-minutes: 360
+    permissions:
+      actions: write
+      contents: write
+      statuses: write
     if: github.event_name == 'push' || !github.event.pull_request.draft
     steps:
       - uses: actions/checkout@v6
@@ -38,6 +42,5 @@ jobs:
         run: julia --color=yes --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
           DATADEPS_ALWAYS_ACCEPT: true
           JULIA_DEBUG: "Documenter"
