@@ -86,7 +86,7 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [sources]
-DiffEqDocs = {path = "/home/chrisrackauckas/github-runners/demeter4-4/_work/DiffEqDocs.jl/DiffEqDocs.jl"}
+DiffEqDocs = {path = "/home/chrisrackauckas/github-runners/demeter4-3/_work/DiffEqDocs.jl/DiffEqDocs.jl"}
 
 [compat]
 ADTypes = "1.7"
