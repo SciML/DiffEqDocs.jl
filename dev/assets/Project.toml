@@ -86,7 +86,7 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [sources]
-DiffEqDocs = {path = "/home/chrisrackauckas/github-runners/demeter4-3/_work/DiffEqDocs.jl/DiffEqDocs.jl"}
+DiffEqDocs = {path = "/home/runner/_work/DiffEqDocs.jl/DiffEqDocs.jl"}
 
 [compat]
 ADTypes = "1.7"
@@ -115,7 +115,7 @@ ImplicitDiscreteSolve = "2"
 IncompleteLU = "0.2"
 JLD2 = "0.4, 0.5.1, 0.6"
 LSODA = "0.7, 1.0"
-LinearSolve = "2, 3"
+LinearSolve = "2, 3, 4.2"
 ModelingToolkit = "9, 10, 11.0"
 NonlinearSolve = "3.15, 4"
 ODEInterfaceDiffEq = "5.0"
