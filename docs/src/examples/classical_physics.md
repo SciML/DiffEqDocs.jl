@@ -218,15 +218,17 @@ end
 
 #Define the Problem
 function double_pendulum(xdot, x, p, t)
-    xdot[1] = x[2]
-    xdot[2] = -((g * (2 * m₁ + m₂) * sin(x[1]) +
-                 m₂ * (g * sin(x[1] - 2 * x[3]) +
-                  2 * (L₂ * x[4]^2 + L₁ * x[2]^2 * cos(x[1] - x[3])) * sin(x[1] - x[3]))) /
-                (2 * L₁ * (m₁ + m₂ - m₂ * cos(x[1] - x[3])^2)))
-    xdot[3] = x[4]
-    xdot[4] = (((m₁ + m₂) * (L₁ * x[2]^2 + g * cos(x[1])) +
-                L₂ * m₂ * x[4]^2 * cos(x[1] - x[3])) * sin(x[1] - x[3])) /
-              (L₂ * (m₁ + m₂ - m₂ * cos(x[1] - x[3])^2))
+    θ₁, ω₁, θ₂, ω₂ = x
+    Δθ = θ₁ - θ₂
+    sΔ, cΔ = sincos(Δθ)
+    xdot[1] = ω₁
+    xdot[2] = -((g * (2m₁ + m₂) * sin(θ₁) +
+                 m₂ * g * sin(θ₁ - 2θ₂) +
+                 2m₂ * (L₂ * ω₂^2 + L₁ * ω₁^2 * cΔ) * sΔ) /
+                (2L₁ * (m₁ + m₂ * sΔ^2)))
+    xdot[3] = ω₂
+    xdot[4] = ((m₁ + m₂) * (L₁ * ω₁^2 + g * cos(θ₁)) + L₂ * m₂ * ω₂^2 * cΔ) * sΔ /
+              (L₂ * (m₁ + m₂ * sΔ^2))
 end
 
 #Pass to Solvers
