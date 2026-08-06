@@ -1,59 +1,63 @@
 # The Kepler Problem
 
-The (non-dimensional) Hamiltonian $\mathcal {H}$ and the angular momentum $L$ for the Kepler problem are
+The (non-dimensional) Hamiltonian ``\mathcal{H}`` and the angular momentum ``L`` for the Kepler problem are
 
 ```math
 \begin{align*}
-\mathcal{H}(q_1, p_1, q_2, p_2) &= \frac{1}{2}(p^2_1+p^2_2)-\frac{1}{\sqrt{q^2_1+q^2_2}}, \\
+\mathcal{H}(q_1, p_1, q_2, p_2) &= \frac{1}{2} \left(p_1^2 + p_2^2\right) - \frac{1}{\sqrt{q_1^2 + q_2^2}}, \\
 L &= q_1 p_2 - p_1 q_2
 \end{align*}
 ```
 
-Also, we know that
+We make special note of angular momentum ``L`` because it's a conserved quantity, like the Hamiltonian ``\mathcal{H}``.
+
+Also, we know that the canonical equations of motion are
 
 ```math
 \begin{align*}
-\frac{\mathrm{d} \boldsymbol{p}}{\mathrm{d} t} &= - \frac {\partial \mathcal{H}}{\partial \boldsymbol{q}} , \\
-\frac{\mathrm{d} \boldsymbol{q}}{\mathrm{d} t} &= + \frac {\partial \mathcal{H}}{\partial \boldsymbol{p}}
+\frac{\mathrm{d} \boldsymbol{p}}{\mathrm{d} t} &= - \frac {\partial \mathcal{H}}{\partial \boldsymbol{q}} = - \frac{\boldsymbol{q}}{\left|\boldsymbol{q}\right|^3} , \\
+\frac{\mathrm{d} \boldsymbol{q}}{\mathrm{d} t} &= + \frac {\partial \mathcal{H}}{\partial \boldsymbol{p}} = \boldsymbol{p}
 \end{align*}
 ```
 
 ```@example kepler
 import OrdinaryDiffEq as ODE
-import OrdinaryDiffEqSymplecticRK as ODESymp # KahanLi6
-import OrdinaryDiffEqRKN as ODERKN           # DPRKN6, ERKN4
-import OrdinaryDiffEqLowOrderRK as ODELow    # RK4
-import ForwardDiff, Plots
+import OrdinaryDiffEqSymplecticRK: KahanLi6
+import OrdinaryDiffEqRKN: DPRKN6, ERKN4
+import OrdinaryDiffEqLowOrderRK: RK4
+import Plots: plot, plot!
 import LinearAlgebra: norm
 H(q, p) = norm(p)^2 / 2 - inv(norm(q))
 L(q, p) = q[1] * p[2] - p[1] * q[2]
 
-pdot(dp, p, q, params, t) = ForwardDiff.gradient!(dp, q -> -H(q, p), q)
-qdot(dq, p, q, params, t) = ForwardDiff.gradient!(dq, p -> H(q, p), p)
+pdot!(dp, p, q, params, t) = (dp .= - q / norm(q)^3)
+qdot!(dq, p, q, params, t) = (dq .= p)
 
 initial_position = [0.4, 0]
-initial_velocity = [0.0, 2.0]
-initial_cond = (initial_position, initial_velocity)
+initial_momentum = [0.0, 2.0]
+initial_cond = (initial_position, initial_momentum)
 initial_first_integrals = (H(initial_cond...), L(initial_cond...))
 tspan = (0, 20.0)
-prob = ODE.DynamicalODEProblem(pdot, qdot, initial_velocity, initial_position, tspan)
-sol = ODE.solve(prob, ODESymp.KahanLi6(), dt = 1 // 10);
+prob = ODE.DynamicalODEProblem(pdot!, qdot!, initial_momentum, initial_position, tspan)
+sol = ODE.solve(prob, KahanLi6(), dt = 1 // 10)
 ```
 
 Let's plot the orbit and check the energy and angular momentum variation. We know that energy and angular momentum should be constant, and they are also called first integrals.
 
 ```@example kepler
-function plot_orbit(sol)
-    Plots.plot(sol, idxs = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
-end
+plot_orbit(sol) = plot(sol, idxs = (3, 4), lab = "Orbit", title = "Kepler Problem Solution")
 
 function plot_first_integrals(sol, H, L)
-    Plots.plot(initial_first_integrals[1] .- map(u -> H(u.x[2], u.x[1]), sol.u),
-        lab = "Energy variation", title = "First Integrals")
-    Plots.plot!(initial_first_integrals[2] .- map(u -> L(u.x[2], u.x[1]), sol.u),
-        lab = "Angular momentum variation")
+    plot(
+        initial_first_integrals[1] .- map(u -> H(u.x[2], u.x[1]), sol.u),
+        lab = "Energy variation", title = "First Integrals"
+    )
+    plot!(
+        initial_first_integrals[2] .- map(u -> L(u.x[2], u.x[1]), sol.u),
+        lab = "Angular momentum variation"
+    )
 end
-analysis_plot(sol, H, L) = Plots.plot(plot_orbit(sol), plot_first_integrals(sol, H, L))
+analysis_plot(sol, H, L) = plot(plot_orbit(sol), plot_first_integrals(sol, H, L))
 ```
 
 ```@example kepler
@@ -63,8 +67,8 @@ analysis_plot(sol, H, L)
 Let's try to use a Runge-Kutta-Nyström solver to solve this problem and check the first integrals' variation.
 
 ```@example kepler
-sol2 = ODE.solve(prob, ODERKN.DPRKN6())  # dt is not necessary, because unlike symplectic
-# integrators DPRKN6 is adaptive
+# dt is not necessary, because unlike symplectic integrators DPRKN6 is adaptive
+sol2 = ODE.solve(prob, DPRKN6())
 @show sol2.u |> length
 analysis_plot(sol2, H, L)
 ```
@@ -72,8 +76,8 @@ analysis_plot(sol2, H, L)
 Let's then try to solve the same problem by the `ERKN4` solver, which is specialized for sinusoid-like periodic function
 
 ```@example kepler
-sol3 = ODE.solve(prob, ODERKN.ERKN4()) # dt is not necessary, because unlike symplectic
-# integrators ERKN4 is adaptive
+# dt is not necessary, because unlike symplectic integrators ERKN4 is adaptive
+sol3 = ODE.solve(prob, ERKN4())
 @show sol3.u |> length
 analysis_plot(sol3, H, L)
 ```
@@ -94,8 +98,6 @@ There is drifting for all the solutions, and high order methods are drifting les
 
 ### Conclusion
 
-* * *
-
 Symplectic integrator does not conserve the energy completely at all time, but the energy can come back. In order to make sure that the energy fluctuation comes back eventually, symplectic integrator has to have a fixed time step. Despite the energy variation, symplectic integrator conserves the angular momentum perfectly.
 
 Both Runge-Kutta-Nyström and Runge-Kutta integrator do not conserve energy nor the angular momentum, and the first integrals do not tend to come back. An advantage Runge-Kutta-Nyström integrator over symplectic integrator is that RKN integrator can have adaptivity. An advantage Runge-Kutta-Nyström integrator over Runge-Kutta integrator is that RKN integrator has less function evaluation per step. The `ERKN4` solver works best for sinusoid-like solutions.
@@ -105,33 +107,38 @@ Both Runge-Kutta-Nyström and Runge-Kutta integrator do not conserve energy nor 
 In this example, we know that energy and angular momentum should be conserved. We can achieve this through manifold projection. As the name implies, it is a procedure to project the ODE solution to a manifold. Let's start with a base case, where manifold projection isn't being used.
 
 !!! note
-    
+
     Note that NonlinearSolve.jl is required to be imported for ManifoldProjection
 
 ```@example kepler
-import DiffEqCallbacks as CB, NonlinearSolve as NLS
+import NonlinearSolve as NLS
+import DiffEqCallbacks: ManifoldProjection
 
 function plot_orbit2(sol)
-    Plots.plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")
+    plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")
 end
 
 function plot_first_integrals2(sol, H, L)
-    Plots.plot(initial_first_integrals[1] .- map(u -> H(u[1:2], u[3:4]), sol.u),
-        lab = "Energy variation", title = "First Integrals")
-    Plots.plot!(initial_first_integrals[2] .- map(u -> L(u[1:2], u[3:4]), sol.u),
-        lab = "Angular momentum variation")
+    plot(
+        initial_first_integrals[1] .- map(u -> H(u[1:2], u[3:4]), sol.u),
+        lab = "Energy variation", title = "First Integrals"
+    )
+    plot!(
+        initial_first_integrals[2] .- map(u -> L(u[1:2], u[3:4]), sol.u),
+        lab = "Angular momentum variation"
+    )
 end
 
-analysis_plot2(sol, H, L) = Plots.plot(plot_orbit2(sol), plot_first_integrals2(sol, H, L))
+analysis_plot2(sol, H, L) = plot(plot_orbit2(sol), plot_first_integrals2(sol, H, L))
 
 function hamiltonian(du, u, params, t)
     q, p = u[1:2], u[3:4]
-    qdot(@view(du[1:2]), p, q, params, t)
-    pdot(@view(du[3:4]), p, q, params, t)
+    qdot!(@view(du[1:2]), p, q, params, t)
+    pdot!(@view(du[3:4]), p, q, params, t)
 end
 
-prob2 = ODE.ODEProblem(hamiltonian, [initial_position; initial_velocity], tspan)
-sol_ = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false)
+prob2 = ODE.ODEProblem(hamiltonian, [initial_position; initial_momentum], tspan)
+sol_ = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false)
 analysis_plot2(sol_, H, L)
 ```
 
@@ -143,8 +150,8 @@ function first_integrals_manifold(residual, u, p, t)
     residual[3:4] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
 end
 
-cb = CB.ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
-sol5 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = cb)
+cb = ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
+sol5 = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = cb)
 analysis_plot2(sol5, H, L)
 ```
 
@@ -155,8 +162,8 @@ function energy_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-energy_cb = CB.ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
-sol6 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
+energy_cb = ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
+sol6 = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
 analysis_plot2(sol6, H, L)
 ```
 
@@ -167,8 +174,8 @@ function angular_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
     residual[3:4] .= 0
 end
-angular_cb = CB.ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
-sol7 = ODE.solve(prob2, ODELow.RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
+angular_cb = ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
+sol7 = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)
 analysis_plot2(sol7, H, L)
 ```
 
