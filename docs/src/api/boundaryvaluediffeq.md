@@ -17,62 +17,62 @@ import BoundaryValueDiffEq
 ## Shooting Method APIs
 
 ```@docs
-BoundaryValueDiffEq.Shooting
-BoundaryValueDiffEq.MultipleShooting
+BoundaryValueDiffEqShooting.Shooting
+BoundaryValueDiffEqShooting.MultipleShooting
 ```
 
 ## MIRK Method APIs
 
 ```@docs
-BoundaryValueDiffEq.MIRK2
-BoundaryValueDiffEq.MIRK3
-BoundaryValueDiffEq.MIRK4
-BoundaryValueDiffEq.MIRK5
-BoundaryValueDiffEq.MIRK6
+BoundaryValueDiffEqMIRK.MIRK2
+BoundaryValueDiffEqMIRK.MIRK3
+BoundaryValueDiffEqMIRK.MIRK4
+BoundaryValueDiffEqMIRK.MIRK5
+BoundaryValueDiffEqMIRK.MIRK6
 ```
 
 ## FIRK Method APIs (Lobatto)
 
 ```@docs
-BoundaryValueDiffEq.LobattoIIIa2
-BoundaryValueDiffEq.LobattoIIIa3
-BoundaryValueDiffEq.LobattoIIIa4
-BoundaryValueDiffEq.LobattoIIIa5
-BoundaryValueDiffEq.LobattoIIIb2
-BoundaryValueDiffEq.LobattoIIIb3
-BoundaryValueDiffEq.LobattoIIIb4
-BoundaryValueDiffEq.LobattoIIIb5
-BoundaryValueDiffEq.LobattoIIIc2
-BoundaryValueDiffEq.LobattoIIIc3
-BoundaryValueDiffEq.LobattoIIIc4
-BoundaryValueDiffEq.LobattoIIIc5
+BoundaryValueDiffEqFIRK.LobattoIIIa2
+BoundaryValueDiffEqFIRK.LobattoIIIa3
+BoundaryValueDiffEqFIRK.LobattoIIIa4
+BoundaryValueDiffEqFIRK.LobattoIIIa5
+BoundaryValueDiffEqFIRK.LobattoIIIb2
+BoundaryValueDiffEqFIRK.LobattoIIIb3
+BoundaryValueDiffEqFIRK.LobattoIIIb4
+BoundaryValueDiffEqFIRK.LobattoIIIb5
+BoundaryValueDiffEqFIRK.LobattoIIIc2
+BoundaryValueDiffEqFIRK.LobattoIIIc3
+BoundaryValueDiffEqFIRK.LobattoIIIc4
+BoundaryValueDiffEqFIRK.LobattoIIIc5
 ```
 
 ## FIRK Method APIs (Radau)
 
 ```@docs
-BoundaryValueDiffEq.RadauIIa1
-BoundaryValueDiffEq.RadauIIa2
-BoundaryValueDiffEq.RadauIIa3
-BoundaryValueDiffEq.RadauIIa5
-BoundaryValueDiffEq.RadauIIa7
+BoundaryValueDiffEqFIRK.RadauIIa1
+BoundaryValueDiffEqFIRK.RadauIIa2
+BoundaryValueDiffEqFIRK.RadauIIa3
+BoundaryValueDiffEqFIRK.RadauIIa5
+BoundaryValueDiffEqFIRK.RadauIIa7
 ```
 
 ## Ascher Collocation Method APIs
 
 ```@docs
-BoundaryValueDiffEq.Ascher1
-BoundaryValueDiffEq.Ascher2
-BoundaryValueDiffEq.Ascher3
-BoundaryValueDiffEq.Ascher4
-BoundaryValueDiffEq.Ascher5
-BoundaryValueDiffEq.Ascher6
-BoundaryValueDiffEq.Ascher7
+BoundaryValueDiffEqAscher.Ascher1
+BoundaryValueDiffEqAscher.Ascher2
+BoundaryValueDiffEqAscher.Ascher3
+BoundaryValueDiffEqAscher.Ascher4
+BoundaryValueDiffEqAscher.Ascher5
+BoundaryValueDiffEqAscher.Ascher6
+BoundaryValueDiffEqAscher.Ascher7
 ```
 
 ## MIRKN Method APIs
 
 ```@docs
-BoundaryValueDiffEq.MIRKN4
-BoundaryValueDiffEq.MIRKN6
+BoundaryValueDiffEqMIRKN.MIRKN4
+BoundaryValueDiffEqMIRKN.MIRKN6
 ```
