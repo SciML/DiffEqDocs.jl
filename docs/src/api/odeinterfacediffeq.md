@@ -32,7 +32,7 @@ ODEInterfaceDiffEq.ddebdf
 ## BVP Solver APIs
 
 ```@docs
-ODEInterfaceDiffEq.BVPM2
-ODEInterfaceDiffEq.BVPSOL
-ODEInterfaceDiffEq.COLNEW
+BoundaryValueDiffEq.BVPM2
+BoundaryValueDiffEq.BVPSOL
+BoundaryValueDiffEq.COLNEW
 ```
