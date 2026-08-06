@@ -38,6 +38,14 @@ jobs:
         env:
           DATADEPS_ALWAYS_ACCEPT: true
           JULIA_PKG_PRECOMPILE_AUTO: 0
+      - name: Precompile environment
+        shell: julia --color=yes --project=docs {0}
+        run: |
+          println("--- Precompiling project")
+          using Pkg
+          Pkg.precompile()
+        env:
+          DATADEPS_ALWAYS_ACCEPT: true
       - name: Building documentation
         run: julia --color=yes --project=docs docs/make.jl
         env:
