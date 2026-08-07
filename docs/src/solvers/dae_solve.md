@@ -6,7 +6,7 @@ The solvers on this page are distributed across the packages below. Add the pack
 
 | Package | Methods | Good for |
 |---|---|---|
-| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | Stiff large/sparse mass-matrix or implicit-form DAEs. |
+| `OrdinaryDiffEqBDF` | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse mass-matrix or implicit-form DAEs. |
 | `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium index-1 mass-matrix DAEs. |
 | `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DAEs with cheap Jacobians; general fallback. |
 | `OrdinaryDiffEqFIRK` | RadauIIA3/5/9 | Stiff DAEs needing high precision (1e-10+). |
@@ -58,12 +58,17 @@ These methods from OrdinaryDiffEq are for `DAEProblem` specifications.
 
 !!! note "v8: import from `OrdinaryDiffEqBDF`"
 
-    `DImplicitEuler`, `DABDF2`, and `DFBDF` live in
+    `DImplicitEuler`, `DABDF2`, `DNordsieckBDF`, and `DFBDF` live in
     `OrdinaryDiffEqBDF` and are not in `OrdinaryDiffEq`'s default re-export
     set under v7. Load them with `using OrdinaryDiffEqBDF`.
 
   - `OrdinaryDiffEqBDF.DImplicitEuler` - 1st order A-L and stiffly stable adaptive implicit Euler
   - `OrdinaryDiffEqBDF.DABDF2` - 2nd order A-L stable adaptive BDF method.
+  - `OrdinaryDiffEqBDF.DNordsieckBDF` - The fully implicit form of `NordsieckBDF`:
+    an adaptive-order adaptive-time BDF method on a
+    propagated Nordsieck history array. The array supplies both the state predictor and
+    the derivative, so the corrector solves `f((zn[1] + l[1]*acor)/h, ypred + acor, p, t) = 0`
+    with leading coefficient `cj = l[1]/h`, the same role `cj` plays in IDA.
   - `OrdinaryDiffEqBDF.DFBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
     similar to `ode15i` or `IDA` in divided differences form.
 

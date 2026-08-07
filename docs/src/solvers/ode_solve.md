@@ -25,7 +25,7 @@ The solvers on this page are distributed across the packages below. Add the pack
 | `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff problems with cheap Jacobians; general stiff fallback. |
 | `OrdinaryDiffEqFIRK` | RadauIIA3/5/9 | Stiff problems needing high precision (1e-10+) or very stiff. |
 | `OrdinaryDiffEqPDIRK` | PDIRK44 | Diagonally-implicit RK with stage parallelism. |
-| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | Stiff large/sparse systems; index-1 DAEs (mass-matrix or implicit). |
+| `OrdinaryDiffEqBDF` | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse systems; index-1 DAEs (mass-matrix or implicit). |
 | `OrdinaryDiffEqAdamsBashforthMoulton` | AB3-AB5, ABM, VCAB, VCABM | Non-stiff multistep on smooth, expensive RHS evaluations. |
 | `OrdinaryDiffEqNordsieck` | AN5, JVODE | Variable-step / variable-order Adams in Nordsieck form. |
 | `OrdinaryDiffEqExtrapolation` | ExtrapolationMidpoint, ImplicitHairerWanner, etc. | Smooth problems benefiting from Richardson extrapolation; very high order. |
@@ -101,8 +101,8 @@ For stiff problems at high tolerances (`>1e-2`?) it is recommended that you use
 stiffness, though are only efficient when low accuracy is needed.
 `Rosenbrock23` is more efficient for small systems where re-evaluating and
 re-factorizing the Jacobian is not too costly, and for sufficiently large
-systems `TRBDF2` will be more efficient. `QNDF` or `FBDF` can be the most efficient
-for the largest systems or most expensive `f`.
+systems `TRBDF2` will be more efficient. `NordsieckBDF`, `QNDF` or `FBDF` can be
+the most efficient for the largest systems or most expensive `f`.
 
 At medium tolerances (`>1e-8`?) it is recommended you use `Rodas5P`,
 `Rodas4P` (the former is more efficient, but the latter is more reliable),
@@ -117,9 +117,14 @@ use `radau`.
 
 For asymptotically large systems of ODEs (`N>1000`?)
 where `f` is very costly, and the complex eigenvalues are minimal (low oscillations),
-in that case `QNDF` or `FBDF` will be the most efficient.
-`QNDF` and `FBDF` will also do surprisingly well if the solution is smooth. However,
-this method can handle less stiffness than other methods and its Newton iterations
+a BDF method will be the most efficient. `NordsieckBDF` is the recommended default
+here: it is the same family as `CVODE_BDF` (a Nordsieck-array BDF following CVODE)
+and on standard stiff benchmarks it needs noticeably fewer matrix factorizations
+than `FBDF`, which is what dominates the cost once the linear solve is expensive.
+(It evaluates the Jacobian itself somewhat more often, matching `CVODE_BDF`'s
+trade-off of cheaper factorizations for fresher Jacobians.) `QNDF` and `FBDF` remain good choices and are more battle-tested.
+All of them will also do surprisingly well if the solution is smooth. However,
+these methods can handle less stiffness than other methods and their Newton iterations
 may fail at low accuracy situations. Other choices to consider in this regime are
 `CVODE_BDF` and `lsoda`.
 
@@ -203,7 +208,7 @@ problems.
     | Stabilized Explicit (ROCK*, RKC, ESERK*, ...)         | `OrdinaryDiffEqStabilizedRK` / `OrdinaryDiffEqStabilizedIRK` |
     | Implicit Extrapolation                                | `OrdinaryDiffEqExtrapolation`                    |
     | Exponential RK / EPIRK / Adaptive Exp Rosenbrock      | `OrdinaryDiffEqExponentialRK`                    |
-    | BDF / FBDF / QNDF / QBDF / DFBDF / DABDF2 / DImplicitEuler / SBDF | `OrdinaryDiffEqBDF` (FBDF re-exported by main pkg) |
+    | BDF / NordsieckBDF / FBDF / QNDF / QBDF / DNordsieckBDF / DFBDF / DABDF2 / DImplicitEuler / SBDF | `OrdinaryDiffEqBDF` (FBDF re-exported by main pkg) |
     | Implicit SSPRK                                        | `OrdinaryDiffEqSSPRK`                            |
     | Function-map / DiscreteProblem default                | `OrdinaryDiffEqFunctionMap`                      |
     | Symplectic RK (KahanLi*, McAte*, VelocityVerlet, ...) | `OrdinaryDiffEqSymplecticRK`                     |
@@ -827,6 +832,13 @@ Sundials CVODE integrator.
     stability properties over the standard BDF. Fixed timestep only.
   - `OrdinaryDiffEqBDF.FBDF` - A fixed-leading coefficient adaptive-order adaptive-time BDF method,
     similar to `ode15i` or `CVODE_BDF` in divided differences form.
+  - `OrdinaryDiffEqBDF.NordsieckBDF` - An adaptive-order adaptive-time BDF method on a
+    propagated Nordsieck history array, following `CVODE_BDF`. Because the history is
+    propagated rather than rebuilt from stored solution points, changing the step size
+    is exact and the corrector may be solved only to a fraction of the local error
+    budget (`nlsolve = NLNewton(κ = ...)` acts as CVODE's `NLSCOEF`). Dense output is
+    the Nordsieck polynomial itself and is free. Recommended for large stiff systems
+    and expensive `f`.
 
 #### Implicit Strong-Stability Preserving Runge-Kutta Methods for Hyperbolic PDEs (Conservation Laws)
 
