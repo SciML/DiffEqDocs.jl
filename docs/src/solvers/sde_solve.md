@@ -291,23 +291,23 @@ For `SRA` and `SRI`, the following option is allowed:
 
 The following methods require analytic derivatives of the diffusion term.
 
-  - `StochasticDiffEqLowOrder.PCEuler` - The predictor corrector Euler method. Strong Order 0.5 in the Ito
-    sense. Requires the ggprime function, which is defined as
-    
-    ```math
-      \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
-    ```
-    
-    This can also be understood more intuitively in vector/matrix form as,
-    
-    ```math
-    \text{ggprime}(t,x) = \sum_{j=1}^m \bar{\mathcal{J}}[\vec g^{(j)}(t,x)] \vec g^{(j)}(t,x).
-    ```
-    
-    where ``\vec g^{(j)}`` is the noise vector for the j'th noise channel and ``\bar{\mathcal{J}}`` is the Jacobian of the j'th   noise vector.
-    
-    The default settings for the drift implicitness are `theta=0.5` and
-    the diffusion implicitness is `eta=0.5`.
+- `StochasticDiffEqLowOrder.PCEuler` - The predictor corrector Euler method. Strong Order 0.5 in the Ito
+  sense. Requires the ggprime function, which is defined as
+
+  ```math
+    \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
+  ```
+
+  This can also be understood more intuitively in vector/matrix form as,
+
+  ```math
+  \text{ggprime}(t,x) = \sum_{j=1}^m \bar{\mathcal{J}}[\vec g^{(j)}(t,x)] \vec g^{(j)}(t,x).
+  ```
+
+  where ``\vec g^{(j)}`` is the noise vector for the j'th noise channel and ``\bar{\mathcal{J}}`` is the Jacobian of the j'th   noise vector.
+
+  The default settings for the drift implicitness are `theta=0.5` and
+  the diffusion implicitness is `eta=0.5`.
 
 #### High Weak Order Methods
 

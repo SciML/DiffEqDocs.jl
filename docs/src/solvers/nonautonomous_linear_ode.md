@@ -75,18 +75,18 @@ These methods require that ``A`` is constant.
 
 Options:
 
-  - `krylov` - symbol. One of
-    
-      + :off (default) - cache the operator beforehand. Requires `Matrix(A)` method
-        defined for the operator `A`.
-      + :simple - uses simple Krylov approximations with fixed subspace size `m`.
-      + :adaptive - uses adaptive Krylov approximations with internal timestepping.
+- `krylov` - symbol. One of
 
-  - `m` - integer, default: `10`. Controls the size of Krylov subspace if
-    `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
-  - `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
-    orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
-    then the Lanczos algorithm will always be used and the IOP setting is ignored.
+  + :off (default) - cache the operator beforehand. Requires `Matrix(A)` method
+    defined for the operator `A`.
+  + :simple - uses simple Krylov approximations with fixed subspace size `m`.
+  + :adaptive - uses adaptive Krylov approximations with internal timestepping.
+
+- `m` - integer, default: `10`. Controls the size of Krylov subspace if
+  `krylov=:simple`, and the initial subspace size if `krylov=:adaptive`.
+- `iop` - integer, default: `0`. If not zero, determines the length of the incomplete
+  orthogonalization procedure (IOP) [^1]. Note that if the linear operator/Jacobian is hermitian,
+  then the Lanczos algorithm will always be used and the IOP setting is ignored.
 
 ```@example linear_ode
 import DifferentialEquations as DE
