@@ -17,7 +17,7 @@ of pre-computed functions to speed up the calculations. This is offered via the
 
 All applicable stiff differential equation solvers in the Julia ecosystem
 (OrdinaryDiffEq.jl, StochasticDiffEq.jl, DelayDiffEq.jl, etc.) take an
-`autodiff` keyword for handling automatic Jacobian construction. This takes an `ADTypes` object, 
+`autodiff` keyword for handling automatic Jacobian construction. This takes an `ADTypes` object,
 which means every AD backend in the Julia ecosystem is supported
 through the same interface:
 

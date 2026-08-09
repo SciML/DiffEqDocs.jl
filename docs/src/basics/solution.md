@@ -20,7 +20,7 @@ derivative at each timestep `du` or the spatial discretization `x`, `y`, etc.
 
 !!! note
     
-    As of RecursiveArrayTools v4 / SciMLBase v3 / OrdinaryDiffEq v7 / DifferentialEquations v8, 
+    As of RecursiveArrayTools v4 / SciMLBase v3 / OrdinaryDiffEq v7 / DifferentialEquations v8,
     `AbstractVectorOfArray <: AbstractArray`. This means
     `sol[i]` now uses standard column-major linear indexing (returning a scalar element),
     not the old behavior of `sol[i] = sol.u[i]` (which returned the `i`th state vector).
