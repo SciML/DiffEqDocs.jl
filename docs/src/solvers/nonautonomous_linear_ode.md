@@ -91,9 +91,9 @@ Options:
 ```@example linear_ode
 import DifferentialEquations as DE
 import OrdinaryDiffEqLinear as ODELinear   # LinearExponential, Magnus*, LieRK4, ...
-import SciMLOperators
+import SciMLOperators: MatrixOperator
 _A = [2 -1; -3 -5] / 5
-A = SciMLOperators.MatrixOperator(_A)
+A = MatrixOperator(_A)
 prob = DE.ODEProblem(A, [1.0, -1.0], (1.0, 6.0))
 sol = DE.solve(prob, ODELinear.LinearExponential())
 ```
@@ -129,7 +129,7 @@ function update_func!(A, u, p, t)
     A[2, 2] = cos(t)
     return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
+A = MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (1.0, 6.0))
 sol = DE.solve(prob, ODELinear.MagnusGL6(), dt = 1 / 10)
 ```
@@ -160,7 +160,7 @@ function update_func!(A, u, p, t)
     A[2, 2] = 0
     return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
+A = MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (0, 30.0))
 sol = DE.solve(prob, ODELinear.LieRK4(), dt = 1 / 4)
 ```
@@ -180,7 +180,7 @@ function update_func!(A, u, p, t)
     A[2, 2] = 0
     return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
+A = MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (30, 150.0))
 sol = DE.solve(prob, ODELinear.MagnusAdapt4())
 ```

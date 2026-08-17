@@ -13,8 +13,8 @@ ArrayPartitions in DiffEq are used for heterogeneous arrays. For example,
 into a single array. You can construct an `ArrayPartition` using RecursiveArrayTools.jl:
 
 ```julia
-import RecursiveArrayTools
-A = RecursiveArrayTools.ArrayPartition(x::AbstractArray...)
+import RecursiveArrayTools: ArrayPartition
+A = ArrayPartition(x::AbstractArray...)
 ```
 
 where `x` is an array of arrays. Then, `A` will act like a single array, and its
@@ -29,8 +29,8 @@ array, then the second, etc. all linearly. But `A.x` is where the arrays are sto
 Thus for
 
 ```julia
-import RecursiveArrayTools
-A = RecursiveArrayTools.ArrayPartition(y, z)
+import RecursiveArrayTools: ArrayPartition
+A = ArrayPartition(y, z)
 ```
 
 We would have `A.x[1]==y` and `A.x[2]==z`. Broadcasting like `f.(A)` is efficient.

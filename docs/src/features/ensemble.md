@@ -276,11 +276,11 @@ achieved with
 [`@everywhere` macro](https://docs.julialang.org/en/v1.2/stdlib/Distributed/#Distributed.@everywhere):
 
 ```julia
-import Distributed
+import Distributed: addprocs, @everywhere
 import DifferentialEquations as DE
-import Plots
+import Plots: plot
 
-Distributed.addprocs()
+addprocs()
 @everywhere import DifferentialEquations as DE
 ```
 
@@ -313,7 +313,7 @@ sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleDistributed(), trajectories
 We can use the plot recipe to plot what the 10 ODEs look like:
 
 ```julia
-Plots.plot(sim, linealpha = 0.4)
+plot(sim, linealpha = 0.4)
 ```
 
 We note that if we wanted to find out what the initial condition was for a given
@@ -338,8 +338,8 @@ prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 prob_func(prob, ctx) = DE.remake(prob, u0 = rand() * prob.u0)
 ensemble_prob = DE.EnsembleProblem(prob; prob_func)
 sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleThreads(), trajectories = 10)
-import Plots;
-Plots.plot(sim);
+import Plots: plot
+plot(sim)
 ```
 
 The number of threads to be used has to be defined outside of Julia, in
@@ -390,9 +390,9 @@ Now we build the SDE with these functions:
 
 ```@example ensemble2
 import DifferentialEquations as DE
-import StochasticDiffEq as SDE # SDEProblem, SRIW1
+import StochasticDiffEq: EnsembleProblem, SDEProblem, SRIW1, solve
 p = [1.5, 1.0, 0.1, 0.1]
-prob = SDE.SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
+prob = SDEProblem(f, g, [1.0, 1.0], (0.0, 10.0), p)
 ```
 
 This is the base problem for our study. What would like to do with this experiment
@@ -417,15 +417,15 @@ end
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
 ```@example ensemble2
-ensemble_prob = SDE.EnsembleProblem(prob; prob_func)
-sim = SDE.solve(ensemble_prob, SDE.SRIW1(), trajectories = 10);
+ensemble_prob = EnsembleProblem(prob; prob_func)
+sim = solve(ensemble_prob, SRIW1(), trajectories = 10);
 nothing # hide
 ```
 
 ```@example ensemble2
-import Plots;
-Plots.plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
-Plots.plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
+import Plots: plot, plot!
+plot(sim, linealpha = 0.6, color = :blue, idxs = (0, 1), title = "Phase Space Plot");
+plot!(sim, linealpha = 0.6, color = :red, idxs = (0, 2), title = "Phase Space Plot")
 ```
 
 We can then summarize this information with the mean/variance bounds using a
@@ -434,7 +434,7 @@ units and directly plot the summary:
 
 ```@example ensemble2
 summ = DE.EnsembleSummary(sim, 0:0.1:10)
-Plots.plot(summ, fillalpha = 0.5)
+plot(summ, fillalpha = 0.5)
 ```
 
 Note that here we used the quantile bounds, which default to `[0.05,0.95]` in
@@ -467,10 +467,10 @@ batch, and declare convergence if the standard error of the mean is calculated
 as sufficiently small:
 
 ```@example ensemble3
-import Statistics
+import Statistics: mean, var
 function reduction(u, batch, I)
     u = append!(u, batch)
-    finished = (Statistics.var(u) / sqrt(last(I))) / Statistics.mean(u) < 0.5
+    finished = (var(u) / sqrt(last(I))) / mean(u) < 0.5
     return u, finished
 end
 ```
@@ -534,9 +534,9 @@ to make sure the steps all hit the same times. We thus set `adaptive=false` and
 explicitly give a `dt`.
 
 ```@example ensemble4
-import StochasticDiffEq as SDE # SRIW1 is no longer reexported by DifferentialEquations v8
+import StochasticDiffEq: SRIW1
 prob2 = DE.EnsembleProblem(prob)
-sim = SDE.solve(prob2, SDE.SRIW1(), dt = 1 // 2^3, trajectories = 10, adaptive = false);
+sim = DE.solve(prob2, SRIW1(), dt = 1 // 2^3, trajectories = 10, adaptive = false);
 @info "Ensemble solution computed with $(length(sim)) trajectories" # hide
 nothing # hide
 ```
@@ -597,19 +597,19 @@ the differential equation, this can get messy, so let's only plot the
 3rd component:
 
 ```@example ensemble4
-import Plots;
-Plots.plot(summ; idxs = 3);
+import Plots: plot
+plot(summ; idxs = 3);
 ```
 
 We can change to errorbars instead of ribbons and plot two different
 indices:
 
 ```@example ensemble4
-Plots.plot(summ; idxs = (3, 5), error_style = :bars)
+plot(summ; idxs = (3, 5), error_style = :bars)
 ```
 
 Or we can simply plot the mean of every component over time:
 
 ```@example ensemble4
-Plots.plot(summ; error_style = :none)
+plot(summ; error_style = :none)
 ```

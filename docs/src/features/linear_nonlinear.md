@@ -45,7 +45,7 @@ can be used as a left or right preconditioner. Preconditioners are configured on
 object itself, through LinearSolve's `Pl` / `Pr` interface. For example:
 
 ```julia
-using LinearSolve              # KrylovJL_GMRES
+using LinearSolve: KrylovJL_GMRES
 using OrdinaryDiffEqSDIRK: TRBDF2
 alg = TRBDF2(linsolve = KrylovJL_GMRES(precs = mypreconditioner))
 ```

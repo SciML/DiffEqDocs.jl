@@ -35,15 +35,15 @@ sol = ODE.solve(poincare, ODE.Tsit5())
 In time, the solution looks like:
 
 ```@example minmax
-import Plots;
-Plots.gr();
-Plots.plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)
+import Plots: gr, plot, scatter!
+gr()
+plot(sol, vars = [(0, 3), (0, 4)], leg = false, plotdensity = 10000)
 ```
 
 while it has the well-known phase-space plot:
 
 ```@example minmax
-Plots.plot(sol, vars = (3, 4), leg = false)
+plot(sol, vars = (3, 4), leg = false)
 ```
 
 ### Local Optimization
@@ -58,11 +58,12 @@ f(t, _) = sol(first(t), idxs = 4)
 function is `f`:
 
 ```@example minmax
-import Optimization as OPT, OptimizationNLopt as OptNL, ForwardDiff
+import Optimization as OPT, ForwardDiff
+import OptimizationNLopt: NLopt
 optf = OPT.OptimizationFunction(f, OPT.AutoForwardDiff())
 min_guess = 18.0
 optprob = OPT.OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
-opt = OPT.solve(optprob, OptNL.NLopt.LD_LBFGS())
+opt = OPT.solve(optprob, NLopt.LD_LBFGS())
 ```
 
 From this printout, we see that the minimum is at `t=18.63` and the value is `-2.79e-2`. We
@@ -80,15 +81,15 @@ fminus(t, _) = -sol(first(t), idxs = 4)
 optf = OPT.OptimizationFunction(fminus, OPT.AutoForwardDiff())
 min_guess = 22.0
 optprob2 = OPT.OptimizationProblem(optf, [min_guess], lb = [0.0], ub = [100.0])
-opt2 = OPT.solve(optprob2, OptNL.NLopt.LD_LBFGS())
+opt2 = OPT.solve(optprob2, NLopt.LD_LBFGS())
 ```
 
 Let's add the maxima and minima to the plots:
 
 ```@example minmax
-Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
-Plots.scatter!([opt.u], [opt.objective], label = "Local Min")
-Plots.scatter!([opt2.u], [-opt2.objective], label = "Local Max")
+plot(sol, vars = (0, 4), plotdensity = 10000)
+scatter!([opt.u], [opt.objective], label = "Local Min")
+scatter!([opt2.u], [-opt2.objective], label = "Local Max")
 ```
 
 ### Global Optimization
@@ -102,14 +103,14 @@ swap out to one of the
 Let's try `GN_ORIG_DIRECT_L`:
 
 ```@example minmax
-gopt = OPT.solve(optprob, OptNL.NLopt.GN_ORIG_DIRECT_L())
-gopt2 = OPT.solve(optprob2, OptNL.NLopt.GN_ORIG_DIRECT_L())
+gopt = OPT.solve(optprob, NLopt.GN_ORIG_DIRECT_L())
+gopt2 = OPT.solve(optprob2, NLopt.GN_ORIG_DIRECT_L())
 
 @show gopt.u, gopt2.u
 ```
 
 ```@example minmax
-Plots.plot(sol, vars = (0, 4), plotdensity = 10000)
-Plots.scatter!([gopt.u], [gopt.objective], label = "Global Min")
-Plots.scatter!([gopt2.u], [-gopt2.objective], label = "Global Max")
+plot(sol, vars = (0, 4), plotdensity = 10000)
+scatter!([gopt.u], [gopt.objective], label = "Global Min")
+scatter!([gopt2.u], [-gopt2.objective], label = "Global Max")
 ```

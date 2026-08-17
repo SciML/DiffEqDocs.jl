@@ -19,7 +19,7 @@ The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac
 
 ```@example bvp
 import BoundaryValueDiffEq as BVP
-import Plots
+import Plots: plot
 const g = 9.81
 L = 1.0
 tspan = (0.0, pi / 2)
@@ -49,7 +49,7 @@ function bc1!(residual, u, p, t)
 end
 bvp1 = BVP.BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = BVP.solve(bvp1, BVP.MIRK4(); dt = 0.05)
-Plots.plot(sol1)
+plot(sol1)
 ```
 
 The third argument of `BVProblem` or `TwoPointBVProblem` is the initial guess of the solution, which can be specified as a `Vector`, a `Function` of `t`, or a solution object from previous solving. In this example, the initial guess is set as a `Vector`.
@@ -70,7 +70,7 @@ The initial guess can also be supplied via a function of `t` or a previous solut
 We changed `u` to `sol` to emphasize the fact that in this case, the boundary condition can be written on the solution object. Thus, all the features on the solution type such as interpolations are available when using both collocation and shooting methods (i.e., you can have a boundary condition saying that the maximum over the interval is `1` using an optimization function on the continuous output).
 
 ```@example bvp
-Plots.plot(sol3)
+plot(sol3)
 ```
 
 `TwoPointBVProblem` is operationally the same as `BVProblem` but allows for the solver
@@ -92,7 +92,7 @@ bvp2 = BVP.TwoPointBVProblem(
     bcresid_prototype = (zeros(1), zeros(1))
 )
 sol2 = BVP.solve(bvp2, BVP.MIRK4(); dt = 0.05)
-Plots.plot(sol2)
+plot(sol2)
 ```
 
 Note here that `bc2a!` is a boundary condition for the first time point, and `bc2b!` is a boundary condition

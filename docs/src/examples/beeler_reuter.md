@@ -373,27 +373,28 @@ u0[90:102, 90:102] .= v1;   # a small square in the middle of the domain
 The initial condition is a small square in the middle of the domain.
 
 ```julia
-import Plots
-Plots.heatmap(u0)
+import Plots: heatmap
+heatmap(u0)
 ```
 
 Next, the problem is defined:
 
 ```julia
-import DifferentialEquations as DE, Sundials
+import DifferentialEquations as DE
+import Sundials: CVODE_BDF
 
 deriv_cpu = BeelerReuterCpu(u0, 1.0);
 prob = DE.ODEProblem(deriv_cpu, u0, (0.0, 50.0));
 ```
 
-For stiff reaction-diffusion equations, `CVODE_BDF` from Sundial library is an excellent solver.
+For stiff reaction-diffusion equations, `CVODE_BDF` from Sundials library is an excellent solver.
 
 ```julia
-@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+@time sol = DE.solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-Plots.heatmap(sol.u[end])
+heatmap(sol.u[end])
 ```
 
 ## CPU/GPU Beeler-Reuter Solver
@@ -681,15 +682,16 @@ end
 Ready to test!
 
 ```julia
-import DifferentialEquations as DE, Sundials
+import DifferentialEquations as DE
+import Sundials: CVODE_BDF
 
 deriv_gpu = BeelerReuterGpu(u0, 1.0);
 prob = DE.ODEProblem(deriv_gpu, u0, (0.0, 50.0));
-@time sol = DE.solve(prob, Sundials.CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
+@time sol = DE.solve(prob, CVODE_BDF(linear_solver = :GMRES), saveat = 100.0);
 ```
 
 ```julia
-Plots.heatmap(sol.u[end])
+heatmap(sol.u[end])
 ```
 
 ## Summary

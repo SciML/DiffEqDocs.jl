@@ -36,8 +36,9 @@ no delays are written as in the ODE.
 Thus, the function for this model is given by:
 
 ```@example dde
-import DelayDiffEq as DDE, DifferentialEquations as DE
-import OrdinaryDiffEqLowOrderRK as ODELow # RK4 is no longer reexported by DifferentialEquations v8
+import DelayDiffEq as DDE
+import DifferentialEquations: Tsit5
+import OrdinaryDiffEqLowOrderRK: RK4
 function bc_model(du, u, h, p, t)
     p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau = p
     hist3 = h(p, t - tau)[3]
@@ -101,7 +102,7 @@ ODE solver method into a method for delay differential equations, which is highl
 efficient due to sweet compiler magic. A good choice is the order 5 method `DDE.Tsit5()`:
 
 ```@example dde
-alg = DDE.MethodOfSteps(DE.Tsit5())
+alg = DDE.MethodOfSteps(Tsit5())
 ```
 
 For lower tolerance solving, one can use the `DDE.BS3()` algorithm to good
@@ -123,8 +124,8 @@ event handling and other callbacks. The solution object has the same interface
 as for ODEs. For example, we can use the same plot recipes to view the results:
 
 ```@example dde
-import Plots
-Plots.plot(sol)
+import Plots: plot
+plot(sol)
 ```
 
 #### Speeding Up Interpolations with Idxs
@@ -209,7 +210,7 @@ from above with residual control:
 
 ```@example dde
 prob = DDE.DDEProblem(bc_model, u0, h, tspan)
-alg = DDE.MethodOfSteps(ODELow.RK4())
+alg = DDE.MethodOfSteps(RK4())
 sol = DDE.solve(prob, alg);
 nothing # hide
 ```
@@ -230,7 +231,7 @@ dependent lags and solving with a `MethodOfSteps` algorithm:
 
 ```@example dde
 prob = DDE.DDEProblem(bc_model, u0, h, tspan; dependent_lags = ((u, p, t) -> tau,))
-alg = DDE.MethodOfSteps(DE.Tsit5())
+alg = DDE.MethodOfSteps(Tsit5())
 sol = DDE.solve(prob, alg);
 nothing # hide
 ```

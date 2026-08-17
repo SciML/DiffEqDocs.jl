@@ -13,11 +13,12 @@ with boundary conditions: ``∇T(z=a) = ∇T_\text{bottom}`` and ``T(z=b) = T_\t
 First, we'll use / import some packages:
 
 ```@example diffusionimplicit
-import Plots
-import LinearAlgebra
+import Plots: plot, plot!
+import LinearAlgebra: Tridiagonal
 import DiffEqBase
-import OrdinaryDiffEqBDF as BDF
-import SciMLBase, SciMLOperators
+import OrdinaryDiffEqBDF: IMEXEuler
+import SciMLBase
+import SciMLOperators: MatrixOperator
 ```
 
 Next, we'll define some global problem parameters:
@@ -136,7 +137,7 @@ T[i] + 2 Δz ∇T_\text{bottom} n̂ = T[g] \\
 
 ```@example diffusionimplicit
 # Initialize interior and boundary stencils:
-∇² = LinearAlgebra.Tridiagonal(
+∇² = Tridiagonal(
     ones(FT, n) .* ∇²_op[1],
     ones(FT, n + 1) .* ∇²_op[2],
     ones(FT, n) .* ∇²_op[3]
@@ -195,13 +196,13 @@ params = (; n)
 tspan = (FT(0), N_t * FT(Δt))
 
 prob = SciMLBase.SplitODEProblem(
-    SciMLOperators.MatrixOperator(D),
+    MatrixOperator(D),
     rhs!,
     T,
     tspan,
     params
 )
-alg = BDF.IMEXEuler()
+alg = IMEXEuler()
 println("Solving...")
 sol = SciMLBase.solve(
     prob,
@@ -220,18 +221,18 @@ Now, let's visualize the results of the solution and error:
 ```@example diffusionimplicit
 T_end = sol.u[end]
 
-p1 = Plots.plot(
+p1 = plot(
     zf, T_analytic.(zf), label = "analytic",
     markershape = :circle, markersize = 6
 )
-p1 = Plots.plot!(p1, zf, T_end, label = "numerical", markershape = :diamond)
-p1 = Plots.plot!(p1, title = "T ∈ cell faces")
+p1 = plot!(p1, zf, T_end, label = "numerical", markershape = :diamond)
+p1 = plot!(p1, title = "T ∈ cell faces")
 
-p2 = Plots.plot(
+p2 = plot(
     zf, abs.(T_end .- T_analytic.(zf)), label = "error",
     markershape = :circle, markersize = 6
 )
-p2 = Plots.plot!(p2, title = "T ∈ cell faces")
+p2 = plot!(p2, title = "T ∈ cell faces")
 
-Plots.plot(p1, p2)
+plot(p1, p2)
 ```

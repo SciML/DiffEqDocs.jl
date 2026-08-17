@@ -58,16 +58,17 @@ For example, to turn off precompilation for non-default problem types
 (specialization levels) and all stiff/implicit/low-storage solvers,
 you can execute the following code in your active project.
 
-```
-import Preferences, UUIDs
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
-Preferences.set_preferences!(UUIDs.UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
+```julia
+import Preferences: set_preferences!
+import UUIDs: UUID
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNonStiff" => true)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileStiff" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSwitch" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileLowStorage" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileDefaultSpecialize" => true)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileAutoSpecialize" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileFunctionWrapperSpecialize" => false)
+set_preferences!(UUID("1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"), "PrecompileNoSpecialize" => false)
 ```
 
 This will create a `LocalPreferences.toml` file next to the currently active
@@ -119,9 +120,9 @@ the old `using DifferentialEquations` shape:
 
 ```@example low_dep_1
 import OrdinaryDiffEq as ODE
-import OrdinaryDiffEqLowOrderRK as ODELow # Euler
-import DiffEqCallbacks as CB              # ProbIntsUncertainty
-import SciMLBase                          # EnsembleProblem
+import OrdinaryDiffEqLowOrderRK: Euler
+import DiffEqCallbacks: ProbIntsUncertainty
+import SciMLBase: EnsembleProblem
 function fitz(du, u, p, t)
     V, R = u
     a, b, c = p
@@ -133,9 +134,9 @@ u0 = [-1.0; 1.0]
 tspan = (0.0, 20.0)
 p = (0.2, 0.2, 3.0)
 prob = ODE.ODEProblem(fitz, u0, tspan, p)
-cb = CB.ProbIntsUncertainty(0.2, 1)
-ensemble_prob = SciMLBase.EnsembleProblem(prob)
-sim = ODE.solve(ensemble_prob, ODELow.Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
+cb = ProbIntsUncertainty(0.2, 1)
+ensemble_prob = EnsembleProblem(prob)
+sim = ODE.solve(ensemble_prob, Euler(), trajectories = 100, callback = cb, dt = 1 / 10)
 ```
 
 If you encounter an unfamiliar name and want to discover which package owns it,
@@ -143,7 +144,7 @@ use `@which`:
 
 ```@example low_dep_1
 import InteractiveUtils: @which # hide
-@which CB.ProbIntsUncertainty(0.2, 1)
+@which ProbIntsUncertainty(0.2, 1)
 ```
 
 Note that due to the way Julia dependencies work, any internal function in the

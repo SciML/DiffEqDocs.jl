@@ -13,8 +13,8 @@ If you're getting some cold feet to jump in to DiffEq land, here are some handcr
 The Radioactive decay problem is the first order linear ODE problem of an exponential with a negative coefficient, which represents the half-life of the process in question. Should the coefficient be positive, this would represent a population growth equation. ``λ`` is known as the decay rate, and can be related to the half-life as ``λ = \ln(2)/t_{1/2}``.
 
 ```@example physics
-import OrdinaryDiffEq as ODE, Plots
-Plots.gr()
+import OrdinaryDiffEq as ODE
+import Plots: plot, plot!
 
 #Half-life of Carbon-14 is 5,730 years.
 t½ = 5.73
@@ -31,12 +31,12 @@ prob = ODE.ODEProblem(radioactivedecay, u₀, tspan)
 sol = ODE.solve(prob, ODE.Tsit5())
 
 #Plot
-Plots.plot(
+plot(
     sol, linewidth = 2, title = "Carbon-14 half-life",
     xaxis = "Time in thousands of years", yaxis = "Ratio left",
     label = "Numerical Solution"
 )
-Plots.plot!(sol.t, t -> 2^(-t / t½), lw = 3, ls = :dash, label = "Analytical Solution")
+plot!(sol.t, t -> 2^(-t / t½), lw = 3, ls = :dash, label = "Analytical Solution")
 ```
 
 ## Second Order Linear ODE
@@ -73,8 +73,8 @@ we can use `SecondOrderODEProblem` as follows.
 ```@example physics
 # Simple Harmonic Oscillator Problem
 import OrdinaryDiffEq as ODE
-import OrdinaryDiffEqRKN as ODERKN # DPRKN6
-import Plots
+import OrdinaryDiffEqRKN: DPRKN6
+import Plots: plot, plot!
 
 #Parameters
 ω = 1
@@ -94,15 +94,15 @@ end
 
 #Pass to solvers
 prob = ODE.SecondOrderODEProblem(harmonicoscillator, dx₀, x₀, tspan, ω)
-sol = ODE.solve(prob, ODERKN.DPRKN6())
+sol = ODE.solve(prob, DPRKN6())
 
 #Plot
-Plots.plot(
+plot(
     sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
     xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"]
 )
-Plots.plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
-Plots.plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
+plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
+plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
 ```
 
 Note that the order of the variables (and initial conditions) is `dx`, `x`.
@@ -137,7 +137,8 @@ of first order ODEs by employing the notation ``ω(t) = \dot{θ}``.
 
 ```@example physics
 # Simple Pendulum Problem
-import OrdinaryDiffEq as ODE, Plots
+import OrdinaryDiffEq as ODE
+import Plots: plot, plot!
 
 #Constants
 const g = 9.81
@@ -160,7 +161,7 @@ prob = ODE.ODEProblem(simplependulum, u₀, tspan)
 sol = ODE.solve(prob, ODE.Tsit5())
 
 #Plot
-Plots.plot(
+plot(
     sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
     yaxis = "Height", label = ["\\theta" "d\\theta"]
 )
@@ -169,21 +170,21 @@ Plots.plot(
 So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.
 
 ```@example physics
-p = Plots.plot(
+p = plot(
     sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
     xaxis = "Angular position", yaxis = "Angular velocity", leg = false
 )
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODE.ODEProblem(prob.f, u0, (0.0, tspan))
     sol = ODE.solve(_prob, ODE.Vern9()) # Use Vern9 solver for higher accuracy
-    return Plots.plot!(p, sol, idxs = (1, 2))
+    return plot!(p, sol, idxs = (1, 2))
 end
 for i in (-4pi):(pi / 2):(4π)
     for j in (-4pi):(pi / 2):(4π)
         phase_plot(prob, [j, i], p)
     end
 end
-Plots.plot(p, xlims = (-9, 9))
+plot(p, xlims = (-9, 9))
 ```
 
 #### Double Pendulum
@@ -205,7 +206,8 @@ its motion are given by the following (taken from this [Stack Overflow question]
 
 ```@example physics
 #Double Pendulum Problem
-import OrdinaryDiffEq as ODE, Plots
+import OrdinaryDiffEq as ODE
+import Plots: plot, plot!, scatter, scatter!
 
 #Constants and setup
 const m₁, m₂, L₁, L₂ = 1, 2, 1, 2
@@ -255,7 +257,7 @@ sol = ODE.solve(double_pendulum_problem, ODE.Vern7(), abstol = 1.0e-10, dt = 0.0
 ```@example physics
 #Obtain coordinates in Cartesian Geometry
 ts, ps = polar2cart(sol, l1 = L₁, l2 = L₂, dt = 0.01)
-Plots.plot(ps...)
+plot(ps...)
 ```
 
 ##### Poincaré section
@@ -269,7 +271,6 @@ The Poincaré section in this is given by the collection of ``(β,l_β)`` when `
 
 ```@example physics
 #Constants and setup
-import OrdinaryDiffEq as ODE
 initial2 = [0.01, 0.005, 0.01, 0.01]
 tspan2 = (0.0, 500.0)
 
@@ -306,17 +307,17 @@ function poincare_map(prob, u₀, p; callback = cb)
         _prob, ODE.Vern9(), save_everystep = false, save_start = false,
         save_end = false, callback = cb, abstol = 1.0e-16, reltol = 1.0e-16
     )
-    return Plots.scatter!(p, sol, idxs = (3, 4), markersize = 3, msw = 0)
+    return scatter!(p, sol, idxs = (3, 4), markersize = 3, msw = 0)
 end
 ```
 
 ```@example physics
 lβrange = -0.02:0.0025:0.02
-p = Plots.scatter(sol2, idxs = (3, 4), leg = false, markersize = 3, msw = 0)
+p = scatter(sol2, idxs = (3, 4), leg = false, markersize = 3, msw = 0)
 for lβ in lβrange
     poincare_map(poincare, [0.01, 0.01, 0.01, lβ], p)
 end
-Plots.plot(p, xlabel = "\\beta", ylabel = "l_\\beta", ylims = (0, 0.03))
+plot(p, xlabel = "\\beta", ylabel = "l_\\beta", ylims = (0, 0.03))
 ```
 
 #### Hénon-Heiles System
@@ -351,7 +352,8 @@ E = T+V = V(x,y) + \frac{1}{2} \left(\dot{x}^2+\dot{y}^2\right).
 The total energy should conserve as this system evolves.
 
 ```@example physics
-import OrdinaryDiffEq as ODE, Plots
+import OrdinaryDiffEq as ODE
+import Plots: plot, plot!
 
 #Setup
 initial = [0.0, 0.1, 0.5, 0]
@@ -379,7 +381,7 @@ sol = ODE.solve(prob, ODE.Vern9(), abstol = 1.0e-16, reltol = 1.0e-16);
 
 ```@example physics
 # Plot the orbit
-Plots.plot(
+plot(
     sol, idxs = (1, 2), title = "The orbit of the Hénon-Heiles system",
     xaxis = "x", yaxis = "y", leg = false
 )
@@ -390,11 +392,11 @@ Plots.plot(
 @show sol.retcode
 
 #Plot -
-Plots.plot(
+plot(
     sol, idxs = (1, 3), title = "Phase space for the Hénon-Heiles system",
     xaxis = "Position", yaxis = "Velocity"
 )
-Plots.plot!(sol, idxs = (2, 4), leg = false)
+plot!(sol, idxs = (2, 4), leg = false)
 ```
 
 ```@example physics
@@ -406,7 +408,7 @@ energy = map(x -> E(x...), sol.u)
 @show ΔE = energy[1] - energy[end]
 
 #Plot
-Plots.plot(
+plot(
     sol.t, energy .- energy[1], title = "Change in Energy over Time",
     xaxis = "Time in iterations", yaxis = "Change in Energy"
 )
@@ -435,18 +437,18 @@ Notice that we get the same results:
 
 ```@example physics
 # Plot the orbit
-Plots.plot(
+plot(
     sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system",
     xaxis = "x", yaxis = "y", leg = false
 )
 ```
 
 ```@example physics
-Plots.plot(
+plot(
     sol2, idxs = (3, 1), title = "Phase space for the Hénon-Heiles system",
     xaxis = "Position", yaxis = "Velocity"
 )
-Plots.plot!(sol2, idxs = (4, 2), leg = false)
+plot!(sol2, idxs = (4, 2), leg = false)
 ```
 
 but now the energy change is essentially zero:
@@ -457,7 +459,7 @@ energy = map(x -> E(x[3], x[4], x[1], x[2]), sol2.u)
 @show ΔE = energy[1] - energy[end]
 
 #Plot
-Plots.plot(
+plot(
     sol2.t, energy .- energy[1], title = "Change in Energy over Time",
     xaxis = "Time in iterations", yaxis = "Change in Energy"
 )
@@ -466,11 +468,10 @@ Plots.plot(
 And let's try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn't symplectic.
 
 ```@example physics
-sol3 = ODE.solve(prob, ODERKN.DPRKN6());
+sol3 = ODE.solve(prob, DPRKN6());
 energy = map(x -> E(x[3], x[4], x[1], x[2]), sol3.u)
 @show ΔE = energy[1] - energy[end]
-Plots.gr()
-Plots.plot(
+plot(
     sol3.t, energy .- energy[1], title = "Change in Energy over Time",
     xaxis = "Time in iterations", yaxis = "Change in Energy"
 )

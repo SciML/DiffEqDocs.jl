@@ -46,8 +46,8 @@ last row of `M` is just zero. We can implement this form as:
 
 ```@example dae
 import DifferentialEquations as DE
-import OrdinaryDiffEqRosenbrock as ODERosenbrock # Rodas5
-import Plots
+import OrdinaryDiffEqRosenbrock: Rodas5
+import Plots: plot
 function rober(du, u, p, t)
     y₁, y₂, y₃ = u
     k₁, k₂, k₃ = p
@@ -63,9 +63,9 @@ M = Float64[
 ]
 f = DE.ODEFunction(rober, mass_matrix = M)
 prob_mm = DE.ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1.0e5), (0.04, 3.0e7, 1.0e4))
-sol = DE.solve(prob_mm, ODERosenbrock.Rodas5(), reltol = 1.0e-8, abstol = 1.0e-8)
+sol = DE.solve(prob_mm, Rodas5(), reltol = 1.0e-8, abstol = 1.0e-8)
 
-Plots.plot(sol, xscale = :log10, tspan = (1.0e-6, 1.0e5), layout = (3, 1))
+plot(sol, xscale = :log10, tspan = (1.0e-6, 1.0e5), layout = (3, 1))
 ```
 
 !!! note
@@ -154,10 +154,10 @@ parameter. The most commonly used initialization algorithm is `BrownFullBasicIni
 which modifies the algebraic variables and derivatives to satisfy the constraints:
 
 ```@example dae
-import Sundials
+import Sundials: IDA
 import DiffEqBase
 # Explicitly use Brown's initialization algorithm
-sol = DE.solve(prob, Sundials.IDA(), initializealg = DiffEqBase.BrownFullBasicInit())
+sol = DE.solve(prob, IDA(), initializealg = DiffEqBase.BrownFullBasicInit())
 ```
 
 If you're confident your initial conditions are already consistent, you can verify
@@ -165,7 +165,7 @@ this using `CheckInit()`:
 
 ```@example dae
 # This will verify initial conditions and error if they're inconsistent
-sol_check = DE.solve(prob, Sundials.IDA(), initializealg = DiffEqBase.CheckInit())
+sol_check = DE.solve(prob, IDA(), initializealg = DiffEqBase.CheckInit())
 ```
 
 For more details on DAE initialization options, see the
@@ -176,7 +176,7 @@ on a logarithmic scale. We'll also plot each on a different subplot, to allow
 scaling the y-axis appropriately.
 
 ```@example dae
-Plots.plot(sol, xscale = :log10, tspan = (1.0e-6, 1.0e5), layout = (3, 1))
+plot(sol, xscale = :log10, tspan = (1.0e-6, 1.0e5), layout = (3, 1))
 ```
 
 ### Handling Inconsistent Initial Conditions
@@ -194,12 +194,12 @@ prob_inconsistent = DE.DAEProblem(
 )
 
 # This would error with CheckInit() because conditions are inconsistent:
-# sol_error = DE.solve(prob_inconsistent, Sundials.IDA(),
+# sol_error = DE.solve(prob_inconsistent, IDA(),
 #                      initializealg = DiffEqBase.CheckInit())
 
 # But BrownFullBasicInit() will fix the inconsistency automatically:
 sol_fixed = DE.solve(
-    prob_inconsistent, Sundials.IDA(),
+    prob_inconsistent, IDA(),
     initializealg = DiffEqBase.BrownFullBasicInit()
 )
 

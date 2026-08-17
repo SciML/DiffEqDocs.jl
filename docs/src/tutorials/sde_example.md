@@ -42,8 +42,8 @@ nothing # hide
 ```
 
 ```@example sde
-import Plots
-Plots.plot(sol)
+import Plots: plot, plot!
+plot(sol)
 ```
 
 ### Using Higher Order Methods
@@ -69,7 +69,7 @@ nothing # hide
 ```
 
 ```@example sde
-Plots.plot(sol, plot_analytic = true)
+plot(sol, plot_analytic = true)
 ```
 
 Now, we choose a higher-order solver `SDE.SRIW1()` for better accuracy. By default,
@@ -82,7 +82,7 @@ nothing # hide
 ```
 
 ```@example sde
-Plots.plot(sol, plot_analytic = true)
+plot(sol, plot_analytic = true)
 ```
 
 Now, let's allow the solver to automatically determine a starting `dt`. This estimate
@@ -94,7 +94,7 @@ nothing # hide
 ```
 
 ```@example sde
-Plots.plot(sol, plot_analytic = true)
+plot(sol, plot_analytic = true)
 ```
 
 We can instead start the method with a larger `dt` by passing it to `solve`:
@@ -105,7 +105,7 @@ nothing # hide
 ```
 
 ```@example sde
-Plots.plot(sol, plot_analytic = true)
+plot(sol, plot_analytic = true)
 ```
 
 ### Ensemble Simulations
@@ -144,9 +144,9 @@ the statistics at every `0.01` timesteps and plot the average + error using:
 ```@example sde
 import StochasticDiffEq as SDE
 summ = SDE.EnsembleSummary(sol, 0:0.01:1)
-Plots.plot(summ, labels = "Middle 95%")
+plot(summ, labels = "Middle 95%")
 summ = SDE.EnsembleSummary(sol, 0:0.01:1; quantiles = [0.25, 0.75])
-Plots.plot!(summ, labels = "Middle 50%", legend = true)
+plot!(summ, labels = "Middle 50%", legend = true)
 ```
 
 Additionally, we can easily calculate the correlation between the values at `t=0.2`
@@ -173,7 +173,7 @@ As an example, we consider a stochastic variant of the Lorenz equations, where w
 
 ```@example sde2
 import StochasticDiffEq as SDE
-import Plots
+import Plots: plot
 
 function f!(du, u, p, t)
     du[1] = 10.0 * (u[2] - u[1])
@@ -195,7 +195,7 @@ nothing # hide
 ```
 
 ```@example sde2
-Plots.plot(sol, idxs = (1, 2, 3))
+plot(sol, idxs = (1, 2, 3))
 ```
 
 Note that it's okay for the noise function to mix terms. For example
@@ -224,7 +224,7 @@ let's solve a linear SDE with scalar noise using a high order algorithm:
 
 ```@example sde3
 import StochasticDiffEq as SDE
-import Plots
+import Plots: plot
 f!(du, u, p, t) = (du .= u)
 g!(du, u, p, t) = (du .= u)
 u0 = rand(4, 2)
@@ -236,7 +236,7 @@ nothing # hide
 ```
 
 ```@example sde3
-Plots.plot(sol)
+plot(sol)
 ```
 
 ## Example 4: Systems of SDEs with Non-Diagonal Noise
@@ -294,12 +294,12 @@ be any `AbstractMatrix` type. Thus, we can define the problem as
 
 ```@example sde4
 # Define a sparse matrix by making a dense matrix and setting some values as not zero
-import SparseArrays
+import SparseArrays: sparse
 A = zeros(2, 4)
 A[1, 1] = 1
 A[1, 4] = 1
 A[2, 4] = 1
-A = SparseArrays.sparse(A)
+A = sparse(A)
 
 # Make `g!` write the sparse matrix values
 function g!(du, u, p, t)

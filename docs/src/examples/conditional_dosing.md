@@ -18,10 +18,9 @@ prob = DE.ODEProblem(f, u0, (0.0, 10.0))
 Let's see what the solution looks like without any events.
 
 ```@example dosing
+import Plots: plot
 sol = DE.solve(prob, DE.Tsit5())
-import Plots;
-Plots.gr();
-Plots.plot(sol)
+plot(sol)
 ```
 
 We see that at time `t=4`, the patient should receive a dose. Let's code up that event. We need to check at `t=4` if the concentration `u[1]/4` is `<4`, and if so, add `10` to `u[1]`. We do this with the following:
@@ -36,9 +35,7 @@ Now we will give this callback to the solver, and tell it to stop at `t=4` so th
 
 ```@example dosing
 sol = DE.solve(prob, DE.Tsit5(), tstops = [4.0], callback = cb)
-import Plots;
-Plots.gr();
-Plots.plot(sol)
+plot(sol)
 ```
 
 Let's show that it actually added 10 instead of setting the value to 10. We could have set the value using `affect!(integrator) = integrator.u[1] = 10`
@@ -62,16 +59,12 @@ prob = DE.ODEProblem(f, u0, (0.0, 10.0))
 
 ```@example dosing
 sol = DE.solve(prob, DE.Tsit5())
-import Plots;
-Plots.gr();
-Plots.plot(sol)
+plot(sol)
 ```
 
 Under the same criteria, with the same event, this patient will not receive a second dose:
 
 ```@example dosing
 sol = DE.solve(prob, DE.Tsit5(), tstops = [4.0], callback = cb)
-import Plots;
-Plots.gr();
-Plots.plot(sol)
+plot(sol)
 ```

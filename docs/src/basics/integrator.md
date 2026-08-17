@@ -282,20 +282,19 @@ For an example of manually chaining together the iterator interface and plotting
 one should try the following:
 
 ```julia
-import DifferentialEquations as DE, DiffEqProblemLibrary, Plots
+import DifferentialEquations as DE, DiffEqProblemLibrary
+import Plots: plot, plot!
 
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
-import Plots
 integrator = DE.init(prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5])
-pyplot(show = true)
-Plots.plot(integrator)
+plot(integrator)
 for i in integrator
-    display(Plots.plot!(integrator, idxs = (0, 1), legend = false))
+    display(plot!(integrator, idxs = (0, 1), legend = false))
 end
 DE.step!(integrator);
-Plots.plot!(integrator, idxs = (0, 1), legend = false);
+plot!(integrator, idxs = (0, 1), legend = false);
 savefig("iteratorplot.png")
 ```
 

@@ -43,12 +43,12 @@ tspan = (0.0, 1.0)
 prob = DE.ODEProblem(f, u0, tspan)
 sol = DE.solve(prob, DE.Tsit5(), reltol = 1.0e-8, abstol = 1.0e-8)
 
-import Plots
-Plots.plot(
+import Plots: plot, plot!
+plot(
     sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!", # legend=false
 )
-Plots.plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
+plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 where the pieces are described below.
@@ -272,9 +272,9 @@ object, simply call plot:
 
 ```@example ODE2
 #]add Plots # You need to install Plots.jl before your first time using it!
-import Plots
+import Plots: plot, plot!
 #plotly() # You can optionally choose a plotting backend
-Plots.plot(sol)
+plot(sol)
 ```
 
 The plot function can be formatted using [the attributes available in Plots.jl](https://juliaplots.org/).
@@ -287,7 +287,7 @@ axis labels, and change the legend (note we can disable the legend with
 `legend=false`) to get a nice-looking plot:
 
 ```@example ODE2
-Plots.plot(
+plot(
     sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
     xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!", # legend=false
 )
@@ -296,7 +296,7 @@ Plots.plot(
 We can then add to the plot using the `plot!` command:
 
 ```@example ODE2
-Plots.plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
+plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
 ## Example 2: Solving Systems of Equations
@@ -346,8 +346,8 @@ Using the plot recipe tools
 we can choose to do a 3D phase space plot between the different variables:
 
 ```@example ODE3
-import Plots
-Plots.plot(sol, idxs = (1, 2, 3))
+import Plots: plot
+plot(sol, idxs = (1, 2, 3))
 ```
 
 Note that the default plot for multidimensional systems is an overlay of
@@ -355,7 +355,7 @@ each timeseries. We can plot the timeseries of just the second component using
 the variable choices interface once more:
 
 ```@example ODE3
-Plots.plot(sol, idxs = (0, 2))
+plot(sol, idxs = (0, 2))
 ```
 
 Note that "variable 0" corresponds to the independent variable ("time").
@@ -422,7 +422,7 @@ where `θ` and `ω` are the angular deviation of the pendulum from the vertical 
 
 ```@example ODE4
 import DifferentialEquations as DE
-import Plots
+import Plots: plot
 
 l = 1.0                             # length [m]
 m = 1.0                             # mass [kg]
@@ -444,7 +444,7 @@ M = t -> 0.1sin(t)                  # external torque [Nm]
 prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
 sol = DE.solve(prob)
 
-Plots.plot(
+plot(
     sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1)
 )
 ```
@@ -463,7 +463,7 @@ We can define a matrix of linear ODEs as follows:
 
 ```@example ODE4
 import DifferentialEquations as DE
-import Plots
+import Plots: plot
 A = [
     1.0 0 0 -5
     4 -2 4 -3
@@ -482,7 +482,7 @@ as before.
 
 ```@example ODE4
 sol = DE.solve(prob)
-Plots.plot(sol)
+plot(sol)
 ```
 
 We can instead use the in-place form by using Julia's in-place matrix multiplication
@@ -500,19 +500,19 @@ normally have. This means that they can be used to solve the same problem as
 above, with the only change being the type for the initial condition and constants:
 
 ```@example ODE4
-import StaticArrays
-A = StaticArrays.@SMatrix [
+import StaticArrays: @SMatrix
+A = @SMatrix [
     1.0 0.0 0.0 -5.0
     4.0 -2.0 4.0 -3.0
     -4.0 0.0 0.0 1.0
     5.0 -2.0 2.0 3.0
 ]
-u0 = StaticArrays.@SMatrix rand(4, 2)
+u0 = @SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u
 prob = DE.ODEProblem(f2, u0, tspan)
 sol = DE.solve(prob)
-Plots.plot(sol)
+plot(sol)
 ```
 
 Note that the analysis tools generalize over to systems of equations as well.
