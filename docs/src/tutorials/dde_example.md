@@ -19,10 +19,10 @@ In this example, we will solve [a model of breast cancer growth kinetics](https:
 
 ```math
 \begin{aligned}
-dx_{0} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{0}-q_{0}\right)x_{0}(t)-d_{0}x_{0}(t)\\
-dx_{1} &= \frac{v_{0}}{1+\beta_{0}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{0}+q_{0}\right)x_{0}(t)\\
-       &+ \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(p_{1}-q_{1}\right)x_{1}(t)-d_{1}x_{1}(t)\\
-dx_{2} &= \frac{v_{1}}{1+\beta_{1}\left(x_{2}(t-\tau)\right)^{2}}\left(1-p_{1}+q_{1}\right)x_{1}(t)-d_{2}x_{2}(t)
+dx_0 &= \frac{v_0}{1 + β_0 \left(x_2(t-τ)\right)^2} \left(p_0 - q_0\right) x_0(t) - d_0 x_0(t) \\
+dx_1 &= \frac{v_0}{1 + β_0 \left(x_2(t-τ)\right)^2} \left(1 - p_0 + q_0\right) x_0(t) \\
+     &+ \frac{v_1}{1 + β_1 \left(x_2(t-τ)\right)^2} \left(p_1 - q_1\right) x_1(t) - d_1 x_1(t) \\
+dx_2 &= \frac{v_1}{1 + β_1 \left(x_2(t-τ)\right)^2} \left(1 - p_1 + q_1\right) x_1(t) - d_2 x_2(t)
 \end{aligned}
 ```
 
@@ -41,10 +41,11 @@ import OrdinaryDiffEqLowOrderRK as ODELow # RK4 is no longer reexported by Diffe
 function bc_model(du, u, h, p, t)
     p0, q0, v0, d0, p1, q1, v1, d1, d2, beta0, beta1, tau = p
     hist3 = h(p, t - tau)[3]
-    du[1] = (v0 / (1 + beta0 * (hist3^2))) * (p0 - q0) * u[1] - d0 * u[1]
-    du[2] = (v0 / (1 + beta0 * (hist3^2))) * (1 - p0 + q0) * u[1] +
-            (v1 / (1 + beta1 * (hist3^2))) * (p1 - q1) * u[2] - d1 * u[2]
-    du[3] = (v1 / (1 + beta1 * (hist3^2))) * (1 - p1 + q1) * u[2] - d2 * u[3]
+    du[1] = (v0 / (1 + beta0 * hist3^2)) * (p0 - q0) * u[1] - d0 * u[1]
+    du[2] = (v0 / (1 + beta0 * hist3^2)) * (1 - p0 + q0) * u[1] +
+        (v1 / (1 + beta1 * hist3^2)) * (p1 - q1) * u[2] - d1 * u[2]
+    du[3] = (v1 / (1 + beta1 * hist3^2)) * (1 - p1 + q1) * u[2] - d2 * u[3]
+    return
 end
 ```
 
@@ -144,10 +145,11 @@ and then our DDE is:
 const out = zeros(3) # Define a cache variable
 function bc_model(du, u, h, p, t)
     h(out, p, t - tau) # updates out to be the correct history function
-    du[1] = (v0 / (1 + beta0 * (out[3]^2))) * (p0 - q0) * u[1] - d0 * u[1]
-    du[2] = (v0 / (1 + beta0 * (out[3]^2))) * (1 - p0 + q0) * u[1] +
-            (v1 / (1 + beta1 * (out[3]^2))) * (p1 - q1) * u[2] - d1 * u[2]
-    du[3] = (v1 / (1 + beta1 * (out[3]^2))) * (1 - p1 + q1) * u[2] - d2 * u[3]
+    du[1] = (v0 / (1 + beta0 * out[3]^2)) * (p0 - q0) * u[1] - d0 * u[1]
+    du[2] = (v0 / (1 + beta0 * out[3]^2)) * (1 - p0 + q0) * u[1] +
+        (v1 / (1 + beta1 * out[3]^2)) * (p1 - q1) * u[2] - d1 * u[2]
+    du[3] = (v1 / (1 + beta1 * out[3]^2)) * (1 - p1 + q1) * u[2] - d2 * u[3]
+    return
 end
 ```
 
@@ -161,8 +163,9 @@ function bc_model(du, u, h, p, t)
     u3_past_sq = h(p, t - tau; idxs = 3)^2
     du[1] = (v0 / (1 + beta0 * (u3_past_sq))) * (p0 - q0) * u[1] - d0 * u[1]
     du[2] = (v0 / (1 + beta0 * (u3_past_sq))) * (1 - p0 + q0) * u[1] +
-            (v1 / (1 + beta1 * (u3_past_sq))) * (p1 - q1) * u[2] - d1 * u[2]
+        (v1 / (1 + beta1 * (u3_past_sq))) * (p1 - q1) * u[2] - d1 * u[2]
     du[3] = (v1 / (1 + beta1 * (u3_past_sq))) * (1 - p1 + q1) * u[2] - d2 * u[3]
+    return
 end
 ```
 

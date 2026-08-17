@@ -15,11 +15,13 @@ tspan = (0.0, 100.0)
 #Define the problem
 function double_pendulum_hamiltonian(udot, u, p, t)
     α, lα, β, lβ = u
-    udot .= [2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
+    return udot .= [
+        2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
         -2sin(α) - sin(α + β),
         2(-(1 + cos(β))lα + (3 + 2cos(β))lβ) / (3 - cos(2β)),
         -sin(α + β) - 2sin(β) * (((lα - lβ)lβ) / (3 - cos(2β))) +
-        2sin(2β) * ((lα^2 - 2(1 + cos(β))lα * lβ + (3 + 2cos(β))lβ^2) / (3 - cos(2β))^2)]
+            2sin(2β) * ((lα^2 - 2(1 + cos(β))lα * lβ + (3 + 2cos(β))lβ^2) / (3 - cos(2β))^2),
+    ]
 end
 
 #Pass to solvers

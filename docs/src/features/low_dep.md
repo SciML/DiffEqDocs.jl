@@ -127,6 +127,7 @@ function fitz(du, u, p, t)
     a, b, c = p
     du[1] = c * (V - V^3 / 3 + R)
     du[2] = -(1 / c) * (V - a - b * R)
+    return
 end
 u0 = [-1.0; 1.0]
 tspan = (0.0, 20.0)
@@ -141,8 +142,8 @@ If you encounter an unfamiliar name and want to discover which package owns it,
 use `@which`:
 
 ```@example low_dep_1
-import InteractiveUtils # hide
-InteractiveUtils.@which CB.ProbIntsUncertainty(0.2, 1)
+import InteractiveUtils: @which # hide
+@which CB.ProbIntsUncertainty(0.2, 1)
 ```
 
 Note that due to the way Julia dependencies work, any internal function in the

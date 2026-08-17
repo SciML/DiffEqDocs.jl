@@ -477,11 +477,13 @@ import DifferentialEquations as DE
 function func(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
+    return
 end
 function f(p)
     prob = DE.ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
     # Lower tolerances to show the methods converge to the same value
-    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12).u[end]
+    sol = DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1.0e-12, reltol = 1.0e-12)
+    return sol.u[end]
 end
 ```
 

@@ -17,7 +17,7 @@ import OrdinaryDiffEq as ODE, Plots
 Plots.gr()
 
 #Half-life of Carbon-14 is 5,730 years.
-t½ = 5.730
+t½ = 5.73
 
 #Setup
 u₀ = 1.0
@@ -31,9 +31,11 @@ prob = ODE.ODEProblem(radioactivedecay, u₀, tspan)
 sol = ODE.solve(prob, ODE.Tsit5())
 
 #Plot
-Plots.plot(sol, linewidth = 2, title = "Carbon-14 half-life",
+Plots.plot(
+    sol, linewidth = 2, title = "Carbon-14 half-life",
     xaxis = "Time in thousands of years", yaxis = "Ratio left",
-    label = "Numerical Solution")
+    label = "Numerical Solution"
+)
 Plots.plot!(sol.t, t -> 2^(-t / t½), lw = 3, ls = :dash, label = "Analytical Solution")
 ```
 
@@ -87,7 +89,7 @@ A = √(x₀[1]^2 + dx₀[1]^2)
 
 #Define the problem
 function harmonicoscillator(ddu, du, u, ω, t)
-    ddu .= -ω^2 * u
+    return ddu .= -ω^2 * u
 end
 
 #Pass to solvers
@@ -95,8 +97,10 @@ prob = ODE.SecondOrderODEProblem(harmonicoscillator, dx₀, x₀, tspan, ω)
 sol = ODE.solve(prob, ODERKN.DPRKN6())
 
 #Plot
-Plots.plot(sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
-    xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"])
+Plots.plot(
+    sol, idxs = [2, 1], linewidth = 2, title = "Simple Harmonic Oscillator",
+    xaxis = "Time", yaxis = "Elongation", label = ["x" "dx"]
+)
 Plots.plot!(t -> A * cos(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution x")
 Plots.plot!(t -> -A * ω * sin(ω * t - ϕ), lw = 3, ls = :dash, label = "Analytical Solution dx")
 ```
@@ -148,6 +152,7 @@ function simplependulum(du, u, p, t)
     θ, ω = u
     du[1] = ω
     du[2] = -(g / L) * sin(θ)
+    return
 end
 
 #Pass to solvers
@@ -155,19 +160,23 @@ prob = ODE.ODEProblem(simplependulum, u₀, tspan)
 sol = ODE.solve(prob, ODE.Tsit5())
 
 #Plot
-Plots.plot(sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
-    yaxis = "Height", label = ["\\theta" "d\\theta"])
+Plots.plot(
+    sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
+    yaxis = "Height", label = ["\\theta" "d\\theta"]
+)
 ```
 
 So now we know that behaviour of the position versus time. However, it will be useful to us to look at the phase space of the pendulum, i.e., and representation of all possible states of the system in question (the pendulum) by looking at its velocity and position. Phase space analysis is ubiquitous in the analysis of dynamical systems, and thus we will provide a few facilities for it.
 
 ```@example physics
-p = Plots.plot(sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
-    xaxis = "Angular position", yaxis = "Angular velocity", leg = false)
+p = Plots.plot(
+    sol, vars = (1, 2), xlims = (-9, 9), title = "Phase Space Plot",
+    xaxis = "Angular position", yaxis = "Angular velocity", leg = false
+)
 function phase_plot(prob, u0, p, tspan = 2pi)
     _prob = ODE.ODEProblem(prob.f, u0, (0.0, tspan))
     sol = ODE.solve(_prob, ODE.Vern9()) # Use Vern9 solver for higher accuracy
-    Plots.plot!(p, sol, idxs = (1, 2))
+    return Plots.plot!(p, sol, idxs = (1, 2))
 end
 for i in (-4pi):(pi / 2):(4π)
     for j in (-4pi):(pi / 2):(4π)
@@ -212,8 +221,11 @@ function polar2cart(sol; dt = 0.02, l1 = L₁, l2 = L₂, vars = (2, 4))
 
     x1 = l1 * sin.(p1)
     y1 = l1 * -cos.(p1)
-    (u, (x1 + l2 * sin.(p2),
-         y1 - l2 * cos.(p2)))
+    r = (
+        x1 + l2 * sin.(p2),
+        y1 - l2 * cos.(p2),
+    )
+    return (u, r)
 end
 
 #Define the Problem
@@ -222,18 +234,22 @@ function double_pendulum(xdot, x, p, t)
     Δθ = θ₁ - θ₂
     sΔ, cΔ = sincos(Δθ)
     xdot[1] = ω₁
-    xdot[2] = -((g * (2m₁ + m₂) * sin(θ₁) +
-                 m₂ * g * sin(θ₁ - 2θ₂) +
-                 2m₂ * (L₂ * ω₂^2 + L₁ * ω₁^2 * cΔ) * sΔ) /
-                (2L₁ * (m₁ + m₂ * sΔ^2)))
+    xdot[2] = -(
+        (
+            g * (2m₁ + m₂) * sin(θ₁) +
+                m₂ * g * sin(θ₁ - 2θ₂) +
+                2m₂ * (L₂ * ω₂^2 + L₁ * ω₁^2 * cΔ) * sΔ
+        ) /
+            (2L₁ * (m₁ + m₂ * sΔ^2))
+    )
     xdot[3] = ω₂
-    xdot[4] = ((m₁ + m₂) * (L₁ * ω₁^2 + g * cos(θ₁)) + L₂ * m₂ * ω₂^2 * cΔ) * sΔ /
-              (L₂ * (m₁ + m₂ * sΔ^2))
+    return xdot[4] = ((m₁ + m₂) * (L₁ * ω₁^2 + g * cos(θ₁)) + L₂ * m₂ * ω₂^2 * cΔ) * sΔ /
+        (L₂ * (m₁ + m₂ * sΔ^2))
 end
 
 #Pass to Solvers
 double_pendulum_problem = ODE.ODEProblem(double_pendulum, initial, tspan)
-sol = ODE.solve(double_pendulum_problem, ODE.Vern7(), abstol = 1e-10, dt = 0.05);
+sol = ODE.solve(double_pendulum_problem, ODE.Vern7(), abstol = 1.0e-10, dt = 0.05);
 ```
 
 ```@example physics
@@ -260,29 +276,37 @@ tspan2 = (0.0, 500.0)
 #Define the problem
 function double_pendulum_hamiltonian(udot, u, p, t)
     α, lα, β, lβ = u
-    udot .= [2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
+    return udot .= [
+        2(lα - (1 + cos(β))lβ) / (3 - cos(2β)),
         -2sin(α) - sin(α + β),
         2(-(1 + cos(β))lα + (3 + 2cos(β))lβ) / (3 - cos(2β)),
         -sin(α + β) - 2sin(β) * (((lα - lβ)lβ) / (3 - cos(2β))) +
-        2sin(2β) * ((lα^2 - 2(1 + cos(β))lα * lβ + (3 + 2cos(β))lβ^2) / (3 - cos(2β))^2)]
+            2sin(2β) * ((lα^2 - 2(1 + cos(β))lα * lβ + (3 + 2cos(β))lβ^2) / (3 - cos(2β))^2),
+    ]
 end
 
 # Construct a ContinuousCallback
 condition(u, t, integrator) = u[1]
 affect!(integrator) = nothing
-cb = ODE.ContinuousCallback(condition, affect!, nothing,
-    save_positions = (true, false))
+cb = ODE.ContinuousCallback(
+    condition, affect!, nothing,
+    save_positions = (true, false)
+)
 
 # Construct Problem
 poincare = ODE.ODEProblem(double_pendulum_hamiltonian, initial2, tspan2)
-sol2 = ODE.solve(poincare, ODE.Vern9(), save_everystep = false, save_start = false,
-    save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
+sol2 = ODE.solve(
+    poincare, ODE.Vern9(), save_everystep = false, save_start = false,
+    save_end = false, callback = cb, abstol = 1.0e-16, reltol = 1.0e-16
+)
 
 function poincare_map(prob, u₀, p; callback = cb)
     _prob = ODE.ODEProblem(prob.f, u₀, prob.tspan)
-    sol = ODE.solve(_prob, ODE.Vern9(), save_everystep = false, save_start = false,
-        save_end = false, callback = cb, abstol = 1e-16, reltol = 1e-16)
-    Plots.scatter!(p, sol, idxs = (3, 4), markersize = 3, msw = 0)
+    sol = ODE.solve(
+        _prob, ODE.Vern9(), save_everystep = false, save_start = false,
+        save_end = false, callback = cb, abstol = 1.0e-16, reltol = 1.0e-16
+    )
+    return Plots.scatter!(p, sol, idxs = (3, 4), markersize = 3, msw = 0)
 end
 ```
 
@@ -345,17 +369,20 @@ function Hénon_Heiles(du, u, p, t)
     du[2] = dy
     du[3] = -x - 2x * y
     du[4] = y^2 - y - x^2
+    return
 end
 
 #Pass to solvers
 prob = ODE.ODEProblem(Hénon_Heiles, initial, tspan)
-sol = ODE.solve(prob, ODE.Vern9(), abstol = 1e-16, reltol = 1e-16);
+sol = ODE.solve(prob, ODE.Vern9(), abstol = 1.0e-16, reltol = 1.0e-16);
 ```
 
 ```@example physics
 # Plot the orbit
-Plots.plot(sol, idxs = (1, 2), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
-    yaxis = "y", leg = false)
+Plots.plot(
+    sol, idxs = (1, 2), title = "The orbit of the Hénon-Heiles system",
+    xaxis = "x", yaxis = "y", leg = false
+)
 ```
 
 ```@example physics
@@ -363,8 +390,10 @@ Plots.plot(sol, idxs = (1, 2), title = "The orbit of the Hénon-Heiles system", 
 @show sol.retcode
 
 #Plot -
-Plots.plot(sol, idxs = (1, 3), title = "Phase space for the Hénon-Heiles system",
-    xaxis = "Position", yaxis = "Velocity")
+Plots.plot(
+    sol, idxs = (1, 3), title = "Phase space for the Hénon-Heiles system",
+    xaxis = "Position", yaxis = "Velocity"
+)
 Plots.plot!(sol, idxs = (2, 4), leg = false)
 ```
 
@@ -377,8 +406,10 @@ energy = map(x -> E(x...), sol.u)
 @show ΔE = energy[1] - energy[end]
 
 #Plot
-Plots.plot(sol.t, energy .- energy[1], title = "Change in Energy over Time",
-    xaxis = "Time in iterations", yaxis = "Change in Energy")
+Plots.plot(
+    sol.t, energy .- energy[1], title = "Change in Energy over Time",
+    xaxis = "Time in iterations", yaxis = "Change in Energy"
+)
 ```
 
 ##### Symplectic Integration
@@ -392,6 +423,7 @@ function HH_acceleration!(dv, v, u, p, t)
     dx, dy = dv
     dv[1] = -x - 2x * y
     dv[2] = y^2 - y - x^2
+    return
 end
 initial_positions = [0.0, 0.1]
 initial_velocities = [0.5, 0.0]
@@ -404,13 +436,16 @@ Notice that we get the same results:
 ```@example physics
 # Plot the orbit
 Plots.plot(
-    sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system", xaxis = "x",
-    yaxis = "y", leg = false)
+    sol2, idxs = (3, 4), title = "The orbit of the Hénon-Heiles system",
+    xaxis = "x", yaxis = "y", leg = false
+)
 ```
 
 ```@example physics
-Plots.plot(sol2, idxs = (3, 1), title = "Phase space for the Hénon-Heiles system",
-    xaxis = "Position", yaxis = "Velocity")
+Plots.plot(
+    sol2, idxs = (3, 1), title = "Phase space for the Hénon-Heiles system",
+    xaxis = "Position", yaxis = "Velocity"
+)
 Plots.plot!(sol2, idxs = (4, 2), leg = false)
 ```
 
@@ -422,8 +457,10 @@ energy = map(x -> E(x[3], x[4], x[1], x[2]), sol2.u)
 @show ΔE = energy[1] - energy[end]
 
 #Plot
-Plots.plot(sol2.t, energy .- energy[1], title = "Change in Energy over Time",
-    xaxis = "Time in iterations", yaxis = "Change in Energy")
+Plots.plot(
+    sol2.t, energy .- energy[1], title = "Change in Energy over Time",
+    xaxis = "Time in iterations", yaxis = "Change in Energy"
+)
 ```
 
 And let's try to use a Runge-Kutta-Nyström solver to solve this. Note that Runge-Kutta-Nyström isn't symplectic.
@@ -433,8 +470,10 @@ sol3 = ODE.solve(prob, ODERKN.DPRKN6());
 energy = map(x -> E(x[3], x[4], x[1], x[2]), sol3.u)
 @show ΔE = energy[1] - energy[end]
 Plots.gr()
-Plots.plot(sol3.t, energy .- energy[1], title = "Change in Energy over Time",
-    xaxis = "Time in iterations", yaxis = "Change in Energy")
+Plots.plot(
+    sol3.t, energy .- energy[1], title = "Change in Energy over Time",
+    xaxis = "Time in iterations", yaxis = "Change in Energy"
+)
 ```
 
 Note that we are using the `DPRKN6` solver at `reltol=1e-3` (the default), yet it has a smaller energy variation than `Vern9` at `abstol=1e-16, reltol=1e-16`. Therefore, using specialized solvers to solve its particular problem is very efficient.

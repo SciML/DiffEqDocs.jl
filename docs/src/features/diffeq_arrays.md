@@ -41,14 +41,16 @@ In this example, we will show using heterogeneous units in dynamics equations. O
 arrays will be:
 
 ```@example diffeq_arrays
-import Unitful, RecursiveArrayTools, DifferentialEquations as DE
-import LinearAlgebra
+import DifferentialEquations as DE
+import RecursiveArrayTools: ArrayPartition
+import LinearAlgebra: norm
+import Unitful: @u_str      # Use units as u"..."
 
-r0 = [1131.340, -2282.343, 6672.423]Unitful.u"km"
-v0 = [-5.64305, 4.30333, 2.42879]Unitful.u"km/s"
-Δt = 86400.0 * 365Unitful.u"s"
-μ = 398600.4418Unitful.u"km^3/s^2"
-rv0 = RecursiveArrayTools.ArrayPartition(r0, v0)
+r0 = [1131.34, -2282.343, 6672.423]u"km"
+v0 = [-5.64305, 4.30333, 2.42879]u"km/s"
+Δt = 86400.0 * 365u"s"
+μ = 398600.4418u"km^3/s^2"
+rv0 = ArrayPartition(r0, v0)
 ```
 
 Here, `r0` is the initial positions, and `v0` are the initial velocities. `rv0`
@@ -57,9 +59,10 @@ terms of the `ArrayPartition`:
 
 ```@example diffeq_arrays
 function f(dy, y, μ, t)
-    r = LinearAlgebra.norm(y.x[1])
+    r = norm(y.x[1])
     dy.x[1] .= y.x[2]
     dy.x[2] .= -μ .* y.x[1] / r^3
+    return
 end
 ```
 
@@ -71,7 +74,7 @@ broadcasting will be efficient.
 Now to solve our equations, we do the same thing as always in DiffEq:
 
 ```@example diffeq_arrays
-prob = DE.ODEProblem(f, rv0, (0.0Unitful.u"s", Δt), μ)
+prob = DE.ODEProblem(f, rv0, (0.0u"s", Δt), μ)
 sol = DE.solve(prob, DE.Vern8())
 ```
 

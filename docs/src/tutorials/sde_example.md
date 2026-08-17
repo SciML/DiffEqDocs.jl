@@ -179,12 +179,14 @@ function f!(du, u, p, t)
     du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
     du[3] = u[1] * u[2] - (8 / 3) * u[3]
+    return
 end
 
 function g!(du, u, p, t)  # It actually represents a diagonal matrix [3.0 0 0; 0 3.0 0; 0 0 3.0]
     du[1] = 3.0
     du[2] = 3.0
     du[3] = 3.0
+    return
 end
 
 prob_sde_lorenz = SDE.SDEProblem(f!, g!, [1.0, 0.0, 0.0], (0.0, 10.0))
@@ -203,6 +205,7 @@ function g!(du, u, p, t)
     du[1] = sin(u[3]) * 3.0
     du[2] = u[2] * u[1] * 3.0
     du[3] = 3.0
+    return
 end
 ```
 
@@ -264,6 +267,7 @@ function g!(du, u, p, t)
     du[2, 2] = 0.2u[2]
     du[2, 3] = 0.3u[2]
     du[2, 4] = 1.8u[2]
+    return
 end
 prob = SDE.SDEProblem(f!, g!, ones(2), (0.0, 1.0), noise_rate_prototype = zeros(2, 4))
 ```
@@ -302,6 +306,7 @@ function g!(du, u, p, t)
     du[1, 1] = 0.3u[1]
     du[1, 4] = 0.12u[2]
     du[2, 4] = 1.8u[2]
+    return
 end
 
 # Make `g!` use the sparse matrix
@@ -342,10 +347,12 @@ In this problem, we have a diagonal noise problem given by:
 function f!(du, u, p, t)
     du[1] = μ * u[1]
     du[2] = κ * (Θ - u[2])
+    return
 end
 function g!(du, u, p, t)
     du[1] = √u[2] * u[1]
     du[2] = σ * √u[2]
+    return
 end
 ```
 
