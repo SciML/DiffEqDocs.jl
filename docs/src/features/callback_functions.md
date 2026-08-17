@@ -81,6 +81,7 @@ import DifferentialEquations as DE
 import DiffEqCallbacks as CB # PresetTimeCallback is no longer reexported by DifferentialEquations v8
 function f(du, u, p, t)
     du[1] = -u[1]
+    return
 end
 u0 = [10.0]
 const V = 1
@@ -173,6 +174,7 @@ Our ODE function will use this field as follows:
 function f(du, u, p, t)
     du[1] = -0.5 * u[1] + p
     du[2] = -0.5 * u[2]
+    return
 end
 ```
 
@@ -186,13 +188,8 @@ as follows:
 const tstop1 = [5.0]
 const tstop2 = [8.0]
 
-function condition(u, t, integrator)
-    t in tstop1
-end
-
-function condition2(u, t, integrator)
-    t in tstop2
-end
+condition(u, t, integrator) = t in tstop1
+condition2(u, t, integrator) = t in tstop2
 ```
 
 Now we have to apply an effect when these conditions are reached. When `condition`
@@ -202,10 +199,12 @@ we will decrease `p` to `-1.5`. This is done via the functions:
 ```@example callback2
 function affect!(integrator)
     integrator.p = 1.5
+    return
 end
 
 function affect2!(integrator)
     integrator.p = -1.5
+    return
 end
 ```
 
@@ -260,7 +259,7 @@ Since the effect is supposed to occur every timestep, we use the trivial conditi
 
 ```@example callback3
 condition = function (u, t, integrator)
-    true
+    return true
 end
 ```
 
@@ -276,7 +275,7 @@ end
 function (p::AutoAbstolAffect)(integrator)
     p.curmax = max(p.curmax, integrator.u)
     integrator.opts.abstol = p.curmax * integrator.opts.reltol
-    DE.derivative_discontinuity!(integrator, false)
+    return DE.derivative_discontinuity!(integrator, false)
 end
 ```
 
@@ -286,11 +285,11 @@ the absolute tolerance of the integrator as the algorithm states.
 Lastly, we can wrap it in a nice little constructor:
 
 ```@example callback3
-function AutoAbstol(save = true; init_curmax = 1e-6)
+function AutoAbstol(save = true; init_curmax = 1.0e-6)
     affect! = AutoAbstolAffect(init_curmax)
     condition = (u, t, integrator) -> true
     save_positions = (save, false)
-    DE.DiscreteCallback(condition, affect!, save_positions = save_positions)
+    return DE.DiscreteCallback(condition, affect!; save_positions)
 end
 ```
 
@@ -300,7 +299,7 @@ that we implemented. Now
 ```@example callback3
 import DifferentialEquations as DE
 import OrdinaryDiffEqLowOrderRK as ODELow # BS3
-cb = AutoAbstol(true; init_curmax = 1e-6)
+cb = AutoAbstol(true; init_curmax = 1.0e-6)
 ```
 
 returns the callback that we created. We can then solve an equation using this
@@ -309,9 +308,7 @@ interface rather than the solve interface, we can step through one by one
 to watch the absolute tolerance increase:
 
 ```@example callback3
-function g(u, p, t)
-    -u[1]
-end
+g(u, p, t) = -u[1]
 u0 = 10.0
 const V = 1
 prob = DE.ODEProblem(g, u0, (0.0, 10.0))
@@ -343,6 +340,7 @@ is the gravitational constant. This is the equation:
 function f(du, u, p, t)
     du[1] = u[2]
     du[2] = -p
+    return
 end
 ```
 
@@ -351,9 +349,8 @@ should always be positive, with an event occurring at 0.
 We thus want to check if the ball's height ever hits zero:
 
 ```@example callback4
-function condition(u, t, integrator) # Event when condition(u,t,integrator) == 0
-    u[1]
-end
+# Event when condition(u,t,integrator) == 0
+condition(u, t, integrator) = u[1]
 ```
 
 Notice that here we used the values `u` instead of the value from the `integrator`.
@@ -366,6 +363,7 @@ flip the velocity (the second variable)
 ```@example callback4
 function affect!(integrator)
     integrator.u[2] = -integrator.u[2]
+    return
 end
 ```
 
@@ -415,11 +413,12 @@ the bounce. This looks as follows:
 function dynamics!(du, u, p, t)
     du[1] = u[2]
     du[2] = p[1] * -9.8
+    return
 end
 function floor_aff!(int)
     int.p[1] = 0
     int.u[2] = 0
-    @show int.u[1], int.t
+    return @show int.u[1], int.t
 end
 floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
@@ -462,6 +461,7 @@ function floor_aff!(int)
     int.u[1] = 0
     int.u[2] = 0
     @show int.u[1], int.t
+    return
 end
 floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
@@ -485,11 +485,13 @@ find the accumulation point. Let's watch!
 function dynamics!(du, u, p, t)
     du[1] = u[2]
     du[2] = -9.8
+    return
 end
 function floor_aff!(int)
     int.u[2] *= -0.5
     int.p[1] += 1
     int.p[2] = int.t
+    return
 end
 floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
@@ -539,10 +541,11 @@ looks as follows:
 function dynamics!(du, u, p, t)
     du[1] = u[2]
     du[2] = p[1] * -9.8
+    return
 end
 function floor_aff!(int)
     int.u[2] *= -0.5
-    if int.dt > 1e-12
+    if int.dt > 1.0e-12
         DE.set_proposed_dt!(int, (int.t - int.tprev) / 100)
     else
         int.u[1] = 0
@@ -551,6 +554,7 @@ function floor_aff!(int)
     end
     int.p[2] += 1
     int.p[3] = int.t
+    return
 end
 floor_event = DE.ContinuousCallback(condition, floor_aff!)
 u0 = [1.0, 0.0]
@@ -565,7 +569,7 @@ point is reached at `t = 1.355261854357056`. To really see the accumulation,
 let's zoom in:
 
 ```@example callback4
-p1 = Plots.plot(sol, idxs = 1, tspan = (1.25, 1.40))
+p1 = Plots.plot(sol, idxs = 1, tspan = (1.25, 1.4))
 p2 = Plots.plot(sol, idxs = 1, tspan = (1.35, 1.36))
 p3 = Plots.plot(sol, idxs = 1, tspan = (1.354, 1.35526))
 p4 = Plots.plot(sol, idxs = 1, tspan = (1.35526, 1.35526185))
@@ -588,6 +592,7 @@ u0 = [1.0, 0.0]
 function fun2(du, u, p, t)
     du[2] = -u[1]
     du[1] = u[2]
+    return
 end
 tspan = (0.0, 10.0)
 prob = DE.ODEProblem(fun2, u0, tspan)
@@ -630,7 +635,7 @@ sol.t[end] # 3.1415902502224307
 Using a more accurate integration increases the accuracy of this prediction:
 
 ```@example callback4
-sol = DE.solve(prob, DE.Vern8(), callback = cb, reltol = 1e-12, abstol = 1e-12)
+sol = DE.solve(prob, DE.Vern8(), callback = cb, reltol = 1.0e-12, abstol = 1.0e-12)
 #π = 3.141592653589703...
 sol.t[end] # 3.1415926535896035
 ```
@@ -667,6 +672,7 @@ function f(du, u, p, t)
     for i in 1:length(u)
         du[i] = α * u[i]
     end
+    return
 end
 ```
 
@@ -674,9 +680,8 @@ Our model is that, whenever the protein `X` gets to a concentration of 1, it
 triggers a cell division. So we check to see if any concentrations hit 1:
 
 ```@example callback5
-function condition(u, t, integrator) # Event when condition(u,t,integrator) == 0
-    1 - maximum(u)
-end
+# Event when condition(u,t,integrator) == 0
+condition(u, t, integrator) = 1 - maximum(u)
 ```
 
 Again, recall that this function finds events as when `condition==0`,
@@ -694,7 +699,7 @@ function affect!(integrator)
     Θ = rand()
     u[maxidx] = Θ
     u[end] = 1 - Θ
-    nothing
+    return
 end
 ```
 
@@ -719,8 +724,10 @@ and plot them directly:
 
 ```@example callback5
 import Plots
-Plots.plot(sol.t, map((x) -> length(x), sol[:]), lw = 3,
-    ylabel = "Number of Cells", xlabel = "Time")
+Plots.plot(
+    sol.t, map((x) -> length(x), sol[:]), lw = 3,
+    ylabel = "Number of Cells", xlabel = "Time"
+)
 ```
 
 Now let's check in on a cell. We can still use the interpolation to get a nice
@@ -728,8 +735,10 @@ plot of the concentration of cell 1 over time. This is done with the command:
 
 ```@example callback5
 ts = range(0, stop = 10, length = 100)
-Plots.plot(ts, map((x) -> x[1], sol.(ts)), lw = 3,
-    ylabel = "Amount of X in Cell 1", xlabel = "Time")
+Plots.plot(
+    ts, map((x) -> x[1], sol.(ts)), lw = 3,
+    ylabel = "Amount of X in Cell 1", xlabel = "Time"
+)
 ```
 
 Notice that every time it hits 1 the cell divides, giving cell 1 a random amount
@@ -756,6 +765,7 @@ function f(du, u, p, t)
     du[2] = -p
     du[3] = u[4]
     du[4] = 0.0
+    return
 end
 ```
 
@@ -765,6 +775,7 @@ where `u[1]` denotes `y`-coordinate, `u[2]` denotes velocity in `y`-direction, `
 function condition(out, u, t, integrator) # Event when condition(out,u,t,integrator) == 0
     out[1] = u[1]
     out[2] = (u[3] - 10.0)u[3]
+    return
 end
 
 function affect!(integrator, idx)
@@ -773,6 +784,7 @@ function affect!(integrator, idx)
     elseif idx == 2
         integrator.u[4] = -0.9integrator.u[4]
     end
+    return
 end
 import DifferentialEquations as DE
 cb = DE.VectorContinuousCallback(condition, affect!, 2)
@@ -787,7 +799,7 @@ u0 = [50.0, 0.0, 0.0, 2.0]
 tspan = (0.0, 15.0)
 p = 9.8
 prob = DE.ODEProblem(f, u0, tspan, p)
-sol = DE.solve(prob, DE.Tsit5(), callback = cb, dt = 1e-3, adaptive = false)
+sol = DE.solve(prob, DE.Tsit5(), callback = cb, dt = 1.0e-3, adaptive = false)
 import Plots;
 Plots.plot(sol, idxs = (1, 3));
 ```

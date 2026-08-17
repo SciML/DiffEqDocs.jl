@@ -451,6 +451,7 @@ Example - This is an invalid implementation for 2N methods:
 function f(du, u, p, t)
     du[1] = u[1] * u[2]
     du[2] = du[1] * u[2] # du appears on the RHS
+    return
 end
 ```
 
@@ -494,8 +495,10 @@ methods have the additional argument:
 To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = ExtrapolationMidpointDeuflhard(max_order = 7, min_order = 4, init_order = 4,
-    sequence = :bulirsch, threading = false)
+alg = ExtrapolationMidpointDeuflhard(
+    max_order = 7, min_order = 4, init_order = 4,
+    sequence = :bulirsch, threading = false
+)
 solve(prob, alg)
 ```
 
@@ -723,8 +726,10 @@ methods have the additional argument:
 To override, utilize the keyword arguments. For example:
 
 ```julia
-alg = ImplicitDeuflhardExtrapolation(max_order = 7, min_order = 4, init_order = 4,
-    sequence = :bulirsch)
+alg = ImplicitDeuflhardExtrapolation(
+    max_order = 7, min_order = 4, init_order = 4,
+    sequence = :bulirsch
+)
 solve(prob, alg)
 ```
 
@@ -915,10 +920,12 @@ stiffness detection algorithms. This is the `AutoSwitch` algorithm with the
 following options:
 
 ```julia
-AutoSwitch(nonstiffalg::nAlg, stiffalg::sAlg;
+AutoSwitch(
+    nonstiffalg::nAlg, stiffalg::sAlg;
     maxstiffstep = 10, maxnonstiffstep = 3,
     nonstifftol::T = 9 // 10, stifftol::T = 9 // 10,
-    dtfac = 2.0, stiffalgfirst = false)
+    dtfac = 2.0, stiffalgfirst = false
+)
 ```
 
 The `nonstiffalg` must have an appropriate stiffness estimate built into the

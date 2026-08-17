@@ -41,11 +41,13 @@ f(u, p, t) = 1.01 * u
 u0 = 1 / 2
 tspan = (0.0, 1.0)
 prob = DE.ODEProblem(f, u0, tspan)
-sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8)
+sol = DE.solve(prob, DE.Tsit5(), reltol = 1.0e-8, abstol = 1.0e-8)
 
 import Plots
-Plots.plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+Plots.plot(
+    sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!", # legend=false
+)
 Plots.plot!(sol.t, t -> 0.5 * exp(1.01t), lw = 3, ls = :dash, label = "True Solution!")
 ```
 
@@ -110,7 +112,7 @@ we can lower the relative tolerance (in order to get a more correct result, at
 the cost of more timesteps) by using the command `reltol`:
 
 ```@example ODE2
-sol = DE.solve(prob, reltol = 1e-6);
+sol = DE.solve(prob, reltol = 1.0e-6);
 nothing # hide
 ```
 
@@ -129,7 +131,7 @@ up the solution. In addition, if we only care about the endpoint, we can turn
 off intermediate saving in general:
 
 ```@example ODE2
-sol = DE.solve(prob, reltol = 1e-6, save_everystep = false);
+sol = DE.solve(prob, reltol = 1.0e-6, save_everystep = false);
 nothing # hide
 ```
 
@@ -148,7 +150,7 @@ For example, if we have a stiff problem where we need high accuracy,
 but don't know the best stiff algorithm for this problem, we can use:
 
 ```@example ODE2
-sol = DE.solve(prob, alg_hints = [:stiff], reltol = 1e-8, abstol = 1e-8);
+sol = DE.solve(prob, alg_hints = [:stiff], reltol = 1.0e-8, abstol = 1.0e-8);
 nothing # hide
 ```
 
@@ -168,7 +170,7 @@ we can for example solve the problem using `DE.Tsit5()` with a lower tolerance
 via:
 
 ```@example ODE2
-sol = DE.solve(prob, DE.Tsit5(), reltol = 1e-8, abstol = 1e-8);
+sol = DE.solve(prob, DE.Tsit5(), reltol = 1.0e-8, abstol = 1.0e-8);
 nothing # hide
 ```
 
@@ -285,8 +287,10 @@ axis labels, and change the legend (note we can disable the legend with
 `legend=false`) to get a nice-looking plot:
 
 ```@example ODE2
-Plots.plot(sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
-    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!") # legend=false
+Plots.plot(
+    sol, linewidth = 5, title = "Solution to the linear ODE with a thick line",
+    xaxis = "Time (t)", yaxis = "u(t) (in μm)", label = "My Thick Line!", # legend=false
+)
 ```
 
 We can then add to the plot using the `plot!` command:
@@ -321,6 +325,7 @@ function lorenz!(du, u, p, t)
     du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
     du[3] = u[1] * u[2] - (8 / 3) * u[3]
+    return
 end
 ```
 
@@ -367,6 +372,7 @@ function parameterized_lorenz!(du, u, p, t)
     du[1] = p[1] * (u[2] - u[1])
     du[2] = u[1] * (p[2] - u[3]) - u[2]
     du[3] = u[1] * u[2] - p[3] * u[3]
+    return
 end
 ```
 
@@ -388,6 +394,7 @@ function parameterized_lorenz!(du, u, p, t)
     du[1] = dx = σ * (y - x)
     du[2] = dy = x * (ρ - z) - y
     du[3] = dz = x * y - β * z
+    return
 end
 ```
 
@@ -424,20 +431,22 @@ g = 9.81                            # gravitational acceleration [m/s²]
 function pendulum!(du, u, p, t)
     du[1] = u[2]                    # θ'(t) = ω(t)
     du[2] = -3g / (2l) * sin(u[1]) + 3 / (m * l^2) * p(t) # ω'(t) = -3g/(2l) sin θ(t) + 3/(ml^2)M(t)
+    return
 end
 
 θ₀ = 0.01                           # initial angular deflection [rad]
 ω₀ = 0.0                            # initial angular velocity [rad/s]
 u₀ = [θ₀, ω₀]                       # initial state vector
-tspan = (0.0, 10.0)                  # time interval
+tspan = (0.0, 10.0)                 # time interval
 
-M = t -> 0.1sin(t)                    # external torque [Nm]
+M = t -> 0.1sin(t)                  # external torque [Nm]
 
 prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
 sol = DE.solve(prob)
 
 Plots.plot(
-    sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1))
+    sol, linewidth = 2, xaxis = "t", label = ["θ [rad]" "ω [rad/s]"], layout = (2, 1)
+)
 ```
 
 Note how the external **time-varying** torque `M` is introduced as a **parameter** in the `pendulum!` function. Indeed, as a general principle the parameters can be any type; here we specify `M` as time-varying by representing it by a function, which is expressed by appending the dependence on time `(t)` to the name of the parameter.
@@ -455,10 +464,12 @@ We can define a matrix of linear ODEs as follows:
 ```@example ODE4
 import DifferentialEquations as DE
 import Plots
-A = [1.0 0 0 -5
-     4 -2 4 -3
-     -4 0 0 1
-     5 -2 2 3]
+A = [
+    1.0 0 0 -5
+    4 -2 4 -3
+    -4 0 0 1
+    5 -2 2 3
+]
 u0 = rand(4, 2)
 tspan = (0.0, 1.0)
 f(u, p, t) = A * u
@@ -490,10 +501,12 @@ above, with the only change being the type for the initial condition and constan
 
 ```@example ODE4
 import StaticArrays
-A = StaticArrays.@SMatrix [1.0 0.0 0.0 -5.0
-                           4.0 -2.0 4.0 -3.0
-                           -4.0 0.0 0.0 1.0
-                           5.0 -2.0 2.0 3.0]
+A = StaticArrays.@SMatrix [
+    1.0 0.0 0.0 -5.0
+    4.0 -2.0 4.0 -3.0
+    -4.0 0.0 0.0 1.0
+    5.0 -2.0 2.0 3.0
+]
 u0 = StaticArrays.@SMatrix rand(4, 2)
 tspan = (0.0, 1.0)
 f2(u, p, t) = A * u

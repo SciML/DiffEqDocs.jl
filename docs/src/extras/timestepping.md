@@ -54,7 +54,7 @@ by Cechino for the optimal stepsize to reduce the error. The algorithm is:
 
 ```julia
 qtmp = integrator.EEst^(1 / (alg_adaptive_order(integrator.alg) + 1)) /
-       integrator.opts.gamma
+    integrator.opts.gamma
 @fastmath q = max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), qtmp))
 integrator.dtnew = integrator.dt / q
 ```
@@ -82,12 +82,14 @@ as well. The form for the updates is:
 
 ```julia
 EEst, beta1, q11, qold, beta2 = integrator.EEst, integrator.opts.beta1, integrator.q11,
-integrator.qold, integrator.opts.beta2
+    integrator.qold, integrator.opts.beta2
 @fastmath q11 = EEst^beta1
 @fastmath q = q11 / (qold^beta2)
 integrator.q11 = q11
-@fastmath q = max(inv(integrator.opts.qmax),
-    min(inv(integrator.opts.qmin), q / integrator.opts.gamma))
+@fastmath q = max(
+    inv(integrator.opts.qmax),
+    min(inv(integrator.opts.qmin), q / integrator.opts.gamma)
+)
 if q <= integrator.opts.qsteady_max && q >= integrator.opts.qsteady_min
     q = one(q)
 end
@@ -117,9 +119,11 @@ for algorithms like the (E)SDIRK methods.
 ```julia
 gamma = integrator.opts.gamma
 niters = integrator.cache.newton_iters
-fac = min(gamma,
+fac = min(
+    gamma,
     (1 + 2 * integrator.alg.max_newton_iter) * gamma /
-    (niters + 2 * integrator.alg.max_newton_iter))
+        (niters + 2 * integrator.alg.max_newton_iter)
+)
 expo = 1 / (alg_order(integrator.alg) + 1)
 qtmp = (integrator.EEst^expo) / fac
 @fastmath q = max(inv(integrator.opts.qmax), min(inv(integrator.opts.qmin), qtmp))
@@ -139,15 +143,17 @@ following logic is applied:
 if integrator.success_iter > 0
     expo = 1 / (alg_adaptive_order(integrator.alg) + 1)
     qgus = (integrator.dtacc / integrator.dt) *
-           (((integrator.EEst^2) / integrator.erracc)^expo)
-    qgus = max(inv(integrator.opts.qmax),
-        min(inv(integrator.opts.qmin), qgus / integrator.opts.gamma))
+        (integrator.EEst^2 / integrator.erracc)^expo
+    qgus = max(
+        inv(integrator.opts.qmax),
+        min(inv(integrator.opts.qmin), qgus / integrator.opts.gamma)
+    )
     qacc = max(q, qgus)
 else
     qacc = q
 end
 integrator.dtacc = integrator.dt
-integrator.erracc = max(1e-2, integrator.EEst)
+integrator.erracc = max(1.0e-2, integrator.EEst)
 integrator.dt / qacc
 ```
 
@@ -202,30 +208,45 @@ For instance, the PI controller for SDEs can be reproduced by
 struct CustomController <: StochasticDiffEq.AbstractController
 end
 
-function StochasticDiffEq.stepsize_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-        controller::CustomController, alg)
-    integrator.q11 = DiffEqBase.value(FastPower.fastpower(
-        integrator.EEst, controller.beta1))
-    integrator.q = DiffEqBase.value(integrator.q11 /
-                                    FastPower.fastpower(integrator.qold, controller.beta2))
-    integrator.q = DiffEqBase.value(max(inv(integrator.opts.qmax),
-        min(inv(integrator.opts.qmin),
-            integrator.q / integrator.opts.gamma)))
-    nothing
+function StochasticDiffEq.stepsize_controller!(
+        integrator::StochasticDiffEq.SDEIntegrator,
+        controller::CustomController, alg
+    )
+    integrator.q11 = DiffEqBase.value(
+        FastPower.fastpower(integrator.EEst, controller.beta1)
+    )
+    integrator.q = DiffEqBase.value(
+        integrator.q11 / FastPower.fastpower(integrator.qold, controller.beta2)
+    )
+    integrator.q = DiffEqBase.value(
+        max(
+            inv(integrator.opts.qmax),
+            min(
+                inv(integrator.opts.qmin),
+                integrator.q / integrator.opts.gamma
+            )
+        )
+    )
+    return
 end
 
 function StochasticDiffEq.step_accept_controller!(
         integrator::StochasticDiffEq.SDEIntegrator,
-        controller::CustomController, alg)
+        controller::CustomController, alg
+    )
     integrator.dtnew = DiffEqBase.value(integrator.dt / integrator.q) *
-                       oneunit(integrator.dt)
-    nothing
+        oneunit(integrator.dt)
+    return
 end
 
-function step_reject_controller!(integrator::StochasticDiffEq.SDEIntegrator,
-        controller::CustomController, alg)
-    integrator.dtnew = integrator.dt / min(inv(integrator.opts.qmin),
-        integrator.q11 / integrator.opts.gamma)
+function step_reject_controller!(
+        integrator::StochasticDiffEq.SDEIntegrator,
+        controller::CustomController, alg
+    )
+    return integrator.dtnew = integrator.dt / min(
+        inv(integrator.opts.qmin),
+        integrator.q11 / integrator.opts.gamma
+    )
 end
 ```
 

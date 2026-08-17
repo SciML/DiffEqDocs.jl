@@ -52,7 +52,7 @@ function plot_first_integrals(sol, H, L)
         initial_first_integrals[1] .- map(u -> H(u.x[2], u.x[1]), sol.u),
         lab = "Energy variation", title = "First Integrals"
     )
-    plot!(
+    return plot!(
         initial_first_integrals[2] .- map(u -> L(u.x[2], u.x[1]), sol.u),
         lab = "Angular momentum variation"
     )
@@ -115,7 +115,7 @@ import NonlinearSolve as NLS
 import DiffEqCallbacks: ManifoldProjection
 
 function plot_orbit2(sol)
-    plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")
+    return plot(sol, vars = (1, 2), lab = "Orbit", title = "Kepler Problem Solution")
 end
 
 function plot_first_integrals2(sol, H, L)
@@ -123,7 +123,7 @@ function plot_first_integrals2(sol, H, L)
         initial_first_integrals[1] .- map(u -> H(u[1:2], u[3:4]), sol.u),
         lab = "Energy variation", title = "First Integrals"
     )
-    plot!(
+    return plot!(
         initial_first_integrals[2] .- map(u -> L(u[1:2], u[3:4]), sol.u),
         lab = "Angular momentum variation"
     )
@@ -135,6 +135,7 @@ function hamiltonian(du, u, params, t)
     q, p = u[1:2], u[3:4]
     qdot!(@view(du[1:2]), p, q, params, t)
     pdot!(@view(du[3:4]), p, q, params, t)
+    return
 end
 
 prob2 = ODE.ODEProblem(hamiltonian, [initial_position; initial_momentum], tspan)
@@ -148,6 +149,7 @@ There is a significant fluctuation in the first integrals, when there is no mani
 function first_integrals_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
+    return
 end
 
 cb = ManifoldProjection(first_integrals_manifold, autodiff = NLS.AutoForwardDiff())
@@ -161,6 +163,7 @@ We can see that thanks to the manifold projection, the first integrals' variatio
 function energy_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[1] - H(u[1:2], u[3:4])
     residual[3:4] .= 0
+    return
 end
 energy_cb = ManifoldProjection(energy_manifold, autodiff = NLS.AutoForwardDiff())
 sol6 = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = energy_cb)
@@ -173,6 +176,7 @@ There is almost no energy variation, but angular momentum varies quite a bit. Ho
 function angular_manifold(residual, u, p, t)
     residual[1:2] .= initial_first_integrals[2] - L(u[1:2], u[3:4])
     residual[3:4] .= 0
+    return
 end
 angular_cb = ManifoldProjection(angular_manifold, autodiff = NLS.AutoForwardDiff())
 sol7 = ODE.solve(prob2, RK4(), dt = 1 // 5, adaptive = false, callback = angular_cb)

@@ -8,6 +8,7 @@ For our model, we will use the simple decay equation. We will write this in the 
 import DifferentialEquations as DE
 function f(du, u, p, t)
     du[1] = -u[1]
+    return
 end
 u0 = [10.0]
 const V = 1
@@ -43,7 +44,7 @@ Plots.plot(sol)
 Let's show that it actually added 10 instead of setting the value to 10. We could have set the value using `affect!(integrator) = integrator.u[1] = 10`
 
 ```@example dosing
-println(sol(4.00000))
+println(sol(4.0))
 println(sol(4.000000000001))
 ```
 
@@ -52,6 +53,7 @@ Now let's model a patient whose decay rate for the drug is lower:
 ```@example dosing
 function f(du, u, p, t)
     du[1] = -u[1] / 6
+    return
 end
 u0 = [10.0]
 const V = 1

@@ -27,7 +27,7 @@ Plots.gr()
 
 function lif(u, p, t)
     gL, EL, C, Vth, I = p
-    (-gL * (u - EL) + I) / C
+    return (-gL * (u - EL) + I) / C
 end
 ```
 
@@ -57,12 +57,11 @@ hyperpolarizes `u` in response. For this purpose, we will use callbacks.
 They can make discontinuous changes to the model when certain conditions are met.
 
 ```@example spikingneural
-function thr(u, t, integrator)
-    u - integrator.p.Vth
-end
+thr(u, t, integrator) = u - integrator.p.Vth
 
 function reset!(integrator)
     integrator.u = integrator.p.EL
+    return
 end
 
 threshold = DE.ContinuousCallback(thr, reset!, nothing)
@@ -109,19 +108,19 @@ function izh!(du, u, p, t)
 
     du[1] = 0.04 * u[1]^2 + 5 * u[1] + 140 - u[2] + I
     du[2] = a * (b * u[1] - u[2])
+    return
 end
 ```
 
 This is our Izhikevich model. There are two important changes here. First of all, note the additional input parameter `du`. This is a sequence of differences. `du[1]` corresponds to the voltage (the first dimension of the system) and `du[2]` corresponds to the second dimension. This second dimension is called `u` in the original Izhikevich work, and it makes the notation a little annoying. In this tutorial, we will generally stick to Julia and `DifferentialEquations` conventions as opposed to conventions of the specific models and `du` is commonly used. We will never define `du` ourselves outside the function, but the ODE solver will use it internally. The other change here is the `!` after our function name. This signifies that `du` will be preallocated before integration and then updated in-place, which saves a lot of allocation time. Now we just need our callbacks to take care of spikes and increase the input.
 
 ```@example spikingneural
-function thr(u, t, integrator)
-    integrator.u[1] >= 30
-end
+thr(u, t, integrator) = integrator.u[1] >= 30
 
 function reset!(integrator)
     integrator.u[1] = integrator.p[3]
     integrator.u[2] += integrator.p[4]
+    return
 end
 
 threshold = DE.DiscreteCallback(thr, reset!)
@@ -188,15 +187,18 @@ function HH!(du, u, p, t)
     gK, gNa, gL, EK, ENa, EL, C, I = p
     v, n, m, h = u
 
-    du[1] = (-(gK * n^4 * (v - EK)) - (gNa * m^3 * h * (v - ENa)) -
-             (gL * (v - EL)) + I) / C
+    du[1] = (
+        -(gK * n^4 * (v - EK)) - (gNa * m^3 * h * (v - ENa)) -
+            (gL * (v - EL)) + I
+    ) / C
     du[2] = (alpha_n(v) * (1.0 - n)) - (beta_n(v) * n)
     du[3] = (alpha_m(v) * (1.0 - m)) - (beta_m(v) * m)
     du[4] = (alpha_h(v) * (1.0 - h)) - (beta_h(v) * h)
+    return
 end
 ```
 
-We have three different types of ionic conductances. Potassium, sodium and the leak. The potassium and sodium conductance are voltage gated. They increase or decrease depending on the voltage. In ion channel terms, open channels can transition to the closed state and closed channels can transition to the open state. It's probably easiest to start with the potassium current described by `gK * (n^4.0) * (EK - v)`. Here `gK` is the total possible conductance that we could reach if all potassium channels were open. If all channels were open, `n` would equal 1 which is usually not the case. The transition from open state to closed state is modeled in `alpha_n(v)` while the transition from closed to open is in `beta_n(v)`. Because potassium conductance is voltage gated, these transitions depend on `v`. The numbers in `alpha_n; beta_n` were calculated by Hodgkin and Huxley based on their extensive experiments on the squid giant axon. They also determined, that `n` needs to be taken to the power of 4 to correctly model the amount of open channels.
+We have three different types of ionic conductances. Potassium, sodium and the leak. The potassium and sodium conductance are voltage gated. They increase or decrease depending on the voltage. In ion channel terms, open channels can transition to the closed state and closed channels can transition to the open state. It's probably easiest to start with the potassium current described by `gK * n^4 * (EK - v)`. Here `gK` is the total possible conductance that we could reach if all potassium channels were open. If all channels were open, `n` would equal 1 which is usually not the case. The transition from open state to closed state is modeled in `alpha_n(v)` while the transition from closed to open is in `beta_n(v)`. Because potassium conductance is voltage gated, these transitions depend on `v`. The numbers in `alpha_n; beta_n` were calculated by Hodgkin and Huxley based on their extensive experiments on the squid giant axon. They also determined, that `n` needs to be taken to the power of 4 to correctly model the amount of open channels.
 
 The sodium current is not very different, but it has two gating variables, `m, h` instead of one. The leak conductance gL has no gating variables because it is not voltage gated. Let's move on to the parameters. If you want all the details on the HH model, you can find a great description [here](https://neuronaldynamics.epfl.ch/online/Ch2.S2.html).
 
@@ -254,11 +256,14 @@ function HH!(du, u, p, t)
 
     ISyn = gSyn(max_gSyn, tau, tf, t) * (v - ESyn)
 
-    du[1] = (-(gK * (n^4.0) * (v - EK)) - (gNa * (m^3.0) * h * (v - ENa)) -
-             (gL * (v - EL)) + I - ISyn) / C
+    du[1] = (
+        -(gK * n^4 * (v - EK)) - (gNa * m^3 * h * (v - ENa)) -
+            (gL * (v - EL)) + I - ISyn
+    ) / C
     du[2] = (alpha_n(v) * (1.0 - n)) - (beta_n(v) * n)
     du[3] = (alpha_m(v) * (1.0 - m)) - (beta_m(v) * m)
     du[4] = (alpha_h(v) * (1.0 - h)) - (beta_h(v) * h)
+    return
 end
 ```
 
@@ -293,8 +298,10 @@ function HH!(du, u, p, t)
     gK, gNa, gL, EK, ENa, EL, C, I, tau, tau_u, tau_R, u0, gmax, Esyn = p
     v, n, m, h, u, R, gsyn = u
 
-    du[1] = ((gK * (n^4.0) * (EK - v)) + (gNa * (m^3.0) * h * (ENa - v)) + (gL * (EL - v)) +
-             I + gsyn * (Esyn - v)) / C
+    du[1] = (
+        (gK * n^4 * (EK - v)) + (gNa * m^3 * h * (ENa - v)) + (gL * (EL - v)) +
+            I + gsyn * (Esyn - v)
+    ) / C
     du[2] = (alpha_n(v) * (1.0 - n)) - (beta_n(v) * n)
     du[3] = (alpha_m(v) * (1.0 - m)) - (beta_m(v) * m)
     du[4] = (alpha_h(v) * (1.0 - h)) - (beta_h(v) * h)
@@ -303,12 +310,14 @@ function HH!(du, u, p, t)
     du[5] = -(u / tau_u)
     du[6] = (1 - R) / tau_R
     du[7] = -(gsyn / tau)
+    return
 end
 
 function epsp!(integrator)
     integrator.u[5] += integrator.p[12] * (1 - integrator.u[5])
     integrator.u[7] += integrator.p[13] * integrator.u[5] * integrator.u[6]
     integrator.u[6] -= integrator.u[5] * integrator.u[6]
+    return
 end
 
 epsp_ts = CB.PresetTimeCallback(100:100:500, epsp!)

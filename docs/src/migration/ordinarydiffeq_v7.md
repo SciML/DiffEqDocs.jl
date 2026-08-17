@@ -40,20 +40,20 @@ package to your project explicitly.
 
 ## What to import instead
 
-| Topic | Old (v7 and earlier) | New (v8) |
-|---|---|---|
-| ODEs | `using DifferentialEquations` | `using OrdinaryDiffEq` (or a sublib like `using OrdinaryDiffEqTsit5: Tsit5`) |
-| Stochastic ODEs (SDEs) | `using DifferentialEquations` | `using StochasticDiffEq` |
-| Delay ODEs (DDEs) | `using DifferentialEquations` | `using DelayDiffEq` |
-| Boundary value problems | `using DifferentialEquations` | `using BoundaryValueDiffEq` (or one of the BVP sublibs) |
-| Jump problems | `using DifferentialEquations` | `using JumpProcesses` |
-| Steady state | `using DifferentialEquations` | `using SteadyStateDiffEq` |
-| DAEs (mass matrix) | (already in `OrdinaryDiffEq`) | `using OrdinaryDiffEq` |
-| DAEs (implicit / IDA) | `using DifferentialEquations` | `using Sundials` (or use a topic sublib) |
+| Topic                                  | Old (v7 and earlier)          | New (v8) |
+| -------------------------------------- | ----------------------------- | -------- |
+| ODEs                                   | `using DifferentialEquations` | `using OrdinaryDiffEq` (or a sublib like `using OrdinaryDiffEqTsit5: Tsit5`) |
+| Stochastic ODEs (SDEs)                 | `using DifferentialEquations` | `using StochasticDiffEq` |
+| Delay ODEs (DDEs)                      | `using DifferentialEquations` | `using DelayDiffEq` |
+| Boundary value problems                | `using DifferentialEquations` | `using BoundaryValueDiffEq` (or one of the BVP sublibs) |
+| Jump problems                          | `using DifferentialEquations` | `using JumpProcesses` |
+| Steady state                           | `using DifferentialEquations` | `using SteadyStateDiffEq` |
+| DAEs (mass matrix)                     | (already in `OrdinaryDiffEq`) | `using OrdinaryDiffEq` |
+| DAEs (implicit / IDA)                  | `using DifferentialEquations` | `using Sundials` (or use a topic sublib) |
 | Sundials wrappers (CVODE, IDA, ARKODE) | `using DifferentialEquations` | `using Sundials` |
-| Linear solves | `using DifferentialEquations` | `using LinearSolve` |
-| Nonlinear solves | `using DifferentialEquations` | `using NonlinearSolve` |
-| Optimization | `using DifferentialEquations` | `using Optimization` |
+| Linear solves                          | `using DifferentialEquations` | `using LinearSolve` |
+| Nonlinear solves                       | `using DifferentialEquations` | `using NonlinearSolve` |
+| Optimization                           | `using DifferentialEquations` | `using Optimization` |
 
 ## Example
 
@@ -369,12 +369,12 @@ Across all implicit/Rosenbrock/BDF/SDIRK/FIRK/Exponential constructors:
 
 ```julia
 # v6
-Rosenbrock23(autodiff=true)   # worked
-Rosenbrock23(autodiff=false)  # worked
+Rosenbrock23(autodiff = true)   # worked
+Rosenbrock23(autodiff = false)  # worked
 
 # v7 — must use ADTypes
-Rosenbrock23(autodiff=AutoForwardDiff())
-Rosenbrock23(autodiff=AutoFiniteDiff())
+Rosenbrock23(autodiff = AutoForwardDiff())
+Rosenbrock23(autodiff = AutoFiniteDiff())
 ```
 
 **Why:** type stability. `autodiff::Bool` forced a runtime branch between AD backends that the compiler couldn't specialize through; `autodiff::AbstractADType` dispatches at compile time. This is also what enables the "generalizes beyond ForwardDiff" story — you can now pass `AutoEnzyme()`, `AutoZygote()`, `AutoMooncake()`, etc., and the solver specializes correctly.
@@ -383,10 +383,10 @@ Rosenbrock23(autodiff=AutoFiniteDiff())
 
 ```julia
 # v6
-solve(prob, alg, verbose=false)
+solve(prob, alg, verbose = false)
 
 # v7 — must use ODEVerbosity
-solve(prob, alg, verbose=ODEVerbosity(SciMLLogging.None()))
+solve(prob, alg, verbose = ODEVerbosity(SciMLLogging.None()))
 ```
 
 **Why:** same type-stability reason, plus `ODEVerbosity` exposes fine-grained control (separate levels for nonlinear solver, linear solver, initialization, etc.) that a single `Bool` can't express.
@@ -395,10 +395,10 @@ solve(prob, alg, verbose=ODEVerbosity(SciMLLogging.None()))
 
 ```julia
 # v6
-solve(prob, alg, alias=true)
+solve(prob, alg, alias = true)
 
 # v7 — must use ODEAliasSpecifier
-solve(prob, alg, alias=ODEAliasSpecifier(alias_u0=true))
+solve(prob, alg, alias = ODEAliasSpecifier(alias_u0 = true))
 ```
 
 Deprecated `alias_u0` / `alias_du0` keyword shortcuts also removed — they already printed warnings on v6. Update to `alias = ODEAliasSpecifier(alias_u0=…, alias_du0=…)` on v6 first, then upgrade.
@@ -415,7 +415,7 @@ solve(prob, Rodas5P())
 solve(prob, Rodas5P())  # throws if u0 is inconsistent
 
 # v7 — explicit opt-in to automatic fixing
-solve(prob, Rodas5P(), initializealg=BrownFullBasicInit())
+solve(prob, Rodas5P(), initializealg = BrownFullBasicInit())
 ```
 
 **Why:** silently fixing an inconsistent DAE initial condition produced wrong answers when the user's `u0` was actually correct but a modeling bug elsewhere made the system look inconsistent. The new default errors loudly; users who want the old "just fix it" behavior opt in explicitly via `initializealg=BrownFullBasicInit()`.
@@ -542,6 +542,7 @@ function affect!(integrator, event_index)
     elseif event_index == 2
         # ball 2 hit the ground
     end
+    return
 end
 cb = VectorContinuousCallback(condition, affect!, affect_neg!, 2)
 
@@ -556,6 +557,7 @@ function affect!(integrator, simultaneous_events)
             # ball 2 hit the ground
         end
     end
+    return
 end
 cb = VectorContinuousCallback(condition, affect!, 2)
 ```

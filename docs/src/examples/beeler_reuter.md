@@ -111,7 +111,7 @@ function laplacian(Δu, u)
     for j in 2:(n2 - 1)
         for i in 2:(n1 - 1)
             @inbounds Δu[i, j] = u[i + 1, j] + u[i - 1, j] + u[i, j + 1] + u[i, j - 1] -
-                                 4 * u[i, j]
+                4 * u[i, j]
         end
     end
 
@@ -132,6 +132,7 @@ function laplacian(Δu, u)
     @inbounds Δu[n1, 1] = 2 * (u[n1 - 1, 1] + u[n1, 2]) - 4 * u[n1, 1]
     @inbounds Δu[1, n2] = 2 * (u[2, n2] + u[1, n2 - 1]) - 4 * u[1, n2]
     @inbounds Δu[n1, n2] = 2 * (u[n1 - 1, n2] + u[n1, n2 - 1]) - 4 * u[n1, n2]
+    return
 end
 ```
 
@@ -280,6 +281,7 @@ function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
             end
         end
     end
+    return
 end
 ```
 
@@ -292,9 +294,11 @@ function calc_iK1(v)
     eb = exp(0.08f0 * (v + 53.0f0))
     ec = exp(0.04f0 * (v + 53.0f0))
     ed = exp(-0.04f0 * (v + 23.0f0))
-    return 0.35f0 * (4.0f0 * (ea - 1.0f0) / (eb + ec)
+    return 0.35f0 * (
+        4.0f0 * (ea - 1.0f0) / (eb + ec)
             +
-            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed)))
+            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed))
+    )
 end
 
 # ix1 is the time-independent background potassium current
@@ -335,6 +339,7 @@ function update_du_cpu(du, u, XI, M, H, J, D, F, C)
             du[i, j] = -I_sum / C_m
         end
     end
+    return
 end
 ```
 
@@ -355,7 +360,7 @@ function (f::BeelerReuterCpu)(du, u, p, t)
     update_du_cpu(du, u, f.XI, f.M, f.H, f.J, f.D, f.F, f.C)
 
     # ...add the diffusion portion
-    du .+= f.diff_coef .* f.Δu
+    return du .+= f.diff_coef .* f.Δu
 end
 ```
 
@@ -544,9 +549,11 @@ function calc_iK1(v)
     eb = CUDAnative.exp(0.08f0 * (v + 53.0f0))
     ec = CUDAnative.exp(0.04f0 * (v + 53.0f0))
     ed = CUDAnative.exp(-0.04f0 * (v + 23.0f0))
-    return 0.35f0 * (4.0f0 * (ea - 1.0f0) / (eb + ec)
+    return 0.35f0 * (
+        4.0f0 * (ea - 1.0f0) / (eb + ec)
             +
-            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed)))
+            0.2f0 * (isapprox(v, -23.0f0) ? 25.0f0 : (v + 23.0f0) / (1.0f0 - ed))
+    )
 end
 
 # ix1 is the time-independent background potassium current
@@ -590,7 +597,7 @@ A C/C++ thread can calculate its index as
 In Julia, we have to take into account base 1. Therefore, we use the following formula
 
 ```julia
-    idx = (blockIdx().x-UInt32(1)) * blockDim().x + threadIdx().x
+    idx = (blockIdx().x - UInt32(1)) * blockDim().x + threadIdx().x
 ```
 
 A CUDA programmer is free to interpret the calculated index however it fits the application, but in practice, it is usually interpreted as an index into input tensors.
@@ -615,7 +622,7 @@ function update_gates_gpu(u, XI, M, H, J, D, F, C, Δt)
 
         C[i, j] = update_C_gpu(C[i, j], D[i, j], F[i, j], v, Δt)
     end
-    nothing
+    return
 end
 
 function update_du_gpu(du, u, XI, M, H, J, D, F, C)
@@ -635,7 +642,7 @@ function update_du_gpu(du, u, XI, M, H, J, D, F, C)
 
     # the reaction part of the reaction-diffusion equation
     du[i, j] = -I_sum / C_m
-    nothing
+    return
 end
 ```
 
@@ -651,24 +658,27 @@ function (f::BeelerReuterGpu)(du, u, p, t)
     ny, nx = size(u)
 
     if Δt != 0 || t == 0
-        @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_gates_gpu(f.d_u, f.d_XI, f.d_M,
+        @cuda blocks = (ny ÷ L, nx ÷ L) threads = (L, L) update_gates_gpu(
+            f.d_u, f.d_XI, f.d_M,
             f.d_H, f.d_J, f.d_D,
-            f.d_F, f.d_C, Δt)
+            f.d_F, f.d_C, Δt
+        )
         f.t = t
     end
 
     laplacian(f.Δv, u)
 
     # calculate the reaction portion
-    @cuda blocks=(ny÷L, nx÷L) threads=(L, L) update_du_gpu(
+    @cuda blocks = (ny ÷ L, nx ÷ L) threads = (L, L) update_du_gpu(
         f.d_du, f.d_u, f.d_XI, f.d_M,
         f.d_H, f.d_J, f.d_D, f.d_F,
-        f.d_C)
+        f.d_C
+    )
 
     copyto!(du, f.d_du)
 
     # ...add the diffusion portion
-    du .+= f.diff_coef .* f.Δv
+    return du .+= f.diff_coef .* f.Δv
 end
 ```
 

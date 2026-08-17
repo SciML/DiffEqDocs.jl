@@ -10,7 +10,7 @@ on the solution and enhance the solving.
 These algorithms require a Non-autonomous linear ODE of the form:
 
 ```math
-u^\prime = A(u,p,t)u
+u' = A(u,p,t) u
 ```
 
 Where ``A`` is an AbstractSciMLOperator (see SciMLOperators.jl for more information) that is
@@ -29,6 +29,7 @@ function update_func(A, u, p, t)
     A[2, 1] = sin(t)
     A[1, 2] = -sin(t)
     A[2, 2] = cos(t)
+    return
 end
 
 import SciMLOperators
@@ -36,9 +37,9 @@ A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
 prob = ODEProblem(A, ones(2), (10, 50.0))
 ```
 
-defines a quasi-linear ODE ``u^\prime = A(t)u`` where the components of ``A`` are
+defines a quasi-linear ODE ``u' = A(t) u`` where the components of ``A`` are
 the given functions. Using that formulation, we can see that the general form is
-``u^\prime = A(u,p,t)u``, for example:
+``u' = A(u,p,t) u``, for example:
 
 ```julia
 function update_func(A, u, p, t)
@@ -46,6 +47,7 @@ function update_func(A, u, p, t)
     A[2, 1] = 1
     A[1, 2] = -2 * (1 - cos(u[2]) - u[2] * sin(u[2]))
     A[2, 2] = 0
+    return
 end
 ```
 
@@ -62,7 +64,7 @@ an `update_func`.
 Note that the affine equation
 
 ```math
-u^\prime = A(u,p,t)u + g(u,p,t)
+u' = A(u,p,t) u + g(u,p,t)
 ```
 
 can be written as a linear form by extending the size of the system by one to have a

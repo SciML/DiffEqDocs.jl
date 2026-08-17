@@ -116,7 +116,7 @@ change the solver characteristics. For example, to modify the absolute tolerance
 for the future timesteps, one can do:
 
 ```julia
-integrator.opts.abstol = 1e-9
+integrator.opts.abstol = 1.0e-9
 ```
 
 The `sol` field holds the current solution. This current solution includes the
@@ -248,7 +248,8 @@ choose:
 
 ```julia
 integrator = DE.init(
-    prob, DE.Tsit5(); dt = 1 // 2^(4), tstops = [0.5], advance_to_tstop = true)
+    prob, DE.Tsit5(); dt = 1 // 2^4, tstops = [0.5], advance_to_tstop = true
+)
 for i in integrator
     @test integrator.t ∈ [0.5, 1.0]
 end

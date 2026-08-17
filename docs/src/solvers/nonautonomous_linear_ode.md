@@ -122,19 +122,20 @@ These methods require ``A`` is only dependent on the independent variable, i.e. 
 Example:
 
 ```@example linear_ode
-function update_func(A, u, p, t)
+function update_func!(A, u, p, t)
     A[1, 1] = cos(t)
     A[2, 1] = sin(t)
     A[1, 2] = -sin(t)
     A[2, 2] = cos(t)
+    return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (1.0, 6.0))
 sol = DE.solve(prob, ODELinear.MagnusGL6(), dt = 1 / 10)
 ```
 
-The initial values for ``A`` are irrelevant in this and similar cases, as the `update_func` immediately overwrites them.
-Starting with `ones(2,2)` is just a convenient way to get a mutable 2x2 matrix.
+The initial values for ``A`` are irrelevant in this and similar cases, as the `update_func!` immediately overwrites them.
+Starting with `ones(2,2)` is just a convenient way to get a mutable 2×2 matrix.
 
 ### State-Dependent Solvers
 
@@ -152,13 +153,14 @@ These methods can be used when ``A`` is dependent on the state variables, i.e. `
 Example:
 
 ```@example linear_ode
-function update_func(A, u, p, t)
+function update_func!(A, u, p, t)
     A[1, 1] = 0
     A[2, 1] = sin(u[1])
     A[1, 2] = -1
     A[2, 2] = 0
+    return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (0, 30.0))
 sol = DE.solve(prob, ODELinear.LieRK4(), dt = 1 / 4)
 ```
@@ -171,13 +173,14 @@ operators can be solved using specialized adaptive algorithms, like `MagnusAdapt
 Example:
 
 ```@example linear_ode
-function update_func(A, u, p, t)
+function update_func!(A, u, p, t)
     A[1, 1] = 0
     A[2, 1] = 1
     A[1, 2] = -2 * (1 - cos(u[2]) - u[2] * sin(u[2]))
     A[2, 2] = 0
+    return
 end
-A = SciMLOperators.MatrixOperator(ones(2, 2), update_func! = update_func)
+A = SciMLOperators.MatrixOperator(ones(2, 2); update_func!)
 prob = DE.ODEProblem(A, ones(2), (30, 150.0))
 sol = DE.solve(prob, ODELinear.MagnusAdapt4())
 ```

@@ -370,6 +370,7 @@ function f(du, u, p, t)
         du[1] = -2u[1]
     end
     du[2] = -u[2]
+    return
 end
 ```
 
@@ -419,7 +420,7 @@ sol = solve(prob, alg)
 use
 
 ```julia
-sol = solve(prob, alg, abstol = 1e-10, reltol = 1e-10)
+sol = solve(prob, alg, abstol = 1.0e-10, reltol = 1.0e-10)
 ```
 
 Of course, there's always a tradeoff between accuracy and efficiency, so play
@@ -476,11 +477,13 @@ import DifferentialEquations as DE
 function func(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
+    return
 end
 function f(p)
     prob = DE.ODEProblem(func, eltype(p).([1.0, 1.0]), (0.0, 10.0), p)
     # Lower tolerances to show the methods converge to the same value
-    DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1e-12, reltol = 1e-12).u[end]
+    sol = DE.solve(prob, DE.Tsit5(), save_everystep = false, abstol = 1.0e-12, reltol = 1.0e-12)
+    return sol.u[end]
 end
 ```
 
@@ -512,7 +515,7 @@ import LinearAlgebra, OrdinaryDiffEq as ODE, DifferentialEquations
 function foo(du, u, (A, tmp), t)
     mul!(tmp, A, u)
     @. du = u + tmp
-    nothing
+    return
 end
 prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0), (ones(5, 5), zeros(5, 5)))
 DE.solve(prob, ODE.Rosenbrock23())
@@ -542,15 +545,17 @@ We could use `get_tmp` and `dualcache` functions from
 to solve this issue, e.g.,
 
 ```julia
-import LinearAlgebra, OrdinaryDiffEq as ODE, PreallocationTools, DifferentialEquations
+import OrdinaryDiffEq as ODE, PreallocationTools, DifferentialEquations
 function foo(du, u, (A, tmp), t)
     tmp = PreallocationTools.get_tmp(tmp, first(u) * t)
     mul!(tmp, A, u)
     @. du = u + tmp
-    nothing
+    return
 end
-prob = DE.ODEProblem(foo, ones(5, 5), (0.0, 1.0),
-    (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5))))
+prob = DE.ODEProblem(
+    foo, ones(5, 5), (0.0, 1.0),
+    (ones(5, 5), PreallocationTools.dualcache(zeros(5, 5)))
+)
 DE.solve(prob, ODE.TRBDF2())
 ```
 
@@ -565,8 +570,10 @@ correctly. **Foreign code called through `ccall` does not.**
 A `Vector{Dual}` is still a bitstype array, so a signature such as
 
 ```julia
-f!(du, u, p, t) = ccall((:rhs, "lib.so"), Cvoid,
-    (Ptr{Cdouble}, Ptr{Cdouble}, Cdouble), du, u, t)
+f!(du, u, p, t) = ccall(
+    (:rhs, "lib.so"), Cvoid, (Ptr{Cdouble}, Ptr{Cdouble}, Cdouble),
+    du, u, t
+)
 ```
 
 **silently reinterprets Dual memory as `Cdouble`**. There is no conversion error
@@ -597,7 +604,7 @@ What to do:
        eltype(u) <: AbstractFloat ||
            error("C RHS cannot accept eltype $(eltype(u)); use autodiff=AutoFiniteDiff() or provide jac")
        ccall((:rhs, "lib.so"), Cvoid, (Ptr{Cdouble}, Ptr{Cdouble}, Cdouble), du, u, t)
-       nothing
+       return
    end
    ```
 
@@ -630,8 +637,11 @@ though, an `Error: SingularException` is also possible if the linear solver fail
 
 ```julia
 import DifferentialEquations as DE, OrdinaryDiffEq as ODE, LinearSolve
-DE.solve(prob, ODE.Rodas4(linsolve = LinearSolve.KLUFactorization(;
-    reuse_symbolic = false)))
+DE.solve(
+    prob, ODE.Rodas4(
+        linsolve = LinearSolve.KLUFactorization(; reuse_symbolic = false)
+    )
+)
 ```
 
 For more details about possible linear solvers, consult the [LinearSolve.jl documentation](https://docs.sciml.ai/LinearSolve/stable/)

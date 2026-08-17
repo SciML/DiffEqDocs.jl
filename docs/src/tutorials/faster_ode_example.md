@@ -42,7 +42,7 @@ function lorenz(u, p, t)
     dx = 10.0 * (u[2] - u[1])
     dy = u[1] * (28.0 - u[3]) - u[2]
     dz = u[1] * u[2] - (8 / 3) * u[3]
-    [dx, dy, dz]
+    return [dx, dy, dz]
 end
 ```
 
@@ -86,7 +86,7 @@ function lorenz!(du, u, p, t)
     du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
     du[3] = u[1] * u[2] - (8 / 3) * u[3]
-    nothing
+    return
 end
 ```
 
@@ -182,7 +182,7 @@ function lorenz_static(u, p, t)
     dx = 10.0 * (u[2] - u[1])
     dy = u[1] * (28.0 - u[3]) - u[2]
     dz = u[1] * u[2] - (8 / 3) * u[3]
-    StaticArrays.SA[dx, dy, dz]
+    return StaticArrays.SA[dx, dy, dz]
 end
 ```
 
@@ -235,11 +235,11 @@ function rober!(du, u, p, t)
     du[1] = -k₁ * y₁ + k₃ * y₂ * y₃
     du[2] = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
     du[3] = k₂ * y₂^2
-    nothing
+    return
 end
-prob = DE.ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1e5), [0.04, 3e7, 1e4])
+prob = DE.ODEProblem(rober!, [1.0, 0.0, 0.0], (0.0, 1.0e5), [0.04, 3.0e7, 1.0e4])
 sol = DE.solve(prob)
-Plots.plot(sol, tspan = (1e-2, 1e5), xscale = :log10)
+Plots.plot(sol, tspan = (1.0e-2, 1.0e5), xscale = :log10)
 ```
 
 ```@example faster_ode2
@@ -296,10 +296,10 @@ function rober_jac!(J, u, p, t)
     J[1, 3] = k₃ * y₂
     J[2, 3] = k₃ * y₂ * -1
     J[3, 3] = 0
-    nothing
+    return
 end
 f! = DE.ODEFunction(rober!, jac = rober_jac!)
-prob_jac = DE.ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+prob_jac = DE.ODEProblem(f!, [1.0, 0.0, 0.0], (0.0, 1.0e5), (0.04, 3.0e7, 1.0e4))
 ```
 
 ```@example faster_ode2
@@ -328,7 +328,7 @@ MTK.generate_jacobian(de)[2] # Second is in-place
 Now let's use that to give the analytical solution Jacobian:
 
 ```@example faster_ode2
-prob_jac2 = DE.ODEProblem(de, [], (0.0, 1e5); jac = true)
+prob_jac2 = DE.ODEProblem(de, [], (0.0, 1.0e5); jac = true)
 ```
 
 ```@example faster_ode2
@@ -354,9 +354,12 @@ function rober_static(u, p, t)
     du1 = -k₁ * y₁ + k₃ * y₂ * y₃
     du2 = k₁ * y₁ - k₂ * y₂^2 - k₃ * y₂ * y₃
     du3 = k₂ * y₂^2
-    StaticArrays.SA[du1, du2, du3]
+    return StaticArrays.SA[du1, du2, du3]
 end
-prob = DE.ODEProblem(rober_static, StaticArrays.SA[1.0, 0.0, 0.0], (0.0, 1e5), StaticArrays.SA[0.04, 3e7, 1e4])
+prob = DE.ODEProblem(
+    rober_static, StaticArrays.SA[1.0, 0.0, 0.0], (0.0, 1.0e5),
+    StaticArrays.SA[0.04, 3.0e7, 1.0e4]
+)
 sol = DE.solve(prob, DE.Rosenbrock23())
 ```
 
@@ -402,8 +405,13 @@ import DifferentialEquations as DE, LinearAlgebra as LA, BenchmarkTools as BT
 # Generate the constants
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0) # a,α,ubar,β,D1,D2
 N = 100
-Ax = Array(LA.Tridiagonal([1.0 for i in 1:(N - 1)], [-2.0 for i in 1:N],
-    [1.0 for i in 1:(N - 1)]))
+Ax = Array(
+    LA.Tridiagonal(
+        [1.0 for i in 1:(N - 1)],
+        [-2.0 for i in 1:N],
+        [1.0 for i in 1:(N - 1)]
+    )
+)
 Ay = copy(Ax)
 Ax[2, 1] = 2.0
 Ax[end - 1, end] = 2.0
@@ -418,6 +426,7 @@ function basic_version!(dr, r, p, t)
     Dv = D2 * (Ay * v + v * Ax)
     dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
     dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
+    return
 end
 
 a, α, ubar, β, D1, D2 = p
@@ -473,6 +482,7 @@ function gm2!(dr, r, p, t)
     Dv = D2 * (Ay * v + v * Ax)
     @. du = Du + a .* u .* u ./ v + ubar - α * u
     @. dv = Dv + a .* u .* u - β * v
+    return
 end
 prob = DE.ODEProblem(gm2!, r0, (0.0, 0.1), p)
 BT.@btime DE.solve(prob, DE.Tsit5());
@@ -505,6 +515,7 @@ function gm3!(dr, r, p, t)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
     @. dv = Dv + a * u * u - β * v
+    return
 end
 prob = DE.ODEProblem(gm3!, r0, (0.0, 0.1), p)
 BT.@btime DE.solve(prob, DE.Tsit5());
@@ -529,6 +540,7 @@ function gm4!(dr, r, p, t)
     @. Dv = D2 * (Ayv + vAx)
     @. du = Du + a * u * u ./ v + ubar - α * u
     @. dv = Dv + a * u * u - β * v
+    return
 end
 prob = DE.ODEProblem(gm4!, r0, (0.0, 0.1), p)
 BT.@btime DE.solve(prob, DE.Tsit5());
@@ -545,98 +557,103 @@ function fast_gm!(du, u, p, t)
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
 
         du[i, j, 1] = D1 *
-                      (u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
-                       4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            (
+            u[i - 1, j, 1] + u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] -
+                4u[i, j, 1]
+        ) +
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
     end
 
     @inbounds for j in 2:(N - 1), i in 2:(N - 1)
 
         du[i, j, 2] = D2 *
-                      (u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
-                       4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            (
+            u[i - 1, j, 2] + u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] -
+                4u[i, j, 2]
+        ) +
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
 
     @inbounds for j in 2:(N - 1)
         i = 1
         du[1, j, 1] = D1 *
-                      (2u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            (2u[i + 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
     end
     @inbounds for j in 2:(N - 1)
         i = 1
         du[1, j, 2] = D2 *
-                      (2u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            (2u[i + 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
     @inbounds for j in 2:(N - 1)
         i = N
         du[end, j, 1] = D1 *
-                        (2u[i - 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
-                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            (2u[i - 1, j, 1] + u[i, j + 1, 1] + u[i, j - 1, 1] - 4u[i, j, 1]) +
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
     end
     @inbounds for j in 2:(N - 1)
         i = N
         du[end, j, 2] = D2 *
-                        (2u[i - 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
-                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+            (2u[i - 1, j, 2] + u[i, j + 1, 2] + u[i, j - 1, 2] - 4u[i, j, 2]) +
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
 
     @inbounds for i in 2:(N - 1)
         j = 1
         du[i, 1, 1] = D1 *
-                      (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
     end
     @inbounds for i in 2:(N - 1)
         j = 1
         du[i, 1, 2] = D2 *
-                      (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
     @inbounds for i in 2:(N - 1)
         j = N
         du[i, end, 1] = D1 *
-                        (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
-                        a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            (u[i - 1, j, 1] + u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
     end
     @inbounds for i in 2:(N - 1)
         j = N
         du[i, end, 2] = D2 *
-                        (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
-                        a * u[i, j, 1]^2 - β * u[i, j, 2]
+            (u[i - 1, j, 2] + u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
 
     @inbounds begin
         i = 1
         j = 1
         du[1, 1, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
         du[1, 1, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
 
         i = 1
         j = N
         du[1, N, 1] = D1 * (2u[i + 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
         du[1, N, 2] = D2 * (2u[i + 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
 
         i = N
         j = 1
         du[N, 1, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j + 1, 1] - 4u[i, j, 1]) +
-                      a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
         du[N, 1, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j + 1, 2] - 4u[i, j, 2]) +
-                      a * u[i, j, 1]^2 - β * u[i, j, 2]
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
 
         i = N
         j = N
         du[end, end, 1] = D1 * (2u[i - 1, j, 1] + 2u[i, j - 1, 1] - 4u[i, j, 1]) +
-                          a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
+            a * u[i, j, 1]^2 / u[i, j, 2] + ubar - α * u[i, j, 1]
         du[end, end, 2] = D2 * (2u[i - 1, j, 2] + 2u[i, j - 1, 2] - 4u[i, j, 2]) +
-                          a * u[i, j, 1]^2 - β * u[i, j, 2]
+            a * u[i, j, 1]^2 - β * u[i, j, 2]
     end
+    return
 end
 prob = DE.ODEProblem(fast_gm!, r0, (0.0, 0.1), p)
 BT.@btime DE.solve(prob, DE.Tsit5());
@@ -661,6 +678,7 @@ function basic_version!(dr, r, p, t)
     Dv = D2 * (Ay * v + v * Ax)
     dr[:, :, 1] = Du .+ a .* u .* u ./ v .+ ubar .- α * u
     dr[:, :, 2] = Dv .+ a .* u .* u .- β * v
+    return
 end
 
 a, α, ubar, β, D1, D2 = p

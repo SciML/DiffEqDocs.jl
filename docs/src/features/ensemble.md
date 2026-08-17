@@ -13,11 +13,13 @@ to specific answers, and compute summary statistics on the results.
 To perform a simulation on an ensemble of trajectories, define a `EnsembleProblem`. The constructor is:
 
 ```julia
-EnsembleProblem(prob::AbstractDEProblem;
+EnsembleProblem(
+    prob::AbstractDEProblem;
     output_func = (sol, ctx) -> (sol, false),
     prob_func = (prob, ctx) -> (prob),
     reduction = (u, data, I) -> (append!(u, data), false),
-    u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
+    u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC
+)
 ```
 
   - `output_func`: The function determines what is saved from the solution to the
@@ -53,7 +55,7 @@ One can specify a function `prob_func` which changes the problem. For example:
 ```julia
 function prob_func(prob, ctx)
     @. prob.u0 = randn() * prob.u0
-    prob
+    return prob
 end
 ```
 
@@ -65,7 +67,7 @@ a new problem type:
 ```julia
 function prob_func(prob, ctx)
     @. prob.u0 = u0_arr[ctx.sim_id]
-    prob
+    return prob
 end
 ```
 
@@ -333,9 +335,7 @@ use the `@everywhere` macro. Instead, the same problem can be implemented simply
 ```@example ensemble1_2
 import DifferentialEquations as DE
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
-function prob_func(prob, ctx)
-    DE.remake(prob, u0 = rand() * prob.u0)
-end
+prob_func(prob, ctx) = DE.remake(prob, u0 = rand() * prob.u0)
 ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
 sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleThreads(), trajectories = 10)
 import Plots;
@@ -357,9 +357,7 @@ we could simply index the `linspace` type:
 
 ```@example ensemble1_3
 initial_conditions = range(0, stop = 1, length = 100)
-function prob_func(prob, ctx)
-    DE.remake(prob, u0 = initial_conditions[ctx.sim_id])
-end
+prob_func(prob, ctx) = DE.remake(prob, u0 = initial_conditions[ctx.sim_id])
 ```
 
 It's worth noting that if you run this code successfully, there will be no visible output.
@@ -374,6 +372,7 @@ drift component:
 function f(du, u, p, t)
     du[1] = p[1] * u[1] - p[2] * u[1] * u[2]
     du[2] = -3 * u[2] + u[1] * u[2]
+    return
 end
 ```
 
@@ -383,6 +382,7 @@ For our noise function, we will use multiplicative noise:
 function g(du, u, p, t)
     du[1] = p[3] * u[1]
     du[2] = p[4] * u[2]
+    return
 end
 ```
 
@@ -449,9 +449,7 @@ the standard error of the mean for the final time point below our tolerance
 to discard the rest of the data.
 
 ```@example ensemble3
-function output_func(sol, ctx)
-    sol.u[end], false
-end
+output_func(sol, ctx) = (sol.u[end], false)
 ```
 
 Our `prob_func` will simply randomize the initial condition:
@@ -461,9 +459,7 @@ import DifferentialEquations as DE
 # Linear ODE which starts at 0.5 and solves from t=0.0 to t=1.0
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 
-function prob_func(prob, ctx)
-    DE.remake(prob, u0 = rand() * prob.u0)
-end
+prob_func(prob, ctx) = DE.remake(prob, u0 = rand() * prob.u0)
 ```
 
 Our reduction function will append the data from the current batch to the previous
@@ -475,15 +471,16 @@ import Statistics
 function reduction(u, batch, I)
     u = append!(u, batch)
     finished = (Statistics.var(u) / sqrt(last(I))) / Statistics.mean(u) < 0.5
-    u, finished
+    return u, finished
 end
 ```
 
 Then we can define and solve the problem:
 
 ```@example ensemble3
-prob2 = DE.EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
-    reduction = reduction, u_init = Vector{Float64}())
+prob2 = DE.EnsembleProblem(
+    prob; prob_func, output_func, reduction, u_init = Vector{Float64}()
+)
 sim = DE.solve(prob2, DE.Tsit5(), trajectories = 10000, batch_size = 20)
 ```
 
@@ -499,11 +496,8 @@ again. Instead of saving the solution at the end for each trajectory, we can ins
 save the running summation of the endpoints:
 
 ```@example ensemble3
-function reduction(u, batch, I)
-    u + sum(batch), false
-end
-prob2 = DE.EnsembleProblem(prob, prob_func = prob_func, output_func = output_func,
-    reduction = reduction, u_init = 0.0)
+reduction(u, batch, I) = (u + sum(batch), false)
+prob2 = DE.EnsembleProblem(prob; prob_func, output_func, reduction, u_init = 0.0)
 sim2 = DE.solve(prob2, DE.Tsit5(), trajectories = 100, batch_size = 20)
 ```
 
@@ -514,7 +508,7 @@ be the mean.
 ## Example 4: Using the Analysis Tools
 
 In this example, we will show how to analyze a `EnsembleSolution`. First, let's
-generate a 10 solution Monte Carlo experiment. For our problem, we will use a `4x2`
+generate a 10 solution Monte Carlo experiment. For our problem, we will use a 4×2
 system of linear stochastic differential equations:
 
 ```@example ensemble4
@@ -522,11 +516,13 @@ function f(du, u, p, t)
     for i in 1:length(u)
         du[i] = 1.01 * u[i]
     end
+    return
 end
 function σ(du, u, p, t)
     for i in 1:length(u)
         du[i] = 0.87 * u[i]
     end
+    return
 end
 import DifferentialEquations as DE
 prob = DE.SDEProblem(f, σ, ones(4, 2) / 2, (0.0, 1.0)) #prob_sde_2Dlinear
@@ -540,7 +536,7 @@ explicitly give a `dt`.
 ```@example ensemble4
 import StochasticDiffEq as SDE # SRIW1 is no longer reexported by DifferentialEquations v8
 prob2 = DE.EnsembleProblem(prob)
-sim = SDE.solve(prob2, SDE.SRIW1(), dt = 1 // 2^(3), trajectories = 10, adaptive = false);
+sim = SDE.solve(prob2, SDE.SRIW1(), dt = 1 // 2^3, trajectories = 10, adaptive = false);
 @info "Ensemble solution computed with $(length(sim)) trajectories" # hide
 nothing # hide
 ```
@@ -579,7 +575,8 @@ compute covariance matrices similarly:
 
 ```@example ensemble4
 DE.EnsembleAnalysis.timeseries_steps_meancov(sim) # Use the time steps, assume fixed dt
-DE.EnsembleAnalysis.timeseries_point_meancov(sim, 0:(1 // 2 ^ (3)):1, 0:(1 // 2 ^ (3)):1) # Use time points, interpolate
+dt = 1 // 2^3
+DE.EnsembleAnalysis.timeseries_point_meancov(sim, 0:dt:1, 0:dt:1) # Use time points, interpolate
 ```
 
 For general analysis, we can build a `EnsembleSummary` type.

@@ -28,6 +28,7 @@ function simplependulum!(du, u, p, t)
     dθ = u[2]
     du[1] = dθ
     du[2] = -(g / L) * sin(θ)
+    return
 end
 ```
 
@@ -44,6 +45,7 @@ There are collocation and shooting methods for addressing boundary value problem
 function bc1!(residual, u, p, t)
     residual[1] = u(pi / 4)[1] + pi / 2 # the solution at the middle of the time span should be -pi/2
     residual[2] = u(pi / 2)[1] - pi / 2 # the solution at the end of the time span should be pi/2
+    return
 end
 bvp1 = BVP.BVProblem(simplependulum!, bc1!, [pi / 2, pi / 2], tspan)
 sol1 = BVP.solve(bvp1, BVP.MIRK4(); dt = 0.05)
@@ -58,6 +60,7 @@ u₀_2 = [-1.6, -1.7] # the initial guess
 function bc3!(residual, sol, p, t)
     residual[1] = sol(pi / 4)[1] + pi / 2 # use the interpolation here, since indexing will be wrong for adaptive methods
     residual[2] = sol(pi / 2)[1] - pi / 2
+    return
 end
 bvp3 = BVP.BVProblem(simplependulum!, bc3!, u₀_2, tspan)
 sol3 = BVP.solve(bvp3, BVP.Shooting(ODE.Vern7()))
@@ -78,12 +81,16 @@ Defining a similar problem as `TwoPointBVProblem` is shown in the following exam
 ```@example bvp
 function bc2a!(resid_a, u_a, p) # u_a is at the beginning of the time span
     resid_a[1] = u_a[1] + pi / 2 # the solution at the beginning of the time span should be -pi/2
+    return
 end
 function bc2b!(resid_b, u_b, p) # u_b is at the ending of the time span
     resid_b[1] = u_b[1] - pi / 2 # the solution at the end of the time span should be pi/2
+    return
 end
-bvp2 = BVP.TwoPointBVProblem(simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
-    bcresid_prototype = (zeros(1), zeros(1)))
+bvp2 = BVP.TwoPointBVProblem(
+    simplependulum!, (bc2a!, bc2b!), [pi / 2, pi / 2], tspan;
+    bcresid_prototype = (zeros(1), zeros(1))
+)
 sol2 = BVP.solve(bvp2, BVP.MIRK4(); dt = 0.05)
 Plots.plot(sol2)
 ```
@@ -123,6 +130,7 @@ function f!(ddu, du, u, p, t)
     ddu[1] = u[2]
     ddu[2] = (-u[1] * du[2] - u[3] * du[3]) / ε
     ddu[3] = (du[1] * u[3] - u[1] * du[3]) / ε
+    return
 end
 function bc!(res, du, u, p, t)
     res[1] = u(0.0)[1]
@@ -131,12 +139,13 @@ function bc!(res, du, u, p, t)
     res[4] = u(1.0)[3] - 1
     res[5] = du(0.0)[1]
     res[6] = du(1.0)[1]
+    return
 end
 u0 = [1.0, 1.0, 1.0]
 tspan = (0.0, 1.0)
 prob = BVP.SecondOrderBVProblem(f!, bc!, u0, tspan)
-sol = BVP.solve(prob, BVP.MIRKN4(;
-    jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff())); dt = 0.01)
+solver = BVP.MIRKN4(; jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
+sol = BVP.solve(prob, solver; dt = 0.01)
 ```
 
 ## Example 3: Semi-Explicit Boundary Value Differential-Algebraic Equations
@@ -170,11 +179,13 @@ function f!(du, u, p, t)
     du[2] = cos(t)
     du[3] = u[4]
     du[4] = (u[1] - sin(t)) * (u[4] - exp(t))
+    return
 end
 function bc!(res, u, p, t)
     res[1] = u[1]
     res[2] = u[3] - 1
     res[3] = u[2] - sin(1.0)
+    return
 end
 u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
