@@ -13,11 +13,13 @@ to specific answers, and compute summary statistics on the results.
 To perform a simulation on an ensemble of trajectories, define a `EnsembleProblem`. The constructor is:
 
 ```julia
-EnsembleProblem(prob::AbstractDEProblem;
+EnsembleProblem(
+    prob::AbstractDEProblem;
     output_func = (sol, ctx) -> (sol, false),
     prob_func = (prob, ctx) -> (prob),
     reduction = (u, data, I) -> (append!(u, data), false),
-    u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC)
+    u_init = [], safetycopy = prob_func !== DEFAULT_PROB_FUNC
+)
 ```
 
   - `output_func`: The function determines what is saved from the solution to the
@@ -53,7 +55,7 @@ One can specify a function `prob_func` which changes the problem. For example:
 ```julia
 function prob_func(prob, ctx)
     @. prob.u0 = randn() * prob.u0
-    prob
+    return prob
 end
 ```
 
@@ -65,7 +67,7 @@ a new problem type:
 ```julia
 function prob_func(prob, ctx)
     @. prob.u0 = u0_arr[ctx.sim_id]
-    prob
+    return prob
 end
 ```
 

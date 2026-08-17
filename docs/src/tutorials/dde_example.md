@@ -51,8 +51,10 @@ end
 Now we build a `DDEProblem`. The signature
 
 ```julia
-prob = DDE.DDEProblem(f, u0, h, tspan, p = SciMLBase.NullParameters();
-    constant_lags = [], dependent_lags = [], kwargs...)
+prob = DDE.DDEProblem(
+    f, u0, h, tspan, p = SciMLBase.NullParameters();
+    constant_lags = [], dependent_lags = [], kwargs...
+)
 ```
 
 is very similar to ODEs, where we now have to give the lags and a function `h`.

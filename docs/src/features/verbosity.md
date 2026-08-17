@@ -13,7 +13,8 @@ using OrdinaryDiffEq
 function lorenz!(du, u, p, t)
     du[1] = 10.0 * (u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
-    du[3] = u[1] * u[2] - (8/3) * u[3]
+    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+    return
 end
 
 u0 = [1.0, 0.0, 0.0]
@@ -50,11 +51,12 @@ function rober(du, u, p, t)
     du[1] = -k₁ * y₁ + k₃ * y₂ * y₃
     du[2] = k₁ * y₁ - k₃ * y₂ * y₃ - k₂ * y₂^2
     du[3] = y₁ + y₂ + y₃ - 1
+    return
 end
 
 u0 = [1.0, 0.0, 0.0]
 tspan = (0.0, 0.1)
-p = [0.04, 3e7, 1e4]
+p = [0.04, 3.0e7, 1.0e4]
 prob = ODEProblem(rober, u0, tspan, p)
 
 # Monitor performance-related events and linear solver details
@@ -127,14 +129,11 @@ using LinearSolve: LinearVerbosity
 using NonlinearSolve: NonlinearVerbosity
 
 # Create explicit verbosity objects
-linear_verb = LinearVerbosity(SciMLLogging.Detailed())
-nonlinear_verb = NonlinearVerbosity(SciMLLogging.Minimal())
+linear_verbosity = LinearVerbosity(SciMLLogging.Detailed())
+nonlinear_verbosity = NonlinearVerbosity(SciMLLogging.Minimal())
 
 # Pass them to DEVerbosity
-verbose = DEVerbosity(
-    linear_verbosity = linear_verb,
-    nonlinear_verbosity = nonlinear_verb
-)
+verbose = DEVerbosity(; linear_verbosity, nonlinear_verbosity)
 
 # Use with a stiff solver
 sol = solve(prob, Rosenbrock23(), verbose = verbose)

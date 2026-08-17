@@ -31,6 +31,7 @@ using DASSL, DiffEqBase
 function f!(res, du, u, p, t)
     res[1] = du[1] - u[2]
     res[2] = u[1] + u[2] - 1.0
+    return
 end
 
 # Initial conditions

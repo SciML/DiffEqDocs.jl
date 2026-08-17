@@ -80,6 +80,7 @@ function pendulum!(res, du, u, p, t)
     res[1] = dx - du[1]
     res[2] = dy - du[2]
     res[3] = x^2 + y^2 - L^2  # Algebraic constraint
+    return
 end
 
 u0 = [1.0, 0.0, 0.0]  # Initial position
@@ -87,8 +88,10 @@ du0 = [0.0, 0.0, 0.0]  # Initial velocity (inconsistent!)
 p = [9.81, 1.0]  # g, L
 tspan = (0.0, 10.0)
 
-prob = DAEProblem(pendulum!, du0, u0, tspan, p,
-                  differential_vars = [true, true, false])
+prob = DAEProblem(
+    pendulum!, du0, u0, tspan, p,
+    differential_vars = [true, true, false]
+)
 
 # BrownFullBasicInit will fix the inconsistent du0
 sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())
@@ -101,8 +104,10 @@ sol = solve(prob, DFBDF(), initializealg = BrownFullBasicInit())
 u0_consistent = [1.0, 0.0, 0.0]
 du0_consistent = [0.0, -1.0, compute_tension(u0_consistent, p)]
 
-prob2 = DAEProblem(pendulum!, du0_consistent, u0_consistent, tspan, p,
-                   differential_vars = [true, true, false])
+prob2 = DAEProblem(
+    pendulum!, du0_consistent, u0_consistent, tspan, p,
+    differential_vars = [true, true, false]
+)
 
 # RECOMMENDED: Verify they're consistent with CheckInit
 sol = solve(prob2, DFBDF(), initializealg = CheckInit())
@@ -125,9 +130,9 @@ using SciMLBase               # DAEProblem, solve
 D = Differential(t)
 
 eqs = [
-    D(x) ~ -T * x/L,
-    D(y) ~ -T * y/L - g,
-    x^2 + y^2 ~ L^2
+    D(x) ~ -T * x / L,
+    D(y) ~ -T * y / L - g,
+    x^2 + y^2 ~ L^2,
 ]
 
 @named pendulum = ODESystem(eqs, t, [x, y, T], [g, L])

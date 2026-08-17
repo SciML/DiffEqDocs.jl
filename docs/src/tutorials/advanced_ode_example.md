@@ -380,6 +380,7 @@ function psetupilu(p, t, u, du, jok, jcurPtr, gamma)
         # Build preconditioner on W
         preccache[] = IncompleteLU.ilu(W, τ = 5.0)
     end
+    return
 end
 ```
 
@@ -387,18 +388,20 @@ Then the preconditioner action is to simply use the `ldiv!` of the generated
 preconditioner:
 
 ```julia
-function precilu(z, r, p, t, y, fy, gamma, delta, lr)
-    ldiv!(z, preccache[], r)
-end
+precilu(z, r, p, t, y, fy, gamma, delta, lr) = ldiv!(z, preccache[], r)
 ```
 
 We then simply pass these functions to the Sundials solver, with a choice of
 `prec_side=1` to indicate that it is a left-preconditioner:
 
 ```julia
-BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    Sundials.CVODE_BDF(; linear_solver = :GMRES, prec = precilu, psetup = psetupilu,
-        prec_side = 1); save_everystep = false);
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d_sparse,
+    Sundials.CVODE_BDF(;
+        linear_solver = :GMRES, prec = precilu, psetup = psetupilu, prec_side = 1
+    );
+    save_everystep = false
+);
 ```
 
 (`Sundials.CVODE_BDF` is from the **Sundials.jl** package — under DifferentialEquations.jl
@@ -408,9 +411,13 @@ v8 the umbrella no longer re-exports Sundials, so explicitly add `using Sundials
 And similarly for algebraic multigrid:
 
 ```julia
-prectmp2 = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(W,
-    presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
-    postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
+prectmp2 = AlgebraicMultigrid.aspreconditioner(
+    AlgebraicMultigrid.ruge_stuben(
+        W,
+        presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+        postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))
+    )
+)
 const preccache2 = Ref(prectmp2)
 function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
     if jok
@@ -423,18 +430,24 @@ function psetupamg(p, t, u, du, jok, jcurPtr, gamma)
         @. @view(W[idxs]) = @view(W[idxs]) + 1
 
         # Build preconditioner on W
-        preccache2[] = AlgebraicMultigrid.aspreconditioner(AlgebraicMultigrid.ruge_stuben(
-            W,
-            presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
-            postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))))
+        preccache2[] = AlgebraicMultigrid.aspreconditioner(
+            AlgebraicMultigrid.ruge_stuben(
+                W,
+                presmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1))),
+                postsmoother = AlgebraicMultigrid.Jacobi(rand(size(W, 1)))
+            )
+        )
     end
+    return
 end
 
-function precamg(z, r, p, t, y, fy, gamma, delta, lr)
-    ldiv!(z, preccache2[], r)
-end
+precamg(z, r, p, t, y, fy, gamma, delta, lr) = ldiv!(z, preccache2[], r)
 
-BT.@btime DE.solve(prob_ode_brusselator_2d_sparse,
-    Sundials.CVODE_BDF(; linear_solver = :GMRES, prec = precamg, psetup = psetupamg,
-        prec_side = 1); save_everystep = false);
+BT.@btime DE.solve(
+    prob_ode_brusselator_2d_sparse,
+    Sundials.CVODE_BDF(;
+        linear_solver = :GMRES, prec = precamg, psetup = psetupamg, prec_side = 1
+    );
+    save_everystep = false
+);
 ```
