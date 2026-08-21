@@ -23,7 +23,7 @@ prob = ODEProblem(lorenz!, u0, tspan)
 
 # Solve with detailed verbosity
 verbose = DEVerbosity(SciMLLogging.Detailed())
-sol = solve(prob, Tsit5(), verbose = verbose)
+sol = solve(prob, Tsit5(); verbose)
 ```
 
 ## Example Use Cases
@@ -37,7 +37,7 @@ using ODEProblemLibrary: prob_ode_vanderpol_stiff
 using OrdinaryDiffEqRosenbrock: Rodas5
 
 verbose = DEVerbosity(alg_switch = SciMLLogging.InfoLevel())
-sol = solve(prob_ode_vanderpol_stiff, AutoTsit5(Rodas5()), verbose = verbose)
+sol = solve(prob_ode_vanderpol_stiff, AutoTsit5(Rodas5()); verbose)
 ```
 
 ### Monitoring Stiff Solver Performance
@@ -64,7 +64,7 @@ verbose = DEVerbosity(
     performance = SciMLLogging.InfoLevel(),
     linear_verbosity = SciMLLogging.Detailed()
 )
-sol = solve(prob, Rosenbrock23(), verbose = verbose)
+sol = solve(prob, Rosenbrock23(); verbose)
 ```
 
 ### Debugging Step Acceptance/Rejection
@@ -76,7 +76,7 @@ verbose = DEVerbosity(
     step_accepted = SciMLLogging.InfoLevel(),
     step_rejected = SciMLLogging.InfoLevel()
 )
-sol = solve(prob, Tsit5(), verbose = verbose)
+sol = solve(prob, Tsit5(); verbose)
 ```
 
 ### Silent Operation
@@ -85,7 +85,7 @@ Completely disable all output:
 
 ```julia
 verbose = DEVerbosity(SciMLLogging.None())
-solve(prob, Tsit5(), verbose = verbose)
+solve(prob, Tsit5(); verbose)
 ```
 
 ## Using with `init`
@@ -97,7 +97,7 @@ verbose = DEVerbosity(
     alg_switch = SciMLLogging.InfoLevel(),
     linear_verbosity = SciMLLogging.Detailed()
 )
-integrator = init(prob, Rosenbrock23(), verbose = verbose)
+integrator = init(prob, Rosenbrock23(); verbose)
 
 # Step through the solution
 step!(integrator)
@@ -117,7 +117,7 @@ using OrdinaryDiffEqSDIRK: ImplicitEuler
 
 # Enable detailed nonlinear solver diagnostics
 verbose = DEVerbosity(nonlinear_verbosity = SciMLLogging.Detailed())
-sol = solve(prob, ImplicitEuler(nlsolve = NonlinearSolveAlg()), verbose = verbose)
+sol = solve(prob, ImplicitEuler(nlsolve = NonlinearSolveAlg()); verbose)
 ```
 
 ### Using LinearVerbosity and NonlinearVerbosity Explicitly
@@ -136,7 +136,7 @@ nonlinear_verbosity = NonlinearVerbosity(SciMLLogging.Minimal())
 verbose = DEVerbosity(; linear_verbosity, nonlinear_verbosity)
 
 # Use with a stiff solver
-sol = solve(prob, Rosenbrock23(), verbose = verbose)
+sol = solve(prob, Rosenbrock23(); verbose)
 ```
 
 ## Combining Settings Flexibly
@@ -151,7 +151,7 @@ verbose = DEVerbosity(
     step_rejected = SciMLLogging.Silent(),
     dt_NaN = SciMLLogging.ErrorLevel()
 )
-sol = solve(prob, Tsit5(), verbose = verbose)
+sol = solve(prob, Tsit5(); verbose)
 ```
 
 ## API Reference

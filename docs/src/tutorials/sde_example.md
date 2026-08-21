@@ -37,7 +37,7 @@ The `solve` interface is then the same as ODEs. Here, we will use the classic
 Euler-Maruyama algorithm `EM` and plot the solution:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.EM(), dt = dt);
+sol = SDE.solve(prob, SDE.EM(); dt);
 nothing # hide
 ```
 
@@ -64,7 +64,7 @@ prob = SDE.SDEProblem(ff, u₀, (0.0, 1.0))
 We can now compare the `SDE.EM()` solution with the analytic one:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.EM(), dt = dt);
+sol = SDE.solve(prob, SDE.EM(); dt);
 nothing # hide
 ```
 
@@ -77,7 +77,7 @@ the higher order methods are adaptive. Let's first switch off adaptivity and
 compare the numerical and analytic solutions :
 
 ```@example sde
-sol = SDE.solve(prob, SDE.SRIW1(), dt = dt, adaptive = false);
+sol = SDE.solve(prob, SDE.SRIW1(); dt, adaptive = false);
 nothing # hide
 ```
 
@@ -100,7 +100,7 @@ Plots.plot(sol, plot_analytic = true)
 We can instead start the method with a larger `dt` by passing it to `solve`:
 
 ```@example sde
-sol = SDE.solve(prob, SDE.SRIW1(), dt = dt);
+sol = SDE.solve(prob, SDE.SRIW1(); dt);
 nothing # hide
 ```
 

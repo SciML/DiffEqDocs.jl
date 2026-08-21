@@ -254,5 +254,5 @@ and used via
 
 ```julia
 import StochasticDiffEq as SDE # EM
-sol = SDE.solve(prob, SDE.EM(), dt = dt, adaptive = true, controller = CustomController())
+sol = SDE.solve(prob, SDE.EM(); dt, adaptive = true, controller = CustomController())
 ```
