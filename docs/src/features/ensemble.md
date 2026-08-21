@@ -306,7 +306,7 @@ end
 Now we build and solve the `EnsembleProblem` with this base problem and `prob_func`:
 
 ```julia
-ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
+ensemble_prob = DE.EnsembleProblem(prob; prob_func)
 sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleDistributed(), trajectories = 10)
 ```
 
@@ -336,7 +336,7 @@ use the `@everywhere` macro. Instead, the same problem can be implemented simply
 import DifferentialEquations as DE
 prob = DE.ODEProblem((u, p, t) -> 1.01u, 0.5, (0.0, 1.0))
 prob_func(prob, ctx) = DE.remake(prob, u0 = rand() * prob.u0)
-ensemble_prob = DE.EnsembleProblem(prob, prob_func = prob_func)
+ensemble_prob = DE.EnsembleProblem(prob; prob_func)
 sim = DE.solve(ensemble_prob, DE.Tsit5(), DE.EnsembleThreads(), trajectories = 10)
 import Plots;
 Plots.plot(sim);
@@ -417,7 +417,7 @@ end
 Now we solve the problem 10 times and plot all of the trajectories in phase space:
 
 ```@example ensemble2
-ensemble_prob = SDE.EnsembleProblem(prob, prob_func = prob_func)
+ensemble_prob = SDE.EnsembleProblem(prob; prob_func)
 sim = SDE.solve(ensemble_prob, SDE.SRIW1(), trajectories = 10);
 nothing # hide
 ```

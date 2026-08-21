@@ -214,11 +214,11 @@ With these functions we can build our callbacks:
 import DifferentialEquations as DE
 save_positions = (true, true)
 
-cb = DE.DiscreteCallback(condition, affect!, save_positions = save_positions)
+cb = DE.DiscreteCallback(condition, affect!; save_positions)
 
 save_positions = (false, true)
 
-cb2 = DE.DiscreteCallback(condition2, affect2!, save_positions = save_positions)
+cb2 = DE.DiscreteCallback(condition2, affect2!; save_positions)
 
 cbs = DE.CallbackSet(cb, cb2)
 ```
@@ -714,7 +714,7 @@ callback = DE.ContinuousCallback(condition, affect!)
 u0 = [0.2]
 tspan = (0.0, 10.0)
 prob = DE.ODEProblem(f, u0, tspan)
-sol = DE.solve(prob, callback = callback)
+sol = DE.solve(prob; callback)
 ```
 
 The plot recipes do not have a way of handling the changing size, but we can

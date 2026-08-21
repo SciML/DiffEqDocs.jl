@@ -132,7 +132,7 @@ and make the `DAEProblem`:
 
 ```@example dae
 differential_vars = [true, true, false]
-prob = DE.DAEProblem(f2, du₀, u₀, tspan, differential_vars = differential_vars)
+prob = DE.DAEProblem(f2, du₀, u₀, tspan; differential_vars)
 ```
 
 `differential_vars` is an option which states which of the variables are differential,
