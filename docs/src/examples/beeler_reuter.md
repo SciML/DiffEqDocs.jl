@@ -60,15 +60,15 @@ mutable struct BeelerReuterCpu
     t::Float64              # the last timestep time to calculate Δt
     diff_coef::Float64      # the diffusion-coefficient (coupling strength)
 
-    C::Array{Float32, 2}    # intracellular calcium concentration
-    M::Array{Float32, 2}    # sodium current activation gate (m)
-    H::Array{Float32, 2}    # sodium current inactivation gate (h)
-    J::Array{Float32, 2}    # sodium current slow inactivation gate (j)
-    D::Array{Float32, 2}    # calcium current activation gate (d)
-    F::Array{Float32, 2}    # calcium current inactivation gate (f)
-    XI::Array{Float32, 2}   # inward-rectifying potassium current (iK1)
+    C::Matrix{Float32}      # intracellular calcium concentration
+    M::Matrix{Float32}      # sodium current activation gate (m)
+    H::Matrix{Float32}      # sodium current inactivation gate (h)
+    J::Matrix{Float32}      # sodium current slow inactivation gate (j)
+    D::Matrix{Float32}      # calcium current activation gate (d)
+    F::Matrix{Float32}      # calcium current inactivation gate (f)
+    XI::Matrix{Float32}     # inward-rectifying potassium current (iK1)
 
-    Δu::Array{Float64, 2}   # place-holder for the Laplacian
+    Δu::Matrix{Float64}     # place-holder for the Laplacian
 
     function BeelerReuterCpu(u0, diff_coef)
         self = new()
@@ -266,19 +266,17 @@ Here, every time step is called three times. We distinguish between two types of
 function update_gates_cpu(u, XI, M, H, J, D, F, C, Δt)
     let Δt = Float32(Δt)
         n1, n2 = size(u)
-        for j in 1:n2
-            for i in 1:n1
-                v = Float32(u[i, j])
+        for j in 1:n2, i in 1:n1
+            v = Float32(u[i, j])
 
-                XI[i, j] = update_XI_cpu(XI[i, j], v, Δt)
-                M[i, j] = update_M_cpu(M[i, j], v, Δt)
-                H[i, j] = update_H_cpu(H[i, j], v, Δt)
-                J[i, j] = update_J_cpu(J[i, j], v, Δt)
-                D[i, j] = update_D_cpu(D[i, j], v, Δt)
-                F[i, j] = update_F_cpu(F[i, j], v, Δt)
+            XI[i, j] = update_XI_cpu(XI[i, j], v, Δt)
+            M[i, j] = update_M_cpu(M[i, j], v, Δt)
+            H[i, j] = update_H_cpu(H[i, j], v, Δt)
+            J[i, j] = update_J_cpu(J[i, j], v, Δt)
+            D[i, j] = update_D_cpu(D[i, j], v, Δt)
+            F[i, j] = update_F_cpu(F[i, j], v, Δt)
 
-                C[i, j] = update_C_cpu(C[i, j], D[i, j], F[i, j], v, Δt)
-            end
+            C[i, j] = update_C_cpu(C[i, j], D[i, j], F[i, j], v, Δt)
         end
     end
     return
@@ -322,22 +320,20 @@ end
 function update_du_cpu(du, u, XI, M, H, J, D, F, C)
     n1, n2 = size(u)
 
-    for j in 1:n2
-        for i in 1:n1
-            v = Float32(u[i, j])
+    for j in 1:n2, i in 1:n1
+        v = Float32(u[i, j])
 
-            # calculating individual currents
-            iK1 = calc_iK1(v)
-            ix1 = calc_ix1(v, XI[i, j])
-            iNa = calc_iNa(v, M[i, j], H[i, j], J[i, j])
-            iCa = calc_iCa(v, D[i, j], F[i, j], C[i, j])
+        # calculating individual currents
+        iK1 = calc_iK1(v)
+        ix1 = calc_ix1(v, XI[i, j])
+        iNa = calc_iNa(v, M[i, j], H[i, j], J[i, j])
+        iCa = calc_iCa(v, D[i, j], F[i, j], C[i, j])
 
-            # total current
-            I_sum = iK1 + ix1 + iNa + iCa
+        # total current
+        I_sum = iK1 + ix1 + iNa + iCa
 
-            # the reaction part of the reaction-diffusion equation
-            du[i, j] = -I_sum / C_m
-        end
+        # the reaction part of the reaction-diffusion equation
+        du[i, j] = -I_sum / C_m
     end
     return
 end
