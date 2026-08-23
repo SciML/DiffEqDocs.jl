@@ -725,7 +725,7 @@ and plot them directly:
 ```@example callback5
 import Plots
 Plots.plot(
-    sol.t, map((x) -> length(x), sol[:]), lw = 3,
+    sol.t, map(length, sol[:]), lw = 3,
     ylabel = "Number of Cells", xlabel = "Time"
 )
 ```
@@ -736,7 +736,7 @@ plot of the concentration of cell 1 over time. This is done with the command:
 ```@example callback5
 ts = range(0, stop = 10, length = 100)
 Plots.plot(
-    ts, map((x) -> x[1], sol.(ts)), lw = 3,
+    ts, map(first, sol.(ts)), lw = 3,
     ylabel = "Amount of X in Cell 1", xlabel = "Time"
 )
 ```
