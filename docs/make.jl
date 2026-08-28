@@ -6,9 +6,11 @@ using Documenter, DiffEqBase, SciMLBase, CommonSolve, OrdinaryDiffEq, OrdinaryDi
 # so listing each subpackage explicitly is what keeps the API docs complete and robust.
 using OrdinaryDiffEqAdamsBashforthMoulton, OrdinaryDiffEqDefault, OrdinaryDiffEqExplicitRK,
     OrdinaryDiffEqExponentialRK, OrdinaryDiffEqExtrapolation, OrdinaryDiffEqFeagin,
-    OrdinaryDiffEqFIRK, OrdinaryDiffEqHighOrderRK, OrdinaryDiffEqIMEXMultistep,
+    OrdinaryDiffEqFIRK, OrdinaryDiffEqFunctionMap, OrdinaryDiffEqHighOrderRK,
+    OrdinaryDiffEqIMEXMultistep,
     OrdinaryDiffEqLinear, OrdinaryDiffEqLowOrderRK, OrdinaryDiffEqLowStorageRK,
-    OrdinaryDiffEqNonlinearSolve, OrdinaryDiffEqNordsieck, OrdinaryDiffEqPDIRK,
+    OrdinaryDiffEqNewmark, OrdinaryDiffEqNonlinearSolve, OrdinaryDiffEqNordsieck,
+    OrdinaryDiffEqPDIRK,
     OrdinaryDiffEqPRK, OrdinaryDiffEqQPRK, OrdinaryDiffEqRKN,
     OrdinaryDiffEqRosenbrock, OrdinaryDiffEqSDIRK, OrdinaryDiffEqSSPRK,
     OrdinaryDiffEqStabilizedIRK, OrdinaryDiffEqStabilizedRK, OrdinaryDiffEqSymplecticRK,
@@ -115,11 +117,13 @@ modules = [
     OrdinaryDiffEqExtrapolation,
     OrdinaryDiffEqFeagin,
     OrdinaryDiffEqFIRK,
+    OrdinaryDiffEqFunctionMap,
     OrdinaryDiffEqHighOrderRK,
     OrdinaryDiffEqIMEXMultistep,
     OrdinaryDiffEqLinear,
     OrdinaryDiffEqLowOrderRK,
     OrdinaryDiffEqLowStorageRK,
+    OrdinaryDiffEqNewmark,
     OrdinaryDiffEqNonlinearSolve,
     OrdinaryDiffEqNordsieck,
     OrdinaryDiffEqPDIRK,
@@ -212,13 +216,7 @@ makedocs(;
         "https://epubs.siam.org/doi/10.1137/S0036144504444711",
     ],
     doctest = false, clean = true,
-    # The api/ordinarydiffeq and api/stochasticdiffeq trees are copied verbatim from the
-    # released packages, and the docstrings they render cross-reference solver internals
-    # (caches, `unwrap_alg`, the composite-algorithm switching types) that this aggregated
-    # site does not pull in as `@docs`. Those unresolvable `@ref`s are the same
-    # upstream-ownership problem that :docs_block and :missing_docs are already tolerated
-    # for here, so they must not fail the build either.
-    warnonly = [:missing_docs, :docs_block, :cross_references],
+    warnonly = [:missing_docs, :docs_block],
     format = Documenter.HTML(
         assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/",
