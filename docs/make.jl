@@ -13,6 +13,14 @@ using OrdinaryDiffEqAdamsBashforthMoulton, OrdinaryDiffEqDefault, OrdinaryDiffEq
     OrdinaryDiffEqRosenbrock, OrdinaryDiffEqSDIRK, OrdinaryDiffEqSSPRK,
     OrdinaryDiffEqStabilizedIRK, OrdinaryDiffEqStabilizedRK, OrdinaryDiffEqSymplecticRK,
     OrdinaryDiffEqTsit5, OrdinaryDiffEqVerner, OrdinaryDiffEqAMF
+# The copied explicit/TaylorSeries.md documents `OrdinaryDiffEqTaylorSeries.*` bindings and
+# globalerrorcontrol/GlobalDiffEq.md documents `GlobalRichardson`, so both packages have to
+# be loaded here the way OrdinaryDiffEq's own docs/make.jl loads them.
+import OrdinaryDiffEqTaylorSeries
+using GlobalDiffEq
+# The `@autodocs` blocks in the copied api/common_interface.md evaluate their
+# `Modules = [...]` in this scope, so those modules have to be reachable from here too.
+import ADTypes, SciMLOperators
 using ImplicitDiscreteSolve, DiffEqDevTools
 using StochasticDiffEqCore, StochasticDiffEqHighOrder, StochasticDiffEqIIF,
     StochasticDiffEqImplicit, StochasticDiffEqLeaping, StochasticDiffEqLowOrder,
@@ -124,9 +132,11 @@ modules = [
     OrdinaryDiffEqStabilizedIRK,
     OrdinaryDiffEqStabilizedRK,
     OrdinaryDiffEqSymplecticRK,
+    OrdinaryDiffEqTaylorSeries,
     OrdinaryDiffEqTsit5,
     OrdinaryDiffEqVerner,
     OrdinaryDiffEqAMF,
+    GlobalDiffEq,
     ImplicitDiscreteSolve,
     DiffEqDevTools,
     StochasticDiffEq,
@@ -192,9 +202,23 @@ makedocs(;
         "https://github.com/JuliaSparse/KLU.jl",
         "https://github.com/JuliaDiff/ForwardDiff.jl",
         "https://www.mathworks.com/help/matlab/math/nonnegative-ode-solution.html",
+        # Absolute links baked into the upstream pages and docstrings copied into this site,
+        # pointing at pages that the deployed docs do not have: SciMLBase's Problem_Traits
+        # page is only in its unreleased docs, and OrdinaryDiffEq's devtools tree is
+        # deliberately dropped from this build above.
+        "https://docs.sciml.ai/SciMLBase/stable/interfaces/Problem_Traits/",
+        "https://docs.sciml.ai/OrdinaryDiffEq/stable/devtools/internals/public_api/",
+        # Paywalled reference from the ADTypes docstrings that api/common_interface.md pulls in.
+        "https://epubs.siam.org/doi/10.1137/S0036144504444711",
     ],
     doctest = false, clean = true,
-    warnonly = [:missing_docs, :docs_block],
+    # The api/ordinarydiffeq and api/stochasticdiffeq trees are copied verbatim from the
+    # released packages, and the docstrings they render cross-reference solver internals
+    # (caches, `unwrap_alg`, the composite-algorithm switching types) that this aggregated
+    # site does not pull in as `@docs`. Those unresolvable `@ref`s are the same
+    # upstream-ownership problem that :docs_block and :missing_docs are already tolerated
+    # for here, so they must not fail the build either.
+    warnonly = [:missing_docs, :docs_block, :cross_references],
     format = Documenter.HTML(
         assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqDocs/stable/",
