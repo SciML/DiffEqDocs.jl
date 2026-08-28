@@ -2,7 +2,7 @@
 
 julia_version = "1.12.7"
 manifest_format = "2.0"
-project_hash = "f6ec99a12bf04199fc630d92eabd4fbcda868488"
+project_hash = "0906cb7d57d347dd7aeb97a78230dd5ae4438e03"
 
 [[deps.ADTypes]]
 deps = ["PrecompileTools"]
@@ -2226,6 +2226,12 @@ deps = ["Adapt", "CommonSolve", "DiffEqBase", "FastBroadcast", "MuladdMacro", "O
 git-tree-sha1 = "17b3f325d26c4a5e0ec8355bbe00800f626c4904"
 uuid = "b0944070-b475-4768-8dec-fb6eb410534d"
 version = "3.4.0"
+
+[[deps.OrdinaryDiffEqNewmark]]
+deps = ["ADTypes", "ConcreteStructs", "DiffEqBase", "FastBroadcast", "LinearAlgebra", "MacroTools", "MuladdMacro", "NonlinearSolveFirstOrder", "OrdinaryDiffEqCore", "PreallocationTools", "RecursiveArrayTools", "Reexport", "SciMLBase", "TruncatedStacktraces"]
+git-tree-sha1 = "7aed3f408b43d63e2c8d086b43baaf01c76691da"
+uuid = "d204908a-63b9-11ef-18f5-cfec7123a93b"
+version = "2.4.0"
 
 [[deps.OrdinaryDiffEqNonlinearSolve]]
 deps = ["ADTypes", "ArrayInterface", "CommonSolve", "ConstructionBase", "DiffEqBase", "FastBroadcast", "FastClosures", "ForwardDiff", "LinearAlgebra", "LinearSolve", "MuladdMacro", "NonlinearSolve", "NonlinearSolveBase", "OrdinaryDiffEqCore", "OrdinaryDiffEqDifferentiation", "PreallocationTools", "RecursiveArrayTools", "SciMLBase", "SciMLOperators", "SciMLPublic", "SimpleNonlinearSolve", "SparseArrays", "StaticArraysCore"]
