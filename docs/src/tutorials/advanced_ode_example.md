@@ -339,40 +339,43 @@ The first is the right-hand side. `brusselator_2d_loop` walks the grid with a sc
 `for` loop, and that cannot run on a device. Writing the same stencil as one broadcast
 puts the work on whichever device the index set lives on:
 
-```julia
-@inline function bruss_point!(du, u, A, B, α, I, t)
+```@example stiff1
+@inline function bruss_point!(du, u, A, B, alpha, I, t)
     i, j = Tuple(I)
     x, y = xyd_brusselator[i], xyd_brusselator[j]
     ip1, im1 = limit(i + 1, N), limit(i - 1, N)
     jp1, jm1 = limit(j + 1, N), limit(j - 1, N)
-    du[i, j, 1] = α * (u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] -
-                       4u[i, j, 1]) +
+    du[i, j, 1] = alpha * (
+        u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] - 4u[i, j, 1]
+    ) +
         B + u[i, j, 1]^2 * u[i, j, 2] - (A + 1) * u[i, j, 1] + brusselator_f(x, y, t)
-    du[i, j, 2] = α * (u[im1, j, 2] + u[ip1, j, 2] + u[i, jp1, 2] + u[i, jm1, 2] -
-                       4u[i, j, 2]) +
+    du[i, j, 2] = alpha * (
+        u[im1, j, 2] + u[ip1, j, 2] + u[i, jp1, 2] + u[i, jm1, 2] - 4u[i, j, 2]
+    ) +
         A * u[i, j, 1] - u[i, j, 1]^2 * u[i, j, 2]
     return nothing
 end
 
 function make_brusselator(idx)
     return function (du, u, p, t)
-        A, B, α, dx = p
-        bruss_point!.(Ref(du), Ref(u), A, B, α / dx^2, idx, t)
+        A, B, alpha, dx = p
+        bruss_point!.(Ref(du), Ref(u), A, B, alpha / dx^2, idx, t)
         return nothing
     end
 end
+nothing # hide
 ```
 
-Every array argument is wrapped in `Ref`, which makes it a scalar as far as broadcasting
-is concerned, so the index set is the only broadcastable argument and it alone decides
-where the loop runs. Pass a host `CartesianIndices` and the whole right-hand side runs
-on the CPU and reads the device arrays one element at a time, which raises
-`Scalar indexing is disallowed` before the solver has done anything.
+Every array argument is wrapped in `Ref`, which makes it a scalar as far as
+broadcasting is concerned, so the index set is the only broadcastable argument and it
+alone decides where the loop runs. Pass a host `CartesianIndices` and the whole
+right-hand side runs on the CPU and reads the device arrays one element at a time,
+which raises `Scalar indexing is disallowed` before the solver has done anything.
 
-The second is the Jacobian prototype, which is used as the template for the Jacobian
-that gets built and so has to be the array type you want back:
+The second is the Jacobian prototype, which is the template for the Jacobian that gets
+built, so it has to be the array type you want back:
 
-```julia
+```@example stiff1
 import CUDA, CUDSS
 import CUDA.CUSPARSE: CuSparseMatrixCSR, CuSparseMatrixCSC
 import SciMLBase: FullSpecialize
@@ -383,30 +386,37 @@ jac_prototype_gpu = CuSparseMatrixCSR(CuSparseMatrixCSC(float.(jac_sparsity)))
 
 f_gpu = DE.ODEFunction{true, FullSpecialize}(gpu_rhs!; jac_prototype = jac_prototype_gpu)
 prob_gpu = DE.ODEProblem(f_gpu, u0_gpu, (0.0, 11.5), p)
-
-DE.solve(prob_gpu, TRBDF2(); save_everystep = false)
+nothing # hide
 ```
 
-`CUDSS` is loaded because it provides the sparse LU on the GPU; without it the solve
+`CUDSS` is loaded because it supplies the sparse LU on the GPU. Without it the solve
 falls back to a Krylov method. `FullSpecialize` is used because the default wrapping
 goes through FunctionWrappers, whose compiled signature is too narrow for some GPU
 solver caches.
 
-It is worth checking the device right-hand side against the host one before trusting a
-solve, since a mistake here is quiet:
+A mistake in the right-hand side is quiet, so it is worth checking the device version
+against the host one before trusting a solve:
 
-```julia
-du_cpu = similar(u0);     brusselator_2d_loop(du_cpu, u0, p, 0.0)
-du_gpu = similar(u0_gpu); gpu_rhs!(du_gpu, u0_gpu, p, 0.0)
-@assert Array(du_gpu) ≈ du_cpu
+```@example stiff1
+du_cpu = similar(u0)
+brusselator_2d_loop(du_cpu, u0, p, 0.0)
+du_gpu = similar(u0_gpu)
+gpu_rhs!(du_gpu, u0_gpu, p, 0.0)
+Array(du_gpu) ≈ du_cpu
 ```
 
-Preconditioners work here as well. The `precs` callback receives the concrete `W`, which
-on this path is a `CuSparseMatrixCSR`, so the preconditioner has to be one that can be
-built from and applied to that. [KrylovPreconditioners.jl](https://github.com/JuliaSmoothOptimizers/KrylovPreconditioners.jl)
-provides GPU-ready incomplete factorizations:
+```@example stiff1
+DE.solve(prob_gpu, TRBDF2(); save_everystep = false)
+nothing # hide
+```
 
-```julia
+Preconditioners work here as well. The `precs` callback receives the concrete `W`,
+which on this path is a `CuSparseMatrixCSR`, so the preconditioner has to be one that
+can be built from and applied to that.
+[KrylovPreconditioners.jl](https://github.com/JuliaSmoothOptimizers/KrylovPreconditioners.jl)
+supplies GPU-ready incomplete factorizations:
+
+```@example stiff1
 import KrylovPreconditioners: kp_ilu0
 
 function gpu_ilu0(W, p)
@@ -418,16 +428,17 @@ DE.solve(
     TRBDF2(; linsolve = KrylovJL_GMRES(precs = gpu_ilu0), concrete_jac = true);
     save_everystep = false
 )
+nothing # hide
 ```
 
-Do not pass a raw `CUSPARSE.ilu02` result as a preconditioner. It stores the factors but
-has no `ldiv!` to apply them, so it cannot be used directly.
+A raw `CUSPARSE.ilu02` result cannot be used as a preconditioner. It stores the factors
+but has no `ldiv!` to apply them.
 
-Note that all three failure modes above report the same `Scalar indexing is disallowed`,
-so the stack trace is what tells them apart: frames in your own kernel or
-`Base.Broadcast` mean the right-hand side is running on the host, frames in `jacobian!`
-or `calc_J!` mean the Jacobian is being built into a host matrix, and frames in
-`lu_instance` mean `CUDSS` is not loaded.
+All three mistakes above report the same `Scalar indexing is disallowed`, so the stack
+trace is what separates them. Frames in your own kernel or `Base.Broadcast` mean the
+right-hand side is running on the host, frames in `jacobian!` or `calc_J!` mean the
+Jacobian is being built into a host matrix, and frames in `lu_instance` mean `CUDSS`
+is not loaded.
 
 ## Sundials-Specific Handling
 
