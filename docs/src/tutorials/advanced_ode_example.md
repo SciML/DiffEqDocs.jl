@@ -331,6 +331,115 @@ nothing # hide
 For more information on the preconditioner interface, see the
 [linear solver documentation](@ref linear_nonlinear).
 
+## Solving on the GPU
+
+The sparse Jacobian setup above works on a GPU, but two things have to change.
+
+The first is the right-hand side. `brusselator_2d_loop` walks the grid with a scalar
+`for` loop, and that cannot run on a device. Writing the same stencil as one broadcast
+puts the work on whichever device the index set lives on:
+
+```@example stiff1
+@inline function bruss_point!(du, u, A, B, alpha, I, t)
+    i, j = Tuple(I)
+    x, y = xyd_brusselator[i], xyd_brusselator[j]
+    ip1, im1 = limit(i + 1, N), limit(i - 1, N)
+    jp1, jm1 = limit(j + 1, N), limit(j - 1, N)
+    du[i, j, 1] = alpha * (
+        u[im1, j, 1] + u[ip1, j, 1] + u[i, jp1, 1] + u[i, jm1, 1] - 4u[i, j, 1]
+    ) +
+        B + u[i, j, 1]^2 * u[i, j, 2] - (A + 1) * u[i, j, 1] + brusselator_f(x, y, t)
+    du[i, j, 2] = alpha * (
+        u[im1, j, 2] + u[ip1, j, 2] + u[i, jp1, 2] + u[i, jm1, 2] - 4u[i, j, 2]
+    ) +
+        A * u[i, j, 1] - u[i, j, 1]^2 * u[i, j, 2]
+    return nothing
+end
+
+function make_brusselator(idx)
+    return function (du, u, p, t)
+        A, B, alpha, dx = p
+        bruss_point!.(Ref(du), Ref(u), A, B, alpha / dx^2, idx, t)
+        return nothing
+    end
+end
+nothing # hide
+```
+
+Every array argument is wrapped in `Ref`, which makes it a scalar as far as
+broadcasting is concerned, so the index set is the only broadcastable argument and it
+alone decides where the loop runs. Pass a host `CartesianIndices` and the whole
+right-hand side runs on the CPU and reads the device arrays one element at a time,
+which raises `Scalar indexing is disallowed` before the solver has done anything.
+
+The second is the Jacobian prototype, which is the template for the Jacobian that gets
+built, so it has to be the array type you want back:
+
+```@example stiff1
+import CUDA, CUDSS
+import CUDA.CUSPARSE: CuSparseMatrixCSR, CuSparseMatrixCSC
+import SciMLBase: FullSpecialize
+
+u0_gpu = CUDA.CuArray(u0)
+gpu_rhs! = make_brusselator(CUDA.CuArray(CartesianIndices((N, N))))
+jac_prototype_gpu = CuSparseMatrixCSR(CuSparseMatrixCSC(float.(jac_sparsity)))
+
+f_gpu = DE.ODEFunction{true, FullSpecialize}(gpu_rhs!; jac_prototype = jac_prototype_gpu)
+prob_gpu = DE.ODEProblem(f_gpu, u0_gpu, (0.0, 11.5), p)
+nothing # hide
+```
+
+`CUDSS` is loaded because it supplies the sparse LU on the GPU. Without it the solve
+falls back to a Krylov method. `FullSpecialize` is used because the default wrapping
+goes through FunctionWrappers, whose compiled signature is too narrow for some GPU
+solver caches.
+
+A mistake in the right-hand side is quiet, so it is worth checking the device version
+against the host one before trusting a solve:
+
+```@example stiff1
+du_cpu = similar(u0)
+brusselator_2d_loop(du_cpu, u0, p, 0.0)
+du_gpu = similar(u0_gpu)
+gpu_rhs!(du_gpu, u0_gpu, p, 0.0)
+Array(du_gpu) ≈ du_cpu
+```
+
+```@example stiff1
+DE.solve(prob_gpu, TRBDF2(); save_everystep = false)
+nothing # hide
+```
+
+Preconditioners work here as well. The `precs` callback receives the concrete `W`,
+which on this path is a `CuSparseMatrixCSR`, so the preconditioner has to be one that
+can be built from and applied to that.
+[KrylovPreconditioners.jl](https://github.com/JuliaSmoothOptimizers/KrylovPreconditioners.jl)
+supplies GPU-ready incomplete factorizations:
+
+```@example stiff1
+import KrylovPreconditioners: kp_ilu0
+
+function gpu_ilu0(W, p)
+    return kp_ilu0(convert(AbstractMatrix, W)), LinearAlgebra.I
+end
+
+DE.solve(
+    prob_gpu,
+    TRBDF2(; linsolve = KrylovJL_GMRES(precs = gpu_ilu0), concrete_jac = true);
+    save_everystep = false
+)
+nothing # hide
+```
+
+A raw `CUSPARSE.ilu02` result cannot be used as a preconditioner. It stores the factors
+but has no `ldiv!` to apply them.
+
+All three mistakes above report the same `Scalar indexing is disallowed`, so the stack
+trace is what separates them. Frames in your own kernel or `Base.Broadcast` mean the
+right-hand side is running on the host, frames in `jacobian!` or `calc_J!` mean the
+Jacobian is being built into a host matrix, and frames in `lu_instance` mean `CUDSS`
+is not loaded.
+
 ## Sundials-Specific Handling
 
 While much of the setup makes the transition to using Sundials automatic, there
