@@ -20,6 +20,7 @@ SciMLBase.NonlinearProblem
 ## Solution Type
 
 ```@docs
+SciMLBase.SteadyStateSolution
 SciMLBase.NonlinearSolution
 ```
 
