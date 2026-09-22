@@ -9,6 +9,14 @@
 SciMLBase.SteadyStateProblem
 ```
 
+## Nonlinear Problem
+
+A `SteadyStateProblem` is lowered to a `NonlinearProblem` by the steady state solvers.
+
+```@docs
+SciMLBase.NonlinearProblem
+```
+
 ## Solution Type
 
 ```@docs
