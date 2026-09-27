@@ -26,8 +26,8 @@ The Brusselator PDE is defined on a unit square periodic domain as follows:
 
 ```math
 \begin{align*}
-\frac{\partial U}{\partial t} &= 1 + U^2V - 4.4U + \alpha \nabla^2 U + f(x, y, t),\\
-\frac{\partial V}{\partial t} &= 3.4U - U^2V + \alpha \nabla^2 V,
+\frac{∂U}{∂t} &= 1 + U^2V - 4.4U + α ∇^2 U + f(x, y, t),\\
+\frac{∂V}{∂t} &= 3.4U - U^2V + α ∇^2 V,
 \end{align*}
 ```
 
@@ -40,12 +40,12 @@ f(x, y, t) = \begin{cases}
 \end{cases}
 ```
 
-and ``\nabla^2 = \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}`` is the two dimensional Laplacian operator. The above equations are to be solved for a time interval ``t \in [0, 11.5]`` subject to the initial conditions
+and ``∇^2 = \frac{∂^2}{∂x^2} + \frac{∂^2}{∂y^2}`` is the two dimensional Laplacian operator. The above equations are to be solved for a time interval ``t ∈ [0, 11.5]`` subject to the initial conditions
 
 ```math
 \begin{align*}
-U(x, y, 0) &= 22\cdot (y(1-y))^{3/2} \\
-V(x, y, 0) &= 27\cdot (x(1-x))^{3/2},
+U(x, y, 0) &= 22 \left[y (1-y)\right]^{3/2} \\
+V(x, y, 0) &= 27 \left[x (1-x)\right]^{3/2},
 \end{align*}
 ```
 

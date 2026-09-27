@@ -9,13 +9,13 @@ Note that this tutorial does not use the [higher order IMEX methods built into D
 There are hundreds of ionic models that describe cardiac electrical activity in various degrees of detail. Most are based on the classic [Hodgkin-Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model) and define the time-evolution of different state variables in the form of nonlinear first-order ODEs. The state vector for these models includes the transmembrane potential, gating variables, and ionic concentrations. The coupling between cells is through the transmembrane potential only and is described as a reaction-diffusion equation, which is a parabolic PDE,
 
 ```math
-\frac{\partial V}{\partial t} = \nabla (D  \nabla V) - \frac {I_\text{ion}} {C_m},
+\frac{∂V}{∂t} = ∇ (D ∇ V) - \frac {I_\text{ion}} {C_m},
 ```
 
 where ``V`` is the transmembrane potential, ``D`` is a diffusion tensor, ``I_\text{ion}`` is the sum of the transmembrane currents and is calculated from the ODEs, and ``C_m`` is the membrane capacitance, usually assumed to be constant. Here, we model a uniform and isotropic medium. Therefore, the model can be simplified to,
 
 ```math
-\frac{\partial V}{\partial t} = D \nabla^2 V - \frac {I_\text{ion}} {C_m},
+\frac{∂V}{∂t} = D ∇^2 V - \frac {I_\text{ion}} {C_m},
 ```
 
 where ``D`` is now a scalar. By nature, these models have to deal with different time scales and are therefore classified as *stiff*. Commonly, they are solved using the explicit Euler method, typically with a closed form for the integration of the gating variables (the Rush-Larsen method, see below). We can also solve these problems using implicit or semi-implicit PDE solvers (e.g., the [Crank-Nicholson method](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method) combined with an iterative solver). Higher order explicit methods such as Runge-Kutta and linear multistep methods cannot overcome the stiffness and are not particularly helpful.
@@ -143,31 +143,31 @@ We use an explicit solver for all the state variables except for the transmembra
 The [Rush-Larsen](https://ieeexplore.ieee.org/document/4122859/) method replaces the explicit Euler integration for the gating variables with direct integration. The starting point is the general ODE for the gating variables in Hodgkin-Huxley style ODEs,
 
 ```math
-\frac{dg}{dt} = (1 - g) \alpha(V) - g \beta(V)
+\frac{dg}{dt} = (1 - g) α(V) - g β(V)
 ```
 
 where ``g`` is a generic gating variable, ranging from 0 to 1, and ``α`` and ``β`` are reaction rates. This equation can be written as,
 
 ```math
-\frac{dg}{dt} = \frac{g_{\infty} - g}{\tau_g},
+\frac{dg}{dt} = \frac{g_{∞} - g}{τ_g},
 ```
 
 where ``g_∞`` and ``τ_g`` are
 
 ```math
-g_{\infty} = \frac{\alpha}{\alpha + \beta},
+g_{∞} = \frac{α}{α + β},
 ```
 
 and,
 
 ```math
-\tau_g = \frac{1}{\alpha + \beta}.
+τ_g = \frac{1}{α + β}.
 ```
 
 Assuming that ``g_∞`` and ``τ_g`` are constant for the duration of a single time step (``Δt``), which is a reasonable assumption for most cardiac models, we can integrate directly to have,
 
 ```math
-g(t + Δt) = g_∞ - \left(g_∞ - g(Δt)\right)\,e^{-Δt/τ_g}.
+g(t + Δt) = g_∞ - \left(g_∞ - g(Δt)\right) \, e^{-Δt/τ_g}.
 ```
 
 This is the Rush-Larsen technique. Note that as ``Δt → 0``, this equation morphs into the explicit Euler formula,
@@ -405,7 +405,7 @@ GPUs are great for embarrassingly parallel problems, but not so much for highly 
 
 It this section, we present a brief summary of how GPUs (specifically NVIDIA GPUs) work and how to program them using the Julia CUDA interface. The readers who are familiar with these basic concepts may skip this section.
 
-Let's start by looking at the hardware of a typical high-end GPU, GTX 1080. It has four Graphics Processing Clusters (equivalent to a discrete CPU), each harboring five Streaming Multiprocessor (similar to a CPU core). Each SM has 128 single-precision CUDA cores. Therefore, GTX 1080 has a total of 4 x 5 x 128 = 2560 CUDA cores. The maximum  theoretical throughput for a GTX 1080 is reported as 8.87 TFLOPS. This figure is calculated for a boost clock frequency of 1.733 MHz as 2 x 2560 x 1.733 MHz = 8.87 TFLOPS. The factor 2 is included because two single floating-point operations, a multiplication and an addition, can be done in a clock cycle as part of a fused-multiply-addition FMA operation. GTX 1080 also has 8192 MB of global memory accessible to all the cores (in addition to local and shared memory on each SM).
+Let's start by looking at the hardware of a typical high-end GPU, GTX 1080. It has four Graphics Processing Clusters (equivalent to a discrete CPU), each harboring five Streaming Multiprocessor (similar to a CPU core). Each SM has 128 single-precision CUDA cores. Therefore, GTX 1080 has a total of 4 × 5 × 128 = 2560 CUDA cores. The maximum  theoretical throughput for a GTX 1080 is reported as 8.87 TFLOPS. This figure is calculated for a boost clock frequency of 1.733 MHz as 2 × 2560 × 1.733 MHz = 8.87 TFLOPS. The factor 2 is included because two single floating-point operations, a multiplication and an addition, can be done in a clock cycle as part of a fused-multiply-addition FMA operation. GTX 1080 also has 8192 MB of global memory accessible to all the cores (in addition to local and shared memory on each SM).
 
 A typical CUDA application has the following flow:
 

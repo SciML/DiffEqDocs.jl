@@ -68,7 +68,7 @@ a matrix in the `SDEProblem` type. A special form of non-diagonal noise,
 commutative noise, occurs when the noise satisfies the following condition:
 
 ```math
-\sum_{i=1}^d g_{i,j_1}(t,x) \frac{\partial g_{k,j_2}(t,x)}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}(t,x)}{\partial x_i}
+\sum_{i=1}^d g_{i,j_1}(t,x) \frac{∂g_{k,j_2}(t,x)}{∂x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{∂g_{k,j_1}(t,x)}{∂x_i}
 ```
 
 for every ``j_1,j_2`` and ``k``. Additive noise is when ``g(t,u)=g(t)``,
@@ -80,7 +80,7 @@ The difficulty of higher strong order integrators stems from the presence of ite
 stochastic integrals
 
 ```math
-I(h) = \int_0^h\int_0^sdW^1_tdW^2_s
+I(h) = \int_0^h \int_0^s dW^1_t dW^2_s
 ```
 
 in these schemes.
@@ -295,7 +295,7 @@ The following methods require analytic derivatives of the diffusion term.
   sense. Requires the ggprime function, which is defined as
 
   ```math
-    \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
+  \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{∂g_{k,j}(t,x)}{∂x_i}.
   ```
 
   This can also be understood more intuitively in vector/matrix form as,

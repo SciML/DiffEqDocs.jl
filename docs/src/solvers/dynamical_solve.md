@@ -14,8 +14,10 @@ HamiltonianProblem{T}(H, p0, q0, tspan, p = NullParameters(); kwargs...)
 These correspond to partitioned equations of motion:
 
 ```math
-\frac{dv}{dt} = f_1(t,u) \\
-\frac{du}{dt} = f_2(v) \\
+\begin{align*}
+\frac{dv}{dt} &= f_1(t,u) \\
+\frac{du}{dt} &= f_2(v)
+\end{align*}
 ```
 
 or, for `SecondOrderODEProblem`,
