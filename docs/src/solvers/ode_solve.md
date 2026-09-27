@@ -1256,7 +1256,7 @@ import GeometricIntegratorsDiffEq
   - `GeometricIntegratorsDiffEq.GILobattoIIIF(s)`
   - `GeometricIntegratorsDiffEq.GISRK3` - 3-stage order 4 symmetric Runge-Kutta method
   - `GeometricIntegratorsDiffEq.GISSPRK3` - 3rd order explicit SSP method
-  - `GICrankNicholson
+  - `GICrankNicholson`
   - `GeometricIntegratorsDiffEq.GIKraaijevangerSpijker`
   - `GeometricIntegratorsDiffEq.GIQinZhang`
   - `GeometricIntegratorsDiffEq.GICrouzeix`
