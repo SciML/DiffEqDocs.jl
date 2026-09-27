@@ -217,8 +217,8 @@ ROBER):
 ```math
 \begin{aligned}
 \frac{dy_1}{dt} &= -0.04y₁ + 10^4 y_2 y_3 \\
-\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3×10^7 y_{2}^2 \\
-\frac{dy_3}{dt} &= 3×10^7 y_{2}^2 \\
+\frac{dy_2}{dt} &= 0.04 y_1 - 10^4 y_2 y_3 - 3×10^7 y_2^2 \\
+\frac{dy_3}{dt} &= 3×10^7 y_2^2 \\
 \end{aligned}
 ```
 
@@ -390,8 +390,8 @@ In its discretized form, this is the ODE:
 
 ```math
 \begin{align*}
-du &= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - \alpha u\\
-dv &= D_2 (A_y v + v A_x) + a u^2 + \beta v
+du &= D_1 (A_y u + u A_x) + \frac{au^2}{v} + \bar{u} - α u\\
+dv &= D_2 (A_y v + v A_x) + a u^2 + β v
 \end{align*}
 ```
 

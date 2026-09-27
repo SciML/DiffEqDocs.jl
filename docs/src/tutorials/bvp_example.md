@@ -15,7 +15,7 @@ g(u) &= \vec{0}
 
 ## Example 1: Simple Pendulum
 
-The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}\sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
+The concrete example that we are solving is the simple pendulum ``\ddot{u} + \frac{g}{L} \sin(u) = 0`` on the time interval ``t ∈ [0,\frac{π}{2}]``. First, we need to define the ODE
 
 ```@example bvp
 import BoundaryValueDiffEq as BVP

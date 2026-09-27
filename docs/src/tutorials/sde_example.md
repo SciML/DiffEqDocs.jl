@@ -16,7 +16,7 @@ where ``f(u,p,t)=αu`` and ``g(u,p,t)=βu``. We know via Stochastic calculus tha
 solution to this equation is
 
 ```math
-u(t,Wₜ)=u₀\exp\left[\left(α-\frac{β^2}{2}\right)t+βWₜ\right].
+u(t,Wₜ) = u₀ \exp\left[\left(α - \frac{β^2}{2}\right) t + βWₜ\right].
 ```
 
 To solve this numerically, we define a stochastic problem type using `SDEProblem` by specifying `f(u, p, t)`, `g(u, p, t)`, and the initial condition:
@@ -56,7 +56,7 @@ to test convergence of new methods being developed. To setup our problem, we def
 `u_analytic(u₀, p, t, W)` and pass it to the `SDEFunction` as:
 
 ```@example sde
-u_analytic(u₀, p, t, W) = u₀ * exp((α - (β^2) / 2) * t + β * W)
+u_analytic(u₀, p, t, W) = u₀ * exp((α - β^2 / 2) * t + β * W)
 ff = SDE.SDEFunction(f, g, analytic = u_analytic)
 prob = SDE.SDEProblem(ff, u₀, (0.0, 1.0))
 ```

@@ -15,8 +15,8 @@ Also, we know that the canonical equations of motion are
 
 ```math
 \begin{align*}
-\frac{\mathrm{d} \boldsymbol{p}}{\mathrm{d} t} &= - \frac {\partial \mathcal{H}}{\partial \boldsymbol{q}} = - \frac{\boldsymbol{q}}{\left|\boldsymbol{q}\right|^3} , \\
-\frac{\mathrm{d} \boldsymbol{q}}{\mathrm{d} t} &= + \frac {\partial \mathcal{H}}{\partial \boldsymbol{p}} = \boldsymbol{p}
+\frac{d\boldsymbol{p}}{dt} &= - \frac {∂\mathcal{H}}{∂\boldsymbol{q}} = - \frac{\boldsymbol{q}}{\left|\boldsymbol{q}\right|^3} , \\
+\frac{d\boldsymbol{q}}{dt} &= + \frac {∂\mathcal{H}}{∂\boldsymbol{p}} = \boldsymbol{p}
 \end{align*}
 ```
 

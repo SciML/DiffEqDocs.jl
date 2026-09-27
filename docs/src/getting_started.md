@@ -23,12 +23,12 @@ In this example, we will solve the equation
 \frac{du}{dt} = f(u,p,t)
 ```
 
-on the time interval ``t\in[0,1]`` where ``f(u,p,t)=αu``. Here, ``u`` is the
+on the time interval ``t ∈ [0,1]`` where ``f(u,p,t) = αu``. Here, ``u`` is the
 current state variable, ``p`` is our parameter variable (containing things like
 a reaction rate or the constant of gravity), and ``t`` is the current time.
 
 (In our example, we know by calculus that the solution to this equation is
-``u(t)=u₀\exp(αt)``, but we will use DifferentialEquations.jl to solve this
+``u(t) = u₀\exp(αt)``, but we will use DifferentialEquations.jl to solve this
 problem *numerically*, which is essential for problems where a symbolic solution
 is not known.)
 
@@ -412,10 +412,10 @@ for differential equation analysis which also achieves high performance.
 Parameterized functions can also be used for building **nonhomogeneous ordinary differential equations** (these are also referred to as ODEs with **nonzero right-hand sides**). They are frequently used as models for dynamical systems with external (in general time-varying) **inputs**. As an example, consider a [model of a pendulum](https://en.wikipedia.org/wiki/Pendulum_(mathematics)) consisting of a slender rod of length `l` and mass `m`:
 
 ```math
-\begin{aligned}
-\frac{\mathrm{d}\theta(t)}{\mathrm{d}t} &= \omega(t)\\
-\frac{\mathrm{d}\omega(t)}{\mathrm{d}t} &= - \frac{3}{2}\frac{g}{l}\sin\theta(t) + \frac{3}{ml^2}M(t),
-\end{aligned}
+\begin{align*}
+\frac{dθ(t)}{dt} &= ω(t) \\
+\frac{dω(t)}{dt} &= - \frac{3}{2} \frac{g}{l} \sin θ(t) + \frac{3}{ml^2} M(t),
+\end{align*}
 ```
 
 where `θ` and `ω` are the angular deviation of the pendulum from the vertical (hanging) orientation and the angular rate, respectively, `M` is an external torque (developed, say, by a wind or a motor), and finally, `g` stands for gravitational acceleration.

@@ -26,7 +26,7 @@ dx_2 &= \frac{v_1}{1 + β_1 \left(x_2(t-τ)\right)^2} \left(1 - p_1 + q_1\right)
 \end{aligned}
 ```
 
-For this problem, we note that ``\tau`` is constant, and thus we can use a method
+For this problem, we note that ``τ`` is constant, and thus we can use a method
 which exploits this behavior. We first write out the equation using the appropriate
 function signature. Most of the equation writing is the same, though we use the
 history function by first interpolating and then choosing the components. Thus,
