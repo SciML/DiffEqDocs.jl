@@ -4,8 +4,8 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
+| Package                | Methods                                   | Good for |
+| ---------------------- | ----------------------------------------- | -------- |
 | `StochasticDiffEqRODE` | `RandomEM`, `RandomTamedEM`, `RandomHeun` | Random ODEs (RODEs); time-dependent random forcing. |
 
 

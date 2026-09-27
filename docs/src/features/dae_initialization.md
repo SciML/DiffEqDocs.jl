@@ -54,14 +54,14 @@ DiffEqBase.ShampineCollocationInit
 
 ## Algorithm Selection Guide
 
-| Algorithm | When to Use | Modifies Variables |
-|-----------|-------------|-------------------|
-| `DefaultInit()` | Default choice - automatically selects appropriate method | Depends on selection |
-| `CheckInit()` | When you've computed consistent conditions yourself | No (verification only) |
-| `NoInit()` | ⚠️ **AVOID** - Only for verified consistent conditions | No |
-| `OverrideInit()` | With ModelingToolkit problems | Yes (uses custom problem) |
-| `BrownFullBasicInit()` | For index-1 DAEs with `differential_vars` | Algebraic variables only |
-| `ShampineCollocationInit()` | For general DAEs without structure information | All variables |
+| Algorithm                   | When to Use                                               | Modifies Variables        |
+| --------------------------- | --------------------------------------------------------- | ------------------------- |
+| `DefaultInit()`             | Default choice - automatically selects appropriate method | Depends on selection      |
+| `CheckInit()`               | When you've computed consistent conditions yourself       | No (verification only)    |
+| `NoInit()`                  | ⚠️ **AVOID** - Only for verified consistent conditions     | No                        |
+| `OverrideInit()`            | With ModelingToolkit problems                             | Yes (uses custom problem) |
+| `BrownFullBasicInit()`      | For index-1 DAEs with `differential_vars`                 | Algebraic variables only  |
+| `ShampineCollocationInit()` | For general DAEs without structure information            | All variables             |
 
 ## Examples
 

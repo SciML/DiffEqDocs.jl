@@ -9,37 +9,37 @@ given, a default algorithm will be chosen.
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `OrdinaryDiffEqDefault` | `DefaultODEAlgorithm` (auto-switching) | General-purpose; auto-detects stiffness and switches. |
-| `OrdinaryDiffEqTsit5` | `Tsit5`, `AutoTsit5` | Default non-stiff workhorse at medium tolerances (1e-3 - 1e-8). |
-| `OrdinaryDiffEqVerner` | Vern6/7/8/9, AutoVern (lazy variants) | High-precision non-stiff (down to 1e-12+) on smooth RHS. |
-| `OrdinaryDiffEqLowOrderRK` | BS3, DP5, RK4, Heun, Euler, OwrenZen | Non-stiff at loose tolerances; quick / one-off / sketches. |
-| `OrdinaryDiffEqHighOrderRK` | DP8, TanYam7, TsitPap8, PFRK87 | High-order non-stiff alternatives to Verner. |
-| `OrdinaryDiffEqFeagin` | Feagin10, Feagin12, Feagin14 | Very tight tolerances (1e-12 to 1e-30) on smooth non-stiff. |
-| `OrdinaryDiffEqExplicitRK` | `ExplicitRK` (user-defined Butcher tableau) | Custom Butcher-tableau methods. |
-| `OrdinaryDiffEqLowStorageRK` | CarpenterKennedy2N54, ORK256, etc. | Memory-constrained or large-N (PDE semi-discretization, GPU). |
-| `OrdinaryDiffEqSSPRK` | SSPRK22/33/43/104 | Hyperbolic conservation laws / advection-dominated PDEs. |
-| `OrdinaryDiffEqPRK` | KuttaPRK2p5 | Parallel explicit RK (multi-stage parallelism). |
-| `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium ODEs / index-1 DAEs (mass matrix). |
-| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff problems with cheap Jacobians; general stiff fallback. |
-| `OrdinaryDiffEqFIRK` | RadauIIA3/5/9 | Stiff problems needing high precision (1e-10+) or very stiff. |
-| `OrdinaryDiffEqPDIRK` | PDIRK44 | Diagonally-implicit RK with stage parallelism. |
-| `OrdinaryDiffEqBDF` | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse systems; index-1 DAEs (mass-matrix or implicit). |
-| `OrdinaryDiffEqAdamsBashforthMoulton` | AB3-AB5, ABM, VCAB, VCABM | Non-stiff multistep on smooth, expensive RHS evaluations. |
-| `OrdinaryDiffEqNordsieck` | AN5, JVODE | Variable-step / variable-order Adams in Nordsieck form. |
-| `OrdinaryDiffEqExtrapolation` | ExtrapolationMidpoint, ImplicitHairerWanner, etc. | Smooth problems benefiting from Richardson extrapolation; very high order. |
-| `OrdinaryDiffEqStabilizedRK` | ROCK2, ROCK4, RKC, ESERK4/5 | Mildly stiff PDE semi-discretizations (parabolic / reaction-diffusion). |
-| `OrdinaryDiffEqExponentialRK` | LawsonEuler, ETDRK4, EPIRK, Exprb | Semilinear problems where the linear operator dominates. |
-| `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | Industrial-grade C BDF / Adams / ARK; `IDA` for general implicit DAEs. |
-| `LSODA` | `lsoda` | Classic Fortran auto-switching solver (Hindmarsh). |
-| `ODEInterfaceDiffEq` | `dopri5`, `dop853`, `radau`, `seulex`, `rodas` | Hairer / Wanner Fortran solvers. |
-| `ProbNumDiffEq` | `EK0`, `EK1` | Probabilistic numerics - get uncertainty estimates on the trajectory. |
-| `TaylorIntegration` | `TaylorMethod` | Taylor method - super-high order for very smooth ODEs. |
-| `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |
-| `GeometricIntegratorsDiffEq` | Gauss, Lobatto, Radau, Symplectic methods | Wrappers for GeometricIntegrators.jl. |
-| `BridgeDiffEq` | `BridgeR3`, `BridgeBS3`, `BridgeEM` | Wrappers for Bridge.jl ODE/SDE solvers. |
-| `QuDiffEq` | Quantum-circuit-based ODE solvers | Quantum-circuit-based solvers. |
+| Package                               | Methods                                           | Good for |
+| ------------------------------------- | ------------------------------------------------- | -------- |
+| `OrdinaryDiffEqDefault`               | `DefaultODEAlgorithm` (auto-switching)            | General-purpose; auto-detects stiffness and switches. |
+| `OrdinaryDiffEqTsit5`                 | `Tsit5`, `AutoTsit5`                              | Default non-stiff workhorse at medium tolerances (1e-3 - 1e-8). |
+| `OrdinaryDiffEqVerner`                | Vern6/7/8/9, AutoVern (lazy variants)             | High-precision non-stiff (down to 1e-12+) on smooth RHS. |
+| `OrdinaryDiffEqLowOrderRK`            | BS3, DP5, RK4, Heun, Euler, OwrenZen              | Non-stiff at loose tolerances; quick / one-off / sketches. |
+| `OrdinaryDiffEqHighOrderRK`           | DP8, TanYam7, TsitPap8, PFRK87                    | High-order non-stiff alternatives to Verner. |
+| `OrdinaryDiffEqFeagin`                | Feagin10, Feagin12, Feagin14                      | Very tight tolerances (1e-12 to 1e-30) on smooth non-stiff. |
+| `OrdinaryDiffEqExplicitRK`            | `ExplicitRK` (user-defined Butcher tableau)       | Custom Butcher-tableau methods. |
+| `OrdinaryDiffEqLowStorageRK`          | CarpenterKennedy2N54, ORK256, etc.                | Memory-constrained or large-N (PDE semi-discretization, GPU). |
+| `OrdinaryDiffEqSSPRK`                 | SSPRK22/33/43/104                                 | Hyperbolic conservation laws / advection-dominated PDEs. |
+| `OrdinaryDiffEqPRK`                   | KuttaPRK2p5                                       | Parallel explicit RK (multi-stage parallelism). |
+| `OrdinaryDiffEqRosenbrock`            | Rosenbrock23, Rodas4/5P, ROS variants             | Stiff small-to-medium ODEs / index-1 DAEs (mass matrix). |
+| `OrdinaryDiffEqSDIRK`                 | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno  | Stiff problems with cheap Jacobians; general stiff fallback. |
+| `OrdinaryDiffEqFIRK`                  | RadauIIA3/5/9                                     | Stiff problems needing high precision (1e-10+) or very stiff. |
+| `OrdinaryDiffEqPDIRK`                 | PDIRK44                                           | Diagonally-implicit RK with stage parallelism. |
+| `OrdinaryDiffEqBDF`                   | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse systems; index-1 DAEs (mass-matrix or implicit). |
+| `OrdinaryDiffEqAdamsBashforthMoulton` | AB3-AB5, ABM, VCAB, VCABM                         | Non-stiff multistep on smooth, expensive RHS evaluations. |
+| `OrdinaryDiffEqNordsieck`             | AN5, JVODE                                        | Variable-step / variable-order Adams in Nordsieck form. |
+| `OrdinaryDiffEqExtrapolation`         | ExtrapolationMidpoint, ImplicitHairerWanner, etc. | Smooth problems benefiting from Richardson extrapolation; very high order. |
+| `OrdinaryDiffEqStabilizedRK`          | ROCK2, ROCK4, RKC, ESERK4/5                       | Mildly stiff PDE semi-discretizations (parabolic / reaction-diffusion). |
+| `OrdinaryDiffEqExponentialRK`         | LawsonEuler, ETDRK4, EPIRK, Exprb                 | Semilinear problems where the linear operator dominates. |
+| `Sundials`                            | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE`       | Industrial-grade C BDF / Adams / ARK; `IDA` for general implicit DAEs. |
+| `LSODA`                               | `lsoda`                                           | Classic Fortran auto-switching solver (Hindmarsh). |
+| `ODEInterfaceDiffEq`                  | `dopri5`, `dop853`, `radau`, `seulex`, `rodas`    | Hairer / Wanner Fortran solvers. |
+| `ProbNumDiffEq`                       | `EK0`, `EK1`                                      | Probabilistic numerics - get uncertainty estimates on the trajectory. |
+| `TaylorIntegration`                   | `TaylorMethod`                                    | Taylor method - super-high order for very smooth ODEs. |
+| `SimpleDiffEq`                        | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |
+| `GeometricIntegratorsDiffEq`          | Gauss, Lobatto, Radau, Symplectic methods         | Wrappers for GeometricIntegrators.jl. |
+| `BridgeDiffEq`                        | `BridgeR3`, `BridgeBS3`, `BridgeEM`               | Wrappers for Bridge.jl ODE/SDE solvers. |
+| `QuDiffEq`                            | Quantum-circuit-based ODE solvers                 | Quantum-circuit-based solvers. |
 
 
 ## Recommended Methods
@@ -190,30 +190,30 @@ problems.
     also `using OrdinaryDiffEq` to get the umbrella default set plus the
     sublibraries you need.
 
-    | Family (section heading)                              | Host sublibrary                                  |
-    |-------------------------------------------------------|--------------------------------------------------|
-    | Explicit Runge-Kutta (low order)                      | `OrdinaryDiffEqLowOrderRK`                       |
-    | Tsit5 / AutoTsit5                                     | `OrdinaryDiffEqTsit5` (re-exported by main pkg)  |
-    | Verner / AutoVern                                     | `OrdinaryDiffEqVerner` (re-exported by main pkg) |
-    | High-order RK (Feagin, TanYam7, DP8, ...)             | `OrdinaryDiffEqHighOrderRK`                      |
-    | Parallel Explicit RK (KuttaPRK2p5)                    | `OrdinaryDiffEqPRK`                              |
-    | SSPRK family                                          | `OrdinaryDiffEqSSPRK`                            |
-    | Low-Storage RK                                        | `OrdinaryDiffEqLowStorageRK`                     |
-    | Explicit Extrapolation                                | `OrdinaryDiffEqExtrapolation`                    |
-    | Adams-Bashforth / Adaptive Adams                      | `OrdinaryDiffEqAdamsBashforthMoulton`            |
-    | SDIRK (TRBDF2, KenCarp*, Kvaerno*, ImplicitEuler, ...) | `OrdinaryDiffEqSDIRK`                            |
-    | FIRK (RadauIIA*)                                      | `OrdinaryDiffEqFIRK`                             |
-    | Parallel DIRK                                         | `OrdinaryDiffEqPDIRK`                            |
+    | Family (section heading)                               | Host sublibrary                                   |
+    | ------------------------------------------------------ | ------------------------------------------------- |
+    | Explicit Runge-Kutta (low order)                       | `OrdinaryDiffEqLowOrderRK`                        |
+    | Tsit5 / AutoTsit5                                      | `OrdinaryDiffEqTsit5` (re-exported by main pkg)   |
+    | Verner / AutoVern                                      | `OrdinaryDiffEqVerner` (re-exported by main pkg)  |
+    | High-order RK (Feagin, TanYam7, DP8, ...)              | `OrdinaryDiffEqHighOrderRK`                       |
+    | Parallel Explicit RK (KuttaPRK2p5)                     | `OrdinaryDiffEqPRK`                               |
+    | SSPRK family                                           | `OrdinaryDiffEqSSPRK`                             |
+    | Low-Storage RK                                         | `OrdinaryDiffEqLowStorageRK`                      |
+    | Explicit Extrapolation                                 | `OrdinaryDiffEqExtrapolation`                     |
+    | Adams-Bashforth / Adaptive Adams                       | `OrdinaryDiffEqAdamsBashforthMoulton`             |
+    | SDIRK (TRBDF2, KenCarp*, Kvaerno*, ImplicitEuler, ...) | `OrdinaryDiffEqSDIRK`                             |
+    | FIRK (RadauIIA*)                                       | `OrdinaryDiffEqFIRK`                              |
+    | Parallel DIRK                                          | `OrdinaryDiffEqPDIRK`                             |
     | Rosenbrock / Rosenbrock-W (Rodas4, Rodas5, ROS3*, ...) | `OrdinaryDiffEqRosenbrock` (Rosenbrock23 / Rodas5P re-exported) |
-    | Stabilized Explicit (ROCK*, RKC, ESERK*, ...)         | `OrdinaryDiffEqStabilizedRK` / `OrdinaryDiffEqStabilizedIRK` |
-    | Implicit Extrapolation                                | `OrdinaryDiffEqExtrapolation`                    |
-    | Exponential RK / EPIRK / Adaptive Exp Rosenbrock      | `OrdinaryDiffEqExponentialRK`                    |
+    | Stabilized Explicit (ROCK*, RKC, ESERK*, ...)          | `OrdinaryDiffEqStabilizedRK` / `OrdinaryDiffEqStabilizedIRK` |
+    | Implicit Extrapolation                                 | `OrdinaryDiffEqExtrapolation`                     |
+    | Exponential RK / EPIRK / Adaptive Exp Rosenbrock       | `OrdinaryDiffEqExponentialRK`                     |
     | BDF / NordsieckBDF / FBDF / QNDF / QBDF / DNordsieckBDF / DFBDF / DABDF2 / DImplicitEuler / SBDF | `OrdinaryDiffEqBDF` (FBDF re-exported by main pkg) |
-    | Implicit SSPRK                                        | `OrdinaryDiffEqSSPRK`                            |
-    | Function-map / DiscreteProblem default                | `OrdinaryDiffEqFunctionMap`                      |
-    | Symplectic RK (KahanLi*, McAte*, VelocityVerlet, ...) | `OrdinaryDiffEqSymplecticRK`                     |
-    | Runge-Kutta-Nyström (DPRKN*, Nystrom*, ERKN*, IRKN*)  | `OrdinaryDiffEqRKN`                              |
-    | Default algorithm chooser (`DefaultODEAlgorithm`)     | `OrdinaryDiffEqDefault` (re-exported by main pkg) |
+    | Implicit SSPRK                                         | `OrdinaryDiffEqSSPRK`                             |
+    | Function-map / DiscreteProblem default                 | `OrdinaryDiffEqFunctionMap`                       |
+    | Symplectic RK (KahanLi*, McAte*, VelocityVerlet, ...)  | `OrdinaryDiffEqSymplecticRK`                      |
+    | Runge-Kutta-Nyström (DPRKN*, Nystrom*, ERKN*, IRKN*)   | `OrdinaryDiffEqRKN`                               |
+    | Default algorithm chooser (`DefaultODEAlgorithm`)      | `OrdinaryDiffEqDefault` (re-exported by main pkg) |
 
 #### Explicit Runge-Kutta Methods
 

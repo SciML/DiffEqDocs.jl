@@ -32,8 +32,8 @@ where ``A`` is a constant operator.
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
+| Package                | Methods                                       | Good for |
+| ---------------------- | --------------------------------------------- | -------- |
 | `OrdinaryDiffEqLinear` | Magnus, Lie-group, matrix-exponential methods | Linear time-dependent ODEs; matrix-exponential propagation. |
 
 

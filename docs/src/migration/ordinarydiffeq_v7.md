@@ -172,15 +172,15 @@ sol_old = RaggedVectorOfArray(sol)   # indexes like v3: sol_old[i] is the i-th t
 
 `AbstractVectorOfArray` (the parent type of `ODESolution`, `RODESolution`, `DAESolution`, etc.) now subtypes `AbstractArray`. This changes the semantics of several common operations:
 
-| Operation | v3 (old) | v4 (new) | Migration |
-|---|---|---|---|
-| `sol[i]` | Returns i-th timestep (`Vector`) | Returns i-th scalar element (column-major) | Use `sol.u[i]` or `sol[:, i]` |
-| `length(sol)` | Number of timesteps | `prod(size(sol))` (total elements) | Use `length(sol.t)` or `length(sol.u)` |
-| `eachindex(sol)` | `1:nsteps` | `CartesianIndices(size(sol))` | Use `eachindex(sol.u)` |
-| `iterate(sol)` | Iterates over timesteps | Iterates over scalar elements | Use `for u in sol.u` |
-| `first(sol)` / `last(sol)` | First/last timestep | First/last scalar element | Use `first(sol.u)` / `last(sol.u)` |
-| `map(f, sol)` | Maps over timesteps | Maps over elements | Use `map(f, sol.u)` |
-| `maximum(sol)` | Maximum over timesteps | Maximum over all elements | Use `maximum(f, sol.u)` |
+| Operation                  | v3 (old)                         | v4 (new)                                   | Migration |
+| -------------------------- | -------------------------------- | ------------------------------------------ | --------- |
+| `sol[i]`                   | Returns i-th timestep (`Vector`) | Returns i-th scalar element (column-major) | Use `sol.u[i]` or `sol[:, i]` |
+| `length(sol)`              | Number of timesteps              | `prod(size(sol))` (total elements)         | Use `length(sol.t)` or `length(sol.u)` |
+| `eachindex(sol)`           | `1:nsteps`                       | `CartesianIndices(size(sol))`              | Use `eachindex(sol.u)` |
+| `iterate(sol)`             | Iterates over timesteps          | Iterates over scalar elements              | Use `for u in sol.u` |
+| `first(sol)` / `last(sol)` | First/last timestep              | First/last scalar element                  | Use `first(sol.u)` / `last(sol.u)` |
+| `map(f, sol)`              | Maps over timesteps              | Maps over elements                         | Use `map(f, sol.u)` |
+| `maximum(sol)`             | Maximum over timesteps           | Maximum over all elements                  | Use `maximum(f, sol.u)` |
 
 **Why:** making `AbstractVectorOfArray <: AbstractArray` lets every generic `AbstractArray` consumer (LinearAlgebra, broadcasting, Zygote adjoints, `StructArrays`, etc.) work on solutions without any special casing in SciMLBase, and deletes a large pile of manual method overrides.
 
@@ -192,13 +192,13 @@ sol_old = RaggedVectorOfArray(sol)   # indexes like v3: sol_old[i] is the i-th t
 
 The same `AbstractArray` migration applies to `EnsembleSolution` (from `EnsembleProblem` trajectories) and to `EnsembleAnalysis` helpers — an ensemble's `.u` is a `Vector{<:ODESolution}` and the solution itself subtypes `AbstractVectorOfArray`:
 
-| Operation | v3 (old) | v4 (new) | Migration |
-|---|---|---|---|
-| `sim[j]` | j-th trajectory (`ODESolution`) | j-th scalar element of the flattened container | Use `sim.u[j]` |
-| `sim[i, j]` | Trajectory `j`'s i-th timestep (`Matrix` / `Vector`) | Scalar element at column-major position `(i, j)` | Use `sim.u[j].u[i]` |
-| `sim[i, j, k]` | Row `k` of trajectory `j`'s i-th timestep | Scalar at `(i, j, k)` | Use `sim.u[j].u[i][k]` |
-| `length(sim)` | Number of trajectories | `prod(size(sim))` (total scalar count) | Use `length(sim.u)` |
-| `for sol in sim` | Iterate trajectories | Iterate scalar elements (column-major) | Use `for sol in sim.u` |
+| Operation        | v3 (old)                                             | v4 (new)                                         | Migration |
+| ---------------- | ---------------------------------------------------- | ------------------------------------------------ | --------- |
+| `sim[j]`         | j-th trajectory (`ODESolution`)                      | j-th scalar element of the flattened container   | Use `sim.u[j]` |
+| `sim[i, j]`      | Trajectory `j`'s i-th timestep (`Matrix` / `Vector`) | Scalar element at column-major position `(i, j)` | Use `sim.u[j].u[i]` |
+| `sim[i, j, k]`   | Row `k` of trajectory `j`'s i-th timestep            | Scalar at `(i, j, k)`                            | Use `sim.u[j].u[i][k]` |
+| `length(sim)`    | Number of trajectories                               | `prod(size(sim))` (total scalar count)           | Use `length(sim.u)` |
+| `for sol in sim` | Iterate trajectories                                 | Iterate scalar elements (column-major)           | Use `for sol in sim.u` |
 
 **Migration shortcut:** as with `ODESolution`, `sim.u[j]` / `sim.u[j].u[i]` / `length(sim.u)` are the forward-compatible forms that work under both v3 and v4.
 
@@ -222,15 +222,15 @@ See [SciML/OrdinaryDiffEq.jl#3532](https://github.com/SciML/OrdinaryDiffEq.jl/pu
 
 The new names already exist under SciMLBase v2 with deprecation warnings. Update to the v3 names while still on v2 before bumping.
 
-| Old (v2, removed in v3) | New (v2 + v3) | Migration |
-|---|---|---|
+| Old (v2, removed in v3)         | New (v2 + v3)                                 | Migration                                    |
+| ------------------------------- | --------------------------------------------- | -------------------------------------------- |
 | `u_modified!(integrator, bool)` | `derivative_discontinuity!(integrator, bool)` | Search-and-replace. `u_modified!` was misleading — the callback system doesn't care whether `u` changed, it cares whether the derivative is discontinuous. |
-| `integrator.u_modified` | `integrator.derivative_discontinuity` | Field access rename. |
-| `DEAlgorithm` | `AbstractDEAlgorithm` | Abstract type name aligned with SciML-wide `Abstract…` convention. |
-| `DEProblem` | `AbstractSciMLProblem` | Same. |
-| `DESolution` | `AbstractSciMLSolution` | Same. |
-| `sol.destats` | `sol.stats` | Drop the `de` prefix. |
-| `has_destats(alg)` | `has_stats(alg)` | Same renaming applied to the trait function. |
+| `integrator.u_modified`         | `integrator.derivative_discontinuity`         | Field access rename.                         |
+| `DEAlgorithm`                   | `AbstractDEAlgorithm`                         | Abstract type name aligned with SciML-wide `Abstract…` convention. |
+| `DEProblem`                     | `AbstractSciMLProblem`                        | Same.                                        |
+| `DESolution`                    | `AbstractSciMLSolution`                       | Same.                                        |
+| `sol.destats`                   | `sol.stats`                                   | Drop the `de` prefix.                        |
+| `has_destats(alg)`              | `has_stats(alg)`                              | Same renaming applied to the trait function. |
 
 ### Removed deprecations
 
@@ -269,12 +269,12 @@ accepts every success-ish return code (`Success`, `StalledSuccess`,
 just `Success` — so a solver that terminated at an exact solution or hit
 a floating-point limit isn't misclassified as a failure.
 
-| Old | New (v3) |
-|-----|----------|
-| `sol.retcode == :Success` | `SciMLBase.successful_retcode(sol)` |
-| `sol.retcode == :Failure` | `!SciMLBase.successful_retcode(sol)` (or match the specific `ReturnCode.Failure` if you really need that exact code) |
+| Old                        | New (v3)                             |
+| -------------------------- | ------------------------------------ |
+| `sol.retcode == :Success`  | `SciMLBase.successful_retcode(sol)`  |
+| `sol.retcode == :Failure`  | `!SciMLBase.successful_retcode(sol)` (or match the specific `ReturnCode.Failure` if you really need that exact code) |
 | `sol.retcode == :MaxIters` | `sol.retcode == ReturnCode.MaxIters` |
-| `sol.retcode == :Default` | `sol.retcode == ReturnCode.Default` |
+| `sol.retcode == :Default`  | `sol.retcode == ReturnCode.Default`  |
 
 The full enum is defined in `SciMLBase/src/retcodes.jl` and documented at
 <https://docs.sciml.ai/SciMLBase/stable/interfaces/Solutions/#retcodes>.
@@ -355,12 +355,12 @@ ImplicitEuler{AutoForwardDiff{nothing, Nothing}, Nothing, NLNewton{...}, typeof(
 
 Across all implicit/Rosenbrock/BDF/SDIRK/FIRK/Exponential constructors:
 
-| Removed kwarg | Migration |
-|---|---|
-| `chunk_size` | Set via `autodiff = AutoForwardDiff(chunksize=N)` |
-| `diff_type` | Set via `autodiff = AutoFiniteDiff(fdtype=Val(:central))` |
-| `standardtag` | Always true; remove the kwarg |
-| `precs` | Preconditioners now configured via `linsolve` kwarg (see LinearSolve.jl docs on the `Pl`/`Pr` interface) |
+| Removed kwarg                     | Migration                                                        |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `chunk_size`                      | Set via `autodiff = AutoForwardDiff(chunksize=N)`                |
+| `diff_type`                       | Set via `autodiff = AutoFiniteDiff(fdtype=Val(:central))`        |
+| `standardtag`                     | Always true; remove the kwarg                                    |
+| `precs`                           | Preconditioners now configured via `linsolve` kwarg (see LinearSolve.jl docs on the `Pl`/`Pr` interface) |
 | `controller` (on individual algs) | Set at `solve()` level via `controller = PIController(...)` etc. |
 
 **Why:** `chunk_size` and `diff_type` only meant anything to ForwardDiff and FiniteDiff respectively. Hoisting them onto the `ADTypes` object means every solver now works with **any** AD backend (Enzyme, Zygote, ReverseDiff, Mooncake, …) by just swapping `autodiff=AutoEnzyme()` — no per-solver kwarg surface needed. `standardtag` was always the right default. `precs` moved under `linsolve` because LinearSolve now owns the preconditioner abstraction.
@@ -424,13 +424,13 @@ solve(prob, Rodas5P(), initializealg = BrownFullBasicInit())
 
 PID controller parameters removed from `solve()`/`init()`:
 
-| Removed kwarg | Migration |
-|---|---|
-| `gamma` | Pass `controller = PIController(gamma=…)` or `PIDController(...)` |
-| `beta1`, `beta2` | Constructor args on `PIController` / `PIDController` |
-| `qmin`, `qmax` | Same — on the controller object |
-| `qsteady_min`, `qsteady_max` | Same |
-| `qoldinit` | Same |
+| Removed kwarg                | Migration                                            |
+| ---------------------------- | ---------------------------------------------------- |
+| `gamma`                      | Pass `controller = PIController(gamma=…)` or `PIDController(...)` |
+| `beta1`, `beta2`             | Constructor args on `PIController` / `PIDController` |
+| `qmin`, `qmax`               | Same — on the controller object                      |
+| `qsteady_min`, `qsteady_max` | Same                                                 |
+| `qoldinit`                   | Same                                                 |
 
 **EEst moved from integrator to controller cache:**
 
@@ -459,8 +459,8 @@ All 2N low-storage RK methods: default changed from `williamson_condition=true` 
 
 ### Threading interface changed
 
-| Old (v6) | New (v7) |
-|---|---|
+| Old (v6)                                    | New (v7)                        |
+| ------------------------------------------- | ------------------------------- |
 | `OrdinaryDiffEq.False()` / `Static.False()` | `Serial()` (from FastBroadcast) |
 | `OrdinaryDiffEq.True()` / `Static.True()` | `Threaded()` (from FastBroadcast) |
 
@@ -474,12 +474,12 @@ All `calculate_residuals!` thread argument types changed from `Union{False, True
 
 All four removals are driven by TTFS.
 
-| Package | Replacement | Why |
-|---|---|---|
-| **Static.jl** | `FastBroadcast.Serial` / `FastBroadcast.Threaded` | Removing Static slashes load time and eliminates a wide surface of `StaticInt`/`StaticBool` specialization that the compiler was re-running for every user |
-| **StaticArrayInterface.jl** | `ArrayInterface.ismutable` | The only thing OrdinaryDiffEq actually used from StaticArrayInterface was the mutability query, which ArrayInterface already provides |
-| **Polyester.jl** (direct dep) | Moved to weak dep `OrdinaryDiffEqCorePolyesterExt`; requires `using Polyester` to activate | Polyester loads a nontrivial amount of threading infrastructure. Users who don't enable Polyester-threaded solvers no longer pay for it |
-| **StaticArrays.jl** (direct dep) | `SVector`/`MVector` in tableaus replaced with `NTuple`/`Vector`; SA moved to test-only | Loading StaticArrays forces compilation of a large generated-function surface for every solver that mentions an `SVector`. Tableaus used them for constants, which `NTuple` expresses just as statically |
+| Package                          | Replacement                                       | Why           |
+| -------------------------------- | ------------------------------------------------- | ------------- |
+| **Static.jl**                    | `FastBroadcast.Serial` / `FastBroadcast.Threaded` | Removing Static slashes load time and eliminates a wide surface of `StaticInt`/`StaticBool` specialization that the compiler was re-running for every user |
+| **StaticArrayInterface.jl**      | `ArrayInterface.ismutable`                        | The only thing OrdinaryDiffEq actually used from StaticArrayInterface was the mutability query, which ArrayInterface already provides |
+| **Polyester.jl** (direct dep)    | Moved to weak dep `OrdinaryDiffEqCorePolyesterExt`; requires `using Polyester` to activate | Polyester loads a nontrivial amount of threading infrastructure. Users who don't enable Polyester-threaded solvers no longer pay for it |
+| **StaticArrays.jl** (direct dep) | `SVector`/`MVector` in tableaus replaced with `NTuple`/`Vector`; SA moved to test-only     | Loading StaticArrays forces compilation of a large generated-function surface for every solver that mentions an `SVector`. Tableaus used them for constants, which `NTuple` expresses just as statically |
 
 ---
 
@@ -524,11 +524,11 @@ affect!(integrator, simultaneous_events::Vector{Int8})
 
 Each entry of `simultaneous_events` encodes both whether condition `i` triggered and which way it crossed:
 
-| value | meaning |
-|---|---|
-| `0`  | condition did not trigger this step |
-| `-1` | upcrossing (condition went from negative to positive) |
-| `+1` | downcrossing (condition went from positive to negative) |
+| value | meaning                                                 |
+| ----- | ------------------------------------------------------- |
+|  `0`  | condition did not trigger this step                     |
+| `-1`  | upcrossing (condition went from negative to positive)   |
+| `+1`  | downcrossing (condition went from positive to negative) |
 
 The vector's length is the callback's `len`; the entries are stable across steps. `affect_neg!` is no longer called for `VectorContinuousCallback` — your single `affect!` handles both crossing directions by inspecting the sign of each nonzero entry.
 
