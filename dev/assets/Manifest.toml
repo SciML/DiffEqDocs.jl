@@ -630,10 +630,10 @@ version = "3.2.0"
 
 [[deps.DDEProblemLibrary]]
 deps = ["DiffEqBase"]
-git-tree-sha1 = "dbb4929dde00fc1f8e908e17c49f16f4c7fb1df4"
+git-tree-sha1 = "a21d141cd53f98b7f9758ce091eb2df0e137f6ec"
 registries = "General"
 uuid = "f42792ee-6ffc-4e2a-ae83-8ee2f22de800"
-version = "0.1.9"
+version = "0.1.10"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "abe83f3a2f1b857aac70ef8b269080af17764bbe"
@@ -1691,10 +1691,10 @@ version = "1.3.0"
 
 [[deps.LazyArrays]]
 deps = ["ArrayLayouts", "FillArrays", "LinearAlgebra", "MacroTools", "SparseArrays"]
-git-tree-sha1 = "5c8955930550966245cf24da91fae823ae9d8839"
+git-tree-sha1 = "2b5863a89c52ab14a7a793909914d63b02a8bd6d"
 registries = "General"
 uuid = "5078a376-72f3-5289-bfd5-ec5146d43c02"
-version = "2.14.0"
+version = "2.14.1"
 
     [deps.LazyArrays.extensions]
     LazyArraysBandedMatricesExt = "BandedMatrices"
