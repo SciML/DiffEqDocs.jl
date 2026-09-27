@@ -71,7 +71,7 @@ BSON.bson("test.bson", Dict(:sol => sol))
 # New session
 import OrdinaryDiffEq as ODE
 import BSON
-# BSON.load("test.bson") # currently broken: https://github.com/JuliaIO/BSON.jl/issues/109
+BSON.load("test.bson")
 ```
 
 If you load it without the DE function then for some algorithms the
