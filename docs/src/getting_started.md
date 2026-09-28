@@ -199,16 +199,16 @@ In DifferentialEquations.jl, some good “go-to” choices for ODEs are:
     OrdinaryDiffEq, so a `using OrdinaryDiffEq` plus the right
     `using OrdinaryDiffEqXxx` will give you everything):
 
-    | Solver(s)                                  | Sublibrary                  |
-    |--------------------------------------------|-----------------------------|
-    | `BS3`, `RK4`, `Heun`, `Euler`, ...         | `OrdinaryDiffEqLowOrderRK`  |
-    | `Rodas4`, `Rodas5`, `ROS3P`, all Rosenbrock except `Rosenbrock23` / `Rodas5P` | `OrdinaryDiffEqRosenbrock` |
-    | `KenCarp3`, `KenCarp4`, `TRBDF2`, `Kvaerno*`, `ImplicitEuler`, ... | `OrdinaryDiffEqSDIRK` |
-    | `RadauIIA3`, `RadauIIA5`, `RadauIIA9`      | `OrdinaryDiffEqFIRK`        |
+    | Solver(s)                                                                     | Sublibrary                   |
+    | :---------------------------------------------------------------------------- | :--------------------------- |
+    | `BS3`, `RK4`, `Heun`, `Euler`, ...                                            | `OrdinaryDiffEqLowOrderRK`   |
+    | `Rodas4`, `Rodas5`, `ROS3P`, all Rosenbrock except `Rosenbrock23` / `Rodas5P` | `OrdinaryDiffEqRosenbrock`   |
+    | `KenCarp3`, `KenCarp4`, `TRBDF2`, `Kvaerno*`, `ImplicitEuler`, ...            | `OrdinaryDiffEqSDIRK`        |
+    | `RadauIIA3`, `RadauIIA5`, `RadauIIA9`                                         | `OrdinaryDiffEqFIRK`         |
     | `QNDF`, `QBDF`, `ABDF2`, `MEBDF2`, `DFBDF`, `DABDF2`, `DImplicitEuler`, `IMEXEuler`, `SBDF*` | `OrdinaryDiffEqBDF` |
-    | `DPRKN*`, `Nystrom*`, `ERKN*`              | `OrdinaryDiffEqRKN`         |
-    | `KahanLi*`, `McAte*`, `VelocityVerlet`, `SymplecticEuler`, ... | `OrdinaryDiffEqSymplecticRK` |
-    | `LinearExponential`, `Magnus*`, `LieRK4`, `RKMK*` | `OrdinaryDiffEqLinear`      |
+    | `DPRKN*`, `Nystrom*`, `ERKN*`                                                 | `OrdinaryDiffEqRKN`          |
+    | `KahanLi*`, `McAte*`, `VelocityVerlet`, `SymplecticEuler`, ...                | `OrdinaryDiffEqSymplecticRK` |
+    | `LinearExponential`, `Magnus*`, `LieRK4`, `RKMK*`                             | `OrdinaryDiffEqLinear`       |
 
 For a comprehensive list of the available algorithms and detailed recommendations,
 [please see the solver documentation](@ref ode_solve). Every problem

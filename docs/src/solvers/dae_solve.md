@@ -4,18 +4,18 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `OrdinaryDiffEqBDF` | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse mass-matrix or implicit-form DAEs. |
-| `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium index-1 mass-matrix DAEs. |
-| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DAEs with cheap Jacobians; general fallback. |
-| `OrdinaryDiffEqFIRK` | RadauIIA3/5/9 | Stiff DAEs needing high precision (1e-10+). |
-| `OrdinaryDiffEqNonlinearSolve` | `BrownFullBasicInit`, `ShampineCollocationInit` | DAE consistent-initialization algorithms. |
-| `SciMLBase` | `CheckInit`, `NoInit` | Common types and DAE-init policies. |
-| `Sundials` | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE` | `IDA` for general implicit DAEs; industrial-grade C solvers. |
-| `ODEInterfaceDiffEq` | `dopri5`, `dop853`, `radau`, `seulex`, `rodas` | Hairer / Wanner Fortran solvers (radau / rodas for DAEs). |
-| `DASSL` | `dassl` | Classical Petzold DASSL Fortran DAE solver direct translation to Julia. |
-| `DASKR` | `daskr` | Krylov variant of DASSL for large-scale DAEs. |
+| Package                        | Methods                                          | Good for |
+| ------------------------------ | ------------------------------------------------ | -------- |
+| `OrdinaryDiffEqBDF`            | NordsieckBDF, FBDF, QNDF, ABDF2, SBDF, DNordsieckBDF, DFBDF, DImplicitEuler | Stiff large/sparse mass-matrix or implicit-form DAEs. |
+| `OrdinaryDiffEqRosenbrock`     | Rosenbrock23, Rodas4/5P, ROS variants            | Stiff small-to-medium index-1 mass-matrix DAEs. |
+| `OrdinaryDiffEqSDIRK`          | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DAEs with cheap Jacobians; general fallback. |
+| `OrdinaryDiffEqFIRK`           | RadauIIA3/5/9                                    | Stiff DAEs needing high precision (1e-10+). |
+| `OrdinaryDiffEqNonlinearSolve` | `BrownFullBasicInit`, `ShampineCollocationInit`  | DAE consistent-initialization algorithms. |
+| `SciMLBase`                    | `CheckInit`, `NoInit`                            | Common types and DAE-init policies. |
+| `Sundials`                     | `CVODE_BDF`, `CVODE_Adams`, `IDA`, `ARKODE`      | `IDA` for general implicit DAEs; industrial-grade C solvers. |
+| `ODEInterfaceDiffEq`           | `dopri5`, `dop853`, `radau`, `seulex`, `rodas`   | Hairer / Wanner Fortran solvers (radau / rodas for DAEs). |
+| `DASSL`                        | `dassl`                                          | Classical Petzold DASSL Fortran DAE solver direct translation to Julia. |
+| `DASKR`                        | `daskr`                                          | Krylov variant of DASSL for large-scale DAEs. |
 
 
 ## Recommended Methods
@@ -83,12 +83,12 @@ extra options for the solvers, see the ODE solver page.
     list below are re-exported by the umbrella `OrdinaryDiffEq` package. The
     rest must be imported from their host sublib:
 
-    | Section                    | Sublibrary                  |
-    |----------------------------|-----------------------------|
-    | Rosenbrock / Rosenbrock-W  | `OrdinaryDiffEqRosenbrock`  |
-    | FIRK (`RadauIIA5`)         | `OrdinaryDiffEqFIRK`        |
-    | SDIRK (`ImplicitEuler`, `ImplicitMidpoint`, `Trapezoid`) | `OrdinaryDiffEqSDIRK` |
-    | Multistep (`QNDF`, `FBDF`, ...) | `OrdinaryDiffEqBDF`     |
+    | Section                                                  | Sublibrary                  |
+    | -------------------------------------------------------- | --------------------------- |
+    | Rosenbrock / Rosenbrock-W                                | `OrdinaryDiffEqRosenbrock`  |
+    | FIRK (`RadauIIA5`)                                       | `OrdinaryDiffEqFIRK`        |
+    | SDIRK (`ImplicitEuler`, `ImplicitMidpoint`, `Trapezoid`) | `OrdinaryDiffEqSDIRK`       |
+    | Multistep (`QNDF`, `FBDF`, ...)                          | `OrdinaryDiffEqBDF`         |
 
 !!! note
     
