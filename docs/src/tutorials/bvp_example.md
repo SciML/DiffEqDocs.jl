@@ -182,15 +182,15 @@ function f!(du, u, p, t)
     return
 end
 function bc!(res, u, p, t)
-    res[1] = u[1]
-    res[2] = u[3] - 1
-    res[3] = u[2] - sin(1.0)
+    res[1] = u(0.0)[1]
+    res[2] = u(0.0)[3] - 1
+    res[3] = u(1.0)[2] - sin(1.0)
     return
 end
 u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
 fun = BVP.BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
 prob = BVP.BVProblem(fun, u0, tspan)
-solver = BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
+solver = BVP.Ascher4(; jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
 sol = BVP.solve(prob, solver; dt = 0.01)
 ```

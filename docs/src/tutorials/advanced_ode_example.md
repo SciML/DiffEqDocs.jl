@@ -152,13 +152,13 @@ than the gains from sparse differentiation!
 
 [ADTypes.jl](https://github.com/SciML/ADTypes.jl) provides a [common interface for automatic sparsity detection](https://sciml.github.io/ADTypes.jl/stable/#Sparsity-detector)
 via its function `jacobian_sparsity`.
-This function can be called using sparsity detectors from [SparseConnectivityTracer.jl](https://github.com/adrhill/SparseConnectivityTracer.jl)
+This function can be called using sparsity detectors from [SparseConnectivityTracer.jl](https://github.com/JuliaDiff/SparseConnectivityTracer.jl)
 or [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl).
 
 We can give an example `du` and `u` and call `jacobian_sparsity` on our function with the example arguments,
 and it will kick out a sparse matrix with our pattern, that we can turn into our `jac_prototype`.
 
-Let's try SparseConnectivityTracer's [`TracerSparsityDetector`](https://adrianhill.de/SparseConnectivityTracer.jl/stable/user/api/#SparseConnectivityTracer.TracerSparsityDetector):
+Let's try SparseConnectivityTracer's [`TracerSparsityDetector`](https://juliadiff.org/SparseConnectivityTracer.jl/stable/user/api/#SparseConnectivityTracer.TracerSparsityDetector):
 
 ```@example stiff1
 import SparseConnectivityTracer: TracerSparsityDetector
