@@ -759,7 +759,7 @@ This allows you to build sophisticated models of populations with births and dea
 
 ### Example 1: Bouncing Ball with multiple walls
 
-This is similar to the above Bouncing Ball example, but now we have two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as -
+This is similar to the above Bouncing Ball example, but ball now can move in both `x` and `y`.  We have also added two more vertical walls, at `x = 0` and `x = 10.0`. We have our ODEFunction as -
 
 ```@example callback6
 function f(du, u, p, t)
@@ -780,10 +780,10 @@ function condition(out, u, t, integrator) # Event when condition(out,u,t,integra
     return
 end
 
-function affect!(integrator, idx)
-    if idx == 1
+function affect!(integrator, simultaneous_events)
+    if simultaneous_events[1] != 0
         integrator.u[2] = -0.9integrator.u[2]
-    elseif idx == 2
+    elseif simultaneous_events[2] != 0
         integrator.u[4] = -0.9integrator.u[4]
     end
     return
@@ -803,5 +803,5 @@ p = 9.8
 prob = DE.ODEProblem(f, u0, tspan, p)
 sol = DE.solve(prob, DE.Tsit5(), callback = cb, dt = 1.0e-3, adaptive = false)
 import Plots: plot
-plot(sol, idxs = (1, 3));
+plot(sol, idxs = (3, 1));
 ```
