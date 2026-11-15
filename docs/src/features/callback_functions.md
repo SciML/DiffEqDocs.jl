@@ -78,7 +78,6 @@ a negative coefficient:
 
 ```@example callback1
 import DifferentialEquations as DE
-import SciMLBase
 import DiffEqCallbacks: PresetTimeCallback # no longer reexported by DifferentialEquations v8
 function f(du, u, p, t)
     du[1] = -u[1]
