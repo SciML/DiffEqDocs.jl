@@ -174,7 +174,7 @@ and their compile time balloons. Thus, static arrays shouldn't be used if your
 system has more than ~20 variables. Additionally, only the native Julia
 algorithms can fully utilize static arrays.
 
-Let's ***optimize `lorenz` using static arrays***. Note that in this case, we
+Let's **_optimize `lorenz` using static arrays_**. Note that in this case, we
 want to use the out-of-place allocating form, but this time we want to output
 a static array:
 
@@ -470,7 +470,7 @@ Notice that changing `B` changed `A`. This is something to be careful of, but
 at the same time we want to use this since we want to modify the output `dr`.
 Additionally, the last statement is a purely element-wise operation, and thus
 we can make use of broadcast fusion there. Let's rewrite `basic_version!` to
-***avoid slicing allocations*** and to ***use broadcast fusion***:
+**_avoid slicing allocations_** and to **_use broadcast fusion_**:
 
 ```@example faster_ode3
 function gm2!(dr, r, p, t)
@@ -523,7 +523,7 @@ prob = DE.ODEProblem(gm3!, r0, (0.0, 0.1), p)
 nothing # hide
 ```
 
-But our temporary variables are global variables. We need to either declare the caches as `const` or localize them. We can localize them by adding them to the parameters, `p`. It's easier for the compiler to reason about local variables than global variables. ***Localizing variables helps to ensure type stability***.
+But our temporary variables are global variables. We need to either declare the caches as `const` or localize them. We can localize them by adding them to the parameters, `p`. It's easier for the compiler to reason about local variables than global variables. **_Localizing variables helps to ensure type stability_**.
 
 ```@example faster_ode3
 p = (1.0, 1.0, 1.0, 10.0, 0.001, 100.0, Ayu, uAx, Du, Ayv, vAx, Dv) # a,α,ubar,β,D1,D2
@@ -705,7 +705,7 @@ multithreaded version.
 
 ### Optimizing Algorithm Choices
 
-The last thing to do is then ***optimize our algorithm choice***. We have been
+The last thing to do is then **_optimize our algorithm choice_**. We have been
 using `DE.Tsit5()` as our test algorithm, but in reality this problem is a stiff
 PDE discretization and thus one recommendation is to use `Sundials.CVODE_BDF()`. However,
 instead of using the default dense Jacobian, we should make use of the sparse
