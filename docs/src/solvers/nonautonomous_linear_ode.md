@@ -3,7 +3,7 @@
 Non-autonomous linear ODE solvers focus on equations in the general form of
 
 ```math
-u^\prime = A(u,p,t)u
+u' = A(u,p,t)u
 ```
 
 and utilize the Lie group structure of the solution to accelerate the numerical
@@ -11,19 +11,19 @@ methods and capture certain properties in the solution process. One common simpl
 is for solvers to require state-independent operators, which implies the form:
 
 ```math
-u^\prime = A(t)u
+u' = A(t)u
 ```
 
 Another type of solver is needed when the operators are state-dependent, i.e.
 
 ```math
-u^\prime = A(u)u
+u' = A(u)u
 ```
 
 Others specifically require linearity, i.e.
 
 ```math
-u^\prime = Au
+u' = Au
 ```
 
 where ``A`` is a constant operator.
@@ -32,8 +32,8 @@ where ``A`` is a constant operator.
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
+| Package                | Methods                                       | Good for |
+| ---------------------- | --------------------------------------------- | -------- |
 | `OrdinaryDiffEqLinear` | Magnus, Lie-group, matrix-exponential methods | Linear time-dependent ODEs; matrix-exponential propagation. |
 
 

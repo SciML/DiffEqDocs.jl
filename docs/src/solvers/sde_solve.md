@@ -4,17 +4,17 @@
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `StochasticDiffEqLowOrder` | EM, EulerHeun, LambaEM, RKMilCommute, SOSRA2 | Non-stiff SDE workhorse; diagonal/scalar noise. |
-| `StochasticDiffEqHighOrder` | SOSRI, SOSRA, RKMilGeneral, SRA1/2/3, SRIW1/2 | High-order strong/weak SDE methods (SRA/SRI families). |
-| `StochasticDiffEqMilstein` | RKMil, RKMilCommute | Itô-Milstein methods for diagonal-noise SDEs. |
-| `StochasticDiffEqImplicit` | ImplicitEM, ImplicitEulerHeun, ImplicitRKMil, STrapezoid, SImplicitMidpoint, SKenCarp | Stiff SDEs (drift-implicit and additive-noise SKenCarp). |
-| `StochasticDiffEqROCK` | SROCK, SROCK2, SROCKC2, SKSROCK | Stiff SDEs from PDE semi-discretization. |
-| `StochasticDiffEqWeak` | DRI1, RDI*, RS1/2, PL1WM, SIE, NON, COM | Weak-order convergence schemes for moment estimation. |
-| `StochasticDiffEqCore` | `IICommutative`, `IILevyArea` types | Internals; rarely imported directly. |
-| `BridgeDiffEq` | `BridgeR3`, `BridgeBS3`, `BridgeEM` | Wrappers for Bridge.jl ODE/SDE solvers. |
-| `SimpleDiffEq` | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |
+| Package                     | Methods                                           | Good for |
+| --------------------------- | ------------------------------------------------- | -------- |
+| `StochasticDiffEqLowOrder`  | EM, EulerHeun, LambaEM, RKMilCommute, SOSRA2      | Non-stiff SDE workhorse; diagonal/scalar noise. |
+| `StochasticDiffEqHighOrder` | SOSRI, SOSRA, RKMilGeneral, SRA1/2/3, SRIW1/2     | High-order strong/weak SDE methods (SRA/SRI families). |
+| `StochasticDiffEqMilstein`  | RKMil, RKMilCommute                               | Itô-Milstein methods for diagonal-noise SDEs. |
+| `StochasticDiffEqImplicit`  | ImplicitEM, ImplicitEulerHeun, ImplicitRKMil, STrapezoid, SImplicitMidpoint, SKenCarp | Stiff SDEs (drift-implicit and additive-noise SKenCarp). |
+| `StochasticDiffEqROCK`      | SROCK, SROCK2, SROCKC2, SKSROCK                   | Stiff SDEs from PDE semi-discretization. |
+| `StochasticDiffEqWeak`      | DRI1, RDI\*, RS1/2, PL1WM, SIE, NON, COM          | Weak-order convergence schemes for moment estimation. |
+| `StochasticDiffEqCore`      | `IICommutative`, `IILevyArea` types               | Internals; rarely imported directly. |
+| `BridgeDiffEq`              | `BridgeR3`, `BridgeBS3`, `BridgeEM`               | Wrappers for Bridge.jl ODE/SDE solvers. |
+| `SimpleDiffEq`              | `SimpleATsit5`, `GPUVern7/9`, `SimpleFunctionMap` | Minimal-allocation solvers for tight inner loops. |
 
 
 ## Recommended Methods
@@ -68,7 +68,7 @@ a matrix in the `SDEProblem` type. A special form of non-diagonal noise,
 commutative noise, occurs when the noise satisfies the following condition:
 
 ```math
-\sum_{i=1}^d g_{i,j_1}(t,x) \frac{\partial g_{k,j_2}(t,x)}{\partial x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{\partial g_{k,j_1}(t,x)}{\partial x_i}
+\sum_{i=1}^d g_{i,j_1}(t,x) \frac{∂g_{k,j_2}(t,x)}{∂x_i} = \sum_{i=1}^d g_{i,j_2}(t,x) \frac{∂g_{k,j_1}(t,x)}{∂x_i}
 ```
 
 for every ``j_1,j_2`` and ``k``. Additive noise is when ``g(t,u)=g(t)``,
@@ -80,7 +80,7 @@ The difficulty of higher strong order integrators stems from the presence of ite
 stochastic integrals
 
 ```math
-I(h) = \int_0^h\int_0^sdW^1_tdW^2_s
+I(h) = \int_0^h \int_0^s dW^1_t dW^2_s
 ```
 
 in these schemes.
@@ -295,7 +295,7 @@ The following methods require analytic derivatives of the diffusion term.
   sense. Requires the ggprime function, which is defined as
 
   ```math
-    \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{\partial g_{k,j}(t,x)}{\partial x_i}.
+  \text{ggprime}^k(t,x) = \sum_{j=1}^m \sum_{i=1}^d g_{i,j}(t,x) \frac{∂g_{k,j}(t,x)}{∂x_i}.
   ```
 
   This can also be understood more intuitively in vector/matrix form as,

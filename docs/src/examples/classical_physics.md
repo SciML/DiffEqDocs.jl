@@ -46,26 +46,26 @@ plot!(sol.t, t -> 2^(-t / t½), lw = 3, ls = :dash, label = "Analytical Solution
 Another classical example is the harmonic oscillator, given by:
 
 ```math
-\ddot{x} + \omega^2 x = 0
+\ddot{x} + ω^2 x = 0
 ```
 
 with the known analytical solution
 
 ```math
 \begin{align*}
-x(t) &= A\cos(\omega t - \phi) \\
-v(t) &= -A\omega\sin(\omega t - \phi),
+x(t) &= A \cos(ωt - φ) \\
+v(t) &= -A ω \sin(ωt - φ),
 \end{align*}
 ```
 
 where
 
 ```math
-A = \sqrt{c_1 + c_2} \qquad\text{and}\qquad \tan \phi = \frac{c_2}{c_1}
+A = \sqrt{c_1 + c_2} \qquad\text{and}\qquad \tan φ = \frac{c_2}{c_1}
 ```
 
 with ``c_1``, ``c_2`` constants determined by the initial conditions such that
-``c_1`` is the initial position and ``\omega c_2`` is the initial velocity.
+``c_1`` is the initial position and ``ω c_2`` is the initial velocity.
 
 Instead of transforming this to a system of ODEs to solve with `ODEProblem`,
 we can use `SecondOrderODEProblem` as follows.
@@ -112,7 +112,7 @@ Thus, if we want the first series to be `x`, we have to flip the order with `var
 
 #### Simple Pendulum
 
-We will start by solving the pendulum problem. In the physics class, we often solve this problem by small angle approximation, i.e. ``\sin(θ) \approx θ``, because otherwise, we get an elliptic integral which doesn't have an analytic solution. The linearized form is
+We will start by solving the pendulum problem. In the physics class, we often solve this problem by small angle approximation, i.e. ``\sin(θ) ≈ θ``, because otherwise, we get an elliptic integral which doesn't have an analytic solution. The linearized form is
 
 ```math
 \ddot{θ} + \frac{g}{L} θ = 0
@@ -163,7 +163,7 @@ sol = ODE.solve(prob, ODE.Tsit5())
 #Plot
 plot(
     sol, linewidth = 2, title = "Simple Pendulum Problem", xaxis = "Time",
-    yaxis = "Height", label = ["\\theta" "d\\theta"]
+    yaxis = "Height", label = ["θ" "ω"]
 )
 ```
 
@@ -193,15 +193,12 @@ A more complicated example is given by the double pendulum. The equations govern
 its motion are given by the following (taken from this [Stack Overflow question](https://mathematica.stackexchange.com/questions/40122/help-to-plot-poincar%C3%A9-section-for-double-pendulum))
 
 ```math
-\frac{d}{dt}
-\begin{pmatrix} \alpha \\ l_\alpha \\ \beta \\ l_\beta \end{pmatrix}
-=
-\begin{pmatrix}
-2\frac{l_\alpha - (1+\cos\beta)l_\beta}{3-\cos 2\beta} \\
--2\sin\alpha - \sin(\alpha + \beta) \\
-2\frac{-(1+\cos\beta)l_\alpha + (3+2\cos\beta)l_\beta}{3-\cos2\beta}\\
--\sin(\alpha+\beta) - 2\sin(\beta)\frac{(l_\alpha-l_\beta)l_\beta}{3-\cos2\beta} + 2\sin(2\beta)\frac{l_\alpha^2-2(1+\cos\beta)l_\alpha l_\beta + (3+2\cos\beta)l_\beta^2}{(3-\cos2\beta)^2}
-\end{pmatrix}
+\begin{align*}
+\frac{dα}{dt} &= 2\frac{l_α - (1+\cos β) l_β}{3 - \cos 2β} \\[4pt]
+\frac{dl_α}{dt} &= -2 \sin α - \sin(α + β) \\[4pt]
+\frac{dβ}{dt} &= 2\frac{-(1+\cos β) l_α + (3+2\cos β) l_β}{3 - \cos(2β)} \\[4pt]
+\frac{dl_β}{dt} &= -\sin(α+β) - 2\sin(β)\frac{(l_α - l_β)l_β}{3-\cos(2β)} + 2\sin(2β) \frac{l_α^2 - 2(1+\cos β) l_α l_β + (3+2\cosβ) l_β^2}{(3 - \cos(2β))^2}
+\end{align*}
 ```
 
 ```@example physics
@@ -317,7 +314,7 @@ p = scatter(sol2, idxs = (3, 4), leg = false, markersize = 3, msw = 0)
 for lβ in lβrange
     poincare_map(poincare, [0.01, 0.01, 0.01, lβ], p)
 end
-plot(p, xlabel = "\\beta", ylabel = "l_\\beta", ylims = (0, 0.03))
+plot(p, xlabel = "β", ylabel = "l_β", ylims = (0, 0.03))
 ```
 
 #### Hénon-Heiles System
@@ -326,8 +323,8 @@ The Hénon-Heiles potential occurs when non-linear motion of a star around a gal
 
 ```math
 \begin{align*}
-\frac{d^2x}{dt^2}&=-\frac{\partial V}{\partial x}\\
-\frac{d^2y}{dt^2}&=-\frac{\partial V}{\partial y}
+\frac{d^2x}{dt^2} &= -\frac{∂V}{∂x} \\
+\frac{d^2y}{dt^2} &= -\frac{∂V}{∂y}
 \end{align*}
 ```
 

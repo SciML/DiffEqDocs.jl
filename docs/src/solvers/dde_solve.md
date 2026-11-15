@@ -9,16 +9,16 @@ given, a default algorithm will be chosen.
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `DelayDiffEq` | `MethodOfSteps`, `DDEProblem`, `SDDEProblem` | DDE / SDDE driver - pick the inner ODE alg by ODE-style criteria. |
-| `OrdinaryDiffEqTsit5` | `Tsit5`, `AutoTsit5` | Default non-stiff inner alg at medium tolerances (1e-3 - 1e-8). |
-| `OrdinaryDiffEqVerner` | Vern6/7/8/9, AutoVern (lazy variants) | High-precision non-stiff inner alg (down to 1e-12+). |
-| `OrdinaryDiffEqLowOrderRK` | BS3, DP5, RK4, Heun, Euler, OwrenZen | Non-stiff DDE inner alg at loose tolerances. |
-| `OrdinaryDiffEqHighOrderRK` | DP8, TanYam7, TsitPap8, PFRK87 | High-order non-stiff inner alg alternatives to Verner. |
-| `OrdinaryDiffEqRosenbrock` | Rosenbrock23, Rodas4/5P, ROS variants | Stiff small-to-medium DDEs (mass-matrix). |
-| `OrdinaryDiffEqSDIRK` | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DDEs with cheap Jacobians; general fallback. |
-| `OrdinaryDiffEqBDF` | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler | Stiff large/sparse DDEs. |
+| Package                     | Methods                                          | Good for |
+| --------------------------- | ------------------------------------------------ | -------- |
+| `DelayDiffEq`               | `MethodOfSteps`, `DDEProblem`, `SDDEProblem`     | DDE / SDDE driver - pick the inner ODE alg by ODE-style criteria. |
+| `OrdinaryDiffEqTsit5`       | `Tsit5`, `AutoTsit5`                             | Default non-stiff inner alg at medium tolerances (1e-3 - 1e-8). |
+| `OrdinaryDiffEqVerner`      | Vern6/7/8/9, AutoVern (lazy variants)            | High-precision non-stiff inner alg (down to 1e-12+). |
+| `OrdinaryDiffEqLowOrderRK`  | BS3, DP5, RK4, Heun, Euler, OwrenZen             | Non-stiff DDE inner alg at loose tolerances. |
+| `OrdinaryDiffEqHighOrderRK` | DP8, TanYam7, TsitPap8, PFRK87                   | High-order non-stiff inner alg alternatives to Verner. |
+| `OrdinaryDiffEqRosenbrock`  | Rosenbrock23, Rodas4/5P, ROS variants            | Stiff small-to-medium DDEs (mass-matrix). |
+| `OrdinaryDiffEqSDIRK`       | KenCarp3/4/47/58, TRBDF2, ImplicitEuler, Kvaerno | Stiff DDEs with cheap Jacobians; general fallback. |
+| `OrdinaryDiffEqBDF`         | FBDF, QNDF, ABDF2, SBDF, DFBDF, DImplicitEuler   | Stiff large/sparse DDEs. |
 
 
 ## Recommended Methods

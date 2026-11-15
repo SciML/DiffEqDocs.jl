@@ -3,7 +3,7 @@
 In this tutorial, we'll be solving the heat equation:
 
 ```math
-∂_t T = α ∇²T + β \sin(γ z)
+\frac{∂T}{∂t} = α ∇²T + β \sin(γ z)
 ```
 
 with boundary conditions: ``∇T(z=a) = ∇T_\text{bottom}`` and ``T(z=b) = T_\text{top}``. We'll solve these equations numerically using Finite Difference Method on cell faces. The same exercise could easily be done on cell centers.
@@ -116,8 +116,8 @@ the Dirichlet boundary stencil & source:
 
 ```math
 \begin{align*}
-∂_t T &= α \frac{T[i-1]+T[b]-2 T[i]}{Δz²} + S \\
-∂_t T &= α \frac{T[i-1]-2 T[i]}{Δz²} + S + α \frac{T[b]}{Δz²}
+\frac{∂T}{∂t} &= α \frac{T[i-1]+T[b]-2 T[i]}{Δz²} + S \\
+\frac{∂T}{∂t} &= α \frac{T[i-1]-2 T[i]}{Δz²} + S + α \frac{T[b]}{Δz²}
 \end{align*}
 ```
 
@@ -125,8 +125,8 @@ and Neumann boundary stencil & source:
 
 ```math
 \begin{align*}
-∇T_\text{bottom} n̂ = \frac{T[g] - T[i]}{2Δz}, \qquad    n̂ = [-1,1] ∈ [z_\text{min},z_\text{max}] \\
-T[i] + 2 Δz ∇T_\text{bottom} n̂ = T[g] \\
+∇T_\text{bottom} n̂ &= \frac{T[g] - T[i]}{2Δz}, &    n̂ = [-1,1] ∈ [z_\text{min},z_\text{max}] \\
+T[i] + 2 Δz ∇T_\text{bottom} n̂ &= T[g] \\
 ∂_t T &= α \frac{\frac{(T[i] + 2 Δz ∇T_\text{bottom} n̂) - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S \\
 ∂_t T &= α \frac{\frac{T[i] - T[b]}{Δz} - \frac{T[b] - T[i]}{Δz}}{Δz} + S + α 2 Δz \frac{∇T_\text{bottom}}{Δz²} \\
 ∂_t T &= α \frac{2 T[i] - 2 T[b]}{Δz²} + S + 2α \frac{∇T_\text{bottom} n̂}{Δz}

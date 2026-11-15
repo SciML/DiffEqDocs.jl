@@ -15,7 +15,7 @@ g(u) &= \vec{0}
 
 ## Example 1: Simple Pendulum
 
-The concrete example that we are solving is the simple pendulum ``\ddot{u}+\frac{g}{L}\sin(u)=0`` on the time interval ``t\in[0,\frac{\pi}{2}]``. First, we need to define the ODE
+The concrete example that we are solving is the simple pendulum ``\ddot{u} + \frac{g}{L} \sin(u) = 0`` on the time interval ``t ∈ [0,\frac{π}{2}]``. First, we need to define the ODE
 
 ```@example bvp
 import BoundaryValueDiffEq as BVP
@@ -182,15 +182,15 @@ function f!(du, u, p, t)
     return
 end
 function bc!(res, u, p, t)
-    res[1] = u[1]
-    res[2] = u[3] - 1
-    res[3] = u[2] - sin(1.0)
+    res[1] = u(0.0)[1]
+    res[2] = u(0.0)[3] - 1
+    res[3] = u(1.0)[2] - sin(1.0)
     return
 end
 u0 = [0.0, 0.0, 0.0, 0.0]
 tspan = (0.0, 1.0)
 fun = BVP.BVPFunction(f!, bc!, mass_matrix = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 0])
 prob = BVP.BVProblem(fun, u0, tspan)
-solver = BVP.Ascher4(; zeta = [0.0, 0.0, 1.0], jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
+solver = BVP.Ascher4(; jac_alg = BVP.BVPJacobianAlgorithm(BVP.AutoForwardDiff()))
 sol = BVP.solve(prob, solver; dt = 0.01)
 ```

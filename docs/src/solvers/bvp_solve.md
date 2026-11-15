@@ -12,15 +12,15 @@ Solves the BVP defined by `prob` using the algorithm `alg`. All algorithms excep
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `BoundaryValueDiffEqShooting` | `Shooting`, `MultipleShooting` | Fastest when not too stiff. |
-| `BoundaryValueDiffEqMIRK` | MIRK2/3/4/5/6 (sparse Jacobians) | Default BVP workhorse; robust on standard two-point BVPs. |
-| `BoundaryValueDiffEqFIRK` | RadauIIa1/2/3/5/7, LobattoIIIa/b/c | Stiff or high-precision BVPs (fully-implicit RK). |
-| `BoundaryValueDiffEqAscher` | Ascher1/2/3/4/5/6/7 | Index-1 DAEs and mixed-order / stiff BVPs. |
-| `BoundaryValueDiffEqMIRKN` | MIRK-N methods | Second-order BVPs (e.g. structural / mechanics). |
-| `SimpleBoundaryValueDiffEq` | SimpleMIRK*, SimpleShooting | Lightweight BVP shooting; minimal dependencies. |
-| `ODEInterface` | `BVPM2`, `BVPSOL` | Fortran BVP wrappers from ODEInterface.jl. |
+| Package                       | Methods                            | Good for                                                  |
+| ----------------------------- | ---------------------------------- | --------------------------------------------------------- |
+| `BoundaryValueDiffEqShooting` | `Shooting`, `MultipleShooting`     | Fastest when not too stiff.                               |
+| `BoundaryValueDiffEqMIRK`     | MIRK2/3/4/5/6 (sparse Jacobians)   | Default BVP workhorse; robust on standard two-point BVPs. |
+| `BoundaryValueDiffEqFIRK`     | RadauIIa1/2/3/5/7, LobattoIIIa/b/c | Stiff or high-precision BVPs (fully-implicit RK).         |
+| `BoundaryValueDiffEqAscher`   | Ascher1/2/3/4/5/6/7                | Index-1 DAEs and mixed-order / stiff BVPs.                |
+| `BoundaryValueDiffEqMIRKN`    | MIRK-N methods                     | Second-order BVPs (e.g. structural / mechanics).          |
+| `SimpleBoundaryValueDiffEq`   | SimpleMIRK\*, SimpleShooting       | Lightweight BVP shooting; minimal dependencies.           |
+| `ODEInterface`                | `BVPM2`, `BVPSOL`                  | Fortran BVP wrappers from ODEInterface.jl.                |
 
 
 ## Recommended Methods
@@ -46,14 +46,14 @@ in many cases, single shooting method `Shooting` may be faster than collocation 
 
     or, for tighter compile times, just the relevant sublibrary:
 
-    | Method family                                              | Sublibrary                          |
-    |------------------------------------------------------------|-------------------------------------|
-    | `Shooting`, `MultipleShooting`                             | `BoundaryValueDiffEqShooting`       |
-    | `MIRK2`–`MIRK6`                                            | `BoundaryValueDiffEqMIRK`           |
-    | `MIRKN4`, `MIRKN6`                                         | `BoundaryValueDiffEqMIRKN`          |
-    | `LobattoIIIa*`, `LobattoIIIb*`, `LobattoIIIc*`, `RadauIIa*` | `BoundaryValueDiffEqFIRK`           |
-    | `Ascher1`–`Ascher7` (BVDAE)                                | `BoundaryValueDiffEqAscher`         |
-    | `BVPM2`, `BVPSOL`, `COLNEW` (Fortran wrappers)             | `BoundaryValueDiffEq` + `ODEInterface` |
+    | Method family                                               | Sublibrary                             |
+    | ----------------------------------------------------------- | -------------------------------------- |
+    | `Shooting`, `MultipleShooting`                              | `BoundaryValueDiffEqShooting`          |
+    | `MIRK2`–`MIRK6`                                             | `BoundaryValueDiffEqMIRK`              |
+    | `MIRKN4`, `MIRKN6`                                          | `BoundaryValueDiffEqMIRKN`             |
+    | `LobattoIIIa*`, `LobattoIIIb*`, `LobattoIIIc*`, `RadauIIa*` | `BoundaryValueDiffEqFIRK`              |
+    | `Ascher1`–`Ascher7` (BVDAE)                                 | `BoundaryValueDiffEqAscher`            |
+    | `BVPM2`, `BVPSOL`, `COLNEW` (Fortran wrappers)              | `BoundaryValueDiffEq` + `ODEInterface` |
 
     Shooting / `MultipleShooting` also need an OrdinaryDiffEq inner solver, e.g.
     `Shooting(Tsit5())` requires `using OrdinaryDiffEqTsit5: Tsit5`.

@@ -14,8 +14,10 @@ HamiltonianProblem{T}(H, p0, q0, tspan, p = NullParameters(); kwargs...)
 These correspond to partitioned equations of motion:
 
 ```math
-\frac{dv}{dt} = f_1(t,u) \\
-\frac{du}{dt} = f_2(v) \\
+\begin{align*}
+\frac{dv}{dt} &= f_1(t,u) \\
+\frac{du}{dt} &= f_2(v)
+\end{align*}
 ```
 
 or, for `SecondOrderODEProblem`,
@@ -42,11 +44,11 @@ kinetic energy".
 
 The solvers on this page are distributed across the packages below. Add the package(s) you need to your environment.
 
-| Package | Methods | Good for |
-|---|---|---|
-| `OrdinaryDiffEqRKN` | DPRKN6/8/12, ERKN4/5/7, IRKN3/4 | Second-order ODEs (Newtonian mechanics) without first-order conversion. |
+| Package                      | Methods                                     | Good for |
+| ---------------------------- | ------------------------------------------- | -------- |
+| `OrdinaryDiffEqRKN`          | DPRKN6/8/12, ERKN4/5/7, IRKN3/4             | Second-order ODEs (Newtonian mechanics) without first-order conversion. |
 | `OrdinaryDiffEqSymplecticRK` | KahanLi6/8, McAte, VelocityVerlet, Yoshida6 | Hamiltonian / conservative dynamics; long-time energy preservation. |
-| `GeometricIntegratorsDiffEq` | Gauss, Lobatto, Radau, Symplectic methods | Wrappers for GeometricIntegrators.jl. |
+| `GeometricIntegratorsDiffEq` | Gauss, Lobatto, Radau, Symplectic methods   | Wrappers for GeometricIntegrators.jl. |
 
 
 ## Recommendations
