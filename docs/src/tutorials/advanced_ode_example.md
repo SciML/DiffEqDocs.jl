@@ -377,31 +377,28 @@ built, so it has to be the array type you want back:
 
 ```@example stiff1
 import CUDA, CUDSS
-import CUDA.CUSPARSE: CuSparseMatrixCSR, CuSparseMatrixCSC
-import SciMLBase: FullSpecialize
+import CUDA.CUSPARSE: CuSparseMatrixCSR
 
 u0_gpu = CUDA.CuArray(u0)
 gpu_rhs! = make_brusselator(CUDA.CuArray(CartesianIndices((N, N))))
-jac_prototype_gpu = CuSparseMatrixCSR(CuSparseMatrixCSC(float.(jac_sparsity)))
+jac_prototype_gpu = CuSparseMatrixCSR(float.(jac_sparsity))
 
-f_gpu = DE.ODEFunction{true, FullSpecialize}(gpu_rhs!; jac_prototype = jac_prototype_gpu)
+f_gpu = DE.ODEFunction(gpu_rhs!; jac_prototype = jac_prototype_gpu)
 prob_gpu = DE.ODEProblem(f_gpu, u0_gpu, (0.0, 11.5), p)
 nothing # hide
 ```
 
 `CUDSS` is loaded because it supplies the sparse LU on the GPU. Without it the solve
-falls back to a Krylov method. `FullSpecialize` is used because the default wrapping
-goes through FunctionWrappers, whose compiled signature is too narrow for some GPU
-solver caches.
+falls back to a Krylov method.
 
 A mistake in the right-hand side is quiet, so it is worth checking the device version
 against the host one before trusting a solve:
 
 ```@example stiff1
 du_cpu = similar(u0)
-brusselator_2d_loop(du_cpu, u0, p, 0.0)
+brusselator_2d_loop(du_cpu, u0, p, 2.0)
 du_gpu = similar(u0_gpu)
-gpu_rhs!(du_gpu, u0_gpu, p, 0.0)
+gpu_rhs!(du_gpu, u0_gpu, p, 2.0)
 Array(du_gpu) ≈ du_cpu
 ```
 
@@ -410,9 +407,9 @@ DE.solve(prob_gpu, TRBDF2(); save_everystep = false)
 nothing # hide
 ```
 
-Preconditioners work here as well. The `precs` callback receives the concrete `W`,
-which on this path is a `CuSparseMatrixCSR`, so the preconditioner has to be one that
-can be built from and applied to that.
+Preconditioners work here as well. `convert(AbstractMatrix, W)` in the `precs` callback
+now gives a `CuSparseMatrixCSR`, matching `jac_prototype`, so the preconditioner has to
+be one that can be built from and applied to that.
 [KrylovPreconditioners.jl](https://github.com/JuliaSmoothOptimizers/KrylovPreconditioners.jl)
 supplies GPU-ready incomplete factorizations:
 
@@ -434,11 +431,10 @@ nothing # hide
 A raw `CUSPARSE.ilu02` result cannot be used as a preconditioner. It stores the factors
 but has no `ldiv!` to apply them.
 
-All three mistakes above report the same `Scalar indexing is disallowed`, so the stack
-trace is what separates them. Frames in your own kernel or `Base.Broadcast` mean the
-right-hand side is running on the host, frames in `jacobian!` or `calc_J!` mean the
-Jacobian is being built into a host matrix, and frames in `lu_instance` mean `CUDSS`
-is not loaded.
+A host `CartesianIndices` and a host `jac_prototype` both report `Scalar indexing is
+disallowed`, so the stack trace is what separates them. Frames in your own kernel or
+`Base.Broadcast` mean the right-hand side is running on the host, and frames in
+`jacobian!` or `calc_J!` mean the Jacobian is being built into a host matrix.
 
 ## Sundials-Specific Handling
 
