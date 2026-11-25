@@ -429,8 +429,10 @@ m = 1.0                             # mass [kg]
 g = 9.81                            # gravitational acceleration [m/s²]
 
 function pendulum!(du, u, p, t)
-    du[1] = u[2]                    # θ'(t) = ω(t)
-    du[2] = -3g / (2l) * sin(u[1]) + 3 / (m * l^2) * p(t) # ω'(t) = -3g/(2l) sin θ(t) + 3/(ml^2)M(t)
+    θ, ω = u
+    m, l, M = p
+    du[1] = ω
+    du[2] = -3g / 2l * sin(θ) + 3 / (m * l^2) * M(t)
     return
 end
 
@@ -439,9 +441,9 @@ end
 u₀ = [θ₀, ω₀]                       # initial state vector
 tspan = (0.0, 10.0)                 # time interval
 
-M = t -> 0.1sin(t)                  # external torque [Nm]
+M = t -> 0.1sin(t)                  # external torque [N⋅m]
 
-prob = DE.ODEProblem(pendulum!, u₀, tspan, M)
+prob = DE.ODEProblem(pendulum!, u₀, tspan, (m, l, M))
 sol = DE.solve(prob)
 
 plot(
