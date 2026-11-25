@@ -4,20 +4,20 @@ import LinearAlgebra: Tridiagonal
 import DiffEqBase
 import OrdinaryDiffEqBDF: IMEXEuler
 import SciMLBase
-import SciMLOperators: MatrixOperator</code></pre><p>Next, we&#39;ll define some global problem parameters:</p><pre><code class="language-julia hljs">a, b, n = 0, 1, 10               # zmin, zmax, number of cells
-n̂_min, n̂_max = -1, 1            # Outward facing unit vectors
-α = 100;                        # thermal diffusivity, larger means more stiff
-β, γ = 10000, π;                # source term coefficients
-Δt = 1000;                      # timestep size
-N_t = 10;                       # number of timesteps to take
-FT = Float64;                   # float type
+import SciMLOperators: MatrixOperator</code></pre><p>Next, we&#39;ll define some global problem parameters:</p><pre><code class="language-julia hljs">a, b, n = 0, 1, 10                  # zmin, zmax, number of cells
+n̂_min, n̂_max = -1, 1                # Outward facing unit vectors
+α = 100;                            # thermal diffusivity, larger means more stiff
+β, γ = 10000, π;                    # source term coefficients
+Δt = 1000;                          # timestep size
+N_t = 10;                           # number of timesteps to take
+FT = Float64;                       # float type
 Δz = FT(b - a) / FT(n)
 Δz² = Δz^2;
-∇²_op = [1 / Δz², -2 / Δz², 1 / Δz²]; # interior Laplacian operator
-∇T_bottom = 10;                 # Temperature gradient at the top
-T_top = 1;                      # Temperature at the bottom
+∇²_op = [1, -2, 1] ./ Δz²;          # interior Laplacian operator
+∇T_bottom = 10;                     # Temperature gradient at the top
+T_top = 1;                          # Temperature at the bottom
 S(z) = β * sin(γ * z)               # source term, (sin for easy integration)
-zf = range(a, b, length = n + 1);   # coordinates on cell faces</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">0.0:0.1:1.0</code></pre><h2 id="Derivation-of-analytic-solution"><a class="docs-heading-anchor" href="#Derivation-of-analytic-solution">Derivation of analytic solution</a><a id="Derivation-of-analytic-solution-1"></a><a class="docs-heading-anchor-permalink" href="#Derivation-of-analytic-solution" title="Permalink"></a></h2><p>Here, we&#39;ll derive the analytic solution:</p><p class="math-container">\[\begin{align*}
+zf = range(a, b, length = n + 1);   # coordinates on cell faces</code></pre><h2 id="Derivation-of-analytic-solution"><a class="docs-heading-anchor" href="#Derivation-of-analytic-solution">Derivation of analytic solution</a><a id="Derivation-of-analytic-solution-1"></a><a class="docs-heading-anchor-permalink" href="#Derivation-of-analytic-solution" title="Permalink"></a></h2><p>Here, we&#39;ll derive the analytic solution:</p><p class="math-container">\[\begin{align*}
 \frac{∂²T}{∂²z} &amp;= -\frac{S(z)}{α} = -\frac{β \sin(γ z)}{α} \\
 \frac{∂T}{∂z} &amp;= \frac{β \cos(γ z)}{γ α}+c_1 \\
 T(z) &amp;= \frac{β \sin(γ z)}{γ^2 α}+c_1 z+c_2, \qquad \text{(generic solution)}
@@ -77,7 +77,7 @@ D = α .* ∇²</code></pre><pre class="documenter-example-output"><code class="
        ⋅         ⋅         ⋅         ⋅            ⋅    10000.0  -20000.0  0.0
        ⋅         ⋅         ⋅         ⋅   …        ⋅         ⋅        0.0  0.0</code></pre><h2 id="Define-boundary-source"><a class="docs-heading-anchor" href="#Define-boundary-source">Define boundary source</a><a id="Define-boundary-source-1"></a><a class="docs-heading-anchor-permalink" href="#Define-boundary-source" title="Permalink"></a></h2><p>Here, we&#39;ll compute the boundary source <span>$\left(\frac{α T[b]}{Δz²}\right)$</span></p><pre><code class="language-julia hljs">AT_b = zeros(FT, n + 1);
 AT_b[1] = α * 2 / Δz * ∇T_bottom * n̂_min;
-AT_b[end - 1] = α * T_top / Δz²;</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">9999.999999999998</code></pre><h2 id="Set-initial-condition"><a class="docs-heading-anchor" href="#Set-initial-condition">Set initial condition</a><a id="Set-initial-condition-1"></a><a class="docs-heading-anchor-permalink" href="#Set-initial-condition" title="Permalink"></a></h2><p>Let&#39;s just initialize the solution to <code>1</code>, and also set the top boundary condition:</p><pre><code class="language-julia hljs">T = zeros(FT, n + 1);
+AT_b[end - 1] = α * T_top / Δz²;</code></pre><h2 id="Set-initial-condition"><a class="docs-heading-anchor" href="#Set-initial-condition">Set initial condition</a><a id="Set-initial-condition-1"></a><a class="docs-heading-anchor-permalink" href="#Set-initial-condition" title="Permalink"></a></h2><p>Let&#39;s just initialize the solution to <code>1</code>, and also set the top boundary condition:</p><pre><code class="language-julia hljs">T = zeros(FT, n + 1);
 T .= 1;
 T[n + 1] = T_top; # set top BC</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1</code></pre><h2 id="Define-right-hand-side-sources"><a class="docs-heading-anchor" href="#Define-right-hand-side-sources">Define right-hand side sources</a><a id="Define-right-hand-side-sources-1"></a><a class="docs-heading-anchor-permalink" href="#Define-right-hand-side-sources" title="Permalink"></a></h2><p>Here, we define the right-hand side (RHS) sources:</p><pre><code class="language-julia hljs">function rhs!(dT, T, params, t)
     n = params.n
@@ -132,4 +132,4 @@ p2 = plot(
 )
 p2 = plot!(p2, title = &quot;T ∈ cell faces&quot;)
 
-plot(p1, p2)</code></pre><img src="35dfc31f.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../beeler_reuter/">« An Implicit/Explicit CUDA-Accelerated Solver for the 2D Beeler-Reuter Model</a><a class="docs-footer-nextpage" href="../../basics/overview/">Overview of DifferentialEquations.jl »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.20.0 on <span class="colophon-date" title="Saturday 21 November 2026 19:43">Saturday 21 November 2026</span>. Using Julia version 1.13.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+plot(p1, p2)</code></pre><img src="33edf82b.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../beeler_reuter/">« An Implicit/Explicit CUDA-Accelerated Solver for the 2D Beeler-Reuter Model</a><a class="docs-footer-nextpage" href="../../basics/overview/">Overview of DifferentialEquations.jl »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.20.0 on <span class="colophon-date" title="Wednesday 25 November 2026 20:46">Wednesday 25 November 2026</span>. Using Julia version 1.13.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
