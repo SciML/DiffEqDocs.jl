@@ -24,20 +24,21 @@ import SciMLOperators: MatrixOperator
 Next, we'll define some global problem parameters:
 
 ```@example diffusionimplicit
-a, b, n = 0, 1, 10               # zmin, zmax, number of cells
-n̂_min, n̂_max = -1, 1            # Outward facing unit vectors
-α = 100;                        # thermal diffusivity, larger means more stiff
-β, γ = 10000, π;                # source term coefficients
-Δt = 1000;                      # timestep size
-N_t = 10;                       # number of timesteps to take
-FT = Float64;                   # float type
+a, b, n = 0, 1, 10                  # zmin, zmax, number of cells
+n̂_min, n̂_max = -1, 1                # Outward facing unit vectors
+α = 100;                            # thermal diffusivity, larger means more stiff
+β, γ = 10000, π;                    # source term coefficients
+Δt = 1000;                          # timestep size
+N_t = 10;                           # number of timesteps to take
+FT = Float64;                       # float type
 Δz = FT(b - a) / FT(n)
 Δz² = Δz^2;
-∇²_op = [1 / Δz², -2 / Δz², 1 / Δz²]; # interior Laplacian operator
-∇T_bottom = 10;                 # Temperature gradient at the top
-T_top = 1;                      # Temperature at the bottom
+∇²_op = [1, -2, 1] ./ Δz²;          # interior Laplacian operator
+∇T_bottom = 10;                     # Temperature gradient at the top
+T_top = 1;                          # Temperature at the bottom
 S(z) = β * sin(γ * z)               # source term, (sin for easy integration)
 zf = range(a, b, length = n + 1);   # coordinates on cell faces
+nothing # hide
 ```
 
 ## Derivation of analytic solution
@@ -163,6 +164,7 @@ Here, we'll compute the boundary source ``\left(\frac{α T[b]}{Δz²}\right)``
 AT_b = zeros(FT, n + 1);
 AT_b[1] = α * 2 / Δz * ∇T_bottom * n̂_min;
 AT_b[end - 1] = α * T_top / Δz²;
+nothing # hide
 ```
 
 ## Set initial condition
