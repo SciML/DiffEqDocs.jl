@@ -288,14 +288,14 @@ derive the Jacobian ``\frac{df_i}{du_j}`` which is `J[i,j]`. From this, we get:
 function rober_jac!(J, u, p, t)
     y₁, y₂, y₃ = u
     k₁, k₂, k₃ = p
-    J[1, 1] = k₁ * -1
+    J[1, 1] = -k₁
     J[2, 1] = k₁
     J[3, 1] = 0
-    J[1, 2] = y₃ * k₃
-    J[2, 2] = y₂ * k₂ * -2 + y₃ * k₃ * -1
-    J[3, 2] = y₂ * 2 * k₂
+    J[1, 2] = k₃ * y₃
+    J[2, 2] = -2k₂ * y₂ - k₃ * y₃
+    J[3, 2] = 2k₂ * y₂
     J[1, 3] = k₃ * y₂
-    J[2, 3] = k₃ * y₂ * -1
+    J[2, 3] = -k₃ * y₂
     J[3, 3] = 0
     return
 end
